@@ -53,7 +53,7 @@ async function t2j(request) {
   let req=await request.arrayBuffer()
   req=new Uint8Array(req)
   const Tresponse=read(req)
-  return new Response(Tresponse,{headers:{"content-type":"application/json"}})
+  return new Response(JSON.stringify(Tresponse),{headers:{"content-type":"application/json"}})
 }
 
 Deno.serve(handler)

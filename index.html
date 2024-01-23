@@ -11,12 +11,13 @@
 
 <body>
     <style>
-        .out{
+        .out {
             max-width: 98%;
             width: 98%;
             height: 90vh;
         }
-        textarea{
+
+        textarea {
             max-width: 98%;
             width: 98%;
             height: 100px;
@@ -25,7 +26,8 @@
     <p>thrift</p>
     <input type="file" id="thrift">
     <textarea id="thrift2"></textarea>
-    <button type="button" onclick="j2t()">Json-&gt;TCompact</button><button type="button" onclick="t2j()">TCompact-&gt;Json</button>
+    <button type="button" onclick="j2t()">Json-&gt;TCompact</button><button type="button"
+        onclick="t2j()">TCompact-&gt;Json</button>
     <p>json</p>
     <textarea class="out" id="json"></textarea>
     <script>
@@ -41,10 +43,14 @@
             const file = document.getElementById("thrift").files[0];
             let res = await fetch("./t2j", {
                 method: "POST",
-                body: file.stream()
+                body:
+                    (await file.stream().getReader().read()).value,
+                headers: {
+                    "content-type": "application/thrift"
+                }
             })
             res = await res.json()
-            document.getElementById("out").value = JSON.stringify(res,null,2)
+            document.getElementById("out").value = JSON.stringify(res, null, 2)
         }
     </script>
 </body>
