@@ -47,7 +47,7 @@ function readThrift(data) {
         console.log(tdata, myprot, bufTrans)
     }
     // Replace ChatMessageData with your own thrift structure
-    return tdata, Lname,outType
+    return {value:tdata,name:Lname,type:outType}
 }
 function object2json(data) {
     const keys = Object.keys(data)
@@ -74,6 +74,5 @@ function object2json(data) {
 //Deno.writeTextFile("./result.json",JSON.stringify(json,null,2))
 
 export default function read(data) {
-    let obj,name,type=readThrift(data)
-    return {value:object2json(obj),name:name,type:type}
+    return object2json(readThrift(data))
 }
