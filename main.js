@@ -50,7 +50,7 @@ async function j2t(request) {
   return new Response(Trequest,{headers:{"content-type":"application/x-thrift"}})
 }
 async function t2j(request) {
-  let req=await fet.arrayBuffer()
+  let req=await request.arrayBuffer()
   req=new Uint8Array(req)
   const Tresponse=read(req)
   return new Response(Tresponse,{headers:{"content-type":"application/json"}})
