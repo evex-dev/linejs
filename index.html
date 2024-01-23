@@ -32,9 +32,12 @@
     <textarea class="out" id="json"></textarea>
     <script>
         const j2t = async () => {
-            let res = await fetch("./", {
+            let res = await fetch("./j2t", {
                 method: "POST",
-                body: document.getElementById("json").value
+                body: document.getElementById("json").value,
+                headers: {
+                    "content-type": "application/json"
+                }
             })
             res = await res.text()
             document.getElementById("thrift2").innerText = res
@@ -46,7 +49,7 @@
                 body:
                     (await file.stream().getReader().read()).value,
                 headers: {
-                    "content-type": "application/thrift"
+                    "content-type": "application/x-thrift"
                 }
             })
             res = await res.json()
