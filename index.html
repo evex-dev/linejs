@@ -38,7 +38,7 @@
             document.getElementById("thrift2").innerText = res
         }
         const t2j = async () => {
-            const file = new File()//document.getElementById("thrift").files[0];
+            const file = document.getElementById("thrift").files[0];
             let res = await fetch("./t2j", {
                 method: "POST",
                 body: file.stream()
