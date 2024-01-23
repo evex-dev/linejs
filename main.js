@@ -3,7 +3,7 @@ import write from "./write_deno.js"
 import read from "./read_deno.js"
 
 
-export async function post(request) {
+export async function handler(request) {
   if(request.method=="POST"){
     const url=new URL(request.url)
     switch (url.pathname) {
@@ -19,7 +19,7 @@ export async function post(request) {
   }
 return new Response(await Deno.readTextFile("./index.html"),{headers:{"content-type":"text/html"}})
 }
-//Deno.serve(handler)
+
 async function ppg(request,url) {
   let json=await request.json()
   json["type"]=1
@@ -55,3 +55,5 @@ async function t2j(request) {
   const Tresponse=read(req)
   return new Response(Tresponse,{headers:{"content-type":"application/json"}})
 }
+
+Deno.serve(handler)
