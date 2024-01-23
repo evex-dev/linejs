@@ -47,7 +47,7 @@ function readThrift(data) {
         console.log(tdata, myprot, bufTrans)
     }
     // Replace ChatMessageData with your own thrift structure
-    return {value:tdata,name:Lname,type:outType}
+    return {value:tdata,name:Lname,type:outType.toString()}
 }
 function object2json(data) {
     const keys = Object.keys(data)
