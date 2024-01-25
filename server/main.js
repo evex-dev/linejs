@@ -31,6 +31,7 @@ async function ppg(request, url) {
   json["type"] = 1
   const Trequest = write(json)
   console.log(Trequest);
+  /*
   let auth;
   if (url.searchParams.get("auth")) {
     auth = url.searchParams.get("auth")
@@ -48,6 +49,18 @@ async function ppg(request, url) {
       "x-line-access": auth,
       "user-agent": url.searchParams.get("ua"),
       "x-line-application": url.searchParams.get("type"),
+      "content-type": "application/x-thrift",
+      "x-lal": "ja_JP",
+      "x-lpv": "1",
+      "accept-encoding": "gzip"
+    },
+    body: Trequest
+  })
+  */
+  const fet = await fetch("https://worker-misty-grass-a637.ke-aoki.workers.dev/", {
+    method: 'POST',
+    headers: {
+      "accept": "application/x-thrift",
       "content-type": "application/x-thrift",
       "x-lal": "ja_JP",
       "x-lpv": "1",
