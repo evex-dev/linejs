@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LINE-Deno-Client ・ API Test</title>
+</head>
+
+<body>
+    <style>
+        .out{
+            max-width: 98%;
+            width: 98%;
+            height: 90vh;
+        }
+        textarea{
+            max-width: 98%;
+            width: 98%;
+            height: 100px;
+        }
+    </style>
+    <p>&lt;-</p>
+    <p>Account</p>
+    <textarea id="auth">
+{
+    "ua": "DESKTOP:WINDOWS:10.0.22621-11NT-x64(8.5.3.3252)",
+    "type": "DESKTOPWIN\t8.5.3.3252\tWINDOWS\t10.0.22621-11NT-x64"
+}</textarea>
+    <p>PATH</p>
+    <input type="text" id="inP" value="/SQ1">
+    <p>METHOD_NAME</p>
+    <input type="text" id="inN" value="fetchMyEvents">
+    <p>params</p>
+    <textarea id="inV">
+{
+    "limit": 100
+}
+    </textarea>
+    <button type="button" onclick="post()">POST</button>
+    <p>-&gt;</p>
+    <textarea class="out" id="out"></textarea>
+    <script>
+        const post = async () => {
+            let q = new URLSearchParams(JSON.parse(document.getElementById("auth").value))
+            let res = await fetch(`./?${q.toString()}`, {
+                method: "POST",
+                body: `{"url":"${document.getElementById("inP").value}","value":${document.getElementById("inV").value},"name":"${document.getElementById("inN").value}"}`
+            })
+            res = await res.json()
+            console.log(res)
+            document.getElementById("out").value = JSON.stringify(res,null,2)
+        }
+    </script>
+</body>
+
+</html>

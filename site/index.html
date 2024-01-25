@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LINE-Deno-Client ・ API Test</title>
+</head>
+
+<body>
+    <style>
+        .out {
+            max-width: 98%;
+            width: 98%;
+            height: 90vh;
+        }
+
+        textarea {
+            max-width: 98%;
+            width: 98%;
+            height: 100px;
+        }
+    </style>
+    <p>thrift</p>
+    <input type="file" id="thrift">
+    <textarea id="thrift2"></textarea>
+    <button type="button" onclick="j2t()">Json-&gt;TCompact</button><button type="button"
+        onclick="t2j()">TCompact-&gt;Json</button>
+    <p>json</p>
+    <textarea class="out" id="json"></textarea>
+    <script>
+        const j2t = async () => {
+            let res = await fetch("./j2t", {
+                method: "POST",
+                body: document.getElementById("json").value,
+                headers: {
+                    "content-type": "application/json"
+                }
+            })
+            res = await res.text()
+            document.getElementById("thrift2").innerText = res
+        }
+        const t2j = async () => {
+            const file = document.getElementById("thrift").files[0];
+            let res = await fetch("./t2j", {
+                method: "POST",
+                body:
+                    (await file.stream().getReader().read()).value,
+                headers: {
+                    "content-type": "application/x-thrift"
+                }
+            })
+            res = await res.json()
+            document.getElementById("json").value = JSON.stringify(res, null, 2)
+        }
+    </script>
+</body>
+
+</html>
