@@ -50,7 +50,7 @@
                 method: "POST",
                 body:T
             })
-            let buf = await fet.arrayBuffer()
+            let buf = await res.arrayBuffer()
             buf = new Uint8Array(buf)
             const json = await t2j(buf)
             document.getElementById("out").value = JSON.stringify(json, null, 2)
