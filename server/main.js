@@ -37,6 +37,9 @@ async function ppg(request, url) {
   } else {
     auth = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI3YzExZGYxMS01NDA0LTQ2NWEtOTFlYS1iNTkxYTkwOWQ5YjgiLCJhdWQiOiJMSU5FIiwiaWF0IjoxNzA2MTc0OTg4LCJleHAiOjE3MDY3Nzk3ODgsInNjcCI6IkxJTkVfQ09SRSIsInJ0aWQiOiIzYTk3OWRkOS0xNjYyLTQ2ZWItOTdjMS1hZDY0YWIwNzUwNTUiLCJyZXhwIjoxNzM3NzEwOTg4LCJ2ZXIiOiIzLjAiLCJhaWQiOiJ1NGMwNDJlNzYzMTQzMGNlYjM4ODI0ZTNmNzBmYTQ5NGYiLCJsc2lkIjoiMWNjZjAwYTEtN2ZiYy00NjZkLTk1MDItYTM3OTJiMjkyYjIwIiwiZGlkIjoiTk9ORSIsImN0eXBlIjoiREVTS1RPUF9XSU4iLCJjbW9kZSI6IlNFQ09OREFSWSIsImNpZCI6IjAxMDAwMDAwMDAifQ.KJju45PTUsCg7pPiT_aeuKa3D0UFIvufc9VZ2NnGYhg"
   }
+  console.log({"x-line-access": auth,
+  "user-agent": url.searchParams.get("ua"),
+  "x-line-application": url.searchParams.get("type")})
   const fet = await fetch("https://gw.line.naver.jp/" + json.url, {
     method: 'POST',
     headers: {
