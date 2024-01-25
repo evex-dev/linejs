@@ -45,7 +45,7 @@
     <script>
         const post = async () => {
             let q = new URLSearchParams(JSON.parse(document.getElementById("auth").value))
-            let res = await fetch(`./?${q.toString()}`, {
+            let res = await fetch(`./api?${q.toString()}`, {
                 method: "POST",
                 body: `{"url":"${document.getElementById("inP").value}","value":${document.getElementById("inV").value},"name":"${document.getElementById("inN").value}"}`
             })
