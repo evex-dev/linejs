@@ -1,6 +1,6 @@
 
-import write from "./server/write_deno.js"
-import read from "./server/read_deno.js"
+import write from "./write_deno.js"
+import read from "./read_deno.js"
 
 
 export async function handler(request) {
@@ -19,11 +19,11 @@ export async function handler(request) {
   }
   switch (url.pathname) {
     case "/api":
-      return new Response(await Deno.readTextFile("./site/api.html"), { headers: { "content-type": "text/html" } });
+      return new Response(await Deno.readTextFile("../site/api.html"), { headers: { "content-type": "text/html" } });
     default:
       break;
   }
-  return new Response(await Deno.readTextFile("./site/index.html"), { headers: { "content-type": "text/html" } })
+  return new Response(await Deno.readTextFile("../site/index.html"), { headers: { "content-type": "text/html" } })
 }
 
 async function ppg(request, url) {
