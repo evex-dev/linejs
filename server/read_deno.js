@@ -11,7 +11,8 @@ function readThrift(data) {
     let type, r;
     let outType = -1;
     if (data[opt] != 0x82) {
-        console.log("LINE Thriftではありません")
+        console.log("LINE Thriftではありません:0x82")
+        console.log(new TextDecoder().decode(data))
         return
     }
     if (data[1 + opt] == 0x41) {
@@ -23,7 +24,8 @@ function readThrift(data) {
         outType = 1
         r = 5 + opt
     } else {
-        console.log("LINE Thriftではありません")
+        console.log("LINE Thriftではありません:0x41or0x21")
+        console.log(new TextDecoder().decode(data))
         return
     }
     let len = data[3 + opt]
