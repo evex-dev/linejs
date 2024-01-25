@@ -46,7 +46,7 @@
         const post = async () => {
             let q = new URLSearchParams(JSON.parse(document.getElementById("auth").value))
             let T = await j2t()
-            const res = await fetch("https://worker-purple-brook-8391.kinpiror.workers.dev"+document.getElementById("path").value,{
+            const res = await fetch("https://worker-purple-brook-8391.kinpiror.workers.dev"+document.getElementById("path").value+"?"+q.toString(),{
                 method: "POST",
                 body:T
             })
