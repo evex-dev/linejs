@@ -29,8 +29,6 @@
     "ua": "DESKTOP:WINDOWS:10.0.22621-11NT-x64(8.5.3.3252)",
     "type": "DESKTOPWIN\t8.5.3.3252\tWINDOWS\t10.0.22621-11NT-x64"
 }</textarea>
-    <p>PATH</p>
-    <input type="text" id="inP" value="/SQ1">
     <p>METHOD_NAME</p>
     <input type="text" id="inN" value="fetchMyEvents">
     <p>params</p>
@@ -39,19 +37,43 @@
     "limit": 100
 }
     </textarea>
+    <p>PATH</p>
+    <input type="text" id="path" value="/SQ1">
     <button type="button" onclick="post()">POST</button>
     <p>-&gt;</p>
     <textarea class="out" id="out"></textarea>
     <script>
         const post = async () => {
             let q = new URLSearchParams(JSON.parse(document.getElementById("auth").value))
-            let res = await fetch(`./api?${q.toString()}`, {
+            let T = await j2t()
+            const res = await fetch("https://worker-purple-brook-8391.kinpiror.workers.dev"+document.getElementById("path").value,{
                 method: "POST",
-                body: `{"url":"${document.getElementById("inP").value}","value":${document.getElementById("inV").value},"name":"${document.getElementById("inN").value}"}`
+                body:T
             })
-            res = await res.json()
-            console.log(res)
-            document.getElementById("out").value = JSON.stringify(res,null,2)
+            let buf = await fet.arrayBuffer()
+            buf = new Uint8Array(buf)
+            const json = await t2j(buf)
+            document.getElementById("out").value = JSON.stringify(json, null, 2)
+        }
+        const j2t = async () => {
+            let res = await fetch("./j2t", {
+                method: "POST",
+                body: `{"type":1,"value":${document.getElementById("inV").value},"name":"${document.getElementById("inN").value}"}`,
+                headers: {
+                    "content-type": "application/json"
+                }
+            })
+            return res.arrayBuffer()
+        }
+        const t2j = async (data) => {
+            let res = await fetch("./t2j", {
+                method: "POST",
+                body: data,
+                headers: {
+                    "content-type": "application/x-thrift"
+                }
+            })
+            return await res.json()   
         }
     </script>
 </body>
