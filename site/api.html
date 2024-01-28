@@ -11,24 +11,30 @@
 
 <body>
     <style>
-        .out{
+        .out {
             max-width: 98%;
             width: 98%;
             height: 90vh;
         }
-        textarea{
+
+        textarea {
             max-width: 98%;
             width: 98%;
             height: 100px;
         }
     </style>
-    <p>&lt;-</p>
     <p>Account</p>
+    <p>auth=authToken,ua=User-Agent,type=x-line-application</p>
     <textarea id="auth">
 {
     "ua": "DESKTOP:WINDOWS:10.0.22621-11NT-x64(8.5.3.3252)",
     "type": "DESKTOPWIN\t8.5.3.3252\tWINDOWS\t10.0.22621-11NT-x64"
 }</textarea>
+    <p>PATH</p>
+    <input type="text" id="path" value="/SQ1">
+    <button type="button" onclick="init_ws()">INIT</button>
+    <p>&lt;-</p>
+
     <p>METHOD_NAME</p>
     <input type="text" id="inN" value="fetchMyEvents">
     <p>params</p>
@@ -37,43 +43,132 @@
     "limit": 100
 }
     </textarea>
-    <p>PATH</p>
-    <input type="text" id="path" value="/SQ1">
-    <button type="button" onclick="post()">POST</button>
+    <button type="button" onclick="main()">POST</button>
     <p>-&gt;</p>
     <textarea class="out" id="out"></textarea>
     <script>
-        const post = async () => {
+        var ws_test = new WebSocket()
+        var ws_j2t, ws_t2j, ws_post;
+        var ws_info = { j2t: null, t2j: null, post: null };
+        const init_post = () => {
             let q = new URLSearchParams(JSON.parse(document.getElementById("auth").value))
-            let T = await j2t()
-            const res = await fetch("https://worker-purple-brook-8391.kinpiror.workers.dev"+document.getElementById("path").value+"?"+q.toString(),{
-                method: "POST",
-                body:T
-            })
-            let buf = await res.arrayBuffer()
-            buf = new Uint8Array(buf)
-            const json = await t2j(buf)
-            document.getElementById("out").value = JSON.stringify(json, null, 2)
-        }
-        const j2t = async () => {
-            let res = await fetch("./j2t", {
-                method: "POST",
-                body: `{"type":1,"value":${document.getElementById("inV").value},"name":"${document.getElementById("inN").value}"}`,
-                headers: {
-                    "content-type": "application/json"
+            ws_post = new WebSocket("wss://worker-purple-brook-8391.kinpiror.workers.dev" + document.getElementById("path").value + "?" + q.toString())
+            ws_post.onopen = (e) => {
+                ws_info.post = { status: "open", wait: null }
+            };
+            ws_post.onclose = (e) => {
+                ws_info.post.status = false
+                init_post()
+            };
+            ws_post.onmessage = (e) => {
+                if (ws_info.post.wait) {
+                    ws_info.post.wait(e)
                 }
-            })
-            return res.arrayBuffer()
+            };
         }
-        const t2j = async (data) => {
-            let res = await fetch("./t2j", {
-                method: "POST",
-                body: data,
-                headers: {
-                    "content-type": "application/x-thrift"
+        const init_j2t = () => {
+            ws_j2t = new WebSocket(`wss://${location.hostname}/j2t`)
+            ws_j2t.onopen = (e) => {
+                ws_info.j2t = { status: "open", wait: null }
+            };
+            ws_j2t.onclose = (e) => {
+                ws_info.j2t.status = false
+                init_post()
+            };
+            ws_j2t.onmessage = (e) => {
+                if (ws_info.j2t.wait) {
+                    ws_info.j2t.wait(e)
                 }
+            };
+        }
+        const init_t2j = () => {
+            ws_t2j = new WebSocket(`wss://${location.hostname}/t2j`)
+            ws_t2j.onopen = (e) => {
+                ws_info.t2j = { status: "open", wait: null }
+            };
+            ws_t2j.onclose = (e) => {
+                ws_info.t2j.status = false
+                init_post()
+            };
+            ws_t2j.onmessage = (e) => {
+                if (ws_info.t2j.wait) {
+                    ws_info.t2j.wait(e)
+                }
+            };
+        }
+        const canWsUse = () => {
+            if ((ws_info.j2t.status === "open") + (ws_info.t2j.status === "open") + (ws_info.post.status === "open") === 3) {
+                return true
+            }
+            return false
+        }
+        const init_ws = async () => {
+            try {
+                ws_j2t.close()
+            } catch (e) {
+            }
+            try {
+                ws_t2j.close()
+            } catch (e) {
+            }
+            try {
+                ws_post.close()
+            } catch (e) {
+            }
+            init_j2t()
+            init_t2j()
+            init_post()
+            while (!canWsUse()) { }
+            alert("open!")
+        }
+        const post = (data) => {
+            return new Promise((resolve, reject) => {
+                if (canWsUse()) {
+                    if (ws_info.post.wait === null) {
+                        ws_info.post.wait = (e) => {
+                            resolve(e.data)
+                            ws_info.j2t.wait = null
+                        }
+                        ws_j2t.send(send)
+                    } else { reject("WS:post is used by other function") }
+                } else { reject("WS:post isn't useable now") }
             })
-            return await res.json()   
+        }
+        const j2t = (v, n, type = 1) => {
+            return new Promise((resolve, reject) => {
+                const send = JSON.stringify({ type: type, name: n, value: v })
+                if (canWsUse()) {
+                    if (ws_info.j2t.wait === null) {
+                        ws_info.j2t.wait = (e) => {
+                            resolve(e.data)
+                            ws_info.j2t.wait = null
+                        }
+                        ws_j2t.send(send)
+                    } else { reject("WS:j2t is used by other function") }
+                } else { reject("WS:j2t isn't useable now") }
+            })
+        }
+        const t2j = (data) => {
+            return new Promise((resolve, reject) => {
+                if (canWsUse()) {
+                    if (ws_info.t2j.wait === null) {
+                        ws_info.t2j.wait = (e) => {
+                            resolve(JSON.parse(e.data))
+                            ws_info.t2j.wait = null
+                        }
+                        ws_t2j.send(send)
+                    } else { reject("WS:t2j is used by other function") }
+                } else { reject("WS:t2j isn't useable now") }
+            })
+        }
+        const main = async () => {
+            if (canWsUse()) {
+                let v = document.getElementById("inV").value
+                let n = document.getElementById("inN").value
+                j2t(v, n).then((d) => post(d)).then((d) => t2j(d)).then((j) => { document.getElementById("out").value = JSON.stringify(j, null, 2) }).catch(e => { alert(e) })
+            } else {
+                alert("click [INIT] first")
+            }
         }
     </script>
 </body>
