@@ -96,8 +96,11 @@
             };
         }
         const canWsUse = () => {
-            if ((ws_info.j2t.status === "open") + (ws_info.t2j.status === "open") + (ws_info.post.status === "open") === 3) {
-                return true
+            try {
+                if ((ws_info.j2t.status === "open") + (ws_info.t2j.status === "open") + (ws_info.post.status === "open") === 3) {
+                    return true
+                }
+            } catch (e) {
             }
             return false
         }
