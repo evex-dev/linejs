@@ -47,17 +47,20 @@
     <p>-&gt;</p>
     <textarea class="out" id="out"></textarea>
     <script>
-        var ws_j2t, ws_t2j, ws_post;
+        if (localStorage.getItem("auth")) {
+            document.getElementById("auth").value=localStorage.getItem("auth")
+        }
+        var ws_j2t, ws_t2j, ws_post;   
         var ws_info = { j2t: null, t2j: null, post: null };
         const init_post = () => {
+            localStorage.setItem("auth",document.getElementById("auth").value)
             let q = new URLSearchParams(JSON.parse(document.getElementById("auth").value))
-            ws_post = new WebSocket("wss://worker-purple-brook-8391.kinpiror.workers.dev" + document.getElementById("path").value + "?" + q.toString())
+            ws_post = new WebSocket("wss://worker-purple-brook-8391.kinpiror.workers.dev"+ document.getElementById("path").value + "?" + q.toString())
             ws_post.onopen = (e) => {
                 ws_info.post = { status: "open", wait: null }
             };
             ws_post.onclose = (e) => {
                 ws_info.post.status = false
-                init_post()
             };
             ws_post.onmessage = (e) => {
                 if (ws_info.post.wait) {
@@ -66,13 +69,12 @@
             };
         }
         const init_j2t = () => {
-            ws_j2t = new WebSocket(`wss://${location.hostname}/j2t`)
+            ws_j2t = new WebSocket(`wss://parse-tcompact.deno.dev/j2t`)
             ws_j2t.onopen = (e) => {
                 ws_info.j2t = { status: "open", wait: null }
             };
             ws_j2t.onclose = (e) => {
                 ws_info.j2t.status = false
-                init_post()
             };
             ws_j2t.onmessage = (e) => {
                 if (ws_info.j2t.wait) {
@@ -81,13 +83,12 @@
             };
         }
         const init_t2j = () => {
-            ws_t2j = new WebSocket(`wss://${location.hostname}/t2j`)
+            ws_t2j = new WebSocket(`wss://parse-tcompact.deno.dev/t2j`)
             ws_t2j.onopen = (e) => {
                 ws_info.t2j = { status: "open", wait: null }
             };
             ws_t2j.onclose = (e) => {
                 ws_info.t2j.status = false
-                init_post()
             };
             ws_t2j.onmessage = (e) => {
                 if (ws_info.t2j.wait) {
@@ -120,7 +121,6 @@
             init_j2t()
             init_t2j()
             init_post()
-            while (!canWsUse()) { }
             alert("open!")
         }
         const post = (data) => {
@@ -129,9 +129,9 @@
                     if (ws_info.post.wait === null) {
                         ws_info.post.wait = (e) => {
                             resolve(e.data)
-                            ws_info.j2t.wait = null
+                            ws_info.post.wait = null
                         }
-                        ws_j2t.send(send)
+                        ws_post.send(data)
                     } else { reject("WS:post is used by other function") }
                 } else { reject("WS:post isn't useable now") }
             })
@@ -158,16 +158,19 @@
                             resolve(JSON.parse(e.data))
                             ws_info.t2j.wait = null
                         }
-                        ws_t2j.send(send)
+                        ws_t2j.send(data)
                     } else { reject("WS:t2j is used by other function") }
                 } else { reject("WS:t2j isn't useable now") }
             })
         }
         const main = async () => {
             if (canWsUse()) {
-                let v = document.getElementById("inV").value
+                let v = JSON.parse(document.getElementById("inV").value)
                 let n = document.getElementById("inN").value
-                j2t(v, n).then((d) => post(d)).then((d) => t2j(d)).then((j) => { document.getElementById("out").value = JSON.stringify(j, null, 2) }).catch(e => { alert(e) })
+                let treq = await j2t(v, n)
+                let tres = await post(treq)
+                let tjson = await t2j(tres)
+                document.getElementById("out").value = JSON.stringify(tjson, null, 2)
             } else {
                 alert("click [INIT] first")
             }
