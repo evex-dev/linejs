@@ -48,14 +48,14 @@
     <textarea class="out" id="out"></textarea>
     <script>
         if (localStorage.getItem("auth")) {
-            document.getElementById("auth").value=localStorage.getItem("auth")
+            document.getElementById("auth").value = localStorage.getItem("auth")
         }
-        var ws_j2t, ws_t2j, ws_post;   
+        var ws_j2t, ws_t2j, ws_post;
         var ws_info = { j2t: null, t2j: null, post: null };
         const init_post = () => {
-            localStorage.setItem("auth",document.getElementById("auth").value)
+            localStorage.setItem("auth", document.getElementById("auth").value)
             let q = new URLSearchParams(JSON.parse(document.getElementById("auth").value))
-            ws_post = new WebSocket("wss://worker-purple-brook-8391.kinpiror.workers.dev"+ document.getElementById("path").value + "?" + q.toString())
+            ws_post = new WebSocket("wss://parse-tcompact.deno.dev/post" + document.getElementById("path").value + "?" + q.toString())
             ws_post.onopen = (e) => {
                 ws_info.post = { status: "open", wait: null }
             };
@@ -155,7 +155,11 @@
                 if (canWsUse()) {
                     if (ws_info.t2j.wait === null) {
                         ws_info.t2j.wait = (e) => {
-                            resolve(JSON.parse(e.data))
+                            try {
+                                resolve(JSON.parse(e.data))
+                            } catch (error) {
+
+                            }
                             ws_info.t2j.wait = null
                         }
                         ws_t2j.send(data)
