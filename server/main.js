@@ -1,7 +1,7 @@
 
 import write from "./write_deno.js"
 import read from "./read_deno.js"
-
+import ws from "./dnowork.js"
 
 export async function handler(request) {
   const url = new URL(request.url)
@@ -11,6 +11,8 @@ export async function handler(request) {
       return await j2t(request);
     case "/t2j":
       return await t2j(request);
+    case "/post":
+      return await ws(request);
     default:
       break;
   }
