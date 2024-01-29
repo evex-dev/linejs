@@ -6,12 +6,12 @@ import ws from "./dnowork.js"
 export async function handler(request) {
   const url = new URL(request.url)
 
-  switch (url.pathname) {
-    case "/j2t":
+  switch (url.pathname.split("/")[1]) {
+    case "j2t":
       return await j2t(request);
-    case "/t2j":
+    case "t2j":
       return await t2j(request);
-    case "/post":
+    case "post":
       return await ws(request);
     default:
       break;

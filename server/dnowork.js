@@ -10,7 +10,8 @@ export default async function ws(request) {
         return new Response('Expected Upgrade: websocket', { status: 426 });
     }
     async function post(res) {
-        const fet = await fetch("https://gw.line.naver.jp/SQ1", {
+        console.log(res,ua,type,auth)
+        const fet = await fetch("https://gw.line.naver.jp/"+url.pathname.split("/")[2], {
             method: 'POST',
             headers: {
                 "Host": "gw.line.naver.jp",
@@ -26,6 +27,7 @@ export default async function ws(request) {
             },
             body: res
         })
+
         res = await fet.arrayBuffer()
         return res
     }
