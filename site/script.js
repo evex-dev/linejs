@@ -100,7 +100,6 @@ class LineTCompactSocket {
             this.socket.post.close()
         } catch (e) {
         }
-        LineTCompactSocket = null
     }
     j2t(data) {
         return new Promise((resolve, reject) => {
