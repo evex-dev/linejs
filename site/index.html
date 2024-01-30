@@ -66,15 +66,27 @@
             try{Account.closeSocket()}catch{}
             Account = new LineTCompactSocket(document.getElementById("path").value, document.getElementById("auth").value, document.getElementById("device").value)
         }
-        const main = async () => {
+        
+        const ticket = async () => {
             if (Account) {
             localStorage.setItem("auth",document.getElementById("auth").value)
             localStorage.setItem("device",document.getElementById("device").value)
-            localStorage.setItem("inV",document.getElementById("inV").value)
-                let v = JSON.parse(document.getElementById("inV").value)
-                let n = document.getElementById("inN").value
+                let v = {invitationTicket:document.getElementById("ticket").value}
+                let n = "findSquareByInvitationTicket"
                 let tjson = await Account.postRequestAndGetResponse(v, n)
-                document.getElementById("out").value = JSON.stringify(tjson, null, 2)
+                document.getElementById("ticketRes").value = JSON.stringify(tjson, null, 2)
+            } else {
+                alert("click [Login] first")
+            }
+        }
+        const joined = async () => {
+            if (Account) {
+            localStorage.setItem("auth",document.getElementById("auth").value)
+            localStorage.setItem("device",document.getElementById("device").value)
+                let v = {limit:100}
+                let n = "getJoinedSquareChats"
+                let tjson = await Account.postRequestAndGetResponse(v, n)
+                document.getElementById("joinedRes").value = JSON.stringify(tjson, null, 2)
             } else {
                 alert("click [Login] first")
             }
