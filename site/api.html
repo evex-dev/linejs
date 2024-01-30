@@ -22,19 +22,22 @@
             width: 98%;
             height: 100px;
         }
+        input {
+            max-width: 98%;
+            width: 98%;
+        }
     </style>
-    <p>Account</p>
-    <p>auth=authToken,ua=User-Agent,type=x-line-application</p>
-    <textarea id="auth">
-{
-    "ua": "DESKTOP:WINDOWS:10.0.22621-11NT-x64(8.5.3.3252)",
-    "type": "DESKTOPWIN\t8.5.3.3252\tWINDOWS\t10.0.22621-11NT-x64"
-}</textarea>
+    <h3>Account</h3>
+    <p>authToken</p>
+    <input type="text" id="auth" value="eyJ...(authToken)">
+    <p>device-name</p>
+    <input type="text" id="device" value="DESKTOPWIN">
     <p>PATH</p>
     <input type="text" id="path" value="/SQ1">
-    <button type="button" onclick="init_ws()">INIT</button>
-    <p>&lt;-</p>
-
+    <p>create socket</p>
+    <button type="button" onclick="create()">create</button>
+    <h2>&lt;-</h2>
+    <h3>Request</h3>
     <p>METHOD_NAME</p>
     <input type="text" id="inN" value="fetchMyEvents">
     <p>params</p>
@@ -44,139 +47,33 @@
 }
     </textarea>
     <button type="button" onclick="main()">POST</button>
-    <p>-&gt;</p>
+    <h2>-&gt;</h2>
+    <h3>Response</h3>
     <textarea class="out" id="out"></textarea>
+    <script src="./script.js"></script>
     <script>
         if (localStorage.getItem("auth")) {
             document.getElementById("auth").value = localStorage.getItem("auth")
+        } if (localStorage.getItem("device")) {
+            document.getElementById("device").value = localStorage.getItem("device")
+        } if (localStorage.getItem("inV")) {
+            document.getElementById("inV").value = localStorage.getItem("inV")
         }
-        var ws_j2t, ws_t2j, ws_post;
-        var ws_info = { j2t: null, t2j: null, post: null };
-        const init_post = () => {
-            localStorage.setItem("auth", document.getElementById("auth").value)
-            let q = new URLSearchParams(JSON.parse(document.getElementById("auth").value))
-            ws_post = new WebSocket("wss://parse-tcompact.deno.dev/post" + document.getElementById("path").value + "?" + q.toString())
-            ws_post.onopen = (e) => {
-                ws_info.post = { status: "open", wait: null }
-            };
-            ws_post.onclose = (e) => {
-                ws_info.post.status = false
-            };
-            ws_post.onmessage = (e) => {
-                if (ws_info.post.wait) {
-                    ws_info.post.wait(e)
-                }
-            };
-        }
-        const init_j2t = () => {
-            ws_j2t = new WebSocket(`wss://parse-tcompact.deno.dev/j2t`)
-            ws_j2t.onopen = (e) => {
-                ws_info.j2t = { status: "open", wait: null }
-            };
-            ws_j2t.onclose = (e) => {
-                ws_info.j2t.status = false
-            };
-            ws_j2t.onmessage = (e) => {
-                if (ws_info.j2t.wait) {
-                    ws_info.j2t.wait(e)
-                }
-            };
-        }
-        const init_t2j = () => {
-            ws_t2j = new WebSocket(`wss://parse-tcompact.deno.dev/t2j`)
-            ws_t2j.onopen = (e) => {
-                ws_info.t2j = { status: "open", wait: null }
-            };
-            ws_t2j.onclose = (e) => {
-                ws_info.t2j.status = false
-            };
-            ws_t2j.onmessage = (e) => {
-                if (ws_info.t2j.wait) {
-                    ws_info.t2j.wait(e)
-                }
-            };
-        }
-        const canWsUse = () => {
-            try {
-                if ((ws_info.j2t.status === "open") + (ws_info.t2j.status === "open") + (ws_info.post.status === "open") === 3) {
-                    return true
-                }
-            } catch (e) {
-            }
-            return false
-        }
-        const init_ws = async () => {
-            try {
-                ws_j2t.close()
-            } catch (e) {
-            }
-            try {
-                ws_t2j.close()
-            } catch (e) {
-            }
-            try {
-                ws_post.close()
-            } catch (e) {
-            }
-            init_j2t()
-            init_t2j()
-            init_post()
-            alert("open!")
-        }
-        const post = (data) => {
-            return new Promise((resolve, reject) => {
-                if (canWsUse()) {
-                    if (ws_info.post.wait === null) {
-                        ws_info.post.wait = (e) => {
-                            resolve(e.data)
-                            ws_info.post.wait = null
-                        }
-                        ws_post.send(data)
-                    } else { reject("WS:post is used by other function") }
-                } else { reject("WS:post isn't useable now") }
-            })
-        }
-        const j2t = (v, n, type = 1) => {
-            return new Promise((resolve, reject) => {
-                const send = JSON.stringify({ type: type, name: n, value: v })
-                if (canWsUse()) {
-                    if (ws_info.j2t.wait === null) {
-                        ws_info.j2t.wait = (e) => {
-                            resolve(e.data)
-                            ws_info.j2t.wait = null
-                        }
-                        ws_j2t.send(send)
-                    } else { reject("WS:j2t is used by other function") }
-                } else { reject("WS:j2t isn't useable now") }
-            })
-        }
-        const t2j = (data) => {
-            return new Promise((resolve, reject) => {
-                if (canWsUse()) {
-                    if (ws_info.t2j.wait === null) {
-                        ws_info.t2j.wait = (e) => {
-                            try {
-                                resolve(JSON.parse(e.data))
-                            } catch (error) {
-
-                            }
-                            ws_info.t2j.wait = null
-                        }
-                        ws_t2j.send(data)
-                    } else { reject("WS:t2j is used by other function") }
-                } else { reject("WS:t2j isn't useable now") }
-            })
+        var Account;
+        const create = async () => {
+            Account = new LineTCompactSocket(document.getElementById("path").value, document.getElementById("auth").value, document.getElementById("device").value)
         }
         const main = async () => {
-            if (canWsUse()) {
+            if (Account) {
+            localStorage.setItem("auth",document.getElementById("auth").value)
+            localStorage.setItem("device",document.getElementById("device").value)
+            localStorage.setItem("inV",document.getElementById("inV").value)
                 let v = JSON.parse(document.getElementById("inV").value)
                 let n = document.getElementById("inN").value
-                let treq = await j2t(v, n)
-                let tres = await post(treq)
-                let tjson = await t2j(tres)
+                let tjson = await Account.postRequestAndGetResponse(v, n)
                 document.getElementById("out").value = JSON.stringify(tjson, null, 2)
             } else {
-                alert("click [INIT] first")
+                alert("click [create] first")
             }
         }
     </script>
