@@ -36,7 +36,7 @@
     <button type="button" onclick="create()">Login</button>
     <h3>ツール</h3>
     <h5>ticket→squareMid</h5>
-    <p>ticket:<input type="text" id="ticket" value="DESKTOPWIN"></p>
+    <p>ticket:<input type="text" id="ticket" value="7Qk6whxscVanCRV7Gn8kDI6s0TmxJIpxbo2z8Q"></p>
     <button type="button" onclick="ticket()">Run</button>
     <p>response</p>
     <textarea id="ticketRes"></textarea>
@@ -84,7 +84,7 @@
             localStorage.setItem("auth",document.getElementById("auth").value)
             localStorage.setItem("device",document.getElementById("device").value)
                 let v = {limit:100}
-                let n = "getJoinedSquareChats"
+                let n = "getJoinedSquares"
                 let tjson = await Account.postRequestAndGetResponse(v, n)
                 document.getElementById("joinedRes").value = JSON.stringify(tjson, null, 2)
             } else {
