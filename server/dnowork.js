@@ -1,17 +1,17 @@
 
 export default async function ws(request) {
     const url = new URL(request.url)
-    var auth, ua, type;
-    ua = url.searchParams.get("ua"),
+    var auth, ua, type, path;
+    ua = url.searchParams.get("ua")
     type = url.searchParams.get("type")
     auth = url.searchParams.get("auth")
+    path = url.searchParams.get("path")
     const upgradeHeader = request.headers.get('Upgrade');
     if (!upgradeHeader || upgradeHeader !== 'websocket') {
         return new Response('Expected Upgrade: websocket', { status: 426 });
     }
     async function post(res) {
-        console.log(res,ua,type,auth)
-        const fet = await fetch("https://gw.line.naver.jp/"+url.pathname.split("/")[2], {
+        const fet = await fetch("https://gw.line.naver.jp" + path, {
             method: 'POST',
             headers: {
                 "Host": "gw.line.naver.jp",
