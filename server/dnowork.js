@@ -38,6 +38,7 @@ export default async function ws(request) {
             res = read(res)
             res.id = id
         } catch (error) {
+            console.log(error);
             res.err = error
             res.id = id
         }
