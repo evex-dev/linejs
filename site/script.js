@@ -67,7 +67,7 @@ class LineTCompactSocket {
     post(data) {
         return new Promise((resolve, reject) => {
             data.id = Date.now()
-            send(this.socket.post,this.socketInfo.post.waitFunc, data, resolve)
+            this.send(this.socket.post,this.socketInfo.post.waitFunc, data, resolve)
         })
     }
     postParseThrift = async (data) => {
