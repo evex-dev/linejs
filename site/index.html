@@ -16,11 +16,13 @@
             width: 98%;
             height: 90vh;
         }
+
         textarea {
             max-width: 98%;
             width: 98%;
             height: 100px;
         }
+
         input {
             max-width: 98%;
             width: 98%;
@@ -40,18 +42,18 @@
     <button type="button" onclick="ticket()">Run</button>
     <p>response</p>
     <textarea id="ticketRes"></textarea>
-    
+
     <h5>参加オプ一覧</h5>
     <button type="button" onclick="joined()">Run</button>
     <p>response</p>
     <textarea id="joinedRes"></textarea>
 
     <h5>再参加禁止リスト取得</h5>
-    <p>sid:<input type="text" id="bansid" value="DESKTOPWIN"></p>
+    <p>sid:<input type="text" id="bansid" value="sxxxxx"></p>
     <button type="button" onclick="banlist()">Run</button>
     <p>response</p>
     <textarea id="banlistRes"></textarea>
-    
+
     <script src="./script.js"></script>
     <script>
         if (localStorage.getItem("auth")) {
@@ -61,15 +63,15 @@
         }
         var Account;
         const create = async () => {
-            try{Account.closeSocket()}catch{}
+            try { Account.closeSocket() } catch { }
             Account = new LineTCompactSocket("/SQ1", document.getElementById("auth").value, document.getElementById("device").value)
         }
-        
+
         const ticket = async () => {
             if (Account) {
-            localStorage.setItem("auth",document.getElementById("auth").value)
-            localStorage.setItem("device",document.getElementById("device").value)
-                let v = {invitationTicket:document.getElementById("ticket").value}
+                localStorage.setItem("auth", document.getElementById("auth").value)
+                localStorage.setItem("device", document.getElementById("device").value)
+                let v = { invitationTicket: document.getElementById("ticket").value }
                 let n = "findSquareByInvitationTicket"
                 let tjson = await Account.postRequestAndGetResponse(v, n)
                 document.getElementById("ticketRes").value = JSON.stringify(tjson, null, 2)
@@ -79,9 +81,9 @@
         }
         const joined = async () => {
             if (Account) {
-            localStorage.setItem("auth",document.getElementById("auth").value)
-            localStorage.setItem("device",document.getElementById("device").value)
-                let v = {limit:100}
+                localStorage.setItem("auth", document.getElementById("auth").value)
+                localStorage.setItem("device", document.getElementById("device").value)
+                let v = { limit: 100 }
                 let n = "getJoinedSquares"
                 let tjson = await Account.postRequestAndGetResponse(v, n)
                 document.getElementById("joinedRes").value = JSON.stringify(tjson, null, 2)
@@ -89,6 +91,25 @@
                 alert("click [Login] first")
             }
         }
+        const banlist = async () => {
+            if (Account) {
+                localStorage.setItem("auth", document.getElementById("auth").value)
+                localStorage.setItem("device", document.getElementById("device").value)
+                let v = {
+                    "squareMid": document.getElementById("bansid").value,
+                    "searchOption": {
+                        "membershipState": 6
+                    },
+                    "limit": 200
+                }
+                let n = "searchSquareMembers"
+                let tjson = await Account.postRequestAndGetResponse(v, n)
+                document.getElementById("banlistRes").value = JSON.stringify(tjson, null, 2)
+            } else {
+                alert("click [Login] first")
+            }
+        }
     </script>
 </body>
+
 </html>

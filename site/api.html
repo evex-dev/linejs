@@ -61,7 +61,6 @@
         }
         var Account;
         const create = async () => {
-            try{Account.closeSocket()}catch{}
             Account = new LineTCompactSocket(document.getElementById("path").value, document.getElementById("auth").value, document.getElementById("device").value)
         }
         const main = async () => {

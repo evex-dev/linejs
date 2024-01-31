@@ -48,7 +48,7 @@ class LineTCompactSocket {
         let account = { path: gwPath, auth: authToken, ua: UA, type: appName }
         this.socket.post = new WebSocket("wss://parse-tcompact.deno.dev/post?" + new URLSearchParams(account).toString())
         this.socket.post.onopen = (e) => {
-            this.socketInfo.post = { status: "open" }
+            this.socketInfo.post = { status: "open", waitFunc: {} }
         };
         this.socket.post.onclose = (e) => {
             this.socketInfo.post.status = false
@@ -57,72 +57,24 @@ class LineTCompactSocket {
         this.socket.post.onclose = (e) => {
             this.socketInfo.post = { status: false }
         };
-
-
-        this.socket.j2t = new WebSocket(`wss://parse-tcompact.deno.dev/j2t`)
-        this.socket.j2t.onopen = (e) => {
-            this.socketInfo.j2t = { status: "open" }
-        };
-        this.socket.j2t.onclose = (e) => {
-            this.socketInfo.j2t = { status: "open" }
-        };
-        this.socket.j2t.onmessage = null
-
-
-        this.socket.t2j = new WebSocket(`wss://parse-tcompact.deno.dev/t2j`)
-        this.socket.t2j.onopen = (e) => {
-            this.socketInfo.t2j = { status: "open" }
-        };
-        this.socket.t2j.onclose = (e) => {
-            this.socketInfo.t2j = { status: false }
-        };
-        this.socket.t2j.onmessage = null
-    }
-    isOpen() {
-        try {
-            if ((this.socketInfo.j2t.status === "open") + (this.socketInfo.t2j.status === "open") + (this.socketInfo.post.status === "open") === 3) {
-                return true
-            }
-        } catch (e) {
-        }
-        return false
     }
     closeSocket() {
-        try {
-            this.socket.j2t.close()
-        } catch (e) {
-        }
-        try {
-            this.socket.t2j.close()
-        } catch (e) {
-        }
         try {
             this.socket.post.close()
         } catch (e) {
         }
     }
-    j2t(data) {
-        return new Promise((resolve, reject) => {
-            send(this.socket.j2t, data, resolve)
-        })
-    }
     post(data) {
         return new Promise((resolve, reject) => {
-            send(this.socket.post, data, resolve)
-        })
-    }
-    t2j(data) {
-        return new Promise((resolve, reject) => {
-            send(this.socket.t2j, data, resolve)
+            data.id = Date.now()
+            send(this.socket.post,this.socketInfo.post.waitFunc, data, resolve)
         })
     }
     postParseThrift = async (data) => {
-        let reqJson, reqTCompact, resTCompact, resJson;
-        reqJson = JSON.stringify(data)
+        let reqJson, resJson;
+        reqJson = data
         try {
-            reqTCompact = await this.j2t(reqJson)
-            resTCompact = await this.post(reqTCompact)
-            resJson = JSON.parse(await this.t2j(resTCompact))
+            resJson = JSON.parse(await this.post(reqJson))
         } catch (error) {
             return new Error("server error")
         }
@@ -133,28 +85,20 @@ class LineTCompactSocket {
         let response = await this.postParseThrift(request)
         return response
     }
-}
-
-const send = (socket, data, returnFunc) => {
-    if (socket.readyState === socket.OPEN) {
-        if (socket.onmessage) {
-            let interval = setInterval(() => {
-                if (socket.onmessage) {
-                } else {
-                    socket.send(data)
-                    socket.onmessage = (e) => {
-                        socket.onmessage = null
-                        returnFunc(e.data)
-                    }
-                    clearInterval(interval)
-                }
-            }, 10)
-        } else {
-            socket.send(data)
-            socket.onmessage = (e) => {
-                socket.onmessage = null
+    send = (socket, FuncMap, data, returnFunc) => {
+        if (socket.readyState === socket.OPEN) {
+            socket.send(JSON.stringify(data))
+            FuncMap[data.id] = (e) => {
                 returnFunc(e.data)
             }
-        }
-    } else { return new Error("socket not open") }
+            socket.onmessage = (e) => {
+                try {
+                    let j = JSON.stringify(e.data)
+                    FuncMap[j.id](e)
+                } catch (error) {
+                }
+            }
+        } else { return new Error("socket not open") }
+    }
 }
+
