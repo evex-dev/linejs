@@ -51,7 +51,7 @@ function readThrift(data) {
     // Replace ChatMessageData with your own thrift structure
     return {value:tdata,name:Lname,type:outType.toString()}
 }
-function object2json(data) {
+export function object2json(data) {
     const keys = Object.keys(data)
     let returnJson = {}
     if (data.forEach) {

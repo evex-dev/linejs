@@ -1,6 +1,8 @@
 
 import write from "./write_deno.js"
 import read from "./read_deno.js"
+import {object2json} from "./read_deno.js"
+
 export default async function ws(request) {
     const url = new URL(request.url)
     var auth, ua, type, path;
@@ -53,7 +55,7 @@ export default async function ws(request) {
             let resp = await post(event.data);
             socket.send(resp)
         } catch (e) {
-            socket.send(e)
+            socket.send(object2json(e))
         }
     };
     return response

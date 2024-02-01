@@ -1,6 +1,4 @@
 
-import write from "./write_deno.js"
-import read from "./read_deno.js"
 import ws from "./dnowork.js"
 
 export async function handler(request) {
