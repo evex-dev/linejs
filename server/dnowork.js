@@ -15,11 +15,13 @@ export default async function ws(request) {
         return new Response('Expected Upgrade: websocket', { status: 426 });
     }
     async function post(req) {
-        let json = JSON.parse(req)
-        let res = {}
-        let id = json.id
+        let json,res,id;
+        try{
+        json = JSON.parse(req)
+        res = {}
+        id = json.id
         json["type"] = 1
-        try {
+        
             const Trequest = write(json)
             const fet = await fetch("https://gw.line.naver.jp" + path, {
                 method: 'POST',
@@ -42,8 +44,7 @@ export default async function ws(request) {
             res = read(res)
             res.id = id
         } catch (error) {
-            console.log(error);
-            res.err = error
+            res.err = object2json(error)
             res.id = id
         }
 
@@ -55,7 +56,7 @@ export default async function ws(request) {
             let resp = await post(event.data);
             socket.send(resp)
         } catch (e) {
-            socket.send(JSON.stringify(object2json(e)))
+            socket.send('{"server":"error"}')
         }
     };
     return response
