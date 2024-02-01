@@ -1,4 +1,6 @@
 
+import write from "./write_deno.js"
+import read from "./read_deno.js"
 export default async function ws(request) {
     const url = new URL(request.url)
     var auth, ua, type, path;
