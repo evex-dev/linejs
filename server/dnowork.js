@@ -44,7 +44,7 @@ export default async function ws(request) {
             res = read(res)
             res.id = id
         } catch (error) {
-            res.err = object2json(error)
+            res.err = error.stack
             res.id = id
         }
 
