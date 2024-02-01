@@ -73,11 +73,7 @@ class LineTCompactSocket {
     postParseThrift = async (data) => {
         let reqJson, resJson;
         reqJson = data
-        try {
-            resJson = JSON.parse(await this.post(reqJson))
-        } catch (error) {
-            return new Error("server error")
-        }
+        resJson = JSON.parse(await this.post(reqJson))
         return resJson
     }
     postRequestAndGetResponse = async (data, methodName) => {
@@ -93,12 +89,12 @@ class LineTCompactSocket {
             }
             socket.onmessage = (e) => {
                 try {
-                    let j = JSON.stringify(e.data)
+                    let j = JSON.parse(e.data)
                     FuncMap[j.id](e)
                 } catch (error) {
                 }
             }
-        } else { return new Error("socket not open") }
+        } else { throw new Error("socket not open") }
     }
 }
 
