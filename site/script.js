@@ -67,7 +67,7 @@ class LineTCompactSocket {
     post(data) {
         return new Promise((resolve, reject) => {
             data.id = Date.now()
-            this.send(this.socket.post,this.socketInfo.post.waitFunc, data, resolve)
+            this.send(this.socket.post, this.socketInfo.post.waitFunc, data, resolve)
         })
     }
     postParseThrift = async (data) => {
@@ -79,7 +79,49 @@ class LineTCompactSocket {
     postRequestAndGetResponse = async (data, methodName) => {
         let request = { value: data, name: methodName, type: 1 }
         let response = await this.postParseThrift(request)
-        return response
+        return response.value
+    }
+    postRequestAndGetContinueResponse = async (data, methodName) => {
+        let responseList = []
+        let addKeys = []
+        let noAddKeys = []
+        let request = { value: data, name: methodName, type: 1 }
+        let response = await this.postParseThrift(request)
+        responseList.push(response.value)
+        while (response.value.continuationToken) {
+            request.value.continuationToken = response.value.continuationToken
+            response = await this.postParseThrift(request)
+            responseList.push(response.value)
+        }
+        Object.keys(responseList[0]).forEach((e) => {
+            if ((typeof responseList[0][e]) == "object") {
+                addKeys.push(e)
+            } else {
+                noAddKeys.push(e)
+            }
+        })
+        let returnjson = {}
+        responseList.forEach((e) => {
+            noAddKeys.forEach((f) => {
+                returnjson[f] = e[f]
+            })
+            addKeys.forEach((g)=>{
+                if (e[g].forEach) {
+                    if (returnjson[g]) {
+                        returnjson[g]=[...returnjson[g],...e[g]]
+                    } else {
+                        returnjson[g]=e[g]
+                    }
+                } else {
+                    if (returnjson[g]) {
+                        returnjson[g]={...returnjson[g],...e[g]}
+                    } else {
+                        returnjson[g]=e[g]
+                    }
+                }
+            })
+        })
+        return returnjson
     }
     send = (socket, FuncMap, data, returnFunc) => {
         if (socket.readyState === socket.OPEN) {
@@ -91,6 +133,7 @@ class LineTCompactSocket {
                 try {
                     let j = JSON.parse(e.data)
                     FuncMap[j.id](e)
+                    delete FuncMap[j.id]
                 } catch (error) {
                 }
             }

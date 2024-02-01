@@ -10,11 +10,85 @@
 </head>
 
 <body>
-    <style>
+    <style id="css">
+        .dicon {
+            position: relative;
+            border-radius: 9999px;
+            width: 50px;
+        }
+
+        span {
+            display: flex;
+        }
+
+        .m1 {
+            position: absolute;
+            transform: translate(150%, 150%);
+            width: 20px;
+            height: 20px;
+            background-image: url(https://static.line-scdn.net/Openchat-Real/edge/img/sp_common_8b9733f297.png);
+            background-size: 262px 230px;
+            background-position: -242px -22px;
+            background-repeat: no-repeat;
+        }
+
+        .m2 {
+            position: absolute;
+            transform: translate(150%, 150%);
+            width: 20px;
+            height: 20px;
+            background-image: url(https://static.line-scdn.net/Openchat-Real/edge/img/sp_common_8b9733f297.png);
+            background-size: 262px 230px;
+            background-position: -242px 0;
+            background-repeat: no-repeat;
+        }
+
+        .m10 {
+            position: absolute;
+            transform: translate(150%, 150%);
+            margin-right: 1px;
+            width: 20px;
+            height: 20px;
+            background-image: url(https://static.line-scdn.net/Openchat-Real/edge/img/sp_common_f44fa3154d.svg);
+            background-size: 294px 269px;
+            background-position: -267px -130px;
+            background-repeat: no-repeat;
+        }
+
+        .ms6 {
+            position: absolute;
+            transform: translate(0%, 150%);
+            width: 20px;
+            height: 20px;
+            background-image: url(https://static.line-scdn.net/Openchat-Real/edge/img/sp_cover_1bcfc6476a.svg);
+            background-size: 144px 101px;
+            background-position: -87px -13px;
+            background-repeat: no-repeat;
+        }
+
         .out {
             max-width: 98%;
             width: 98%;
             height: 90vh;
+        }
+
+        iframe {
+            max-width: 98%;
+            width: 98%;
+            height: 50vh;
+        }
+
+        .no-margin {
+            margin: 0px;
+        }
+
+        .indent {
+            margin: 20px;
+        }
+
+        .icon {
+            border-radius: 9999px;
+            width: 50px;
         }
 
         textarea {
@@ -41,18 +115,30 @@
     <p>ticket:<input type="text" id="ticket" value="7Qk6whxscVanCRV7Gn8kDI6s0TmxJIpxbo2z8Q"></p>
     <button type="button" onclick="ticket()">Run</button>
     <p>response</p>
-    <textarea id="ticketRes"></textarea>
+    <iframe id="ticketRes"></iframe>
 
     <h5>参加オプ一覧</h5>
     <button type="button" onclick="joined()">Run</button>
     <p>response</p>
-    <textarea id="joinedRes"></textarea>
+    <iframe id="joinedRes"></iframe>
 
     <h5>再参加禁止リスト取得</h5>
     <p>sid:<input type="text" id="bansid" value="sxxxxx"></p>
     <button type="button" onclick="banlist()">Run</button>
     <p>response</p>
-    <textarea id="banlistRes"></textarea>
+    <iframe id="banlistRes"></iframe>
+
+    <h5>メンバー一覧取得</h5>
+    <p>chatMid:<input type="text" id="memcid" value="mxxxxx"></p>
+    <button type="button" onclick="memberlist()">Run</button>
+    <p>response</p>
+    <iframe id="memberRes"></iframe>
+
+    <h5>トーク取得</h5>
+    <p>chatMid:<input type="text" id="chatmid" value="mxxxxx"></p>
+    <button type="button" onclick="chat()">Run</button>
+    <p>response</p>
+    <textarea id="chatRes"></textarea>
 
     <script src="./script.js"></script>
     <script>
@@ -65,36 +151,94 @@
         const create = async () => {
             try { Account.closeSocket() } catch { }
             Account = new LineTCompactSocket("/SQ1", document.getElementById("auth").value, document.getElementById("device").value)
+            localStorage.setItem("auth", document.getElementById("auth").value)
+            localStorage.setItem("device", document.getElementById("device").value)
         }
-
+        const getValue = (obj, key) => {
+            obj = JSON.parse(JSON.stringify(obj))
+            key.split(".").forEach((e) => {
+                obj = obj[e]
+            })
+            return obj
+        }
+        const forEachHTML = (array, elm) => {
+            let baseHTML = `<head><meta charset="UTF-8"><meta http-equiv="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body><style>${document.getElementById("css").innerHTML}</style>`
+            array.forEach((e) => {
+                let html = elm.html
+                elm.keys.forEach((f) => { html = html.replace("{v}", getValue(e, f)) })
+                baseHTML += html
+            })
+            return baseHTML + "</body>"
+        }
+        const makeHTML = (obj, elm) => {
+            let html = `<head><meta charset="UTF-8"><meta http-equiv="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body><style>${document.getElementById("css").innerHTML}</style>${elm.html}</body>`
+            elm.keys.forEach((f) => { html = html.replace("{v}", getValue(obj, f)) })
+            return html
+        }
         const ticket = async () => {
             if (Account) {
-                localStorage.setItem("auth", document.getElementById("auth").value)
-                localStorage.setItem("device", document.getElementById("device").value)
                 let v = { invitationTicket: document.getElementById("ticket").value }
                 let n = "findSquareByInvitationTicket"
                 let tjson = await Account.postRequestAndGetResponse(v, n)
-                document.getElementById("ticketRes").value = JSON.stringify(tjson, null, 2)
+                document.getElementById("ticketRes").contentWindow.document.documentElement.innerHTML = makeHTML(tjson.square, {
+                    html:
+                        `<div class="">
+        <h3 class="no-margin">
+        <img class="icon no-margin" src="https://obs.line-scdn.net/{v}/preview">
+        <a href="{v}">{v}</a></h3>
+        <p class="no-margin">{v}</p>
+    </div>`,
+                    keys: ["profileImageObsHash", "invitationURL", "name", "mid"]
+                })
             } else {
                 alert("click [Login] first")
             }
         }
         const joined = async () => {
             if (Account) {
-                localStorage.setItem("auth", document.getElementById("auth").value)
-                localStorage.setItem("device", document.getElementById("device").value)
                 let v = { limit: 100 }
                 let n = "getJoinedSquares"
-                let tjson = await Account.postRequestAndGetResponse(v, n)
-                document.getElementById("joinedRes").value = JSON.stringify(tjson, null, 2)
+                let tjson = await Account.postRequestAndGetContinueResponse(v, n)
+                document.getElementById("joinedRes").contentWindow.document.documentElement.innerHTML = forEachHTML(tjson.squares, {
+                    html:
+                        `<div class="indent">
+        <h3 class="no-margin">
+        <img class="icon no-margin" src="https://obs.line-scdn.net/{v}/preview">
+        <a href="{v}">{v}</a></h3>
+        <p class="no-margin">{v}</p>
+    </div>`,
+                    keys: ["profileImageObsHash", "invitationURL", "name", "mid"]
+                })
+            } else {
+                alert("click [Login] first")
+            }
+        }
+        const memberlist = async () => {
+            if (Account) {
+                let v = {
+                    "squareChatMid": document.getElementById("memcid").value,
+                    "limit": 200
+                }
+                let n = "getSquareChatMembers"
+                let tjson = await Account.postRequestAndGetContinueResponse(v, n)
+                document.getElementById("memberRes").contentWindow.document.documentElement.innerHTML = forEachHTML(tjson.squareChatMembers, {
+                    html:
+                        `<div class="indent">
+        <div class="dicon">
+        <span class="m{v}"></span>
+        <img class="icon no-margin" src="https://obs.line-scdn.net/{v}/preview">
+        </div>
+        <h3 class="no-margin">{v}</h3>
+        <p class="no-margin">{v}</p>
+    </div>`,
+                    keys: ["role", "profileImageObsHash", "displayName", "squareMemberMid"]
+                })
             } else {
                 alert("click [Login] first")
             }
         }
         const banlist = async () => {
             if (Account) {
-                localStorage.setItem("auth", document.getElementById("auth").value)
-                localStorage.setItem("device", document.getElementById("device").value)
                 let v = {
                     "squareMid": document.getElementById("bansid").value,
                     "searchOption": {
@@ -103,12 +247,37 @@
                     "limit": 200
                 }
                 let n = "searchSquareMembers"
-                let tjson = await Account.postRequestAndGetResponse(v, n)
-                document.getElementById("banlistRes").value = JSON.stringify(tjson, null, 2)
+                let tjson = await Account.postRequestAndGetContinueResponse(v, n)
+                document.getElementById("banlistRes").contentWindow.document.documentElement.innerHTML = forEachHTML(tjson.members, {
+                    html:
+                    `<div class="indent">
+        <div class="dicon">
+        <span class="m{v}"></span><span class="ms{v}"></span>
+        <img class="icon no-margin" src="https://obs.line-scdn.net/{v}/preview">
+        </div>
+        <h3 class="no-margin">{v}</h3>
+        <p class="no-margin">{v}</p>
+    </div>`,
+                    keys: ["role","membershipState", "profileImageObsHash", "displayName", "squareMemberMid"]
+                })
             } else {
                 alert("click [Login] first")
             }
         }
+        const chat = async () => {
+            if (Account) {
+                let v = {
+                    "squareChatMid": document.getElementById("chatmid").value,
+                    "limit": 200
+                }
+                let n = "fetchSquareChatEvents"
+                let tjson = await Account.postRequestAndGetResponse(v, n)
+                document.getElementById("chatRes").value=JSON.stringify(tjson,null,2)
+            } else {
+                alert("click [Login] first")
+            }
+        }
+
     </script>
 </body>
 
