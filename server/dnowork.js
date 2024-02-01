@@ -55,7 +55,7 @@ export default async function ws(request) {
             let resp = await post(event.data);
             socket.send(resp)
         } catch (e) {
-            socket.send(object2json(e))
+            socket.send(JSON.stringify(object2json(e)))
         }
     };
     return response
