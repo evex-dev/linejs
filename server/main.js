@@ -10,16 +10,11 @@ export async function handler(request) {
     default:
       break;
   }
-
-  switch (url.pathname) {
-    case "/api":
-      return new Response(await Deno.readTextFile("./site/api.html"), { headers: { "content-type": "text/html" } });
-    case "/script.js":
-      return new Response(await Deno.readTextFile("./site/script.js"), { headers: { "content-type": "appliction/script" } });
-    default:
-      break;
+  try {
+    return new Response(await Deno.readTextFile("./site"+url.pathname), { headers: { "content-type": "text/html" } });
+  } catch (error) {
   }
-  return new Response(await Deno.readTextFile("./site/index.html"), { headers: { "content-type": "text/html" } })
+    return new Response(await Deno.readTextFile("./site/index.html"), { headers: { "content-type": "text/html" ,"server":"error"} })
 }
 
 

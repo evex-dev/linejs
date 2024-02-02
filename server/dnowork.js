@@ -1,7 +1,6 @@
 
 import write from "./write_deno.js"
 import read from "./read_deno.js"
-import {object2json} from "./read_deno.js"
 
 export default async function ws(request) {
     const url = new URL(request.url)
@@ -60,4 +59,8 @@ export default async function ws(request) {
         }
     };
     return response
+}
+
+export async function interval(data){
+
 }

@@ -33,7 +33,6 @@ function readThrift(data) {
     let Lname = Ltype
     Ltype = Ltype.substr(0, 1).toUpperCase() + Ltype.substr(1) + type
     data = data.slice(len + r)
-    console.log(Ltype)
     // Use frame transport to read
     const Transport = thrift.TFramedTransport
     const Protocol = thrift.TCompactProtocol
