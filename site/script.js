@@ -70,18 +70,18 @@ class LineTCompactSocket {
             this.send(this.socket.post, this.socketInfo.post.waitFunc, data, resolve)
         })
     }
-    postParseThrift = async (data) => {
+    async postParseThrift(data) {
         let reqJson, resJson;
         reqJson = data
         resJson = JSON.parse(await this.post(reqJson))
         return resJson
     }
-    postRequestAndGetResponse = async (data, methodName) => {
+    async postRequestAndGetResponse(data, methodName) {
         let request = { value: data, name: methodName, type: 1 }
         let response = await this.postParseThrift(request)
         return response.value
     }
-    postRequestAndGetContinueResponse = async (data, methodName) => {
+    async postRequestAndGetContinueResponse(data, methodName) {
         let responseList = []
         let addKeys = []
         let noAddKeys = []
@@ -90,6 +90,7 @@ class LineTCompactSocket {
         responseList.push(response.value)
         while (response.value.continuationToken) {
             request.value.continuationToken = response.value.continuationToken
+            request.value.syncToken = response.value.syncToken
             response = await this.postParseThrift(request)
             responseList.push(response.value)
         }
@@ -105,25 +106,25 @@ class LineTCompactSocket {
             noAddKeys.forEach((f) => {
                 returnjson[f] = e[f]
             })
-            addKeys.forEach((g)=>{
+            addKeys.forEach((g) => {
                 if (e[g].forEach) {
                     if (returnjson[g]) {
-                        returnjson[g]=[...returnjson[g],...e[g]]
+                        returnjson[g] = [...returnjson[g], ...e[g]]
                     } else {
-                        returnjson[g]=e[g]
+                        returnjson[g] = e[g]
                     }
                 } else {
                     if (returnjson[g]) {
-                        returnjson[g]={...returnjson[g],...e[g]}
+                        returnjson[g] = { ...returnjson[g], ...e[g] }
                     } else {
-                        returnjson[g]=e[g]
+                        returnjson[g] = e[g]
                     }
                 }
             })
         })
         return returnjson
     }
-    send = (socket, FuncMap, data, returnFunc) => {
+    send(socket, FuncMap, data, returnFunc) {
         if (socket.readyState === socket.OPEN) {
             socket.send(JSON.stringify(data))
             FuncMap[data.id] = (e) => {
@@ -141,3 +142,67 @@ class LineTCompactSocket {
     }
 }
 
+class LineSquareClient {
+    constructor(authToken, device) {
+        this.SQ1 = new LineTCompactSocket("/SQ1", authToken, device)
+    }
+    async findSquareByInvitationTicket(ticket) {
+        let v = { invitationTicket: ticket }
+        let n = "findSquareByInvitationTicket"
+        return await this.SQ1.postRequestAndGetResponse(v, n)
+    }
+    async getJoinedSquares() {
+        let v = { limit: 100 }
+        let n = "getJoinedSquares"
+        return await this.SQ1.postRequestAndGetContinueResponse(v, n)
+    }
+    async searchSquareMembers(squareMid, searchOption = {}) {
+        let v = {
+            squareMid: squareMid,
+            searchOption: searchOption,
+            limit: 200
+        }
+        let n = "searchSquareMembers"
+        return await this.SQ1.postRequestAndGetContinueResponse(v, n)
+    }
+    async getBannedMembers(squareMid, searchOption = { "membershipState": 6 }) {
+        return await this.searchSquareMembers(squareMid, searchOption)
+    }
+    async sendTxtMessage(squareChatMid, text, contentMetadata = {}, reqSeq = 1) {
+        let v = {
+            squareChatMid: squareChatMid,
+            reqSeq: reqSeq,
+            squareMessage: {
+                message: {
+                    to: squareChatMid,
+                    text: text,
+                    contentMetadata: contentMetadata,
+                    contentType: 0
+                },
+                toType: 4,
+            }
+        }
+        let n = "sendMessage"
+        return await this.SQ1.postRequestAndGetResponse(v, n)
+    }
+    async fetchMyEvents(syncToken = 1) {
+        let v = {
+            syncToken: syncToken,
+            limit: 200
+        }
+        let n = "fetchMyEvents"
+        return await this.SQ1.postRequestAndGetContinueResponse(v, n)
+    }
+    async fetchSquareChatEvents(squareChatMid, syncToken) {
+        let v = {
+            squareChatMid: squareChatMid,
+            limit: 200
+        }
+        if (syncToken) {
+            v.syncToken = syncToken
+        }
+        let n = "fetchSquareChatEvents"
+        return await Account.postRequestAndGetResponse(v, n)
+    }
+
+}

@@ -250,7 +250,7 @@
                 let tjson = await Account.postRequestAndGetContinueResponse(v, n)
                 document.getElementById("banlistRes").contentWindow.document.documentElement.innerHTML = forEachHTML(tjson.members, {
                     html:
-                    `<div class="indent">
+                        `<div class="indent">
         <div class="dicon">
         <span class="m{v}"></span><span class="ms{v}"></span>
         <img class="icon no-margin" src="https://obs.line-scdn.net/{v}/preview">
@@ -258,7 +258,7 @@
         <h3 class="no-margin">{v}</h3>
         <p class="no-margin">{v}</p>
     </div>`,
-                    keys: ["role","membershipState", "profileImageObsHash", "displayName", "squareMemberMid"]
+                    keys: ["role", "membershipState", "profileImageObsHash", "displayName", "squareMemberMid"]
                 })
             } else {
                 alert("click [Login] first")
@@ -272,12 +272,33 @@
                 }
                 let n = "fetchSquareChatEvents"
                 let tjson = await Account.postRequestAndGetResponse(v, n)
-                document.getElementById("chatRes").value=JSON.stringify(tjson,null,2)
+                document.getElementById("chatRes").value = JSON.stringify(tjson, null, 2)
             } else {
                 alert("click [Login] first")
             }
         }
-
+        const send = async () => {
+            if (Account) {
+                let v = {
+                    "squareChatMid": document.getElementById("sendmid").value,
+                    "reqSeq": 3077388,
+                    "squareMessage": {
+                        "message": {
+                            "to": document.getElementById("sendmid").value,
+                            "text":document.getElementById("sendtxt").value,
+                            "contentMetadata": {},
+                            "contentType": 0
+                        },
+                        "toType": 4,
+                    }
+                }
+                let n = "sendMessage"
+                let tjson = await Account.postRequestAndGetResponse(v, n)
+                document.getElementById("chatRes").value = JSON.stringify(tjson, null, 2)
+            } else {
+                alert("click [Login] first")
+            }
+        }
     </script>
 </body>
 
