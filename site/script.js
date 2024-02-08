@@ -70,10 +70,21 @@ class LineTCompactSocket {
             this.send(this.socket.post, this.socketInfo.post.waitFunc, data, resolve)
         })
     }
+    postAndCheckResponse(data) {
+        return new Promise((resolve, reject) => {
+            this.post(data).then((r)=>{
+                if (r.err) {
+                    reject(r.err)
+                } else {
+                    resolve(r)
+                }
+            })
+        })
+    }
     async postParseThrift(data) {
         let reqJson, resJson;
         reqJson = data
-        resJson = JSON.parse(await this.post(reqJson))
+        resJson = JSON.parse(await this.postAndCheckResponse(reqJson))
         return resJson
     }
     async postRequestAndGetResponse(data, methodName) {
