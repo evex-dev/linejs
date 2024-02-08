@@ -74,7 +74,7 @@ class LineTCompactSocket {
         return new Promise((resolve, reject) => {
             this.post(data).then((r)=>{
                 if (r.err) {
-                    reject(r.err)
+                    throw new Error(r.err)
                 } else {
                     resolve(r)
                 }
@@ -176,8 +176,8 @@ class LineSquareClient {
         let n = "searchSquareMembers"
         return await this.SQ1.postRequestAndGetContinueResponse(v, n)
     }
-    async getBannedMembers(squareMid, searchOption = { "membershipState": 6 }) {
-        return await this.searchSquareMembers(squareMid, searchOption)
+    async getBannedMembers(squareMid) {
+        return await this.searchSquareMembers(squareMid,{ "membershipState": 6 })
     }
     async sendTxtMessage(squareChatMid, text, contentMetadata = {}, reqSeq = 1) {
         let v = {
@@ -194,10 +194,13 @@ class LineSquareClient {
         let n = "sendMessage"
         return await this.SQ1.postRequestAndGetResponse(v, n)
     }
-    async fetchMyEvents(syncToken = 1) {
+    async fetchMyEvents(syncToken) {
         let v = {
             syncToken: syncToken,
             limit: 200
+        }
+        if (!v.syncToken) {
+            delete v.syncToken
         }
         let n = "fetchMyEvents"
         return await this.SQ1.postRequestAndGetContinueResponse(v, n)
