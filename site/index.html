@@ -147,10 +147,11 @@
         } if (localStorage.getItem("device")) {
             document.getElementById("device").value = localStorage.getItem("device")
         }
-        var Account;
+        var Account,LINE;
         const create = async () => {
             try { Account.closeSocket() } catch { }
-            Account = new LineTCompactSocket("/SQ1", document.getElementById("auth").value, document.getElementById("device").value)
+            LINE = new LineSquareClient(document.getElementById("auth").value, document.getElementById("device").value)
+            Account = LINE.SQ1
             localStorage.setItem("auth", document.getElementById("auth").value)
             localStorage.setItem("device", document.getElementById("device").value)
         }

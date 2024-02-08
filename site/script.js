@@ -170,18 +170,16 @@ class LineSquareClient {
     }
     async sendTxtMessage(squareChatMid, text, contentMetadata = {}, reqSeq = 1) {
         let v = {
-            squareChatMid: squareChatMid,
             reqSeq: reqSeq,
+            squareChatMid: squareChatMid,
             squareMessage: {
-                message: {
-                    to: squareChatMid,
-                    text: text,
-                    contentMetadata: contentMetadata,
-                    contentType: 0
-                },
-                toType: 4,
+                    message:{
+                      to: squareChatMid,
+                      contentType: 0,
+                      text:text,
+                      contentMetadata: contentMetadata
+                  }},
             }
-        }
         let n = "sendMessage"
         return await this.SQ1.postRequestAndGetResponse(v, n)
     }

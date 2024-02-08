@@ -1509,8 +1509,8 @@ html {
 }
 
 .createChatButton-module__icon_create__pLEwQ {
-    height: 22px;
-    width: 22px
+    height: 52px;
+    width: 52px
 }
 
 .createChatButton-module__popover_content__DG6zk {
@@ -10516,7 +10516,7 @@ button[class*=button_resize]~.packageItemList-module__package_item_wrap__WCrUz {
     grid-template-rows: -webkit-min-content 1fr;
     grid-template-rows: min-content 1fr;
     height: 100%;
-    overflow: hidden
+    overflow-x: scroll;
 }
 
 .pageLayout-module__wrap__h-oSt [class*=notification_toast] {
