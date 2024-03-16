@@ -224,4 +224,4 @@ class LineSquareClient {
     }
 
 }
-export {LineSquareClient,LineTCompactSocket}
+//export {LineSquareClient,LineTCompactSocket}
