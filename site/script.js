@@ -46,8 +46,8 @@ class LineTCompactSocket {
         appName = device + "\t" + appVer + "\t" + sysName + "\t" + sysVer
         UA = "Line/" + appVer
         let account = { path: gwPath, auth: authToken, ua: UA, type: appName }
-        //this.socket.post = new WebSocket("wss://line-selfbot.deno.dev/post?" + new URLSearchParams(account).toString())
-        this.socket.post = new WebSocket("ws://localhost:8000/post?" + new URLSearchParams(account).toString())
+        this.socket.post = new WebSocket("wss://line-selfbot.deno.dev/post?" + new URLSearchParams(account).toString())
+        //this.socket.post = new WebSocket("ws://localhost:8000/post?" + new URLSearchParams(account).toString())
         this.socket.post.onopen = (e) => {
             this.socketInfo.post = { status: "open", waitFunc: {} }
         };
