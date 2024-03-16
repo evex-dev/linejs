@@ -2724,6 +2724,7 @@ div[class*=push_notice_area]~.chatroomNotice-module__notice_area__2CN4p:not([dat
     flex-direction: column;
     grid-area: room;
     min-width: 375px;
+    min-height: 100%;
     overflow-y: overlay
 }
 
@@ -12604,4 +12605,11 @@ h2 {
     color: #758295;
     line-height: 1.5;
     width: 230px
+}
+.chatTxtIn{
+    max-width: 100%;
+    min-width: 100%;
+}
+.sendButton{
+    fill: #2131df;
 }

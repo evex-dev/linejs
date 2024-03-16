@@ -1,4 +1,4 @@
-const chatlist = (mid, top, obs, memberCount, lastTime, unreadCount) => {
+const chatlist = (mid, top, obs, memberCount, lastTime, unreadCount,chatname,lastText) => {
     let unread = `<span class="chatlistItem-module__message_count__FRt4s">${unreadCount}</span>`
     if (!unreadCount) {
         unreadCount = ""
@@ -21,13 +21,12 @@ const chatlist = (mid, top, obs, memberCount, lastTime, unreadCount) => {
     <div class="chatlistItem-module__info__nHGhi"><strong
             class="chatlistItem-module__title_box__aDNJD"><span
                 class="chatlistItem-module__text__daDD3">
-                <pre><span>???</span></pre>
+                <pre><span>${chatname}</span></pre>
             </span><span
                 class="chatlistItem-module__member_count__MbL2c">(${memberCount})</span></strong><time
             class="chatlistItem-module__date__tG-MV">${lastTime}</time>
         <div class="chatlistItem-module__description__JH3NE">
-            <p class="chatlistItem-module__text__daDD3"><span
-                    data-message-id="493273039035957493">text</span></p>
+            <p class="chatlistItem-module__text__daDD3">${lastText}</p>
         </div>${unread}
     </div><button type="button" aria-label="Go chatroom"
         class="chatlistItem-module__button_chatlist_item__pcmtA" id="ChatList:${mid}:Go_Button"></button>
@@ -97,46 +96,15 @@ const chatroom = (mid, name,data) => {
                 </svg></i></button>
         ${chatMsgList(mid,data)}
     </div>
-    <div class="chatroomEditor-module__editor_area__1UsgR"><textarea-ex data-is-empty="true"
-            class="text chatroomEditor-module__textarea__yKTlH" spellcheck="false" autofocus=""
-            maxlength="10000" placeholder="メッセージを入力"></textarea-ex>
-        <div class="actionGroup-module__action_box__-HA8N "><button type="button" aria-label="Send file"
-                class="actionGroup-module__button_action__VwNgx" data-type="file" data-tooltip="ファイル送信"
-                data-tooltip-placement="top-start"><i class="icon"><svg width="24" height="24"
-                        viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M11.479 4.971c1.664-1.925 4.658-2.24 6.686-.702.988.749 1.603 1.823 1.73 3.021a4.32 4.32 0 0 1-.908 3.123l-.156.19-8.75 10.125-1.1-.834 8.78-10.158c.566-.655.828-1.47.74-2.3A3.009 3.009 0 0 0 17.3 5.341c-1.382-1.049-3.414-.88-4.615.352l-.134.147-6.762 7.828a1.86 1.86 0 0 0-.458 1.421c.054.513.316.971.744 1.295a2.16 2.16 0 0 0 1.54.418 2.17 2.17 0 0 0 1.296-.597l.123-.131 6.763-7.83a.707.707 0 0 0-.109-1.042.885.885 0 0 0-1.098.046l-.078.078-5.367 6.213-1.043-.954 5.34-6.128a2.316 2.316 0 0 1 3.113-.326 2.034 2.034 0 0 1 .415 2.854l-.102.127-6.763 7.83a3.579 3.579 0 0 1-2.348 1.21 3.578 3.578 0 0 1-2.55-.696 3.192 3.192 0 0 1-1.269-2.22 3.176 3.176 0 0 1 .638-2.26l.142-.176 6.762-7.829z"
-                            fill="#303030"></path>
-                    </svg></i></button><button type="button" aria-label="Capture screen"
-                class="actionGroup-module__button_action__VwNgx" data-type="capture"
-                data-tooltip="画面キャプチャ" data-tooltip-placement="top-start"><i class="icon"><svg
-                        width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path d="M7.077 3.659V16.5a.5.5 0 0 0 .5.5h12.84" stroke="#303030"
-                            stroke-width="1.4" stroke-linecap="square" stroke-linejoin="round"></path>
-                        <path d="M17.824 19.594V6.753a.5.5 0 0 0-.5-.5H4.483" stroke="#303030"
-                            stroke-width="1.4" stroke-linecap="square" stroke-linejoin="round"></path>
-                    </svg></i></button><button type="button" aria-label="Select sticker"
-                class="actionGroup-module__button_action__VwNgx" data-type="sticker" data-tooltip="スタンプ"
-                data-tooltip-placement="top-end"><i class="icon"><svg width="24" height="24"
-                        viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g opacity="0.01" fill="#fff">
-                            <path d="M0 0h24v24H0z"></path>
-                            <path opacity="0.7" d="M2 2h20v20H2z"></path>
-                        </g>
-                        <path
-                            d="M14.843 13.17a.624.624 0 0 0-.853.228 2.76 2.76 0 0 1-4.78 0 .624.624 0 1 0-1.08.625 4.008 4.008 0 0 0 6.94 0 .624.624 0 0 0-.227-.852z"
-                            fill="#303030"></path>
-                        <circle cx="14.266" cy="10.464" r="0.96" fill="#303030"></circle>
-                        <circle cx="8.934" cy="10.464" r="0.96" fill="#303030"></circle>
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                            d="M11.6 3.22a8.88 8.88 0 1 0 8.88 8.88 8.89 8.89 0 0 0-8.88-8.88zm0 16.512a7.632 7.632 0 1 1 7.632-7.632 7.64 7.64 0 0 1-7.632 7.632z"
-                            fill="#303030"></path>
-                        <path
-                            d="M11.6 3.22v-.1.1zm8.88 8.88h.1-.1zm-8.88 7.632v.1-.1zm7.632-7.632h.1-.1zM11.6 3.12a8.98 8.98 0 0 0-8.98 8.98h.2a8.78 8.78 0 0 1 8.78-8.78v-.2zM2.62 12.1a8.98 8.98 0 0 0 8.98 8.98v-.2a8.78 8.78 0 0 1-8.78-8.78h-.2zm8.98 8.98a8.98 8.98 0 0 0 8.98-8.98h-.2a8.78 8.78 0 0 1-8.78 8.78v.2zm8.98-8.98a8.99 8.99 0 0 0-8.98-8.98v.2a8.79 8.79 0 0 1 8.78 8.78h.2zm-8.98 7.532a7.532 7.532 0 0 1-6.96-4.649l-.184.077a7.732 7.732 0 0 0 7.144 4.772v-.2zm-6.96-4.649a7.532 7.532 0 0 1 1.633-8.209l-.142-.141a7.732 7.732 0 0 0-1.675 8.427l.185-.077zm1.633-8.209a7.532 7.532 0 0 1 8.209-1.633l.076-.185a7.732 7.732 0 0 0-8.427 1.677l.142.141zm8.209-1.633a7.532 7.532 0 0 1 4.65 6.959h.2a7.732 7.732 0 0 0-4.774-7.144l-.076.185zm4.65 6.959a7.54 7.54 0 0 1-7.532 7.532v.2a7.74 7.74 0 0 0 7.731-7.732h-.2z"
-                            fill="#303030"></path>
-                    </svg></i></button></div>
-    </div>
+    <div class="chatroomEditor-module__editor_area__1UsgR">
+        <textarea part="input" class="input chatTxtIn" placeholder="メッセージを入力" maxlength="10000" autofocus="" style="--inherited-font-family: -apple-system, BlinkMacSystemFont, &quot;Helvetica Neue&quot;, helvetica, &quot;Hiragino Sans&quot;, arial, &quot;MS PGothic&quot;, sans-serif; --webfont-family: F2176498343;"></textarea>
+        <div class="cover" part="cover" style="--inherited-font-family: -apple-system, BlinkMacSystemFont, &quot;Helvetica Neue&quot;, helvetica, &quot;Hiragino Sans&quot;, arial, &quot;MS PGothic&quot;, sans-serif; --webfont-family: F2176498343;"></div>
+        <div class="actionGroup-module__action_box__-HA8N ">
+        <button type="button" aria-label="Send file" class="actionGroup-module__button_action__VwNgx" data-type="file" data-tooltip="ファイル送信" data-tooltip-placement="top-start"><i class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.479 4.971c1.664-1.925 4.658-2.24 6.686-.702.988.749 1.603 1.823 1.73 3.021a4.32 4.32 0 0 1-.908 3.123l-.156.19-8.75 10.125-1.1-.834 8.78-10.158c.566-.655.828-1.47.74-2.3A3.009 3.009 0 0 0 17.3 5.341c-1.382-1.049-3.414-.88-4.615.352l-.134.147-6.762 7.828a1.86 1.86 0 0 0-.458 1.421c.054.513.316.971.744 1.295a2.16 2.16 0 0 0 1.54.418 2.17 2.17 0 0 0 1.296-.597l.123-.131 6.763-7.83a.707.707 0 0 0-.109-1.042.885.885 0 0 0-1.098.046l-.078.078-5.367 6.213-1.043-.954 5.34-6.128a2.316 2.316 0 0 1 3.113-.326 2.034 2.034 0 0 1 .415 2.854l-.102.127-6.763 7.83a3.579 3.579 0 0 1-2.348 1.21 3.578 3.578 0 0 1-2.55-.696 3.192 3.192 0 0 1-1.269-2.22 3.176 3.176 0 0 1 .638-2.26l.142-.176 6.762-7.829z" fill="#303030"></path></svg></i></button>
+        <button type="button" aria-label="Capture screen" class="actionGroup-module__button_action__VwNgx" data-type="capture" data-tooltip="画面キャプチャ" data-tooltip-placement="top-start"><i class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.077 3.659V16.5a.5.5 0 0 0 .5.5h12.84" stroke="#303030" stroke-width="1.4" stroke-linecap="square" stroke-linejoin="round"></path><path d="M17.824 19.594V6.753a.5.5 0 0 0-.5-.5H4.483" stroke="#303030" stroke-width="1.4" stroke-linecap="square" stroke-linejoin="round"></path></svg></i></button>
+        <button type="button" aria-label="Select sticker" class="actionGroup-module__button_action__VwNgx" data-type="sticker" data-tooltip="スタンプ" data-tooltip-placement="top-end"><i class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g opacity="0.01" fill="#fff"><path d="M0 0h24v24H0z"></path><path opacity="0.7" d="M2 2h20v20H2z"></path></g><path d="M14.843 13.17a.624.624 0 0 0-.853.228 2.76 2.76 0 0 1-4.78 0 .624.624 0 1 0-1.08.625 4.008 4.008 0 0 0 6.94 0 .624.624 0 0 0-.227-.852z" fill="#303030"></path><circle cx="14.266" cy="10.464" r="0.96" fill="#303030"></circle><circle cx="8.934" cy="10.464" r="0.96" fill="#303030"></circle><path fill-rule="evenodd" clip-rule="evenodd" d="M11.6 3.22a8.88 8.88 0 1 0 8.88 8.88 8.89 8.89 0 0 0-8.88-8.88zm0 16.512a7.632 7.632 0 1 1 7.632-7.632 7.64 7.64 0 0 1-7.632 7.632z" fill="#303030"></path><path d="M11.6 3.22v-.1.1zm8.88 8.88h.1-.1zm-8.88 7.632v.1-.1zm7.632-7.632h.1-.1zM11.6 3.12a8.98 8.98 0 0 0-8.98 8.98h.2a8.78 8.78 0 0 1 8.78-8.78v-.2zM2.62 12.1a8.98 8.98 0 0 0 8.98 8.98v-.2a8.78 8.78 0 0 1-8.78-8.78h-.2zm8.98 8.98a8.98 8.98 0 0 0 8.98-8.98h-.2a8.78 8.78 0 0 1-8.78 8.78v.2zm8.98-8.98a8.99 8.99 0 0 0-8.98-8.98v.2a8.79 8.79 0 0 1 8.78 8.78h.2zm-8.98 7.532a7.532 7.532 0 0 1-6.96-4.649l-.184.077a7.732 7.732 0 0 0 7.144 4.772v-.2zm-6.96-4.649a7.532 7.532 0 0 1 1.633-8.209l-.142-.141a7.732 7.732 0 0 0-1.675 8.427l.185-.077zm1.633-8.209a7.532 7.532 0 0 1 8.209-1.633l.076-.185a7.732 7.732 0 0 0-8.427 1.677l.142.141zm8.209-1.633a7.532 7.532 0 0 1 4.65 6.959h.2a7.732 7.732 0 0 0-4.774-7.144l-.076.185zm4.65 6.959a7.54 7.54 0 0 1-7.532 7.532v.2a7.74 7.74 0 0 0 7.731-7.732h-.2z" fill="#303030"></path></svg></i></button>
+        <button type="button" aria-label="Select sticker" class="actionGroup-module__button_action__VwNgx" data-type="send" data-tooltip="送信" data-tooltip-placement="top-end"><i class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path class="sendButton" d="M9.00967 5.12761H11.0097C12.1142 5.12761 13.468 5.89682 14.0335 6.8457L16.5089 11H21.0097C21.562 11 22.0097 11.4477 22.0097 12C22.0097 12.5523 21.562 13 21.0097 13H16.4138L13.9383 17.1543C13.3729 18.1032 12.0191 18.8724 10.9145 18.8724H8.91454L12.4138 13H5.42485L3.99036 15.4529H1.99036L4.00967 12L4.00967 11.967L2.00967 8.54712H4.00967L5.44417 11H12.5089L9.00967 5.12761Z" fill="currentColor" /></svg></i></button>
+        </div></div>
 </div>`
 }
 const chatMsgList = (mid="",data) => {
@@ -214,6 +182,7 @@ const chatMsg = (type = "text",mid = "MID_TEST",data = {}) => {
 const chatMsgs=(datas=[],mid="")=>{
     html=""
     datas.forEach(element => {
-        chatMsg(...element,mid=mid)
+        html+=chatMsg(element[0],mid=mid,element[1])
     });
+    return html
 }

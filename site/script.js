@@ -46,7 +46,8 @@ class LineTCompactSocket {
         appName = device + "\t" + appVer + "\t" + sysName + "\t" + sysVer
         UA = "Line/" + appVer
         let account = { path: gwPath, auth: authToken, ua: UA, type: appName }
-        this.socket.post = new WebSocket("wss://line-selfbot.deno.dev/post?" + new URLSearchParams(account).toString())
+        //this.socket.post = new WebSocket("wss://line-selfbot.deno.dev/post?" + new URLSearchParams(account).toString())
+        this.socket.post = new WebSocket("ws://localhost:8000/post?" + new URLSearchParams(account).toString())
         this.socket.post.onopen = (e) => {
             this.socketInfo.post = { status: "open", waitFunc: {} }
         };
@@ -86,6 +87,11 @@ class LineTCompactSocket {
         reqJson = data
         resJson = JSON.parse(await this.postAndCheckResponse(reqJson))
         return resJson
+    }
+    async postCHRRequestAndGetResponse(data, methodName) {
+        let request = { value: data, name: methodName, type: 3 }
+        let response = await this.postParseThrift(request)
+        return response.value
     }
     async postRequestAndGetResponse(data, methodName) {
         let request = { value: data, name: methodName, type: 1 }
@@ -218,3 +224,4 @@ class LineSquareClient {
     }
 
 }
+export {LineSquareClient,LineTCompactSocket}
