@@ -9,7 +9,7 @@ data = [...data]*/
 
 function XreadX(input) {
     var Thrift = thrift.Thrift;
-    var returnData = ["hey!"];
+    var returnData = ["ThriftDecoderByPirorikinG"];
     input.readStructBegin();
     var ret, ftype, fid;
     try {
