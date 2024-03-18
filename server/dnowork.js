@@ -65,6 +65,9 @@ export default async function ws(request) {
             headers[e]=extraH[e]
         })
     }
+    socket.onopen = ()=>{
+        socket.send(JSON.stringify({headers:headers,path:path}))
+    }
     socket.onmessage = async (event) => {
         try {
             //console.log("[msg] ",event.data)
