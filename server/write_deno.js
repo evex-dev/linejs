@@ -6,7 +6,7 @@ var Thrift = thrift.Thrift;
 
 export default function write(data) {
   let type, b, writedBinary;
-  if (data.type == 0||data.type == 1) {
+  if (data.type == 0 || data.type == 1) {
     if (data.type == 0) {
       type = "Response"
 
@@ -35,19 +35,29 @@ export default function write(data) {
   } else {
     if (data.type == 3) {
       type = "CHRLINE_REQ"
-      console.log(type);
       const Transport = thrift.TBufferedTransport
-    const Protocol = thrift.TCompactProtocol
-    var myBuf = new Buffer([])
-    var buftra = new Transport(myBuf, function (outBuf) {
-      myBuf = Buffer.concat([myBuf, outBuf])
-    })
-    var myprot = new Protocol(buftra)
-    XwriteX(myprot,data.value)
-    myprot.flush()
-    buftra.flush()
-    myBuf = Buffer.concat([new Uint8Array([0x82, 0x21, 1, data.name.length]), Buffer.from(data.name), new Uint8Array([0x1c]), myBuf, new Uint8Array([0])])
-    writedBinary = new Uint8Array([...myBuf])
+      const Protocol = thrift.TCompactProtocol
+      var myBuf = new Buffer([])
+      var buftra = new Transport(myBuf, function (outBuf) {
+        myBuf = Buffer.concat([myBuf, outBuf])
+      })
+      var myprot = new Protocol(buftra)
+      XwriteX(myprot, data.value)
+      myprot.flush()
+      buftra.flush()
+      myBuf = Buffer.concat([new Uint8Array([0x82, 0x21, 1, data.name.length]), Buffer.from(data.name), new Uint8Array([0x1c]), myBuf, new Uint8Array([0])])
+      writedBinary = new Uint8Array([...myBuf])
+    } else {
+      if (data.type == 5) {
+        type = "RAW_REQ"
+        let data;
+        if (data.name == "b64") {
+          data = new Uint8Array([...atob(data.value)].map(s => s.charCodeAt(0)));
+        } else {
+          data = new TextEncoder().encode(data.value)
+        }
+        writedBinary = data
+      }
     }
   }
 
@@ -60,11 +70,11 @@ export default function write(data) {
 }
 // Thrift encoded buffer is ready to use, save or transport
 
-function XwriteX(output, inCHRLINE=[]) {
+function XwriteX(output, inCHRLINE = []) {
   output.writeStructBegin('');
 
-  inCHRLINE.forEach(e=>{
-    POWERRRR(output,e[0],e[1],e[2])
+  inCHRLINE.forEach(e => {
+    POWERRRR(output, e[0], e[1], e[2])
   })
 
   output.writeFieldStop();
@@ -109,20 +119,32 @@ function POWERRRR(output, ftype, fid, val) {
       output.writeFieldEnd();
       break;
 
-      case Thrift.Type.MAP:
-        output.writeFieldBegin('', Thrift.Type.MAP, fid);
-        output.writeMapBegin(val[0], val[1], Thrift.objectLength(val[2]));
-        for (var kiter85 in val[2]) {
-            if (val[2].hasOwnProperty(kiter85)) {
-                var viter86 = val[2][kiter85];
-                POWER(output,val[0],kiter85);
-                POWER(output,val[1],viter86);
-            }
-        } output.writeMapEnd();
-        output.writeFieldEnd();
-        break;
+    case Thrift.Type.MAP:
+      output.writeFieldBegin('', Thrift.Type.MAP, fid);
+      output.writeMapBegin(val[0], val[1], Thrift.objectLength(val[2]));
+      for (var kiter85 in val[2]) {
+        if (val[2].hasOwnProperty(kiter85)) {
+          var viter86 = val[2][kiter85];
+          POWER(output, val[0], kiter85);
+          POWER(output, val[1], viter86);
+        }
+      } output.writeMapEnd();
+      output.writeFieldEnd();
+      break;
 
+    case Thrift.Type.LIST:
+      output.writeFieldBegin('', Thrift.Type.LIST, fit);
+      output.writeListBegin(val[0], val[1].length);
+      for (var iter483 in val[1]) {
+        if (val[1].hasOwnProperty(iter483)) {
+          iter483 = val[1][iter483];
+          POWER(output, val[0], iter483);
+        }
+      } output.writeListEnd();
+      output.writeFieldEnd();
+      break;
     default:
+      console.log(fid,ftype,val,"unknown");
       break;
   }
 }
@@ -154,6 +176,7 @@ function POWER(output, ftype, val) {
       break;
 
     default:
+      console.log(fid,ftype,val,"unknown");
       break;
   }
 }

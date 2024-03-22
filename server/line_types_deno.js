@@ -21497,9 +21497,18 @@ ttypes.GetSquareMembersResponse.prototype.read = function (input) {
         if (ftype == Thrift.Type.STOP) {
             break;
         } switch (fid) {
-            case 1: if (ftype == Thrift.Type.STRUCT) {
-                this.members = new ttypes.SquareMember();
-                this.members.read(input);
+            case 1: if (ftype == Thrift.Type.LIST) {
+                this.members = [];
+                var _rtmp3475 = input.readListBegin();
+                var _size474 = _rtmp3475.size || 0;
+                for (var _i476 = 0;
+                    _i476 < _size474;
+                    ++_i476) {
+                    var elem477 = null;
+                    elem477 = new ttypes.SquareMember();
+                    elem477.read(input);
+                    this.members.push(elem477);
+                } input.readListEnd();
             } else {
                 input.skip(ftype);
             } break;

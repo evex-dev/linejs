@@ -9,7 +9,7 @@ data = [...data]*/
 
 function XreadX(input) {
     var Thrift = thrift.Thrift;
-    var returnData = ["ThriftDecoderByPirorikinG"];
+    var returnData = ["hey!"];
     input.readStructBegin();
     var ret, ftype, fid;
     try {
@@ -20,7 +20,7 @@ function XreadX(input) {
             if (ftype == Thrift.Type.STOP) {
                 break;
             }
-            returnData[fid]=POWERRRRR(input,ftype)
+            returnData[fid] = POWERRRRR(input, ftype)
             input.readFieldEnd();
         } input.readStructEnd();
     } catch (error) {
@@ -28,51 +28,52 @@ function XreadX(input) {
     }
     return returnData;
 }
-function POWERRRRR(input,ftype) {
+function POWERRRRR(input, ftype) {
     var Thrift = thrift.Thrift;
-        if (ftype == Thrift.Type.STRUCT) {
-            return XreadX(input)
-        } else if (ftype == Thrift.Type.I32) {
-            return input.readI32();
-        } else if (ftype == Thrift.Type.I64) {
-            return input.readI64();
-        } else if (ftype == Thrift.Type.STRING) {
-            return input.readString();
-        } else if (ftype == Thrift.Type.LIST) {
-            let returnData = [];
-            var _rtmp = input.readListBegin();
-            var _size = _rtmp.size || 0;
-            for (var _i = 0;
-                _i < _size;
-                ++_i) {
-                var elem = null;
-                elem = POWERRRRR(input,_rtmp.etype)
-                returnData.push(elem);
-            } input.readListEnd();
-            return returnData
-        } else if (ftype == Thrift.Type.MAP) {
-            let returnData = {};
-            var _rtmp3384 = input.readMapBegin();
-            var _size383 = _rtmp3384.size || 0;
-            for (var _i385 = 0;
-                _i385 < _size383;
-                ++_i385) {
-                var key386 = null;
-                var val387 = null;
-                key386 = POWERRRRR(input,_rtmp3384.ktype);
-                val387 = POWERRRRR(input,_rtmp3384.vtype);
-                returnData[key386] = val387;
-            } input.readMapEnd();
-            return returnData
-        } else if (ftype == Thrift.Type.BOOL) {
-            return input.readBool();
-        } else if (ftype == Thrift.Type.DOUBLE) {
-            return input.readDouble();
-        } else {
-            input.skip(ftype);
-            return
-        }
+    if (ftype == Thrift.Type.STRUCT) {
+        return XreadX(input)
+    } else if (ftype == Thrift.Type.I32) {
+        return input.readI32();
+    } else if (ftype == Thrift.Type.I64) {
+        return input.readI64();
+    } else if (ftype == Thrift.Type.STRING) {
+        return input.readString();
+    } else if (ftype == Thrift.Type.LIST) {
+        let returnData = [];
+        var _rtmp = input.readListBegin();
+        var _size = _rtmp.size || 0;
+        for (var _i = 0;
+            _i < _size;
+            ++_i) {
+            var elem = null;
+            elem = POWERRRRR(input, _rtmp.etype)
+            returnData.push(elem);
+        } input.readListEnd();
+        return returnData
+    } else if (ftype == Thrift.Type.MAP) {
+        let returnData = {};
+        var _rtmp3384 = input.readMapBegin();
+        var _size383 = _rtmp3384.size || 0;
+        for (var _i385 = 0;
+            _i385 < _size383;
+            ++_i385) {
+            var key386 = null;
+            var val387 = null;
+            key386 = POWERRRRR(input, _rtmp3384.ktype);
+            val387 = POWERRRRR(input, _rtmp3384.vtype);
+            returnData[key386] = val387;
+        } input.readMapEnd();
+        return returnData
+    } else if (ftype == Thrift.Type.BOOL) {
+        return input.readBool();
+    } else if (ftype == Thrift.Type.DOUBLE) {
+        return input.readDouble();
+    } else {
+        console.log(fid,ftype,val,"unknown");
         input.skip(ftype);
+        return
+    }
+    input.skip(ftype);
 }
 
 function readThrift(data) {
@@ -81,8 +82,8 @@ function readThrift(data) {
     let outType = -1;
     //console.log(new TextDecoder().decode(new Uint8Array(data)))
     if (data[opt] != 0x82) {
-        console.log("LINE Thriftではありません:0x82",data)
-        
+        console.log("LINE Thriftではありません:0x82", data)
+
         return
     }
     if (data[1 + opt] == 0x41) {
@@ -158,6 +159,25 @@ export function object2json(data) {
 // Use the decoded data
 //Deno.writeTextFile("./result.json",JSON.stringify(json,null,2))
 
-export default function read(data) {
-    return object2json(readThrift(data))
+export default function read(data, type,b) {
+    if (type = 1) {
+        return object2json(readThrift(data))
+    } else if (type = 3) {
+        const Transport = thrift.TFramedTransport
+        const Protocol = thrift.TCompactProtocol
+        let b = Buffer.from(data)
+        let tdata;
+        bufTrans = new Transport(b)
+        myprot = new Protocol(bufTrans)
+        try {
+            tdata = XreadX(myprot)
+        } catch (e) {
+            console.log(e)
+            console.log(tdata, myprot, bufTrans)
+        }
+        outType = outType + 2
+        return object2json({ value: tdata, name: Lname, type: outType.toString() })
+    } else if (type = 5) {
+        return data
+    }
 }
