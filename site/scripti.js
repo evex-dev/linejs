@@ -1,3 +1,153 @@
+
+var DEVICE;
+
+async function LoginMP(mail, pw, dev, cert){
+    DEVICE = dev
+    let rsaKey = await getRSAKeyInfo()
+    let keynm = rsaKey[1]
+    let nvalue = rsaKey[2]
+    let evalue = rsaKey[3]
+    let sessionKey = rsaKey[4]
+    let certificate = cert
+    let _req = await genReq(
+        sessionKey,
+        mail,
+        pw,
+        nvalue,
+        evalue
+    )
+    let secret = _req.other.secret
+    let pincode = _req.other.pincode
+    let res = await loginV2(
+        keynm,
+        _req.encData,
+        _req.secret,
+        "Remote1919",
+        certificate,
+        null,
+        "LoginZ"
+    )
+    if (!res[1]) {
+        let verifier = res[3]
+        console.log("Enter Pincode: "+pincode)
+        let e2eeInfo = await checkLoginV2PinCode(verifier)["metadata"]
+        let blablabao = await genEncDevSec(e2eeInfo,secret)
+        let e2eeLogin = await confirmE2EELogin(verifier, blablabao)
+        res = await loginV2(
+            keynm,
+            _req.encData,
+            _req.secret,
+            "Remote1919",
+            certificate,
+            e2eeLogin,
+            "LoginZ"
+        )
+        return [res[1],res[2]]
+    }
+    return [res[1]]
+
+}
+
+const mkSoc = (path, tok, dev, ex) => {
+    return new Promise((resolve, reject) => {
+        new LineTCompactSocket(path, tok, dev, resolve, ex)
+    })
+}
+
+const getRSAKeyInfo = async () => {
+    const params = [
+        [8, 2, 1],
+    ]
+    var soc = await mkSoc("/api/v3/TalkService.do", 0, DEVICE)
+    const res = await soc.postCHRRequestAndGetResponse(params, "getRSAKeyInfo")
+    soc.closeSocket()
+    return res
+}
+
+const genReq = async (
+    sessionKey,
+    email,
+    pw,
+    nvalue,
+    evalue
+) => {
+    let res = await fetch(
+        "https://v-linelogin.vercel.app/genReq/?arg="
+        + enc(JSON.stringify({
+            sessionKey: sessionKey,
+            email: email,
+            pw: pw,
+            nvalue: nvalue,
+            evalue: evalue
+        }))
+    )
+    return await res.json()
+}
+
+const genEncDevSec = async (e2eeInfo, secret) => {
+    e2eeInfo["secret"] = secret
+    let res = await fetch(
+        "https://v-linelogin.vercel.app/genEncDevSec/?"
+        + new URLSearchParams({ arg: (JSON.stringify(e2eeInfo)) }).toString()
+    )
+    return await res.text()
+}
+
+const loginV2 = async (
+    keynm,
+    encData,
+    secret,
+    deviceName = "Chrome",
+    cert = null,
+    verifier = null,
+    calledName = "loginV2",
+) => {
+    let loginType = 2
+    if (!secret) loginType = 0
+    if (verifier) loginType = 1
+    const params = [
+        [
+            12,
+            2,
+            [
+                [8, 1, loginType],
+                [8, 2, 1],
+                [11, 3, keynm],
+                [11, 4, encData],
+                [2, 5, 0],
+                [11, 6, ""],
+                [11, 7, deviceName],
+                [11, 8, cert],
+                [11, 9, verifier],
+                [11, 10, secret],
+                [8, 11, 1],
+                [11, 12, "System Product Name"],
+            ],
+        ]
+    ]
+    var soc = await mkSoc("/api/v3p/rs", 0, DEVICE)
+    const res = await soc.postCHRRequestAndGetResponse(params, calledName)
+    soc.closeSocket()
+    return res
+}
+
+const checkLoginV2PinCode = async (accessSession) => {
+    var soc = await mkSoc("/LF1", 0, DEVICE, { "x-lhm": "GET", "x-line-access": accessSession })
+    const res = await soc.postRRequestAndGetRResponse("")
+    soc.closeSocket()
+    return JSON.parse(new TextDecoder().decode(res))["result"]
+}
+
+const confirmE2EELogin = async (verifier, deviceSecret) => {
+    const params = [
+        [11, 1, verifier],
+        [11, 2, deviceSecret],
+    ]
+    var soc = await mkSoc("/api/v3p/rs", 0, DEVICE)
+    const res = await soc.postCHRRequestAndGetResponse(params, 'confirmE2EELogin')
+    soc.closeSocket()
+    return res
+}
 class LineTCompactSocket {
     constructor(gwPath, authToken, device,resolve,extraH) {
         this.socket = {}
@@ -269,4 +419,3 @@ class LineSquareClient {
     }
 
 }
-//export {LineSquareClient,LineTCompactSocket}
