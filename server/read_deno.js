@@ -159,7 +159,7 @@ export function object2json(data) {
 // Use the decoded data
 //Deno.writeTextFile("./result.json",JSON.stringify(json,null,2))
 
-export default function read(data, type,b) {
+export default function read(data, type) {
     if (type = 1) {
         return object2json(readThrift(data))
     } else if (type = 3) {

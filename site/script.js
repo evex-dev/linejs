@@ -113,6 +113,11 @@ class LineTCompactSocket {
                     FuncMap[id](j.slice(3+j[2]))
                     delete FuncMap[id]
                 } catch (error) {
+                    try {
+                        let j = JSON.parse(e.data)
+                        FuncMap[j.id](e)
+                        delete FuncMap[j.id]
+                    }catch(e){}
                 }
             }
         } else { throw new Error("socket not open") }
@@ -198,6 +203,17 @@ class LineTCompactSocket {
                     FuncMap[j.id](e)
                     delete FuncMap[j.id]
                 } catch (error) {
+                    try {
+                        let j = new Uint8Array(e.data)
+                        let id=0
+                        for (let index = 0; index < j[2]; index++) {
+                            const element = j[3+index];
+                            id+=element*(0xff**index)
+                        }
+                        FuncMap[id](j.slice(3+j[2]))
+                        delete FuncMap[id]
+                    } catch (error) {
+                    }
                 }
             }
         } else { throw new Error("socket not open") }
