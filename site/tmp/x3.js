@@ -1,7 +1,13 @@
-xxxx=()=>{$("body").in(
+xxxx=()=>{_("body").in(
+    div(
+{"style":"display: none;","id":"hide"},
+"hidden DIV"
+    ),
     noscript(
         {},
-        "You need to enable JavaScript to run this app."), div(
+        "You need to enable JavaScript to run this app."
+        ), 
+        div(
             {
                 "id": "root",
                 "style": "min-width: 766px; min-height: 453px;"
@@ -584,24 +590,7 @@ xxxx=()=>{$("body").in(
                                     {
                                         "class": "icon createChatButton-module__icon_create__pLEwQ"
                                     },
-                                    svg(
-                                        {
-                                            "xmlns": "http://www.w3.org/2000/svg",
-                                            "data-laicon-version": "5",
-                                            "viewBox": "0 0 20 20"
-                                        },
-                                        g(
-                                            {
-                                                "transform": "translate(-2 -2)"
-                                            },
-                                            path(
-                                                {
-                                                    "d": "M10.6389 3.4325c4.839 0 8.0835 2.7677 8.2065 7.0372l.0036.2529v.4464h-1.3v-.4464c0-3.6545-2.6593-5.9901-6.9101-5.9901-4.4218 0-7.1029 2.706-7.1029 7.1752 0 2.261 1.0566 4.4484 2.6177 6.341l.0973.1158.0942-.1253c.6888-.881 1.609-1.447 2.787-1.5106l.224-.006 3.1182-.0098.004 1.3-3.1202.0098c-1.0282 0-1.7907.5815-2.3367 1.541l-.0999.1842-.423.8197-.6297-.6742c-2.1224-2.273-3.6329-5.0123-3.6329-7.9856 0-5.1844 3.2604-8.4752 8.4029-8.4752zm7.9769 9.5058l-.0008 3.1472 3.149.0009v1.3l-3.149-.001.0008 3.1492h-1.3l-.0008-3.1491-3.1473.0009v-1.3l3.1473-.001.0008-3.1471h1.3zm-8.1554-2.6692a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8zm-3.3981 0a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8zm6.7961 0a.9.9 0 0 1 .9.9.9.9 0 1 1-.9-.9z",
-                                                    "fill": "currentColor"
-                                                },
-                                            )
-                                        )
-                                    )
+                                    img({src:"https://static.line-scdn.net/Openchat-Real/edge/img/apng/icon-nav-create.png",alt:""})
                                 )
                             )
                             , div(

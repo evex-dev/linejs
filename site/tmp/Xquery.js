@@ -11,7 +11,7 @@ for (let e = 0;
     e < Tags.length;
     e++)globalThis[Tags[e]] = (t, ...i) => {
         let r = document.createElement(Tags[e]);
-        if (Tags[e]=="g"||Tags[e]=="path"||Tags[e]=="svg"||Tags[e]=="defs"||Tags[e]=="clipPath") {
+        if (Tags[e]=="g"||Tags[e]=="path"||Tags[e]=="svg"||Tags[e]=="defs"||Tags[e]=="clipPath"||Tags[e]=="circle") {
             r = document.createElementNS("http://www.w3.org/2000/svg", Tags[e]);
         }
         if (t) for (let n in t) {
@@ -20,7 +20,8 @@ for (let e = 0;
                 continue
             } if ("style" === n && "object" == typeof t[n]) for (let o in t[n]) r.style[o] = t[n][o];
             if ("$" === n.slice("")[0]) {
-                r.addEventListener(n.slice(1), t[n]);
+                let x=(...arg)=>{t[n](r,...arg)}
+                r.addEventListener(n.slice(1), x);
                 continue
             } r.setAttribute(n, t[n])
         } for (let a = 0;
@@ -28,7 +29,7 @@ for (let e = 0;
             a++)"string" == typeof i[a] || "number" == typeof i[a] || "boolean" == typeof i[a] || void 0 === i[a] || null === i[a] ? r.appendChild(document.createTextNode(i[a])) : r.appendChild(i[a]);
         return r
     };
-globalThis.$ = t => {
+globalThis._ = t => {
     let i = document.querySelectorAll(t);
     if (0 === i.length) return { in() { throw Error("Element not found") } };
     let r = {};

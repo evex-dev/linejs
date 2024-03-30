@@ -1,3 +1,4 @@
+var clicked
 async function getMDataUrl() {
     return ""
 }
@@ -18,6 +19,10 @@ async function getProfile() {
 }
 async function getStkDataUrl() {
     return ""
+}
+function buttonEvent(n, arg) {
+    clicked = arg[0]
+    console.log(n, arg)
 }
 
 async function squareChat2chatroom(squareChatResponse, msgs = []) {
@@ -58,7 +63,7 @@ function genChatroom(data) {
                             "aria-controls": "member_popup",
                             "aria-haspopup": "false",
                             "aria-expanded": "false",
-                            "$click": (a,b,c) => { buttonEvent("memberView", this);console.log(a,b,c) }
+                            "$click": (...arg) => { buttonEvent("memberView", arg) }
                         },
                         strong(
                             {
@@ -81,7 +86,7 @@ function genChatroom(data) {
                         {
                             "class": "chatroomHeader-module__button_alarm__dBqwP",
                             "data-tooltip": "通知オフ",
-                            "$click": () => { buttonEvent("chatNotiDisable", this) }
+                            "$click": (...arg) => { buttonEvent("chatNotiDisable", arg) }
                         },
                         i(
                             {
@@ -112,7 +117,7 @@ function genChatroom(data) {
                         {
                             "class": "chatroomHeader-module__button_popup__tcF1V",
                             "data-tooltip": "別のウィンドウで開く",
-                            "$click": () => { buttonEvent("popUp", this) }
+                            "$click": (...arg) => { buttonEvent("popUp", arg) }
                         },
                         i(
                             {
@@ -150,7 +155,7 @@ function genChatroom(data) {
                             "data-tooltip": "ノート",
                             "class": "chatroomHeader-module__button_more__9rz-2",
                             "aria-haspopup": "true",
-                            "$click": () => { buttonEvent("noteView", this) }
+                            "$click": (...arg) => { buttonEvent("noteView", arg) }
                         },
                         i(
                             {
@@ -199,7 +204,7 @@ function genChatroom(data) {
                             "aria-label": "more button",
                             "class": "chatroomHeader-module__button_more__9rz-2",
                             "aria-haspopup": "true",
-                            "$click": () => { buttonEvent("chatAction", this) }
+                            "$click": (...arg) => { buttonEvent("chatAction", arg) }
                         },
                         i(
                             {
@@ -246,7 +251,7 @@ function genChatroom(data) {
                     "aria-label": "Scroll down",
                     "class": "scrollDownButton-module__button_scroll_down__-XrLT",
                     "data-hidden": "true",
-                    "$click": () => { buttonEvent("chatDown", this) }
+                    "$click": (...arg) => { buttonEvent("chatDown", arg) }
                 },
                 i(
                     {
@@ -277,8 +282,8 @@ function genChatroom(data) {
                 {
                     "class": "message_list",
                     "role": "log",
-                    
-                }, ...data.msgs
+
+                }, ...(data.msgs),
             )
         )
         , div(
@@ -317,7 +322,7 @@ function genChatroom(data) {
                         "data-type": "file",
                         "data-tooltip": "ファイル送信",
                         "data-tooltip-placement": "top-start",
-                        "$click": () => { buttonEvent("sendFile", this) }
+                        "$click": (...arg) => { buttonEvent("sendFile", arg) }
                     },
                     i(
                         {
@@ -348,7 +353,7 @@ function genChatroom(data) {
                         "data-type": "sticker",
                         "data-tooltip": "スタンプ",
                         "data-tooltip-placement": "top-end",
-                        "$click": () => { buttonEvent("sendStk", this) }
+                        "$click": (...arg) => { buttonEvent("sendStk", arg) }
                     },
                     i(
                         {
@@ -426,7 +431,7 @@ function genChatroom(data) {
                         "data-type": "send",
                         "data-tooltip": "送信",
                         "data-tooltip-placement": "top-end",
-                        "$click": () => { buttonEvent("send", this) }
+                        "$click": (...arg) => { buttonEvent("send", arg) }
                     },
                     i(
                         {
@@ -474,10 +479,10 @@ async function Message2Elm(message) {
         msgId: message.id,
         rCode: message.relatedMessageServiceCode,
         rId: message.relatedMessageId,
-        contentType:message.contentType
+        contentType: message.contentType
 
     }
-    if (chatroom.msgData[chatroom.msgData.length - 1]&&chatroom.msgData[chatroom.msgData.length - 1].mid == data.mid) {
+    if (chatroom.msgData[chatroom.msgData.length - 1] && chatroom.msgData[chatroom.msgData.length - 1].mid == data.mid) {
         data["msgGroup"] = "item"
     }
     if (data.rId) {
@@ -518,6 +523,11 @@ async function Message2Elm(message) {
             data = { ...data, ...add }
         case 14://fi
         case 22://fl
+            add = {
+                text: message.contentMetadata.ALT_TEXT,
+                flex: message.contentMetadata.FLEX_JSON,
+            }
+            data = { ...data, ...add }
         default:
             break;
     }
@@ -547,7 +557,7 @@ function genSysMsg(data) {
                 "data-message-id": data.event.id,
                 "data-timestamp": data.event.timeStr,
                 "data-mid": data.event.mid,
-                "$click": () => { buttonEvent("eventView", this) }
+                "$click": (...arg) => { buttonEvent("eventView", arg) }
             },
             div(
                 {
@@ -591,7 +601,7 @@ function genMsg(data = {}) {
                 {
                     "type": "button",
                     "class": "profileImage-module__button_profile__GqKue",
-                    "$click": () => { buttonEvent("openProfile", this) }
+                    "$click": (...arg) => { buttonEvent("openProfile", arg) }
                 },
                 div(
                     {
@@ -677,8 +687,9 @@ function msgMain(data) {
             return audioMsg(data)
         case 7://sticker
             return stickerMsg(data)
-        case 14://file
-        case 22://flex
+        case 14: //file
+        case 22: //flex
+            return flexMsg(data)
         default:
             break;
     }
@@ -702,7 +713,7 @@ function msgMain(data) {
                         {
                             "class": "mention",
                             "data-mid": e.M,
-                            "$click": () => { buttonEvent("openProfile", this) }
+                            "$click": (...arg) => { buttonEvent("openProfile", arg) }
                         }, "@" + e.M + ":" + otxt.substring(Number(e.S), Number(e.E))
                     ))
                     txt.push(otxt.substring(Number(e.E)))
@@ -712,7 +723,7 @@ function msgMain(data) {
                         {
                             "class": "mention",
                             "data-mid": e.M,
-                            "$click": () => { buttonEvent("openProfile", this) }
+                            "$click": (...arg) => { buttonEvent("openProfile", arg) }
                         }, "@" + e.M + ":" + otxt.substring(Number(e.S), Number(e.E))
                     ))
                 }
@@ -740,7 +751,7 @@ function msgMain(data) {
                             "data-tooltip-is-html": "true",
                             "data-tooltip-is-preserved": "true",
                             "data-emoji": e.productId + ":" + e.sticonId,
-                            "$click": () => { buttonEvent("emojiView", this) }
+                            "$click": (...arg) => { buttonEvent("emojiView", arg) }
                         },
                         img(
                             {
@@ -761,7 +772,7 @@ function msgMain(data) {
                             "data-tooltip-is-html": "true",
                             "data-tooltip-is-preserved": "true",
                             "data-emoji": e.productId + ":" + e.sticonId,
-                            "$click": () => { buttonEvent("emojiView", this) }
+                            "$click": (...arg) => { buttonEvent("emojiView", arg) }
                         },
                         img(
                             {
@@ -783,7 +794,7 @@ function msgMain(data) {
                 "class": "textMessageContent-module__content_wrap__238E1 ",
                 "data-message-id": data.msgId,
                 "oncontextmenu": "return false;",
-                "$contextmenu": () => { buttonEvent("msgAction", this) }
+                "$contextmenu": (...arg) => { buttonEvent("msgAction", arg) }
             },
             pre(
                 {
@@ -812,7 +823,7 @@ function msgMain(data) {
                     "type": "button",
                     "class": "replyMessageContent-module__button_move__Jo33w",
                     "aria-label": "See in chat",
-                    "$click": () => { buttonEvent("viewReply", this) }
+                    "$click": (...arg) => { buttonEvent("viewReply", arg) }
                 },
                 div(
                     {
@@ -897,7 +908,7 @@ function msgMain(data) {
                                 "class": "imageMessageContent-module__button_view__4y-jN",
                                 "aria-label": "Show image",
                                 "data-index": "0",
-                                "$click": () => { buttonEvent("imgMsgView", this) }
+                                "$click": (...arg) => { buttonEvent("imgMsgView", arg) }
                             },
                             img(
                                 {
@@ -930,7 +941,7 @@ function msgMain(data) {
                         "type": "button",
                         "class": "videoMessageContent-module__button_view__qMX7E",
                         "aria-label": "view video",
-                        "$click": () => { buttonEvent("videoMsgView", this) }
+                        "$click": (...arg) => { buttonEvent("videoMsgView", arg) }
                     },
                     img(
                         {
@@ -999,7 +1010,7 @@ function msgMain(data) {
                     "type": "button",
                     "class": "stickerMessageContent-module__button_view__rTOx0",
                     "aria-label": "view sticker",
-                    "$click": () => { buttonEvent("stkView", this) }
+                    "$click": (...arg) => { buttonEvent("stkView", arg) }
                 },
                 div(
                     {
@@ -1028,6 +1039,45 @@ function msgMain(data) {
         )
 
     }
+    function flexMsg(data) {
+        let flex=JSON.parse(data.flex)
+        let html = "<!doctype html><html class=\"in_iframe\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1\"><meta name=\"format-detection\" content=\"telephone=no\"><link rel=\"stylesheet\" type=\"text/css\" href=\"https://pamornt.github.io/flex2html/css/flex2html.css\"></head><body style=\"margin: 0;\">"
+        html += flex2html("hide", { "type": "flex", "altText": "Flex Message", "contents": flex }) + "</body></html>"
+        return div(
+            {
+                "class": "iframeMessage-module__content_wrap__Trsl-"
+            },
+            div(
+                {
+                    "class": "iframeMessageContent-module__content__jrRvg"
+                },
+                div(
+                    {
+                        "class": "iframeMessageContent-module__content_inner__XVLKI"
+                    },
+                    div(
+                        {
+                            "class": "iframeMessage-module__iframe_wrap__PUSyZ"
+                        },
+                        iframe(
+                            {
+                                "frameborder": "0",
+                                "title": "",
+                                "width": "100%",
+                                "data-message-id": "501557461296873730",
+                                "srcdoc": html,
+                                "sandbox": "allow-same-origin allow-popups allow-popups-to-escape-sandbox",
+                                "scrolling": "no",
+                                "style": "height: 343.688px;"
+                            },
+                        )
+                    )
+
+                )
+            )
+        )
+
+    }
     function fileM() {
         fileMenu = div(
             {
@@ -1037,7 +1087,7 @@ function msgMain(data) {
                 {
                     "type": "button",
                     "class": "actionGroup-module__button_action__Cu9RJ",
-                    "$click": () => { buttonEvent("dlFile", this) }
+                    "$click": (...arg) => { buttonEvent("dlFile", arg) }
                 },
                 span(
                     {
