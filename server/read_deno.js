@@ -143,13 +143,10 @@ export function object2json(data) {
     }
     keys.forEach((e) => {
         if (!(data[e])) {
+        } else if (data[e].buffer) {
+            returnJson[e] = parseInt(data[e].buffer.toString("hex"), 16)
         } else if (typeof (data[e]) == 'object') {
             returnJson[e] = object2json(data[e])
-        } else if (typeof (data[e]) == 'Buffer') {
-            var _int = 0
-            var b = data[e].reverse()
-            b.forEach((e, i) => { _int += e * (256 ** i) })
-            returnJson[e] = _int
         } else {
             returnJson[e] = data[e]
         }
@@ -160,24 +157,28 @@ export function object2json(data) {
 //Deno.writeTextFile("./result.json",JSON.stringify(json,null,2))
 
 export default function read(data, type) {
-    if (type = 1) {
+    if (type == 1) {
         return object2json(readThrift(data))
-    } else if (type = 3) {
+    } else if (type == 3) {
+        let len = data[3]
+    let Lname = new TextDecoder().decode(new Uint8Array(data.slice(4, 4 + len)))
+    data = data.slice(len + 6)
+        console.log("chrRes")
         const Transport = thrift.TFramedTransport
         const Protocol = thrift.TCompactProtocol
         let b = Buffer.from(data)
         let tdata;
-        bufTrans = new Transport(b)
-        myprot = new Protocol(bufTrans)
+        let bufTrans = new Transport(b)
+        let myprot = new Protocol(bufTrans)
         try {
             tdata = XreadX(myprot)
         } catch (e) {
             console.log(e)
             console.log(tdata, myprot, bufTrans)
         }
-        outType = outType + 2
-        return object2json({ value: tdata, name: Lname, type: outType.toString() })
-    } else if (type = 5) {
+        type = type + 2
+        return object2json({ value: tdata, name: Lname, type: type.toString() })
+    } else if (type == 5) {
         return data
     }
 }
