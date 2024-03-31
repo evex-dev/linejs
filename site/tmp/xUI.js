@@ -1,42 +1,337 @@
-var clicked
-async function getMDataUrl() {
-    return ""
+
+var URLcashe = localforage.createInstance({
+    name: "URLcashe"
+});
+var MDataCashe = localforage.createInstance({
+    name: "MDataCashe"
+});
+var ThriftCashe = localforage.createInstance({
+    name: "ThriftCashe"
+});
+async function buildChatButton(squareChatResponseList=[]) {
+    function list(inElm) {
+        return div({style:"height: "+71*squareChatResponseList.length+"px; width: 100%;"},...inElm)
+    }
+    let elms=[]
+    for (let index = 0; index < squareChatResponseList.length; index++) {
+        const element = squareChatResponseList[index];
+        elms.push(await squareChat2chatButton(element,index))
+    }
+    let res=list(elms)
+    __("#root > div > div > div.chatlist-module__chatlist_wrap__KtTpq > div.chatlist-module__chatlist__qruAE > div > div > div").in(res)
+    return res
 }
-async function getMPDataUrl() {
-    return ""
-}
-async function getMsgById() {
-    return { profile: await getProfile(), txt: "reply" }
-}
-async function getObsUrl(obs) {
-    return "https://obs.line-scdn.net/" + obs
-}
-async function getMDataUrl() {
-    return ""
-}
-async function getProfile() {
-    return { name: "getProfile", img: "", mid: "" }
-}
-async function getStkDataUrl() {
-    return ""
-}
-function buttonEvent(n, arg) {
-    clicked = arg[0]
-    console.log(n, arg)
+async function squareChat2chatButton(squareChatResponse, index) {
+    let lastText = ""
+    let date = ""
+    let unread=""
+    if (squareChatResponse.squareChatStatus.lastMessage) {
+        date = new Date(squareChatResponse.squareChatStatus.lastMessage.message.createdTime)
+        date = date.getMonth() + 1 + "/" + date.getDate()
+        if (squareChatResponse.squareChatStatus.lastMessage.message.text) {
+            lastText = squareChatResponse.squareChatStatus.lastMessage.message.text
+        }
+    }
+    if (squareChatResponse.squareChatStatus.otherStatus.unreadMessageCount) {
+        unread=squareChatResponse.squareChatStatus.otherStatus.unreadMessageCount
+        unread=span({class:"chatlistItem-module__message_count__FRt4s"},unread)
+    }
+    let data = {
+        mid: squareChatResponse.squareChat.squareChatMid,
+        name: squareChatResponse.squareChat.name,
+        member: squareChatResponse.squareChatStatus.otherStatus.memberCount,
+        img: await getObsUrl(squareChatResponse.squareChat.chatImageObsHash),
+        index: index,
+        date: date,
+        lastText: lastText,
+        unread:unread
+    }
+    return genChatButton(data)
+
 }
 
-async function squareChat2chatroom(squareChatResponse, msgs = []) {
+function genChatButton(data) {
+    return div(
+        {
+            "class": "chatlistItem-module__chatlist_item__MOwxh ",
+            "aria-selected": "false",
+            "aria-busy": "false",
+            "aria-current": "true",
+            "data-mid": data.mid,
+            "style": "position: absolute; left: 0px; top: "+data.index*71+"px; height: 71px; width: 100%;"
+        },
+        div(
+            {
+                "class": "profileImage-module__thumbnail_wrap__0bK7m ",
+                "data-mid": data.mid,
+                "data-profile-image": "true",
+                "style": "width: 53px; height: 53px; border-radius: 50%;"
+            },
+            button(
+                {
+                    "type": "button",
+                    "class": "profileImage-module__button_profile__GqKue",
+                },
+                div(
+                    {
+                        "class": "profileImage-module__thumbnail_area__nqIpB"
+                    },
+                    span(
+                        {
+                            "class": "profileImage-module__thumbnail__Q6OsR"
+                        },
+                        img(
+                            {
+                                "src": data.img,
+                                "class": "",
+                                "loading": "lazy",
+                                "alt": "",
+                                "draggable": "false"
+                            },
+                        )
+                    )
+                )
+            )
+        )
+        , div(
+            {
+                "class": "chatlistItem-module__info__nHGhi"
+            },
+            strong(
+                {
+                    "class": "chatlistItem-module__title_box__aDNJD"
+                },
+                span(
+                    {
+                        "class": "chatlistItem-module__text__daDD3"
+                    },
+                    pre(
+                        {},
+                        span(
+                            {},
+                            data.name)
+                    )
+                )
+                , span(
+                    {
+                        "class": "chatlistItem-module__member_count__MbL2c"
+                    },
+                    "(" + data.member + ")")
+            )
+            , time(
+                {
+                    "datetime": "Tue Mar 26 2024 14:20:07 GMT+0900 (日本標準時)",
+                    "class": "chatlistItem-module__date__tG-MV"
+                },
+                data.date)
+            , div(
+                {
+                    "class": "chatlistItem-module__description__JH3NE"
+                },
+                p(
+                    {
+                        "class": "chatlistItem-module__text__daDD3"
+                    },
+                    span(
+                        {
+                            "data-message-id": "500966165850882385"
+                        },
+                        data.lastText)
+                )
+            ),data.unread
+        )
+        , button(
+            {
+                "role": "link",
+                "type": "button",
+                "aria-label": "Go chatroom",
+                "class": "chatlistItem-module__button_chatlist_item__pcmtA",
+                "$click": (...arg) => { buttonEvent("goChat", arg) }
+            },
+        )
+    )
+
+}
+
+
+var messageViewList = []
+var messageViewElm = []
+async function getMDataUrl(id) {
+    let url = "https://obs-jp.line-apps.com/r/g2/m/" + id
+    let data = await MDataCashe.getItem(url)
+    if (data) {
+        return URL.createObjectURL(data)
+    } else {
+        let res
+        try {
+            res = await LINE.fetch(url)
+        } catch (error) {
+
+        }
+        if (!res || !res.ok) {
+            console.error("Error response at " + url)
+            return ""
+        }
+        data = await res.blob()
+        MDataCashe.setItem(url, data)
+        return URL.createObjectURL(data)
+    }
+}
+async function getMPDataUrl(id) {
+    let url = "https://obs-jp.line-apps.com/r/g2/m/" + id + "/preview"
+    let data = await MDataCashe.getItem(url)
+    if (data) {
+        return URL.createObjectURL(data)
+    } else {
+        let res
+        try {
+            res = await LINE.fetch(url)
+        } catch (error) {
+
+        }
+        if (!res || !res.ok) {
+            console.error("Error response at " + url)
+            return ""
+        }
+        data = await res.blob()
+        MDataCashe.setItem(url, data)
+        return URL.createObjectURL(data)
+    }
+}
+async function getMsgById(id) {
+    let data = { txt: "このメッセージはありません", profile: { name: "unknown", img: "", mid: "" } }
+    messageViewList.forEach(async (e) => {
+        if (e.id == id) {
+            if (e.contentType == 0) {
+                data.txt = e.text
+                data.profile = await getProfile(e._from)
+            } else {
+                data.txt = ""
+                data.profile = await getProfile(e._from)
+            }
+            return
+        }
+    })
+    return data
+}
+async function getObsUrl(obs) {
+    let url = "https://obs.line-scdn.net/" + obs
+    let data = await URLcashe.getItem(url)
+    if (data) {
+        return URL.createObjectURL(data)
+    } else {
+        let res
+        try {
+            res = await fetch(url)
+        } catch (error) {
+
+        }
+        if (!res || !res.ok) {
+            console.error("Error response at " + url)
+            return ""
+        }
+        data = await res.blob()
+        URLcashe.setItem(url, data)
+        return URL.createObjectURL(data)
+    }
+}
+async function getSquareChatHistory(mid) {
+    let prot = "squareChatHistory:" + mid
+    let data = await ThriftCashe.getItem(prot)
+    if (data) {
+        return data
+    } else {
+        return null
+    }
+}
+async function refreshProfile(mid) {
+    let prot = "squareMember:" + mid
+    await ThriftCashe.removeItem(prot)
+    return await getProfile(mid)
+}
+async function getProfile(mid, raw) {
+    let prot = "squareMember:" + mid
+    let data = await ThriftCashe.getItem(prot)
+    if (data) {
+    } else {
+        let res = (await LINE.getSquareMember(mid))[1]
+        if (res.length == 1) {
+            console.error("Error response at " + prot)
+            return ""
+        }
+        let member = new lineType.SquareMember({
+            squareMemberMid: res[1],
+            squareMid: res[2],
+            displayName: res[3],
+            profileImageObsHash: res[4],
+            ableToReceiveMessage: res[5],
+            membershipState: res[7],
+            role: res[8],
+            revision: res[9],
+            joinMessage: res[10]
+        })
+        data = member
+        URLcashe.setItem(prot, data)
+    }
+    if (raw) {
+        return data
+    }
+    let img=""
+    if (data.profileImageObsHash) {
+        img=await getObsUrl(data.profileImageObsHash + "/preview") 
+    }
+    return { name: data.displayName, img: img, mid: data.squareMemberMid }
+}
+async function getStkDataUrl(id) {
+    let url = "https://stickershop.line-scdn.net/stickershop/v1/sticker/" + id + "/android/sticker.png"
+    let data = await URLcashe.getItem(url)
+    if (data) {
+        return URL.createObjectURL(data)
+    } else {
+        let res
+        try {
+            res = await fetch(url)
+        } catch (error) {
+
+        }
+        if (!res || !res.ok) {
+            console.error("Error response at " + url)
+            return ""
+        }
+        data = await res.blob()
+        URLcashe.setItem(url, data)
+        return URL.createObjectURL(data)
+    }
+}
+async function buttonEvent(n, arg) {
+    console.log(n, arg)
+    if (n=="goChat") {
+        squareChat2chatroom(await LINE.getSquareChat(arg[0].parentElement.dataset.mid))
+    }
+}
+
+async function squareChat2chatroom(squareChatResponse) {
+    messageViewList = []
     let data = {
         mid: squareChatResponse.squareChat.squareChatMid,
         name: squareChatResponse.squareChat.name,
         member: squareChatResponse.squareChatStatus.otherStatus.memberCount,
         img: await getObsUrl(squareChatResponse.squareChat.chatImageObsHash),
         inputName: (await getProfile(squareChatResponse.squareChatMember.squareMemberMid)).name + "として",
-        msgs: msgs
     }
-    return genChatroom(data)
+    let res=genChatroom(data)
+    __("#root > div > div > div:nth-child(4)").in(res)
+    return res
 }
 function genChatroom(data) {
+    let mlist = div(
+        {
+            "class": "message_list",
+            "role": "log",
+
+        },
+    )
+    messageViewElm = mlist
     return div(
         {
             "class": "chatroom-module__chatroom__eVUaK ",
@@ -278,13 +573,7 @@ function genChatroom(data) {
                     )
                 )
             )
-            , div(
-                {
-                    "class": "message_list",
-                    "role": "log",
-
-                }, ...(data.msgs),
-            )
+            , mlist
         )
         , div(
             {
@@ -466,6 +755,13 @@ function genChatroom(data) {
 
 
 var fileMenu = ""
+async function appendMsg(messages = []) {
+    for (let index = 0; index < messages.length; index++) {
+        const element = messages[index];
+        messageViewElm.appendChild(await Message2Elm(element))
+        messageViewList.push(element)
+    }
+}
 async function Message2Elm(message) {
     let data = {
         isSelected: false,
@@ -1022,7 +1318,7 @@ function msgMain(data) {
                         },
                         img(
                             {
-                                "src": "https://stickershop.line-scdn.net/stickershop/v1/sticker/" + data.img + "/android/sticker.png",
+                                "src": data.img,
                                 "alt": "[スタンプ]",
                                 "loading": "lazy",
                                 "draggable": "false",
@@ -1040,43 +1336,27 @@ function msgMain(data) {
 
     }
     function flexMsg(data) {
-        let flex=JSON.parse(data.flex)
+        let flex = JSON.parse(data.flex)
         let html = "<!doctype html><html class=\"in_iframe\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1\"><meta name=\"format-detection\" content=\"telephone=no\"><link rel=\"stylesheet\" type=\"text/css\" href=\"https://pamornt.github.io/flex2html/css/flex2html.css\"></head><body style=\"margin: 0;\">"
         html += flex2html("hide", { "type": "flex", "altText": "Flex Message", "contents": flex }) + "</body></html>"
+        document.getElementById("hide").innerHTML = ""
         return div(
             {
-                "class": "iframeMessage-module__content_wrap__Trsl-"
+                "class": "iframeMessage-module__iframe_wrap__PUSyZ"
             },
-            div(
+            iframe(
                 {
-                    "class": "iframeMessageContent-module__content__jrRvg"
+                    "frameborder": "0",
+                    "title": "",
+                    "width": "100%",
+                    "data-message-id": "501557461296873730",
+                    "srcdoc": html,
+                    "sandbox": "allow-same-origin allow-popups allow-popups-to-escape-sandbox",
+                    "scrolling": "no",
+                    "style": "height: 343.688px;"
                 },
-                div(
-                    {
-                        "class": "iframeMessageContent-module__content_inner__XVLKI"
-                    },
-                    div(
-                        {
-                            "class": "iframeMessage-module__iframe_wrap__PUSyZ"
-                        },
-                        iframe(
-                            {
-                                "frameborder": "0",
-                                "title": "",
-                                "width": "100%",
-                                "data-message-id": "501557461296873730",
-                                "srcdoc": html,
-                                "sandbox": "allow-same-origin allow-popups allow-popups-to-escape-sandbox",
-                                "scrolling": "no",
-                                "style": "height: 343.688px;"
-                            },
-                        )
-                    )
-
-                )
             )
         )
-
     }
     function fileM() {
         fileMenu = div(

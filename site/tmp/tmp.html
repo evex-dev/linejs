@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="theme-color" content="#000000">
-    <meta name="description" content="Web site created using create-react-app">
+    <meta name="description" content="LINE in WEB">
     <meta name="google" content="notranslate">
     <title class="notranslate">LINE</title>
     <!--<script defer="defer" src="chrome-extension://ophjlpahpchlmihnnnihgmmeilfjmjjc/static/js/main.js"></script>-->
@@ -15,13 +15,33 @@
 
 <body class="positive_button_first"><noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root" style="min-width: 155px; min-height: 403px;">
-        <div class="app"></div>
+        <div class="app" style="margin: 10px;">
+            <input type="text" placeholder="authToken" id="auth" style="border: 2px;border-color: black;"><br>
+            <input type="text" placeholder="device" id="dev" style="border: 2px;"><br>
+            <button type="button" onclick="runnnn()" style="border: 2px;">RUN!!!</button>
+        </div>
     </div>
+    <script async>
+        var LINE
+        async function runnnn() {
+            LINE = new LineSquareClient(document.getElementById("auth").value, document.getElementById("dev").value, () => {
+                setTimeout(async () => {
+                    let rooms = await LINE.getJoinedSquareChats()
+                    buildChatButton(rooms)
+                },200)
+            })
+            runLINE()
+        }
+    </script>
     <script src="./Xquery.js"></script>
     <script src="./type.js"></script>
-    <script src="./x3.js"></script>
-    <script src="./xUI.js"></script>
+    <script src="./localforage.min.js"></script>
+    <script src="./escape.js"></script>
+    <script async src="./script.js"></script>
     <script src="https://pamornt.github.io/flex2html/js/flex2html.min.js"></script>
+    <script src="./x3.js"></script>
+    <script async src="./xUI.js"></script>
+
 </body>
 
 </html>

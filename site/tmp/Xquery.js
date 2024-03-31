@@ -29,7 +29,7 @@ for (let e = 0;
             a++)"string" == typeof i[a] || "number" == typeof i[a] || "boolean" == typeof i[a] || void 0 === i[a] || null === i[a] ? r.appendChild(document.createTextNode(i[a])) : r.appendChild(i[a]);
         return r
     };
-globalThis._ = t => {
+globalThis.__ = t => {
     let i = document.querySelectorAll(t);
     if (0 === i.length) return { in() { throw Error("Element not found") } };
     let r = {};

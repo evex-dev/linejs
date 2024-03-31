@@ -20,8 +20,6 @@ var matchHtmlRegExp = /["'&<>]/;
  * @public
  */
 
-module.exports = escapeHtml;
-
 /**
  * Escape special characters in the given string of html.
  *
