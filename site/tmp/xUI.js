@@ -975,9 +975,7 @@ function genMsg(data = {}) {
                 "class": "username-module__username__vGQGj",
                 "style": "color:#fff;"
             },
-            span(
-                {},
-                data.profile.name)
+            fuchi(data.profile.name)
         )
         , div(
             {
@@ -1006,7 +1004,7 @@ function genMsg(data = {}) {
                                 "class": "metaInfo-module__send_time__-3Q6-",
                                 "style": "color:#fff;"
                             },
-                            data.timeStr)
+                            fuchi(data.timeStr))
                     )
                 )
             )
@@ -1155,7 +1153,8 @@ function msgMain(data) {
                 "class": "textMessageContent-module__content_wrap__238E1 ",
                 "data-message-id": data.msgId,
                 "oncontextmenu": "return false;",
-                "$contextmenu": (...arg) => { buttonEvent("msgAction", arg) }
+                "$contextmenu": (...arg) => { buttonEvent("msgAction", arg) },
+                "data-direction":data.direction
             },
             pre(
                 {
@@ -1437,9 +1436,15 @@ function msgMain(data) {
                     {
                         "class": "actionGroup-module__text__OBOQx"
                     },
-                    "保存")
+                    fuchi("保存"))
             )
         )
     }
 }
 
+function fuchi(txt) {
+    return span(
+        {style:"color:#fff; -webkit-text-stroke: 0.2px #000;text-stroke: 0.2px #000;"}
+        ,txt
+    )
+}

@@ -6682,7 +6682,9 @@ button[class*=button_resize]~.packageItemList-module__package_item_wrap__WCrUz {
     font-size: 9px;
     margin-bottom: 5px
 }
-
+[data-direction=reverse].textMessageContent-module__content_wrap__238E1 {
+    background-color: #c3f69d;
+}
 .textMessageContent-module__content_wrap__238E1 {
     word-wrap: break-word;
     background-color: #efefef;
