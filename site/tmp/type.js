@@ -5035,7 +5035,7 @@ lineType.SquareEventPayload = class {
 lineType.SquareEvent = class {
     constructor(args) {
         this.createdTime = null;
-        this.type = null;
+        this.type = 0;
         this.payload = null;
         this.syncToken = null;
         this.eventStatus = null;

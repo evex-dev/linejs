@@ -128,8 +128,7 @@ function readThrift(data) {
         try {
             tdata = XreadX(myprot)
         } catch (e) {
-            console.log(e)
-            console.log(tdata, myprot, bufTrans)
+            return { name: Lname ,err: e.stack}
         }
         outType = outType + 2
     }

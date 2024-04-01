@@ -10,7 +10,6 @@ runLINE=()=>{__("body").in(
         div(
             {
                 "id": "root",
-                "style": "min-width: 766px; min-height: 453px;"
             },
             div(
                 {

@@ -19,13 +19,11 @@ export default async function ws(request) {
 
             const Trequest = write(json)
             //await Deno.writeFile("./tmpReq.bin", Trequest)/////////////////////////
-            console.log(headers)
             const fet = await fetch("https://gw.line.naver.jp" + path, {
                 method: 'POST',
                 headers: headers,
                 body: Trequest
             })
-            console.log(fet)
             res = await fet.arrayBuffer()
             res = new Uint8Array(res)
             // Deno.writeFile("./tmpRes.bin", res)/////////////////////////////
@@ -41,7 +39,6 @@ export default async function ws(request) {
             }
             res.id = id
         } catch (error) {
-            console.log("[err] ", error)
             res.err = error.stack
             res.id = id
         }

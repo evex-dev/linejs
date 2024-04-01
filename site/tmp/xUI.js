@@ -8,23 +8,23 @@ var MDataCashe = localforage.createInstance({
 var ThriftCashe = localforage.createInstance({
     name: "ThriftCashe"
 });
-async function buildChatButton(squareChatResponseList=[]) {
+async function buildChatButton(squareChatResponseList = []) {
     function list(inElm) {
-        return div({style:"height: "+71*squareChatResponseList.length+"px; width: 100%;"},...inElm)
+        return div({ style: "height: " + 71 * squareChatResponseList.length + "px; width: 100%;" }, ...inElm)
     }
-    let elms=[]
+    let elms = []
     for (let index = 0; index < squareChatResponseList.length; index++) {
         const element = squareChatResponseList[index];
-        elms.push(await squareChat2chatButton(element,index))
+        elms.push(await squareChat2chatButton(element, index))
     }
-    let res=list(elms)
+    let res = list(elms)
     __("#root > div > div > div.chatlist-module__chatlist_wrap__KtTpq > div.chatlist-module__chatlist__qruAE > div > div > div").in(res)
     return res
 }
 async function squareChat2chatButton(squareChatResponse, index) {
     let lastText = ""
     let date = ""
-    let unread=""
+    let unread = ""
     if (squareChatResponse.squareChatStatus.lastMessage) {
         date = new Date(squareChatResponse.squareChatStatus.lastMessage.message.createdTime)
         date = date.getMonth() + 1 + "/" + date.getDate()
@@ -33,8 +33,8 @@ async function squareChat2chatButton(squareChatResponse, index) {
         }
     }
     if (squareChatResponse.squareChatStatus.otherStatus.unreadMessageCount) {
-        unread=squareChatResponse.squareChatStatus.otherStatus.unreadMessageCount
-        unread=span({class:"chatlistItem-module__message_count__FRt4s"},unread)
+        unread = squareChatResponse.squareChatStatus.otherStatus.unreadMessageCount
+        unread = span({ class: "chatlistItem-module__message_count__FRt4s" }, unread)
     }
     let data = {
         mid: squareChatResponse.squareChat.squareChatMid,
@@ -44,7 +44,7 @@ async function squareChat2chatButton(squareChatResponse, index) {
         index: index,
         date: date,
         lastText: lastText,
-        unread:unread
+        unread: unread
     }
     return genChatButton(data)
 
@@ -58,7 +58,7 @@ function genChatButton(data) {
             "aria-busy": "false",
             "aria-current": "true",
             "data-mid": data.mid,
-            "style": "position: absolute; left: 0px; top: "+data.index*71+"px; height: 71px; width: 100%;"
+            "style": "position: absolute; left: 0px; top: " + data.index * 71 + "px; height: 71px; width: 100%;"
         },
         div(
             {
@@ -138,7 +138,7 @@ function genChatButton(data) {
                         },
                         data.lastText)
                 )
-            ),data.unread
+            ), data.unread
         )
         , button(
             {
@@ -153,9 +153,13 @@ function genChatButton(data) {
 
 }
 
-
-var messageViewList = []
-var messageViewElm = []
+var roomData = {
+    messageView: {
+        dataList: [],
+        elmList: []
+    },
+    mymid: "",
+}
 async function getMDataUrl(id) {
     let url = "https://obs-jp.line-apps.com/r/g2/m/" + id
     let data = await MDataCashe.getItem(url)
@@ -199,8 +203,8 @@ async function getMPDataUrl(id) {
     }
 }
 async function getMsgById(id) {
-    let data = { txt: "このメッセージはありません", profile: { name: "unknown", img: "", mid: "" } }
-    messageViewList.forEach(async (e) => {
+    let data = { txt: "このメッセージはありません" }
+    roomData.messageView.dataList.forEach(async (e) => {
         if (e.id == id) {
             if (e.contentType == 0) {
                 data.txt = e.text
@@ -244,12 +248,16 @@ async function getSquareChatHistory(mid) {
         return null
     }
 }
+
 async function refreshProfile(mid) {
     let prot = "squareMember:" + mid
     await ThriftCashe.removeItem(prot)
     return await getProfile(mid)
 }
 async function getProfile(mid, raw) {
+    if (mid.substring(0, 1) == "v") {
+        return { name: "Auto-reply", img: "", mid: mid }
+    }
     let prot = "squareMember:" + mid
     let data = await ThriftCashe.getItem(prot)
     if (data) {
@@ -271,14 +279,14 @@ async function getProfile(mid, raw) {
             joinMessage: res[10]
         })
         data = member
-        URLcashe.setItem(prot, data)
+        ThriftCashe.setItem(prot, data)
     }
     if (raw) {
         return data
     }
-    let img=""
+    let img = ""
     if (data.profileImageObsHash) {
-        img=await getObsUrl(data.profileImageObsHash + "/preview") 
+        img = await getObsUrl(data.profileImageObsHash + "/preview")
     }
     return { name: data.displayName, img: img, mid: data.squareMemberMid }
 }
@@ -305,21 +313,23 @@ async function getStkDataUrl(id) {
 }
 async function buttonEvent(n, arg) {
     console.log(n, arg)
-    if (n=="goChat") {
-        squareChat2chatroom(await LINE.getSquareChat(arg[0].parentElement.dataset.mid))
+    if (n == "goChat") {
+        await squareChat2chatroom(await LINE.getSquareChat(arg[0].parentElement.dataset.mid))
+        await getAndBuildMessages(arg[0].parentElement.dataset.mid)
     }
 }
 
 async function squareChat2chatroom(squareChatResponse) {
-    messageViewList = []
+    roomData.messageView.dataList = []
     let data = {
+        mymid: squareChatResponse.squareChatMember.squareMemberMid,
         mid: squareChatResponse.squareChat.squareChatMid,
         name: squareChatResponse.squareChat.name,
         member: squareChatResponse.squareChatStatus.otherStatus.memberCount,
         img: await getObsUrl(squareChatResponse.squareChat.chatImageObsHash),
         inputName: (await getProfile(squareChatResponse.squareChatMember.squareMemberMid)).name + "として",
     }
-    let res=genChatroom(data)
+    let res = genChatroom(data)
     __("#root > div > div > div:nth-child(4)").in(res)
     return res
 }
@@ -328,10 +338,11 @@ function genChatroom(data) {
         {
             "class": "message_list",
             "role": "log",
-
+            "data-mymid": data.mymid
         },
     )
-    messageViewElm = mlist
+    roomData.mymid = data.mymid
+    roomData.messageView.elmList = mlist
     return div(
         {
             "class": "chatroom-module__chatroom__eVUaK ",
@@ -532,7 +543,7 @@ function genChatroom(data) {
         , div(
             {
                 "class": "chatroomContent-module__content_area__gK6db ",
-                "style": "background-image:url(" + data.img + ");background-size: 100% auto;background-position: center;"
+                "style": "background-image:url(" + data.img + ");background-size: 100% auto;background-position: center;height:50vh;"
             },
             ul(
                 {
@@ -755,11 +766,23 @@ function genChatroom(data) {
 
 
 var fileMenu = ""
-async function appendMsg(messages = []) {
+async function getAndBuildMessages(mid) {
+    let data = await LINE.fetchSquareChatEvents(mid)
+    let chats = []
+    data.events.forEach((e) => {
+        if (e.type == 1) {
+            chats.push(e.payload.sendMessage.squareMessage.message)
+        } else if (e.type == undefined) {
+            chats.push(e.payload.receiveMessage.squareMessage.message)
+        }
+    })
+    appendMsgs(chats)
+}
+async function appendMsgs(messages = []) {
     for (let index = 0; index < messages.length; index++) {
-        const element = messages[index];
-        messageViewElm.appendChild(await Message2Elm(element))
-        messageViewList.push(element)
+        const element = new lineType.Message(messages[index])
+        roomData.messageView.elmList.prepend((await Message2Elm(element))[0])
+        roomData.messageView.dataList.push(element)
     }
 }
 async function Message2Elm(message) {
@@ -775,11 +798,15 @@ async function Message2Elm(message) {
         msgId: message.id,
         rCode: message.relatedMessageServiceCode,
         rId: message.relatedMessageId,
-        contentType: message.contentType
-
+        contentType: message.contentType,
+        direction: "",
+        msgGroup:""
     }
-    if (chatroom.msgData[chatroom.msgData.length - 1] && chatroom.msgData[chatroom.msgData.length - 1].mid == data.mid) {
+    if (roomData.messageView.dataList[roomData.messageView.dataList.length - 1] && (roomData.messageView.dataList[roomData.messageView.dataList.length - 1].mid == data.mid)) {
         data["msgGroup"] = "item"
+    }
+    if (data.mid == roomData.mymid) {
+        data.direction = "reverse"
     }
     if (data.rId) {
         data.reply = await getMsgById(data.rId)
@@ -793,6 +820,15 @@ async function Message2Elm(message) {
                 mention: message.contentMetadata.MENTION
             }
             data = { ...data, ...add }
+            break;
+        case undefined://t
+            add = {
+                text: [message.text],
+                emoji: message.contentMetadata.REPLACE,
+                mention: message.contentMetadata.MENTION
+            }
+            data = { ...data, ...add }
+            break;
         case 1://i
             add = {
                 data: {
@@ -800,6 +836,7 @@ async function Message2Elm(message) {
                 }
             }
             data = { ...data, ...add }
+            break;
         case 2://v
             add = {
                 data: {
@@ -807,16 +844,19 @@ async function Message2Elm(message) {
                 }
             }
             data = { ...data, ...add }
+            break;
         case 3://a
             add = {
                 data: await getMDataUrl(message.id)
             }
             data = { ...data, ...add }
+            break;
         case 7://st
             add = {
                 img: await getStkDataUrl(message.contentMetadata.STKID)
             }
             data = { ...data, ...add }
+            break;
         case 14://fi
         case 22://fl
             add = {
@@ -824,9 +864,11 @@ async function Message2Elm(message) {
                 flex: message.contentMetadata.FLEX_JSON,
             }
             data = { ...data, ...add }
+            break;
         default:
             break;
     }
+    
     return [genMsg(data)
         , data, genMsg]//elm data func
 
@@ -885,6 +927,7 @@ function genMsg(data = {}) {
             "data-message-content-prefix": data.timeStr + " " + data.name,
             "data-mid": data.mid,
             "data-group": data.msgGroup,
+            "data-direction": data.direction
         },
         div(
             {
@@ -922,7 +965,8 @@ function genMsg(data = {}) {
         )
         , pre(
             {
-                "class": "username-module__username__vGQGj"
+                "class": "username-module__username__vGQGj",
+                "style": "color:#fff;"
             },
             span(
                 {},
@@ -953,6 +997,7 @@ function genMsg(data = {}) {
                         , time(
                             {
                                 "class": "metaInfo-module__send_time__-3Q6-",
+                                "style": "color:#fff;"
                             },
                             data.timeStr)
                     )
@@ -968,6 +1013,7 @@ function genMsg(data = {}) {
 
 }
 function msgMain(data) {
+    fileMenu=""
     switch (data.contentType) {
         case 0://txt
             if (data.rId) {
@@ -975,22 +1021,34 @@ function msgMain(data) {
             } else {
                 return textMsg(data)
             }
+            break;
+        case undefined://txt
+            if (data.rId) {
+                return replyBox(data, textMsg(data))
+            } else {
+                return textMsg(data)
+            }
+            break;
         case 1://img
-            return imgMsg(data)
+            return imgMsg(data);
         case 2://video
-            return videoMsg(data)
+            return videoMsg(data);
         case 3://audio
-            return audioMsg(data)
+            return audioMsg(data);
         case 7://sticker
-            return stickerMsg(data)
+            return stickerMsg(data);
         case 14: //file
+            break;
         case 22: //flex
-            return flexMsg(data)
+            return flexMsg(data);
         default:
             break;
     }
 
     function textMsg(data) {
+        if (!data.text) {
+            data.text=[""]
+        }
         if (data.mention) {
             let mention = JSON.parse(data.mention)
             let txt = []
@@ -1010,7 +1068,7 @@ function msgMain(data) {
                             "class": "mention",
                             "data-mid": e.M,
                             "$click": (...arg) => { buttonEvent("openProfile", arg) }
-                        }, "@" + e.M + ":" + otxt.substring(Number(e.S), Number(e.E))
+                        }, e.M + ":" + otxt.substring(Number(e.S), Number(e.E))
                     ))
                     txt.push(otxt.substring(Number(e.E)))
                 } else {
@@ -1020,7 +1078,7 @@ function msgMain(data) {
                             "class": "mention",
                             "data-mid": e.M,
                             "$click": (...arg) => { buttonEvent("openProfile", arg) }
-                        }, "@" + e.M + ":" + otxt.substring(Number(e.S), Number(e.E))
+                        }, e.M + ":" + otxt.substring(Number(e.S), Number(e.E))
                     ))
                 }
 
@@ -1107,6 +1165,7 @@ function msgMain(data) {
     }
 
     function replyBox(data, index) {
+        console.log(data)
         return div(
             {
                 "class": "replyMessageContent-module__content_wrap__D0K-5 ",
@@ -1209,7 +1268,7 @@ function msgMain(data) {
                             img(
                                 {
                                     "alt": "",
-                                    "src": data.mData.preview,
+                                    "src": data.data.preview,
                                     "class": "",
                                     "loading": "lazy",
                                     "draggable": "false"
@@ -1296,7 +1355,7 @@ function msgMain(data) {
         )
     }
     function stickerMsg(data) {
-        div(
+        return div(
             {
                 "class": "stickerMessageContent-module__content_wrap__BGfk- ",
                 "data-message-id": data.msgId
@@ -1353,7 +1412,6 @@ function msgMain(data) {
                     "srcdoc": html,
                     "sandbox": "allow-same-origin allow-popups allow-popups-to-escape-sandbox",
                     "scrolling": "no",
-                    "style": "height: 343.688px;"
                 },
             )
         )

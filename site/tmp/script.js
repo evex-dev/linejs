@@ -49,8 +49,8 @@ class LineTCompactSocket {
         if (extraH) {
             account["ex"] = JSON.stringify(extraH)
         }
-        //this.socket.post = new WebSocket("wss://line-selfbot.deno.dev/post?" + new URLSearchParams(account).toString())
-        this.socket.post = new WebSocket("ws://localhost:8000/post?" + new URLSearchParams(account).toString())
+        
+        this.socket.post = new WebSocket("ws"+location.protocol.replace(":","").replace("http","")+"://"+location.host+"/post?" + new URLSearchParams(account).toString())
         this.socket.post.onopen = (e) => {
             try {
                 resolve(this)
