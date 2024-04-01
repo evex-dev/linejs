@@ -204,7 +204,9 @@ async function getMPDataUrl(id) {
 }
 async function getMsgById(id) {
     let data = { txt: "このメッセージはありません" }
-    roomData.messageView.dataList.forEach(async (e) => {
+    
+    for (let index = 0; index < roomData.messageView.dataList.length; index++) {
+        const e = roomData.messageView.dataList[index];
         if (e.id == id) {
             if (e.contentType == 0) {
                 data.txt = e.text
@@ -213,9 +215,14 @@ async function getMsgById(id) {
                 data.txt = ""
                 data.profile = await getProfile(e._from)
             }
-            return
+            return data
         }
-    })
+    }
+        
+    
+    if (!data.profile) {
+        data.profile={img:"",mid:"",name:""}
+    }
     return data
 }
 async function getObsUrl(obs) {
@@ -1165,7 +1172,6 @@ function msgMain(data) {
     }
 
     function replyBox(data, index) {
-        console.log(data)
         return div(
             {
                 "class": "replyMessageContent-module__content_wrap__D0K-5 ",
