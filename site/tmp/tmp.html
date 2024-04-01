@@ -27,7 +27,11 @@
             LINE = new LineSquareClient(document.getElementById("auth").value, document.getElementById("dev").value, () => {
                 setTimeout(async () => {
                     let rooms = await LINE.getJoinedSquareChats()
-                    buildChatButton(rooms)
+                    await buildChatButton(rooms)
+                    setInterval(()=>{
+                        fetchEventUpdate()
+                    },
+                    1000)
                 },200)
             })
             runLINE()
