@@ -17,14 +17,19 @@
     <div id="root" style="min-width: 155px; min-height: 403px;">
         <div class="app" style="margin: 10px;">
             <input type="text" placeholder="authToken" id="auth" style="border: 2px;-webkit-appearance: auto;"><br>
-            <input type="text" placeholder="device" id="dev" style="border: 2px;-webkit-appearance: auto;"><br>
+            <input type="text" placeholder="device" id="device" style="border: 2px;-webkit-appearance: auto;"><br>
             <button type="button" onclick="runnnn()" style="border: 2px;-webkit-appearance: auto;">RUN!!!</button>
         </div>
     </div>
     <script async>
         var LINE
+        if (localStorage.getItem("auth")) {
+            document.getElementById("auth").value = localStorage.getItem("auth")
+        } if (localStorage.getItem("device")) {
+            document.getElementById("device").value = localStorage.getItem("device")
+        }
         async function runnnn() {
-            LINE = new LineSquareClient(document.getElementById("auth").value, document.getElementById("dev").value, () => {
+            LINE = new LineSquareClient(document.getElementById("auth").value, document.getElementById("device").value, () => {
                 setTimeout(async () => {
                     let rooms = await LINE.getJoinedSquareChats()
                     await buildChatButton(rooms)
@@ -34,6 +39,8 @@
                     1000)
                 },200)
             })
+            localStorage.setItem("auth", document.getElementById("auth").value)
+            localStorage.setItem("device", document.getElementById("device").value)
             runLINE()
         }
     </script>
