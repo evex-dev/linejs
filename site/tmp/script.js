@@ -45,12 +45,16 @@ class LineTCompactSocket {
         }
         appName = device + "\t" + appVer + "\t" + sysName + "\t" + sysVer
         UA = "Line/" + appVer
+        this.config={
+            ua:UA,
+            appName:appName
+        }
         let account = { path: gwPath, auth: authToken, ua: UA, type: appName }
         if (extraH) {
             account["ex"] = JSON.stringify(extraH)
         }
-        
-        this.socket.post = new WebSocket("ws"+location.protocol.replace(":","").replace("http","")+"://"+location.host+"/post?" + new URLSearchParams(account).toString())
+
+        this.socket.post = new WebSocket("ws" + location.protocol.replace(":", "").replace("http", "") + "://" + location.host + "/post?" + new URLSearchParams(account).toString())
         this.socket.post.onopen = (e) => {
             try {
                 resolve(this)
@@ -286,40 +290,50 @@ class LineSquareClient {
         let n = "fetchSquareChatEvents"
         return await this.SQ1.postRequestAndGetResponse(v, n)
     }
-    async getSquareMember(mid){
-        return await this.SQ1.postCHRRequestAndGetResponse([12,1,[11, 2, mid]],"getSquareMember")
+    async getSquareMember(mid) {
+        return await this.SQ1.postCHRRequestAndGetResponse([12, 1, [11, 2, mid]], "getSquareMember")
     }
     async getJoinedSquareChats() {
-        let syncToken=(Number((await LINE.SQ1.postRequestAndGetResponse({limit:10},"fetchMyEvents")).syncToken)-30000).toString()
-        let data=await LINE.SQ1.postRequestAndGetResponse({limit:30000,syncToken:syncToken},"fetchMyEvents")
-        let chats=new Set()
-        data.events.forEach((e)=>{
-            if (e.type==29) {
+        let syncToken = (Number((await LINE.SQ1.postRequestAndGetResponse({ limit: 10 }, "fetchMyEvents")).syncToken) - 30000).toString()
+        let data = await LINE.SQ1.postRequestAndGetResponse({ limit: 30000, syncToken: syncToken }, "fetchMyEvents")
+        let chats = new Set()
+        data.events.forEach((e) => {
+            if (e.type == 29) {
                 chats.add(e.payload.notificationMessage.squareChatMid)
             }
         })
-        let joinedChats=[]
+        let joinedChats = []
         for (let e of chats) {
-            let ch=(await LINE.SQ1.postRequestAndGetResponse({squareChatMid:e},"getSquareChat"))
+            let ch = (await LINE.SQ1.postRequestAndGetResponse({ squareChatMid: e }, "getSquareChat"))
             if (ch.squareChatMember) {
                 joinedChats.push(ch)
             }
         }
-        joinedChats.sort((a,b)=>{
+        joinedChats.sort((a, b) => {
             return b.squareChatStatus.lastMessage.message.createdTime - a.squareChatStatus.lastMessage.message.createdTime;
         })
         return joinedChats
-        }
-    async getSquareChat(mid){
-        return await LINE.SQ1.postRequestAndGetResponse({squareChatMid:mid},"getSquareChat")
     }
-        
+    async getSquareChat(mid) {
+        return await LINE.SQ1.postRequestAndGetResponse({ squareChatMid: mid }, "getSquareChat")
+    }
+
     async fetch(url, addHead = {}, method = "GET", body = null) {//  !!! USE TOKEN !!!
         return await fetch(url, {
             headers: {
                 "x-line-access": this.authToken,
                 ...addHead
             },
+            method: method,
+            body: body
+        })
+    }
+    async proxyFetch(url, headers = {}, method = "GET", body = null) {
+        let requrl = new URL(url)
+        let reqhost = btoa(requrl.protocol + requrl.host).replace("=", "")
+        let reqpath = requrl.pathname+requrl.search
+        return await fetch(location.origin+"/proxy/"+reqhost+"/path"+reqpath, {
+            headers: headers,
             method: method,
             body: body
         })

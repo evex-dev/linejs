@@ -1,5 +1,6 @@
 
 import ws from "./dnowork.js"
+import proxy from "./proxy.js"
 
 export async function handler(request) {
   const url = new URL(request.url)
@@ -7,6 +8,8 @@ export async function handler(request) {
   switch (url.pathname.split("/")[1]) {
     case "post":
       return await ws(request);
+    case "proxy":
+      return await proxy(request);
     default:
       break;
   }

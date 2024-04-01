@@ -1,4 +1,4 @@
-
+var chatList = []
 var URLcashe = localforage.createInstance({
     name: "URLcashe"
 });
@@ -46,6 +46,7 @@ async function squareChat2chatButton(squareChatResponse, index) {
         lastText: lastText,
         unread: unread
     }
+    chatList.push(data)
     return genChatButton(data)
 
 }
@@ -159,6 +160,7 @@ var roomData = {
         elmList: []
     },
     mymid: "",
+    roomMid: ""
 }
 async function getMDataUrl(id) {
     let url = "https://obs-jp.line-apps.com/r/g2/m/" + id
@@ -168,7 +170,7 @@ async function getMDataUrl(id) {
     } else {
         let res
         try {
-            res = await LINE.fetch(url)
+            res = await LINE.proxyFetch(url,{"x-line-access":LINE.authToken,"x-line-application":LINE.SQ1.config.appName})
         } catch (error) {
 
         }
@@ -189,7 +191,7 @@ async function getMPDataUrl(id) {
     } else {
         let res
         try {
-            res = await LINE.fetch(url)
+            res = await LINE.proxyFetch(url,{"x-line-access":LINE.authToken,"x-line-application":LINE.SQ1.config.appName})
         } catch (error) {
 
         }
@@ -204,7 +206,7 @@ async function getMPDataUrl(id) {
 }
 async function getMsgById(id) {
     let data = { txt: "このメッセージはありません" }
-    
+
     for (let index = 0; index < roomData.messageView.dataList.length; index++) {
         const e = roomData.messageView.dataList[index];
         if (e.id == id) {
@@ -218,10 +220,10 @@ async function getMsgById(id) {
             return data
         }
     }
-        
-    
+
+
     if (!data.profile) {
-        data.profile={img:"",mid:"",name:""}
+        data.profile = { img: "", mid: "", name: "" }
     }
     return data
 }
@@ -324,10 +326,16 @@ async function buttonEvent(n, arg) {
         await squareChat2chatroom(await LINE.getSquareChat(arg[0].parentElement.dataset.mid))
         await getAndBuildMessages(arg[0].parentElement.dataset.mid)
     }
+    if (n == "send") {
+        let res = await LINE.sendTxtMessage(roomData.roomMid, arg[0].parentElement.parentElement.childNodes[0].childNodes[0].value)
+        appendMsgs([res.createdSquareMessage.message])
+        arg[0].parentElement.parentElement.childNodes[0].childNodes[0].value=""
+    }
 }
 
 async function squareChat2chatroom(squareChatResponse) {
     roomData.messageView.dataList = []
+    roomData.roomMid = squareChatResponse.squareChat.squareChatMid
     let data = {
         mymid: squareChatResponse.squareChatMember.squareMemberMid,
         mid: squareChatResponse.squareChat.squareChatMid,
@@ -807,7 +815,7 @@ async function Message2Elm(message) {
         rId: message.relatedMessageId,
         contentType: message.contentType,
         direction: "",
-        msgGroup:""
+        msgGroup: ""
     }
     if (roomData.messageView.dataList[roomData.messageView.dataList.length - 1] && (roomData.messageView.dataList[roomData.messageView.dataList.length - 1].mid == data.mid)) {
         data["msgGroup"] = "item"
@@ -875,7 +883,7 @@ async function Message2Elm(message) {
         default:
             break;
     }
-    
+
     return [genMsg(data)
         , data, genMsg]//elm data func
 
@@ -1018,7 +1026,7 @@ function genMsg(data = {}) {
 
 }
 function msgMain(data) {
-    fileMenu=""
+    fileMenu = ""
     switch (data.contentType) {
         case 0://txt
             if (data.rId) {
@@ -1052,7 +1060,7 @@ function msgMain(data) {
 
     function textMsg(data) {
         if (!data.text) {
-            data.text=[""]
+            data.text = [""]
         }
         if (data.mention) {
             let mention = JSON.parse(data.mention)
@@ -1154,7 +1162,7 @@ function msgMain(data) {
                 "data-message-id": data.msgId,
                 "oncontextmenu": "return false;",
                 "$contextmenu": (...arg) => { buttonEvent("msgAction", arg) },
-                "data-direction":data.direction
+                "data-direction": data.direction
             },
             pre(
                 {
@@ -1416,7 +1424,6 @@ function msgMain(data) {
                     "data-message-id": "501557461296873730",
                     "srcdoc": html,
                     "sandbox": "allow-same-origin allow-popups allow-popups-to-escape-sandbox",
-                    "scrolling": "no",
                 },
             )
         )
@@ -1444,7 +1451,7 @@ function msgMain(data) {
 
 function fuchi(txt) {
     return span(
-        {style:"color:#fff; -webkit-text-stroke: 0.2px #000;text-stroke: 0.2px #000;"}
-        ,txt
+        { style: "color:#fff; -webkit-text-stroke: 0.2px #000;text-stroke: 0.2px #000;" }
+        , txt
     )
 }

@@ -623,9 +623,4 @@ runLINE=()=>{__("body").in(
         {
             "id": "modal-root"
         },
-    ), iframe(
-        {
-            "src": "/ltsmSandbox.html?sandboxId=268e3c8a-c668-417a-9110-69d1ff52ad23",
-            "style": "width: 0px; height: 0px; border: none; position: absolute; left: 0px; top: 0px;"
-        },
     ))}

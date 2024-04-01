@@ -98,7 +98,7 @@ code {
 }
 
 .show_e2ee_mark [data-is-e2ee-message=true]>[class^=messageLayout-module]:before {
-    content: "🔑";
+    content: "ðŸ”‘";
     font-size: 2em;
     position: relative;
     z-index: 1
@@ -3543,7 +3543,7 @@ div[class*=push_notice_area]~.chatroomNotice-module__notice_area__2CN4p:not([dat
 }
 
 .imageMessageContent-module__content_wrap__bT-Si {
-    background-color: #fff;
+    background-color: unset;
     max-width: 265px;
     min-width: 100px;
     -webkit-user-select: text;
@@ -3649,8 +3649,8 @@ div[class*=push_notice_area]~.chatroomNotice-module__notice_area__2CN4p:not([dat
 }
 
 .imageMessageContent-module__image_group__ZOeAa .imageMessageContent-module__item__fJDih:only-child:last-child .imageMessageContent-module__thumbnail__z4GO8 img:not(.is_loading) {
-    background-color: #fff;
-    border: 1px solid #f5f5f5;
+    background-color: unset;
+    border: none;
     border-radius: 5px;
     box-sizing: border-box
 }
@@ -3665,7 +3665,7 @@ div[class*=push_notice_area]~.chatroomNotice-module__notice_area__2CN4p:not([dat
 }
 
 .imageMessageContent-module__thumbnail__z4GO8 {
-    background-color: #f0f0f1;
+    background-color: unset;
     max-height: 340px;
     overflow: hidden;
     padding-top: 100%;

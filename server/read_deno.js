@@ -24,7 +24,6 @@ function XreadX(input) {
             input.readFieldEnd();
         } input.readStructEnd();
     } catch (error) {
-        console.log(error, ret, input, returnData)
     }
     return returnData;
 }
@@ -69,7 +68,7 @@ function POWERRRRR(input, ftype) {
     } else if (ftype == Thrift.Type.DOUBLE) {
         return input.readDouble();
     } else {
-        console.log(fid,ftype,val,"unknown");
+        console.log(fid, ftype, val, "unknown");
         input.skip(ftype);
         return
     }
@@ -113,12 +112,9 @@ function readThrift(data) {
         bufTrans = new Transport(b)
         myprot = new Protocol(bufTrans)
         tdata = new ttypes[Ltype]()
-        try {
-            tdata.read(myprot)
-        } catch (e) {
-            console.log(e)
-            console.log(tdata, myprot, bufTrans)
-        }
+
+        tdata.read(myprot)
+
     } catch {
         const Transport = thrift.TFramedTransport
         const Protocol = thrift.TCompactProtocol
@@ -128,7 +124,7 @@ function readThrift(data) {
         try {
             tdata = XreadX(myprot)
         } catch (e) {
-            return { name: Lname ,err: e.stack}
+            return { name: Lname, err: e.stack }
         }
         outType = outType + 2
     }
@@ -160,8 +156,8 @@ export default function read(data, type) {
         return object2json(readThrift(data))
     } else if (type == 3) {
         let len = data[3]
-    let Lname = new TextDecoder().decode(new Uint8Array(data.slice(4, 4 + len)))
-    data = data.slice(len + 6)
+        let Lname = new TextDecoder().decode(new Uint8Array(data.slice(4, 4 + len)))
+        data = data.slice(len + 6)
         console.log("chrRes")
         const Transport = thrift.TFramedTransport
         const Protocol = thrift.TCompactProtocol
@@ -172,8 +168,6 @@ export default function read(data, type) {
         try {
             tdata = XreadX(myprot)
         } catch (e) {
-            console.log(e)
-            console.log(tdata, myprot, bufTrans)
         }
         type = type + 2
         return object2json({ value: tdata, name: Lname, type: type.toString() })
