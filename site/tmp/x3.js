@@ -10,6 +10,9 @@ runLINE=()=>{__("body").in(
         div(
             {
                 "id": "root",
+                "$click":()=>{
+                    document.querySelector("#modal-root").innerHTML=""
+                }
             },
             div(
                 {

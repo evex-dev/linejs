@@ -30,9 +30,14 @@
         async function runnnn() {
             LINE = new LineSquareClient(document.getElementById("auth").value, document.getElementById("device").value, () => {
                 setTimeout(async () => {
-                    let rooms = await LINE.getJoinedSquareChats()
-                    await buildChatButton(rooms)
-                },200)
+                    let rooms = await UserCashe.getItem(LINE.mid + ":chatsList")
+                    if (!rooms) {
+                        rooms = await LINE.getJoinedSquareChats()
+                        await buildChatButton(rooms)
+                    }else{
+                        await buildChatButtonC(rooms)
+                    }
+                }, 200)
             })
             localStorage.setItem("auth", document.getElementById("auth").value)
             localStorage.setItem("device", document.getElementById("device").value)

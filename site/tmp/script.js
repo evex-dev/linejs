@@ -45,16 +45,16 @@ class LineTCompactSocket {
         }
         appName = device + "\t" + appVer + "\t" + sysName + "\t" + sysVer
         UA = "Line/" + appVer
-        this.config={
-            ua:UA,
-            appName:appName
+        this.config = {
+            ua: UA,
+            appName: appName
         }
         let account = { path: gwPath, auth: authToken, ua: UA, type: appName }
         if (extraH) {
             account["ex"] = JSON.stringify(extraH)
         }
-
-        this.socket.post = new WebSocket("ws" + location.protocol.replace(":", "").replace("http", "") + "://" + location.host + "/post?" + new URLSearchParams(account).toString())
+        this.wsURL = "ws" + location.protocol.replace(":", "").replace("http", "") + "://" + location.host + "/post?" + new URLSearchParams(account).toString()
+        this.socket.post = new WebSocket(this.wsURL)
         this.socket.post.onopen = (e) => {
             try {
                 resolve(this)
@@ -76,6 +76,24 @@ class LineTCompactSocket {
             this.socket.post.close()
         } catch (e) {
         }
+    }
+    reOpenSocket(resolve) {
+        this.socket.post = new WebSocket(this.wsURL)
+        this.socket.post.onopen = (e) => {
+            try {
+                resolve(this)
+            } catch (e) {
+
+            }
+            this.socketInfo.post = { status: "open", waitFunc: {} }
+        };
+        this.socket.post.onclose = (e) => {
+            this.socketInfo.post.status = false
+        };
+        this.socket.post.onmessage = null
+        this.socket.post.onclose = (e) => {
+            this.socketInfo.post = { status: false }
+        };
     }
     post(data) {
         return new Promise((resolve, reject) => {
@@ -132,7 +150,7 @@ class LineTCompactSocket {
         reqJson = data
         resJson = JSON.parse(await this.postAndCheckResponse(reqJson))
         if (reqJson.err) {
-            throw new Error("Server Error : "+reqJson.err)
+            throw new Error("Server Error : " + reqJson.err)
         }
         return resJson
     }
@@ -229,7 +247,18 @@ class LineTCompactSocket {
 
 class LineSquareClient {
     constructor(authToken, device, resolve) {
-        this.SQ1 = new LineTCompactSocket("/SQ1", authToken, device, resolve)
+        this.S4 = new LineTCompactSocket("/S4", authToken, device, ()=>{
+            setTimeout(async () => {
+                let res=await this.S4.postCHRRequestAndGetResponse([],"getProfile")
+                this.mid=res[1]
+                this.name=res[20]
+                try {
+                    resolve()
+                } catch (error) {
+                }
+            },200)
+        })
+        this.SQ1 = new LineTCompactSocket("/SQ1", authToken, device)
         this.authToken = authToken
         this.deviceName = device
     }
@@ -285,7 +314,7 @@ class LineSquareClient {
     async fetchSquareChatEvents(squareChatMid, syncToken) {
         let v = {
             squareChatMid: squareChatMid,
-            limit: 20
+            limit: 50
         }
         if (syncToken) {
             v.syncToken = syncToken
@@ -324,12 +353,18 @@ class LineSquareClient {
     async proxyFetch(url, headers = {}, method = "GET", body = null) {
         let requrl = new URL(url)
         let reqhost = btoa(requrl.protocol + requrl.host).replace("=", "")
-        let reqpath = requrl.pathname+requrl.search
-        return await fetch(location.origin+"/proxy/"+reqhost+"/path"+reqpath, {
+        let reqpath = requrl.pathname + requrl.search
+        return await fetch(location.origin + "/proxy/" + reqhost + "/path" + reqpath, {
             headers: headers,
             method: method,
             body: body
         })
+    }
+    async sleep() {
+        this.SQ1.closeSocket()
+    }
+    async wake() {
+        this.SQ1.reOpenSocket()
     }
 
 }

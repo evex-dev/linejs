@@ -124,5 +124,6 @@ function ToStr(str = "") {
     })
     return `${elm.localName}(
 ${JSON.stringify(ops, null, 1)},
-${prms})`
+${prms}
+)`
 }
