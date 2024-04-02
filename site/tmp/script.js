@@ -131,6 +131,9 @@ class LineTCompactSocket {
         let reqJson, resJson;
         reqJson = data
         resJson = JSON.parse(await this.postAndCheckResponse(reqJson))
+        if (reqJson.err) {
+            throw new Error("Server Error : "+reqJson.err)
+        }
         return resJson
     }
     async postRRequestAndGetRResponse(data, isBuf = false) {

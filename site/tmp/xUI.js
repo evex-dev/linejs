@@ -22,80 +22,88 @@ async function buildChatButton(squareChatResponseList = []) {
     }
     let res = list(elms)
     __("#root > div > div > div.chatlist-module__chatlist_wrap__KtTpq > div.chatlist-module__chatlist__qruAE > div > div > div").in(res)
-    setInterval(()=>{
+    setInterval(() => {
         try {
             fetchEventUpdate()
         } catch (error) {
-            
+
         }
-                },
-                2000)
+    },
+        2000)
     return res
 }
-async function fetchEventUpdate() {
-    function list(inElm) {
-        return div({ style: "height: " + 71 * inElm.length + "px; width: 100%;" }, ...inElm)
-    }
-    let elms=[]
-    if (!chatData.syncToken) {
-        chatData.syncToken = (await LINE.fetchMyEvents()).syncToken
-    }
-    let res = (await LINE.fetchMyEvents(chatData.syncToken))
-    chatData.syncToken = res.syncToken
-    res.events.forEach(async (e) => {
-        let chat
-        switch (e.type) {
-            case 29:
-                chat = await getChatdata(e.payload.notificationMessage.squareChatMid)
-                let date = e.payload.notificationMessage.squareMessage.message.deliveredTime
-                date = new Date(date)
-                date = date.getMonth() + 1 + "/" + date.getDate()
-                chat.timeInt = e.payload.notificationMessage.squareMessage.message.deliveredTime
-                if (e.payload.notificationMessage.squareMessage.message.text) {
-                    chat.lastText = e.payload.notificationMessage.squareMessage.message.text
-                }
-                
-                if (e.payload.notificationMessage.unreadCount) {
-                    let unread = e.payload.notificationMessage.unreadCount
-                    chat.unread = span({ class: "chatlistItem-module__message_count__FRt4s" }, unread)
-                }else{
-                    chat.unread = ""
-                }
-                break;
-            case 13:
-                chat = await getChatdata(e.payload.notifiedUpdateSquareChatStatus.squareChatMid)
-                chat.member=e.payload.notifiedUpdateSquareChatStatus.statusWithoutMessage.memberCount
-                if (e.payload.notifiedUpdateSquareChatStatus.statusWithoutMessage.unreadCount) {
-                    let unread = e.payload.notifiedUpdateSquareChatStatus.statusWithoutMessage.unreadCount
-                    chat.unread = span({ class: "chatlistItem-module__message_count__FRt4s" }, unread)
-                }else{
-                    chat.unread = ""
-                }
-            default:
-                break;
+function fetchEventUpdate() {
+    (async () => {
+        if (roomData.roomMid) {
+            let data = await getSquareChatHistory(roomData.roomMid)
+            getAndBuildMessages(roomData.roomMid, data.syncToken)
         }
-    })
-    chatData.chatList.sort((a, b) => {
-        return b.timeInt - a.timeInt;
-    })
-    chatData.chatList.forEach((e,i)=>{
-        e.index=i
-        elms.push(genChatButton(e))
-    })
-    let elm = list(elms)
-    __("#root > div > div > div.chatlist-module__chatlist_wrap__KtTpq > div.chatlist-module__chatlist__qruAE > div > div > div").in(elm)
-    
-    async function getChatdata(id) {
-        for (let index = 0; index < chatData.chatList.length; index++) {
-            const e = chatData.chatList[index];
-            if (e.mid == id) {
-                return e
+    })();
+    (async () => {
+        function list(inElm) {
+            return div({ style: "height: " + 71 * inElm.length + "px; width: 100%;" }, ...inElm)
+        }
+        let elms = []
+        if (!chatData.syncToken) {
+            chatData.syncToken = (await LINE.fetchMyEvents()).syncToken
+        }
+        let res = (await LINE.fetchMyEvents(chatData.syncToken))
+        chatData.syncToken = res.syncToken
+        res.events.forEach(async (e) => {
+            let chat
+            switch (e.type) {
+                case 29:
+                    chat = await getChatdata(e.payload.notificationMessage.squareChatMid)
+                    let date = e.payload.notificationMessage.squareMessage.message.deliveredTime
+                    date = new Date(date)
+                    date = date.getMonth() + 1 + "/" + date.getDate()
+                    chat.timeInt = e.payload.notificationMessage.squareMessage.message.deliveredTime
+                    if (e.payload.notificationMessage.squareMessage.message.text) {
+                        chat.lastText = e.payload.notificationMessage.squareMessage.message.text
+                    }
+
+                    if (e.payload.notificationMessage.unreadCount) {
+                        let unread = e.payload.notificationMessage.unreadCount
+                        chat.unread = span({ class: "chatlistItem-module__message_count__FRt4s" }, unread)
+                    } else {
+                        chat.unread = ""
+                    }
+                    break;
+                case 13:
+                    chat = await getChatdata(e.payload.notifiedUpdateSquareChatStatus.squareChatMid)
+                    chat.member = e.payload.notifiedUpdateSquareChatStatus.statusWithoutMessage.memberCount
+                    if (e.payload.notifiedUpdateSquareChatStatus.statusWithoutMessage.unreadCount) {
+                        let unread = e.payload.notifiedUpdateSquareChatStatus.statusWithoutMessage.unreadCount
+                        chat.unread = span({ class: "chatlistItem-module__message_count__FRt4s" }, unread)
+                    } else {
+                        chat.unread = ""
+                    }
+                default:
+                    break;
             }
+        })
+        chatData.chatList.sort((a, b) => {
+            return b.timeInt - a.timeInt;
+        })
+        chatData.chatList.forEach((e, i) => {
+            e.index = i
+            elms.push(genChatButton(e))
+        })
+        let elm = list(elms)
+        __("#root > div > div > div.chatlist-module__chatlist_wrap__KtTpq > div.chatlist-module__chatlist__qruAE > div > div > div").in(elm)
+
+        async function getChatdata(id) {
+            for (let index = 0; index < chatData.chatList.length; index++) {
+                const e = chatData.chatList[index];
+                if (e.mid == id) {
+                    return e
+                }
+            }
+            let chat = await LINE.getSquareChat(id)
+            await squareChat2chatButton(chat, 0)
+            return await getChatdata(id)
         }
-        let chat=await LINE.getSquareChat(id)
-        await squareChat2chatButton(chat,0)
-        return await getChatdata(id)
-    }
+    })()
 }
 async function squareChat2chatButton(squareChatResponse, index) {
     let lastText = ""
@@ -236,8 +244,9 @@ var roomData = {
         dataList: [],
         elmList: []
     },
-    mymid: "",
-    roomMid: ""
+    mymid: null,
+    roomMid: null,
+    followLatest: false
 }
 async function getMDataUrl(id) {
     let url = "https://obs-jp.line-apps.com/r/g2/m/" + id
@@ -281,9 +290,17 @@ async function getMPDataUrl(id) {
         return URL.createObjectURL(data)
     }
 }
-async function getMsgById(id) {
+async function getMsgById(id, isElm) {
     let data = { txt: "このメッセージはありません" }
-
+    if (isElm) {
+        for (let index = 0; index < roomData.messageView.elmList.childNodes.length; index++) {
+            const e = roomData.messageView.elmList.childNodes[index];
+            if (e.dataset.id == id) {
+                return e
+            }
+        }
+        return null
+    }
     for (let index = 0; index < roomData.messageView.dataList.length; index++) {
         const e = roomData.messageView.dataList[index];
         if (e.id == id) {
@@ -334,7 +351,22 @@ async function getSquareChatHistory(mid) {
         return null
     }
 }
-
+async function setSquareChatHistory(mid, sync, history = []) {
+    let prot = "squareChatHistory:" + mid
+    let data = await getSquareChatHistory(mid)
+    if (data) {
+        data = {
+            syncToken: sync,
+            history: [...data.history, ...history]
+        }
+    } else {
+        data = {
+            syncToken: sync,
+            history: history
+        }
+    }
+    await ThriftCashe.setItem(prot, data)
+}
 async function refreshProfile(mid) {
     let prot = "squareMember:" + mid
     await ThriftCashe.removeItem(prot)
@@ -398,16 +430,42 @@ async function getStkDataUrl(id) {
     }
 }
 async function buttonEvent(n, arg) {
-    console.log(n, arg)
+
     if (n == "goChat") {
+        roomData.roomMid=arg[0].parentElement.dataset.mid
         await squareChat2chatroom(await LINE.getSquareChat(arg[0].parentElement.dataset.mid))
         await getAndBuildMessages(arg[0].parentElement.dataset.mid)
+        return
     }
     if (n == "send") {
-        let res = await LINE.sendTxtMessage(roomData.roomMid, arg[0].parentElement.parentElement.childNodes[0].childNodes[0].value)
-        appendMsgs([res.createdSquareMessage.message])
+        LINE.sendTxtMessage(roomData.roomMid, arg[0].parentElement.parentElement.childNodes[0].childNodes[0].value)
         arg[0].parentElement.parentElement.childNodes[0].childNodes[0].value = ""
+        return
     }
+    if (n == "viewReply") {
+        let res = await getMsgById(arg[0].parentElement.dataset.messageId, true)
+        if (res) {
+            res.scrollIntoView()
+        }
+        return
+    }
+    if (n == "chatScroll") {
+        var scroll = arg[0].scrollTop;
+        if (scroll > -1) {
+            arg[0].parentElement.childNodes[1].dataset.hidden = "true"
+            roomData.followLatest = true
+        } else {
+            roomData.followLatest = false
+            arg[0].parentElement.childNodes[1].dataset.hidden = "false"
+        }
+        return
+    }
+    if (n == "chatDown") {
+        roomData.followLatest = true
+        arg[0].parentElement.childNodes[2].scrollTop = 0
+        return
+    }
+    console.log(n, arg)
 }
 
 async function squareChat2chatroom(squareChatResponse) {
@@ -430,7 +488,8 @@ function genChatroom(data) {
         {
             "class": "message_list",
             "role": "log",
-            "data-mymid": data.mymid
+            "data-mymid": data.mymid,
+            "$scroll": (...arg) => { buttonEvent("chatScroll", arg) }
         },
     )
     roomData.mymid = data.mymid
@@ -678,7 +737,8 @@ function genChatroom(data) {
             )
             , mlist
         )
-        , div(
+        ,
+        div(
             {
                 "class": "chatroomEditor-module__editor_area__1UsgR"
             }, div({
@@ -690,7 +750,8 @@ function genChatroom(data) {
                     "placeholder": data.inputName + "メッセージを入力",
                     "maxlength": "10000",
                     "autofocus": "",
-                    "style": "max-width: 100%; min-width: 100%;max-height:150%;--inherited-font-family: -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", helvetica, \"Hiragino Sans\", arial, \"MS PGothic\", sans-serif; --webfont-family: F2607980855;"
+                    "style": "max-width: 100%; min-width: 100%;max-height:150%;--inherited-font-family: -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", helvetica, \"Hiragino Sans\", arial, \"MS PGothic\", sans-serif; --webfont-family: F2607980855;",
+                    "$change": (...arg) => { buttonEvent("msgInput", arg) }
                 },
             )
                 , div(
@@ -858,31 +919,49 @@ function genChatroom(data) {
 
 
 var fileMenu = ""
-async function getAndBuildMessages(mid) {
-    let data = await LINE.fetchSquareChatEvents(mid)
+async function getAndBuildMessages(mid, sync) {
+    let data
+    if (sync) {
+        data = await LINE.fetchSquareChatEvents(mid, sync)
+    } else {
+        data = await LINE.fetchSquareChatEvents(mid)
+    }
+    if (data.syncToken) {
+        setSquareChatHistory(mid, data.syncToken)
+    }
+
     let chats = []
     data.events.forEach((e) => {
-        if (roomData.roomMid==mid) {
+        if (roomData.roomMid == mid) {
             if (e.type == 1) {
-            chats.push(e.payload.sendMessage.squareMessage.message)
-        } else if (e.type == undefined) {
-            chats.push(e.payload.receiveMessage.squareMessage.message)
+                chats.push(e.payload.sendMessage.squareMessage.message)
+            } else if (e.type == undefined) {
+                chats.push(e.payload.receiveMessage.squareMessage.message)
+            }
         }
-        }
-        
+
     })
-    appendMsgs(chats,mid)
+    if (sync && data.syncToken) {
+        setSquareChatHistory(mid, data.syncToken, chats)
+    }
+
+    appendMsgs(chats, mid)
 }
-async function appendMsgs(messages = [],mid) {
+async function appendMsgs(messages = [], mid) {
     for (let index = 0; index < messages.length; index++) {
-        if (roomData.roomMid!=mid){
+        if (roomData.roomMid != mid) {
             squareChat2chatroom(roomData.roomMid)
             return
         }
         const element = new lineType.Message(messages[index])
-        roomData.messageView.elmList.prepend((await Message2Elm(element))[0])
+        let dom=(await Message2Elm(element))[0]
+        roomData.messageView.elmList.prepend(dom)
         roomData.messageView.dataList.push(element)
+        if (roomData.followLatest) {
+            dom.scrollIntoView()
+        }
     }
+
 }
 async function Message2Elm(message) {
     let data = {
@@ -1023,13 +1102,13 @@ function genMsg(data = {}) {
     return div(
         {
             "class": "message-module__message__7odk3   messageLayout-module__message__YVDhk ",
-            "data-direction": "",
             "data-selected": data.isSelected,
             "data-timestamp": data.timeInt,
-            "data-message-content-prefix": data.timeStr + " " + data.name,
+            "data-message-content-prefix": data.timeStr + " " + data.profile.name,
             "data-mid": data.mid,
             "data-group": data.msgGroup,
-            "data-direction": data.direction
+            "data-direction": data.direction,
+            "data-id": data.msgId
         },
         div(
             {
@@ -1168,7 +1247,7 @@ function msgMain(data) {
                             "class": "mention",
                             "data-mid": e.M,
                             "$click": (...arg) => { buttonEvent("openProfile", arg) }
-                        }, e.M + ":" + otxt.substring(Number(e.S), Number(e.E))
+                        }, e.M + otxt.substring(Number(e.S), Number(e.E))
                     ))
                     txt.push(otxt.substring(Number(e.E)))
                 } else {
@@ -1178,7 +1257,7 @@ function msgMain(data) {
                             "class": "mention",
                             "data-mid": e.M,
                             "$click": (...arg) => { buttonEvent("openProfile", arg) }
-                        }, e.M + ":" + otxt.substring(Number(e.S), Number(e.E))
+                        }, e.M + otxt.substring(Number(e.S), Number(e.E))
                     ))
                 }
 
@@ -1271,7 +1350,7 @@ function msgMain(data) {
                 "class": "replyMessageContent-module__content_wrap__D0K-5 ",
                 "data-type": "",
                 "data-content-type": "",
-                "data-message-id": data.msgId
+                "data-message-id": data.rId
             },
             button(
                 {

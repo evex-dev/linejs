@@ -7,7 +7,6 @@
     <meta name="description" content="LINE in WEB">
     <meta name="google" content="notranslate">
     <title class="notranslate">LINE</title>
-    <!--<script defer="defer" src="chrome-extension://ophjlpahpchlmihnnnihgmmeilfjmjjc/static/js/main.js"></script>-->
     <link href='https://unpkg.com/css.gg@2.0.0/icons/css/terminal.css' rel='stylesheet'>
     <link href='https://unpkg.com/css.gg@2.0.0/icons/css/notes.css' rel='stylesheet'>
     <link href="./main.bdef6c38.css" rel="stylesheet">
@@ -33,10 +32,6 @@
                 setTimeout(async () => {
                     let rooms = await LINE.getJoinedSquareChats()
                     await buildChatButton(rooms)
-                    setInterval(()=>{
-                        fetchEventUpdate()
-                    },
-                    1000)
                 },200)
             })
             localStorage.setItem("auth", document.getElementById("auth").value)
