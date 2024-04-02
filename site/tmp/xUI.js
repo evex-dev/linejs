@@ -18,7 +18,9 @@ async function buildChatButton(squareChatResponseList = []) {
     let elms = []
     for (let index = 0; index < squareChatResponseList.length; index++) {
         const element = squareChatResponseList[index];
-        elms.push(await squareChat2chatButton(element, index))
+        let elm=await squareChat2chatButton(element, index)
+        observer.observe(elm)
+        elms.push(elm)
     }
     let res = list(elms)
     __("#root > div > div > div.chatlist-module__chatlist_wrap__KtTpq > div.chatlist-module__chatlist__qruAE > div > div > div").in(res)
@@ -916,7 +918,15 @@ function genChatroom(data) {
 }
 
 
-
+const observer = new IntersectionObserver((entries) => {
+    for(const e of entries) {
+       if(e.isIntersecting) {
+         e.target.setAttribute("style","")
+       } else {
+           e.target.setAttribute("style","visibility:hidden;")
+       }
+     }
+   });
 
 var fileMenu = ""
 async function getAndBuildMessages(mid, sync) {
@@ -942,7 +952,7 @@ async function getAndBuildMessages(mid, sync) {
 
     })
     if (sync && data.syncToken) {
-        setSquareChatHistory(mid, data.syncToken, chats)
+        setSquareChatHistory(mid, data.syncToken)
     }
 
     appendMsgs(chats, mid)
@@ -960,6 +970,7 @@ async function appendMsgs(messages = [], mid) {
         if (roomData.followLatest) {
             dom.scrollIntoView()
         }
+        observer.observe(dom)
     }
 
 }

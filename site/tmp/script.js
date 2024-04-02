@@ -285,7 +285,7 @@ class LineSquareClient {
     async fetchSquareChatEvents(squareChatMid, syncToken) {
         let v = {
             squareChatMid: squareChatMid,
-            limit: 200
+            limit: 20
         }
         if (syncToken) {
             v.syncToken = syncToken
@@ -321,16 +321,6 @@ class LineSquareClient {
         return await LINE.SQ1.postRequestAndGetResponse({ squareChatMid: mid }, "getSquareChat")
     }
 
-    async fetch(url, addHead = {}, method = "GET", body = null) {//  !!! USE TOKEN !!!
-        return await fetch(url, {
-            headers: {
-                "x-line-access": this.authToken,
-                ...addHead
-            },
-            method: method,
-            body: body
-        })
-    }
     async proxyFetch(url, headers = {}, method = "GET", body = null) {
         let requrl = new URL(url)
         let reqhost = btoa(requrl.protocol + requrl.host).replace("=", "")
