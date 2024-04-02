@@ -18,7 +18,7 @@ async function buildChatButton(squareChatResponseList = []) {
     let elms = []
     for (let index = 0; index < squareChatResponseList.length; index++) {
         const element = squareChatResponseList[index];
-        let elm=await squareChat2chatButton(element, index)
+        let elm = await squareChat2chatButton(element, index)
         observer.observe(elm)
         elms.push(elm)
     }
@@ -434,7 +434,7 @@ async function getStkDataUrl(id) {
 async function buttonEvent(n, arg) {
 
     if (n == "goChat") {
-        roomData.roomMid=arg[0].parentElement.dataset.mid
+        roomData.roomMid = arg[0].parentElement.dataset.mid
         await squareChat2chatroom(await LINE.getSquareChat(arg[0].parentElement.dataset.mid))
         await getAndBuildMessages(arg[0].parentElement.dataset.mid)
         return
@@ -919,14 +919,14 @@ function genChatroom(data) {
 
 
 const observer = new IntersectionObserver((entries) => {
-    for(const e of entries) {
-       if(e.isIntersecting) {
-         e.target.setAttribute("style","")
-       } else {
-           e.target.setAttribute("style","visibility:hidden;")
-       }
-     }
-   });
+    for (const e of entries) {
+        if (e.isIntersecting) {
+            e.target.setAttribute("style", "")
+        } else {
+            e.target.setAttribute("style", "visibility:hidden;")
+        }
+    }
+});
 
 var fileMenu = ""
 async function getAndBuildMessages(mid, sync) {
@@ -964,7 +964,7 @@ async function appendMsgs(messages = [], mid) {
             return
         }
         const element = new lineType.Message(messages[index])
-        let dom=(await Message2Elm(element))[0]
+        let dom = (await Message2Elm(element))[0]
         roomData.messageView.elmList.prepend(dom)
         roomData.messageView.dataList.push(element)
         if (roomData.followLatest) {
@@ -985,7 +985,6 @@ async function Message2Elm(message) {
         profile: await getProfile(message._from),
         mid: message._from,
         msgId: message.id,
-        rCode: message.relatedMessageServiceCode,
         rId: message.relatedMessageId,
         contentType: message.contentType,
         direction: "",
@@ -1000,7 +999,7 @@ async function Message2Elm(message) {
     if (data.mid == roomData.mymid) {
         data.direction = "reverse"
     }
-    if (data.rId) {
+    if (data.rId && (message.relatedMessageServiceCode == 2) && (message.messageRelationType == 3)) {
         data.reply = await getMsgById(data.rId)
     }
     let add;
@@ -1050,6 +1049,17 @@ async function Message2Elm(message) {
             data = { ...data, ...add }
             break;
         case 14://fi
+
+            break
+        case 16://note
+            add = {
+                text: message.text,
+                url: message.contentMetadata.postEndUrl,
+                createBy: message.contentMetadata.officialName
+            }
+            data = { ...data, ...add }
+            break;
+            break
         case 22://fl
             add = {
                 text: message.contentMetadata.ALT_TEXT,
@@ -1229,12 +1239,38 @@ function msgMain(data) {
             return stickerMsg(data);
         case 14: //file
             break;
+        case 16://note
+            return noteMessage(data);
         case 22: //flex
             return flexMsg(data);
         default:
             break;
     }
-
+    function noteMessage(data) {
+        if (!data.text) {
+            data.text = ""
+        }
+        let text=["ノート\n",data.text,"\n",a({href:data.url},"ノートを見る")]
+        return div(
+            {
+                "class": "textMessageContent-module__content_wrap__238E1 ",
+                "data-message-id": data.msgId,
+                "$contextmenu": (...arg) => { buttonEvent("msgAction", arg) },
+                "data-direction": data.direction
+            },
+            pre(
+                {
+                    "class": "textMessageContent-module__text__EFwEN"
+                },
+                span(
+                    {
+                        "data-message-content": "",
+                        "data-is-message-text": "true"
+                    },
+                    ...text)
+            )
+        )
+    }
     function textMsg(data) {
         if (!data.text) {
             data.text = [""]
@@ -1257,7 +1293,7 @@ function msgMain(data) {
                         {
                             "class": "mention",
                             "data-mid": e.M,
-                            "$click": (...arg) => { buttonEvent("openProfile", arg) }
+                            "$click": (...arg) => { buttonEvent("openProfileM", arg) }
                         }, e.M + otxt.substring(Number(e.S), Number(e.E))
                     ))
                     txt.push(otxt.substring(Number(e.E)))
@@ -1267,7 +1303,7 @@ function msgMain(data) {
                         {
                             "class": "mention",
                             "data-mid": e.M,
-                            "$click": (...arg) => { buttonEvent("openProfile", arg) }
+                            "$click": (...arg) => { buttonEvent("openProfileM", arg) }
                         }, e.M + otxt.substring(Number(e.S), Number(e.E))
                     ))
                 }
@@ -1337,7 +1373,6 @@ function msgMain(data) {
             {
                 "class": "textMessageContent-module__content_wrap__238E1 ",
                 "data-message-id": data.msgId,
-                "oncontextmenu": "return false;",
                 "$contextmenu": (...arg) => { buttonEvent("msgAction", arg) },
                 "data-direction": data.direction
             },
