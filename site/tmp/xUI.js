@@ -1,17 +1,8 @@
-var chatData = {
+var chatData = {    //チャットリストのデータを入れる
     chatList: []
 }
 
-var URLcashe = localforage.createInstance({
-    name: "URLcashe"
-});
-var MDataCashe = localforage.createInstance({
-    name: "MDataCashe"
-});
-var ThriftCashe = localforage.createInstance({
-    name: "ThriftCashe"
-});
-async function buildChatButton(squareChatResponseList = []) {
+async function buildChatButton(squareChatResponseList = []) {   //[getSquareChatResponse]からチャットリストのボタンを生成追加
     function list(inElm) {
         return div({ style: "height: " + 71 * squareChatResponseList.length + "px; width: 100%;" }, ...inElm)
     }
@@ -26,7 +17,7 @@ async function buildChatButton(squareChatResponseList = []) {
     __("#root > div > div > div.chatlist-module__chatlist_wrap__KtTpq > div.chatlist-module__chatlist__qruAE > div > div > div").in(res)
     setInterval(() => {
         try {
-            fetchEventUpdate()
+            fetchEventUpdate()  //更新開始
         } catch (error) {
 
         }
@@ -34,13 +25,15 @@ async function buildChatButton(squareChatResponseList = []) {
         2000)
     return res
 }
-function fetchEventUpdate() {
+function fetchEventUpdate() {   //fetchMyEvents fetchSquareChatEvents から表示を更新
+    //chat
     (async () => {
         if (roomData.roomMid) {
             let data = await getSquareChatHistory(roomData.roomMid)
             getAndBuildMessages(roomData.roomMid, data.syncToken)
         }
     })();
+    //myEvent
     (async () => {
         function list(inElm) {
             return div({ style: "height: " + 71 * inElm.length + "px; width: 100%;" }, ...inElm)
@@ -107,7 +100,8 @@ function fetchEventUpdate() {
         }
     })()
 }
-async function squareChat2chatButton(squareChatResponse, index) {
+
+async function squareChat2chatButton(squareChatResponse, index) {   //getSquareChatと上からの順番からボタンを生成
     let lastText = ""
     let date = ""
     let unread = ""
@@ -138,7 +132,7 @@ async function squareChat2chatButton(squareChatResponse, index) {
 
 }
 
-function genChatButton(data) {
+function genChatButton(data) { //html生成部分
     return div(
         {
             "class": "chatlistItem-module__chatlist_item__MOwxh ",
@@ -241,7 +235,7 @@ function genChatButton(data) {
 
 }
 
-var roomData = {
+var roomData = {    //chat
     messageView: {
         dataList: [],
         elmList: []
@@ -250,6 +244,16 @@ var roomData = {
     roomMid: null,
     followLatest: false
 }
+
+var URLcashe = localforage.createInstance({
+    name: "URLcashe"
+});
+var MDataCashe = localforage.createInstance({
+    name: "MDataCashe"
+});
+var ThriftCashe = localforage.createInstance({
+    name: "ThriftCashe"
+});
 async function getMDataUrl(id) {
     let url = "https://obs-jp.line-apps.com/r/g2/m/" + id
     let data = await MDataCashe.getItem(url)
