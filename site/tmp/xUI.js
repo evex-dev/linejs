@@ -100,7 +100,8 @@ function genMemberList(data) {
     })
     return div(
         {
-            "class": "memberPopup-module__popup__KtCXP "
+            "class": "memberPopup-module__popup__KtCXP ",
+            "style": "min-width:300;"
         },
         div(
             {
