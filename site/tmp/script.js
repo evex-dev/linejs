@@ -78,6 +78,7 @@ class LineTCompactSocket {
         }
     }
     reOpenSocket(resolve) {
+        this.closeSocket()
         this.socket.post = new WebSocket(this.wsURL)
         this.socket.post.onopen = (e) => {
             try {
@@ -325,6 +326,14 @@ class LineSquareClient {
     async getSquareMember(mid) {
         return await this.SQ1.postCHRRequestAndGetResponse([12, 1, [11, 2, mid]], "getSquareMember")
     }
+    async getSquareChatMembers(mid) {
+        let v = {
+            squareChatMid:mid,
+            limit: 200
+        }
+        let n = "getSquareChatMembers"
+        return await this.SQ1.postRequestAndGetContinueResponse(v, n)
+    }
     async getJoinedSquareChats() {
         let syncToken = (Number((await LINE.SQ1.postRequestAndGetResponse({ limit: 10 }, "fetchMyEvents")).syncToken) - 30000).toString()
         let data = await LINE.SQ1.postRequestAndGetResponse({ limit: 30000, syncToken: syncToken }, "fetchMyEvents")
@@ -361,9 +370,12 @@ class LineSquareClient {
         })
     }
     async sleep() {
+        this.S4.closeSocket()
         this.SQ1.closeSocket()
+
     }
     async wake() {
+        this.S4.reOpenSocket()
         this.SQ1.reOpenSocket()
     }
 

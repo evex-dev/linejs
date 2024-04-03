@@ -1,17 +1,18 @@
-runLINE=()=>{__("body").in(
-    div(
-{"style":"display: none;","id":"hide"},
-"hidden DIV"
-    ),
-    noscript(
-        {},
-        "You need to enable JavaScript to run this app."
-        ), 
+runLINE = () => {
+    __("body").in(
+        div(
+            { "style": "display: none;", "id": "hide" },
+            "hidden DIV"
+        ),
+        noscript(
+            {},
+            "You need to enable JavaScript to run this app."
+        ),
         div(
             {
                 "id": "root",
-                "$click":()=>{
-                    document.querySelector("#modal-root").innerHTML=""
+                "$click": () => {
+                    document.querySelector("#modal-root").innerHTML = ""
                 }
             },
             div(
@@ -40,7 +41,8 @@ runLINE=()=>{__("body").in(
                                         "class": "gnb-module__button_action__aTdj7",
                                         "aria-label": "Friend",
                                         "aria-current": "false",
-                                        "data-tooltip": "友だち"
+                                        "data-tooltip": "友だち",
+                                        "$click": (...arg) => { buttonEvent("openProfile", arg) }
                                     },
                                     i(
                                         {
@@ -62,13 +64,13 @@ runLINE=()=>{__("body").in(
                                                     {
                                                         "d": "M19.394 16.513s-3.866-2.369-4.816-2.969c-.086-.055-.316-.2-.296-.694.014-.348.151-.712.271-.902.185-.291.395-.702.639-1.183.124-.244.258-.507.404-.782.339-.184.729-.559.866-1.493.078-.531-.07-.945-.223-1.214C16.175 4.555 14.45 2.669 12 2.669c-2.439 0-4.16 1.869-4.236 4.602-.154.269-.304.685-.226 1.22.138.941.535 1.314.866 1.49.145.276.28.54.404.784.244.481.454.892.639 1.183.12.19.257.554.271.902.02.494-.21.639-.297.694-.949.6-4.815 2.969-4.83 2.979a2.7233 2.7233 0 0 0-1.241 2.29v2.518h17.3v-2.518c0-.928-.464-1.784-1.256-2.3"
                                                     },
+
                                                 )
                                             )
                                         )
                                     )
                                 )
-                            )
-                            , li(
+                            ), li(
                                 {
                                     "class": "gnb-module__nav_list_item__tbnc4"
                                 },
@@ -78,7 +80,8 @@ runLINE=()=>{__("body").in(
                                         "class": "gnb-module__button_action__aTdj7",
                                         "aria-label": "Chat",
                                         "aria-current": "true",
-                                        "data-tooltip": "トーク"
+                                        "data-tooltip": "トーク",
+                                        "$click": (...arg) => { buttonEvent("openTalk", arg) }
                                     },
                                     i(
                                         {
@@ -100,51 +103,18 @@ runLINE=()=>{__("body").in(
                                                     {
                                                         "d": "M12.1 3.078c5.194 0 8.549 2.979 8.549 7.591 0 4.185-3.405 7.59-7.591 7.59l-2.289.01c-1.346 0-2.132.993-2.555 1.826l-.418.827-.635-.676c-1.423-1.516-3.81-4.616-3.81-8.343 0-5.361 3.434-8.825 8.749-8.825Zm-3.724 7.155a.9.9 0 1 0 .0001 1.8001.9.9 0 0 0-.0001-1.8001Zm3.538 0a.9.9 0 1 0 .0001 1.8001.9.9 0 0 0-.0001-1.8001Zm3.538 0a.9.9 0 1 0 .0001 1.8001.9.9 0 0 0-.0001-1.8001Z"
                                                     },
+
                                                 )
                                             )
                                         )
                                     )
-                                )
-                            )
-                            , li(
-                                {
-                                    "class": "gnb-module__nav_list_item__tbnc4"
-                                },
-                                button(
+                                ), div(
                                     {
-                                        "type": "button",
-                                        "class": "gnb-module__button_action__aTdj7",
-                                        "aria-label": "Add friend",
-                                        "aria-current": "false",
-                                        "data-tooltip": "友だち追加"
+                                        "class": "gnb-module__badge__nU45a badge-module__badge__Eh36I "
                                     },
-                                    i(
-                                        {
-                                            "class": "icon gnb-module__icon__RvjKM"
-                                        },
-                                        svg(
-                                            {
-                                                "height": "1em",
-                                                "fill": "currentColor",
-                                                "viewBox": "0 0 20 20",
-                                                "xmlns": "http://www.w3.org/2000/svg",
-                                                "data-laicon-version": "9.0"
-                                            },
-                                            g(
-                                                {
-                                                    "transform": "translate(-2 -2)"
-                                                },
-                                                path(
-                                                    {
-                                                        "d": "M13.014 15.326h2.846a452.794 452.794 0 0 1-3.085-1.906c-.078-.05-.279-.18-.26-.62.012-.32.138-.655.25-.83.172-.273.37-.658.6-1.11.114-.228.24-.473.375-.73.325-.18.695-.542.825-1.429a1.803 1.803 0 0 0-.21-1.158c-.064-2.577-1.702-4.363-4.027-4.363-2.314 0-3.948 1.77-4.024 4.36a1.805 1.805 0 0 0-.213 1.162c.131.896.51 1.257.825 1.426.132.25.253.489.366.711l.011.021c.23.453.427.838.6 1.11.111.175.236.51.25.83.017.441-.183.57-.26.62-.734.464-3.313 2.046-4.225 2.605l-.323.198A2.6 2.6 0 0 0 2.15 18.41v2.41h14.207v-2.494h-3.343v-3zm5.493.85v-3.342h-1.3v3.343h-3.343v1.3h3.343v3.343h1.3v-3.343h3.343v-1.3h-3.343z"
-                                                    },
-                                                )
-                                            )
-                                        )
-                                    )
+                                    "25"
                                 )
-                            )
-                            , li(
+                            ), li(
                                 {
                                     "class": "gnb-module__nav_list_item__tbnc4"
                                 },
@@ -154,7 +124,8 @@ runLINE=()=>{__("body").in(
                                         "class": "gnb-module__button_action__aTdj7",
                                         "aria-label": "Voom",
                                         "aria-current": "false",
-                                        "data-tooltip": "LINE VOOM"
+                                        "data-tooltip": "LINE VOOM",
+                                        "$click": (...arg) => { buttonEvent("openVoom", arg) }
                                     },
                                     i(
                                         {
@@ -176,18 +147,13 @@ runLINE=()=>{__("body").in(
                                                     {
                                                         "d": "m19.088 15.33-9.068 5.149a3.907 3.907 0 0 1-5.86-3.329v-1.62a3.1 3.1 0 0 1 1.579-2.69l4.351-2.47a.728.728 0 0 0 .367-.63.736.736 0 0 0-.149-.44.756.756 0 0 0-.963-.18L5.7 11.19a1.023 1.023 0 0 1-1.54-.87V6.851a3.908 3.908 0 0 1 5.86-3.33l9.068 5.149a3.816 3.816 0 0 1 0 6.66z"
                                                     },
+
                                                 )
                                             )
                                         )
                                     )
                                 )
-                            )
-                        )
-                        , ul(
-                            {
-                                "class": "gnb-module__nav_bottom_list__t-ASJ"
-                            },
-                            li(
+                            ), li(
                                 {
                                     "class": "gnb-module__nav_list_item__tbnc4"
                                 },
@@ -195,8 +161,10 @@ runLINE=()=>{__("body").in(
                                     {
                                         "type": "button",
                                         "class": "gnb-module__button_action__aTdj7",
-                                        "aria-label": "Sound setting",
-                                        "data-tooltip": "すべての通知をオフ"
+                                        "aria-label": "Voom",
+                                        "aria-current": "false",
+                                        "data-tooltip": "LINE Openchat",
+                                        "$click": (...arg) => { buttonEvent("openSquare", arg) }
                                     },
                                     i(
                                         {
@@ -208,7 +176,7 @@ runLINE=()=>{__("body").in(
                                                 "fill": "currentColor",
                                                 "viewBox": "0 0 20 20",
                                                 "xmlns": "http://www.w3.org/2000/svg",
-                                                "data-laicon-version": "7.0"
+                                                "data-laicon-version": "7.3"
                                             },
                                             g(
                                                 {
@@ -216,15 +184,43 @@ runLINE=()=>{__("body").in(
                                                 },
                                                 path(
                                                     {
-                                                        "d": "M13.38 3.18 8.376 7.845H2.66a.65.65 0 0 0-.66.639v7.032l.006.094a.654.654 0 0 0 .654.545l5.716-.001 5.004 4.666c.419.391 1.119.103 1.119-.46V3.64c0-.563-.699-.851-1.119-.46zm-.203 1.965v13.711l-4.076-3.8-.078-.063a.68.68 0 0 0-.38-.117H3.319V9.124h5.324c.17 0 .333-.064.458-.179l4.076-3.8zm4.569 3.943a4.185 4.185 0 0 0-.725-.57l-.702 1.09.175.118A2.793 2.793 0 0 1 16.818 14c-.153.15-.32.281-.498.392l.701 1.09.192-.127c.19-.133.368-.28.533-.443a4.068 4.068 0 0 0 0-5.824zM18.638 6c.45.28.87.61 1.248.983h.002a7.008 7.008 0 0 1 0 10.034c-.306.3-.635.57-.984.809L18.64 18l-.704-1.09c.37-.23.712-.5 1.023-.805a5.735 5.735 0 0 0 0-8.21 5.874 5.874 0 0 0-.753-.626l-.27-.179.701-1.09z"
+                                                        "d": "M19.7 19.982V9.018c0-2.606-2.163-4.718-4.832-4.718H9.132C6.463 4.3 4.3 6.412 4.3 9.018v5.6c0 2.605 2.163 4.717 4.832 4.717h5.908",
+                                                        "stroke": "#707991",
+                                                        "stroke-width": "3",
+                                                        "style": "color: #202a43;"
                                                     },
+
                                                 )
                                             )
                                         )
                                     )
                                 )
+                            ), li(
+                                {
+                                    "class": "gnb-module__nav_list_item__tbnc4"
+                                },
+                                button(
+                                    {
+                                        "type": "button",
+                                        "class": "gnb-module__button_action__aTdj7",
+                                        "aria-label": "Voom",
+                                        "aria-current": "false",
+                                        "data-tooltip": "Console",
+                                        "$click": (...arg) => { buttonEvent("openConsole", arg) }
+                                    },
+                                    i(
+                                        {
+                                            "class": "icon gg-terminal"
+                                        },
+
+                                    )
+                                )
                             )
-                            , li(
+                        ), ul(
+                            {
+                                "class": "gnb-module__nav_bottom_list__t-ASJ"
+                            },
+                            li(
                                 {
                                     "class": "gnb-module__nav_list_item__tbnc4"
                                 },
@@ -233,7 +229,8 @@ runLINE=()=>{__("body").in(
                                         "type": "button",
                                         "class": "gnb-module__button_action__aTdj7",
                                         "aria-label": "Popover more actions",
-                                        "data-tooltip": "設定"
+                                        "data-tooltip": "設定",
+                                        "$click": (...arg) => { buttonEvent("openSettings", arg) }
                                     },
                                     i(
                                         {
@@ -255,6 +252,7 @@ runLINE=()=>{__("body").in(
                                                     {
                                                         "d": "M12 10.5c.829 0 1.5.671 1.5 1.5s-.671 1.5-1.5 1.5-1.5-.671-1.5-1.5.671-1.5 1.5-1.5Zm5.9722 0c.828 0 1.5.671 1.5 1.5s-.672 1.5-1.5 1.5c-.829 0-1.5-.671-1.5-1.5s.671-1.5 1.5-1.5Zm-11.9444-.0003c.208 0 .405.042.584.118.18.076.341.186.477.322.272.271.439.646.439 1.06 0 .414-.167.789-.439 1.061-.136.136-.297.245-.477.322-.179.075-.376.117-.584.117-.828 0-1.5-.671-1.5-1.5 0-.828.672-1.5 1.5-1.5Z"
                                                     },
+
                                                 )
                                             )
                                         )
@@ -467,7 +465,7 @@ runLINE=()=>{__("body").in(
                                         {
                                             "style": "position: relative; height: auto; width: 100%; overflow: overlay; will-change: transform; direction: ltr;"
                                         },
-                                        
+
                                     )
                                 )
                             )
@@ -490,7 +488,7 @@ runLINE=()=>{__("body").in(
                                     {
                                         "class": "icon createChatButton-module__icon_create__pLEwQ"
                                     },
-                                    img({src:"https://static.line-scdn.net/Openchat-Real/edge/img/apng/icon-nav-create.png",alt:""})
+                                    img({ src: "https://static.line-scdn.net/Openchat-Real/edge/img/apng/icon-nav-create.png", alt: "" })
                                 )
                             )
                             , div(
@@ -622,8 +620,9 @@ runLINE=()=>{__("body").in(
                 )
             )
         )
-    , div(
-        {
-            "id": "modal-root"
-        },
-    ))}
+        , div(
+            {
+                "id": "modal-root"
+            },
+        ))
+}
