@@ -314,7 +314,7 @@ class LineSquareClient {
     async fetchSquareChatEvents(squareChatMid, syncToken) {
         let v = {
             squareChatMid: squareChatMid,
-            limit: 50
+            limit: 90
         }
         if (syncToken) {
             v.syncToken = syncToken

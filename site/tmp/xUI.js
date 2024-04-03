@@ -2,7 +2,7 @@ var chatData = {    //チャットリストのデータを入れる
     chatList: []
 }
 async function memberPopup(pid) {
-    let data=await getProfile(pid)
+    let data=await refreshProfile(pid)
     let data2=await getProfile(pid,true)
     data.desc='INFO\n'+JSON.stringify(data2,null,2)
     __("#modal-root").in(genProfilePopup(data))
@@ -13,7 +13,7 @@ function genProfilePopup(data) {
             "class": "profileModal-module__modal__QRrnT ",
             "role": "dialog",
             "aria-labelledby": "profile modal",
-            "style": "position: absolute;left: auto;top: auto;width: 80%;background-color: #fff;display: block;user-select:text;"
+            "style": "position: absolute;left: auto;top: auto;width: 300;background-color: #fff;display: block;user-select:text;"
         },
         div(
             {

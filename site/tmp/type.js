@@ -122,6 +122,7 @@ lineType.SquareAuthorityAttribute = { 'UPDATE_SQUARE_PROFILE': 1, 'INVITE_NEW_ME
 lineType.SquareEventStatus = { 'NORMAL': 1, 'ALERT_DISABLED': 2 };
 lineType.SuggestDictionaryIncrementStatus = { 'SUCCESS': 0, 'INVALID_REVISION': 1, 'TOO_LARGE_DATA': 2, 'SCHEME_CHANGED': 3, 'RETRY': 4, 'FAIL': 5, 'TOO_OLD_DATA': 6 };
 
+
 var Thrift = {}
 Thrift.copyList = (args = [], clas) => {
     let rt = []
@@ -149,12 +150,20 @@ Thrift.copyMap = (args = {}, clas) => {
 }
 
 Thrift.bin2int = (args = []) => {
-    let rt=0
-    args.forEach((e,i)=>{
-        rt=rt*(0xff)
-        rt+=e
+    let rt = 0
+    args.forEach((e, i) => {
+        rt = rt * (0xff)
+        rt += e
     })
     return rt
+}
+Thrift.getValue = (name, k) => {
+    for (const key in lineType[name]) {
+        const element = lineType[name][key];
+        if (element==k) {
+            return key
+        }
+    }
 }
 
 lineType.Location = class {
@@ -535,9 +544,9 @@ lineType.SquareMember = class {
             } if (args.ableToReceiveMessage !== undefined && args.ableToReceiveMessage !== null) {
                 this.ableToReceiveMessage = args.ableToReceiveMessage;
             } if (args.membershipState !== undefined && args.membershipState !== null) {
-                this.membershipState = args.membershipState;
+                this.membershipState = Thrift.getValue("SquareMembershipState",args.membershipState);
             } if (args.role !== undefined && args.role !== null) {
-                this.role = args.role;
+                this.role = Thrift.getValue("SquareMemberRole",args.role);
             } if (args.revision !== undefined && args.revision !== null) {
                 this.revision = args.revision;
             } if (args.preference !== undefined && args.preference !== null) {
@@ -2503,18 +2512,18 @@ lineType.Message = class {
             } if (args.id !== undefined && args.id !== null) {
                 this.id = args.id;
             } if (args.createdTime !== undefined && args.createdTime !== null) {
-                if (typeof args.createdTime=="object") {
-                    this.createdTime =Thrift.bin2int(args.createdTime.buffer)
+                if (typeof args.createdTime == "object") {
+                    this.createdTime = Thrift.bin2int(args.createdTime.buffer)
                 } else {
                     this.createdTime = args.createdTime;
                 }
             } if (args.deliveredTime !== undefined && args.deliveredTime !== null) {
-                if (typeof args.deliveredTime=="object") {
-                    this.deliveredTime =Thrift.bin2int(args.deliveredTime.buffer)
+                if (typeof args.deliveredTime == "object") {
+                    this.deliveredTime = Thrift.bin2int(args.deliveredTime.buffer)
                 } else {
                     this.deliveredTime = args.deliveredTime;
                 }
-                
+
             } if (args.text !== undefined && args.text !== null) {
                 this.text = args.text;
             } if (args.location !== undefined && args.location !== null) {
@@ -2523,7 +2532,7 @@ lineType.Message = class {
                 this.hasContent = args.hasContent;
             } if (args.contentType !== undefined && args.contentType !== null) {
                 this.contentType = args.contentType;
-            } else{
+            } else {
                 this.contentType = 0
             } if (args.contentPreview !== undefined && args.contentPreview !== null) {
                 this.contentPreview = args.contentPreview;
