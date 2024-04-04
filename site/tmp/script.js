@@ -378,6 +378,18 @@ class LineSquareClient {
         this.S4.reOpenSocket()
         this.SQ1.reOpenSocket()
     }
-
+    timeOutWith(o,k, t, ...arg) {
+        return new Promise((resolve, reject) => {
+            let time=true
+            o[k](...arg).then((res) => { resolve(res);time=false })
+            setTimeout(() => {
+                reject("Time Out")
+                if (time) {
+                    notify("リクエストがタイムアウトしました","#fff","red")
+                }
+                
+            }, t);
+        })
+    }
 }
 //export {LineSquareClient,LineTCompactSocket}

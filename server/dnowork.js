@@ -84,7 +84,11 @@ export default async function ws(request) {
             let resp = await post(event.data, headers);
             socket.send(resp)
         } catch (e) {
-            socket.send('{"server":"error"}')
+            try {
+                socket.send('{"server":"error"}')
+            } catch (error) {
+            }
+            
         }
     };
     return response
