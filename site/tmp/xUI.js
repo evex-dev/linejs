@@ -518,7 +518,7 @@ function genProfilePopup(data) {
                         {
                             "class": "profileModal-module__description__hSNDU",
                             "data-tooltip": "87f15f9f-0c36-4796-bf4e-f74d9f10fef5",
-                            "style": "text-align: left;"
+                            "style": "text-align: left;user-select:text;"
                         }, data.desc
                     )
                 )
