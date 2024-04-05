@@ -445,11 +445,11 @@ function genProfilePopup(data) {
                 "style": "width: 300px;height: 400px;margin-right: auto;margin-left: auto;margin-top: 100;border: solid;background-color: #fff;border-color: black;"
             },
             button({
-                 "type":"button" ,
-                 "style":"margin-right: auto;font-size: 18px;margin-left: 10px;margin-top: 10px;",
-                 "$click":()=>{document.querySelector("#modal-root").innerHTML=""}
-                }
-            ,"X"
+                "type": "button",
+                "style": "margin-right: auto;font-size: 18px;margin-left: 10px;margin-top: 10px;",
+                "$click": () => { document.querySelector("#modal-root").innerHTML = "" }
+            }
+                , "X"
             ),
             div(
                 {
@@ -518,7 +518,7 @@ function genProfilePopup(data) {
                         {
                             "class": "profileModal-module__description__hSNDU",
                             "data-tooltip": "87f15f9f-0c36-4796-bf4e-f74d9f10fef5",
-                            "style":"text-align: left;"
+                            "style": "text-align: left;"
                         }, data.desc
                     )
                 )
@@ -1063,6 +1063,10 @@ async function buttonEvent(n, arg) {
         return
     }
     if (n == "send") {
+        if (roomData.command) {
+            cRequest(arg[0].parentElement.parentElement.childNodes[0].childNodes[0].value)
+            cResponse(await runCommand(" " + arg[0].parentElement.parentElement.childNodes[0].childNodes[0].value))
+        }
         if (arg[0].parentElement.parentElement.childNodes[0].childNodes[0].value.substring(0, 4) == "$cmd") {
             notify(await runCommand(arg[0].parentElement.parentElement.childNodes[0].childNodes[0].value.substring(4)), "#fff", "#222", 7000)
             return
@@ -1113,30 +1117,34 @@ async function buttonEvent(n, arg) {
         return
     }
     if (n == "imgMsgView") {
-        notify("画像を読み込み中...","#fff","green")
-        open(await getMDataUrl(arg[0].parentElement.parentElement.dataset.messageId),"image","popup,width=400,height=400")
+        notify("画像を読み込み中...", "#fff", "green")
+        open(await getMDataUrl(arg[0].parentElement.parentElement.dataset.messageId), "image", "popup,width=400,height=400")
         return
     }
     if (n == "videoMsgView") {
-        notify("動画を読み込み中...","#fff","green")
-        open(await getMDataUrl(arg[0].parentElement.parentElement.dataset.messageId),"video","popup,width=400,height=400")
+        notify("動画を読み込み中...", "#fff", "green")
+        open(await getMDataUrl(arg[0].parentElement.parentElement.dataset.messageId), "video", "popup,width=400,height=400")
         return
     }
     if (n == "stkView") {
-        console.log("https://store.line.me/stickershop/product/"+arg[0].dataset.stkPkgId)
+        open("https://store.line.me/stickershop/product/" + arg[0].dataset.stkPkgId)
+        return
+    }
+    if (n == "openProfileImg") {
+        open("https://obs.line-scdn.net/" + (await getProfile(arg[0].parentElement.dataset.mid, true)).profileImageObsHash, "image", "popup,width=400,height=400")
+        return
+    }
+    if (n == "openConsole") {
+        consoleRoom()
         return
     }
     console.log(n, arg)
 }
 async function runCommand(command) {
+    console.log(command)
     if (command == "") {
-        return `chatCommand
-OpenChat-Web-Client : ${window.version}
-User-Name : ${LINE.name}
-User-Mid : ${LINE.mid}
-User-Device : ${LINE.deviceName}
-ChatMid : ${roomData.roomMid}
-MySquarePid : ${roomData.mymid}`
+        consoleRoom()
+        return "consoleを開きました"
     }
     command = command.split(" ")
     switch (command[1]) {
@@ -1146,12 +1154,109 @@ MySquarePid : ${roomData.mymid}`
             return `${command[2]} : mode = Silent`
         case "normal":
             return `${command[2]} : mode = Normal`
+        case "status":
+            return `OpenChat-Web-Client : ${window.version} / ${window.versionCode}
+User-Name : ${LINE.name}
+User-Mid : ${LINE.mid}
+User-Device : ${LINE.deviceName}
+SquareChatMid : ${roomData.commandMid}
+MySquareMemberMid : ${roomData.mymid}`
+        case "cd":
+            roomData.commandMid = command[2]
+            roomData.mymid = null
+            return `SquareChatMid : ${roomData.commandMid}`
         default:
-            break;
+            return "unknown command : " + command[1]
     }
+}
+function consoleRoom() {
+    let data = {
+        mymid: roomData.mymid,
+        mid: roomData.roomMid,
+        name: "Console",
+        member: "^^",
+        img: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/4QBoRXhpZgAATU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAMAAAExAAIAAAARAAAATgAAAAAAAJOjAAAD6AAAk6MAAAPocGFpbnQubmV0IDUuMC4xMwAA/+ICKElDQ19QUk9GSUxFAAEBAAACGAAAAAAEMAAAbW50clJHQiBYWVogAAAAAAAAAAAAAAAAYWNzcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAPbWAAEAAAAA0y0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJZGVzYwAAAPAAAAB0clhZWgAAAWQAAAAUZ1hZWgAAAXgAAAAUYlhZWgAAAYwAAAAUclRSQwAAAaAAAAAoZ1RSQwAAAaAAAAAoYlRSQwAAAaAAAAAod3RwdAAAAcgAAAAUY3BydAAAAdwAAAA8bWx1YwAAAAAAAAABAAAADGVuVVMAAABYAAAAHABzAFIARwBCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9wYXJhAAAAAAAEAAAAAmZmAADypwAADVkAABPQAAAKWwAAAAAAAAAAWFlaIAAAAAAAAPbWAAEAAAAA0y1tbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAABAAEDARIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD+f+igD//Z",
+        inputName: "コマンド ",
+    }
+    let res = genChatroom(data)
+    __("#root > div > div > div:nth-child(4)").in(res)
+    if (!roomData.commandMid) {
+        roomData.commandMid = roomData.roomMid
+    }
+    roomData.command = true
+    roomData.roomMid = null
+    data = {
+        isSelected: false,
+        timeInt: new Date().getTime(),
+        timeStr: new Date()
+            .toLocaleTimeString()
+            .substring(0, 5)
+        ,
+        profile: { img: defaltIMG, name: "console", mid: "vconsole" },
+        mid: "vconsole",
+        msgId: new Date().getTime(),
+        contentType: 0,
+        direction: "",//reverse
+        msgGroup: "item",
+        text: `chatCommand
+OpenChat-Web-Client : ${window.version} / ${window.versionCode}
+User-Name : ${LINE.name}
+User-Mid : ${LINE.mid}
+User-Device : ${LINE.deviceName}
+SquareChatMid : ${roomData.commandMid}
+MySquareMemberMid : ${roomData.mymid}`
+    }
+    appendMsgByData(data)
+
+}
+function cResponse(text) {
+    data = {
+        isSelected: false,
+        timeInt: new Date().getTime(),
+        timeStr: new Date()
+            .toLocaleTimeString()
+            .substring(0, 5)
+        ,
+        profile: { img: defaltIMG, name: "console", mid: "vconsole" },
+        mid: "vconsole",
+        msgId: new Date().getTime(),
+        contentType: 0,
+        direction: "",//reverse
+        msgGroup: "item",
+        text: text
+    }
+    appendMsgByData(data)
+}
+function cRequest(text) {
+    data = {
+        isSelected: false,
+        timeInt: new Date().getTime(),
+        timeStr: new Date()
+            .toLocaleTimeString()
+            .substring(0, 5)
+        ,
+        profile: { img: defaltIMG, name: "console", mid: "vconsole" },
+        mid: "vconsole",
+        msgId: new Date().getTime(),
+        contentType: 0,
+        direction: "reverse",//
+        msgGroup: "item",
+        text: text
+    }
+    appendMsgByData(data)
+}
+function appendMsgByData(data) {
+    let dom = genMsg(data)
+    roomData.messageView.elmList.prepend(dom)
+    if (roomData.followLatest) {
+        dom.scrollIntoView()
+    }
+    observer.observe(dom)
 }
 async function squareChat2chatroom(squareChatResponse) {
     roomData.messageView.dataList = []
+    roomData.commandMid = null
+    roomData.command = false
     roomData.roomMid = squareChatResponse.squareChat.squareChatMid
     let data = {
         mymid: squareChatResponse.squareChatMember.squareMemberMid,
@@ -1712,8 +1817,8 @@ async function Message2Elm(message) {
         case 7://st
             add = {
                 img: await getStkDataUrl(message.contentMetadata.STKID),
-                stkId:message.contentMetadata.STKID,
-                stkPId:message.contentMetadata.STKPKGID
+                stkId: message.contentMetadata.STKID,
+                stkPId: message.contentMetadata.STKPKGID
             }
             data = { ...data, ...add }
             break;
@@ -2048,7 +2153,7 @@ function msgMain(data) {
             pre(
                 {
                     "class": "textMessageContent-module__text__EFwEN",
-                    "style":"max-height: 500px;overflow-y: auto;"
+                    "style": "max-height: 500px;overflow-y: auto;"
                 },
                 span(
                     {
@@ -2257,7 +2362,7 @@ function msgMain(data) {
                     "type": "button",
                     "class": "stickerMessageContent-module__button_view__rTOx0",
                     "aria-label": "view sticker",
-                    "data-stkPkgId":data.stkPId,
+                    "data-stkPkgId": data.stkPId,
                     "$click": (...arg) => { buttonEvent("stkView", arg) }
                 },
                 div(

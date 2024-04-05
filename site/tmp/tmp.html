@@ -21,7 +21,8 @@
         </div>
     </div>
     <script async>
-        window.version="v 0.0.0"
+        window.version = "v 0.0.0"
+        window.versionCode = 0
         var LINE
         if (localStorage.getItem("auth")) {
             document.getElementById("auth").value = localStorage.getItem("auth")
@@ -35,7 +36,7 @@
                     if (!rooms) {
                         rooms = await LINE.getJoinedSquareChats()
                         await buildChatButton(rooms)
-                    }else{
+                    } else {
                         await buildChatButtonC(rooms)
                     }
                 }, 200)
