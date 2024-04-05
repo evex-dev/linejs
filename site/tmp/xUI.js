@@ -425,7 +425,7 @@ function genMemberList(data) {
 async function memberPopup(pid) {
     let data = await refreshProfile(pid)
     let data2 = await getProfile(pid, true)
-    data.desc = 'INFO\n' + JSON.stringify(data2, null, 2)
+    data.desc = JSON.stringify(data2, null, 2)
     let member = genProfilePopup(data)
     __("#modal-root").in(member)
     member.scrollIntoView()
@@ -437,24 +437,31 @@ function genProfilePopup(data) {
             "class": "profileModal-module__modal__QRrnT ",
             "role": "dialog",
             "aria-labelledby": "profile modal",
-            "style": "position: absolute;left: auto;top: auto;width: 300;background-color: #fff;display: block;user-select:text;"
+            "style": "position: absolute;z-index: 28;left: 0px;top: 0px;width: 100%;height: 100%;text-align: center;"
         },
         div(
             {
                 "class": "profileModal-module__content__qKTEy",
-                "style": "height:auto;"
+                "style": "width: 300px;height: 400px;margin-right: auto;margin-left: auto;margin-top: 100;border: solid;background-color: #fff;border-color: black;"
             },
+            button({
+                 "type":"button" ,
+                 "style":"margin-right: auto;font-size: 18px;margin-left: 10px;margin-top: 10px;",
+                 "$click":()=>{document.querySelector("#modal-root").innerHTML=""}
+                }
+            ,"X"
+            ),
             div(
                 {
                     "class": "profileModal-module__info_area__VRAIt",
-                    "style": "height:auto;"
+                    "style": "height:100px"
                 },
                 div(
                     {
                         "class": "profileImage-module__thumbnail_wrap__0bK7m ",
                         "data-mid": data.mid,
                         "data-profile-image": "true",
-                        "style": "border-radius: 50%;cursor: default;margin: 30% 0 0 0;"
+                        "style": "border-radius: 50%;cursor: default;margin: 0 0 0 0;"
                     },
                     div(
                         {
@@ -510,7 +517,8 @@ function genProfilePopup(data) {
                     pre(
                         {
                             "class": "profileModal-module__description__hSNDU",
-                            "data-tooltip": "87f15f9f-0c36-4796-bf4e-f74d9f10fef5"
+                            "data-tooltip": "87f15f9f-0c36-4796-bf4e-f74d9f10fef5",
+                            "style":"text-align: left;"
                         }, data.desc
                     )
                 )
@@ -2040,7 +2048,7 @@ function msgMain(data) {
             pre(
                 {
                     "class": "textMessageContent-module__text__EFwEN",
-                    "style":"max-height: 500px;overflow: scroll;"
+                    "style":"max-height: 500px;overflow-y: auto;"
                 },
                 span(
                     {
