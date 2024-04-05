@@ -349,7 +349,7 @@ function genMemberList(data) {
                                 },
                                 div(
                                     {
-                                        "style": "height: " + (data.members.length * 57 + 20) + "px; width: 100%;"
+                                        "style": "height: " + (data.members.length * 57 + 60) + "px; width: 100%;"
                                     },
                                     div(
                                         {
