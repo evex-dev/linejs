@@ -2,6 +2,58 @@ var chatData = {    //チャットリストのデータを入れる
     chatList: []
 }
 
+async function updateChat() {
+    if (roomData.roomMid) {
+        let isTooLate = false
+        setTimeout(() => {
+            isTooLate = true
+            updateChat()
+        }, 2000)
+        let data = await LINE.timeOutWith(LINE, "fetchSquareChatEvents", 2100, roomData.roomMid, roomData.syncToken)
+        if (!data) {
+            return
+        }
+        if (isTooLate) {
+            return
+        }
+        if (data.syncToken && !Number(data.syncToken)) {
+            roomData.syncToken = data.syncToken
+        }
+
+        let chats = []
+        let reading = []
+        for (let i = 0; i < data.events.length; i++) {
+            const e = data.events[i];
+            if (e.type == 1) {
+                chats.push(e.payload.sendMessage.squareMessage.message)
+            } else if (e.type == undefined) {
+                chats.push(e.payload.receiveMessage.squareMessage.message)
+            } else if (e.type == 6) {
+                reading.push(await getProfile(e.payload.notifiedMarkAsRead.sMemberMid))
+            }
+
+        }
+        if (isTooLate) {
+            return
+        }
+        let readingTxt = "浮上中: "
+        reading.forEach(e => {
+            readingTxt += e.name + " "
+        })
+        genNewMessage({
+            text: readingTxt,
+            by: "",
+            call: () => { notify(readingTxt, "#fff", "#333") }
+        })
+        appendMsgs(chats, roomData.roomMid)
+    } else {
+        setTimeout(() => {
+            isTooLate = true
+            updateChat()
+        }, 2000)
+    }
+}
+
 function genNewMessage(data) {
     roomData.notifyMsg.innerHTML = ""
     roomData.notifyMsg.appendChild(div(
@@ -524,12 +576,14 @@ async function buildChatButton(squareChatResponseList = []) {   //[getSquareChat
     __("#root > div > div > div.chatlist-module__chatlist_wrap__KtTpq > div.chatlist-module__chatlist__qruAE > div > div > div").in(res)
     setInterval(() => {
         try {
-            fetchEventUpdate()  //更新開始
+            fetchEventUpdate()
+            //更新開始
         } catch (error) {
 
         }
     },
-        5000)
+        2000)
+    updateChat()
     return res
 }
 async function buildChatButtonC(dataList = []) {   //dataListからチャットリストのボタンを生成追加
@@ -540,6 +594,9 @@ async function buildChatButtonC(dataList = []) {   //dataListからチャット�
     for (let index = 0; index < dataList.length; index++) {
         const element = await LINE.getSquareChat(dataList[index]);
         let elm = await squareChat2chatButton(element)
+        if (!elm) {
+            continue
+        }
         observer.observe(elm)
         elms.push(elm)
     }
@@ -552,7 +609,8 @@ async function buildChatButtonC(dataList = []) {   //dataListからチャット�
 
         }
     },
-        5000)
+        2000)
+    updateChat()
     return res
 }
 function fetchEventUpdate() {   //fetchMyEvents fetchSquareChatEvents から表示を更新
@@ -577,13 +635,6 @@ function fetchEventUpdate() {   //fetchMyEvents fetchSquareChatEvents から表�
     })
 
     UserCashe.setItem(LINE.mid + ":chatsList", mids);
-    //chat
-    (async () => {
-        if (roomData.roomMid) {
-            let data = await getSquareChatHistory(roomData.roomMid)
-            getAndBuildMessages(roomData.roomMid, data.syncToken, 3500)
-        }
-    })();
     //myEvent
     (async () => {
         function list(inElm) {
@@ -656,9 +707,12 @@ async function squareChat2chatButton(squareChatResponse, index) {   //getSquareC
     let lastText = ""
     let date = ""
     let unread = ""
+    if (!squareChatResponse.squareChatStatus) {
+        return
+    }
     if (squareChatResponse.squareChatStatus.lastMessage) {
         date = new Date(squareChatResponse.squareChatStatus.lastMessage.message.createdTime)
-        date = date.getMonth() + 1 + "/" + date.getDate()
+        date = date.getMonth() + 1 + "/" + date.getDate() + " " + date.toLocaleTimeString().substring(0, 5)
         if (squareChatResponse.squareChatStatus.lastMessage.message.text) {
             lastText = squareChatResponse.squareChatStatus.lastMessage.message.text
         }
@@ -991,6 +1045,10 @@ async function getStkDataUrl(id) {
 async function buttonEvent(n, arg) {
 
     if (n == "goChat") {
+        if (roomData.roomMid == arg[0].parentElement.dataset.mid) {
+            notify("すでに開いています", "red", "#fff")
+            return
+        }
         roomData.roomMid = arg[0].parentElement.dataset.mid
         await squareChat2chatroom(await LINE.getSquareChat(arg[0].parentElement.dataset.mid))
         await getAndBuildMessages(arg[0].parentElement.dataset.mid)
@@ -1042,7 +1100,22 @@ async function buttonEvent(n, arg) {
         return
     }
     if (n == "memberView") {
+        roomData.roomMid = null
         chatMembersList(arg[0].parentElement.parentElement.parentElement.parentElement.dataset.mid)
+        return
+    }
+    if (n == "imgMsgView") {
+        notify("画像を読み込み中...","#fff","green")
+        open(await getMDataUrl(arg[0].parentElement.parentElement.dataset.messageId),"image","popup,width=400,height=400")
+        return
+    }
+    if (n == "videoMsgView") {
+        notify("動画を読み込み中...","#fff","green")
+        open(await getMDataUrl(arg[0].parentElement.parentElement.dataset.messageId),"video","popup,width=400,height=400")
+        return
+    }
+    if (n == "stkView") {
+        console.log("https://store.line.me/stickershop/product/"+arg[0].dataset.stkPkgId)
         return
     }
     console.log(n, arg)
@@ -1514,7 +1587,8 @@ async function getAndBuildMessages(mid, sync, t = 20000) {
         data = await LINE.timeOutWith(LINE, "fetchSquareChatEvents", t, mid)
     }
     if (data.syncToken && !Number(data.syncToken)) {
-        setSquareChatHistory(mid, data.syncToken)
+        //setSquareChatHistory(mid, data.syncToken)
+        roomData.syncToken = data.syncToken
     }
 
     let chats = []
@@ -1531,14 +1605,14 @@ async function getAndBuildMessages(mid, sync, t = 20000) {
             }
         }
     }
-    let readingTxt="浮上中: "
-    reading.forEach(e=>{
-        readingTxt+=e.name+" "
+    let readingTxt = "浮上中: "
+    reading.forEach(e => {
+        readingTxt += e.name + " "
     })
     genNewMessage({
-        text:readingTxt,
-        by:"",
-        call:()=>{notify(readingTxt,"#fff","#333")}
+        text: readingTxt,
+        by: "",
+        call: () => { notify(readingTxt, "#fff", "#333") }
     })
     appendMsgs(chats, mid)
 }
@@ -1629,7 +1703,9 @@ async function Message2Elm(message) {
             break;
         case 7://st
             add = {
-                img: await getStkDataUrl(message.contentMetadata.STKID)
+                img: await getStkDataUrl(message.contentMetadata.STKID),
+                stkId:message.contentMetadata.STKID,
+                stkPId:message.contentMetadata.STKPKGID
             }
             data = { ...data, ...add }
             break;
@@ -1801,14 +1877,14 @@ function msgMain(data) {
     fileMenu = ""
     switch (data.contentType) {
         case 0://txt
-            if (data.rId) {
+            if (data.reply) {
                 return replyBox(data, textMsg(data))
             } else {
                 return textMsg(data)
             }
             break;
         case undefined://txt
-            if (data.rId) {
+            if (data.reply) {
                 return replyBox(data, textMsg(data))
             } else {
                 return textMsg(data)
@@ -1963,7 +2039,8 @@ function msgMain(data) {
             },
             pre(
                 {
-                    "class": "textMessageContent-module__text__EFwEN"
+                    "class": "textMessageContent-module__text__EFwEN",
+                    "style":"max-height: 500px;overflow: scroll;"
                 },
                 span(
                     {
@@ -2048,7 +2125,6 @@ function msgMain(data) {
         )
     }
     function imgMsg(data) {
-        fileM()
         return div(
             {
                 "class": "imageMessageContent-module__content_wrap__bT-Si ",
@@ -2091,7 +2167,6 @@ function msgMain(data) {
         )
     }
     function videoMsg(data) {
-        fileM()
         return div(
             {
                 "class": "videoMessageContent-module__content_wrap__ffvJq ",
@@ -2150,7 +2225,6 @@ function msgMain(data) {
         )
     }
     function audioMsg(data) {
-        fileM()
         return div(
             {
                 "class": "textMessageContent-module__content_wrap__238E1 ",
@@ -2175,6 +2249,7 @@ function msgMain(data) {
                     "type": "button",
                     "class": "stickerMessageContent-module__button_view__rTOx0",
                     "aria-label": "view sticker",
+                    "data-stkPkgId":data.stkPId,
                     "$click": (...arg) => { buttonEvent("stkView", arg) }
                 },
                 div(
