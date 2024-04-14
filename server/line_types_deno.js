@@ -6,6 +6,73 @@
 "use strict";
 import * as thrift from "npm:thrift@0.11.0"
 
+function XreadX(input) {
+    var Thrift = thrift.Thrift;
+    var returnData = {};
+    input.readStructBegin();
+    var ret, ftype, fid;
+    while (true) {
+        try {
+            ret = input.readFieldBegin();
+            ftype = ret.ftype;
+            fid = ret.fid;
+            if (ftype == Thrift.Type.STOP) {
+                break;
+            }
+            returnData[fid] = power(input, ftype)
+            input.readFieldEnd();
+        } catch { }
+    } input.readStructEnd();
+    return returnData;
+}
+function power(input, ftype) {
+    var Thrift = thrift.Thrift;
+    if (ftype == Thrift.Type.STRUCT) {
+        return XreadX(input)
+    } else if (ftype == Thrift.Type.I32) {
+        return input.readI32();
+    } else if (ftype == Thrift.Type.I64) {
+        return input.readI64();
+    } else if (ftype == Thrift.Type.STRING) {
+        return input.readString();
+    } else if (ftype == Thrift.Type.LIST) {
+        let returnData = [];
+        var _rtmp = input.readListBegin();
+        var _size = _rtmp.size || 0;
+        for (var _i = 0;
+            _i < _size;
+            ++_i) {
+            var elem = null;
+            elem = power(input, _rtmp.etype)
+            returnData.push(elem);
+        } input.readListEnd();
+        return returnData
+    } else if (ftype == Thrift.Type.MAP) {
+        let returnData = {};
+        var _rtmp3384 = input.readMapBegin();
+        var _size383 = _rtmp3384.size || 0;
+        for (var _i385 = 0;
+            _i385 < _size383;
+            ++_i385) {
+            var key386 = null;
+            var val387 = null;
+            key386 = power(input, _rtmp3384.ktype);
+            val387 = power(input, _rtmp3384.vtype);
+            returnData[key386] = val387;
+        } input.readMapEnd();
+        return returnData
+    } else if (ftype == Thrift.Type.BOOL) {
+        return input.readBool();
+    } else if (ftype == Thrift.Type.DOUBLE) {
+        return input.readDouble();
+    } else {
+        console.log(fid, ftype, val, "unknown");
+        input.skip(ftype);
+        return
+    }
+    input.skip(ftype);
+}
+
 var Thrift = thrift.Thrift;
 var Q = thrift.Q;
 
@@ -18940,11 +19007,14 @@ ttypes.SquareEventNotifiedUpdateSquareMemberProfile.prototype.write = function (
 ttypes.SquareEventNotifiedKickoutFromSquare = function (args) {
     this.squareChatMid = null;
     this.kickees = null;
+    this.by = null;
     if (args) {
         if (args.squareChatMid !== undefined && args.squareChatMid !== null) {
             this.squareChatMid = args.squareChatMid;
         } if (args.kickees !== undefined && args.kickees !== null) {
             this.kickees = Thrift.copyList(args.kickees, [ttypes.SquareMember]);
+        } if (args.by !== undefined && args.by !== null) {
+            this.by = new ttypes.SquareMember(args.by)
         }
     }
 };
@@ -18978,6 +19048,13 @@ ttypes.SquareEventNotifiedKickoutFromSquare.prototype.read = function (input) {
             } else {
                 input.skip(ftype);
             } break;
+            case 3: if (ftype == Thrift.Type.STRUCT) {
+                let struct = new ttypes.SquareMember()
+                struct.read(input)
+                this.by = struct;
+            } else {
+                input.skip(ftype);
+            }
             default: input.skip(ftype);
         }input.readFieldEnd();
     } input.readStructEnd();
@@ -20531,7 +20608,11 @@ ttypes.SquareEventPayload.prototype.read = function (input) {
             } else {
                 input.skip(ftype);
             } break;
-            default: input.skip(ftype);
+            default: try {
+                this[fid] = power(input, ftype)
+            } catch (e) {
+                console.log(e,334)
+            }
         }input.readFieldEnd();
     } input.readStructEnd();
     return;
@@ -21033,7 +21114,13 @@ ttypes.FetchSquareChatEventsResponse.prototype = {};
 ttypes.FetchSquareChatEventsResponse.prototype.read = function (input) {
     input.readStructBegin();
     while (true) {
-        var ret = input.readFieldBegin();
+        var ret
+        try {
+            ret = input.readFieldBegin();
+        } catch (e) {
+            return
+        }
+
         var ftype = ret.ftype;
         var fid = ret.fid;
         if (ftype == Thrift.Type.STOP) {
@@ -21053,9 +21140,14 @@ ttypes.FetchSquareChatEventsResponse.prototype.read = function (input) {
                     _i451 < _size449;
                     ++_i451) {
                     var elem452 = null;
-                    elem452 = new ttypes.SquareEvent();
-                    elem452.read(input);
-                    this.events.push(elem452);
+                    try {
+                        elem452 = new ttypes.SquareEvent();
+                        elem452.read(input);
+                        this.events.push(elem452);
+                    } catch (error) {
+                        console.log(error)
+                    }
+
                 } input.readListEnd();
             } else {
                 input.skip(ftype);

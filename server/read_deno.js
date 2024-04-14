@@ -9,7 +9,7 @@ data = [...data]*/
 
 function XreadX(input) {
     var Thrift = thrift.Thrift;
-    var returnData = ["hey!"];
+    var returnData = {};
     input.readStructBegin();
     var ret, ftype, fid;
     try {
@@ -115,7 +115,8 @@ function readThrift(data) {
 
         tdata.read(myprot)
 
-    } catch {
+    } catch(e) {
+        console.log(e)
         const Transport = thrift.TFramedTransport
         const Protocol = thrift.TCompactProtocol
         let b = Buffer.from(data)
