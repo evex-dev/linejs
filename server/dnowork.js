@@ -18,7 +18,7 @@ export default async function ws(request) {
             id = json.id
 
             const Trequest = write(json)
-            await Deno.writeFile("./tmpReq.bin", Trequest)/////////////////////////
+            //await Deno.writeFile("./tmpReq.bin", Trequest)/////////////////////////
             const fet = await fetch("https://gw.line.naver.jp" + path, {
                 method: 'POST',
                 headers: headers,
@@ -26,7 +26,7 @@ export default async function ws(request) {
             })
             res = await fet.arrayBuffer()
             res = new Uint8Array(res)
-            Deno.writeFile("./tmpRes.bin", res)/////////////////////////////
+            //Deno.writeFile("./tmpRes.bin", res)/////////////////////////////
             res = read(res, json.type)
             if (json.type == 5) {
                 let a = id
