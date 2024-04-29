@@ -31,14 +31,13 @@ async function updateChat() {
         let reading = []
         for (let i = 0; i < data.events.length; i++) {
             const e = data.events[i];
-            if (e.type == 1 || e.type == undefined || e.type == 2 || e.type == 4 || e.type == 5 || e.type == 30 || e.type == 31 || e.type == 41 || e.type == 49) {
+            if (e.type == 1 || e.type == undefined || e.type == 2 || e.type == 4 || e.type == 5 || e.type == 30 || e.type == 31 || e.type == 41 || e.type == 49 || e.type == 6) {
                 events.push(e)
             } else if (e.type == 7) {
                 (await refreshProfile(e.payload.notifiedUpdateSquareMemberProfile.squareMember.squareMemberMid))
-            } else if (e.type == 6) {
-                reading.push(await getProfile(e.payload.notifiedMarkAsRead.sMemberMid))
             }
         }
+        /*
         let readingTxt = "浮上中: "
         reading.forEach(e => {
             readingTxt += e.name + " "
@@ -47,23 +46,23 @@ async function updateChat() {
             text: readingTxt,
             by: "",
             call: () => { notify(readingTxt, "#fff", "#333") }
-        })
-        await append2Talk(events, roomData.roomMid)
+        })*/
+        await append2Talk(events, roomData.roomMid,true)
     } else {
     }
 }
 
 async function initTalk(mid) {
     let res = await LINE.timeOutWith(LINE, "fetchSquareChatEvents", 2100, mid)
-    roomData.syncToken=res.syncToken
-    await append2Talk(res.events,mid)
+    roomData.syncToken = res.syncToken
+    await append2Talk(res.events, mid, false)
 }
 
-async function append2Talk(events, mid) {
+async function append2Talk(events, mid, withEvent) {
     let htmls = []
     for (let index = 0; index < events.length; index++) {
         const e = events[index];
-        if (e.type == undefined&&e.payload) {
+        if (e.type == undefined && e.payload) {
             roomData.messageView.dataList.push(e.payload.receiveMessage.squareMessage.message)
             htmls.push((await Message2Elm(e.payload.receiveMessage.squareMessage.message))[0])
         } else if (e.type == 1) {
@@ -101,6 +100,14 @@ async function append2Talk(events, mid) {
                         }
                     },
                     text: "メッセージが削除されました"
+                }
+            }))
+        } else if (e.type == 6 && withEvent) {
+            htmls.push(genSysMsg({
+                event: {
+                    timeStr: "",
+                    arg:e.payload,
+                    text: (await getProfile(e.payload.notifiedMarkAsRead.sMemberMid)).name + "が既読しました"
                 }
             }))
         } else if (e.type == 19) {
@@ -670,7 +677,7 @@ function genProfilePopup(data) {
 }
 
 function genTxtPopup(data) {
-    return div(
+    __("#modal-root").out.appendChild(div(
         {
             "class": "profileModal-module__modal__QRrnT ",
             "role": "dialog",
@@ -698,17 +705,17 @@ function genTxtPopup(data) {
                     {
                         "class": "profileModal-module__name_box__vJfbr"
                     },
-                        span(
-                            {
-                                "class": "editButton-module__name__uQ-y5"
-                            },
-                            pre(
+                    span(
+                        {
+                            "class": "editButton-module__name__uQ-y5"
+                        },
+                        pre(
+                            {},
+                            span(
                                 {},
-                                span(
-                                    {},
-                                    data.name)
-                            )
+                                data.name)
                         )
+                    )
                     ,
                 )
                 , div(
@@ -727,7 +734,8 @@ function genTxtPopup(data) {
             )
         )
     )
-
+    )
+    console.log(data)
 }
 
 function notify(text, color, bcolor, time = 5000) {
@@ -916,7 +924,7 @@ async function squareChat2chatButton(squareChatResponse, index) {   //getSquareC
         img: await getObsUrl(squareChatResponse.squareChat.chatImageObsHash),
         index: index,
         date: date,
-        timeInt: squareChatResponse.squareChatStatus.lastMessage?squareChatResponse.squareChatStatus.lastMessage.message.createdTime:0,
+        timeInt: squareChatResponse.squareChatStatus.lastMessage ? squareChatResponse.squareChatStatus.lastMessage.message.createdTime : 0,
         lastText: lastText,
         unread: unread
     }
@@ -1106,7 +1114,7 @@ async function getMsgById(id, isElm) {
     for (let index = 0; index < roomData.messageView.dataList.length; index++) {
         const e = roomData.messageView.dataList[index];
         if (e.id == id) {
-            if (e.contentType == 0) {
+            if (e.text) {
                 data.txt = e.text
                 data.profile = await getProfile(e._from)
             } else {
@@ -1176,7 +1184,7 @@ async function refreshProfile(mid) {
 }
 async function getProfile(mid, raw) {
     if (mid.substring(0, 1) == "v") {
-        return { name: "Auto-reply", img: await getObsUrl("0hkT4bVyeTNHsJGydD1DtLLDZNaVV4fy9-YT5lXCUePh52fyZ-NiksHClIOUl0fiYpMS54Ty1Ma0slKycp/preview"), mid: mid }
+        return { name: "Auto-reply", img: await getObsUrl("0hC0fMBLdfHB9bNA6h2cdjSGViQTEgRwUNJkwRLXxnSyp0DAxBNFVRfncwQykhAFJPY1YDK3g2RngkUAw/preview"), mid: mid }
     }
     let prot = "squareMember:" + mid
     let data = await ThriftCashe.getItem(prot)
@@ -1230,7 +1238,7 @@ async function getStkDataUrl(id) {
         return URL.createObjectURL(data)
     }
 }
-async function buttonEvent(n, arg,add) {
+async function buttonEvent(n, arg, add) {
     if (n == "goChat") {
         if (roomData.roomMid == arg[0].parentElement.dataset.mid) {
             notify("すでに開いています", "red", "#fff")
@@ -1320,14 +1328,16 @@ async function buttonEvent(n, arg,add) {
         return
     }
     if (n == "msgAction") {
-        __("#modal-root").in(genTxtPopup({name:"Message Data",desc:JSON.stringify(add,null,2)}))
+        genTxtPopup({ name: "Message Data", desc: JSON.stringify(add, null, 2) })
         return
     }
     if (n == "eventView") {
-        __("#modal-root").out.appendChild(genTxtPopup({name:"Event Data",desc:JSON.stringify(add,null,2)}))
+        genTxtPopup({ name: "Event Data", desc: JSON.stringify(add, null, 2) })
         return
     }
-
+    if (n == "msgInput") {
+        return
+    }
     console.log(n, arg)
 }
 async function runCommand(command) {
@@ -1908,12 +1918,12 @@ async function Message2Elm(message) {
     }
     let add;
 
-    if (message.contentMetadata&&message.contentMetadata.UNSENT=="true") {
+    if (message.contentMetadata && message.contentMetadata.UNSENT == "true") {
         return [genSysMsg({
             event: {
                 timeStr: data.timeStr,
                 arg: message,
-                text: data.profile.name+"が送信取り消ししたメッセージ"
+                text: data.profile.name + "が送信取り消ししたメッセージ"
             }
         })]
     }
@@ -1922,16 +1932,16 @@ async function Message2Elm(message) {
         case 0://t
             add = {
                 text: [message.text],
-                emoji: message.contentMetadata?message.contentMetadata.REPLACE:null,
-                mention: message.contentMetadata?message.contentMetadata.MENTION:null
+                emoji: message.contentMetadata ? message.contentMetadata.REPLACE : null,
+                mention: message.contentMetadata ? message.contentMetadata.MENTION : null
             }
             data = { ...data, ...add }
             break;
         case undefined://t
             add = {
                 text: [message.text],
-                emoji: message.contentMetadata?message.contentMetadata.REPLACE:null,
-                mention: message.contentMetadata?message.contentMetadata.MENTION:null
+                emoji: message.contentMetadata ? message.contentMetadata.REPLACE : null,
+                mention: message.contentMetadata ? message.contentMetadata.MENTION : null
             }
             data = { ...data, ...add }
             break;
@@ -1988,12 +1998,12 @@ async function Message2Elm(message) {
             break;
     }
 
-    return [genMsg(data,message)
+    return [genMsg(data, message)
         , data, genMsg]//elm data func
 
 }
 
-function genSysMsg(data,raw) {
+function genSysMsg(data, raw) {
     if (data.date) {
         return div(
             {
@@ -2003,7 +2013,7 @@ function genSysMsg(data,raw) {
             time(
                 {
                     "class": "messageDate-module__date__pDnK3",
-                    "style":"color:#fff;"
+                    "style": "color:#000;"
                 },
                 data.date)
         )
@@ -2014,7 +2024,7 @@ function genSysMsg(data,raw) {
                 "data-flexible": "true",
                 "data-selected": "false",
                 "data-timestamp": data.event.timeStr,
-                "$click": (data.event.arg ? (...arg) => { buttonEvent("eventView", arg,data.event.arg) } : data.event.onclick)
+                "$click": (data.event.arg ? (...arg) => { setTimeout(()=>genTxtPopup({ name: "Event Data", desc: JSON.stringify(data.event.arg, null, 2)})) } : data.event.onclick)
             },
             div(
                 {
@@ -2024,18 +2034,18 @@ function genSysMsg(data,raw) {
                     {},
                     time(
                         {
-                            "class": "systemMessage-module__date__o1LDL","style":"color:#fff;"
+                            "class": "systemMessage-module__date__o1LDL", "style": "color:#fff;"
                         },
                         data.event.timeStr)
                     , span(
-                        {"style":"color:#fff;"},
+                        { "style": "color:#000;" },
                         data.event.text)
                 )
             )
         )
     }
 }
-function genMsg(data = {},raw) {
+function genMsg(data = {}, raw) {
     return div(
         {
             "class": "message-module__message__7odk3   messageLayout-module__message__YVDhk ",
@@ -2100,7 +2110,7 @@ function genMsg(data = {},raw) {
                     {
                         "class": "message-module__content_inner__j-iko"
                     },
-                    msgMain(data,raw)
+                    msgMain(data, raw)
                     , div(
                         {
                             "class": "metaInfo-module__meta__F2Lfn "
@@ -2128,7 +2138,7 @@ function genMsg(data = {},raw) {
         , "‌")
 
 }
-function msgMain(data,raw) {
+function msgMain(data, raw) {
     fileMenu = ""
     switch (data.contentType) {
         case 0://txt
@@ -2171,7 +2181,7 @@ function msgMain(data,raw) {
             {
                 "class": "textMessageContent-module__content_wrap__238E1 ",
                 "data-message-id": data.msgId,
-                "$contextmenu": (...arg) => { buttonEvent("msgAction", arg,raw) },
+                "$contextmenu": (...arg) => { buttonEvent("msgAction", arg, raw) },
                 "data-direction": data.direction
             },
             pre(
@@ -2289,7 +2299,7 @@ function msgMain(data,raw) {
             {
                 "class": "textMessageContent-module__content_wrap__238E1 ",
                 "data-message-id": data.msgId,
-                "$contextmenu": (...arg) => { buttonEvent("msgAction", arg,raw) },
+                "$contextmenu": (...arg) => { buttonEvent("msgAction", arg, raw) },
                 "data-direction": data.direction
             },
             pre(
