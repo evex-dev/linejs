@@ -1476,7 +1476,8 @@ function genChatroom(data) {
             "class": "message_list",
             "role": "log",
             "data-mymid": data.mymid,
-            "$scroll": (...arg) => { buttonEvent("chatScroll", arg) }
+            "$scroll": (...arg) => { buttonEvent("chatScroll", arg) },
+            "style":"background-color:rgba(0,0,0,0.2)"
         },
     )
     roomData.mymid = data.mymid
@@ -2013,7 +2014,6 @@ function genSysMsg(data, raw) {
             time(
                 {
                     "class": "messageDate-module__date__pDnK3",
-                    "style": "color:#000;"
                 },
                 data.date)
         )
@@ -2038,7 +2038,7 @@ function genSysMsg(data, raw) {
                         },
                         data.event.timeStr)
                     , span(
-                        { "style": "color:#000;" },
+                        {},
                         data.event.text)
                 )
             )
@@ -2591,7 +2591,7 @@ function msgMain(data, raw) {
 
 function fuchi(txt) {
     return span(
-        { style: "color:#fff; -webkit-text-stroke: 0.2px #000;text-stroke: 0.2px #000;" }
+        { style: "color:#fff;" }
         , txt
     )
 }
