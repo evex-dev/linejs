@@ -1,5 +1,5 @@
 
-import ws from "./dnowork.js"
+import ws from "./denows.js"
 import proxy from "./proxy.js"
 
 export async function handler(request) {
