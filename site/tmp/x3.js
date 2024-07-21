@@ -1,5 +1,5 @@
 runLINE = () => {
-    __("body").in(
+    $("body").in(
         div(
             { "style": "display: none;", "id": "hide" },
             "hidden DIV"

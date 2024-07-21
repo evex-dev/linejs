@@ -40,7 +40,7 @@ class LineTCompactSocket {
                 sysName = "Wear OS"
                 break;
             default:
-                return new Error("device name is wrong")
+                throw new Error("deviceName is wrong")
                 break;
         }
         appName = device + "\t" + appVer + "\t" + sysName + "\t" + sysVer
@@ -119,32 +119,6 @@ class LineTCompactSocket {
             })
         })
     }
-    sendr(socket, FuncMap, data, returnFunc) {
-        if (socket.readyState === socket.OPEN) {
-            socket.send(JSON.stringify(data))
-            FuncMap[data.id] = (e) => {
-                returnFunc(e.data)
-            }
-            socket.onmessage = (e) => {
-                try {
-                    let j = new Uint8Array(e.data)
-                    let id = 0
-                    for (let index = 0; index < j[2]; index++) {
-                        const element = j[3 + index];
-                        id += element * (0xff ** index)
-                    }
-                    FuncMap[id](j.slice(3 + j[2]))
-                    delete FuncMap[id]
-                } catch (error) {
-                    try {
-                        let j = JSON.parse(e.data)
-                        FuncMap[j.id](e)
-                        delete FuncMap[j.id]
-                    } catch (e) { }
-                }
-            }
-        } else { throw new Error("socket not open") }
-    }
 
     async postParseThrift(data) {
         let reqJson, resJson;
@@ -154,15 +128,6 @@ class LineTCompactSocket {
             throw new Error("Server Error : " + reqJson.err)
         }
         return resJson
-    }
-    async postRRequestAndGetRResponse(data, isBuf = false) {
-        let request = { value: data, type: 5 }
-        if (isBuf) {
-            request.name = "b64"
-            request.value = btoa([...data].map(n => String.fromCharCode(n)).join(""));
-        }
-        let response = await this.postr(request)
-        return response
     }
     async postCHRRequestAndGetResponse(data, methodName) {
         let request = { value: data, name: methodName, type: 3 }
@@ -250,7 +215,7 @@ class LineSquareClient {
     constructor(authToken, device, resolve) {
         this.S4 = new LineTCompactSocket("/S4", authToken, device, ()=>{
             setTimeout(async () => {
-                let res=await this.S4.postCHRRequestAndGetResponse([],"getProfile")
+                const res=await this.S4.postCHRRequestAndGetResponse([],"getProfile")
                 this.mid=res[1]
                 this.name=res[20]
                 try {
@@ -335,8 +300,8 @@ class LineSquareClient {
         return await this.SQ1.postRequestAndGetContinueResponse(v, n)
     }
     async getJoinedSquareChats() {
-        let syncToken = (Number((await LINE.SQ1.postRequestAndGetResponse({ limit: 10 }, "fetchMyEvents")).syncToken) - 30000).toString()
-        let data = await LINE.SQ1.postRequestAndGetResponse({ limit: 30000, syncToken: syncToken }, "fetchMyEvents")
+        let syncToken = (Number((await this.SQ1.postRequestAndGetResponse({ limit: 10 }, "fetchMyEvents")).syncToken) - 1000).toString()
+        let data = await this.SQ1.postRequestAndGetResponse({ limit: 1000, syncToken: syncToken }, "fetchMyEvents")
         let chats = new Set()
         data.events.forEach((e) => {
             if (e.type == 29) {
@@ -345,7 +310,7 @@ class LineSquareClient {
         })
         let joinedChats = []
         for (let e of chats) {
-            let ch = (await LINE.SQ1.postRequestAndGetResponse({ squareChatMid: e }, "getSquareChat"))
+            let ch = (await this.SQ1.postRequestAndGetResponse({ squareChatMid: e }, "getSquareChat"))
             if (ch.squareChatMember) {
                 joinedChats.push(ch)
             }
@@ -356,7 +321,7 @@ class LineSquareClient {
         return joinedChats
     }
     async getSquareChat(mid) {
-        return await LINE.SQ1.postRequestAndGetResponse({ squareChatMid: mid }, "getSquareChat")
+        return await this.SQ1.postRequestAndGetResponse({ squareChatMid: mid }, "getSquareChat")
     }
 
     async proxyFetch(url, headers = {}, method = "GET", body = null) {
@@ -378,16 +343,15 @@ class LineSquareClient {
         this.S4.reOpenSocket()
         this.SQ1.reOpenSocket()
     }
-    timeOutWith(o,k, t, ...arg) {
+    timeout(f, t) {
         return new Promise((resolve, reject) => {
             let time=true
-            o[k](...arg).then((res) => { resolve(res);time=false })
+            f().then((res) => { resolve(res);time=false })
             setTimeout(() => {
                 reject("Time Out")
                 if (time) {
                     notify("リクエストがタイムアウトしました","#fff","red")
                 }
-                
             }, t);
         })
     }

@@ -1,3 +1,26 @@
+window.version = "v 0.0.0"
+window.versionCode = 0
+if (localStorage.getItem("auth")) {
+    document.getElementById("auth").value = localStorage.getItem("auth")
+} if (localStorage.getItem("device")) {
+    document.getElementById("device").value = localStorage.getItem("device")
+}
+async function runnnn() {
+    window.Line = new LineSquareClient(document.getElementById("auth").value, document.getElementById("device").value, () => {
+        setTimeout(async () => {
+            let rooms = await UserCashe.getItem(Line.mid + ":chatsList")
+            if (!rooms) {
+                rooms = await Line.getJoinedSquareChats()
+                await buildChatButton(rooms)
+            } else {
+                await buildChatButtonC(rooms)
+            }
+        }, 200)
+    })
+    localStorage.setItem("auth", document.getElementById("auth").value)
+    localStorage.setItem("device", document.getElementById("device").value)
+    runLINE()
+}
 var chatData = {    //チャットリストのデータを入れる
     chatList: []
 }
@@ -12,12 +35,12 @@ function createObjectURL(prot, blob) {
 async function updateChat() {
     if (roomData.roomMid) {
         let isTooLate = false
-        setTimeout(() => {
-            isTooLate = true
-            updateChat()
-        }, 2000)
-        let data = await LINE.timeOutWith(LINE, "fetchSquareChatEvents", 2100, roomData.roomMid, roomData.syncToken)
+        let data = await Line.timeout(()=>Line.fetchSquareChatEvents(roomData.roomMid, roomData.syncToken), 2100)
         if (!data) {
+            setTimeout(() => {
+                isTooLate = true
+                updateChat()
+            }, 2000)
             return
         }
         if (isTooLate) {
@@ -47,13 +70,17 @@ async function updateChat() {
             by: "",
             call: () => { notify(readingTxt, "#fff", "#333") }
         })*/
-        await append2Talk(events, roomData.roomMid,true)
+        await append2Talk(events, roomData.roomMid, roomData.setting.viewMkRead)
+        setTimeout(() => {
+            isTooLate = true
+            updateChat()
+        }, 2000)
     } else {
     }
 }
 
 async function initTalk(mid) {
-    let res = await LINE.timeOutWith(LINE, "fetchSquareChatEvents", 2100, mid)
+    let res = await Line.timeout(()=>Line.fetchSquareChatEvents(mid), 2100)
     roomData.syncToken = res.syncToken
     await append2Talk(res.events, mid, false)
 }
@@ -106,7 +133,7 @@ async function append2Talk(events, mid, withEvent) {
             htmls.push(genSysMsg({
                 event: {
                     timeStr: "",
-                    arg:e.payload,
+                    arg: e.payload,
                     text: (await getProfile(e.payload.notifiedMarkAsRead.sMemberMid)).name + "が既読しました"
                 }
             }))
@@ -217,7 +244,7 @@ function genNewMessage(data) {
 var defaltIMG = "data:image/png;base64,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"
 async function chatMembersList(mid) {
     notify("Loading...", "#FFF", "#333")
-    let member = (await LINE.getSquareChatMembers(mid)).squareChatMembers
+    let member = (await Line.getSquareChatMembers(mid)).squareChatMembers
     let members = []
     for (let i = 0; i < member.length; i++) {
         const e = member[i];
@@ -237,7 +264,7 @@ async function chatMembersList(mid) {
         mid: mid,
         members: members
     }
-    __("#root > div > div > div:nth-child(4)").in(genMemberList(data))
+    $("#root > div > div > div:nth-child(4)").in(genMemberList(data))
 }
 
 function genMemberList(data) {
@@ -555,7 +582,7 @@ async function memberPopup(pid) {
     let data2 = await getProfile(pid, true)
     data.desc = JSON.stringify(data2, null, 2)
     let member = genProfilePopup(data)
-    __("#modal-root").in(member)
+    $("#modal-root").in(member)
     member.scrollIntoView()
 
 }
@@ -677,7 +704,7 @@ function genProfilePopup(data) {
 }
 
 function genTxtPopup(data) {
-    __("#modal-root").out.appendChild(div(
+    $("#modal-root").out.appendChild(div(
         {
             "class": "profileModal-module__modal__QRrnT ",
             "role": "dialog",
@@ -743,7 +770,7 @@ function notify(text, color, bcolor, time = 5000) {
         {}, div(
             {
                 style: "background-color:" + bcolor + ";border-radius: 17.5px;user-select:text;",
-                "$click": () => { __("#root > div > ul").out.innerHTML = "" }
+                "$click": () => { $("#root > div > ul").out.innerHTML = "" }
             },
             pre(
                 {
@@ -753,9 +780,9 @@ function notify(text, color, bcolor, time = 5000) {
             )
         )
     )
-    __("#root > div > ul").out.appendChild(noti)
+    $("#root > div > ul").out.appendChild(noti)
     setTimeout(() => {
-        __("#root > div > ul").out.removeChild(noti)
+        $("#root > div > ul").out.removeChild(noti)
     }, time)
 }
 
@@ -771,7 +798,7 @@ async function buildChatButton(squareChatResponseList = []) {   //[getSquareChat
         elms.push(elm)
     }
     let res = list(elms)
-    __("#root > div > div > div.chatlist-module__chatlist_wrap__KtTpq > div.chatlist-module__chatlist__qruAE > div > div > div").in(res)
+    $("#root > div > div > div.chatlist-module__chatlist_wrap__KtTpq > div.chatlist-module__chatlist__qruAE > div > div > div").in(res)
     setInterval(() => {
         try {
             fetchEventUpdate()
@@ -789,7 +816,7 @@ async function buildChatButtonC(dataList = []) {   //dataListからチャット�
     }
     let elms = []
     for (let index = 0; index < dataList.length; index++) {
-        const element = await LINE.getSquareChat(dataList[index]);
+        const element = await Line.getSquareChat(dataList[index]);
         let elm = await squareChat2chatButton(element)
         if (!elm) {
             continue
@@ -798,7 +825,7 @@ async function buildChatButtonC(dataList = []) {   //dataListからチャット�
         elms.push(elm)
     }
     let res = list(elms)
-    __("#root > div > div > div.chatlist-module__chatlist_wrap__KtTpq > div.chatlist-module__chatlist__qruAE > div > div > div").in(res)
+    $("#root > div > div > div.chatlist-module__chatlist_wrap__KtTpq > div.chatlist-module__chatlist__qruAE > div > div > div").in(res)
     setInterval(() => {
         try {
             fetchEventUpdate()  //更新開始
@@ -810,8 +837,8 @@ async function buildChatButtonC(dataList = []) {   //dataListからチャット�
     return res
 }
 function fetchEventUpdate() {   //fetchMyEvents fetchSquareChatEvents から表示を更新
-    if (LINE.SQ1.socket.post.readyState !== LINE.SQ1.socket.post.OPEN) {
-        LINE.SQ1.reOpenSocket()
+    if (Line.SQ1.socket.post.readyState !== Line.SQ1.socket.post.OPEN) {
+        Line.SQ1.reOpenSocket()
         notify("Network Error", "#fff", "#f00")
         return
     }
@@ -830,7 +857,7 @@ function fetchEventUpdate() {   //fetchMyEvents fetchSquareChatEvents から表�
         }
     })
 
-    UserCashe.setItem(LINE.mid + ":chatsList", mids);
+    UserCashe.setItem(Line.mid + ":chatsList", mids);
     //myEvent
     (async () => {
         function list(inElm) {
@@ -838,9 +865,9 @@ function fetchEventUpdate() {   //fetchMyEvents fetchSquareChatEvents から表�
         }
         let elms = []
         if (!chatData.syncToken) {
-            chatData.syncToken = (await LINE.fetchMyEvents()).syncToken
+            chatData.syncToken = (await Line.fetchMyEvents()).syncToken
         }
-        let res = await LINE.timeOutWith(LINE, "fetchMyEvents", 3500, chatData.syncToken)
+        let res = await Line.timeout(()=>Line.fetchMyEvents(chatData.syncToken),3500)
         chatData.syncToken = res.syncToken
         res.events.forEach(async (e) => {
             let chat
@@ -883,7 +910,7 @@ function fetchEventUpdate() {   //fetchMyEvents fetchSquareChatEvents から表�
             elms.push(genChatButton(e))
         })
         let elm = list(elms)
-        __("#root > div > div > div.chatlist-module__chatlist_wrap__KtTpq > div.chatlist-module__chatlist__qruAE > div > div > div").in(elm)
+        $("#root > div > div > div.chatlist-module__chatlist_wrap__KtTpq > div.chatlist-module__chatlist__qruAE > div > div > div").in(elm)
 
         async function getChatdata(id) {
             for (let index = 0; index < chatData.chatList.length; index++) {
@@ -892,7 +919,7 @@ function fetchEventUpdate() {   //fetchMyEvents fetchSquareChatEvents から表�
                     return e
                 }
             }
-            let chat = await LINE.getSquareChat(id)
+            let chat = await Line.getSquareChat(id)
             await squareChat2chatButton(chat, 0)
             return await getChatdata(id)
         }
@@ -908,7 +935,7 @@ async function squareChat2chatButton(squareChatResponse, index) {   //getSquareC
     }
     if (squareChatResponse.squareChatStatus.lastMessage) {
         date = new Date(squareChatResponse.squareChatStatus.lastMessage.message.createdTime)
-        date = date.getMonth() + 1 + "/" + date.getDate() + " " + date.toLocaleTimeString().substring(0, 5)
+        date = date.getMonth() + 1 + "/" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes()
         if (squareChatResponse.squareChatStatus.lastMessage.message.text) {
             lastText = squareChatResponse.squareChatStatus.lastMessage.message.text
         }
@@ -1043,7 +1070,8 @@ var roomData = {    //chat
     },
     mymid: null,
     roomMid: null,
-    followLatest: false
+    followLatest: false,
+    setting: {}
 }
 
 var URLcashe = localforage.createInstance({
@@ -1066,7 +1094,7 @@ async function getMDataUrl(id) {
     } else {
         let res
         try {
-            res = await LINE.proxyFetch(url, { "x-line-access": LINE.authToken, "x-line-application": LINE.SQ1.config.appName })
+            res = await Line.proxyFetch(url, { "x-line-access": Line.authToken, "x-line-application": Line.SQ1.config.appName })
         } catch (error) {
 
         }
@@ -1087,7 +1115,7 @@ async function getMPDataUrl(id) {
     } else {
         let res
         try {
-            res = await LINE.proxyFetch(url, { "x-line-access": LINE.authToken, "x-line-application": LINE.SQ1.config.appName })
+            res = await Line.proxyFetch(url, { "x-line-access": Line.authToken, "x-line-application": Line.SQ1.config.appName })
         } catch (error) {
 
         }
@@ -1190,7 +1218,7 @@ async function getProfile(mid, raw) {
     let data = await ThriftCashe.getItem(prot)
     if (data) {
     } else {
-        let res = (await LINE.getSquareMember(mid))[1]
+        let res = (await Line.getSquareMember(mid))[1]
         if (res.length == 1) {
             console.error("Error response at " + prot)
             return ""
@@ -1246,7 +1274,7 @@ async function buttonEvent(n, arg, add) {
         }
         notify("Loading...", "#000", "#fff")
         roomData.roomMid = arg[0].parentElement.dataset.mid
-        await squareChat2chatroom(await LINE.getSquareChat(arg[0].parentElement.dataset.mid))
+        await squareChat2chatroom(await Line.getSquareChat(arg[0].parentElement.dataset.mid))
         await initTalk(arg[0].parentElement.dataset.mid)
         updateChat()
         return
@@ -1260,7 +1288,7 @@ async function buttonEvent(n, arg, add) {
             notify(await runCommand(arg[0].parentElement.parentElement.childNodes[0].childNodes[0].value.substring(4)), "#fff", "#222", 7000)
             return
         }
-        LINE.sendTxtMessage(roomData.roomMid, arg[0].parentElement.parentElement.childNodes[0].childNodes[0].value)
+        Line.sendTxtMessage(roomData.roomMid, arg[0].parentElement.parentElement.childNodes[0].childNodes[0].value)
         arg[0].parentElement.parentElement.childNodes[0].childNodes[0].value = ""
         return
     }
@@ -1297,7 +1325,7 @@ async function buttonEvent(n, arg, add) {
     }
     if (n == "closeChat") {
         roomData.roomMid = null
-        __("#root > div > div > div:nth-child(4)").out.innerHTML = ""
+        $("#root > div > div > div:nth-child(4)").out.innerHTML = ""
         return
     }
     if (n == "memberView") {
@@ -1342,23 +1370,27 @@ async function buttonEvent(n, arg, add) {
 }
 async function runCommand(command) {
     console.log(command)
-    if (command == "") {
-        consoleRoom()
-        return "consoleを開きました"
-    }
     command = command.split(" ")
     switch (command[1]) {
+        case "viewRead":
+            if (command[2] == "true") {
+                roomData.setting.viewMkRead = true
+                return "viewMkRead : true"
+            } else {
+                roomData.setting.viewMkRead = false
+                return "viewMkRead : false"
+            }
         case "allkick":
             return "👿"
         case "silent":
             return `${command[2]} : mode = Silent`
-        case "normal":
+        case "nosilent":
             return `${command[2]} : mode = Normal`
         case "status":
             return `OpenChat-Web-Client : ${window.version} / ${window.versionCode}
-User-Name : ${LINE.name}
-User-Mid : ${LINE.mid}
-User-Device : ${LINE.deviceName}
+User-Name : ${Line.name}
+User-Mid : ${Line.mid}
+User-Device : ${Line.deviceName}
 SquareChatMid : ${roomData.commandMid ? roomData.commandMid : roomData.roomMid}
 MySquareMemberMid : ${roomData.mymid}`
         case "cd":
@@ -1379,7 +1411,7 @@ function consoleRoom() {
         inputName: "コマンド ",
     }
     let res = genChatroom(data)
-    __("#root > div > div > div:nth-child(4)").in(res)
+    $("#root > div > div > div:nth-child(4)").in(res)
     if (!roomData.commandMid) {
         roomData.commandMid = roomData.roomMid
     }
@@ -1400,9 +1432,9 @@ function consoleRoom() {
         msgGroup: "item",
         text: `chatCommand
 OpenChat-Web-Client : ${window.version} / ${window.versionCode}
-User-Name : ${LINE.name}
-User-Mid : ${LINE.mid}
-User-Device : ${LINE.deviceName}
+User-Name : ${Line.name}
+User-Mid : ${Line.mid}
+User-Device : ${Line.deviceName}
 SquareChatMid : ${roomData.commandMid}
 MySquareMemberMid : ${roomData.mymid}`
     }
@@ -1467,7 +1499,7 @@ async function squareChat2chatroom(squareChatResponse) {
         inputName: (await getProfile(squareChatResponse.squareChatMember.squareMemberMid)).name + "として",
     }
     let res = genChatroom(data)
-    __("#root > div > div > div:nth-child(4)").in(res)
+    $("#root > div > div > div:nth-child(4)").in(res)
     return res
 }
 function genChatroom(data) {
@@ -1477,7 +1509,7 @@ function genChatroom(data) {
             "role": "log",
             "data-mymid": data.mymid,
             "$scroll": (...arg) => { buttonEvent("chatScroll", arg) },
-            "style":"background-color:rgba(0,0,0,0.2)"
+            "style": "background-color:rgba(0,0,0,0.2)"
         },
     )
     roomData.mymid = data.mymid
@@ -1854,23 +1886,25 @@ function genChatroom(data) {
                     },
                     i(
                         {
-                            "class": "icon"
+                            "class": "icon" , "style": "color:#007aff;"
                         },
                         svg(
                             {
-                                "width": "24",
-                                "height": "24",
-                                "viewBox": "0 0 24 24",
-                                "fill": "none",
-                                "xmlns": "http://www.w3.org/2000/svg"
+                                "height": "1em",
+                                "fill": "currentColor",
+                                "viewBox": "0 0 20 20",
+                                "xmlns": "http://www.w3.org/2000/svg",
+                                "data-laicon-version": "15.0"
                             },
-                            path(
+                            g(
                                 {
-                                    "class": "sendButton",
-                                    "d": "M9.00967 5.12761H11.0097C12.1142 5.12761 13.468 5.89682 14.0335 6.8457L16.5089 11H21.0097C21.562 11 22.0097 11.4477 22.0097 12C22.0097 12.5523 21.562 13 21.0097 13H16.4138L13.9383 17.1543C13.3729 18.1032 12.0191 18.8724 10.9145 18.8724H8.91454L12.4138 13H5.42485L3.99036 15.4529H1.99036L4.00967 12L4.00967 11.967L2.00967 8.54712H4.00967L5.44417 11H12.5089L9.00967 5.12761Z",
-                                    "fill": "currentColor"
+                                    "transform": "translate(-2 -2)"
                                 },
-
+                                path(
+                                    {
+                                        "d": "m20.1864 11.0044-15.477-7.736a1.1091 1.1091 0 0 0-1.165.105c-.338.254-.503.671-.427 1.087l1.274 7.04h8.108v1h-8.119l-1.263 7.039c-.076.417.089.833.427 1.087.198.148.432.224.667.224.169 0 .34-.039.499-.118l15.476-7.737c.379-.19.614-.571.614-.995 0-.425-.235-.806-.614-.996Z"
+                                    },
+                                )
                             )
                         )
                     )
@@ -1895,13 +1929,11 @@ const observer = new IntersectionObserver((entries) => {
 var fileMenu = ""
 
 async function Message2Elm(message) {
+    let date = new Date(message.deliveredTime)
     let data = {
         isSelected: false,
         timeInt: message.deliveredTime,
-        timeStr: new Date(message.deliveredTime)
-            .toLocaleTimeString()
-            .substring(0, 5)
-        ,
+        timeStr: date.getHours() + ":" + date.getMinutes(),
         profile: await getProfile(message._from),
         mid: message._from,
         msgId: message.id,
@@ -2024,7 +2056,7 @@ function genSysMsg(data, raw) {
                 "data-flexible": "true",
                 "data-selected": "false",
                 "data-timestamp": data.event.timeStr,
-                "$click": (data.event.arg ? (...arg) => { setTimeout(()=>genTxtPopup({ name: "Event Data", desc: JSON.stringify(data.event.arg, null, 2)})) } : data.event.onclick)
+                "$click": (data.event.arg ? (...arg) => { setTimeout(() => genTxtPopup({ name: "Event Data", desc: JSON.stringify(data.event.arg, null, 2) })) } : data.event.onclick)
             },
             div(
                 {
@@ -2038,7 +2070,7 @@ function genSysMsg(data, raw) {
                         },
                         data.event.timeStr)
                     , span(
-                        {},
+                        { "style": "color:#fff;" },
                         data.event.text)
                 )
             )
