@@ -30,6 +30,12 @@
     </div>
     <script src="./js/eruda.min.js"></script>
     <script>
+        if (localStorage.getItem("auth")) {
+            document.getElementById("auth").value = localStorage.getItem("auth");
+        }
+        if (localStorage.getItem("device")) {
+            document.getElementById("device").value = localStorage.getItem("device");
+        }
         eruda.init()
         var snippets = eruda.get('snippets');
         snippets._snippets = []
