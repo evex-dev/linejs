@@ -1,4 +1,4 @@
-import ws from "./dnowork.js";
+import ws from "./denows.js";
 
 export async function handler(request) {
 	const url = new URL(request.url);
