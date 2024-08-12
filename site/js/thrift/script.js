@@ -214,7 +214,9 @@ class LineClient extends Classes(
                     if (!authToken) {
                         return;
                     }
-                    this.getProfile();
+                    this.getProfile().catch((e) => {
+                        alert("authTokenが間違っているか期限切れです。もう一度ログインしてください")
+                    });
                 }, 200);
             });
         }
@@ -370,15 +372,15 @@ function Classes(...bases) {
 }
 function test() {
     if (!document.getElementById("device").value) {
-        alert("まずdeviceを入力してください(IOSIPAD DESKTOPWIN DESKTOPMAC)")
-        return
+        alert("まずdeviceを入力してください(IOSIPAD DESKTOPWIN DESKTOPMAC)");
+        return;
     }
     if (!document.getElementById("auth").value) {
-        const email = document.getElementById("email").value
-        const pw = document.getElementById("pw").value
-        if (!(pw&&email)) {
-            alert("emailとpassword、またはauthTokenを入力してください")
-            return
+        const email = document.getElementById("email").value;
+        const pw = document.getElementById("pw").value;
+        if (!(pw && email)) {
+            alert("emailとpassword、またはauthTokenを入力してください");
+            return;
         }
         globalThis.Line = new LineClient({
             device: document.getElementById("device").value,
@@ -391,6 +393,8 @@ function test() {
         globalThis.Line = new LineClient({
             authToken: document.getElementById("auth").value,
             device: document.getElementById("device").value,
+        }, () => {
+            localStorage.setItem("auth", Line.authToken);
         });
     }
     localStorage.setItem("email", document.getElementById("email").value);
