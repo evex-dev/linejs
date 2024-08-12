@@ -9,7 +9,7 @@ Line-Deno-ClientはDenoで書かれたLINEの非公式APIです
 メールとパスワードでログイン:
 
 ```js
-constLine = new LineClient({
+const Line = new LineClient({
     device: "device",
     email: "email",
     pw: "pass_word",
@@ -24,7 +24,7 @@ constLine = new LineClient({
 Tokenから生成:
 
 ```js
-constLine = new LineClient({
+const Line = new LineClient({
     authToken: "authToken",
     device: "device",
 }, () => {
@@ -32,12 +32,12 @@ constLine = new LineClient({
 });
 ```
 
-###Lineリクエストを送信
+### Lineリクエストを送信
 
 `LineClient.request`を使用してthriftデータを送信、受信できます:
 
 ```js
-awaitLine.request(
+await Line.request(
     CHRdata = [], // CHRLINE Thrift [[ftype,fid,value],...]
     methodName, // Method Name
     protocol_type = 3, // 3:TBINARY 4:TCOMPACT
@@ -53,11 +53,11 @@ awaitLine.request(
 
 ```js
 // SquareServise
-awaitLine.getJoinedSquares(limit = 50, continuationToken);
-awaitLine.inviteIntoSquareChat(inviteeMids, squareChatMid);
-awaitLine.inviteToSquare(squareMid, invitees, squareChatMid);
-awaitLine.markAsRead(squareChatMid, messageId);
-awaitLine.reactToMessage(squareChatMid, messageId, reactionType = 2);
+await Line.getJoinedSquares(limit = 50, continuationToken);
+await Line.inviteIntoSquareChat(inviteeMids, squareChatMid);
+await Line.inviteToSquare(squareMid, invitees, squareChatMid);
+await Line.markAsRead(squareChatMid, messageId);
+await Line.reactToMessage(squareChatMid, messageId, reactionType = 2);
 /*
     reactionType
         ALL     = 0,
@@ -69,40 +69,40 @@ awaitLine.reactToMessage(squareChatMid, messageId, reactionType = 2);
         SAD     = 6,
         OMG     = 7,
 */
-awaitLine.findSquareByInvitationTicket(invitationTicket);
-awaitLine.fetchMyEvents(
+await Line.findSquareByInvitationTicket(invitationTicket);
+await Line.fetchMyEvents(
     syncToken = undefined,
     limit = 100,
     continuationToken = undefined,
     subscriptionId,
 );
-awaitLine.fetchSquareChatEvents(
+await Line.fetchSquareChatEvents(
     squareChatMid,
     syncToken = undefined,
     continuationToken = undefined,
     subscriptionId = 0,
     limit = 100,
 );
-awaitLine.sendSquareMessage(
+await Line.sendSquareMessage(
     squareChatMid,
     text = "test Message",
     contentType = 0,
     contentMetadata = {},
     relatedMessageId = undefined,
 );
-awaitLine.getSquare(squareMid);
-awaitLine.getSquareChat(squareChatMid);
-awaitLine.getJoinableSquareChats(
+await Line.getSquare(squareMid);
+await Line.getSquareChat(squareChatMid);
+await Line.getJoinableSquareChats(
     squareMid,
     continuationToken = undefined,
     limit = 100,
 );
-awaitLine.createSquare(
+await Line.createSquare(
     name = "TEST Square",
     displayName = "Tester",
     profileImageObsHash =
         "0h6tJf0hQsaVt3H0eLAsAWDFheczgHd3wTCTx2eApNKSoefHNVGRdwfgxbdgUMLi8MSngnPFMeNmpbLi8MSngnPFMeNmpbLi8MSngnOA",
-    desc = "test withLine-Deno-Client",
+    desc = "test with Line-Deno-Client",
     searchable = true,
     SquareJoinMethodType = 0,
 );
@@ -112,8 +112,8 @@ awaitLine.createSquare(
         APPROVAL(1),
         CODE(2);
 */
-awaitLine.getSquareChatAnnouncements(squareChatMid);
-awaitLine.updateSquareFeatureSet(
+await Line.getSquareChatAnnouncements(squareChatMid);
+await Line.updateSquareFeatureSet(
     updateAttributes = [],
     squareMid,
     revision,
@@ -132,15 +132,15 @@ awaitLine.updateSquareFeatureSet(
         DISABLE_TRANSFER_ADMIN(9),
         CREATING_LIVE_TALK(10);
 */
-awaitLine.joinSquare(
+await Line.joinSquare(
     squareMid,
     displayName,
     ableToReceiveMessage = false,
     passCode = undefined,
 );
-awaitLine.removeSubscriptions(subscriptionIds = []);
-awaitLine.unsendSquareMessage(squareChatMid, messageId);
-awaitLine.createSquareChat(
+await Line.removeSubscriptions(subscriptionIds = []);
+await Line.unsendSquareMessage(squareChatMid, messageId);
+await Line.createSquareChat(
     squareChatMid,
     name,
     chatImageObsHash,
@@ -160,14 +160,14 @@ awaitLine.createSquareChat(
         OFF(1),
         ON(2);
 */
-awaitLine.getSquareChatMembers(
+await Line.getSquareChatMembers(
     squareChatMid,
     continuationToken = undefined,
     limit = 200,
 );
-awaitLine.getSquareFeatureSet(squareMid);
-awaitLine.getSquareInvitationTicketUrl(mid);
-awaitLine.updateSquareChatMember(
+await Line.getSquareFeatureSet(squareMid);
+await Line.getSquareInvitationTicketUrl(mid);
+await Line.updateSquareChatMember(
     squareMemberMid,
     squareChatMid,
     notificationForMessage = true,
@@ -180,7 +180,7 @@ awaitLine.updateSquareChatMember(
         NOTIFICATION_MESSAGE(6),
         NOTIFICATION_NEW_MEMBER(7);
 */
-awaitLine.updateSquareMember(
+await Line.updateSquareMember(
     updatedAttrs = [],
     updatedPreferenceAttrs = [],
     squareMemberMid,
@@ -207,9 +207,9 @@ awaitLine.updateSquareMember(
         BANNED(6),
         DELETED(7);
 */
-awaitLine.kickOutSquareMember(sid, pid);
-awaitLine.checkSquareJoinCode(squareMid, code);
-awaitLine.createSquareChatAnnouncement(
+await Line.kickOutSquareMember(sid, pid);
+await Line.checkSquareJoinCode(squareMid, code);
+await Line.createSquareChatAnnouncement(
     squareChatMid,
     messageId,
     text,
@@ -217,27 +217,27 @@ awaitLine.createSquareChatAnnouncement(
     createdAt,
     announcementType = 0,
 );
-awaitLine.getSquareMember(squareMemberMid);
-awaitLine.searchSquareChatMembers(
+await Line.getSquareMember(squareMemberMid);
+await Line.searchSquareChatMembers(
     squareChatMid,
     displayName = "",
     continuationToken,
     limit = 20,
 );
-awaitLine.getSquareEmid(squareMid);
-awaitLine.getSquareMembersBySquare(squareMid, squareMemberMids = []);
-awaitLine.manualRepair(syncToken, limit = 100, continuationToken);
-awaitLine.sendSquareRequestByName(METHOD_NAME, params); // send SquareRequest
-//LineServise
-awaitLine.getProfile();
+await Line.getSquareEmid(squareMid);
+await Line.getSquareMembersBySquare(squareMid, squareMemberMids = []);
+await Line.manualRepair(syncToken, limit = 100, continuationToken);
+await Line.sendSquareRequestByName(METHOD_NAME, params); // send SquareRequest
+// LineServise
+await Line.getProfile();
 // LiffServise
-awaitLine.issueLiffView(
+await Line.issueLiffView(
     chatMid,
     liffId = "1562242036-RW04okm",
     lang = "ja_JP",
 );
 // ChannelService
-awaitLine.approveChannelAndIssueChannelToken(channelId = "1341209850");
+await Line.approveChannelAndIssueChannelToken(channelId = "1341209850");
 ```
 
 ### イベントハンドラー
@@ -250,7 +250,7 @@ fetchMyEventsのハンドラー:
 const handler = (event, line) => {
     console.log(event);
 };
-const remove = awaitLine.squareEvent(handler, ?syncToken, ?interval, ?remove);
+const remove = await Line.squareEvent(handler, ?syncToken, ?interval, ?remove);
 function stopRoop() {
     remove.remove = true;
 }
@@ -262,7 +262,7 @@ fetchSquareChatEventsのハンドラー:
 const handler = (event, line, mid) => {
     console.log(event);
 };
-const remove = awaitLine.squareChatEvent(
+const remove = await Line.squareChatEvent(
     handler,
     mid,
     ?syncToken,
@@ -281,7 +281,7 @@ addEventListenerを利用して処理することもできます。
 fetchMyEventsのハンドラー:
 
 ```js
-const eventTarget =Line.getSquareEventTarget();
+const eventTarget = Line.getSquareEventTarget();
 eventTarget.addEventListener(
     "message",
     (e) => console.log(e.squareMessage.message.text),
@@ -296,12 +296,12 @@ function stopRoop() {
 fetchSquareChatEventsのハンドラー:
 
 ```js
-const eventTarget =Line.getSquareChatEventTarget(mid);
+const eventTarget = Line.getSquareChatEventTarget(mid);
 eventTarget.addEventListener(
     "message",
     (e) => {
         console.log(e.squareMessage.message.text);
-       Line.sendSquareMessage(
+        Line.sendSquareMessage(
             mid,
             e.squareMessage.message.text,
         );
@@ -323,7 +323,7 @@ function stopRoop() {
 イベント名の配列は以下のコードで取得できます:
 
 ```js
-const eventNameArray =Line.parser.def.SquareEventPayload.map((e) => {
+const eventNameArray = Line.parser.def.SquareEventPayload.map((e) => {
     let name = e.name.replace("notified", "")
         .replace("notification", "");
     name = name[0].toLowerCase() + name.substring(1);
@@ -346,4 +346,4 @@ const eventNameArray =Line.parser.def.SquareEventPayload.map((e) => {
 - [jkFujiyama](https://github.com/jkFujiyama)
 - [CHRLINE](https://github.com/DeachSword/CHRLINE)
 - [thriftrw-node](https://github.com/thriftrw/thriftrw-node/)
--Line Openchat 拓也集落's group members
+- Line open-chat 拓也集落's group members

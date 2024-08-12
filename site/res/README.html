@@ -370,7 +370,7 @@ code {
 <h2 id="%E3%82%B3%E3%83%BC%E3%83%89%E4%BE%8B">コード例</h2>
 <h3 id="%E3%82%A4%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%B3%E3%82%B9%E7%94%9F%E6%88%90">インスタンス生成</h3>
 <p>メールとパスワードでログイン:</p>
-<pre class="hljs"><code><div><span class="hljs-keyword">const</span> LINE = <span class="hljs-keyword">new</span> LineClient({
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> Line = <span class="hljs-keyword">new</span> LineClient({
     <span class="hljs-attr">device</span>: <span class="hljs-string">"device"</span>,
     <span class="hljs-attr">email</span>: <span class="hljs-string">"email"</span>,
     <span class="hljs-attr">pw</span>: <span class="hljs-string">"pass_word"</span>,
@@ -382,16 +382,16 @@ code {
 });
 </div></code></pre>
 <p>Tokenから生成:</p>
-<pre class="hljs"><code><div><span class="hljs-keyword">const</span> LINE = <span class="hljs-keyword">new</span> LineClient({
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> Line = <span class="hljs-keyword">new</span> LineClient({
     <span class="hljs-attr">authToken</span>: <span class="hljs-string">"authToken"</span>,
     <span class="hljs-attr">device</span>: <span class="hljs-string">"device"</span>,
 }, () =&gt; {
     <span class="hljs-comment">// oninit</span>
 });
 </div></code></pre>
-<h3 id="line%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88%E3%82%92%E9%80%81%E4%BF%A1">LINEリクエストを送信</h3>
+<h3 id="line%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88%E3%82%92%E9%80%81%E4%BF%A1">Lineリクエストを送信</h3>
 <p><code>LineClient.request</code>を使用してthriftデータを送信、受信できます:</p>
-<pre class="hljs"><code><div><span class="hljs-keyword">await</span> LINE.request(
+<pre class="hljs"><code><div><span class="hljs-keyword">await</span> Line.request(
     CHRdata = [], <span class="hljs-comment">// CHRLINE Thrift [[ftype,fid,value],...]</span>
     methodName, <span class="hljs-comment">// Method Name</span>
     protocol_type = <span class="hljs-number">3</span>, <span class="hljs-comment">// 3:TBINARY 4:TCOMPACT</span>
@@ -404,11 +404,11 @@ code {
 </div></code></pre>
 <p>実装されているメソッドを利用することもできます:</p>
 <pre class="hljs"><code><div><span class="hljs-comment">// SquareServise</span>
-<span class="hljs-keyword">await</span> LINE.getJoinedSquares(limit = <span class="hljs-number">50</span>, continuationToken);
-<span class="hljs-keyword">await</span> LINE.inviteIntoSquareChat(inviteeMids, squareChatMid);
-<span class="hljs-keyword">await</span> LINE.inviteToSquare(squareMid, invitees, squareChatMid);
-<span class="hljs-keyword">await</span> LINE.markAsRead(squareChatMid, messageId);
-<span class="hljs-keyword">await</span> LINE.reactToMessage(squareChatMid, messageId, reactionType = <span class="hljs-number">2</span>);
+<span class="hljs-keyword">await</span> Line.getJoinedSquares(limit = <span class="hljs-number">50</span>, continuationToken);
+<span class="hljs-keyword">await</span> Line.inviteIntoSquareChat(inviteeMids, squareChatMid);
+<span class="hljs-keyword">await</span> Line.inviteToSquare(squareMid, invitees, squareChatMid);
+<span class="hljs-keyword">await</span> Line.markAsRead(squareChatMid, messageId);
+<span class="hljs-keyword">await</span> Line.reactToMessage(squareChatMid, messageId, reactionType = <span class="hljs-number">2</span>);
 <span class="hljs-comment">/*
     reactionType
         ALL     = 0,
@@ -420,40 +420,40 @@ code {
         SAD     = 6,
         OMG     = 7,
 */</span>
-<span class="hljs-keyword">await</span> LINE.findSquareByInvitationTicket(invitationTicket);
-<span class="hljs-keyword">await</span> LINE.fetchMyEvents(
+<span class="hljs-keyword">await</span> Line.findSquareByInvitationTicket(invitationTicket);
+<span class="hljs-keyword">await</span> Line.fetchMyEvents(
     syncToken = <span class="hljs-literal">undefined</span>,
     limit = <span class="hljs-number">100</span>,
     continuationToken = <span class="hljs-literal">undefined</span>,
     subscriptionId,
 );
-<span class="hljs-keyword">await</span> LINE.fetchSquareChatEvents(
+<span class="hljs-keyword">await</span> Line.fetchSquareChatEvents(
     squareChatMid,
     syncToken = <span class="hljs-literal">undefined</span>,
     continuationToken = <span class="hljs-literal">undefined</span>,
     subscriptionId = <span class="hljs-number">0</span>,
     limit = <span class="hljs-number">100</span>,
 );
-<span class="hljs-keyword">await</span> LINE.sendSquareMessage(
+<span class="hljs-keyword">await</span> Line.sendSquareMessage(
     squareChatMid,
     text = <span class="hljs-string">"test Message"</span>,
     contentType = <span class="hljs-number">0</span>,
     contentMetadata = {},
     relatedMessageId = <span class="hljs-literal">undefined</span>,
 );
-<span class="hljs-keyword">await</span> LINE.getSquare(squareMid);
-<span class="hljs-keyword">await</span> LINE.getSquareChat(squareChatMid);
-<span class="hljs-keyword">await</span> LINE.getJoinableSquareChats(
+<span class="hljs-keyword">await</span> Line.getSquare(squareMid);
+<span class="hljs-keyword">await</span> Line.getSquareChat(squareChatMid);
+<span class="hljs-keyword">await</span> Line.getJoinableSquareChats(
     squareMid,
     continuationToken = <span class="hljs-literal">undefined</span>,
     limit = <span class="hljs-number">100</span>,
 );
-<span class="hljs-keyword">await</span> LINE.createSquare(
+<span class="hljs-keyword">await</span> Line.createSquare(
     name = <span class="hljs-string">"TEST Square"</span>,
     displayName = <span class="hljs-string">"Tester"</span>,
     profileImageObsHash =
         <span class="hljs-string">"0h6tJf0hQsaVt3H0eLAsAWDFheczgHd3wTCTx2eApNKSoefHNVGRdwfgxbdgUMLi8MSngnPFMeNmpbLi8MSngnPFMeNmpbLi8MSngnOA"</span>,
-    desc = <span class="hljs-string">"test with LINE-Deno-Client"</span>,
+    desc = <span class="hljs-string">"test with Line-Deno-Client"</span>,
     searchable = <span class="hljs-literal">true</span>,
     SquareJoinMethodType = <span class="hljs-number">0</span>,
 );
@@ -463,8 +463,8 @@ code {
         APPROVAL(1),
         CODE(2);
 */</span>
-<span class="hljs-keyword">await</span> LINE.getSquareChatAnnouncements(squareChatMid);
-<span class="hljs-keyword">await</span> LINE.updateSquareFeatureSet(
+<span class="hljs-keyword">await</span> Line.getSquareChatAnnouncements(squareChatMid);
+<span class="hljs-keyword">await</span> Line.updateSquareFeatureSet(
     updateAttributes = [],
     squareMid,
     revision,
@@ -483,15 +483,15 @@ code {
         DISABLE_TRANSFER_ADMIN(9),
         CREATING_LIVE_TALK(10);
 */</span>
-<span class="hljs-keyword">await</span> LINE.joinSquare(
+<span class="hljs-keyword">await</span> Line.joinSquare(
     squareMid,
     displayName,
     ableToReceiveMessage = <span class="hljs-literal">false</span>,
     passCode = <span class="hljs-literal">undefined</span>,
 );
-<span class="hljs-keyword">await</span> LINE.removeSubscriptions(subscriptionIds = []);
-<span class="hljs-keyword">await</span> LINE.unsendSquareMessage(squareChatMid, messageId);
-<span class="hljs-keyword">await</span> LINE.createSquareChat(
+<span class="hljs-keyword">await</span> Line.removeSubscriptions(subscriptionIds = []);
+<span class="hljs-keyword">await</span> Line.unsendSquareMessage(squareChatMid, messageId);
+<span class="hljs-keyword">await</span> Line.createSquareChat(
     squareChatMid,
     name,
     chatImageObsHash,
@@ -511,14 +511,14 @@ code {
         OFF(1),
         ON(2);
 */</span>
-<span class="hljs-keyword">await</span> LINE.getSquareChatMembers(
+<span class="hljs-keyword">await</span> Line.getSquareChatMembers(
     squareChatMid,
     continuationToken = <span class="hljs-literal">undefined</span>,
     limit = <span class="hljs-number">200</span>,
 );
-<span class="hljs-keyword">await</span> LINE.getSquareFeatureSet(squareMid);
-<span class="hljs-keyword">await</span> LINE.getSquareInvitationTicketUrl(mid);
-<span class="hljs-keyword">await</span> LINE.updateSquareChatMember(
+<span class="hljs-keyword">await</span> Line.getSquareFeatureSet(squareMid);
+<span class="hljs-keyword">await</span> Line.getSquareInvitationTicketUrl(mid);
+<span class="hljs-keyword">await</span> Line.updateSquareChatMember(
     squareMemberMid,
     squareChatMid,
     notificationForMessage = <span class="hljs-literal">true</span>,
@@ -531,7 +531,7 @@ code {
         NOTIFICATION_MESSAGE(6),
         NOTIFICATION_NEW_MEMBER(7);
 */</span>
-<span class="hljs-keyword">await</span> LINE.updateSquareMember(
+<span class="hljs-keyword">await</span> Line.updateSquareMember(
     updatedAttrs = [],
     updatedPreferenceAttrs = [],
     squareMemberMid,
@@ -558,9 +558,9 @@ code {
         BANNED(6),
         DELETED(7);
 */</span>
-<span class="hljs-keyword">await</span> LINE.kickOutSquareMember(sid, pid);
-<span class="hljs-keyword">await</span> LINE.checkSquareJoinCode(squareMid, code);
-<span class="hljs-keyword">await</span> LINE.createSquareChatAnnouncement(
+<span class="hljs-keyword">await</span> Line.kickOutSquareMember(sid, pid);
+<span class="hljs-keyword">await</span> Line.checkSquareJoinCode(squareMid, code);
+<span class="hljs-keyword">await</span> Line.createSquareChatAnnouncement(
     squareChatMid,
     messageId,
     text,
@@ -568,27 +568,27 @@ code {
     createdAt,
     announcementType = <span class="hljs-number">0</span>,
 );
-<span class="hljs-keyword">await</span> LINE.getSquareMember(squareMemberMid);
-<span class="hljs-keyword">await</span> LINE.searchSquareChatMembers(
+<span class="hljs-keyword">await</span> Line.getSquareMember(squareMemberMid);
+<span class="hljs-keyword">await</span> Line.searchSquareChatMembers(
     squareChatMid,
     displayName = <span class="hljs-string">""</span>,
     continuationToken,
     limit = <span class="hljs-number">20</span>,
 );
-<span class="hljs-keyword">await</span> LINE.getSquareEmid(squareMid);
-<span class="hljs-keyword">await</span> LINE.getSquareMembersBySquare(squareMid, squareMemberMids = []);
-<span class="hljs-keyword">await</span> LINE.manualRepair(syncToken, limit = <span class="hljs-number">100</span>, continuationToken);
-<span class="hljs-keyword">await</span> LINE.sendSquareRequestByName(METHOD_NAME, params); <span class="hljs-comment">// send SquareRequest</span>
-<span class="hljs-comment">// LINEServise</span>
-<span class="hljs-keyword">await</span> LINE.getProfile();
+<span class="hljs-keyword">await</span> Line.getSquareEmid(squareMid);
+<span class="hljs-keyword">await</span> Line.getSquareMembersBySquare(squareMid, squareMemberMids = []);
+<span class="hljs-keyword">await</span> Line.manualRepair(syncToken, limit = <span class="hljs-number">100</span>, continuationToken);
+<span class="hljs-keyword">await</span> Line.sendSquareRequestByName(METHOD_NAME, params); <span class="hljs-comment">// send SquareRequest</span>
+<span class="hljs-comment">// LineServise</span>
+<span class="hljs-keyword">await</span> Line.getProfile();
 <span class="hljs-comment">// LiffServise</span>
-<span class="hljs-keyword">await</span> LINE.issueLiffView(
+<span class="hljs-keyword">await</span> Line.issueLiffView(
     chatMid,
     liffId = <span class="hljs-string">"1562242036-RW04okm"</span>,
     lang = <span class="hljs-string">"ja_JP"</span>,
 );
 <span class="hljs-comment">// ChannelService</span>
-<span class="hljs-keyword">await</span> LINE.approveChannelAndIssueChannelToken(channelId = <span class="hljs-string">"1341209850"</span>);
+<span class="hljs-keyword">await</span> Line.approveChannelAndIssueChannelToken(channelId = <span class="hljs-string">"1341209850"</span>);
 </div></code></pre>
 <h3 id="%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E3%83%8F%E3%83%B3%E3%83%89%E3%83%A9%E3%83%BC">イベントハンドラー</h3>
 <p>Squareでイベントハンドラーを利用できます。</p>
@@ -596,7 +596,7 @@ code {
 <pre class="hljs"><code><div><span class="hljs-keyword">const</span> handler = <span class="hljs-function">(<span class="hljs-params">event, line</span>) =&gt;</span> {
     <span class="hljs-built_in">console</span>.log(event);
 };
-<span class="hljs-keyword">const</span> remove = <span class="hljs-keyword">await</span> LINE.squareEvent(handler, ?syncToken, ?interval, ?remove);
+<span class="hljs-keyword">const</span> remove = <span class="hljs-keyword">await</span> Line.squareEvent(handler, ?syncToken, ?interval, ?remove);
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">stopRoop</span>(<span class="hljs-params"></span>) </span>{
     remove.remove = <span class="hljs-literal">true</span>;
 }
@@ -605,7 +605,7 @@ code {
 <pre class="hljs"><code><div><span class="hljs-keyword">const</span> handler = <span class="hljs-function">(<span class="hljs-params">event, line, mid</span>) =&gt;</span> {
     <span class="hljs-built_in">console</span>.log(event);
 };
-<span class="hljs-keyword">const</span> remove = <span class="hljs-keyword">await</span> LINE.squareChatEvent(
+<span class="hljs-keyword">const</span> remove = <span class="hljs-keyword">await</span> Line.squareChatEvent(
     handler,
     mid,
     ?syncToken,
@@ -619,7 +619,7 @@ code {
 <h4 id="addeventlistener">addEventListener</h4>
 <p>addEventListenerを利用して処理することもできます。</p>
 <p>fetchMyEventsのハンドラー:</p>
-<pre class="hljs"><code><div><span class="hljs-keyword">const</span> eventTarget = LINE.getSquareEventTarget();
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> eventTarget = Line.getSquareEventTarget();
 eventTarget.addEventListener(
     <span class="hljs-string">"message"</span>,
     (e) =&gt; <span class="hljs-built_in">console</span>.log(e.squareMessage.message.text),
@@ -631,12 +631,12 @@ eventTarget.onmessage = <span class="hljs-function">(<span class="hljs-params">e
 }
 </div></code></pre>
 <p>fetchSquareChatEventsのハンドラー:</p>
-<pre class="hljs"><code><div><span class="hljs-keyword">const</span> eventTarget = LINE.getSquareChatEventTarget(mid);
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> eventTarget = Line.getSquareChatEventTarget(mid);
 eventTarget.addEventListener(
     <span class="hljs-string">"message"</span>,
     (e) =&gt; {
         <span class="hljs-built_in">console</span>.log(e.squareMessage.message.text);
-        LINE.sendSquareMessage(
+        Line.sendSquareMessage(
             mid,
             e.squareMessage.message.text,
         );
@@ -655,7 +655,7 @@ eventTarget.addEventListener(
 }
 </div></code></pre>
 <p>イベント名の配列は以下のコードで取得できます:</p>
-<pre class="hljs"><code><div><span class="hljs-keyword">const</span> eventNameArray = LINE.parser.def.SquareEventPayload.map(<span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> eventNameArray = Line.parser.def.SquareEventPayload.map(<span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
     <span class="hljs-keyword">let</span> name = e.name.replace(<span class="hljs-string">"notified"</span>, <span class="hljs-string">""</span>)
         .replace(<span class="hljs-string">"notification"</span>, <span class="hljs-string">""</span>);
     name = name[<span class="hljs-number">0</span>].toLowerCase() + name.substring(<span class="hljs-number">1</span>);
@@ -673,7 +673,7 @@ eventTarget.addEventListener(
 <li><a href="https://github.com/jkFujiyama">jkFujiyama</a></li>
 <li><a href="https://github.com/DeachSword/CHRLINE">CHRLINE</a></li>
 <li><a href="https://github.com/thriftrw/thriftrw-node/">thriftrw-node</a></li>
-<li>LINE open-chat 拓也集落's group members</li>
+<li>Line open-chat 拓也集落's group members</li>
 </ul>
 
 </body>
