@@ -53,11 +53,11 @@ await LINE.request(
 
 ```js
 // SquareServise
-await getJoinedSquares(limit = 50, continuationToken);
-await inviteIntoSquareChat(inviteeMids, squareChatMid);
-await inviteToSquare(squareMid, invitees, squareChatMid);
-await markAsRead(squareChatMid, messageId);
-await reactToMessage(squareChatMid, messageId, reactionType = 2);
+await LINE.getJoinedSquares(limit = 50, continuationToken);
+await LINE.inviteIntoSquareChat(inviteeMids, squareChatMid);
+await LINE.inviteToSquare(squareMid, invitees, squareChatMid);
+await LINE.markAsRead(squareChatMid, messageId);
+await LINE.reactToMessage(squareChatMid, messageId, reactionType = 2);
 /*
     reactionType
         ALL     = 0,
@@ -69,35 +69,35 @@ await reactToMessage(squareChatMid, messageId, reactionType = 2);
         SAD     = 6,
         OMG     = 7,
 */
-await findSquareByInvitationTicket(invitationTicket);
-await fetchMyEvents(
+await LINE.findSquareByInvitationTicket(invitationTicket);
+await LINE.fetchMyEvents(
     syncToken = undefined,
     limit = 100,
     continuationToken = undefined,
     subscriptionId,
 );
-await fetchSquareChatEvents(
+await LINE.fetchSquareChatEvents(
     squareChatMid,
     syncToken = undefined,
     continuationToken = undefined,
     subscriptionId = 0,
     limit = 100,
 );
-await sendSquareMessage(
+await LINE.sendSquareMessage(
     squareChatMid,
     text = "test Message",
     contentType = 0,
     contentMetadata = {},
     relatedMessageId = undefined,
 );
-await getSquare(squareMid);
-await getSquareChat(squareChatMid);
-await getJoinableSquareChats(
+await LINE.getSquare(squareMid);
+await LINE.getSquareChat(squareChatMid);
+await LINE.getJoinableSquareChats(
     squareMid,
     continuationToken = undefined,
     limit = 100,
 );
-await createSquare(
+await LINE.createSquare(
     name = "TEST Square",
     displayName = "Tester",
     profileImageObsHash =
@@ -112,8 +112,8 @@ await createSquare(
         APPROVAL(1),
         CODE(2);
 */
-await getSquareChatAnnouncements(squareChatMid);
-await updateSquareFeatureSet(
+await LINE.getSquareChatAnnouncements(squareChatMid);
+await LINE.updateSquareFeatureSet(
     updateAttributes = [],
     squareMid,
     revision,
@@ -132,15 +132,15 @@ await updateSquareFeatureSet(
         DISABLE_TRANSFER_ADMIN(9),
         CREATING_LIVE_TALK(10);
 */
-await joinSquare(
+await LINE.joinSquare(
     squareMid,
     displayName,
     ableToReceiveMessage = false,
     passCode = undefined,
 );
-await removeSubscriptions(subscriptionIds = []);
-await unsendSquareMessage(squareChatMid, messageId);
-await createSquareChat(
+await LINE.removeSubscriptions(subscriptionIds = []);
+await LINE.unsendSquareMessage(squareChatMid, messageId);
+await LINE.createSquareChat(
     squareChatMid,
     name,
     chatImageObsHash,
@@ -160,14 +160,14 @@ await createSquareChat(
         OFF(1),
         ON(2);
 */
-await getSquareChatMembers(
+await LINE.getSquareChatMembers(
     squareChatMid,
     continuationToken = undefined,
     limit = 200,
 );
-await getSquareFeatureSet(squareMid);
-await getSquareInvitationTicketUrl(mid);
-await updateSquareChatMember(
+await LINE.getSquareFeatureSet(squareMid);
+await LINE.getSquareInvitationTicketUrl(mid);
+await LINE.updateSquareChatMember(
     squareMemberMid,
     squareChatMid,
     notificationForMessage = true,
@@ -180,7 +180,7 @@ await updateSquareChatMember(
         NOTIFICATION_MESSAGE(6),
         NOTIFICATION_NEW_MEMBER(7);
 */
-await updateSquareMember(
+await LINE.updateSquareMember(
     updatedAttrs = [],
     updatedPreferenceAttrs = [],
     squareMemberMid,
@@ -207,9 +207,9 @@ await updateSquareMember(
         BANNED(6),
         DELETED(7);
 */
-await kickOutSquareMember(sid, pid);
-await checkSquareJoinCode(squareMid, code);
-await createSquareChatAnnouncement(
+await LINE.kickOutSquareMember(sid, pid);
+await LINE.checkSquareJoinCode(squareMid, code);
+await LINE.createSquareChatAnnouncement(
     squareChatMid,
     messageId,
     text,
@@ -217,27 +217,27 @@ await createSquareChatAnnouncement(
     createdAt,
     announcementType = 0,
 );
-await getSquareMember(squareMemberMid);
-await searchSquareChatMembers(
+await LINE.getSquareMember(squareMemberMid);
+await LINE.searchSquareChatMembers(
     squareChatMid,
     displayName = "",
     continuationToken,
     limit = 20,
 );
-await getSquareEmid(squareMid);
-await getSquareMembersBySquare(squareMid, squareMemberMids = []);
-await manualRepair(syncToken, limit = 100, continuationToken);
-await sendSquareRequestByName(METHOD_NAME, params); // send SquareRequest
+await LINE.getSquareEmid(squareMid);
+await LINE.getSquareMembersBySquare(squareMid, squareMemberMids = []);
+await LINE.manualRepair(syncToken, limit = 100, continuationToken);
+await LINE.sendSquareRequestByName(METHOD_NAME, params); // send SquareRequest
 // LINEServise
-await getProfile();
+await LINE.getProfile();
 // LiffServise
-await issueLiffView(
+await LINE.issueLiffView(
     chatMid,
     liffId = "1562242036-RW04okm",
     lang = "ja_JP",
 );
 // ChannelService
-await approveChannelAndIssueChannelToken(channelId = "1341209850");
+await LINE.approveChannelAndIssueChannelToken(channelId = "1341209850");
 ```
 
 ### イベントハンドラー

@@ -13,7 +13,7 @@
 </head>
 
 <body class="positive_button_first"><noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root" style="min-width: 155px; min-height: 403px;">
+    <div id="root" style="">
         <div class="app" style="margin: 10px;">
             <input type="text" placeholder="authToken" id="auth"
                 style="background-color: #222; color: #fff; padding: 10px;"><br>
@@ -32,6 +32,7 @@
             <button style="background-color: #222; color: #fff; padding: 10px;" type="button" onclick="console.log('>',document.getElementById('cl-in').value);console.log(eval(document.getElementById('cl-in').value))">send</button>!-->
         </div>
     </div>
+    <iframe src="./res/README.html" frameborder="0" style="width: 100%; height: 100vh;"></iframe>
     <script src="./js/eruda.min.js"></script>
     <script>
         if (localStorage.getItem("auth")) {
