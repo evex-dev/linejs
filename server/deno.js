@@ -2,7 +2,7 @@ import write from "./write_deno.js";
 import read from "./read_deno.js";
 import { TBinaryProtocol, TCompactProtocol } from "npm:thrift@0.20.0";
 import { Buffer } from "node:buffer";
-import ThriftRenameParser from "../site/rename_thrift.js";
+import ThriftRenameParser from "../site/js/thrift/rename_thrift.js";
 import PinVerifier from "./pinVerifier.js";
 TBinaryProtocol.genHeader = (name) => {
     return Buffer.from([
