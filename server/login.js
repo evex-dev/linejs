@@ -2,7 +2,6 @@ import write from "./write_deno.js";
 import read from "./read_deno.js";
 import { TBinaryProtocol, TCompactProtocol } from "npm:thrift@0.20.0";
 import { Buffer } from "node:buffer";
-import ThriftRenameParser from "../site/js/thrift/rename_thrift.js";
 import PinVerifier from "./pinVerifier.js";
 TBinaryProtocol.genHeader = (name) => {
     return Buffer.from([
@@ -245,6 +244,7 @@ class lineClient extends LoginAPI {
             } catch (error) {
                 console.log(error, "/", res);
             }
+            console.log("/r", res);
             return res;
         } else {
             try {
@@ -344,10 +344,9 @@ export default function loginMP(request) {
             } catch (e) {
                 controller.enqueue(
                     encoder.encode(
-                        `event: loginErr\ndata: ${JSON.stringify(e.cause)}\n\n`,
+                        `event: loginErr\ndata: ${JSON.stringify(e.stack)}\n\n`,
                     ),
                 );
-                controller.close();
             }
         },
         cancel() {

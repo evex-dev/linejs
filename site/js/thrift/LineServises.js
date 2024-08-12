@@ -901,7 +901,8 @@ class LineMethod {
         pincall(d.data);
       });
       loginSSE.addEventListener("loginErr", (d) => {
-        console.error(d.data);
+        console.log("err",d.data);
+        loginSSE.close();
       });
       loginSSE.addEventListener("login", (d) => {
         const res = JSON.parse(d.data);
