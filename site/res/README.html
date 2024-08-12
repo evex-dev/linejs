@@ -616,6 +616,7 @@ code {
     remove.remove = <span class="hljs-literal">true</span>;
 }
 </div></code></pre>
+<h4 id="addeventlistener">addEventListener</h4>
 <p>addEventListenerを利用して処理することもできます。</p>
 <p>fetchMyEventsのハンドラー:</p>
 <pre class="hljs"><code><div><span class="hljs-keyword">const</span> eventTarget = LINE.getSquareEventTarget();
@@ -629,7 +630,7 @@ eventTarget.onmessage = <span class="hljs-function">(<span class="hljs-params">e
     eventTarget.remove.remove = <span class="hljs-literal">true</span>;
 }
 </div></code></pre>
-<p>fetchMyEventsのハンドラー:</p>
+<p>fetchSquareChatEventsのハンドラー:</p>
 <pre class="hljs"><code><div><span class="hljs-keyword">const</span> eventTarget = LINE.getSquareChatEventTarget(mid);
 eventTarget.addEventListener(
     <span class="hljs-string">"message"</span>,
@@ -653,6 +654,17 @@ eventTarget.addEventListener(
     eventTarget.remove.remove = <span class="hljs-literal">true</span>;
 }
 </div></code></pre>
+<p>イベント名の配列は以下のコードで取得できます:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> eventNameArray = LINE.parser.def.SquareEventPayload.map(<span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+    <span class="hljs-keyword">let</span> name = e.name.replace(<span class="hljs-string">"notified"</span>, <span class="hljs-string">""</span>)
+        .replace(<span class="hljs-string">"notification"</span>, <span class="hljs-string">""</span>);
+    name = name[<span class="hljs-number">0</span>].toLowerCase() + name.substring(<span class="hljs-number">1</span>);
+    <span class="hljs-keyword">return</span> name
+});
+</div></code></pre>
+<p>ただし、全てのイベントが確実に発生するとは限りません。</p>
+<p>例えば、メッセージの受信時に<code>squareEventTarget</code>では<code>message</code>のみ発生しますが、<code>squareChatEventTarget</code>では<code>sendMessage</code>と<code>receiveMessage</code>も発生します。</p>
+<p>また、<a href="./site/res/thrift.json"><code>/site/res/thrift.json</code></a>に記載されていないイベントではイベント名はその<code>fid</code>の値になります。</p>
 <h2 id="thanks">Thanks</h2>
 <p><code>This project got their help directly/indirectly, thank them deeply</code></p>
 <ul>

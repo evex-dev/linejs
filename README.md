@@ -274,6 +274,8 @@ function stopRoop() {
 }
 ```
 
+#### addEventListener
+
 addEventListenerを利用して処理することもできます。
 
 fetchMyEventsのハンドラー:
@@ -291,7 +293,7 @@ function stopRoop() {
 }
 ```
 
-fetchMyEventsのハンドラー:
+fetchSquareChatEventsのハンドラー:
 
 ```js
 const eventTarget = LINE.getSquareChatEventTarget(mid);
@@ -317,6 +319,23 @@ function stopRoop() {
     eventTarget.remove.remove = true;
 }
 ```
+
+イベント名の配列は以下のコードで取得できます:
+
+```js
+const eventNameArray = LINE.parser.def.SquareEventPayload.map((e) => {
+    let name = e.name.replace("notified", "")
+        .replace("notification", "");
+    name = name[0].toLowerCase() + name.substring(1);
+    return name
+});
+```
+
+ただし、全てのイベントが確実に発生するとは限りません。
+
+例えば、メッセージの受信時に`squareEventTarget`では`message`のみ発生しますが、`squareChatEventTarget`では`sendMessage`と`receiveMessage`も発生します。
+
+また、[`/site/res/thrift.json`](./site/res/thrift.json)に記載されていないイベントではイベント名はその`fid`の値になります。
 
 ## Thanks
 
