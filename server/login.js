@@ -231,7 +231,7 @@ class lineClient extends LoginAPI {
             try {
                 res = {};
                 const Trequest = write(value, name, Protocol);
-                await Deno.writeFile("./tmpReq.bin", Trequest); /////////////////////////
+                //await Deno.writeFile("./tmpReq.bin", Trequest); /////////////////////////
                 const fet = await fetch("https://gw.line.naver.jp" + path, {
                     method: "POST",
                     headers: headers,
@@ -239,7 +239,7 @@ class lineClient extends LoginAPI {
                 });
                 res = await fet.arrayBuffer();
                 res = new Uint8Array(res);
-                Deno.writeFile("./tmpRes.bin", res); /////////////////////////////
+                //Deno.writeFile("./tmpRes.bin", res); /////////////////////////////
                 res = read(res, Protocol);
             } catch (error) {
                 console.log(error, "/", res);
