@@ -1,5 +1,6 @@
 # Line-Deno-Client
 
+<<<<<<< HEAD
 Line-Deno-ClientはDenoで書かれたLINEの非公式APIです
 
 ## コード例
@@ -328,3 +329,15 @@ function stopRoop() {
 - [CHRLINE](https://github.com/DeachSword/CHRLINE)
 - [thriftrw-node](https://github.com/thriftrw/thriftrw-node/)
 - LINE open-chat 拓也集落's group members
+=======
+Line Deno ClientはDenoで書かれたLINEの非公式APIです
+
+$ deno run ./server/main.js
+
+WEB sample -> https://line-selfbot.deno.dev/tmp/tmp.html
+
+```bash
+# format
+deno fmt
+```
+>>>>>>> Line-Deno-Client/dev
