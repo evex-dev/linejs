@@ -204,6 +204,9 @@ class LineClient extends Classes(
                     this.parser.def = await fetch("./res/thrift.json").then((
                         r,
                     ) => r.json());
+                    if (!authToken && !noLogin) {
+                        return;
+                    }
                     try {
                         resolve();
                     } catch (error) {
@@ -216,7 +219,12 @@ class LineClient extends Classes(
             });
         }
         if (!authToken && (!noLogin)) {
-            this.loginMP(email, pw, pincall);
+            this.loginMP(email, pw, pincall).then((r) => {
+                try {
+                    resolve();
+                } catch (error) {
+                }
+            });
         }
         this.authToken = authToken;
     }
@@ -368,7 +376,7 @@ function test() {
             device: document.getElementById("device").value,
             email,
             pw,
-        },()=>{
+        }, () => {
             localStorage.setItem("auth", Line.authToken);
         });
     } else {
@@ -384,4 +392,3 @@ function test() {
     console.log("Line.method(...arg)");
     alert("open console");
 }
-
