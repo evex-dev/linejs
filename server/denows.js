@@ -104,8 +104,6 @@ export default function ws(request) {
             try {
                 res = {};
                 const Trequest = write(value, name, Protocol);
-                const x = Buffer.from(Trequest).toString("hex");
-                console.log(x);
                 const fet = await fetch("https://gw.line.naver.jp" + path, {
                     method: "POST",
                     headers: send_headers,

@@ -19,8 +19,12 @@
                 style="background-color: #222; color: #fff; padding: 10px;"><br>
             <input type="text" placeholder="device" id="device"
                 style="background-color: #222; color: #fff; padding: 10px; "><br>
+            <input type="text" placeholder="email" id="email"
+                style="background-color: #222; color: #fff; padding: 10px; "><br>
+            <input type="text" placeholder="password" id="pw"
+                style="background-color: #222; color: #fff; padding: 10px; "><br>
             <button type="button" onclick="test()"
-                style="background-color: #222; color: #fff; padding: 10px; ">RUN!!!</button><br>
+                style="background-color: #222; color: #fff; padding: 10px; ">＞RUN</button><br>
             <!--<textarea placeholder="console" id="cl"
                 style="background-color: #222; color: #fff; padding: 10px; width: 90%; height: 70vh;"></textarea><br>
             <input type="text" placeholder=">"
@@ -36,6 +40,9 @@
         if (localStorage.getItem("device")) {
             document.getElementById("device").value = localStorage.getItem("device");
         }
+        if (localStorage.getItem("email")) {
+            document.getElementById("email").value = localStorage.getItem("email");
+        }
         eruda.init()
         var snippets = eruda.get('snippets');
         snippets._snippets = []
@@ -46,7 +53,7 @@
             console.log('-> Mid', await globalThis.Line.voom2mid(prompt("PostId?")));
         }, 'PostId -> Mid');
         snippets.add('MessageRecv', async () => {
-            const logEvent = confirm("logEvent?")
+            const logEvent = confirm("詳細を出力しますか?")
             console.log("start!")
             globalThis.Line.getSquareEventTarget().onmessage = (e) => {
                 console.log(`[${e.senderDisplayName ? e.senderDisplayName : "!" + e.squareMessage.fromType}] ${e.squareMessage.message.text ? e.squareMessage.message.text : "!" + e.squareMessage.message.contentType}\n${new Date(e.squareMessage.message.deliveredTime).toLocaleString()}`)

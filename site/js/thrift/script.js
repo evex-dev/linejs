@@ -369,10 +369,18 @@ function Classes(...bases) {
     return Bases;
 }
 function test() {
+    if (!document.getElementById("device").value) {
+        alert("まずdeviceを入力してください(IOSIPAD DESKTOPWIN DESKTOPMAC)")
+        return
+    }
     if (!document.getElementById("auth").value) {
-        const [email, pw] = prompt("email/password").split("/");
+        const email = document.getElementById("email").value
+        const pw = document.getElementById("pw").value
+        if (!(pw&&email)) {
+            alert("emailとpassword、またはauthTokenを入力してください")
+            return
+        }
         globalThis.Line = new LineClient({
-            authToken: document.getElementById("auth").value,
             device: document.getElementById("device").value,
             email,
             pw,
@@ -385,10 +393,10 @@ function test() {
             device: document.getElementById("device").value,
         });
     }
-
+    localStorage.setItem("email", document.getElementById("email").value);
     localStorage.setItem("auth", document.getElementById("auth").value);
     localStorage.setItem("device", document.getElementById("device").value);
     console.log(Line);
     console.log("Line.method(...arg)");
-    alert("open console");
+    alert("open console or eruda console");
 }
