@@ -244,7 +244,6 @@ class lineClient extends LoginAPI {
             } catch (error) {
                 console.log(error, "/", res);
             }
-            console.log("/r", res);
             return res;
         } else {
             try {
