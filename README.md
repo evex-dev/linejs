@@ -250,7 +250,7 @@ fetchMyEventsのハンドラー:
 const handler = (event, line) => {
     console.log(event);
 };
-const remove = await LINE.squareEvent(handler, syncToken, interval, remove);
+const remove = await LINE.squareEvent(handler, ?syncToken, ?interval, ?remove);
 function stopRoop() {
     remove.remove = true;
 }
@@ -265,9 +265,9 @@ const handler = (event, line, mid) => {
 const remove = await LINE.squareChatEvent(
     handler,
     mid,
-    syncToken,
-    interval,
-    remove,
+    ?syncToken,
+    ?interval,
+    ?remove,
 );
 function stopRoop() {
     remove.remove = true;

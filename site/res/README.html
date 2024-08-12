@@ -596,7 +596,7 @@ code {
 <pre class="hljs"><code><div><span class="hljs-keyword">const</span> handler = <span class="hljs-function">(<span class="hljs-params">event, line</span>) =&gt;</span> {
     <span class="hljs-built_in">console</span>.log(event);
 };
-<span class="hljs-keyword">const</span> remove = <span class="hljs-keyword">await</span> LINE.squareEvent(handler, syncToken, interval, remove);
+<span class="hljs-keyword">const</span> remove = <span class="hljs-keyword">await</span> LINE.squareEvent(handler, ?syncToken, ?interval, ?remove);
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">stopRoop</span>(<span class="hljs-params"></span>) </span>{
     remove.remove = <span class="hljs-literal">true</span>;
 }
@@ -608,9 +608,9 @@ code {
 <span class="hljs-keyword">const</span> remove = <span class="hljs-keyword">await</span> LINE.squareChatEvent(
     handler,
     mid,
-    syncToken,
-    interval,
-    remove,
+    ?syncToken,
+    ?interval,
+    ?remove,
 );
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">stopRoop</span>(<span class="hljs-params"></span>) </span>{
     remove.remove = <span class="hljs-literal">true</span>;
