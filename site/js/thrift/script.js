@@ -215,7 +215,9 @@ class LineClient extends Classes(
                         return;
                     }
                     this.getProfile().catch((e) => {
-                        alert("authTokenが間違っているか期限切れです。もう一度ログインしてください")
+                        alert(
+                            "authTokenが間違っているか期限切れです。もう一度ログインしてください",
+                        );
                     });
                 }, 200);
             });
@@ -292,6 +294,29 @@ class LineClient extends Classes(
             return this.parser.rename_thrift(parse, res.value);
         }
         return res.value;
+    }
+    async parse_request(
+        data,
+        methodName,
+        protocol_type = 3,
+        parse = true,
+        path = "/S3",
+        headers = {},
+        parseName,
+    ) {
+        if (!parseName) {
+            parseName = methodName.substr(0, 1).toUpperCase() +
+                methodName.substr(1) + "Request";
+        }
+        const CHRdata = this.parser.parse_data(parseName, data);
+        return this.request(
+            CHRdata,
+            methodName,
+            protocol_type,
+            parse,
+            path,
+            headers,
+        );
     }
     async proxyFetch(url, headers = {}, method = "GET", body = null) {
         const requrl = new URL(url);

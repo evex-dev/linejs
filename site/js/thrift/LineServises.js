@@ -659,7 +659,7 @@ class SquareServise {
     );
   }
 
-  async manualRepair(syncToken, limit=100, continuationToken) {
+  async manualRepair(syncToken, limit = 100, continuationToken) {
     return await this.request(
       [
         [11, 1, syncToken],
@@ -667,6 +667,40 @@ class SquareServise {
         [11, 3, continuationToken],
       ],
       "manualRepair",
+      this.SquareService_P_TYPE,
+      true,
+      this.SquareService_API_PATH,
+    );
+  }
+
+  async leaveSquare(squareMid) {
+    return await this.request(
+      [
+        [11, 2, squareMid],
+      ],
+      "leaveSquare",
+      this.SquareService_P_TYPE,
+      true,
+      this.SquareService_API_PATH,
+    );
+  }
+
+  async reportSquare(squareMid, reportType, otherReason) {
+/*
+    ReportType {
+    ADVERTISING = 1;
+    GENDER_HARASSMENT = 2;
+    HARASSMENT = 3;
+    OTHER = 4;
+}
+*/
+    return await this.parse_request(
+      {
+        squareMid,
+        reportType,
+        otherReason,
+      },
+      "reportSquare",
       this.SquareService_P_TYPE,
       true,
       this.SquareService_API_PATH,
@@ -681,12 +715,12 @@ class SquareServise {
       this.SquareService_API_PATH,
     );
   }
-  async getSyncToken(){
-    return (await Line.manualRepair(null,1)).continuationToken;
+  async getSyncToken() {
+    return (await Line.manualRepair(null, 1)).continuationToken;
   }
   async squareEvent(handler, syncToken, i, remove = {}) {
     if (!syncToken) {
-      syncToken = await this.getSyncToken()
+      syncToken = await this.getSyncToken();
     }
     const res = await this.fetchMyEvents(syncToken);
     const _syncToken = res.syncToken;
@@ -707,7 +741,7 @@ class SquareServise {
     return remove;
   }
   getSquareEventTarget() {
-    if (this.squareEventTarget&&(!this.squareEventTarget.remove.remove)) {
+    if (this.squareEventTarget && (!this.squareEventTarget.remove.remove)) {
       return this.squareEventTarget;
     }
     const squareEventTarget = new EventTarget();
@@ -901,7 +935,7 @@ class LineMethod {
         pincall(d.data);
       });
       loginSSE.addEventListener("loginErr", (d) => {
-        console.log("err",d.data);
+        console.log("err", d.data);
         loginSSE.close();
       });
       loginSSE.addEventListener("login", (d) => {

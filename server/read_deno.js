@@ -1,10 +1,5 @@
 import * as thrift from "npm:thrift@0.20.0";
 import { Buffer } from "node:buffer";
-/*
-const path = "f2.bin"//prompt("file:/// path? ")
-console.log(`<${path}>`)
-let data = await Deno.readFile(path)
-data = [...data]*/
 
 function readStruct(input) {
     var Thrift = thrift.Thrift;
