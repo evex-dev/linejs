@@ -1056,15 +1056,10 @@ class LineClient extends Classes(
     LINEServise,
 ) {
     constructor(
-        target = null,
+        target = target,
         resolve = () => {},
     ) {
         super();
-        this.secure = secure;
-        if (!authToken) {
-            authToken = 0;
-        }
-        this.deviceName = device;
         if (target) {
             this.thrift = new LineThriftPost(target);
         } else {
