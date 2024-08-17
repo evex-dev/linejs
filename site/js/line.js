@@ -42,16 +42,12 @@ class LineThriftPost {
     ) {
         return new Promise((resolve, reject) => {
             const request = [path, CHRdata, methodName, protocol_type, headers];
-            this.postParseThrift(request).then((r) => resolve(r)).catch((e) => {
-                this.reOpenSocket(() => {
-                    this.postParseThrift(request).then((r) => resolve(r));
-                });
-            });
+            this.postParseThrift(request).then((r) => resolve(r))
         });
     }
     send(socket, funcMap, data, returnFunc) {
         if (socket) {
-            socket.postMessage(data);
+            socket.postMessage(data,"*");
             funcMap[data.id] = (e) => {
                 returnFunc(e);
             };
@@ -60,7 +56,7 @@ class LineThriftPost {
                 funcMap[j.id](j);
                 delete funcMap[j.id];
             };
-        } else throw new Error("socket not open");
+        } else throw new Error("No parent window");
     }
 }
 
