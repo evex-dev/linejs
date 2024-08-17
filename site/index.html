@@ -29,6 +29,29 @@
                 style="background-color: #222; color: #fff; padding: 10px;"><br>
             <button type="button" onclick="load_plugin()"
                 style="background-color: #222; color: #fff; padding: 10px; ">Load Script</button><br>
+            <textarea placeholder="raw HTML script" id="rhtml"
+                style="background-color: #222; color: #fff; padding: 10px; width: 90%; height: 30vh;">
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>LINE BOT Example</title>
+                </head>
+                <body>
+                    <div>
+                        <button id="getProfile">getProfile</button>
+                    </div>
+                    <script src="https://line-selfbot--dev.deno.dev/js/line.js"></script>
+                    <script>
+                        const Line = new LineClient(target)
+                        document.getElementById("getProfile").addEventListener("click",async (e)=>{
+                            e.preventDefault()
+                            alert(JSON.stringify(await Line.getProfile()))
+                        })
+                    </script>
+                </body>
+                </html></textarea>
             <!--<textarea placeholder="console" id="cl"
                 style="background-color: #222; color: #fff; padding: 10px; width: 90%; height: 70vh;"></textarea><br>
             <input type="text" placeholder=">"
@@ -36,7 +59,7 @@
             <button style="background-color: #222; color: #fff; padding: 10px;" type="button" onclick="console.log('>',document.getElementById('cl-in').value);console.log(eval(document.getElementById('cl-in').value))">send</button>!-->
         </div>
     </div>
-    <iframe src="/res/README.html" id="ifr" frameborder="0" style="width: 100%; height: 100vh;"></iframe>
+    <iframe src="/res/README.html" id="ifr" frameborder="1" style="width: 100%; height: 100vh;"></iframe>
     <script src="/js/eruda.min.js"></script>
     <script>
         if (localStorage.getItem("auth")) {

@@ -166,11 +166,21 @@ class LineClient extends Classes(
     LINEServise,
 ) {
     constructor(
-        { authToken, device, email, pw, pincall, noLogin, secure = false ,target = null},
+        {
+            authToken,
+            device,
+            email,
+            pw,
+            pincall,
+            noLogin,
+            secure = false,
+            target = null,
+        },
         resolve = () => {},
         onerror = (e) => {
             alert(
-                "authTokenが間違っているか期限切れです。もう一度ログインしてください\n"+e,
+                "authTokenが間違っているか期限切れです。もう一度ログインしてください\n" +
+                    e,
             );
         },
     ) {
@@ -216,7 +226,7 @@ class LineClient extends Classes(
                         return;
                     }
                     this.getProfile().catch((e) => {
-                        onerror(e)
+                        onerror(e);
                     });
                 }, 200);
             });
@@ -394,7 +404,7 @@ function Classes(...bases) {
     });
     return Bases;
 }
-let Line = {}
+let Line = {};
 function test() {
     if (!document.getElementById("device").value) {
         alert("まずdeviceを入力してください(IOSIPAD DESKTOPWIN DESKTOPMAC)");
@@ -435,7 +445,9 @@ function test() {
                 Line.thrift.socket.post,
                 Line.thrift.socketInfo.post.waitFunc,
                 data,
-                (res)=>{globalThis.plugin.postMessage(res, "*");},
+                (res) => {
+                    globalThis.plugin.postMessage(res, "*");
+                },
             );
         }
     };
@@ -443,11 +455,16 @@ function test() {
 
 function load_plugin(iframe = true) {
     const url = document.getElementById("plugin").value;
-    localStorage.setItem("plugin", url);
-    if (iframe) {
-        document.getElementById("ifr").src = url
-        globalThis.plugin = document.getElementById("ifr").contentWindow
+    if (url) {
+        localStorage.setItem("plugin", url);
+        if (iframe) {
+            document.getElementById("ifr").src = url;
+            globalThis.plugin = document.getElementById("ifr").contentWindow;
+        } else {
+            globalThis.plugin = open(url);
+        }
     } else {
-        globalThis.plugin = open(url);
+        document.getElementById("ifr").srcdoc = document.getElementById("rhtml").value;
+        globalThis.plugin = document.getElementById("ifr").contentWindow;
     }
 }
