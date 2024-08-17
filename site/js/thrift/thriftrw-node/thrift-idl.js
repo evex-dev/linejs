@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-// The MIT License > "./License.txt"
 import ast from "./ast.js";
 export default (function() {
   /*

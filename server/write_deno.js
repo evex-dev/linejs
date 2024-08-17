@@ -1,3 +1,9 @@
+/*
+Copyright (c) 2024 Piloking
+Released under the MIT license
+https://opensource.org/license/mit
+*/
+
 import * as thrift from "npm:thrift@0.20.0";
 import { Buffer } from "node:buffer";
 const Thrift = thrift.Thrift;

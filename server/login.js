@@ -1,3 +1,9 @@
+/*
+Copyright (c) 2024 Piloking
+Released under the MIT license
+https://opensource.org/license/mit
+*/
+
 import write from "./write_deno.js";
 import read from "./read_deno.js";
 import { TBinaryProtocol, TCompactProtocol } from "npm:thrift@0.20.0";

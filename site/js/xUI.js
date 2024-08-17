@@ -1,4 +1,5 @@
 // deno-lint-ignore-file no-window
+
 if (localStorage.getItem("auth")) {
     document.getElementById("auth").value = localStorage.getItem("auth");
 }

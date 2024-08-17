@@ -1,3 +1,9 @@
+/*
+Copyright (c) 2024 Piloking
+Released under the MIT license
+https://opensource.org/license/mit
+*/
+
 export default async function proxy(request) {
     const url = new URL(request.url)
     const domain = atob(url.pathname.split("/")[2])

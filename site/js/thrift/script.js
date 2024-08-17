@@ -168,10 +168,13 @@ class LineClient extends Classes(
     LINEServise,
 ) {
     constructor(
-        { authToken, device, email, pw, pincall },
+        { authToken, device, email, pw, pincall, noLogin, secure = false },
         resolve = () => {},
-        secure = false,
-        noLogin = false,
+        onerror = (e) => {
+            alert(
+                "authTokenが間違っているか期限切れです。もう一度ログインしてください\n"+e,
+            );
+        },
     ) {
         super();
         this.secure = secure;
@@ -215,9 +218,7 @@ class LineClient extends Classes(
                         return;
                     }
                     this.getProfile().catch((e) => {
-                        alert(
-                            "authTokenが間違っているか期限切れです。もう一度ログインしてください",
-                        );
+                        onerror(e)
                     });
                 }, 200);
             });
@@ -428,4 +429,21 @@ function test() {
     console.log(Line);
     console.log("Line.method(...arg)");
     alert("open console or eruda console");
+    window.onmessage = async (e) => {
+        const data = e.data;
+        if (typeof data === "object" && globalThis.plugin) {
+            globalThis.plugin.postMessage(await Line.thrift.post(data), "*");
+        }
+    };
+}
+
+function load_plugin(iframe = true) {
+    const url = document.getElementById("plugin").value;
+    localStorage.setItem("plugin", url);
+    if (iframe) {
+        const script = document.createElement("iframe");
+        script.src = url;
+    } else {
+        globalThis.plugin;
+    }
 }

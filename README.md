@@ -2,7 +2,12 @@
 
 Line-Deno-ClientはDenoで書かれたLINEの非公式APIです
 
-## コード例
+## 使用方法
+```
+git clone 
+```
+
+## コード例 (web版)
 
 ### インスタンス生成
 
@@ -335,7 +340,7 @@ const eventNameArray = Line.parser.def.SquareEventPayload.map((e) => {
 
 例えば、メッセージの受信時に`squareEventTarget`では`message`のみ発生しますが、`squareChatEventTarget`では`sendMessage`と`receiveMessage`も発生します。
 
-また、[`/site/res/thrift.json`](./site/res/thrift.json)に記載されていないイベントではイベント名はその`fid`の値になります。
+また、[`/site/res/thrift.json`](./site/res/thrift.json)|[for web](./res/thrift.json)に記載されていないイベントではイベント名はその`fid`の値になります。
 
 ## Thanks
 
@@ -347,3 +352,5 @@ const eventNameArray = Line.parser.def.SquareEventPayload.map((e) => {
 - [CHRLINE](https://github.com/DeachSword/CHRLINE)
 - [thriftrw-node](https://github.com/thriftrw/thriftrw-node/)
 - Line open-chat 拓也集落's group members
+
+## MIT Licenced
