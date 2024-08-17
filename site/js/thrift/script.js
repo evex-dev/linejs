@@ -128,13 +128,11 @@ class LineThriftSocket {
     ) {
         return new Promise((resolve, reject) => {
             const request = [path, CHRdata, methodName, protocol_type, headers];
-            try {
-                this.postParseThrift(request).then((r) => resolve(r));
-            } catch (error) {
+            this.postParseThrift(request).then((r) => resolve(r)).catch((e) => {
                 this.reOpenSocket(() => {
                     this.postParseThrift(request).then((r) => resolve(r));
                 });
-            }
+            });
         });
     }
     async serverConfig(
@@ -168,7 +166,7 @@ class LineClient extends Classes(
     LINEServise,
 ) {
     constructor(
-        { authToken, device, email, pw, pincall, noLogin, secure = false },
+        { authToken, device, email, pw, pincall, noLogin, secure = false ,target = null},
         resolve = () => {},
         onerror = (e) => {
             alert(
@@ -396,6 +394,7 @@ function Classes(...bases) {
     });
     return Bases;
 }
+let Line = {}
 function test() {
     if (!document.getElementById("device").value) {
         alert("まずdeviceを入力してください(IOSIPAD DESKTOPWIN DESKTOPMAC)");
@@ -408,7 +407,7 @@ function test() {
             alert("emailとpassword、またはauthTokenを入力してください");
             return;
         }
-        globalThis.Line = new LineClient({
+        Line = new LineClient({
             device: document.getElementById("device").value,
             email,
             pw,
@@ -416,7 +415,7 @@ function test() {
             localStorage.setItem("auth", Line.authToken);
         });
     } else {
-        globalThis.Line = new LineClient({
+        Line = new LineClient({
             authToken: document.getElementById("auth").value,
             device: document.getElementById("device").value,
         }, () => {
@@ -432,7 +431,12 @@ function test() {
     window.onmessage = async (e) => {
         const data = e.data;
         if (typeof data === "object" && globalThis.plugin) {
-            globalThis.plugin.postMessage(await Line.thrift.post(data), "*");
+            Line.thrift.send(
+                Line.thrift.socket.post,
+                Line.thrift.socketInfo.post.waitFunc,
+                data,
+                (res)=>{globalThis.plugin.postMessage(res, "*");},
+            );
         }
     };
 }
@@ -441,9 +445,9 @@ function load_plugin(iframe = true) {
     const url = document.getElementById("plugin").value;
     localStorage.setItem("plugin", url);
     if (iframe) {
-        const script = document.createElement("iframe");
-        script.src = url;
+        document.getElementById("ifr").src = url
+        globalThis.plugin = document.getElementById("ifr").contentWindow
     } else {
-        globalThis.plugin;
+        globalThis.plugin = open(url);
     }
 }

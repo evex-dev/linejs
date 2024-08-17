@@ -7,8 +7,8 @@
     <meta name="description" content="LINE in WEB">
     <meta name="google" content="notranslate">
     <title class="notranslate">LINE</title>
-    <link href='https://unpkg.com/css.gg@2.0.0/icons/css/terminal.css' rel='stylesheet'>
-    <link href='https://unpkg.com/css.gg@2.0.0/icons/css/notes.css' rel='stylesheet'>
+    <!--<link href='https://unpkg.com/css.gg@2.0.0/icons/css/terminal.css' rel='stylesheet'>!-->
+    <!--<link href='https://unpkg.com/css.gg@2.0.0/icons/css/notes.css' rel='stylesheet'>!-->
     <!--<link href="./res/main.bdef6c38.css" rel="stylesheet">!-->
 </head>
 
@@ -27,7 +27,7 @@
                 style="background-color: #222; color: #fff; padding: 10px; ">＞RUN</button><br>
             <input type="text" placeholder="script URL" id="plugin"
                 style="background-color: #222; color: #fff; padding: 10px;"><br>
-            <button type="button" onclick="plugin()"
+            <button type="button" onclick="load_plugin()"
                 style="background-color: #222; color: #fff; padding: 10px; ">Load Script</button><br>
             <!--<textarea placeholder="console" id="cl"
                 style="background-color: #222; color: #fff; padding: 10px; width: 90%; height: 70vh;"></textarea><br>
@@ -36,7 +36,7 @@
             <button style="background-color: #222; color: #fff; padding: 10px;" type="button" onclick="console.log('>',document.getElementById('cl-in').value);console.log(eval(document.getElementById('cl-in').value))">send</button>!-->
         </div>
     </div>
-    <iframe src="/res/README.html" frameborder="0" style="width: 100%; height: 100vh;"></iframe>
+    <iframe src="/res/README.html" id="ifr" frameborder="0" style="width: 100%; height: 100vh;"></iframe>
     <script src="/js/eruda.min.js"></script>
     <script>
         if (localStorage.getItem("auth")) {
@@ -47,6 +47,9 @@
         }
         if (localStorage.getItem("email")) {
             document.getElementById("email").value = localStorage.getItem("email");
+        }
+        if (localStorage.getItem("plugin")) {
+            document.getElementById("plugin").value = localStorage.getItem("plugin");
         }
         eruda.init()
         var snippets = eruda.get('snippets');
@@ -71,7 +74,6 @@
     <script type="module" src="/js/thrift/rename_thrift.js"></script>
     <script src="/js/thrift/LineServises.js"></script>
     <script src="/js/thrift/LoginAPI.js"></script>
-    <script src="/js/thrift/cryptico.min.js"></script>
     <!--<script src="/js/Xquery.js"></script>!-->
     <script src="/js/localforage.min.js"></script>
     <!--<script src="/js/escape.js"></script>!-->
