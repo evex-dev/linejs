@@ -1,6 +1,6 @@
-# Line-Deno-Client
+# LINEJS
 
-Line-Deno-ClientはDenoで書かれたLINEの非公式APIです。
+linejsは、全JavaScriptランタイム対応のLINEの非公式ボットライブラリです。
 
 DenoまたはDeno DeployのHTTPサーバーを利用してブラウザ上で、またDeno単体でも実行できます。
 
