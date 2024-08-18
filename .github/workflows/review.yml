@@ -5,27 +5,13 @@ on:
   pull_request:
     types: [opened]
 
-permissions:
-  actions: read|write
-  checks: read|write
-  contents: read|write
-  deployments: read|write
-  id-token: read|write
-  issues: read|write
-  discussions: read|write
-  packages: read|write
-  pages: read|write
-  pull-requests: read|write
-  repository-projects: read|write
-  security-events: read|write
-  statuses: read|write
-  
 jobs:
   run:
     runs-on: ubuntu-latest
     permissions:
       issues: write
       pull-requests: write
+      id-token: write
     steps:
     - name: 'Auto-assign issue'
       uses: pozil/auto-assign-issue@v1
