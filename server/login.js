@@ -1,7 +1,3 @@
-/*
-Copyright (c) 2024 Piloking　/ Free
-*/
-
 import write from "./write_deno.js";
 import read from "./read_deno.js";
 import { TBinaryProtocol, TCompactProtocol } from "npm:thrift@0.20.0";

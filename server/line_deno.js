@@ -1,7 +1,3 @@
-/*
-Copyright (c) 2024 Piloking　/ Free
-*/
-
 import write from "./write_deno.js";
 import read from "./read_deno.js";
 import { TBinaryProtocol, TCompactProtocol } from "npm:thrift@0.20.0";
@@ -1265,7 +1261,6 @@ export default class lineClient extends Classes(
       try {
         res = {};
         const Trequest = write(value, name, Protocol);
-        await Deno.writeFile("./tmpReq.bin", Trequest); /////////////////////////
         const fet = await fetch("https://gw.line.naver.jp" + path, {
           method: "POST",
           headers: headers,
@@ -1276,7 +1271,6 @@ export default class lineClient extends Classes(
         }
         res = await fet.arrayBuffer();
         res = new Uint8Array(res);
-        Deno.writeFile("./tmpRes.bin", res); /////////////////////////////
         res = read(res, Protocol);
         if (parse === true) {
           this.parser.rename_data(res);
@@ -1296,7 +1290,6 @@ export default class lineClient extends Classes(
       try {
         res = {};
         const Trequest = value;
-        await Deno.writeFile("./tmpReq.bin", Trequest); /////////////////////////
         const fet = await fetch("https://gw.line.naver.jp" + path, {
           method: "POST",
           headers: headers,
@@ -1304,7 +1297,6 @@ export default class lineClient extends Classes(
         });
         res = await fet.arrayBuffer();
         res = new Uint8Array(res);
-        Deno.writeFile("./tmpRes.bin", res); /////////////////////////////
       } catch (error) {
         console.log(error, "/", res);
       }

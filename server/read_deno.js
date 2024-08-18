@@ -1,7 +1,3 @@
-/*
-Copyright (c) 2024 Piloking　/ Free
-*/
-
 import * as thrift from "npm:thrift@0.20.0";
 import { Buffer } from "node:buffer";
 

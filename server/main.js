@@ -28,6 +28,9 @@ export async function handler(request) {
       case "js":
         mimeType = "application/javascript";
         break;
+      case "json":
+        mimeType = "application/json";
+        break;
       case "svg":
         mimeType = "image/svg+xml";
         break;
