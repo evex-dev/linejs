@@ -354,7 +354,7 @@ const eventNameArray = Line.parser.def.SquareEventPayload.map((e) => {
 
 例えば、メッセージの受信時に`squareEventTarget`では`message`のみ発生しますが、`squareChatEventTarget`では`sendMessage`と`receiveMessage`も発生します。
 
-また、[`/site/res/thrift.json`](./site/res/thrift.json)|[for web](./res/thrift.json)に記載されていないイベントではイベント名はその`fid`の値になります。
+また、[`/site/res/thrift.json`](./site/res/thrift.json)|[for web](/res/thrift.json)に記載されていないイベントではイベント名はその`fid`の値になります。
 
 ## Thanks
 
