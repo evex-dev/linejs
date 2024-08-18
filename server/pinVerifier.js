@@ -1,10 +1,3 @@
-/*
-Copyright (c) 2024 Piloking
-Released under the MIT license
-https://opensource.org/license/mit
-*/
-
-
 import { Key } from 'npm:node-bignumber';
 
 class PinVerifier {

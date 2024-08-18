@@ -25,33 +25,7 @@
                 style="background-color: #222; color: #fff; padding: 10px; "><br>
             <button type="button" onclick="test()"
                 style="background-color: #222; color: #fff; padding: 10px; ">＞RUN</button><br>
-            <input type="text" placeholder="script URL" id="plugin"
-                style="background-color: #222; color: #fff; padding: 10px;"><br>
-            <button type="button" onclick="load_plugin()"
-                style="background-color: #222; color: #fff; padding: 10px; ">Load Script</button><br>
-            <textarea placeholder="raw HTML script" id="rhtml"
-                style="background-color: #222; color: #fff; padding: 10px; width: 90%; height: 30vh;">
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>LINE BOT Example</title>
-                </head>
-                <body>
-                    <div>
-                        <button id="getProfile">getProfile</button>
-                    </div>
-                    <script src="https://line-selfbot--dev.deno.dev/js/line.js"></script>
-                    <script>
-                        const Line = new LineClient(target)
-                        document.getElementById("getProfile").addEventListener("click",async (e)=>{
-                            e.preventDefault()
-                            alert(JSON.stringify(await Line.getProfile()))
-                        })
-                    </script>
-                </body>
-                </html></textarea>
+            <div id="scr"></div>
             <!--<textarea placeholder="console" id="cl"
                 style="background-color: #222; color: #fff; padding: 10px; width: 90%; height: 70vh;"></textarea><br>
             <input type="text" placeholder=">"
@@ -71,28 +45,93 @@
         if (localStorage.getItem("email")) {
             document.getElementById("email").value = localStorage.getItem("email");
         }
-        if (localStorage.getItem("plugin")) {
-            document.getElementById("plugin").value = localStorage.getItem("plugin");
-        }
         eruda.init()
         var snippets = eruda.get('snippets');
         snippets._snippets = []
         snippets.add('getProfile', async () => {
-            console.log('-> profile', await globalThis.Line.getProfile());
+            console.log('-> profile', await Line.getProfile());
         }, '-> Your profile');
         snippets.add('voomPostIdToMid', async () => {
-            console.log('-> Mid', await globalThis.Line.voom2mid(prompt("PostId?")));
+            console.log('-> Mid', await Line.voom2mid(prompt("PostId?")));
         }, 'PostId -> Mid');
         snippets.add('MessageRecv', async () => {
             const logEvent = confirm("詳細を出力しますか?")
             console.log("start!")
-            globalThis.Line.getSquareEventTarget().onmessage = (e) => {
+            Line.getSquareEventTarget().onmessage = (e) => {
                 console.log(`[${e.senderDisplayName ? e.senderDisplayName : "!" + e.squareMessage.fromType}] ${e.squareMessage.message.text ? e.squareMessage.message.text : "!" + e.squareMessage.message.contentType}\n${new Date(e.squareMessage.message.deliveredTime).toLocaleString()}`)
                 if (logEvent) {
                     console.log(e)
                 }
             }
         }, 'onmessage -> Message');
+        async function test() {
+            if (!document.getElementById("device").value) {
+                alert("まずdeviceを入力してください(IOSIPAD DESKTOPWIN DESKTOPMAC)");
+                return;
+            }
+            Line = new LineClient();
+            if (!document.getElementById("auth").value) {
+                const email = document.getElementById("email").value;
+                const pw = document.getElementById("pw").value;
+                if (!(pw && email)) {
+                    alert("emailとpassword、またはauthTokenを入力してください");
+                    return;
+                }
+                await Line.init({
+                    device: document.getElementById("device").value,
+                    email,
+                    pw,
+                })
+                localStorage.setItem("auth", Line.authToken);
+                alert("open console or eruda console");
+            } else {
+                await Line.init({
+                    authToken: document.getElementById("auth").value,
+                    device: document.getElementById("device").value,
+                });
+                localStorage.setItem("auth", Line.authToken);
+                alert("open console or eruda console");
+            }
+            localStorage.setItem("email", document.getElementById("email").value);
+            localStorage.setItem("auth", document.getElementById("auth").value);
+            localStorage.setItem("device", document.getElementById("device").value);
+            console.log(Line);
+            console.log("Line.method(...arg)");
+            window.onmessage = async (e) => {
+                const data = e.data;
+                if (typeof data === "object" && globalThis.plugin) {
+                    Line.thrift.send(
+                        Line.thrift.socket.post,
+                        Line.thrift.socketInfo.post.waitFunc,
+                        data,
+                        (res) => {
+                            globalThis.plugin.postMessage(res, "*");
+                        },
+                    );
+                }
+            };
+            document.getElementById("scr").innerHTML = `<input type="text" placeholder="script URL" id="plugin" style="background-color: #222; color: #fff; padding: 10px;"><br><button type="button" onclick="load_plugin()" style="background-color: #222; color: #fff; padding: 10px; ">Load Script</button><br>`
+            if (localStorage.getItem("plugin")) {
+                document.getElementById("plugin").value = localStorage.getItem("plugin");
+            }
+        }
+
+        function load_plugin(iframe = true) {
+            const url = document.getElementById("plugin").value;
+            if (url) {
+                localStorage.setItem("plugin", url);
+                if (iframe) {
+                    document.getElementById("ifr").src = url;
+                    globalThis.plugin = document.getElementById("ifr").contentWindow;
+                } else {
+                    globalThis.plugin = open(url);
+                }
+            } else {
+                document.getElementById("ifr").srcdoc = document.getElementById("rhtml").value;
+                globalThis.plugin = document.getElementById("ifr").contentWindow;
+            }
+        }
+
     </script>
     <script type="module" src="/js/thrift/rename_thrift.js"></script>
     <script src="/js/thrift/LineServises.js"></script>

@@ -354,39 +354,31 @@ code {
 
 </style>
 
-<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
 </head>
 <body>
-  <script>
-    mermaid.initialize({
-      startOnLoad: true,
-      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
-          ? 'dark'
-          : 'default'
-    });
-  </script>
 <h1 id="line-deno-client">Line-Deno-Client</h1>
 <p>Line-Deno-ClientはDenoで書かれたLINEの非公式APIです</p>
-<h2 id="%E3%82%B3%E3%83%BC%E3%83%89%E4%BE%8B">コード例</h2>
-<h3 id="%E3%82%A4%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%B3%E3%82%B9%E7%94%9F%E6%88%90">インスタンス生成</h3>
+<h2 id="%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95">使用方法</h2>
+<pre class="hljs"><code><div>git clone 
+</div></code></pre>
+<h2 id="%E3%82%B3%E3%83%BC%E3%83%89%E4%BE%8B-web%E7%89%88">コード例 (web版)</h2>
+<h3 id="%E3%82%A4%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%B3%E3%82%B9%E7%94%9F%E6%88%90%E3%81%A8%E5%88%9D%E6%9C%9F%E5%8C%96">インスタンス生成と初期化</h3>
 <p>メールとパスワードでログイン:</p>
-<pre class="hljs"><code><div><span class="hljs-keyword">const</span> Line = <span class="hljs-keyword">new</span> LineClient({
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> Line = <span class="hljs-keyword">new</span> LineClient()
+<span class="hljs-keyword">await</span> Line.init({
     <span class="hljs-attr">device</span>: <span class="hljs-string">"device"</span>,
     <span class="hljs-attr">email</span>: <span class="hljs-string">"email"</span>,
     <span class="hljs-attr">pw</span>: <span class="hljs-string">"pass_word"</span>,
     <span class="hljs-attr">pincall</span>: <span class="hljs-function">(<span class="hljs-params">pincode</span>) =&gt;</span> {
         <span class="hljs-comment">// pincode callback</span>
     },
-}, () =&gt; {
-    <span class="hljs-comment">// oninit</span>
 });
 </div></code></pre>
-<p>Tokenから生成:</p>
-<pre class="hljs"><code><div><span class="hljs-keyword">const</span> Line = <span class="hljs-keyword">new</span> LineClient({
+<p>Tokenで初期化:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> Line = <span class="hljs-keyword">new</span> LineClient()
+<span class="hljs-keyword">await</span> Line.init({
     <span class="hljs-attr">authToken</span>: <span class="hljs-string">"authToken"</span>,
     <span class="hljs-attr">device</span>: <span class="hljs-string">"device"</span>,
-}, () =&gt; {
-    <span class="hljs-comment">// oninit</span>
 });
 </div></code></pre>
 <h3 id="line%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88%E3%82%92%E9%80%81%E4%BF%A1">Lineリクエストを送信</h3>
@@ -664,7 +656,7 @@ eventTarget.addEventListener(
 </div></code></pre>
 <p>ただし、全てのイベントが確実に発生するとは限りません。</p>
 <p>例えば、メッセージの受信時に<code>squareEventTarget</code>では<code>message</code>のみ発生しますが、<code>squareChatEventTarget</code>では<code>sendMessage</code>と<code>receiveMessage</code>も発生します。</p>
-<p>また、<a href="./site/res/thrift.json"><code>/site/res/thrift.json</code></a>に記載されていないイベントではイベント名はその<code>fid</code>の値になります。</p>
+<p>また、<a href="./site/res/thrift.json"><code>/site/res/thrift.json</code></a>|<a href="./res/thrift.json">for web</a>に記載されていないイベントではイベント名はその<code>fid</code>の値になります。</p>
 <h2 id="thanks">Thanks</h2>
 <p><code>This project got their help directly/indirectly, thank them deeply</code></p>
 <ul>
@@ -675,6 +667,7 @@ eventTarget.addEventListener(
 <li><a href="https://github.com/thriftrw/thriftrw-node/">thriftrw-node</a></li>
 <li>Line open-chat 拓也集落's group members</li>
 </ul>
+<h2 id="mit-licenced">MIT Licenced</h2>
 
 </body>
 </html>

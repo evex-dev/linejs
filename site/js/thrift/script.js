@@ -1,5 +1,5 @@
 class LineThriftSocket {
-    constructor(authToken, device, resolve, addH) {
+    constructor(authToken, device, resolve, ontokenUpdate,addH) {
         this.socket = {};
         this.socketInfo = {};
         let appVer, sysName, sysVer, UA, appName;
@@ -71,6 +71,12 @@ class LineThriftSocket {
         this.socket.post.onclose = (e) => {
             this.socketInfo.post = { status: false };
         };
+        this.socket.post.addEventListener("message",(e)=>{
+            const data = JSON.parse(e.data)
+            if (data.event) {
+                ontokenUpdate(data.event)
+            }
+        })
     }
     closeSocket() {
         try {
@@ -151,8 +157,11 @@ class LineThriftSocket {
             };
             socket.onmessage = (e) => {
                 let j = JSON.parse(e.data);
-                FuncMap[j.id](j);
-                delete FuncMap[j.id];
+                try {
+                    FuncMap[j.id](j);
+                    delete FuncMap[j.id];
+                } catch (error) {
+                }
             };
         } else throw new Error("socket not open");
     }
@@ -165,86 +174,54 @@ class LineClient extends Classes(
     LiffServise,
     LINEServise,
 ) {
-    constructor(
-        {
-            authToken,
-            device,
-            email,
-            pw,
-            pincall,
-            noLogin,
-            secure = false,
-            target = null,
-        },
-        resolve = () => {},
-        onerror = (e) => {
-            alert(
-                "authTokenが間違っているか期限切れです。もう一度ログインしてください\n" +
-                    e,
-            );
-        },
-    ) {
+    constructor() {
         super();
-        this.secure = secure;
+    }
+    async init({
+        authToken,
+        device,
+        email,
+        pw,
+        pincall,
+        noLogin,
+    }) {
         if (!authToken) {
             authToken = 0;
         }
         this.deviceName = device;
-        if (secure) {
-            this.thrift = new LineThriftSocket(0, device, () => {
-                setTimeout(async () => {
-                    this.parser = new ThriftRenameParser();
-                    this.parser.def = await fetch("./res/thrift.json").then((
-                        r,
-                    ) => r.json());
-                    try {
-                        resolve();
-                    } catch (error) {
-                    }
-                    if (!authToken) {
-                        return;
-                    }
-                    this.setAuthToken(authToken);
-                    this.getProfile();
-                }, 200);
-            });
-        } else {
+        await new Promise((resolve, reject) => {
             this.thrift = new LineThriftSocket(authToken, device, () => {
                 setTimeout(async () => {
-                    this.parser = new ThriftRenameParser();
-                    this.parser.def = await fetch("./res/thrift.json").then((
-                        r,
-                    ) => r.json());
                     if (!authToken && !noLogin) {
                         return;
                     }
-                    try {
-                        resolve();
-                    } catch (error) {
-                    }
                     if (!authToken) {
                         return;
                     }
-                    this.getProfile().catch((e) => {
-                        onerror(e);
+                    this.getProfile().then(() => {
+                        resolve();
+                    }).catch((e) => {
+                        throw new Error(
+                            "authTokenが間違っているか期限切れです。もう一度ログインしてください\n" +
+                                e,
+                        );
                     });
                 }, 200);
+            },(t)=>{
+                this.authToken = t
             });
-        }
-        if (!authToken && (!noLogin)) {
-            this.loginMP(email, pw, pincall).then((r) => {
-                try {
-                    resolve();
-                } catch (error) {
-                }
-            });
-        }
+        });
+        this.parser = new ThriftRenameParser();
+        this.parser.def = await fetch("./res/thrift.json").then((r) =>
+            r.json()
+        );
         this.authToken = authToken;
+        if ((!authToken) && (!noLogin)) {
+            await this.loginMP(email, pw, pincall);
+        }
     }
     async setAuthToken(authToken) {
-        if (!this.secure) {
-            this.authToken = authToken;
-        }
+        this.authToken = authToken;
         await this.thrift.serverConfig("UPDATE_TOKEN", authToken);
         await this.getProfile();
     }
@@ -405,66 +382,3 @@ function Classes(...bases) {
     return Bases;
 }
 let Line = {};
-function test() {
-    if (!document.getElementById("device").value) {
-        alert("まずdeviceを入力してください(IOSIPAD DESKTOPWIN DESKTOPMAC)");
-        return;
-    }
-    if (!document.getElementById("auth").value) {
-        const email = document.getElementById("email").value;
-        const pw = document.getElementById("pw").value;
-        if (!(pw && email)) {
-            alert("emailとpassword、またはauthTokenを入力してください");
-            return;
-        }
-        Line = new LineClient({
-            device: document.getElementById("device").value,
-            email,
-            pw,
-        }, () => {
-            localStorage.setItem("auth", Line.authToken);
-        });
-    } else {
-        Line = new LineClient({
-            authToken: document.getElementById("auth").value,
-            device: document.getElementById("device").value,
-        }, () => {
-            localStorage.setItem("auth", Line.authToken);
-        });
-    }
-    localStorage.setItem("email", document.getElementById("email").value);
-    localStorage.setItem("auth", document.getElementById("auth").value);
-    localStorage.setItem("device", document.getElementById("device").value);
-    console.log(Line);
-    console.log("Line.method(...arg)");
-    alert("open console or eruda console");
-    window.onmessage = async (e) => {
-        const data = e.data;
-        if (typeof data === "object" && globalThis.plugin) {
-            Line.thrift.send(
-                Line.thrift.socket.post,
-                Line.thrift.socketInfo.post.waitFunc,
-                data,
-                (res) => {
-                    globalThis.plugin.postMessage(res, "*");
-                },
-            );
-        }
-    };
-}
-
-function load_plugin(iframe = true) {
-    const url = document.getElementById("plugin").value;
-    if (url) {
-        localStorage.setItem("plugin", url);
-        if (iframe) {
-            document.getElementById("ifr").src = url;
-            globalThis.plugin = document.getElementById("ifr").contentWindow;
-        } else {
-            globalThis.plugin = open(url);
-        }
-    } else {
-        document.getElementById("ifr").srcdoc = document.getElementById("rhtml").value;
-        globalThis.plugin = document.getElementById("ifr").contentWindow;
-    }
-}

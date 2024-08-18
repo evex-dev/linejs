@@ -1,39 +1,53 @@
 # Line-Deno-Client
 
-Line-Deno-ClientはDenoで書かれたLINEの非公式APIです
+Line-Deno-ClientはDenoで書かれたLINEの非公式APIです。
+
+DenoまたはDeno DeployのHTTPサーバーを利用してブラウザ上で、またDeno単体でも実行できます。
 
 ## 使用方法
-```
-git clone 
+
+```sh
+git clone -b dev https://github.com/test0987654321234567890/Line-Deno-Client
+cd Line-Deno-Client
+# HTTPサーバー起動
+deno run server/main.js
 ```
 
-## コード例 (web版)
+## コード例
 
-### インスタンス生成
+### インスタンス生成と初期化
+
+Denoの場合、importします。
+
+```js
+import LineClient from "./server/line_deno.js";
+```
+
+Webの場合、`deno run server/main.js`でサーバーを起動してから[localhost:7070](http://localhost:7070)にアクセスします。
+
+または、[Deno Deployのテストサーバー](https://line-selfbot--dev.deno.dev/)にアクセスします。
 
 メールとパスワードでログイン:
 
 ```js
-const Line = new LineClient({
+const Line = new LineClient();
+await Line.init({
     device: "device",
     email: "email",
     pw: "pass_word",
     pincall: (pincode) => {
         // pincode callback
     },
-}, () => {
-    // oninit
 });
 ```
 
-Tokenから生成:
+Tokenで初期化:
 
 ```js
-const Line = new LineClient({
-    authToken: "authToken",
-    device: "device",
-}, () => {
-    // oninit
+const Line = new LineClient();
+await Line.init({
+    authToken: "FHZWgN1MvZyCcGvljBib.vVQ0sVYTH+QJRnQ0rDoTsW.GBdUE+X+C7SrvpMBMbBrjaVbhQc+hCFoijX6xE29cbM=",
+    device: "IOSIPAD",
 });
 ```
 
@@ -332,7 +346,7 @@ const eventNameArray = Line.parser.def.SquareEventPayload.map((e) => {
     let name = e.name.replace("notified", "")
         .replace("notification", "");
     name = name[0].toLowerCase() + name.substring(1);
-    return name
+    return name;
 });
 ```
 
@@ -344,13 +358,13 @@ const eventNameArray = Line.parser.def.SquareEventPayload.map((e) => {
 
 ## Thanks
 
-`This project got their help directly/indirectly, thank them deeply`
+`このプロジェクトは直接的、または間接的に以下の人々/プロジェクトの支援を得ました。深く感謝します。`
 
 - [EdamAmex](https://github.com/EdamAme-x)
 - [羽風](https://github.com/hafusun)
 - [jkFujiyama](https://github.com/jkFujiyama)
-- [CHRLINE](https://github.com/DeachSword/CHRLINE)
+- [DeachSword/CHRLINE](https://github.com/DeachSword/CHRLINE)
 - [thriftrw-node](https://github.com/thriftrw/thriftrw-node/)
 - Line open-chat 拓也集落's group members
 
-## MIT Licenced
+## Licence free
