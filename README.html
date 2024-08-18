@@ -357,14 +357,23 @@ code {
 </head>
 <body>
 <h1 id="line-deno-client">Line-Deno-Client</h1>
-<p>Line-Deno-ClientはDenoで書かれたLINEの非公式APIです</p>
+<p>Line-Deno-ClientはDenoで書かれたLINEの非公式APIです。</p>
+<p>DenoまたはDeno DeployのHTTPサーバーを利用してブラウザ上で、またDeno単体でも実行できます。</p>
 <h2 id="%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95">使用方法</h2>
-<pre class="hljs"><code><div>git clone 
+<pre class="hljs"><code><div>git <span class="hljs-built_in">clone</span> -b dev https://github.com/test0987654321234567890/Line-Deno-Client
+<span class="hljs-built_in">cd</span> Line-Deno-Client
+<span class="hljs-comment"># HTTPサーバー起動</span>
+deno run server/main.js
 </div></code></pre>
-<h2 id="%E3%82%B3%E3%83%BC%E3%83%89%E4%BE%8B-web%E7%89%88">コード例 (web版)</h2>
+<h2 id="%E3%82%B3%E3%83%BC%E3%83%89%E4%BE%8B">コード例</h2>
 <h3 id="%E3%82%A4%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%B3%E3%82%B9%E7%94%9F%E6%88%90%E3%81%A8%E5%88%9D%E6%9C%9F%E5%8C%96">インスタンス生成と初期化</h3>
+<p>Denoの場合、importします。</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> LineClient <span class="hljs-keyword">from</span> <span class="hljs-string">"./server/line_deno.js"</span>;
+</div></code></pre>
+<p>Webの場合、<code>deno run server/main.js</code>でサーバーを起動してから<a href="http://localhost:7070">localhost:7070</a>にアクセスします。</p>
+<p>または、<a href="https://line-selfbot--dev.deno.dev/">Deno Deployのテストサーバー</a>にアクセスします。</p>
 <p>メールとパスワードでログイン:</p>
-<pre class="hljs"><code><div><span class="hljs-keyword">const</span> Line = <span class="hljs-keyword">new</span> LineClient()
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> Line = <span class="hljs-keyword">new</span> LineClient();
 <span class="hljs-keyword">await</span> Line.init({
     <span class="hljs-attr">device</span>: <span class="hljs-string">"device"</span>,
     <span class="hljs-attr">email</span>: <span class="hljs-string">"email"</span>,
@@ -375,10 +384,10 @@ code {
 });
 </div></code></pre>
 <p>Tokenで初期化:</p>
-<pre class="hljs"><code><div><span class="hljs-keyword">const</span> Line = <span class="hljs-keyword">new</span> LineClient()
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> Line = <span class="hljs-keyword">new</span> LineClient();
 <span class="hljs-keyword">await</span> Line.init({
-    <span class="hljs-attr">authToken</span>: <span class="hljs-string">"authToken"</span>,
-    <span class="hljs-attr">device</span>: <span class="hljs-string">"device"</span>,
+    <span class="hljs-attr">authToken</span>: <span class="hljs-string">"FHZWgN1MvZyCcGvljBib.vVQ0sVYTH+QJRnQ0rDoTsW.GBdUE+X+C7SrvpMBMbBrjaVbhQc+hCFoijX6xE29cbM="</span>,
+    <span class="hljs-attr">device</span>: <span class="hljs-string">"IOSIPAD"</span>,
 });
 </div></code></pre>
 <h3 id="line%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88%E3%82%92%E9%80%81%E4%BF%A1">Lineリクエストを送信</h3>
@@ -651,23 +660,23 @@ eventTarget.addEventListener(
     <span class="hljs-keyword">let</span> name = e.name.replace(<span class="hljs-string">"notified"</span>, <span class="hljs-string">""</span>)
         .replace(<span class="hljs-string">"notification"</span>, <span class="hljs-string">""</span>);
     name = name[<span class="hljs-number">0</span>].toLowerCase() + name.substring(<span class="hljs-number">1</span>);
-    <span class="hljs-keyword">return</span> name
+    <span class="hljs-keyword">return</span> name;
 });
 </div></code></pre>
 <p>ただし、全てのイベントが確実に発生するとは限りません。</p>
 <p>例えば、メッセージの受信時に<code>squareEventTarget</code>では<code>message</code>のみ発生しますが、<code>squareChatEventTarget</code>では<code>sendMessage</code>と<code>receiveMessage</code>も発生します。</p>
 <p>また、<a href="./site/res/thrift.json"><code>/site/res/thrift.json</code></a>|<a href="./res/thrift.json">for web</a>に記載されていないイベントではイベント名はその<code>fid</code>の値になります。</p>
 <h2 id="thanks">Thanks</h2>
-<p><code>This project got their help directly/indirectly, thank them deeply</code></p>
+<p><code>このプロジェクトは直接的、または間接的に以下の人々/プロジェクトの支援を得ました。深く感謝します。</code></p>
 <ul>
 <li><a href="https://github.com/EdamAme-x">EdamAmex</a></li>
 <li><a href="https://github.com/hafusun">羽風</a></li>
 <li><a href="https://github.com/jkFujiyama">jkFujiyama</a></li>
-<li><a href="https://github.com/DeachSword/CHRLINE">CHRLINE</a></li>
+<li><a href="https://github.com/DeachSword/CHRLINE">DeachSword/CHRLINE</a></li>
 <li><a href="https://github.com/thriftrw/thriftrw-node/">thriftrw-node</a></li>
 <li>Line open-chat 拓也集落's group members</li>
 </ul>
-<h2 id="mit-licenced">MIT Licenced</h2>
+<h2 id="licence-free">Licence free</h2>
 
 </body>
 </html>
