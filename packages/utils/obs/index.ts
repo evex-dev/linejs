@@ -37,11 +37,11 @@ class LINE_OBS_BASE {
 	}
 
 	/**
-	 * @param gid {string} group id
+	 * @param groupId {string} group id (gid)
 	 * @returns line-obs group-image url
 	 */
-	public createGroupImage(gid: string): string {
-		return this.prefix + "os/g/" + gid;
+	public createGroupImage(groupId: string): string {
+		return this.prefix + "os/g/" + groupId;
 	}
 }
 
