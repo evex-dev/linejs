@@ -3,7 +3,7 @@
  * Utility for LINE Scheme URI
  */
 
-import { ALL_STRING, WEB_SCHEME_PREFIX } from "../common/types.ts";
+import type { ALL_STRING, WEB_SCHEME_PREFIX } from "../common/types.ts";
 
 type LINE_SCHEME_PREFIX =
 	| "line://"
@@ -11,15 +11,24 @@ type LINE_SCHEME_PREFIX =
 	| WEB_SCHEME_PREFIX<"line.naver.jp/R/">
 	| ALL_STRING;
 
+/**
+ * @description LINE Scheme Utility
+ */
 class LINE_SCHEME_BASE {
 	constructor(
 		public prefix: LINE_SCHEME_PREFIX = "line://",
 	) {}
 
+	/**
+     * @returns home url
+     */
 	public getHome(): string {
 		return this.prefix + "home";
 	}
 
+	/**
+     * @returns user profile setting url
+     */
 	public getProfile(): string {
 		return this.prefix + "profile";
 	}
