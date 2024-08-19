@@ -5,7 +5,7 @@
 **LINEJS** is a JavaScript library for LINE Self-Bot.
 
 ## Installation
-Support all runtimes (Node.js, Deno, and Bun).
+Support all runtimes (Node.js, Deno, and Bun) and typescript.
 
 ```llvm
 npx jsr add @evex/linejs
@@ -22,7 +22,7 @@ client.on("pincode", (pincode) => {
     console.log(`pincode: ${pincode}`);
 });
 
-client.on("ready", (pincode) => {
+client.on("ready", () => {
     console.log(`Logged in as ${client.user.name} (${client.user.id})`);
 });
 
