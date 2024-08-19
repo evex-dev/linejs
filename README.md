@@ -53,7 +53,7 @@ client.login({
 
 - [ ] Migrate to [packages](./packages) from [archive](./archive)
 - [ ] Create Utils for LINE
-    - [ ] Add [LINE Scheme URI](./packages/utils/line-scheme/index.ts)
+    - [ ] Add [LINE Scheme](./packages/utils/line-scheme/index.ts)
     - [ ] Create REGEX for LINE URI
     - [ ] Create OpenChat Search Function and etc...
 - [ ] Release to JSR

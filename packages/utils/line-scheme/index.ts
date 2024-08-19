@@ -3,7 +3,7 @@
  * Utility for LINE Scheme URI
  */
 
-export const LINE_SCHEME_URI = {
+export const LINE_SCHEME = {
     /**
      * Home URI
      */
