@@ -20,26 +20,26 @@ class LINE_OBS_BASE {
 		public prefix: LINE_OBS_PREFIX = "obs://",
 	) {}
 
-    /**
-     * @param hash {string} obs hash
-     * @returns line-obs url
-     */
+	/**
+	 * @param hash {string} obs hash
+	 * @returns line-obs url
+	 */
 	public createURI(hash: string): string {
 		return this.prefix + hash;
 	}
 
-    /**
-     * @param mid {string} user mid
-     * @returns line-obs profile-image url
-     */
+	/**
+	 * @param mid {string} user mid
+	 * @returns line-obs profile-image url
+	 */
 	public createProfileImage(mid: string): string {
 		return this.prefix + "os/p/" + mid;
 	}
 
-    /**
-     * @param gid {string} group id
-     * @returns line-obs group-image url
-     */
+	/**
+	 * @param gid {string} group id
+	 * @returns line-obs group-image url
+	 */
 	public createGroupImage(gid: string): string {
 		return this.prefix + "os/g/" + gid;
 	}

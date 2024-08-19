@@ -1,7 +1,7 @@
 {
-    "name": "@evex/linejs",
-    "version": "0.0.0",
-    "exports": {
+	"name": "@evex/linejs",
+	"version": "0.0.0",
+	"exports": {
 		".": "./packages/client/index.ts",
 		"./client": "./packages/client/index.ts",
 		"./utils": "./packages/utils/index.ts"
