@@ -48,7 +48,7 @@ client.login({
 
 - Owner & Developer [Piloking](https://github.com/piloking)
 - Developer [EdamAme-x](https://github.com/EdamAme-x)
-- Developer [Hafusan](https://github.com/hafusun)
+- Developer [Hafusun](https://github.com/hafusun)
 
 ## ToDo
 
