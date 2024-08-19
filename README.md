@@ -48,3 +48,12 @@ client.login({
 - Owner & Developer [Piloking](https://github.com/piloking)
 - Developer [EdamAme-x](https://github.com/EdamAme-x)
 - Developer [Hafusan](https://github.com/hafusun)
+
+## ToDo
+
+- [ ] Migrate to [packages](./packages) from [archive](./archive)
+- [ ] Create Utils for LINE
+    - [ ] Add [LINE Scheme URI](./packages/utils/line-scheme/index.ts)
+    - [ ] Create REGEX for LINE URI
+    - [ ] Create OpenChat Search Function and etc...
+- [ ] Release to JSR
