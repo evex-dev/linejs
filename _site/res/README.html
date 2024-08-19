@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>README.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+</head>
+<body>
+<h1 id="line-deno-client">Line-Deno-Client</h1>
+<p>Line-Deno-ClientはDenoで書かれたLINEの非公式APIです。</p>
+<p>DenoまたはDeno DeployのHTTPサーバーを利用してブラウザ上で、またDeno単体でも実行できます。</p>
+<h2 id="%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95">使用方法</h2>
+<pre class="hljs"><code><div>git <span class="hljs-built_in">clone</span> -b dev https://github.com/test0987654321234567890/Line-Deno-Client
+<span class="hljs-built_in">cd</span> Line-Deno-Client
+<span class="hljs-comment"># HTTPサーバー起動</span>
+deno run server/main.js
+</div></code></pre>
+<h2 id="%E3%82%B3%E3%83%BC%E3%83%89%E4%BE%8B">コード例</h2>
+<h3 id="%E3%82%A4%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%B3%E3%82%B9%E7%94%9F%E6%88%90%E3%81%A8%E5%88%9D%E6%9C%9F%E5%8C%96">インスタンス生成と初期化</h3>
+<p>Denoの場合、importします。</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> LineClient <span class="hljs-keyword">from</span> <span class="hljs-string">"./server/line_deno.js"</span>;
+</div></code></pre>
+<p>Webの場合、<code>deno run server/main.js</code>でサーバーを起動してから<a href="http://localhost:7070">localhost:7070</a>にアクセスします。</p>
+<p>または、<a href="https://line-selfbot--dev.deno.dev/">Deno Deployのテストサーバー</a>にアクセスします。</p>
+<p>メールとパスワードでログイン:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> Line = <span class="hljs-keyword">new</span> LineClient();
+<span class="hljs-keyword">await</span> Line.init({
+    <span class="hljs-attr">device</span>: <span class="hljs-string">"device"</span>,
+    <span class="hljs-attr">email</span>: <span class="hljs-string">"email"</span>,
+    <span class="hljs-attr">pw</span>: <span class="hljs-string">"pass_word"</span>,
+    <span class="hljs-attr">pincall</span>: <span class="hljs-function">(<span class="hljs-params">pincode</span>) =&gt;</span> {
+        <span class="hljs-comment">// pincode callback</span>
+    },
+});
+</div></code></pre>
+<p>Tokenで初期化:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> Line = <span class="hljs-keyword">new</span> LineClient();
+<span class="hljs-keyword">await</span> Line.init({
+    <span class="hljs-attr">authToken</span>: <span class="hljs-string">"FHZWgN1MvZyCcGvljBib.vVQ0sVYTH+QJRnQ0rDoTsW.GBdUE+X+C7SrvpMBMbBrjaVbhQc+hCFoijX6xE29cbM="</span>,
+    <span class="hljs-attr">device</span>: <span class="hljs-string">"IOSIPAD"</span>,
+});
+</div></code></pre>
+<h3 id="line%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88%E3%82%92%E9%80%81%E4%BF%A1">Lineリクエストを送信</h3>
+<p><code>LineClient.request</code>を使用してthriftデータを送信、受信できます:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">await</span> Line.request(
+    CHRdata = [], <span class="hljs-comment">// CHRLINE Thrift [[ftype,fid,value],...]</span>
+    methodName, <span class="hljs-comment">// Method Name</span>
+    protocol_type = <span class="hljs-number">3</span>, <span class="hljs-comment">// 3:TBINARY 4:TCOMPACT</span>
+    parse = <span class="hljs-literal">true</span>, <span class="hljs-comment">// true:auto-parse false:no-parse "name":name-parse</span>
+    path = <span class="hljs-string">"/S3"</span>, <span class="hljs-comment">// gw.line.naver.jp{path}</span>
+    headers = {}, <span class="hljs-comment">// HTTP headers</span>
+);
+<span class="hljs-comment">// return Promise&lt;Object(thriftData)&gt;</span>
+<span class="hljs-comment">// throw error.cause = thriftExceptionData</span>
+</div></code></pre>
+<p>実装されているメソッドを利用することもできます:</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// SquareServise</span>
+<span class="hljs-keyword">await</span> Line.getJoinedSquares(limit = <span class="hljs-number">50</span>, continuationToken);
+<span class="hljs-keyword">await</span> Line.inviteIntoSquareChat(inviteeMids, squareChatMid);
+<span class="hljs-keyword">await</span> Line.inviteToSquare(squareMid, invitees, squareChatMid);
+<span class="hljs-keyword">await</span> Line.markAsRead(squareChatMid, messageId);
+<span class="hljs-keyword">await</span> Line.reactToMessage(squareChatMid, messageId, reactionType = <span class="hljs-number">2</span>);
+<span class="hljs-comment">/*
+    reactionType
+        ALL     = 0,
+        UNDO    = 1,
+        NICE    = 2,
+        LOVE    = 3,
+        FUN     = 4,
+        AMAZING = 5,
+        SAD     = 6,
+        OMG     = 7,
+*/</span>
+<span class="hljs-keyword">await</span> Line.findSquareByInvitationTicket(invitationTicket);
+<span class="hljs-keyword">await</span> Line.fetchMyEvents(
+    syncToken = <span class="hljs-literal">undefined</span>,
+    limit = <span class="hljs-number">100</span>,
+    continuationToken = <span class="hljs-literal">undefined</span>,
+    subscriptionId,
+);
+<span class="hljs-keyword">await</span> Line.fetchSquareChatEvents(
+    squareChatMid,
+    syncToken = <span class="hljs-literal">undefined</span>,
+    continuationToken = <span class="hljs-literal">undefined</span>,
+    subscriptionId = <span class="hljs-number">0</span>,
+    limit = <span class="hljs-number">100</span>,
+);
+<span class="hljs-keyword">await</span> Line.sendSquareMessage(
+    squareChatMid,
+    text = <span class="hljs-string">"test Message"</span>,
+    contentType = <span class="hljs-number">0</span>,
+    contentMetadata = {},
+    relatedMessageId = <span class="hljs-literal">undefined</span>,
+);
+<span class="hljs-keyword">await</span> Line.getSquare(squareMid);
+<span class="hljs-keyword">await</span> Line.getSquareChat(squareChatMid);
+<span class="hljs-keyword">await</span> Line.getJoinableSquareChats(
+    squareMid,
+    continuationToken = <span class="hljs-literal">undefined</span>,
+    limit = <span class="hljs-number">100</span>,
+);
+<span class="hljs-keyword">await</span> Line.createSquare(
+    name = <span class="hljs-string">"TEST Square"</span>,
+    displayName = <span class="hljs-string">"Tester"</span>,
+    profileImageObsHash =
+        <span class="hljs-string">"0h6tJf0hQsaVt3H0eLAsAWDFheczgHd3wTCTx2eApNKSoefHNVGRdwfgxbdgUMLi8MSngnPFMeNmpbLi8MSngnPFMeNmpbLi8MSngnOA"</span>,
+    desc = <span class="hljs-string">"test with Line-Deno-Client"</span>,
+    searchable = <span class="hljs-literal">true</span>,
+    SquareJoinMethodType = <span class="hljs-number">0</span>,
+);
+<span class="hljs-comment">/*
+    SquareJoinMethodType
+        NONE(0),
+        APPROVAL(1),
+        CODE(2);
+*/</span>
+<span class="hljs-keyword">await</span> Line.getSquareChatAnnouncements(squareChatMid);
+<span class="hljs-keyword">await</span> Line.updateSquareFeatureSet(
+    updateAttributes = [],
+    squareMid,
+    revision,
+    creatingSecretSquareChat = <span class="hljs-number">0</span>,
+);
+<span class="hljs-comment">/*
+    updateAttributes:
+        CREATING_SECRET_SQUARE_CHAT(1),
+        INVITING_INTO_OPEN_SQUARE_CHAT(2),
+        CREATING_SQUARE_CHAT(3),
+        READONLY_DEFAULT_CHAT(4),
+        SHOWING_ADVERTISEMENT(5),
+        DELEGATE_JOIN_TO_PLUG(6),
+        DELEGATE_KICK_OUT_TO_PLUG(7),
+        DISABLE_UPDATE_JOIN_METHOD(8),
+        DISABLE_TRANSFER_ADMIN(9),
+        CREATING_LIVE_TALK(10);
+*/</span>
+<span class="hljs-keyword">await</span> Line.joinSquare(
+    squareMid,
+    displayName,
+    ableToReceiveMessage = <span class="hljs-literal">false</span>,
+    passCode = <span class="hljs-literal">undefined</span>,
+);
+<span class="hljs-keyword">await</span> Line.removeSubscriptions(subscriptionIds = []);
+<span class="hljs-keyword">await</span> Line.unsendSquareMessage(squareChatMid, messageId);
+<span class="hljs-keyword">await</span> Line.createSquareChat(
+    squareChatMid,
+    name,
+    chatImageObsHash,
+    squareChatType = <span class="hljs-number">1</span>,
+    maxMemberCount = <span class="hljs-number">5000</span>,
+    ableToSearchMessage = <span class="hljs-number">1</span>,
+    squareMemberMids = [],
+);
+<span class="hljs-comment">/*
+    - SquareChatType:
+        OPEN(1),
+        SECRET(2),
+        ONE_ON_ONE(3),
+        SQUARE_DEFAULT(4);
+    - ableToSearchMessage:
+        NONE(0),
+        OFF(1),
+        ON(2);
+*/</span>
+<span class="hljs-keyword">await</span> Line.getSquareChatMembers(
+    squareChatMid,
+    continuationToken = <span class="hljs-literal">undefined</span>,
+    limit = <span class="hljs-number">200</span>,
+);
+<span class="hljs-keyword">await</span> Line.getSquareFeatureSet(squareMid);
+<span class="hljs-keyword">await</span> Line.getSquareInvitationTicketUrl(mid);
+<span class="hljs-keyword">await</span> Line.updateSquareChatMember(
+    squareMemberMid,
+    squareChatMid,
+    notificationForMessage = <span class="hljs-literal">true</span>,
+    notificationForNewMember = <span class="hljs-literal">true</span>,
+    updatedAttrs = [<span class="hljs-number">6</span>],
+);
+<span class="hljs-comment">/*
+    - SquareChatMemberAttribute:
+        MEMBERSHIP_STATE(4),
+        NOTIFICATION_MESSAGE(6),
+        NOTIFICATION_NEW_MEMBER(7);
+*/</span>
+<span class="hljs-keyword">await</span> Line.updateSquareMember(
+    updatedAttrs = [],
+    updatedPreferenceAttrs = [],
+    squareMemberMid,
+    squareMid,
+    revision,
+    displayName,
+    membershipState,
+    role,
+);
+<span class="hljs-comment">/*
+    SquareMemberAttribute:
+        DISPLAY_NAME(1),
+        PROFILE_IMAGE(2),
+        ABLE_TO_RECEIVE_MESSAGE(3),
+        MEMBERSHIP_STATE(5),
+        ROLE(6),
+        PREFERENCE(7);
+    SquareMembershipState:
+        JOIN_REQUESTED(1),
+        JOINED(2),
+        REJECTED(3),
+        LEFT(4),
+        KICK_OUT(5),
+        BANNED(6),
+        DELETED(7);
+*/</span>
+<span class="hljs-keyword">await</span> Line.kickOutSquareMember(sid, pid);
+<span class="hljs-keyword">await</span> Line.checkSquareJoinCode(squareMid, code);
+<span class="hljs-keyword">await</span> Line.createSquareChatAnnouncement(
+    squareChatMid,
+    messageId,
+    text,
+    senderSquareMemberMid,
+    createdAt,
+    announcementType = <span class="hljs-number">0</span>,
+);
+<span class="hljs-keyword">await</span> Line.getSquareMember(squareMemberMid);
+<span class="hljs-keyword">await</span> Line.searchSquareChatMembers(
+    squareChatMid,
+    displayName = <span class="hljs-string">""</span>,
+    continuationToken,
+    limit = <span class="hljs-number">20</span>,
+);
+<span class="hljs-keyword">await</span> Line.getSquareEmid(squareMid);
+<span class="hljs-keyword">await</span> Line.getSquareMembersBySquare(squareMid, squareMemberMids = []);
+<span class="hljs-keyword">await</span> Line.manualRepair(syncToken, limit = <span class="hljs-number">100</span>, continuationToken);
+<span class="hljs-keyword">await</span> Line.sendSquareRequestByName(METHOD_NAME, params); <span class="hljs-comment">// send SquareRequest</span>
+<span class="hljs-comment">// LineServise</span>
+<span class="hljs-keyword">await</span> Line.getProfile();
+<span class="hljs-comment">// LiffServise</span>
+<span class="hljs-keyword">await</span> Line.issueLiffView(
+    chatMid,
+    liffId = <span class="hljs-string">"1562242036-RW04okm"</span>,
+    lang = <span class="hljs-string">"ja_JP"</span>,
+);
+<span class="hljs-comment">// ChannelService</span>
+<span class="hljs-keyword">await</span> Line.approveChannelAndIssueChannelToken(channelId = <span class="hljs-string">"1341209850"</span>);
+</div></code></pre>
+<h3 id="%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E3%83%8F%E3%83%B3%E3%83%89%E3%83%A9%E3%83%BC">イベントハンドラー</h3>
+<p>Squareでイベントハンドラーを利用できます。</p>
+<p>fetchMyEventsのハンドラー:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> handler = <span class="hljs-function">(<span class="hljs-params">event, line</span>) =&gt;</span> {
+    <span class="hljs-built_in">console</span>.log(event);
+};
+<span class="hljs-keyword">const</span> remove = <span class="hljs-keyword">await</span> Line.squareEvent(handler, ?syncToken, ?interval, ?remove);
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">stopRoop</span>(<span class="hljs-params"></span>) </span>{
+    remove.remove = <span class="hljs-literal">true</span>;
+}
+</div></code></pre>
+<p>fetchSquareChatEventsのハンドラー:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> handler = <span class="hljs-function">(<span class="hljs-params">event, line, mid</span>) =&gt;</span> {
+    <span class="hljs-built_in">console</span>.log(event);
+};
+<span class="hljs-keyword">const</span> remove = <span class="hljs-keyword">await</span> Line.squareChatEvent(
+    handler,
+    mid,
+    ?syncToken,
+    ?interval,
+    ?remove,
+);
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">stopRoop</span>(<span class="hljs-params"></span>) </span>{
+    remove.remove = <span class="hljs-literal">true</span>;
+}
+</div></code></pre>
+<h4 id="addeventlistener">addEventListener</h4>
+<p>addEventListenerを利用して処理することもできます。</p>
+<p>fetchMyEventsのハンドラー:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> eventTarget = Line.getSquareEventTarget();
+eventTarget.addEventListener(
+    <span class="hljs-string">"message"</span>,
+    (e) =&gt; <span class="hljs-built_in">console</span>.log(e.squareMessage.message.text),
+);
+eventTarget.onmessage = <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(e.squareMessage.message.text);
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">stopRoop</span>(<span class="hljs-params"></span>) </span>{
+    eventTarget.remove.remove = <span class="hljs-literal">true</span>;
+}
+</div></code></pre>
+<p>fetchSquareChatEventsのハンドラー:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> eventTarget = Line.getSquareChatEventTarget(mid);
+eventTarget.addEventListener(
+    <span class="hljs-string">"message"</span>,
+    (e) =&gt; {
+        <span class="hljs-built_in">console</span>.log(e.squareMessage.message.text);
+        Line.sendSquareMessage(
+            mid,
+            e.squareMessage.message.text,
+        );
+        <span class="hljs-comment">// echo BOT</span>
+    },
+);
+eventTarget.onmessage = <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(e.squareMessage.message.text);
+<span class="hljs-comment">// message は receiveMessage,sendMessage の受信時にも発火します</span>
+eventTarget.addEventListener(
+    <span class="hljs-string">"markAsRead"</span>,
+    (e) =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"既読:"</span>, e),
+);
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">stopRoop</span>(<span class="hljs-params"></span>) </span>{
+    eventTarget.remove.remove = <span class="hljs-literal">true</span>;
+}
+</div></code></pre>
+<p>イベント名の配列は以下のコードで取得できます:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> eventNameArray = Line.parser.def.SquareEventPayload.map(<span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+    <span class="hljs-keyword">let</span> name = e.name.replace(<span class="hljs-string">"notified"</span>, <span class="hljs-string">""</span>)
+        .replace(<span class="hljs-string">"notification"</span>, <span class="hljs-string">""</span>);
+    name = name[<span class="hljs-number">0</span>].toLowerCase() + name.substring(<span class="hljs-number">1</span>);
+    <span class="hljs-keyword">return</span> name;
+});
+</div></code></pre>
+<p>ただし、全てのイベントが確実に発生するとは限りません。</p>
+<p>例えば、メッセージの受信時に<code>squareEventTarget</code>では<code>message</code>のみ発生しますが、<code>squareChatEventTarget</code>では<code>sendMessage</code>と<code>receiveMessage</code>も発生します。</p>
+<p>また、<a href="./site/res/thrift.json"><code>/site/res/thrift.json</code></a>|<a href="/res/thrift.json">for web</a>に記載されていないイベントではイベント名はその<code>fid</code>の値になります。</p>
+<h2 id="thanks">Thanks</h2>
+<p><code>このプロジェクトは直接的、または間接的に以下の人々/プロジェクトの支援を得ました。深く感謝します。</code></p>
+<ul>
+<li><a href="https://github.com/EdamAme-x">EdamAmex</a></li>
+<li><a href="https://github.com/hafusun">羽風</a></li>
+<li><a href="https://github.com/jkFujiyama">jkFujiyama</a></li>
+<li><a href="https://github.com/DeachSword/CHRLINE">DeachSword/CHRLINE</a></li>
+<li><a href="https://github.com/thriftrw/thriftrw-node/">thriftrw-node</a></li>
+<li>Line open-chat 拓也集落's group members</li>
+</ul>
+<h2 id="licence-free">Licence free</h2>
+
+</body>
+</html>

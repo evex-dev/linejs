@@ -1,0 +1,150 @@
+<html lang="ja-JP">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#000000">
+    <meta name="description" content="LINE in WEB">
+    <meta name="google" content="notranslate">
+    <title class="notranslate">LINE</title>
+    <!--<link href='https://unpkg.com/css.gg@2.0.0/icons/css/terminal.css' rel='stylesheet'>!-->
+    <!--<link href='https://unpkg.com/css.gg@2.0.0/icons/css/notes.css' rel='stylesheet'>!-->
+    <!--<link href="./res/main.bdef6c38.css" rel="stylesheet">!-->
+</head>
+
+<body class="positive_button_first"><noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root" style="">
+        <div class="app" style="margin: 10px;">
+            <input type="text" placeholder="authToken" id="auth"
+                style="background-color: #222; color: #fff; padding: 10px;"><br>
+            <input type="text" placeholder="device" id="device"
+                style="background-color: #222; color: #fff; padding: 10px; "><br>
+            <input type="text" placeholder="email" id="email"
+                style="background-color: #222; color: #fff; padding: 10px; "><br>
+            <input type="text" placeholder="password" id="pw"
+                style="background-color: #222; color: #fff; padding: 10px; "><br>
+            <button type="button" onclick="test()"
+                style="background-color: #222; color: #fff; padding: 10px; ">＞RUN</button><br>
+            <div id="scr"></div>
+            <!--<textarea placeholder="console" id="cl"
+                style="background-color: #222; color: #fff; padding: 10px; width: 90%; height: 70vh;"></textarea><br>
+            <input type="text" placeholder=">"
+                style="background-color: #222; color: #fff; padding: 10px; width: 90%;" id="cl-in"><br>
+            <button style="background-color: #222; color: #fff; padding: 10px;" type="button" onclick="console.log('>',document.getElementById('cl-in').value);console.log(eval(document.getElementById('cl-in').value))">send</button>!-->
+        </div>
+    </div>
+    <iframe src="/res/README.html" id="ifr" frameborder="1" style="width: 100%; height: 100vh;"></iframe>
+    <script src="/js/eruda.min.js"></script>
+    <script>
+        if (localStorage.getItem("auth")) {
+            document.getElementById("auth").value = localStorage.getItem("auth");
+        }
+        if (localStorage.getItem("device")) {
+            document.getElementById("device").value = localStorage.getItem("device");
+        }
+        if (localStorage.getItem("email")) {
+            document.getElementById("email").value = localStorage.getItem("email");
+        }
+        eruda.init()
+        var snippets = eruda.get('snippets');
+        snippets._snippets = []
+        snippets.add('getProfile', async () => {
+            console.log('-> profile', await Line.getProfile());
+        }, '-> Your profile');
+        snippets.add('voomPostIdToMid', async () => {
+            console.log('-> Mid', await Line.voom2mid(prompt("PostId?")));
+        }, 'PostId -> Mid');
+        snippets.add('MessageRecv', async () => {
+            const logEvent = confirm("詳細を出力しますか?")
+            console.log("start!")
+            Line.getSquareEventTarget().onmessage = (e) => {
+                console.log(`[${e.senderDisplayName ? e.senderDisplayName : "!" + e.squareMessage.fromType}] ${e.squareMessage.message.text ? e.squareMessage.message.text : "!" + e.squareMessage.message.contentType}\n${new Date(e.squareMessage.message.deliveredTime).toLocaleString()}`)
+                if (logEvent) {
+                    console.log(e)
+                }
+            }
+        }, 'onmessage -> Message');
+        async function test() {
+            if (!document.getElementById("device").value) {
+                alert("まずdeviceを入力してください(IOSIPAD DESKTOPWIN DESKTOPMAC)");
+                return;
+            }
+            Line = new LineClient();
+            if (!document.getElementById("auth").value) {
+                const email = document.getElementById("email").value;
+                const pw = document.getElementById("pw").value;
+                if (!(pw && email)) {
+                    alert("emailとpassword、またはauthTokenを入力してください");
+                    return;
+                }
+                await Line.init({
+                    device: document.getElementById("device").value,
+                    email,
+                    pw,
+                })
+                localStorage.setItem("auth", Line.authToken);
+                alert("open console or eruda console");
+            } else {
+                await Line.init({
+                    authToken: document.getElementById("auth").value,
+                    device: document.getElementById("device").value,
+                });
+                localStorage.setItem("auth", Line.authToken);
+                alert("open console or eruda console");
+            }
+            localStorage.setItem("email", document.getElementById("email").value);
+            localStorage.setItem("auth", document.getElementById("auth").value);
+            localStorage.setItem("device", document.getElementById("device").value);
+            console.log(Line);
+            console.log("Line.method(...arg)");
+            window.onmessage = async (e) => {
+                const data = e.data;
+                if (typeof data === "object" && globalThis.plugin) {
+                    Line.thrift.send(
+                        Line.thrift.socket.post,
+                        Line.thrift.socketInfo.post.waitFunc,
+                        data,
+                        (res) => {
+                            globalThis.plugin.postMessage(res, "*");
+                        },
+                    );
+                }
+            };
+            document.getElementById("scr").innerHTML = `<input type="text" placeholder="script URL" id="plugin" style="background-color: #222; color: #fff; padding: 10px;"><br><button type="button" onclick="load_plugin()" style="background-color: #222; color: #fff; padding: 10px; ">Load Script</button><br>`
+            if (localStorage.getItem("plugin")) {
+                document.getElementById("plugin").value = localStorage.getItem("plugin");
+            }
+        }
+
+        function load_plugin(iframe = true) {
+            const url = document.getElementById("plugin").value;
+            if (url) {
+                localStorage.setItem("plugin", url);
+                if (iframe) {
+                    document.getElementById("ifr").src = url;
+                    globalThis.plugin = document.getElementById("ifr").contentWindow;
+                } else {
+                    globalThis.plugin = open(url);
+                }
+            } else {
+                document.getElementById("ifr").srcdoc = document.getElementById("rhtml").value;
+                globalThis.plugin = document.getElementById("ifr").contentWindow;
+            }
+        }
+
+    </script>
+    <script type="module" src="/js/thrift/rename_thrift.js"></script>
+    <script src="/js/thrift/LineServises.js"></script>
+    <script src="/js/thrift/LoginAPI.js"></script>
+    <!--<script src="/js/Xquery.js"></script>!-->
+    <script src="/js/localforage.min.js"></script>
+    <!--<script src="/js/escape.js"></script>!-->
+    <script async src="/js/thrift/script.js"></script>
+    <!--<script src="https://pamornt.github.io/flex2html/js/flex2html.min.js"></script>
+    <script src="/js/x3.js"></script>
+    <script async src="/js/xUI.js"></script>
+    <script src="/js/app.js"></script>!-->
+
+</body>
+
+</html>
