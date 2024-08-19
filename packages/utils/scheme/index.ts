@@ -13,6 +13,7 @@ type LINE_SCHEME_PREFIX =
 
 /**
  * @description LINE Scheme Utility
+ * @param prefix {LINE_SCHEME_PREFIX} scheme prefix (e.x. 'line://')
  */
 class LINE_SCHEME_BASE {
 	constructor(
@@ -20,14 +21,19 @@ class LINE_SCHEME_BASE {
 	) {}
 
 	/**
-	 * @returns home url
+	 * Returns the URL for the home page.
+	 *
+	 * @return {string} The URL for the home page.
 	 */
 	public getHome(): string {
 		return this.prefix + "home";
 	}
 
 	/**
-	 * @returns user profile setting url
+	 * Returns a profile URL based on the provided prefix and whether to use Naver.
+	 *
+	 * @param {boolean} useNv - Whether to use Nv. Defaults to true.
+	 * @return {string} The profile URL.
 	 */
 	public getProfile(useNv: boolean = true): string {
 		if (useNv) {
@@ -38,20 +44,38 @@ class LINE_SCHEME_BASE {
 	}
 
 	/**
-	 * @returns nv url
+	 * Returns the URL for the nv page.
+	 *
+	 * @param {string} nv - nv path
+	 * @return {string} The URL for the nv page.
 	 */
 	public getNv(nv: string = ""): string {
 		return this.prefix + "nv" + nv;
 	}
 
+	/**
+	 * Returns the URL for the friend page.
+	 *
+	 * @return {string} The URL for the friend page.
+	 */
 	public getFriend(): string {
 		return this.prefix + "nv/friend";
 	}
 
+	/**
+	 * Returns the URL for the chat page.
+	 *
+	 * @return {string} The URL for the chat page.
+	 */
 	public getChat(): string {
 		return this.prefix + "nv/chat";
 	}
 
+	/**
+	 * Returns the URL for the timeline page.
+	 * 
+	 * @return {string} The URL for the timeline page.
+	 */
 	public getTimeline(): string {
 		return this.prefix + "nv/timeline";
 	}
