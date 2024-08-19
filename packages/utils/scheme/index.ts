@@ -16,11 +16,11 @@ class LINE_SCHEME_BASE {
 		public prefix: LINE_SCHEME_PREFIX = "line://",
 	) {}
 
-	public getHome() {
+	public getHome(): string {
 		return this.prefix + "home";
 	}
 
-	public getProfile() {
+	public getProfile(): string {
 		return this.prefix + "profile";
 	}
 }

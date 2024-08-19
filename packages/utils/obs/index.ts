@@ -17,15 +17,15 @@ class LINE_OBS_BASE {
 		public prefix: LINE_OBS_PREFIX = "obs://",
 	) {}
 
-	public createURI(hash: string) {
+	public createURI(hash: string): string {
 		return this.prefix + hash;
 	}
 
-	public createProfileImage(mid: string) {
+	public createProfileImage(mid: string): string {
 		return this.prefix + "os/p/" + mid;
 	}
 
-	public createGroupImage(gid: string) {
+	public createGroupImage(gid: string): string {
 		return this.prefix + "os/g/" + gid;
 	}
 }

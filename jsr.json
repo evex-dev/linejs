@@ -1,10 +1,10 @@
 {
 	"$schema": "https://jsr.io/schema/config-file.v1.json",
 	"name": "@evex/linejs",
-	"version": "0.0.1",
+	"version": "0.0.0",
 	"exports": {
-		".": "./src/client/index.ts",
-		"client": "./src/client/index.ts",
-		"utils": "./src/utils/index.ts"
+		".": "./packages/client/index.ts",
+		"./client": "./packages/client/index.ts",
+		"./utils": "./packages/utils/index.ts"
 	}
 }
