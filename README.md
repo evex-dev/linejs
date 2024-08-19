@@ -36,7 +36,10 @@ client.on("message", (message) => {
 
 client.login({
     email: "YOUR_EMAIL",
-    password: "YOUR_PASSWORD"
+    password: "YOUR_PASSWORD",
+    device: "IOSIPAD",
+    // OR
+    // authToken: "YOUR_AUTH_TOKEN",
 });
 ```
 
