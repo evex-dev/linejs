@@ -55,7 +55,7 @@ class LINE_OBS_BASE {
 	 * Gets an open chat member image URI by appending the given open chat member ID to the prefix.
 	 *
 	 * @param {string} squareMemberId - The square member ID (pid) to use in the URL.
-	 * @param {boolean} isPreview - Whether to append '/preview' to the URL. Defaults to false.
+	 * @param {boolean} isPreview - Whether to append '/preview' to the URL. (default: false)
 	 * @return {string} The getted open chat member image URI.
 	 */
 	public getSquareMemberImage(squareMemberId: string, isPreview = false): string {

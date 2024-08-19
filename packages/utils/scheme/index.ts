@@ -100,6 +100,12 @@ class LINE_SCHEME_BASE {
 		return this.prefix + "nv/settings";
 	}
 
+	/**
+	 * Returns the URL for the add friend page.
+	 * 
+	 * @param useNv {boolean} Whether to use '/nv' in the URL. (default: false)
+	 * @return {string} The URL for the add friend page.
+	 */
 	public getAddFriends(useNv: boolean = false): string {
 		if (useNv) {
 			return this.prefix + "nv/addFriends";
