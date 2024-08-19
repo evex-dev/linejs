@@ -1,1 +1,7 @@
-{}
+{
+	"fmt": {
+		"indentWidth": 2,
+		"singleQuote": false,
+		"useTabs": true
+	}
+}

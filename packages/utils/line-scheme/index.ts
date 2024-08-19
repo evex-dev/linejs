@@ -3,29 +3,26 @@
  * Utility for LINE Scheme URI
  */
 
+import { ALL_STRING, WEB_SCHEME_PREFIX } from "../common/types.ts";
+
 type LINE_SCHEME_PREFIX =
-    | "line://"
-    | "http://line.me/R/"
-    | "https://line.me/R/"
-    | "http://line.naver.jp/R/"
-    | "https://line.naver.jp/R/"
-    // deno-lint-ignore ban-types
-    | (string & {});
+	| "line://"
+	| WEB_SCHEME_PREFIX<"line.me/R/">
+	| WEB_SCHEME_PREFIX<"line.naver.jp/R/">
+	| ALL_STRING;
 
 class LINE_SCHEME_BASE {
-    constructor(
-        public prefix: LINE_SCHEME_PREFIX = "line://",
-    ) {}
+	constructor(
+		public prefix: LINE_SCHEME_PREFIX = "line://",
+	) {}
 
-    public getHome() {
-        return this.prefix + "home";
-    }
+	public getHome() {
+		return this.prefix + "home";
+	}
 
-    public getProfile() {
-        return this.prefix + "profile";
-    }
+	public getProfile() {
+		return this.prefix + "profile";
+	}
 }
-
-console.log(new LINE_SCHEME_BASE("line://").getHome())
 
 export { LINE_SCHEME_BASE as LINE_SCHEME };

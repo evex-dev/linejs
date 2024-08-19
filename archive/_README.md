@@ -2,7 +2,8 @@
 
 linejsは、全JavaScriptランタイム対応のLINEの非公式ボットライブラリです。
 
-DenoまたはDeno DeployのHTTPサーバーを利用してブラウザ上で、またDeno単体でも実行できます。
+DenoまたはDeno
+DeployのHTTPサーバーを利用してブラウザ上で、またDeno単体でも実行できます。
 
 ## 使用方法
 
@@ -32,12 +33,12 @@ Webの場合、`deno run server/main.js`でサーバーを起動してから[loc
 ```js
 const Line = new LineClient();
 await Line.init({
-    device: "device",
-    email: "email",
-    pw: "pass_word",
-    pincall: (pincode) => {
-        // pincode callback
-    },
+	device: "device",
+	email: "email",
+	pw: "pass_word",
+	pincall: (pincode) => {
+		// pincode callback
+	},
 });
 ```
 
@@ -46,8 +47,9 @@ Tokenで初期化:
 ```js
 const Line = new LineClient();
 await Line.init({
-    authToken: "FHZWgN1MvZyCcGvljBib.vVQ0sVYTH+QJRnQ0rDoTsW.GBdUE+X+C7SrvpMBMbBrjaVbhQc+hCFoijX6xE29cbM=",
-    device: "IOSIPAD",
+	authToken:
+		"FHZWgN1MvZyCcGvljBib.vVQ0sVYTH+QJRnQ0rDoTsW.GBdUE+X+C7SrvpMBMbBrjaVbhQc+hCFoijX6xE29cbM=",
+	device: "IOSIPAD",
 });
 ```
 
@@ -57,12 +59,12 @@ await Line.init({
 
 ```js
 await Line.request(
-    CHRdata = [], // CHRLINE Thrift [[ftype,fid,value],...]
-    methodName, // Method Name
-    protocol_type = 3, // 3:TBINARY 4:TCOMPACT
-    parse = true, // true:auto-parse false:no-parse "name":name-parse
-    path = "/S3", // gw.line.naver.jp{path}
-    headers = {}, // HTTP headers
+	CHRdata = [], // CHRLINE Thrift [[ftype,fid,value],...]
+	methodName, // Method Name
+	protocol_type = 3, // 3:TBINARY 4:TCOMPACT
+	parse = true, // true:auto-parse false:no-parse "name":name-parse
+	path = "/S3", // gw.line.naver.jp{path}
+	headers = {}, // HTTP headers
 );
 // return Promise<Object(thriftData)>
 // throw error.cause = thriftExceptionData
@@ -90,40 +92,40 @@ await Line.reactToMessage(squareChatMid, messageId, reactionType = 2);
 */
 await Line.findSquareByInvitationTicket(invitationTicket);
 await Line.fetchMyEvents(
-    syncToken = undefined,
-    limit = 100,
-    continuationToken = undefined,
-    subscriptionId,
+	syncToken = undefined,
+	limit = 100,
+	continuationToken = undefined,
+	subscriptionId,
 );
 await Line.fetchSquareChatEvents(
-    squareChatMid,
-    syncToken = undefined,
-    continuationToken = undefined,
-    subscriptionId = 0,
-    limit = 100,
+	squareChatMid,
+	syncToken = undefined,
+	continuationToken = undefined,
+	subscriptionId = 0,
+	limit = 100,
 );
 await Line.sendSquareMessage(
-    squareChatMid,
-    text = "test Message",
-    contentType = 0,
-    contentMetadata = {},
-    relatedMessageId = undefined,
+	squareChatMid,
+	text = "test Message",
+	contentType = 0,
+	contentMetadata = {},
+	relatedMessageId = undefined,
 );
 await Line.getSquare(squareMid);
 await Line.getSquareChat(squareChatMid);
 await Line.getJoinableSquareChats(
-    squareMid,
-    continuationToken = undefined,
-    limit = 100,
+	squareMid,
+	continuationToken = undefined,
+	limit = 100,
 );
 await Line.createSquare(
-    name = "TEST Square",
-    displayName = "Tester",
-    profileImageObsHash =
-        "0h6tJf0hQsaVt3H0eLAsAWDFheczgHd3wTCTx2eApNKSoefHNVGRdwfgxbdgUMLi8MSngnPFMeNmpbLi8MSngnPFMeNmpbLi8MSngnOA",
-    desc = "test with Line-Deno-Client",
-    searchable = true,
-    SquareJoinMethodType = 0,
+	name = "TEST Square",
+	displayName = "Tester",
+	profileImageObsHash =
+		"0h6tJf0hQsaVt3H0eLAsAWDFheczgHd3wTCTx2eApNKSoefHNVGRdwfgxbdgUMLi8MSngnPFMeNmpbLi8MSngnPFMeNmpbLi8MSngnOA",
+	desc = "test with Line-Deno-Client",
+	searchable = true,
+	SquareJoinMethodType = 0,
 );
 /*
     SquareJoinMethodType
@@ -133,10 +135,10 @@ await Line.createSquare(
 */
 await Line.getSquareChatAnnouncements(squareChatMid);
 await Line.updateSquareFeatureSet(
-    updateAttributes = [],
-    squareMid,
-    revision,
-    creatingSecretSquareChat = 0,
+	updateAttributes = [],
+	squareMid,
+	revision,
+	creatingSecretSquareChat = 0,
 );
 /*
     updateAttributes:
@@ -152,21 +154,21 @@ await Line.updateSquareFeatureSet(
         CREATING_LIVE_TALK(10);
 */
 await Line.joinSquare(
-    squareMid,
-    displayName,
-    ableToReceiveMessage = false,
-    passCode = undefined,
+	squareMid,
+	displayName,
+	ableToReceiveMessage = false,
+	passCode = undefined,
 );
 await Line.removeSubscriptions(subscriptionIds = []);
 await Line.unsendSquareMessage(squareChatMid, messageId);
 await Line.createSquareChat(
-    squareChatMid,
-    name,
-    chatImageObsHash,
-    squareChatType = 1,
-    maxMemberCount = 5000,
-    ableToSearchMessage = 1,
-    squareMemberMids = [],
+	squareChatMid,
+	name,
+	chatImageObsHash,
+	squareChatType = 1,
+	maxMemberCount = 5000,
+	ableToSearchMessage = 1,
+	squareMemberMids = [],
 );
 /*
     - SquareChatType:
@@ -180,18 +182,18 @@ await Line.createSquareChat(
         ON(2);
 */
 await Line.getSquareChatMembers(
-    squareChatMid,
-    continuationToken = undefined,
-    limit = 200,
+	squareChatMid,
+	continuationToken = undefined,
+	limit = 200,
 );
 await Line.getSquareFeatureSet(squareMid);
 await Line.getSquareInvitationTicketUrl(mid);
 await Line.updateSquareChatMember(
-    squareMemberMid,
-    squareChatMid,
-    notificationForMessage = true,
-    notificationForNewMember = true,
-    updatedAttrs = [6],
+	squareMemberMid,
+	squareChatMid,
+	notificationForMessage = true,
+	notificationForNewMember = true,
+	updatedAttrs = [6],
 );
 /*
     - SquareChatMemberAttribute:
@@ -200,14 +202,14 @@ await Line.updateSquareChatMember(
         NOTIFICATION_NEW_MEMBER(7);
 */
 await Line.updateSquareMember(
-    updatedAttrs = [],
-    updatedPreferenceAttrs = [],
-    squareMemberMid,
-    squareMid,
-    revision,
-    displayName,
-    membershipState,
-    role,
+	updatedAttrs = [],
+	updatedPreferenceAttrs = [],
+	squareMemberMid,
+	squareMid,
+	revision,
+	displayName,
+	membershipState,
+	role,
 );
 /*
     SquareMemberAttribute:
@@ -229,19 +231,19 @@ await Line.updateSquareMember(
 await Line.kickOutSquareMember(sid, pid);
 await Line.checkSquareJoinCode(squareMid, code);
 await Line.createSquareChatAnnouncement(
-    squareChatMid,
-    messageId,
-    text,
-    senderSquareMemberMid,
-    createdAt,
-    announcementType = 0,
+	squareChatMid,
+	messageId,
+	text,
+	senderSquareMemberMid,
+	createdAt,
+	announcementType = 0,
 );
 await Line.getSquareMember(squareMemberMid);
 await Line.searchSquareChatMembers(
-    squareChatMid,
-    displayName = "",
-    continuationToken,
-    limit = 20,
+	squareChatMid,
+	displayName = "",
+	continuationToken,
+	limit = 20,
 );
 await Line.getSquareEmid(squareMid);
 await Line.getSquareMembersBySquare(squareMid, squareMemberMids = []);
@@ -251,9 +253,9 @@ await Line.sendSquareRequestByName(METHOD_NAME, params); // send SquareRequest
 await Line.getProfile();
 // LiffServise
 await Line.issueLiffView(
-    chatMid,
-    liffId = "1562242036-RW04okm",
-    lang = "ja_JP",
+	chatMid,
+	liffId = "1562242036-RW04okm",
+	lang = "ja_JP",
 );
 // ChannelService
 await Line.approveChannelAndIssueChannelToken(channelId = "1341209850");
@@ -302,13 +304,13 @@ fetchMyEventsのハンドラー:
 ```js
 const eventTarget = Line.getSquareEventTarget();
 eventTarget.addEventListener(
-    "message",
-    (e) => console.log(e.squareMessage.message.text),
+	"message",
+	(e) => console.log(e.squareMessage.message.text),
 );
 eventTarget.onmessage = (e) => console.log(e.squareMessage.message.text);
 
 function stopRoop() {
-    eventTarget.remove.remove = true;
+	eventTarget.remove.remove = true;
 }
 ```
 
@@ -317,25 +319,25 @@ fetchSquareChatEventsのハンドラー:
 ```js
 const eventTarget = Line.getSquareChatEventTarget(mid);
 eventTarget.addEventListener(
-    "message",
-    (e) => {
-        console.log(e.squareMessage.message.text);
-        Line.sendSquareMessage(
-            mid,
-            e.squareMessage.message.text,
-        );
-        // echo BOT
-    },
+	"message",
+	(e) => {
+		console.log(e.squareMessage.message.text);
+		Line.sendSquareMessage(
+			mid,
+			e.squareMessage.message.text,
+		);
+		// echo BOT
+	},
 );
 eventTarget.onmessage = (e) => console.log(e.squareMessage.message.text);
 // message は receiveMessage,sendMessage の受信時にも発火します
 eventTarget.addEventListener(
-    "markAsRead",
-    (e) => console.log("既読:", e),
+	"markAsRead",
+	(e) => console.log("既読:", e),
 );
 
 function stopRoop() {
-    eventTarget.remove.remove = true;
+	eventTarget.remove.remove = true;
 }
 ```
 
@@ -343,10 +345,10 @@ function stopRoop() {
 
 ```js
 const eventNameArray = Line.parser.def.SquareEventPayload.map((e) => {
-    let name = e.name.replace("notified", "")
-        .replace("notification", "");
-    name = name[0].toLowerCase() + name.substring(1);
-    return name;
+	let name = e.name.replace("notified", "")
+		.replace("notification", "");
+	name = name[0].toLowerCase() + name.substring(1);
+	return name;
 });
 ```
 

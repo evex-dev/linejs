@@ -5,6 +5,7 @@
 **LINEJS** is a JavaScript library for LINE Self-Bot.
 
 ## Installation
+
 Support all runtimes (Node.js, Deno, and Bun) and typescript.
 
 ```llvm
@@ -19,27 +20,27 @@ import { Client } from "@evex/linejs";
 const client = new Client();
 
 client.on("pincode", (pincode) => {
-    console.log(`pincode: ${pincode}`);
+	console.log(`pincode: ${pincode}`);
 });
 
 client.on("ready", () => {
-    console.log(`Logged in as ${client.user.name} (${client.user.id})`);
+	console.log(`Logged in as ${client.user.name} (${client.user.id})`);
 });
 
 client.on("message", (message) => {
-    if (message.author.id !== client.user.id) return;
-    
-    if (message.content == '!ping') {
-        message.reply('pong!');
-    }
+	if (message.author.id !== client.user.id) return;
+
+	if (message.content == "!ping") {
+		message.reply("pong!");
+	}
 });
 
 client.login({
-    email: "YOUR_EMAIL",
-    password: "YOUR_PASSWORD",
-    device: "IOSIPAD",
-    // OR
-    // authToken: "YOUR_AUTH_TOKEN",
+	email: "YOUR_EMAIL",
+	password: "YOUR_PASSWORD",
+	device: "IOSIPAD",
+	// OR
+	// authToken: "YOUR_AUTH_TOKEN",
 });
 ```
 
@@ -53,7 +54,7 @@ client.login({
 
 - [ ] Migrate to [packages](./packages) from [archive](./archive)
 - [ ] Create Utils for LINE
-    - [ ] Add [LINE Scheme](./packages/utils/line-scheme/index.ts)
-    - [ ] Create REGEX for LINE URI
-    - [ ] Create OpenChat Search Function and etc...
+  - [ ] Add [LINE Scheme](./packages/utils/line-scheme/index.ts)
+  - [ ] Create REGEX for LINE URI
+  - [ ] Create OpenChat Search Function and etc...
 - [ ] Release to JSR
