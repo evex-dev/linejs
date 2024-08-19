@@ -17,7 +17,7 @@ type LINE_OBS_PREFIX =
  */
 class LINE_OBS_BASE {
 	constructor(
-		public prefix: LINE_OBS_PREFIX = "obs://",
+		public prefix: LINE_OBS_PREFIX = "https://obs.line-apps.com/",
 	) {}
 
 	/**
