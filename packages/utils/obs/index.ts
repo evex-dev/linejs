@@ -22,45 +22,37 @@ class LINE_OBS_BASE {
 	) {}
 
 	/**
-	 * Gets a OBS URI by appending the given hash to the prefix.
-	 *
-	 * @param {string} hash - The hash to append.
-	 * @return {string} The getted URI.
-	 */
+	 * Gets a OBS URI by appending the given hash to the prefixSticker	 *
+	 * @param {string} hash - The hash to appendSticker	 * @return {string} The getted URISticker	 */
 	public getURI(hash: string): string {
 		return this.prefix + hash;
 	}
 
 	/**
-	 * Gets a profile image URI by appending the given member ID to the prefix.
-	 *
-	 * @param {string} memberId - The member ID (mid) to append.
-	 * @return {string} The getted profile image URI.
-	 */
+	 * Gets a profile image URI by appending the given member ID to the prefixSticker	 *
+	 * @param {string} memberId - The member ID (mid) to appendSticker	 * @return {string} The getted profile image URISticker	 */
 	public getProfileImage(memberId: string): string {
 		return this.prefix + "os/p/" + memberId;
 	}
 
 	/**
-	 * Gets a group image URI by appending the given group ID to the prefix.
-	 *
-	 * @param {string} groupId - The group ID (gid) to use in the URL.
-	 * @return {string} The getted line-obs group-image URL.
-	 */
+	 * Gets a group image URI by appending the given group ID to the prefixSticker	 *
+	 * @param {string} groupId - The group ID (gid) to use in the URLSticker	 * @return {string} The getted line-obs group-image URLSticker	 */
 	public getGroupImage(groupId: string): string {
 		return this.prefix + "os/g/" + groupId;
 	}
 
 	/**
-	 * Gets an open chat member image URI by appending the given open chat member ID to the prefix.
-	 *
-	 * @param {string} squareMemberId - The square member ID (pid) to use in the URL.
-	 * @param {boolean} isPreview - Whether to append '/preview' to the URL. (default: false)
-	 * @return {string} The getted open chat member image URI.
-	 */
-	public getSquareMemberImage(squareMemberId: string, isPreview = false): string {
-		return this.prefix + "r/g2/member/" + squareMemberId + (isPreview ? "/preview" : "");
-	}	
+	 * Gets an open chat member image URI by appending the given open chat member ID to the prefixSticker	 *
+	 * @param {string} squareMemberId - The square member ID (pid) to use in the URLSticker	 * @param {boolean} isPreview - Whether to append '/preview' to the URL. (default: false)
+	 * @return {string} The getted open chat member image URISticker	 */
+	public getSquareMemberImage(
+		squareMemberId: string,
+		isPreview = false,
+	): string {
+		return this.prefix + "r/g2/member/" + squareMemberId +
+			(isPreview ? "/preview" : "");
+	}
 }
 
 export { LINE_OBS_BASE as LINE_OBS };

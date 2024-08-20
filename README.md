@@ -2,7 +2,7 @@
 
 <img src="./.github/assets/icon.png" width="150" height="150" alt="LINEJS" />
 
-**LINEJS** is a JavaScript library for LINE Self-Bot.
+**LINEJS** is a JavaScript library for LINE SelfBot.
 
 ## Installation
 
@@ -54,7 +54,7 @@ client.login({
 
 - [ ] Migrate to [packages](./packages) from [archive](./archive)
 - [ ] Create Utils for LINE
-  - [ ] Add [LINE Scheme](./packages/utils/line-scheme/index.ts)
+  - [x] Add [LINE Scheme](./packages/utils/line-scheme/index.ts)
   - [ ] Create REGEX for LINE URI
   - [ ] Create OpenChat Search Function and etc...
-- [ ] Release to JSR
+- [x] Release to JSR
