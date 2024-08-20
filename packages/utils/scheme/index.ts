@@ -100,12 +100,8 @@ class LINE_SCHEME_BASE {
 		return this.prefix + "nv/settings";
 	}
 
-	public getAddFriends(useNv: boolean = false): string {
-		if (useNv) {
-			return this.prefix + "nv/addFriends";
-		} else {
-			return this.prefix + "addFriend";
-		}
+	public getAddFriends(): string {
+	 return this.prefix + "nv/addFriends";
 	}
 
 	public getInvitationEmail(): string {
