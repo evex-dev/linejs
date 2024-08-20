@@ -5,7 +5,7 @@ export type User<T extends UserType = UserType> = Partial<{
 	displayName: string;
 	displayNameOverridden: string;
 	memberId: string;
-    iconObsHash: string;
+	iconObsHash: string;
 	thumbnailObsHash: string;
 	statusMessage: string;
 }>;
