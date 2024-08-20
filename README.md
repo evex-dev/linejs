@@ -66,6 +66,6 @@ client.login({
 - [ ] Migrate to [packages](./packages) from [archive](./archive)
 - [ ] Create Utils for LINE
   - [x] Add [LINE Scheme](./packages/utils/line-scheme/index.ts)
-  - [ ] Create REGEX for LINE URI
+  - [x] Create REGEX for LINE URI
   - [ ] Create OpenChat Search Function and etc...
 - [x] Release to JSR
