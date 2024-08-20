@@ -44,6 +44,16 @@ client.login({
 });
 ```
 
+## Provided Packages
+
+- client - (@evex/linejs) or (@evex/linejs/client)
+    - Client - LINE SelfBot Client
+- utils - (@evex/linejs/utils)
+    - LINE_SCHEME - LINE Scheme utility
+    - LINE_OBS - LINE OBS utility
+    - LINE_REGEX - LINE URI Regex utility
+    - LINE_FUNCTIONS - LINE Function utility (search openchat, ticket to emid, etc...) 
+
 ## Authors
 
 - Owner & Developer [Piloking](https://github.com/piloking)
