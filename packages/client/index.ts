@@ -133,6 +133,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 					this.metadata.authToken =
 						response.headers.get("x-line-next-access") ||
 						this.metadata.authToken;
+
+					this.emit("update:authtoken", this.metadata.authToken);
 				}
 
 				const body = await response.arrayBuffer();
