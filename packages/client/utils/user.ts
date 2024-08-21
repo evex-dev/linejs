@@ -1,6 +1,6 @@
 type UserType = "friend" | "other" | "me";
 
-export type User<T extends UserType = UserType> = Partial<{
+export type User<T extends UserType = UserType> = {
 	type: T;
 	displayName: string;
 	displayNameOverridden: string;
@@ -8,4 +8,4 @@ export type User<T extends UserType = UserType> = Partial<{
 	iconObsHash: string;
 	thumbnailObsHash: string;
 	statusMessage: string;
-}>;
+};

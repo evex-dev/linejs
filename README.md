@@ -19,16 +19,16 @@ import { Client } from "@evex/linejs";
 
 const client = new Client();
 
-client.on("pincode", (pincode) => {
+client.on("pincall", (pincode) => {
 	console.log(`pincode: ${pincode}`);
 });
 
-client.on("ready", () => {
-	console.log(`Logged in as ${client.user.name} (${client.user.id})`);
+client.on("ready", (user) => {
+	console.log(`Logged in as ${user.name} (${user.id})`);
 });
 
 client.on("message", (message) => {
-	if (message.author.id !== client.user.id) return;
+	if (message.author.id !== client.user?.id) return;
 
 	if (message.content == "!ping") {
 		message.reply("pong!");
