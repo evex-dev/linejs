@@ -67,7 +67,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			systemName: details.systemName,
 			systemVersion: details.systemVersion,
 			type:
-				`${device}\t${details.appVersion}\t${details.systemName}\n${details.systemVersion}`,
+				`${device}\t${details.appVersion}\t${details.systemName}\t${details.systemVersion}`,
 			userAgent: `Line/${details.appVersion}`,
 			device,
 		};
@@ -165,23 +165,39 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 				this.metadata.authToken = response.headers.get("x-line-next-access") ||
 					this.metadata.authToken;
 
-				this.emit("update:authtoken", this.metadata.authToken);
-			}
+					this.emit("update:authtoken", this.metadata.authToken);
+				}
 
-			const body = await response.arrayBuffer();
-			const parsedBody = new Uint8Array(body);
-			res = readThrift(parsedBody, Protocol);
-			if (parse) {
-				this.parser.rename_data(res);
-			} else if (typeof parse === "string") {
-				res.value = this.parser.rename_thrift(parse, res.value);
+				const body = await response.arrayBuffer();
+				const parsedBody = new Uint8Array(body);
+				res = readThrift(parsedBody, Protocol);
+				if (parse === true) {
+					this.parser.rename_data(res);
+				} else if (typeof parse === "string") {
+					res.value = this.parser.rename_thrift(parse, res.value);
+				}
+			} catch (error) {
+				throw new InternalError("Request external failed", String(error));
 			}
-		} catch (error) {
-			throw new InternalError("Request external failed", String(error));
+			if (res && res.e) {
+				throw new InternalError("Request internal failed", String(res.e));
+			}
+			return res;
+		} else {
+			try {
+				const Trequest = value;
+				const response = await fetch("https://gw.line.naver.jp" + path, {
+					method: "POST",
+					headers: headers,
+					body: Trequest as LooseType,
+				});
+				const body = await response.arrayBuffer();
+				const parsedBody = new Uint8Array(body);
+				res = parsedBody;
+			} catch (error) {
+				throw new InternalError("Request external failed", String(error));
+			}
+			return res;
 		}
-		if (res && res.e) {
-			throw new InternalError("Request internal failed", String(res.e));
-		}
-		return res;
 	}
 }

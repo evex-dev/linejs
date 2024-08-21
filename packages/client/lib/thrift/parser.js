@@ -1,4 +1,4 @@
-import thriftIdl from "./thrift-ast-parser.js";
+//import thriftIdl from "./thrift-ast-parser.js";
 
 const TYPE = {
 	STOP: 0,
@@ -35,8 +35,9 @@ export default class ThriftRenameParser {
 		if (!input) {
 			return;
 		}
-		this.add_def(input);
+		//this.add_def(input);
 	}
+	/*
 	add_def(input) {
 		const def = thriftIdl.parse(input);
 		const thrift_def = {};
@@ -77,6 +78,7 @@ export default class ThriftRenameParser {
 		});
 		this.def = { ...this.def, ...thrift_def };
 	}
+	*/
 	name2fid(struct_name, name) {
 		const struct = this.def[struct_name];
 		if (struct) {
