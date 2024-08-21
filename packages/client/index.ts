@@ -18,12 +18,7 @@ import {
 import type { System } from "./utils/system.ts";
 import type { User } from "./utils/user.ts";
 import type { Metadata } from "./utils/metadata.ts";
-import {
-	type LooseType,
-	type NestedArray,
-	Protocols,
-} from "./lib/thrift/declares.ts";
-import { Buffer } from "node:buffer";
+import { type NestedArray, Protocols } from "./lib/thrift/declares.ts";
 import { writeThrift } from "./lib/thrift/write.js";
 import { readThrift } from "./lib/thrift/read.js";
 
@@ -90,22 +85,60 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 	private parser: ThriftRenameParser = new ThriftRenameParser();
 
-	async _request(
+	public async getRSAKeyInfo(provider = 0) {
+		return await this.request(
+			[
+				[8, 2, provider],
+			],
+			"getRSAKeyInfo",
+			3,
+			true,
+			"/api/v3/TalkService.do",
+		);
+	}
+
+	public async request(
+		value: NestedArray,
+		name: string,
+		protocol_type: keyof typeof Protocols = 3,
+		parse = true,
+		path = "/S3",
+		headers = {},
+	) {
+		return (await this.rawRequest(
+			path,
+			[
+				[
+					12,
+					1,
+					value,
+				],
+			],
+			name,
+			protocol_type,
+			headers,
+			undefined,
+			parse,
+		)).value;
+	}
+
+	public async rawRequest(
 		path: string,
 		value: NestedArray,
 		name: string,
-		ptype: keyof typeof Protocols,
-		add_headers = {},
+		protocol_type: keyof typeof Protocols,
+		append_headers = {},
+		override_method = "POST",
 		parse = true,
 	) {
 		if (!this.system || !this.metadata) {
 			throw new InternalError(
-				"Not logged in",
+				"Not setup yet",
 				"Please call 'login()' first",
 			);
 		}
 
-		const Protocol = Protocols[ptype];
+		const Protocol = Protocols[protocol_type];
 		let headers = {
 			"Host": "gw.line.naver.jp",
 			"accept": "application/x-thrift",
@@ -119,54 +152,36 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			"accept-encoding": "gzip",
 		};
 
-		headers = { ...headers, ...add_headers };
+		headers = { ...headers, ...append_headers };
 		let res;
-		if (Protocol !== Buffer) {
-			try {
-				const Trequest = writeThrift(value, name, Protocol);
-				const response = await fetch("https://gw.line.naver.jp" + path, {
-					method: "POST",
-					headers: headers,
-					body: Trequest,
-				});
-				if (response.headers.get("x-line-next-access")) {
-					this.metadata.authToken =
-						response.headers.get("x-line-next-access") ||
-						this.metadata.authToken;
+		try {
+			const Trequest = writeThrift(value, name, Protocol);
+			const response = await fetch("https://gw.line.naver.jp" + path, {
+				method: override_method,
+				headers: headers,
+				body: Trequest,
+			});
+			if (response.headers.get("x-line-next-access")) {
+				this.metadata.authToken = response.headers.get("x-line-next-access") ||
+					this.metadata.authToken;
 
-					this.emit("update:authtoken", this.metadata.authToken);
-				}
+				this.emit("update:authtoken", this.metadata.authToken);
+			}
 
-				const body = await response.arrayBuffer();
-				const parsedBody = new Uint8Array(body);
-				res = readThrift(parsedBody, Protocol);
-				if (parse === true) {
-					this.parser.rename_data(res);
-				} else if (typeof parse === "string") {
-					res.value = this.parser.rename_thrift(parse, res.value);
-				}
-			} catch (error) {
-				throw new InternalError("Request external failed", String(error));
+			const body = await response.arrayBuffer();
+			const parsedBody = new Uint8Array(body);
+			res = readThrift(parsedBody, Protocol);
+			if (parse) {
+				this.parser.rename_data(res);
+			} else if (typeof parse === "string") {
+				res.value = this.parser.rename_thrift(parse, res.value);
 			}
-			if (res && res.e) {
-				throw new InternalError("Request internal failed", String(res.e));
-			}
-			return res;
-		} else {
-			try {
-				const Trequest = value;
-				const response = await fetch("https://gw.line.naver.jp" + path, {
-					method: "POST",
-					headers: headers,
-					body: Trequest as LooseType,
-				});
-				const body = await response.arrayBuffer();
-				const parsedBody = new Uint8Array(body);
-				res = parsedBody;
-			} catch (error) {
-				throw new InternalError("Request external failed", String(error));
-			}
-			return res;
+		} catch (error) {
+			throw new InternalError("Request external failed", String(error));
 		}
+		if (res && res.e) {
+			throw new InternalError("Request internal failed", String(res.e));
+		}
+		return res;
 	}
 }
