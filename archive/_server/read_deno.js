@@ -26,7 +26,7 @@ function readValue(input, ftype) {
 	} else if (ftype == Thrift.Type.I32) {
 		return input.readI32();
 	} else if (ftype == Thrift.Type.I64) {
-		return input.readI64();
+		return parseInt(input.readI64().buffer.toString("hex"), 16);
 	} else if (ftype == Thrift.Type.STRING) {
 		return input.readString();
 	} else if (ftype == Thrift.Type.LIST) {
@@ -72,24 +72,7 @@ function readThrift(data, Protocol = thrift.TCompactProtocol) {
 	proto.readMessageEnd();
 	return { value: tdata[0], e: tdata[1], _info: msg_info };
 }
-function object2json(data) {
-	const keys = Object.keys(data);
-	let returnJson = {};
-	if (data.forEach) {
-		returnJson = [];
-	}
-	keys.forEach((e) => {
-		if ((data[e]) === undefined) {
-		} else if (data[e].buffer) {
-			returnJson[e] = parseInt(data[e].buffer.toString("hex"), 16);
-		} else if (typeof (data[e]) == "object") {
-			returnJson[e] = object2json(data[e]);
-		} else {
-			returnJson[e] = data[e];
-		}
-	});
-	return returnJson;
-}
+
 export default function read(data, Protocol = thrift.TCompactProtocol) {
-	return object2json(readThrift(data, Protocol));
+	return readThrift(data, Protocol);
 }
