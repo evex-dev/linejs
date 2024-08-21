@@ -72,7 +72,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			systemName: details.systemName,
 			systemVersion: details.systemVersion,
 			type:
-				`${device}\t${details.appVersion}\t${details.systemName}\n${details.systemVersion}`,
+				`${device}\t${details.appVersion}\t${details.systemName}\t${details.systemVersion}`,
 			userAgent: `Line/${details.appVersion}`,
 			device,
 		};
@@ -144,10 +144,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 					res.value = this.parser.rename_thrift(parse, res.value);
 				}
 			} catch (error) {
-				throw new InternalError("Request external failed", String(error));
+				throw new InternalError("Request external failed ", "(" + String(error.stack) + ")");
 			}
 			if (res && res.e) {
-				throw new InternalError("Request internal failed", String(res.e));
+				throw new InternalError("Request internal failed", JSON.stringify(res.e));
 			}
 			return res;
 		} else {
