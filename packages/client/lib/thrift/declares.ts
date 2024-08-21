@@ -1,7 +1,7 @@
 import { TBinaryProtocol, TCompactProtocol } from "npm:thrift@0.20.0";
 import { Buffer } from "node:buffer";
 
-TBinaryProtocol.genHeader = (name) => {
+TBinaryProtocol.genHeader = (name: string) => {
 	return Buffer.from([
 		0x80,
 		1,
@@ -18,7 +18,8 @@ TBinaryProtocol.genHeader = (name) => {
 		0,
 	]);
 };
-TCompactProtocol.genHeader = (name) => {
+
+TCompactProtocol.genHeader = (name: string) => {
 	return Buffer.from([
 		0x82,
 		0x21,

@@ -38,7 +38,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	public login(options: LoginOptions) {
 		if (options.authToken) {
 			if (!AUTH_TOKEN_REGEX.test(options.authToken)) {
-				throw new InternalError("Invalid auth token", `'${options.authToken}'`);
+				throw new InternalError(
+					"Invalid auth token",
+					`'${options.authToken}'`,
+				);
 			}
 		} else if (options.email && options.password) {
 			if (!EMAIL_REGEX.test(options.email)) {
@@ -46,7 +49,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			}
 
 			if (!PASSWORD_REGEX.test(options.password)) {
-				throw new InternalError("Invalid password", `'${options.password}'`);
+				throw new InternalError(
+					"Invalid password",
+					`'${options.password}'`,
+				);
 			}
 		} else {
 			throw new InternalError(
@@ -165,39 +171,23 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 				this.metadata.authToken = response.headers.get("x-line-next-access") ||
 					this.metadata.authToken;
 
-					this.emit("update:authtoken", this.metadata.authToken);
-				}
+				this.emit("update:authtoken", this.metadata.authToken);
+			}
 
-				const body = await response.arrayBuffer();
-				const parsedBody = new Uint8Array(body);
-				res = readThrift(parsedBody, Protocol);
-				if (parse === true) {
-					this.parser.rename_data(res);
-				} else if (typeof parse === "string") {
-					res.value = this.parser.rename_thrift(parse, res.value);
-				}
-			} catch (error) {
-				throw new InternalError("Request external failed", String(error));
+			const body = await response.arrayBuffer();
+			const parsedBody = new Uint8Array(body);
+			res = readThrift(parsedBody, Protocol);
+			if (parse === true) {
+				this.parser.rename_data(res);
+			} else if (typeof parse === "string") {
+				res.value = this.parser.rename_thrift(parse, res.value);
 			}
-			if (res && res.e) {
-				throw new InternalError("Request internal failed", String(res.e));
-			}
-			return res;
-		} else {
-			try {
-				const Trequest = value;
-				const response = await fetch("https://gw.line.naver.jp" + path, {
-					method: "POST",
-					headers: headers,
-					body: Trequest as LooseType,
-				});
-				const body = await response.arrayBuffer();
-				const parsedBody = new Uint8Array(body);
-				res = parsedBody;
-			} catch (error) {
-				throw new InternalError("Request external failed", String(error));
-			}
-			return res;
+		} catch (error) {
+			throw new InternalError("Request external failed", String(error));
 		}
+		if (res && res.e) {
+			throw new InternalError("Request internal failed", String(res.e));
+		}
+		return res;
 	}
 }
