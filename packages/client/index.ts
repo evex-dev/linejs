@@ -98,7 +98,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			],
 			"getRSAKeyInfo",
 			3,
-			true,
+			"RSAKey",
 			"/api/v3/TalkService.do",
 		);
 	}
@@ -107,7 +107,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		value: NestedArray,
 		name: string,
 		protocol_type: keyof typeof Protocols = 3,
-		parse = true,
+		parse: boolean | string = true,
 		path = "/S3",
 		headers = {},
 	) {
@@ -135,7 +135,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		protocol_type: keyof typeof Protocols,
 		append_headers = {},
 		override_method = "POST",
-		parse = true,
+		parse: boolean | string = true,
 	) {
 		if (!this.system || !this.metadata) {
 			throw new InternalError(
