@@ -378,8 +378,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 			if (nextToken) {
 				this.metadata = {
-					authToken: nextToken
-				}
+					authToken: nextToken,
+				};
 
 				this.emit("update:authtoken", this.metadata.authToken);
 			}
