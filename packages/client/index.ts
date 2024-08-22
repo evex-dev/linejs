@@ -26,17 +26,23 @@ import {
 } from "./lib/thrift/declares.ts";
 import { writeThrift } from "./lib/thrift/write.js";
 import { readThrift } from "./lib/thrift/read.js";
-import type { RSAKeyInfo } from "./lib/rsa/rsaKey.ts";
+import type { RSAKeyInfo } from "./lib/rsa/rsa-key.ts";
 import type { LooseType } from "./utils/common.ts";
-import { RSAPincodeVerifier } from "./lib/rsa/rsaVerify.ts";
+import { RSAPincodeVerifier } from "./lib/rsa/rsa-verify.ts";
 import type { Profile } from "./utils/profile.ts";
 import * as fs from "node:fs/promises";
+import { MemoryStorage } from "./lib/storage/memory-storage.ts";
+import type { BaseStorage } from "./lib/storage/index.ts";
 
 /**
  * @description LINE SelfBot Client
+ *
+ * @param {BaseStorage} storge Storage
  */
 export class Client extends TypedEventEmitter<ClientEvents> {
-	constructor() {
+	constructor(
+		public storge: BaseStorage = new MemoryStorage(),
+	) {
 		super();
 		this.parser.def = Thrift;
 	}

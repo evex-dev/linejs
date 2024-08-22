@@ -58,6 +58,9 @@ await client.login({
   - LINE_REGEX - LINE URI Regex utility
   - LINE_FUNCTIONS - LINE Function utility (search openchat, ticket to emid,
     etc...)
+- storage - (@evex/linejs/storage)
+  - BaseStorage - LINE Client Base Storage
+  - MemoryStorage - LINE Client Memory Storage
 
 ## Authors
 

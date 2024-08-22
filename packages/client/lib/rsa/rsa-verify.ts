@@ -1,5 +1,5 @@
 import { Key } from "npm:node-bignumber@1.2.2";
-import type { RSAKeyInfo } from "./rsaKey.ts";
+import type { RSAKeyInfo } from "./rsa-key.ts";
 
 export class RSAPincodeVerifier {
 	constructor(private message: string) {}

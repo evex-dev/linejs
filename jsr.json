@@ -5,6 +5,7 @@
 	"exports": {
 		".": "./packages/client/index.ts",
 		"./client": "./packages/client/index.ts",
-		"./utils": "./packages/utils/index.ts"
+		"./utils": "./packages/utils/index.ts",
+		"./storage": "./packages/client/lib/storage/index.ts"
 	}
 }
