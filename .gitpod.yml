@@ -1,0 +1,7 @@
+tasks:
+  - name:  Setup
+    init:  echo "LINEJS GITPOD"
+
+vscode:
+  extensions:
+    - denoland.vscode-deno
