@@ -38,8 +38,8 @@ type SearchSquareResult = {
 /**
  * Search square by query.
  *
- * @param query {string} The query of search square.
- * @param limit {number} The limit of the result. (0-200)
+ * @param {string} query The query of search square.
+ * @param {number} limit The limit of the result. (0-200)
  * @returns The result of the search.
  */
 export async function searchSquare(
@@ -112,9 +112,9 @@ type getSquareResult = {
 /**
  * Gets a Square by its ticket or emid.
  *
- * @param ticketOrEmid {string} The ticket or emid of the Square.
- * @param isTicket {string} Whether the given parameter is a ticket or emid.
- * @param append_headers {object} The headers to append. (Please includes 'x-line-channeltoken')
+ * @param {string} ticketOrEmid The ticket or emid of the Square.
+ * @param {string} isTicket Whether the given parameter is a ticket or emid.
+ * @param {object} append_headers The headers to append. (Please includes 'x-line-channeltoken')
  * @returns The result of the get.
  */
 export async function getSquare(

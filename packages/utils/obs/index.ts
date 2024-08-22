@@ -14,7 +14,7 @@ type LINE_OBS_PREFIX =
 
 /**
  * @description LINE Obs Utility
- * @param prefix {LINE_OBS_PREFIX} obs prefix (e.x. 'https://obs.line-apps.com/')
+ * @param {LINE_OBS_PREFIX} prefix obs prefix (e.x. 'https://obs.line-apps.com/')
  */
 class LINE_OBS_BASE {
 	constructor(

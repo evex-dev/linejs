@@ -57,7 +57,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Login to LINE server with auth token or email/password
 	 * 
-	 * @param options {LoginOptions} Options for login
+	 * @param {LoginOptions} options Options for login
 	 * @throws {InternalError} If login options are invalid
 	 * @throws {InternalError} If email is invalid
 	 * @throws {InternalError} If password is invalid
@@ -154,7 +154,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * Registers a certificate path to be used for login.
 	 *
-	 * @param path {string}  - The path to the certificate.
+	 * @param {string} path  - The path to the certificate.
 	 */
 	public registerCertPath(path: string): void {
 		this.certPath = path;
