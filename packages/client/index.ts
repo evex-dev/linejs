@@ -130,7 +130,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	private parser: ThriftRenameParser = new ThriftRenameParser();
 	private certPath: string | undefined;
 
-	public registerCertPath(path: string) {
+	public registerCertPath(path: string): void {
 		this.certPath = path;
 	}
 
