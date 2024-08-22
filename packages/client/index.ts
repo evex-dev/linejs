@@ -243,7 +243,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			this.system?.device,
 			null,
 			e2eeData,
-			cert,
+			cert || null,
 			"loginZ",
 		);
 
@@ -274,7 +274,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 				this.system.device,
 				verifier.result.verifier,
 				e2eeData,
-				undefined,
+				null,
 				"loginZ",
 			);
 			if (loginReponse[2]) {
@@ -290,7 +290,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		deviceName: Device,
 		verifier: LooseType,
 		secret: LooseType,
-		cert: LooseType,
+		cert: string | null,
 		calledName = "loginV2",
 	) {
 		let loginType = 2;
