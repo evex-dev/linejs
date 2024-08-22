@@ -33,6 +33,12 @@ import type { Profile } from "./utils/profile.ts";
 import * as fs from "node:fs/promises";
 import { MemoryStorage } from "./lib/storage/memory-storage.ts";
 import type { BaseStorage } from "./lib/storage/base-storage.ts";
+import thriftJson from "../../archive/_server/thriftJson.js";
+
+interface ClientOptions {
+	storage?: BaseStorage;
+	endpoint?: string;
+}
 
 /**
  * @description LINE SelfBot Client
@@ -41,11 +47,22 @@ import type { BaseStorage } from "./lib/storage/base-storage.ts";
  */
 export class Client extends TypedEventEmitter<ClientEvents> {
 	constructor(
-		public storge: BaseStorage = new MemoryStorage(),
+		options: ClientOptions = {},
 	) {
 		super();
 		this.parser.def = Thrift;
+		const requiredOptions = {
+			storage: new MemoryStorage(),
+			endpoint: "gw.line.naver.jp",
+			...options,
+		};
+
+		this.storage = requiredOptions.storage;
+		this.endpoint = requiredOptions.endpoint;
 	}
+
+	public storage: BaseStorage;
+	public endpoint: string;
 
 	/**
 	 * @description THe information of user
@@ -255,7 +272,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		} else {
 			this.emit("pincall", response.pinCode);
 			const headers = {
-				"Host": "gw.line.naver.jp",
+				"Host": this.endpoint,
 				"accept": "application/x-thrift",
 				"user-agent": this.system.userAgent,
 				"x-line-application": this.system.type,
@@ -265,7 +282,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 				"x-lhm": "GET",
 				"accept-encoding": "gzip",
 			};
-			const verifier = await fetch("https://gw.line.naver.jp/Q", {
+			const verifier = await fetch(`https://${this.endpoint}/Q`, {
 				headers: headers,
 			}).then((res) => res.json());
 			const loginReponse = await this.requestLoginV2(
@@ -443,7 +460,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 		const Protocol = Protocols[protocolType];
 		let headers = {
-			"Host": "gw.line.naver.jp",
+			"Host": this.endpoint,
 			"accept": "application/x-thrift",
 			"user-agent": this.system.userAgent,
 			"x-line-application": this.system.type,
@@ -463,7 +480,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		let res;
 		try {
 			const Trequest = writeThrift(value, methodName, Protocol);
-			const response = await fetch("https://gw.line.naver.jp" + path, {
+			const response = await fetch(this.endpoint + path, {
 				method: overrideMethod,
 				headers,
 				body: Trequest,

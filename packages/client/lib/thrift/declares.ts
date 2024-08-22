@@ -45,8 +45,8 @@ export type NestedArray = Array<
 	| string
 	| null
 	| undefined
-	| Map<any, any>
-	| Array<any>
+	| Map<LooseType, LooseType>
+	| Array<LooseType>
 >;
 
 export interface ParsedThrift {
