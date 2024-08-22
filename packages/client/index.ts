@@ -994,12 +994,12 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	public async updateSquareMember(
 		updatedAttrs = [],
 		updatedPreferenceAttrs = [],
-		squareMemberMid = undefined,
-		squareMid = undefined,
-		revision = undefined,
-		displayName = undefined,
-		membershipState = undefined,
-		role = undefined,
+		squareMemberMid,
+		squareMid,
+		revision,
+		displayName,
+		membershipState,
+		role,
 	) {
 		/*
     SquareMemberAttribute:
@@ -1259,7 +1259,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		}
 		return remove;
 	}
-	getSquareEventTarget() {
+	public getSquareEventTarget() {
 		if (this.squareEventTarget && (!this.squareEventTarget.remove.remove)) {
 			return this.squareEventTarget;
 		}
@@ -1316,7 +1316,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		return remove;
 	}
 	squareChatEventTargets = {};
-	getSquareChatEventTarget(mid) {
+	public getSquareChatEventTarget(mid) {
 		if (this.squareChatEventTargets[mid]) {
 			return this.squareChatEventTargets[mid];
 		}
