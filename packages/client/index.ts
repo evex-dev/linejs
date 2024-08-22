@@ -202,7 +202,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		}
 
 		const rsaKey = await this.getRSAKeyInfo();
-
+		const { keynm } = rsaKey;
 		const message = String.fromCharCode(rsaKey.sessionKey.length) +
 			rsaKey.sessionKey +
 			String.fromCharCode(email.length) +
@@ -223,28 +223,28 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		const cert = await this.getCert() || undefined;
 
 		const response = await this.requestLoginV2(
-			rsaKey,
+			keynm,
 			encryptedMessage,
 			this.system?.device,
-			null,
+			undefined,
 			e2eeData,
 			cert,
 			"loginZ",
 		);
 
-		if (response[1]) {
-			if (response[2]) {
-				this.emit("update:cert", response[2]);
+		if (response.authToken) {
+			if (response.certificate) {
+				this.emit("update:cert", response.certificate);
 			}
-			return response[1];
+			return response.authToken;
 		} else {
-			this.emit("pincall", response[4]);
+			this.emit("pincall", response.pinCode);
 			const headers = {
 				"Host": "gw.line.naver.jp",
 				"accept": "application/x-thrift",
 				"user-agent": this.system.userAgent,
 				"x-line-application": this.system.type,
-				"x-line-access": response[3],
+				"x-line-access": response.verifier,
 				"x-lal": "ja_JP",
 				"x-lpv": "1",
 				"x-lhm": "GET",
@@ -254,7 +254,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 				headers: headers,
 			}).then((res) => res.json());
 			const loginReponse = await this.requestLoginV2(
-				rsaKey,
+				keynm,
 				encryptedMessage,
 				this.system.device,
 				verifier.result.verifier,
@@ -262,20 +262,20 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 				undefined,
 				"loginZ",
 			);
-			if (loginReponse[2]) {
-				this.emit("update:cert", loginReponse[2]);
+			if (loginReponse.certificate) {
+				this.emit("update:cert", loginReponse.certificate);
 			}
-			return loginReponse[1];
+			return loginReponse.authToken;
 		}
 	}
 
 	private async requestLoginV2(
-		rsaKey: RSAKeyInfo,
-		encryptedMessage: LooseType,
+		keynm: string,
+		encryptedMessage: string,
 		deviceName: Device,
-		verifier: LooseType,
-		secret: LooseType,
-		cert: LooseType,
+		verifier: string | undefined,
+		secret: string | undefined,
+		cert: string | undefined,
 		calledName = "loginV2",
 	) {
 		let loginType = 2;
@@ -291,7 +291,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 					[
 						[8, 1, loginType],
 						[8, 2, 1],
-						[11, 3, rsaKey.keynm],
+						[11, 3, keynm],
 						[11, 4, encryptedMessage],
 						[2, 5, 0],
 						[11, 6, ""],
@@ -306,7 +306,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			],
 			calledName,
 			3,
-			true,
+			"LoginResult",
 			"/api/v3p/rs",
 		);
 	}
@@ -319,21 +319,15 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 * @throws {FetchError} If failed to fetch RSA key info.
 	 */
 	public async getRSAKeyInfo(provider = 0): Promise<RSAKeyInfo> {
-		const RSAKeyInfo = await this.request(
+		return await this.request(
 			[
 				[8, 2, provider],
 			],
 			"getRSAKeyInfo",
 			3,
-			true,
+			"RSAKey",
 			"/api/v3/TalkService.do",
 		);
-		return {
-			keynm: RSAKeyInfo[1],
-			nvalue: RSAKeyInfo[2],
-			evalue: RSAKeyInfo[3],
-			sessionKey: RSAKeyInfo[4],
-		};
 	}
 
 	/**
@@ -387,7 +381,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		value: NestedArray,
 		method_name: string,
 		protocol_type: ProtocolKey = 3,
-		parse = true,
+		parse: boolean | string = true,
 		path = "/S3",
 		headers = {},
 	): Promise<LooseType> {

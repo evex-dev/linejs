@@ -38,7 +38,9 @@ export const Protocols = {
 
 export type ProtocolKey = keyof typeof Protocols;
 
-export type NestedArray = Array<NestedArray | number | string | null>;
+export type NestedArray = Array<
+	NestedArray | number | string | null | undefined
+>;
 
 export interface ParsedThrift {
 	value: LooseType;
