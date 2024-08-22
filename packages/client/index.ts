@@ -217,7 +217,11 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		}
 
 		const rsaKey = await this.getRSAKeyInfo();
+<<<<<<< HEAD
 		const { keynm } = rsaKey;
+=======
+
+>>>>>>> df5121d12f54b457070c1366f82359a9d5885824
 		const message = String.fromCharCode(rsaKey.sessionKey.length) +
 			rsaKey.sessionKey +
 			String.fromCharCode(email.length) +
