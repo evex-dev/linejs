@@ -1074,7 +1074,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async kickOutSquareMember(squareMid: string, squareMemberMid: string) {
+	public async kickOutSquareMember(squareMid: string, squareMemberMid: string, allowRejoin = true) {
 		const UPDATE_PREF_ATTRS: number[] = [];
 		const UPDATE_ATTRS = [5];
 		const MEMBERSHIP_STATE = 5;
@@ -1087,7 +1087,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			squareMemberRevision,
 			undefined,
 			MEMBERSHIP_STATE,
-			undefined,
+			allowRejoin ? undefined : 6,
 			UPDATE_ATTRS,
 			UPDATE_PREF_ATTRS,
 		);
