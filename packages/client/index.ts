@@ -155,15 +155,32 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	}
 
 	private parser: ThriftRenameParser = new ThriftRenameParser();
-	private certPath: string | undefined;
+	private cert: string | null = null;
 
 	/**
 	 * @description Registers a certificate path to be used for login.
 	 *
 	 * @param {string} path  - The path to the certificate.
 	 */
-	public registerCertPath(path: string): void {
-		this.certPath = path;
+	public async registerCertPath(path: string): Promise<void> {
+		let cert;
+
+		try {
+			cert = await fs.readFile(path, "utf8");
+		} catch (_) {
+			cert = null;
+		}
+
+		this.registerCert(cert);
+	}
+
+	/**
+	 * @description Registers a certificate to be used for login.
+	 *
+	 * @param {string | null} cert - The certificate to register. If null, the certificate will be cleared.
+	 */
+	public registerCert(cert: string | null): void {
+		this.cert = cert;
 	}
 
 	/**
@@ -171,13 +188,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 *
 	 * @return {Promise<string | null>} The certificate, or null if it does not exist or an error occurred.
 	 */
-	public async getCert(): Promise<string | null> {
-		if (this.certPath) {
-			try {
-				return await fs.readFile(this.certPath, "utf8");
-			} catch (_) { /* Do Nothing*/ }
-		}
-		return null;
+	public getCert(): string | null {
+		return this.cert;
 	}
 
 	/**
@@ -198,7 +210,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		enableE2EE: boolean = false,
 	): Promise<string> {
 		if (!this.system) {
-			throw new InternalError("Not setup yet", "Please call 'login()' first");
+			throw new InternalError(
+				"Not setup yet",
+				"Please call 'login()' first",
+			);
 		}
 
 		const rsaKey = await this.getRSAKeyInfo();
@@ -478,10 +493,16 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 				res.value = this.parser.rename_thrift(parse, res.value);
 			}
 		} catch (error) {
-			throw new InternalError("Request external failed", JSON.stringify(error));
+			throw new InternalError(
+				"Request external failed",
+				JSON.stringify(error),
+			);
 		}
 		if (res && res.e) {
-			throw new InternalError("Request internal failed", JSON.stringify(res.e));
+			throw new InternalError(
+				"Request internal failed",
+				JSON.stringify(res.e),
+			);
 		}
 		return res;
 	}
