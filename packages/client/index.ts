@@ -332,9 +332,9 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 	/**
 	 * @description Request to LINE API.
-	 * 
+	 *
 	 * @param {NestedArray} value - The value to request.
-	 * @param {string} name - The name of the request.
+	 * @param {string} method_name - The method name of the request.
 	 * @param {ProtocolKey} [protocol_type=3] - The protocol type of the request.
 	 * @param {boolean | string} [parse=true] - Whether to parse the response.
 	 * @param {string} [path="/S3"] - The path of the request.
@@ -343,7 +343,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 */
 	public async request(
 		value: NestedArray,
-		name: string,
+		method_name: string,
 		protocol_type: ProtocolKey = 3,
 		parse: boolean | string = true,
 		path = "/S3",
@@ -358,7 +358,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 					value,
 				],
 			],
-			name,
+			method_name,
 			protocol_type,
 			headers,
 			undefined,
@@ -368,9 +368,9 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 	/**
 	 * @description Request to LINE API directly.
-	 * 
+	 *
 	 * @param {NestedArray} value - The value to request.
-	 * @param {string} name - The name of the request.
+	 * @param {string} method_name - The method name of the request.
 	 * @param {ProtocolKey} [protocol_type=3] - The protocol type of the request.
 	 * @param {boolean | string} [parse=true] - Whether to parse the response.
 	 * @param {string} [path="/S3"] - The path of the request.
@@ -379,7 +379,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 */
 	public async direct_request(
 		value: NestedArray,
-		name: string,
+		method_name: string,
 		protocol_type: ProtocolKey = 3,
 		parse = true,
 		path = "/S3",
@@ -388,7 +388,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		return (await this.rawRequest(
 			path,
 			value,
-			name,
+			method_name,
 			protocol_type,
 			headers,
 			undefined,
@@ -398,22 +398,22 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 	/**
 	 * @description Request to LINE API by raw.
-	 * 
+	 *
 	 * @param {string} path - The path of the request.
 	 * @param {NestedArray} value - The value to request.
-	 * @param {string} name - The name of the request.
+	 * @param {string} method_name - The method name of the request.
 	 * @param {ProtocolKey} protocol_type - The protocol type of the request.
 	 * @param {object} [append_headers={}] - The headers to append to the request.
 	 * @param {string} [override_method="POST"] - The method of the request.
 	 * @param {boolean | string} [parse=true] - Whether to parse the response.
 	 * @returns {Promise<ParsedThrift>} The response.
-	 * 
+	 *
 	 * @throws {InternalError} If the request fails.
 	 */
 	public async rawRequest(
 		path: string,
 		value: NestedArray,
-		name: string,
+		method_name: string,
 		protocol_type: ProtocolKey,
 		append_headers = {},
 		override_method = "POST",
@@ -447,7 +447,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 		let res;
 		try {
-			const Trequest = writeThrift(value, name, Protocol);
+			const Trequest = writeThrift(value, method_name, Protocol);
 			const response = await fetch("https://gw.line.naver.jp" + path, {
 				method: override_method,
 				headers,
@@ -472,27 +472,27 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 				res.value = this.parser.rename_thrift(parse, res.value);
 			}
 		} catch (error) {
-			throw new InternalError("Request external failed", String(error));
+			throw new InternalError("Request external failed", JSON.stringify(error));
 		}
 		if (res && res.e) {
-			throw new InternalError("Request internal failed", String(res.e));
+			throw new InternalError("Request internal failed", JSON.stringify(res.e));
 		}
 		return res;
 	}
 
 	private LINEService_API_PATH = "/S4";
-	private LINEService_P_TYPE: ProtocolKey = 4;
+	private LINEService_REQ_TYPE: ProtocolKey = 4;
 
 	/**
 	 * @description Get the profile of the current user.
-	 * 
+	 *
 	 * @returns {Promise<Profile>} The profile of the user.
 	 */
 	public async getProfile(): Promise<Profile> {
 		return await this.request(
 			[],
 			"getProfile",
-			this.LINEService_P_TYPE,
+			this.LINEService_REQ_TYPE,
 			"Profile",
 			this.LINEService_API_PATH,
 		);
