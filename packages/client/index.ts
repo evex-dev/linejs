@@ -20,6 +20,7 @@ import type { User } from "./utils/user.ts";
 import type { Metadata } from "./utils/metadata.ts";
 import {
 	type NestedArray,
+	ParsedThrift,
 	type ProtocolKey,
 	Protocols,
 } from "./lib/thrift/declares.ts";
@@ -134,7 +135,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		this.certPath = path;
 	}
 
-	public async getCert() {
+	public async getCert(): Promise<string | null> {
 		let cert = "";
 
 		if (this.certPath) {
@@ -319,7 +320,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		parse = true,
 		path = "/S3",
 		headers = {},
-	) {
+	): Promise<LooseType> {
 		return (await this.rawRequest(
 			path,
 			value,
@@ -339,7 +340,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		append_headers = {},
 		override_method = "POST",
 		parse: boolean | string = true,
-	) {
+	): Promise<ParsedThrift> {
 		if (!this.system || !this.metadata) {
 			throw new InternalError(
 				"Not setup yet",

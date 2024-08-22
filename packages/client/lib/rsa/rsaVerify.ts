@@ -1,4 +1,4 @@
-import { Key } from "npm:node-bignumber";
+import { Key } from "npm:node-bignumber@1.2.2";
 import type { RSAKeyInfo } from "./rsaKey.ts";
 
 class RSAPincodeVerifier {

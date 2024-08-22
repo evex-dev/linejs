@@ -6,7 +6,10 @@
       "jsr:@std/internal@^1.0.1": "jsr:@std/internal@1.0.1",
       "jsr:@std/testing@^1.0.0": "jsr:@std/testing@1.0.0",
       "npm:@types/node": "npm:@types/node@18.16.19",
+      "npm:crypto-js": "npm:crypto-js@4.2.0",
+      "npm:curve25519-js": "npm:curve25519-js@0.0.4",
       "npm:node-bignumber": "npm:node-bignumber@1.2.2",
+      "npm:node-bignumber@1.2.2": "npm:node-bignumber@1.2.2",
       "npm:thrift@0.20.0": "npm:thrift@0.20.0_ws@5.2.4"
     },
     "jsr": {
@@ -37,6 +40,14 @@
       },
       "browser-or-node@1.3.0": {
         "integrity": "sha512-0F2z/VSnLbmEeBcUrSuDH5l0HxTXdQQzLjkmBR4cYfvg1zJrKSlmIZFqyFR8oX0NrwPhy3c3HQ6i3OxMbew4Tg==",
+        "dependencies": {}
+      },
+      "crypto-js@4.2.0": {
+        "integrity": "sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==",
+        "dependencies": {}
+      },
+      "curve25519-js@0.0.4": {
+        "integrity": "sha512-axn2UMEnkhyDUPWOwVKBMVIzSQy2ejH2xRGy1wq81dqRwApXfIzfbE3hIX0ZRFBIihf/KDqK158DLwESu4AK1w==",
         "dependencies": {}
       },
       "isomorphic-ws@4.0.1_ws@5.2.4": {
