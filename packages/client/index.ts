@@ -41,11 +41,32 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		this.parser.def = Thrift;
 	}
 
+	/**
+	 * @description THe information of user
+	 */
 	public user: User<"me"> | undefined;
+	/**
+	 * @description The information of system
+	 */
 	public system: System | undefined;
+	/**
+	 * @description The information of metadata
+	 */
 	public metadata: Metadata | undefined;
 
-	public async login(options: LoginOptions) {
+	/**
+	 * @description Login to LINE server with auth token or email/password
+	 * 
+	 * @param options {LoginOptions} Options for login
+	 * @throws {InternalError} If login options are invalid
+	 * @throws {InternalError} If email is invalid
+	 * @throws {InternalError} If password is invalid
+	 * @throws {InternalError} If device is unsupported
+	 * @throws {InternalError} If auth token is invalid
+	 * @emits ready
+	 * @emits update:authtoken
+	 */
+	public async login(options: LoginOptions): Promise<void> {
 		if (options.authToken) {
 			if (!AUTH_TOKEN_REGEX.test(options.authToken)) {
 				throw new InternalError(
@@ -130,6 +151,11 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	private parser: ThriftRenameParser = new ThriftRenameParser();
 	private certPath: string | undefined;
 
+	/**
+	 * Registers a certificate path to be used for login.
+	 *
+	 * @param path {string}  - The path to the certificate.
+	 */
 	public registerCertPath(path: string): void {
 		this.certPath = path;
 	}
