@@ -14,6 +14,10 @@ bunx --bun jsr add @evex/linejs
 deno add @evex/linejs
 ```
 
+### Sample
+
+Documentation is coming soon.
+
 ```ts
 import { Client } from "@evex/linejs";
 
@@ -63,9 +67,10 @@ await client.login({
 
 ## ToDo
 
-- [ ] Migrate to [packages](./packages) from [archive](./archive)
-- [ ] Create Utils for LINE
+- [x] Migrate Client to [packages](./packages) from [archive](./archive)
+- [ ] Migrate Method to [packages](./packages) from [archive](./archive)
+- [x] Create Utils for LINE
   - [x] Add [LINE Scheme](./packages/utils/line-scheme/index.ts)
   - [x] Create REGEX for LINE URI
-  - [ ] Create OpenChat Search Function and etc...
+  - [x] Create OpenChat Search Function and etc...
 - [x] Release to JSR
