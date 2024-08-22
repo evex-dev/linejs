@@ -3,7 +3,7 @@
  * Utility for LINE FUNCTIONS
  */
 
-import { ALL_STRING } from "../common/types.ts";
+import type { ALL_STRING } from "../common/types.ts";
 
 interface Square {
 	emid: string;
