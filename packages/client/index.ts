@@ -119,7 +119,6 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			displayNameOverridden: profile.displayName,
 			mid: profile.mid,
 			iconObsHash: profile.pictureStatus,
-			thumbnailObsHash: profile.picturePath.slice(1),
 			statusMessage: profile.statusMessage,
 			statusMessageContentMetadata: profile.statusMessageContentMetadata,
 			profile,
@@ -341,7 +340,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		override_method = "POST",
 		parse: boolean | string = true,
 	): Promise<ParsedThrift> {
-		if (!this.system || !this.metadata) {
+		if (!this.system) {
 			throw new InternalError(
 				"Not setup yet",
 				"Please call 'login()' first",
@@ -354,26 +353,33 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			"accept": "application/x-thrift",
 			"user-agent": this.system.userAgent,
 			"x-line-application": this.system.type,
-			"x-line-access": this.metadata.authToken,
 			"content-type": "application/x-thrift",
 			"x-lal": "ja_JP",
 			"x-lpv": "1",
 			"x-lhm": "POST",
 			"accept-encoding": "gzip",
-		};
+		} as Record<string, string>;
 
 		headers = { ...headers, ...append_headers };
+
+		if (this.metadata && this.metadata.authToken) {
+			headers["x-line-access"] = this.metadata.authToken;
+		}
+
 		let res;
 		try {
 			const Trequest = writeThrift(value, name, Protocol);
 			const response = await fetch("https://gw.line.naver.jp" + path, {
 				method: override_method,
-				headers: headers,
+				headers,
 				body: Trequest,
 			});
-			if (response.headers.get("x-line-next-access")) {
-				this.metadata.authToken = response.headers.get("x-line-next-access") ||
-					this.metadata.authToken;
+			const nextToken = response.headers.get("x-line-next-access");
+
+			if (nextToken) {
+				this.metadata = {
+					authToken: nextToken
+				}
 
 				this.emit("update:authtoken", this.metadata.authToken);
 			}

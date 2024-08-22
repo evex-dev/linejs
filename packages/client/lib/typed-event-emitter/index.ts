@@ -10,14 +10,14 @@ export class TypedEventEmitter<
 
 	public listeners: Map<E, T[E][]> = new Map();
 
-	public on(event: E, listener: T[E]): void {
+	public on<E2 extends E>(event: E2, listener: T[E2]): void {
 		if (!this.listeners.has(event)) {
 			this.listeners.set(event, []);
 		}
 		this.listeners.get(event)?.push(listener);
 	}
 
-	public off(event: E, listener: T[E]): void {
+	public off<E2 extends E>(event: E2, listener: T[E2]): void {
 		if (this.listeners.has(event)) {
 			this.listeners.get(event)?.splice(
 				this.listeners.get(event)?.indexOf(listener) ?? 0,
@@ -26,7 +26,7 @@ export class TypedEventEmitter<
 		}
 	}
 
-	public emit(event: E, ...args: Parameters<T[E]>): void {
+	public emit<E2 extends E>(event: E2, ...args: Parameters<T[E2]>): void {
 		if (this.listeners.has(event)) {
 			this.listeners.get(event)?.forEach((listener) => listener(...args));
 		}

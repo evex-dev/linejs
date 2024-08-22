@@ -9,7 +9,6 @@ export type User<T extends UserType = UserType> =
 		displayNameOverridden: string;
 		mid: string;
 		iconObsHash: string;
-		thumbnailObsHash: string;
 		statusMessage: string;
 		statusMessageContentMetadata: Profile["statusMessageContentMetadata"];
 	}
