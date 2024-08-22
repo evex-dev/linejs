@@ -1,6 +1,4 @@
 /**
-import { MemoryStorage } from './memory-storage';
-import { FileStorage } from './file-storage';
  * @module
  * The Storage for LINE Client
  */
