@@ -1,4 +1,4 @@
-import { BaseStorage, type Storage } from "./index.ts";
+import { BaseStorage, type Storage } from "./base-storage.ts";
 import * as fs from "node:fs";
 
 /**

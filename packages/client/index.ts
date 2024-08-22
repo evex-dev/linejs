@@ -32,7 +32,7 @@ import { RSAPincodeVerifier } from "./lib/rsa/rsa-verify.ts";
 import type { Profile } from "./utils/profile.ts";
 import * as fs from "node:fs/promises";
 import { MemoryStorage } from "./lib/storage/memory-storage.ts";
-import type { BaseStorage } from "./lib/storage/index.ts";
+import type { BaseStorage } from "./lib/storage/base-storage.ts";
 
 /**
  * @description LINE SelfBot Client

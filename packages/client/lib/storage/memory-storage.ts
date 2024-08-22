@@ -1,4 +1,4 @@
-import { BaseStorage, type Storage } from "./index.ts";
+import { BaseStorage, type Storage } from "./base-storage.ts";
 
 /**
  * @description Mmemory Storage for LINE Client
