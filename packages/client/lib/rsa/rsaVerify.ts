@@ -1,7 +1,7 @@
 import { Key } from "npm:node-bignumber@1.2.2";
 import type { RSAKeyInfo } from "./rsaKey.ts";
 
-class RSAPincodeVerifier {
+export class RSAPincodeVerifier {
 	constructor(private message: string) {}
 
 	getRSACrypto(json: RSAKeyInfo) {
@@ -13,5 +13,3 @@ class RSAPincodeVerifier {
 		return { keyname, credentials, message };
 	}
 }
-
-export default RSAPincodeVerifier;

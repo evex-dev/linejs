@@ -1,6 +1,6 @@
 import { TBinaryProtocol, TCompactProtocol } from "npm:thrift@0.20.0";
 import { Buffer } from "node:buffer";
-import { LooseType } from "../../utils/common.ts";
+import type { LooseType } from "../../utils/common.ts";
 
 TBinaryProtocol.genHeader = (name: string) => {
 	return Buffer.from([
@@ -41,7 +41,7 @@ export type ProtocolKey = keyof typeof Protocols;
 export type NestedArray = Array<NestedArray | number>;
 
 export interface ParsedThrift {
-    value: LooseType;
-    e: LooseType;
-    _info: LooseType;
+	value: LooseType;
+	e: LooseType;
+	_info: LooseType;
 }

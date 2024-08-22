@@ -20,7 +20,7 @@ import type { User } from "./utils/user.ts";
 import type { Metadata } from "./utils/metadata.ts";
 import {
 	type NestedArray,
-	ParsedThrift,
+	type ParsedThrift,
 	type ProtocolKey,
 	Protocols,
 } from "./lib/thrift/declares.ts";
@@ -28,7 +28,7 @@ import { writeThrift } from "./lib/thrift/write.js";
 import { readThrift } from "./lib/thrift/read.js";
 import type { RSAKeyInfo } from "./lib/rsa/rsaKey.ts";
 import type { LooseType } from "./utils/common.ts";
-import RSAPincodeVerifier from "./lib/rsa/rsaVerify.ts";
+import { RSAPincodeVerifier } from "./lib/rsa/rsaVerify.ts";
 import type { Profile } from "./utils/profile.ts";
 import * as fs from "node:fs/promises";
 
@@ -125,7 +125,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			profile,
 		};
 
-		this.emit("ready", this.user)
+		this.emit("ready", this.user);
 	}
 
 	private parser: ThriftRenameParser = new ThriftRenameParser();
