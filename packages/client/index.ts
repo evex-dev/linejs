@@ -155,15 +155,32 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	}
 
 	private parser: ThriftRenameParser = new ThriftRenameParser();
-	private certPath: string | undefined;
+	private cert: string | null = null;
 
 	/**
 	 * @description Registers a certificate path to be used for login.
 	 *
 	 * @param {string} path  - The path to the certificate.
 	 */
-	public registerCertPath(path: string): void {
-		this.certPath = path;
+	public async registerCertPath(path: string): Promise<void> {
+		let cert;
+
+		try {
+			cert = await fs.readFile(path, "utf8");
+		} catch (_) {
+			cert = null;
+		}
+
+		this.registerCert(cert);
+	}
+
+	/**
+	 * @description Registers a certificate to be used for login.
+	 *
+	 * @param {string | null} cert - The certificate to register. If null, the certificate will be cleared.
+	 */
+	public registerCert(cert: string | null): void {
+		this.cert = cert;
 	}
 
 	/**
@@ -171,13 +188,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 *
 	 * @return {Promise<string | null>} The certificate, or null if it does not exist or an error occurred.
 	 */
-	public async getCert(): Promise<string | null> {
-		if (this.certPath) {
-			try {
-				return await fs.readFile(this.certPath, "utf8");
-			} catch (_) { /* Do Nothing*/ }
-		}
-		return null;
+	public getCert(): string | null {
+		return this.cert;
 	}
 
 	/**
@@ -198,7 +210,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		enableE2EE: boolean = false,
 	): Promise<string> {
 		if (!this.system) {
-			throw new InternalError("Not setup yet", "Please call 'login()' first");
+			throw new InternalError(
+				"Not setup yet",
+				"Please call 'login()' first",
+			);
 		}
 
 		const rsaKey = await this.getRSAKeyInfo();
@@ -228,7 +243,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			this.system?.device,
 			undefined,
 			e2eeData,
-			cert,
+			cert || undefined,
 			"loginZ",
 		);
 
@@ -334,8 +349,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 * @description Request to LINE API.
 	 *
 	 * @param {NestedArray} value - The value to request.
-	 * @param {string} method_name - The method name of the request.
-	 * @param {ProtocolKey} [protocol_type=3] - The protocol type of the request.
+	 * @param {string} methodName - The method name of the request.
+	 * @param {ProtocolKey} [protocolType=3] - The protocol type of the request.
 	 * @param {boolean | string} [parse=true] - Whether to parse the response.
 	 * @param {string} [path="/S3"] - The path of the request.
 	 * @param {object} [headers={}] - The headers of the request.
@@ -343,8 +358,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 */
 	public async request(
 		value: NestedArray,
-		method_name: string,
-		protocol_type: ProtocolKey = 3,
+		methodName: string,
+		protocolType: ProtocolKey = 3,
 		parse: boolean | string = true,
 		path = "/S3",
 		headers = {},
@@ -358,8 +373,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 					value,
 				],
 			],
-			method_name,
-			protocol_type,
+			methodName,
+			protocolType,
 			headers,
 			undefined,
 			parse,
@@ -370,8 +385,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 * @description Request to LINE API directly.
 	 *
 	 * @param {NestedArray} value - The value to request.
-	 * @param {string} method_name - The method name of the request.
-	 * @param {ProtocolKey} [protocol_type=3] - The protocol type of the request.
+	 * @param {string} methodName - The method name of the request.
+	 * @param {ProtocolKey} [protocolType=3] - The protocol type of the request.
 	 * @param {boolean | string} [parse=true] - Whether to parse the response.
 	 * @param {string} [path="/S3"] - The path of the request.
 	 * @param {object} [headers={}] - The headers of the request.
@@ -379,8 +394,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 */
 	public async direct_request(
 		value: NestedArray,
-		method_name: string,
-		protocol_type: ProtocolKey = 3,
+		methodName: string,
+		protocolType: ProtocolKey = 3,
 		parse: boolean | string = true,
 		path = "/S3",
 		headers = {},
@@ -388,8 +403,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		return (await this.rawRequest(
 			path,
 			value,
-			method_name,
-			protocol_type,
+			methodName,
+			protocolType,
 			headers,
 			undefined,
 			parse,
@@ -401,10 +416,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 *
 	 * @param {string} path - The path of the request.
 	 * @param {NestedArray} value - The value to request.
-	 * @param {string} method_name - The method name of the request.
-	 * @param {ProtocolKey} protocol_type - The protocol type of the request.
-	 * @param {object} [append_headers={}] - The headers to append to the request.
-	 * @param {string} [override_method="POST"] - The method of the request.
+	 * @param {string} methodName - The method name of the request.
+	 * @param {ProtocolKey} protocolType - The protocol type of the request.
+	 * @param {object} [appendHeaders={}] - The headers to append to the request.
+	 * @param {string} [overrideMethod="POST"] - The method of the request.
 	 * @param {boolean | string} [parse=true] - Whether to parse the response.
 	 * @returns {Promise<ParsedThrift>} The response.
 	 *
@@ -413,10 +428,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	public async rawRequest(
 		path: string,
 		value: NestedArray,
-		method_name: string,
-		protocol_type: ProtocolKey,
-		append_headers = {},
-		override_method = "POST",
+		methodName: string,
+		protocolType: ProtocolKey,
+		appendHeaders = {},
+		overrideMethod = "POST",
 		parse: boolean | string = true,
 	): Promise<ParsedThrift> {
 		if (!this.system) {
@@ -426,7 +441,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			);
 		}
 
-		const Protocol = Protocols[protocol_type];
+		const Protocol = Protocols[protocolType];
 		let headers = {
 			"Host": "gw.line.naver.jp",
 			"accept": "application/x-thrift",
@@ -439,7 +454,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			"accept-encoding": "gzip",
 		} as Record<string, string>;
 
-		headers = { ...headers, ...append_headers };
+		headers = { ...headers, ...appendHeaders };
 
 		if (this.metadata && this.metadata.authToken) {
 			headers["x-line-access"] = this.metadata.authToken;
@@ -447,9 +462,9 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 		let res;
 		try {
-			const Trequest = writeThrift(value, method_name, Protocol);
+			const Trequest = writeThrift(value, methodName, Protocol);
 			const response = await fetch("https://gw.line.naver.jp" + path, {
-				method: override_method,
+				method: overrideMethod,
 				headers,
 				body: Trequest,
 			});
@@ -472,10 +487,16 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 				res.value = this.parser.rename_thrift(parse, res.value);
 			}
 		} catch (error) {
-			throw new InternalError("Request external failed", JSON.stringify(error));
+			throw new InternalError(
+				"Request external failed",
+				JSON.stringify(error),
+			);
 		}
 		if (res && res.e) {
-			throw new InternalError("Request internal failed", JSON.stringify(res.e));
+			throw new InternalError(
+				"Request internal failed",
+				JSON.stringify(res.e),
+			);
 		}
 		return res;
 	}

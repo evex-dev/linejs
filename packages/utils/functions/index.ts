@@ -114,13 +114,13 @@ type getSquareResult = {
  *
  * @param {string} ticketOrEmid The ticket or emid of the Square.
  * @param {string} isTicket Whether the given parameter is a ticket or emid.
- * @param {object} append_headers The headers to append. (Please includes 'x-line-channeltoken')
+ * @param {object} appendHeaders The headers to append. (Please includes 'x-line-channeltoken')
  * @returns {Promise<getSquareResult>} The result of the get.
  */
 export async function getSquare(
 	ticketOrEmid: string,
 	isTicket: boolean,
-	append_headers: Record<"x-line-channeltoken" | ALL_STRING, string>,
+	appendHeaders: Record<"x-line-channeltoken" | ALL_STRING, string>,
 ): Promise<getSquareResult> {
 	const url = isTicket
 		? `https://square-api.line.me/smw/api/v2p/sm/square?ticket=${ticketOrEmid}`
@@ -140,7 +140,7 @@ export async function getSquare(
 				"sec-fetch-site": "same-origin",
 				"x-lal": "ja-JP_JP",
 				"x-web-client-version": "4.3.3",
-				...append_headers,
+				...appendHeaders,
 			},
 			"referrerPolicy": "strict-origin-when-cross-origin",
 			"body": null,

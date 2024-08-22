@@ -902,39 +902,39 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the oa main page
 	 *
-	 * @param {string} oaId_withoutAT oa id without AT
+	 * @param {string} oaIdWithoutAT oa id without AT
 	 * @returns {string} The URL for the oa main page
 	 */
-	public getOaMain(oaId_withoutAT: string): string {
-		return this.prefix + `home/public/main?id=${oaId_withoutAT}`;
+	public getOaMain(oaIdWithoutAT: string): string {
+		return this.prefix + `home/public/main?id=${oaIdWithoutAT}`;
 	}
 
 	/**
 	 * Returns the URL for the oa profile page
 	 *
-	 * @param {string} oaId_withoutAT oa id without AT
+	 * @param {string} oaIdWithoutAT oa id without AT
 	 * @returns {string} The URL for the oa profile page
 	 */
-	public getOaProfile(oaId_withoutAT: string): string {
-		return this.prefix + `home/public/profile?id=${oaId_withoutAT}`;
+	public getOaProfile(oaIdWithoutAT: string): string {
+		return this.prefix + `home/public/profile?id=${oaIdWithoutAT}`;
 	}
 
 	/**
 	 * Returns the URL for the oa post page
 	 *
-	 * @param {string} oaId_withoutAT oa id without AT
+	 * @param {string} oaIdWithoutAT oa id without AT
 	 * @param {string} postId post id
 	 * @returns {string} The URL for the oa post page
 	 */
-	public getOaPost(oaId_withoutAT: string, postId: string): string {
+	public getOaPost(oaIdWithoutAT: string, postId: string): string {
 		return this.prefix +
-			`home/public/post?id=${oaId_withoutAT}&postId=${postId}`;
+			`home/public/post?id=${oaIdWithoutAT}&postId=${postId}`;
 	}
 
 	/**
 	 * Returns the URL for the group camera page
 	 *
-	 * @param {string} oaId_withoutAT oa id without AT
+	 * @param {string} oaIdWithoutAT oa id without AT
 	 * @returns {string} The URL for the group camera page
 	 */
 	public getGroupCreate(): string {
