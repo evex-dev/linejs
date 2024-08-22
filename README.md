@@ -24,11 +24,11 @@ client.on("pincall", (pincode) => {
 });
 
 client.on("ready", (user) => {
-	console.log(`Logged in as ${user.name} (${user.id})`);
+	console.log(`Logged in as ${user.displayName} (${user.mid})`);
 });
 
 client.on("message", (message) => {
-	if (message.author.id !== client.user?.id) return;
+	if (message.author.mid !== client.user?.mid) return;
 
 	if (message.content == "!ping") {
 		message.reply("pong!");

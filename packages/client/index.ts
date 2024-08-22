@@ -28,6 +28,7 @@ import { readThrift } from "./lib/thrift/read.js";
 import type { RSAKeyInfo } from "./lib/rsa/rsaKey.ts";
 import type { LooseType } from "./utils/common.ts";
 import RSAPincodeVerifier from "./lib/rsa/rsaVerify.ts";
+import type { Profile } from "./utils/profile.ts";
 import * as fs from "node:fs/promises";
 
 /**
@@ -108,6 +109,22 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		};
 
 		this.emit("update:authtoken", authToken);
+
+		const profile = await this.getProfile();
+
+		this.user = {
+			type: "me",
+			displayName: profile.displayName,
+			displayNameOverridden: profile.displayName,
+			mid: profile.mid,
+			iconObsHash: profile.pictureStatus,
+			thumbnailObsHash: profile.picturePath.slice(1),
+			statusMessage: profile.statusMessage,
+			statusMessageContentMetadata: profile.statusMessageContentMetadata,
+			profile,
+		};
+
+		this.emit("ready", this.user)
 	}
 
 	private parser: ThriftRenameParser = new ThriftRenameParser();
@@ -375,5 +392,18 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			throw new InternalError("Request internal failed", String(res.e));
 		}
 		return res;
+	}
+
+	private LINEService_API_PATH = "/S4";
+	private LINEService_P_TYPE: ProtocolKey = 4;
+
+	async getProfile(): Promise<Profile> {
+		return await this.request(
+			[],
+			"getProfile",
+			this.LINEService_P_TYPE,
+			"Profile",
+			this.LINEService_API_PATH,
+		);
 	}
 }
