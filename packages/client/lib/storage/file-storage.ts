@@ -1,6 +1,9 @@
 import { BaseStorage, type Storage } from "./index.ts";
 import * as fs from "node:fs";
 
+/**
+ * @description File Storage for LINE Client
+ */
 export class FileStorage extends BaseStorage {
 	constructor(private path: string, extendData?: string) {
 		super();

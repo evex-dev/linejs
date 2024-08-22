@@ -1,5 +1,8 @@
 import { BaseStorage, type Storage } from "./index.ts";
 
+/**
+ * @description Mmemory Storage for LINE Client
+ */
 export class MemoryStorage extends BaseStorage {
 	constructor(extendData?: Record<Storage["Key"], Storage["Value"]>) {
 		super();
