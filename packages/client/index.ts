@@ -56,7 +56,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 	/**
 	 * @description Login to LINE server with auth token or email/password
-	 * 
+	 *
 	 * @param {LoginOptions} options Options for login
 	 * @throws {InternalError} If login options are invalid
 	 * @throws {InternalError} If email is invalid
@@ -152,7 +152,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	private certPath: string | undefined;
 
 	/**
-	 * Registers a certificate path to be used for login.
+	 * @description Registers a certificate path to be used for login.
 	 *
 	 * @param {string} path  - The path to the certificate.
 	 */
@@ -160,22 +160,32 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		this.certPath = path;
 	}
 
+	/**
+	 * @description Reads the certificate from the registered path, if it exists.
+	 *
+	 * @return {Promise<string | null>} The certificate, or null if it does not exist or an error occurred.
+	 */
 	public async getCert(): Promise<string | null> {
-		let cert = "";
-
 		if (this.certPath) {
 			try {
-				cert = await fs.readFile(this.certPath, "utf8");
-			} catch (_) {
-				return null;
-			}
-		} else {
-			return null;
+				return await fs.readFile(this.certPath, "utf8");
+			} catch (_) { /* Do Nothing*/ }
 		}
-
-		return cert;
+		return null;
 	}
 
+	/**
+	 * @description Login to LINE server with email and password.
+	 *
+	 * @param {string} email The email to login with.
+	 * @param {string} password The password to login with.
+	 * @param {boolean} [enableE2EE=false] Enable E2EE or not.
+	 * @returns {Promise<string>} The auth token.
+	 * @throws {InternalError} If the system is not setup yet.
+	 * @throws {InternalError} If the login type is not supported.
+	 * @emits pincall
+	 * @emits update:cert
+	 */
 	public async requestEmailLogin(
 		email: string,
 		password: string,
@@ -295,6 +305,13 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
+	/**
+	 * @description Get RSA key info for login.
+	 *
+	 * @param {number} [provider=0] Provider to get RSA key info from.
+	 * @returns {Promise<RSAKeyInfo>} RSA key info.
+	 * @throws {FetchError} If failed to fetch RSA key info.
+	 */
 	public async getRSAKeyInfo(provider = 0): Promise<RSAKeyInfo> {
 		const RSAKeyInfo = await this.request(
 			[
@@ -313,6 +330,17 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		};
 	}
 
+	/**
+	 * @description Request to LINE API.
+	 * 
+	 * @param {NestedArray} value - The value to request.
+	 * @param {string} name - The name of the request.
+	 * @param {ProtocolKey} [protocol_type=3] - The protocol type of the request.
+	 * @param {boolean | string} [parse=true] - Whether to parse the response.
+	 * @param {string} [path="/S3"] - The path of the request.
+	 * @param {object} [headers={}] - The headers of the request.
+	 * @returns {Promise<LooseType>} The response.
+	 */
 	public async request(
 		value: NestedArray,
 		name: string,
@@ -338,6 +366,17 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		)).value;
 	}
 
+	/**
+	 * @description Request to LINE API directly.
+	 * 
+	 * @param {NestedArray} value - The value to request.
+	 * @param {string} name - The name of the request.
+	 * @param {ProtocolKey} [protocol_type=3] - The protocol type of the request.
+	 * @param {boolean | string} [parse=true] - Whether to parse the response.
+	 * @param {string} [path="/S3"] - The path of the request.
+	 * @param {object} [headers={}] - The headers of the request.
+	 * @returns {Promise<LooseType>} The response.
+	 */
 	public async direct_request(
 		value: NestedArray,
 		name: string,
@@ -357,6 +396,20 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		)).value;
 	}
 
+	/**
+	 * @description Request to LINE API by raw.
+	 * 
+	 * @param {string} path - The path of the request.
+	 * @param {NestedArray} value - The value to request.
+	 * @param {string} name - The name of the request.
+	 * @param {ProtocolKey} protocol_type - The protocol type of the request.
+	 * @param {object} [append_headers={}] - The headers to append to the request.
+	 * @param {string} [override_method="POST"] - The method of the request.
+	 * @param {boolean | string} [parse=true] - Whether to parse the response.
+	 * @returns {Promise<ParsedThrift>} The response.
+	 * 
+	 * @throws {InternalError} If the request fails.
+	 */
 	public async rawRequest(
 		path: string,
 		value: NestedArray,
@@ -430,7 +483,12 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	private LINEService_API_PATH = "/S4";
 	private LINEService_P_TYPE: ProtocolKey = 4;
 
-	async getProfile(): Promise<Profile> {
+	/**
+	 * @description Get the profile of the current user.
+	 * 
+	 * @returns {Promise<Profile>} The profile of the user.
+	 */
+	public async getProfile(): Promise<Profile> {
 		return await this.request(
 			[],
 			"getProfile",

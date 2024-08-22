@@ -32,7 +32,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns a profile URL based on the provided prefix and whether to use NaverSticker
 	 *
-	 * @param {boolean} useNv - Whether to use Nv. (default: true)
+	 * @param {boolean} [useNv=true] - Whether to use Nv.
 	 * @return {string} The profile URLSticker
 	 */
 	public getProfile(useNv: boolean = true): string {
@@ -515,7 +515,7 @@ class LINE_SCHEME_BASE {
 	 * Returns the URL for the liff app page
 	 *
 	 * @param {string} id liffId
-	 * @param {boolean} useLiff use 'liff.line.me' url. (default: false)
+	 * @param {boolean} [useLiff=false] use 'liff.line.me' url.
 	 * @param param {Record<string, string>} url query
 	 * @returns {string} The URL for the liff app page
 	 */
@@ -535,7 +535,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the official account liffSticker
 	 *
-	 * @param {boolean} useLiff use 'liff.line.me' url. (default: false)
+	 * @param {boolean} [useLiff=false] use 'liff.line.me' url.
 	 * @param param {Record<string, string>} url query
 	 * @returns {string} The URL for the official account liffSticker
 	 */
@@ -549,7 +549,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the vote liffSticker
 	 *
-	 * @param {boolean} useLiff use 'liff.line.me' url. (default: false)
+	 * @param {boolean} [useLiff=false] use 'liff.line.me' url.
 	 * @param param {Record<string, string>} url query
 	 * @returns {string} The URL for the vote liffSticker
 	 */
@@ -563,7 +563,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the spam filter liffSticker
 	 *
-	 * @param {boolean} useLiff use 'liff.line.me' url. (default: false)
+	 * @param {boolean} [useLiff=false] use 'liff.line.me' url.
 	 * @param param {Record<string, string>} url query
 	 * @returns {string} The URL for the spam filter liffSticker
 	 */
@@ -577,7 +577,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the auto reply liffSticker
 	 *
-	 * @param {boolean} useLiff use 'liff.line.me' url. (default: false)
+	 * @param {boolean} [useLiff=false] use 'liff.line.me' url.
 	 * @param param {Record<string, string>} url query
 	 * @returns {string} The URL for the auto reply liffSticker
 	 */
@@ -591,7 +591,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the translate liffSticker
 	 *
-	 * @param {boolean} useLiff use 'liff.line.me' url. (default: false)
+	 * @param {boolean} [useLiff=false] use 'liff.line.me' url.
 	 * @param param {Record<string, string>} url query
 	 * @returns {string} The URL for the translate liffSticker
 	 */
@@ -605,7 +605,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the gift liffSticker
 	 *
-	 * @param {boolean} useLiff use 'liff.line.me' url. (default: false)
+	 * @param {boolean} [useLiff=false] use 'liff.line.me' url.
 	 * @param param {Record<string, string>} url query
 	 * @returns {string} The URL for the gift liffSticker
 	 */
@@ -619,7 +619,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the square liffSticker
 	 *
-	 * @param {boolean} useLiff use 'liff.line.me' url. (default: false)
+	 * @param {boolean} [useLiff=false] use 'liff.line.me' url.
 	 * @param param {Record<string, string>} url query
 	 * @returns {string} The URL for the square liffSticker
 	 */
@@ -633,7 +633,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the point club liffSticker
 	 *
-	 * @param {boolean} useLiff use 'liff.line.me' url. (default: false)
+	 * @param {boolean} [useLiff=false] use 'liff.line.me' url.
 	 * @param param {Record<string, string>} url query
 	 * @returns {string} The URL for the point club liffSticker
 	 */
@@ -647,7 +647,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the schedule liffSticker
 	 *
-	 * @param {boolean} useLiff use 'liff.line.me' url. (default: false)
+	 * @param {boolean} [useLiff=false] use 'liff.line.me' url.
 	 * @param param {Record<string, string>} url query
 	 * @returns {string} The URL for the schedule liffSticker
 	 */
@@ -661,7 +661,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the coupon liffSticker
 	 *
-	 * @param {boolean} useLiff use 'liff.line.me' url. (default: false)
+	 * @param {boolean} [useLiff=false] use 'liff.line.me' url.
 	 * @param param {Record<string, string>} url query
 	 * @returns {string} The URL for the coupon liffSticker
 	 */
@@ -675,7 +675,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the sticker shop liffSticker
 	 *
-	 * @param {boolean} useLiff use 'liff.line.me' url. (default: false)
+	 * @param {boolean} [useLiff=false] use 'liff.line.me' url.
 	 * @param param {Record<string, string>} url query
 	 * @returns {string} The URL for the sticker shop liffSticker
 	 */
@@ -689,7 +689,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the dress-up shop liffSticker
 	 *
-	 * @param {boolean} useLiff use 'liff.line.me' url. (default: false)
+	 * @param {boolean} [useLiff=false] use 'liff.line.me' url.
 	 * @param param {Record<string, string>} url query
 	 * @returns {string} The URL for the dress-up shop liffSticker
 	 */
@@ -762,7 +762,7 @@ class LINE_SCHEME_BASE {
 	 * Returns the URL for the square report page
 	 *
 	 * @param {string} ticketOrEmid ticket or emid (by isTicket)
-	 * @param {boolean} isTicket is ticket. (default: true)
+	 * @param {boolean} [isTicket=true] is ticket.
 	 * @returns {string} The URL for the square report page
 	 */
 	public getSquareReport(
@@ -780,7 +780,7 @@ class LINE_SCHEME_BASE {
 	 * Returns the URL for the square join page
 	 *
 	 * @param {string} ticketOrEmid ticket or emid (by isTicket)
-	 * @param {boolean} isTicket is ticket. (default: true)
+	 * @param {boolean} [isTicket=true] is ticket.
 	 * @returns {string} The URL for the square join page
 	 */
 	public getSquareJoin(ticketOrEmid: string, isTicket: boolean = true): string {
@@ -857,7 +857,7 @@ class LINE_SCHEME_BASE {
 	 * Returns the URL for the text share page
 	 *
 	 * @param {string} text share text
-	 * @param {boolean} useShare use share. (default: true)
+	 * @param {boolean} [useShare=true] use share.
 	 * @returns {string} The URL for the text share page
 	 */
 	public getTextShare(text: string, useShare: boolean = true): string {
