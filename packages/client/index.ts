@@ -33,7 +33,6 @@ import type { Profile } from "./utils/profile.ts";
 import * as fs from "node:fs/promises";
 import { MemoryStorage } from "./lib/storage/memory-storage.ts";
 import type { BaseStorage } from "./lib/storage/base-storage.ts";
-import thriftJson from "../../archive/_server/thriftJson.js";
 
 interface ClientOptions {
 	storage?: BaseStorage;
@@ -1020,34 +1019,34 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	}
 
 	public async updateSquareMember(
-		updatedAttrs: Array<number> = [],
-		updatedPreferenceAttrs: Array<number> = [],
 		squareMemberMid: string,
 		squareMid: string,
 		revision: number,
-		displayName?: string | undefined,
-		membershipState?: number | undefined,
-		role?: number | undefined,
+		displayName: string | undefined,
+		membershipState: number | undefined,
+		role: number | undefined,
+		updatedAttrs: number[] = [],
+		updatedPreferenceAttrs: number[] = [],
 	) {
 		/*
-		SquareMemberAttribute:
-			DISPLAY_NAME(1),
-			PROFILE_IMAGE(2),
-			ABLE_TO_RECEIVE_MESSAGE(3),
-			MEMBERSHIP_STATE(5),
-			ROLE(6),
-			PREFERENCE(7);
+			SquareMemberAttribute:
+				DISPLAY_NAME(1),
+				PROFILE_IMAGE(2),
+				ABLE_TO_RECEIVE_MESSAGE(3),
+				MEMBERSHIP_STATE(5),
+				ROLE(6),
+				PREFERENCE(7);
 
-		SquareMembershipState:
-			JOIN_REQUESTED(1),
-			JOINED(2),
-			REJECTED(3),
-			LEFT(4),
-			KICK_OUT(5),
-			BANNED(6),
-			DELETED(7);
-	*/
-		const squareMember: Array<any> = [[11, 1, squareMemberMid], [
+			SquareMembershipState:
+				JOIN_REQUESTED(1),
+				JOINED(2),
+				REJECTED(3),
+				LEFT(4),
+				KICK_OUT(5),
+				BANNED(6),
+				DELETED(7);
+		*/
+		const squareMember: NestedArray = [[11, 1, squareMemberMid], [
 			11,
 			2,
 			squareMid,
@@ -1076,20 +1075,21 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	}
 
 	public async kickOutSquareMember(squareMid: string, squareMemberMid: string) {
-		const UPDATE_PREF_ATTRS = [];
+		const UPDATE_PREF_ATTRS: number[] = [];
 		const UPDATE_ATTRS = [5];
 		const MEMBERSHIP_STATE = 5;
-		const getSquareMemberResp = this.getSquareMember(squareMemberMid);
+		const getSquareMemberResp = await this.getSquareMember(squareMemberMid);
 		const squareMember = getSquareMemberResp[1];
 		const squareMemberRevision = squareMember[9];
 		return await this.updateSquareMember(
-			UPDATE_ATTRS,
-			UPDATE_PREF_ATTRS,
 			squareMemberMid,
 			squareMid,
 			squareMemberRevision,
 			undefined,
 			MEMBERSHIP_STATE,
+			undefined,
+			UPDATE_ATTRS,
+			UPDATE_PREF_ATTRS,
 		);
 	}
 
