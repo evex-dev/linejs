@@ -537,7 +537,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async getJoinedSquares(limit = 50, continuationToken) {
+	public async getJoinedSquares(limit = 50, continuationToken: string) {
 		return await this.request(
 			[[11, 2, continuationToken], [8, 3, limit]],
 			"getJoinedSquares",
@@ -547,7 +547,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async inviteIntoSquareChat(inviteeMids, squareChatMid) {
+	public async inviteIntoSquareChat(
+		inviteeMids: string[],
+		squareChatMid: string,
+	) {
 		return await this.request(
 			[[15, 1, [11, inviteeMids]], [11, 2, squareChatMid]],
 			"inviteIntoSquareChat",
@@ -557,7 +560,11 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async inviteToSquare(squareMid, invitees, squareChatMid) {
+	public async inviteToSquare(
+		squareMid: string,
+		invitees: string[],
+		squareChatMid: string,
+	) {
 		return await this.request(
 			[[11, 2, squareMid], [15, 3, [11, invitees]], [
 				11,
@@ -571,7 +578,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async markAsRead(squareChatMid, messageId) {
+	public async markAsRead(squareChatMid: string, messageId: string) {
 		return await this.request(
 			[[11, 2, squareChatMid], [11, 4, messageId]],
 			"markAsRead",
@@ -581,18 +588,22 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async reactToMessage(squareChatMid, messageId, reactionType = 2) {
+	public async reactToMessage(
+		squareChatMid: string,
+		messageId: string,
+		reactionType = 2,
+	) {
 		/*
-	reactionType
-		ALL     = 0,
-		UNDO    = 1,
-		NICE    = 2,
-		LOVE    = 3,
-		FUN     = 4,
-		AMAZING = 5,
-		SAD     = 6,
-		OMG     = 7,
-	*/
+    		reactionType
+       			 ALL     = 0,
+        		UNDO    = 1,
+        		NICE    = 2,
+        		LOVE    = 3,
+        		FUN     = 4,
+        		AMAZING = 5,
+       			SAD     = 6,
+        		OMG     = 7,
+    	*/
 		return await this.request(
 			[
 				[8, 1, 0],
@@ -607,7 +618,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async findSquareByInvitationTicket(invitationTicket) {
+	public async findSquareByInvitationTicket(invitationTicket: string) {
 		return await this.request(
 			[[11, 2, invitationTicket]],
 			"findSquareByInvitationTicket",
@@ -618,10 +629,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	}
 
 	public async fetchMyEvents(
-		syncToken = undefined,
+		syncToken: string | undefined = undefined,
 		limit = 100,
-		continuationToken = undefined,
-		subscriptionId,
+		continuationToken: string | undefined = undefined,
+		subscriptionId: number = 0,
 	) {
 		return await this.request(
 			[
@@ -638,9 +649,9 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	}
 
 	public async fetchSquareChatEvents(
-		squareChatMid,
-		syncToken = undefined,
-		continuationToken = undefined,
+		squareChatMid: string,
+		syncToken: string | undefined = undefined,
+		continuationToken: string | undefined = undefined,
 		subscriptionId = 0,
 		limit = 100,
 	) {
@@ -663,11 +674,11 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	}
 
 	public async sendSquareMessage(
-		squareChatMid,
+		squareChatMid: string,
 		text = "test Message",
 		contentType = 0,
-		contentMetadata = {},
-		relatedMessageId = undefined,
+		contentMetadata: LooseType = {},
+		relatedMessageId: string | undefined = undefined,
 	) {
 		const msg = [
 			[11, 2, squareChatMid],
@@ -702,7 +713,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async getSquare(squareMid) {
+	public async getSquare(squareMid: string) {
 		return await this.request(
 			[[11, 2, squareMid]],
 			"getSquare",
@@ -711,7 +722,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			this.SquareService_API_PATH,
 		);
 	}
-	public async getSquareChat(squareChatMid) {
+	public async getSquareChat(squareChatMid: string) {
 		return await this.request(
 			[[11, 1, squareChatMid]],
 			"getSquareChat",
@@ -721,8 +732,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 	public async getJoinableSquareChats(
-		squareMid,
-		continuationToken = undefined,
+		squareMid: string,
+		continuationToken: string | undefined = undefined,
 		limit = 100,
 	) {
 		return await this.request(
@@ -735,20 +746,20 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	}
 
 	public async createSquare(
-		name = "TEST Square",
-		displayName = "Tester",
+		name: string,
+		displayName: string,
 		profileImageObsHash =
 			"0h6tJf0hQsaVt3H0eLAsAWDFheczgHd3wTCTx2eApNKSoefHNVGRdwfgxbdgUMLi8MSngnPFMeNmpbLi8MSngnPFMeNmpbLi8MSngnOA",
-		desc = "test with LINE-Deno-Client",
+		description = "",
 		searchable = true,
 		SquareJoinMethodType = 0,
 	) {
 		/*
-	SquareJoinMethodType
-		NONE(0),
-		APPROVAL(1),
-		CODE(2);
-		*/
+    		SquareJoinMethodType
+        		NONE(0),
+        		APPROVAL(1),
+        		CODE(2);
+        */
 		return await this.request(
 			[
 				[8, 2, 0],
@@ -758,7 +769,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 					[
 						[11, 2, name],
 						[11, 4, profileImageObsHash],
-						[11, 5, desc],
+						[11, 5, description],
 						[2, 6, searchable],
 						[8, 7, 1], // type
 						[8, 8, 1], // categoryId
@@ -787,7 +798,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async getSquareChatAnnouncements(squareChatMid) {
+	public async getSquareChatAnnouncements(squareChatMid: string) {
 		return await this.request(
 			[[11, 2, squareChatMid]],
 			"getSquareChatAnnouncements",
@@ -798,25 +809,25 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	}
 
 	public async updateSquareFeatureSet(
-		updateAttributes = [],
-		squareMid,
-		revision,
+		updateAttributes: number[] = [],
+		squareMid: string,
+		revision: number,
 		creatingSecretSquareChat = 0,
 	) {
 		/*
-	updateAttributes:
-		CREATING_SECRET_SQUARE_CHAT(1),
-		INVITING_INTO_OPEN_SQUARE_CHAT(2),
-		CREATING_SQUARE_CHAT(3),
-		READONLY_DEFAULT_CHAT(4),
-		SHOWING_ADVERTISEMENT(5),
-		DELEGATE_JOIN_TO_PLUG(6),
-		DELEGATE_KICK_OUT_TO_PLUG(7),
-		DISABLE_UPDATE_JOIN_METHOD(8),
-		DISABLE_TRANSFER_ADMIN(9),
-		CREATING_LIVE_TALK(10);
-	*/
-		const SquareFeatureSet = [
+    		updateAttributes:
+        		CREATING_SECRET_SQUARE_CHAT(1),
+        		INVITING_INTO_OPEN_SQUARE_CHAT(2),
+        		CREATING_SQUARE_CHAT(3),
+        		READONLY_DEFAULT_CHAT(4),
+        		SHOWING_ADVERTISEMENT(5),
+        		DELEGATE_JOIN_TO_PLUG(6),
+        		DELEGATE_KICK_OUT_TO_PLUG(7),
+        		DISABLE_UPDATE_JOIN_METHOD(8),
+        		DISABLE_TRANSFER_ADMIN(9),
+        		CREATING_LIVE_TALK(10);
+    	*/
+		const SquareFeatureSet: NestedArray = [
 			[11, 1, squareMid],
 			[10, 2, revision],
 		];
@@ -839,10 +850,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	}
 
 	public async joinSquare(
-		squareMid,
-		displayName,
+		squareMid: string,
+		displayName: string,
 		ableToReceiveMessage = false,
-		passCode = undefined,
+		passCode: string | undefined = undefined,
 	) {
 		return await this.request(
 			[
@@ -866,7 +877,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async removeSubscriptions(subscriptionIds = []) {
+	public async removeSubscriptions(subscriptionIds: number[] = []) {
 		return await this.request(
 			[
 				[15, 2, [10, subscriptionIds]],
@@ -878,7 +889,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async unsendSquareMessage(squareChatMid, messageId) {
+	public async unsendSquareMessage(squareChatMid: string, messageId: string) {
 		return await this.request(
 			[[11, 2, squareChatMid], [11, 3, messageId]],
 			"unsendMessage",
@@ -889,25 +900,25 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	}
 
 	public async createSquareChat(
-		squareChatMid,
-		name,
-		chatImageObsHash,
+		squareChatMid: string,
+		name: string,
+		chatImageObsHash: string = "0h",
 		squareChatType = 1,
 		maxMemberCount = 5000,
 		ableToSearchMessage = 1,
 		squareMemberMids = [],
 	) {
 		/*
-	- SquareChatType:
-		OPEN(1),
-		SECRET(2),
-		ONE_ON_ONE(3),
-		SQUARE_DEFAULT(4);
-	- ableToSearchMessage:
-		NONE(0),
-		OFF(1),
-		ON(2);
-	*/
+    	- SquareChatType:
+        	OPEN(1),
+        	SECRET(2),
+        	ONE_ON_ONE(3),
+        	SQUARE_DEFAULT(4);
+    	- ableToSearchMessage:
+        	NONE(0),
+        	OFF(1),
+        	ON(2);
+    	*/
 		return await this.request(
 			[
 				[8, 1, 0],
@@ -933,8 +944,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	}
 
 	public async getSquareChatMembers(
-		squareChatMid,
-		continuationToken = undefined,
+		squareChatMid: string,
+		continuationToken: string | undefined = undefined,
 		limit = 200,
 	) {
 		const req = [[11, 1, squareChatMid], [8, 3, limit]];
@@ -950,7 +961,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async getSquareFeatureSet(squareMid) {
+	public async getSquareFeatureSet(squareMid: string) {
 		return await this.request(
 			[
 				[11, 2, squareMid],
@@ -962,7 +973,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async getSquareInvitationTicketUrl(mid) {
+	public async getSquareInvitationTicketUrl(mid: string) {
 		return await this.request(
 			[
 				[11, 2, mid],
@@ -975,18 +986,18 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	}
 
 	public async updateSquareChatMember(
-		squareMemberMid,
-		squareChatMid,
+		squareMemberMid: string,
+		squareChatMid: string,
 		notificationForMessage = true,
 		notificationForNewMember = true,
 		updatedAttrs = [6],
 	) {
 		/*
-	- SquareChatMemberAttribute:
-		MEMBERSHIP_STATE(4),
-		NOTIFICATION_MESSAGE(6),
-		NOTIFICATION_NEW_MEMBER(7);
-	*/
+    		- SquareChatMemberAttribute:
+        		MEMBERSHIP_STATE(4),
+        		NOTIFICATION_MESSAGE(6),
+        		NOTIFICATION_NEW_MEMBER(7);
+    	*/
 		return await this.request(
 			[
 				[14, 2, [8, updatedAttrs]],
@@ -1019,21 +1030,22 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		role?: number | undefined,
 	) {
 		/*
-	SquareMemberAttribute:
-		DISPLAY_NAME(1),
-		PROFILE_IMAGE(2),
-		ABLE_TO_RECEIVE_MESSAGE(3),
-		MEMBERSHIP_STATE(5),
-		ROLE(6),
-		PREFERENCE(7);
-	SquareMembershipState:
-		JOIN_REQUESTED(1),
-		JOINED(2),
-		REJECTED(3),
-		LEFT(4),
-		KICK_OUT(5),
-		BANNED(6),
-		DELETED(7);
+		SquareMemberAttribute:
+			DISPLAY_NAME(1),
+			PROFILE_IMAGE(2),
+			ABLE_TO_RECEIVE_MESSAGE(3),
+			MEMBERSHIP_STATE(5),
+			ROLE(6),
+			PREFERENCE(7);
+
+		SquareMembershipState:
+			JOIN_REQUESTED(1),
+			JOINED(2),
+			REJECTED(3),
+			LEFT(4),
+			KICK_OUT(5),
+			BANNED(6),
+			DELETED(7);
 	*/
 		const squareMember: Array<any> = [[11, 1, squareMemberMid], [
 			11,
@@ -1238,12 +1250,11 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		otherReason: string | undefined = undefined,
 	) {
 		/*
-	ReportType {
-	ADVERTISING = 1;
-	GENDER_HARASSMENT = 2;
-	HARASSMENT = 3;
-	OTHER = 4;
-}
+		ReportType:
+			ADVERTISING = 1;
+			GENDER_HARASSMENT = 2;
+			HARASSMENT = 3;
+			OTHER = 4;
 		*/
 		return await this.request(
 			[
