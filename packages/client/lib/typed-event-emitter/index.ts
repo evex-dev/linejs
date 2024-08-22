@@ -1,5 +1,6 @@
-// deno-lint-ignore no-explicit-any
-type RecordEvent = Record<string, (...args: any[]) => any>;
+import type { LooseType } from "../../utils/common.ts";
+
+type RecordEvent = Record<string, (...args: LooseType[]) => LooseType>;
 
 export class TypedEventEmitter<
 	T extends RecordEvent,

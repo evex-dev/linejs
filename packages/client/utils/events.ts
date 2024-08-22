@@ -4,4 +4,5 @@ export type ClientEvents = {
 	"pincall": (pincode: string) => void;
 	"ready": (user: User<"me">) => void;
 	"update:authtoken": (authtoken: string) => void;
+	"update:cert": (cert: string) => void;
 };

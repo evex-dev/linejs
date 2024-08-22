@@ -35,7 +35,6 @@ export const Protocols = {
 	0: Buffer,
 };
 
-export type NestedArray = Array<NestedArray | number>;
+export type ProtocolKey = keyof typeof Protocols;
 
-// deno-lint-ignore no-explicit-any
-export type LooseType = any;
+export type NestedArray = Array<NestedArray | number>;

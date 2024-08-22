@@ -35,7 +35,7 @@ client.on("message", (message) => {
 	}
 });
 
-client.login({
+await client.login({
 	email: "YOUR_EMAIL",
 	password: "YOUR_PASSWORD",
 	device: "IOSIPAD",
