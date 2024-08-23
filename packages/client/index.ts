@@ -549,11 +549,16 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	private LiffService_API_PATH = "/LIFF1";
 	private LiffService_PROTOCOL_TYPE: ProtocolKey = 4;
 
-	private SquareService_API_PATH = "/SQ1";
-	private SquareService_PROTOCOL_TYPE: ProtocolKey = 4;
+	private ChannelService_API_PATH = "/CH3";
+	private ChannelService_PROTOCOL_TYPE: ProtocolKey = 3;
 
 	private SyncService_API_PATH = "/SYNC4";
 	private SyncService_PROTOCOL_TYPE: ProtocolKey = 4;
+
+	private SquareService_API_PATH = "/SQ1";
+	private SquareService_PROTOCOL_TYPE: ProtocolKey = 4;
+
+	// -- LINE --
 
 	/**
 	 * @description Get the profile of the current user.
@@ -578,12 +583,14 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 	// -- Talk --
 
+	// -- Sync --
+
 	public async sync(
 		revision: number,
 		limit: number = 100,
 		globalRev: number = 0,
 		individualRev: number = 0,
-	):Promise<ttype.SyncResponse> {
+	): Promise<ttype.SyncResponse> {
 		return await this.request(
 			[
 				[10, 1, revision],
