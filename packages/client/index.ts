@@ -1370,13 +1370,14 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			this.SquareService_API_PATH,
 		);
 	}
-	private async sync(
+	
+	public async sync(
 		revision: number,
 		limit: number = 100,
 		globalRev = 0,
 		individualRev = 0,
 	) {
-		await this.request(
+		return await this.request(
 			[
 				[10, 1, revision],
 				[8, 2, limit],
