@@ -169,13 +169,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 		this.user = {
 			type: "me",
-			displayName: profile.displayName,
-			displayNameOverridden: profile.displayName,
-			mid: profile.mid,
-			iconObsHash: profile.pictureStatus,
-			statusMessage: profile.statusMessage,
-			statusMessageContentMetadata: profile.statusMessageContentMetadata,
-			profile,
+			...profile,
 		};
 
 		this.emit("ready", this.user);
@@ -234,7 +228,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	public async requestEmailLogin(
 		email: string,
 		password: string,
-		enableE2EE = false,
+		enableE2EE: boolean = false,
 	): Promise<string> {
 		this.log("login", {
 			method: "email",
@@ -319,7 +313,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		verifier: string | undefined,
 		secret: string | undefined,
 		cert: string | undefined,
-		calledName = "loginV2",
+		methodName: string = "loginV2",
 	): Promise<LINETypes.LoginResult> {
 		let loginType = 2;
 		if (!secret) loginType = 0;
@@ -347,7 +341,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 					],
 				],
 			],
-			calledName,
+			methodName,
 			3,
 			"LoginResult",
 			"/api/v3p/rs",
@@ -361,7 +355,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 * @returns {Promise<LINETypes.RSAKey>} RSA key info.
 	 * @throws {FetchError} If failed to fetch RSA key info.
 	 */
-	public async getRSAKeyInfo(provider = 0): Promise<LINETypes.RSAKey> {
+	public async getRSAKeyInfo(provider: number = 0): Promise<LINETypes.RSAKey> {
 		return await this.request(
 			[[8, 2, provider]],
 			"getRSAKeyInfo",
@@ -387,8 +381,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		methodName: string,
 		protocolType: ProtocolKey = 3,
 		parse: boolean | string = true,
-		path = "/S3",
-		headers = {},
+		path: string = "/S3",
+		headers: Record<string, string | undefined> = {},
 	): Promise<LooseType> {
 		return (
 			await this.rawRequest(
@@ -419,8 +413,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		methodName: string,
 		protocolType: ProtocolKey = 3,
 		parse: boolean | string = true,
-		path = "/S3",
-		headers = {},
+		path: string = "/S3",
+		headers: Record<string, string | undefined> = {},
 	): Promise<LooseType> {
 		return (
 			await this.rawRequest(
@@ -580,7 +574,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	public async issueLiffView(
 		chatMid: string,
 		liffId: string,
-		lang : string= "ja_JP",
+		lang: string = "ja_JP",
 	): Promise<LooseType> {
 		let context: NestedArray = [12, 1, []];
 		let chaLINETypes;
@@ -1179,7 +1173,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			undefined,
 			UPDATE_ATTRS,
 			UPDATE_PREF_ATTRS,
-			squareMemberRevision
+			squareMemberRevision,
 		);
 	}
 
