@@ -78,6 +78,9 @@ export default class ThriftRenameParser {
 		for (const fid in object) {
 			const value = object[fid];
 			const finfo = this.fid2name(structName, fid);
+			if (typeof value==="undefined") {
+				continue
+			}
 			if (finfo.struct) {
 				if (isStruct(this.def[finfo.struct])) {
 					newObject[finfo.name] = this.rename_thrift(
