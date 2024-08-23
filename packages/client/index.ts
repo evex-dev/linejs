@@ -575,6 +575,26 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 	// -- Talk --
 
+	public async sync(
+		revision: number,
+		limit: number = 100,
+		globalRev = 0,
+		individualRev = 0,
+	) {
+		return await this.request(
+			[
+				[10, 1, revision],
+				[8, 2, limit],
+				[10, 3, globalRev],
+				[10, 4, individualRev],
+			],
+			"sync",
+			4,
+			"SyncResponse",
+			"/SYNC4",
+		);
+	}
+
 	// -- Group --
 
 	// -- Square --
@@ -1365,25 +1385,6 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			this.SquareService_PROTOCOL_TYPE,
 			true,
 			this.SquareService_API_PATH,
-		);
-	}
-	public async sync(
-		revision: number,
-		limit: number = 100,
-		globalRev = 0,
-		individualRev = 0,
-	) {
-		await this.request(
-			[
-				[10, 1, revision],
-				[8, 2, limit],
-				[10, 3, globalRev],
-				[10, 4, individualRev],
-			],
-			"sync",
-			4,
-			"SyncResponse",
-			"/SYNC4",
 		);
 	}
 }
