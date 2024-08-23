@@ -43,7 +43,7 @@ interface ClientOptions {
 /**
  * @description LINE SelfBot Client
  *
- * @param {BaseStorage} storge Storage
+ * @param {BaseStorage} [storge] Storage
  */
 export class Client extends TypedEventEmitter<ClientEvents> {
 	constructor(options: ClientOptions = {}) {
@@ -78,7 +78,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Emit log event
 	 *
-	 * @param {LooseType} data Log data
+	 * @param {LooseType} [data] Log data
 	 * @emits log
 	 */
 	public log(type: LogType, data: LooseType) {
@@ -91,7 +91,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Login to LINE server with auth token or email/password
 	 *
-	 * @param {LoginOptions} options Options for login
+	 * @param {LoginOptions} [options] Options for login
 	 * @throws {InternalError} If login options are invalid
 	 * @throws {InternalError} If email is invalid
 	 * @throws {InternalError} If password is invalid
@@ -181,7 +181,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Registers a certificate path to be used for login.
 	 *
-	 * @param {string} path  - The path to the certificate.
+	 * @param {string} [path]  - The path to the certificate.
 	 */
 	public async registerCertPath(path: string): Promise<void> {
 		let cert;
@@ -216,8 +216,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Login to LINE server with email and password.
 	 *
-	 * @param {string} email The email to login with.
-	 * @param {string} password The password to login with.
+	 * @param {string} [email] The email to login with.
+	 * @param {string} [password] The password to login with.
 	 * @param {boolean} [enableE2EE=false] Enable E2EE or not.
 	 * @returns {Promise<string>} The auth token.
 	 * @throws {InternalError} If the system is not setup yet.
@@ -368,8 +368,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Request to LINE API.
 	 *
-	 * @param {NestedArray} value - The value to request.
-	 * @param {string} methodName - The method name of the request.
+	 * @param {NestedArray} [value] - The value to request.
+	 * @param {string} [methodName] - The method name of the request.
 	 * @param {ProtocolKey} [protocolType=3] - The protocol type of the request.
 	 * @param {boolean | string} [parse=true] - Whether to parse the response.
 	 * @param {string} [path="/S3"] - The path of the request.
@@ -400,8 +400,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Request to LINE API directly.
 	 *
-	 * @param {NestedArray} value - The value to request.
-	 * @param {string} methodName - The method name of the request.
+	 * @param {NestedArray} [value] - The value to request.
+	 * @param {string} [methodName] - The method name of the request.
 	 * @param {ProtocolKey} [protocolType=3] - The protocol type of the request.
 	 * @param {boolean | string} [parse=true] - Whether to parse the response.
 	 * @param {string} [path="/S3"] - The path of the request.
@@ -432,10 +432,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Request to LINE API by raw.
 	 *
-	 * @param {string} path - The path of the request.
-	 * @param {NestedArray} value - The value to request.
-	 * @param {string} methodName - The method name of the request.
-	 * @param {ProtocolKey} protocolType - The protocol type of the request.
+	 * @param {string} [path] - The path of the request.
+	 * @param {NestedArray} [value] - The value to request.
+	 * @param {string} [methodName] - The method name of the request.
+	 * @param {ProtocolKey} [protocolType] - The protocol type of the request.
 	 * @param {object} [appendHeaders={}] - The headers to append to the request.
 	 * @param {string} [overrideMethod="POST"] - The method of the request.
 	 * @param {boolean | string} [parse=true] - Whether to parse the response.

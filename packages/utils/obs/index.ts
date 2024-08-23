@@ -21,7 +21,7 @@ class LINE_OBS_BASE {
 
 	/**
 	 * Gets a OBS URI by appending the given hash to the prefixSticker
-	 * @param {string} hash - The hash to appendSticker	 * @return {string} The getted URISticker
+	 * @param {string} [hash] - The hash to appendSticker	 * @return {string} The getted URISticker
 	 */
 	public getURI(hash: string): string {
 		return this.prefix + hash;
@@ -29,7 +29,7 @@ class LINE_OBS_BASE {
 
 	/**
 	 * Gets a profile image URI by appending the given member ID to the prefixSticker
-	 * @param {string} memberId - The member ID (mid) to appendSticker
+	 * @param {string} [memberId] - The member ID (mid) to appendSticker
 	 * @return {string} The getted profile image URISticker
 	 */
 	public getProfileImage(memberId: string): string {
@@ -38,7 +38,7 @@ class LINE_OBS_BASE {
 
 	/**
 	 * Gets a group image URI by appending the given group ID to the prefixSticker
-	 * @param {string} groupId - The group ID (gid) to use in the URLSticker
+	 * @param {string} [groupId] - The group ID (gid) to use in the URLSticker
 	 * @return {string} The getted line-obs group-image URLSticker
 	 */
 	public getGroupImage(groupId: string): string {
@@ -47,7 +47,7 @@ class LINE_OBS_BASE {
 
 	/**
 	 * Gets an open chat member image URI by appending the given open chat member ID to the prefixSticker
-	 * @param {string} squareMemberId - The square member ID (pid) to use in the URLSticker
+	 * @param {string} [squareMemberId] - The square member ID (pid) to use in the URLSticker
 	 * @param {boolean} [isPreview=false] - Whether to append '/preview' to the URL.
 	 * @return {string} The getted open chat member image URISticker
 	 */

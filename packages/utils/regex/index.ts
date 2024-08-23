@@ -10,7 +10,7 @@ class LINE_REGEX_BASE {
 	/**
 	 * Extracts a ticket from a given link using a regular expression.
 	 *
-	 * @param {string} link - The link to extract the ticket from.
+	 * @param {string} [link] - The link to extract the ticket from.
 	 * @return {string|null} The extracted ticket, or null if no match is found.
 	 */
 	public getTicket(link: string): string | null {
@@ -33,7 +33,7 @@ class LINE_REGEX_BASE {
 	/**
 	 * Extracts a emid from a given link using a regular expression.
 	 *
-	 * @param {string} link - The link to extract the ticket from.
+	 * @param {string} [link] - The link to extract the ticket from.
 	 * @return {string|null} The extracted ticket, or null if no match is found.
 	 */
 	public getEmid(link: string): string | null {

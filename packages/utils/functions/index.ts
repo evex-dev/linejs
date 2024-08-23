@@ -40,8 +40,8 @@ type SearchSquareResult =
 /**
  * Search square by query.
  *
- * @param {string} query The query of search square.
- * @param {number} limit The limit of the result. (0-200)
+ * @param {string} [query] The query of search square.
+ * @param {number} [limit] The limit of the result. (0-200)
  * @returns {Promise<SearchSquareResult>} The result of the search.
  */
 export async function searchSquare(
@@ -114,10 +114,11 @@ type getSquareResult =
 /**
  * Gets a Square by its ticket or emid.
  *
- * @param {string} ticketOrEmid The ticket or emid of the Square.
- * @param {string} isTicket Whether the given parameter is a ticket or emid.
- * @param {object} appendHeaders The headers to append. (Please includes 'x-line-channeltoken')
+ * @param {string} [ticketOrEmid] The ticket or emid of the Square.
+ * @param {string} [isTicket] Whether the given parameter is a ticket or emid.
+ * @param {object} [appendHeaders] The headers to append. (Please includes 'x-line-channeltoken')
  * @returns {Promise<getSquareResult>} The result of the get.
+ * @experimental
  */
 export async function getSquare(
 	ticketOrEmid: string,

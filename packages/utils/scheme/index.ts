@@ -43,7 +43,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the nv page
 	 *
-	 * @param {string} nv - nv path
+	 * @param {string} [nv] - nv path
 	 * @return {string} The URL for the nv page
 	 */
 	public getNv(nv = ""): string {
@@ -467,7 +467,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the profile popup page
 	 *
-	 * @param {string} mid memberId
+	 * @param {string} [mid] memberId
 	 * @returns {string} The URL for the profile popup page
 	 */
 	public getProfilePopup(mid: string): string {
@@ -495,7 +495,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for any channel page
 	 *
-	 * @param {string} ch channelId
+	 * @param {string} [ch] channelId
 	 * @returns {string} The URL for any channel page
 	 */
 	public getCh(ch = ""): string {
@@ -505,7 +505,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the liff app page
 	 *
-	 * @param {string} id liffId
+	 * @param {string} [id] liffId
 	 * @param {boolean} [useLiff=false] use 'liff.line.me' url.
 	 * @param param {Record<string, string>} url query
 	 * @returns {string} The URL for the liff app page
@@ -693,7 +693,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the sticker category page
 	 *
-	 * @param {string} categoryId categoryId
+	 * @param {string} [categoryId] categoryId
 	 * @returns {string} The URL for the sticker category page
 	 */
 	public getStickerCategory(categoryId: string): string {
@@ -703,7 +703,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the sticker package page
 	 *
-	 * @param {string} packageId packageId
+	 * @param {string} [packageId] packageId
 	 * @returns {string} The URL for the sticker package page
 	 */
 	public getStickerPackage(packageId: string): string {
@@ -713,7 +713,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the sticker author page
 	 *
-	 * @param {string} authorId authorId
+	 * @param {string} [authorId] authorId
 	 * @returns {string} The URL for the sticker author page
 	 */
 	public getStickerAuthor(authorId: string): string {
@@ -723,7 +723,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the sticker product page
 	 *
-	 * @param {string} productId productId
+	 * @param {string} [productId] productId
 	 * @returns {string} The URL for the sticker product page
 	 */
 	public getStickerProduct(productId: string): string {
@@ -751,7 +751,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the square report page
 	 *
-	 * @param {string} ticketOrEmid ticket or emid (by isTicket)
+	 * @param {string} [ticketOrEmid] ticket or emid (by isTicket)
 	 * @param {boolean} [isTicket=true] is ticket.
 	 * @returns {string} The URL for the square report page
 	 */
@@ -765,7 +765,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the square join page
 	 *
-	 * @param {string} ticketOrEmid ticket or emid (by isTicket)
+	 * @param {string} [ticketOrEmid] ticket or emid (by isTicket)
 	 * @param {boolean} [isTicket=true] is ticket.
 	 * @returns {string} The URL for the square join page
 	 */
@@ -779,7 +779,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the square home page
 	 *
-	 * @param {string} emid encryptedSquareMid
+	 * @param {string} [emid] encryptedSquareMid
 	 * @returns {string} The URL for the square home page
 	 */
 	public getSquareHome(emid: string): string {
@@ -789,8 +789,8 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the square note post page
 	 *
-	 * @param {string} squareMid squareMid
-	 * @param {string} postId postId
+	 * @param {string} [squareMid] squareMid
+	 * @param {string} [postId] postId
 	 * @returns {string} The URL for the square note post page
 	 */
 	public getSquareNotePost(squareMid: string, postId: string): string {
@@ -800,7 +800,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the user ticket page
 	 *
-	 * @param {string} ticket user ticket
+	 * @param {string} [ticket] user ticket
 	 * @returns {string} The URL for the user ticket page
 	 */
 	public getUserTicket(ticket: string): string {
@@ -810,7 +810,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the userId search page
 	 *
-	 * @param {string} userId userId
+	 * @param {string} [userId] userId
 	 * @returns {string} The URL for the userId search page
 	 */
 	public getUserIdSearch(userId: string): string {
@@ -820,7 +820,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the group ticket page
 	 *
-	 * @param {string} ticket group ticket
+	 * @param {string} [ticket] group ticket
 	 * @returns {string} The URL for the group ticket page
 	 */
 	public getGroupTicket(ticket: string): string {
@@ -830,7 +830,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the square group ticket page
 	 *
-	 * @param {string} ticket square group ticket
+	 * @param {string} [ticket] square group ticket
 	 * @returns {string} The URL for the square group ticket page
 	 */
 	public getSquareTicket(ticket: string): string {
@@ -840,7 +840,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the text share page
 	 *
-	 * @param {string} text share text
+	 * @param {string} [text] share text
 	 * @param {boolean} [useShare=true] use share.
 	 * @returns {string} The URL for the text share page
 	 */
@@ -854,8 +854,8 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the oa message page
 	 *
-	 * @param {string} oaId oa id
-	 * @param {string} text text
+	 * @param {string} [oaId] oa id
+	 * @param {string} [text] text
 	 * @returns {string} The URL for the oa message page
 	 */
 	public getOaMessage(oaId: string, text: string): string {
@@ -874,8 +874,8 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the user post page
 	 *
-	 * @param {string} userMid user mid
-	 * @param {string} postId post id
+	 * @param {string} [userMid] user mid
+	 * @param {string} [postId] post id
 	 * @returns {string} The URL for the user post page
 	 */
 	public getUserPost(userMid: string, postId: string): string {
@@ -885,7 +885,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the oa main page
 	 *
-	 * @param {string} oaIdWithoutAT oa id without AT
+	 * @param {string} [oaIdWithoutAT] oa id without AT
 	 * @returns {string} The URL for the oa main page
 	 */
 	public getOaMain(oaIdWithoutAT: string): string {
@@ -895,7 +895,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the oa profile page
 	 *
-	 * @param {string} oaIdWithoutAT oa id without AT
+	 * @param {string} [oaIdWithoutAT] oa id without AT
 	 * @returns {string} The URL for the oa profile page
 	 */
 	public getOaProfile(oaIdWithoutAT: string): string {
@@ -905,8 +905,8 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the oa post page
 	 *
-	 * @param {string} oaIdWithoutAT oa id without AT
-	 * @param {string} postId post id
+	 * @param {string} [oaIdWithoutAT] oa id without AT
+	 * @param {string} [postId] post id
 	 * @returns {string} The URL for the oa post page
 	 */
 	public getOaPost(oaIdWithoutAT: string, postId: string): string {
@@ -916,7 +916,7 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the group camera page
 	 *
-	 * @param {string} oaIdWithoutAT oa id without AT
+	 * @param {string} [oaIdWithoutAT] oa id without AT
 	 * @returns {string} The URL for the group camera page
 	 */
 	public getGroupCreate(): string {
@@ -926,8 +926,8 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the group post page
 	 *
-	 * @param {string} groupId gruop id
-	 * @param {string} postId post id
+	 * @param {string} [groupId] gruop id
+	 * @param {string} [postId] post id
 	 * @returns {string} The URL for the group post page
 	 */
 	public getGroupPost(groupId: string, postId: string): string {
@@ -937,8 +937,8 @@ class LINE_SCHEME_BASE {
 	/**
 	 * Returns the URL for the group album page
 	 *
-	 * @param {string} albumId album id
-	 * @param {string} groupId gruop id
+	 * @param {string} [albumId] album id
+	 * @param {string} [groupId] gruop id
 	 * @returns {string} The URL for the group album page
 	 */
 	public getGroupAlbum(albumId: string, groupId: string): string {
