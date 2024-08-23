@@ -539,7 +539,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 * Gets arugments of thrift
 	 * @experimental
 	 */
-	public getArgumentsHelper(name: string) {
+	public getArgumentsHelper(name: string): LooseType[][] {
 		return this.parser.get_cl(name);
 	}
 
@@ -1376,7 +1376,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		limit: number = 100,
 		globalRev = 0,
 		individualRev = 0,
-	) {
+	): Promise<ttype.SyncResponse> {
 		return await this.request(
 			[
 				[10, 1, revision],
