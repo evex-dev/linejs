@@ -581,8 +581,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	public async sync(
 		revision: number,
 		limit: number = 100,
-		globalRev = 0,
-		individualRev = 0,
+		globalRev: number = 0,
+		individualRev: number = 0,
 	) {
 		return await this.request(
 			[
