@@ -45,9 +45,7 @@ interface ClientOptions {
  * @param {BaseStorage} storge Storage
  */
 export class Client extends TypedEventEmitter<ClientEvents> {
-	constructor(
-		options: ClientOptions = {},
-	) {
+	constructor(options: ClientOptions = {}) {
 		super();
 		this.parser.def = Thrift;
 		const requiredOptions = {
@@ -104,10 +102,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	public async login(options: LoginOptions): Promise<void> {
 		if (options.authToken) {
 			if (!AUTH_TOKEN_REGEX.test(options.authToken)) {
-				throw new InternalError(
-					"Invalid auth token",
-					`'${options.authToken}'`,
-				);
+				throw new InternalError("Invalid auth token", `'${options.authToken}'`);
 			}
 		} else if (options.email && options.password) {
 			if (!EMAIL_REGEX.test(options.email)) {
@@ -115,10 +110,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			}
 
 			if (!PASSWORD_REGEX.test(options.password)) {
-				throw new InternalError(
-					"Invalid password",
-					`'${options.password}'`,
-				);
+				throw new InternalError("Invalid password", `'${options.password}'`);
 			}
 		} else {
 			throw new InternalError(
@@ -138,8 +130,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			appVersion: details.appVersion,
 			systemName: details.systemName,
 			systemVersion: details.systemVersion,
-			type:
-				`${device}\t${details.appVersion}\t${details.systemName}\t${details.systemVersion}`,
+			type: `${device}\t${details.appVersion}\t${details.systemName}\t${details.systemVersion}`,
 			userAgent: `Line/${details.appVersion}`,
 			device,
 		};
@@ -244,15 +235,13 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			password,
 		});
 		if (!this.system) {
-			throw new InternalError(
-				"Not setup yet",
-				"Please call 'login()' first",
-			);
+			throw new InternalError("Not setup yet", "Please call 'login()' first");
 		}
 
 		const rsaKey = await this.getRSAKeyInfo();
 		const { keynm } = rsaKey;
-		const message = String.fromCharCode(rsaKey.sessionKey.length) +
+		const message =
+			String.fromCharCode(rsaKey.sessionKey.length) +
 			rsaKey.sessionKey +
 			String.fromCharCode(email.length) +
 			email +
@@ -268,7 +257,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 		const encryptedMessage = getRSACrypto(message, rsaKey).credentials;
 
-		const cert = await this.getCert() || undefined;
+		const cert = (await this.getCert()) || undefined;
 
 		const response = await this.requestLoginV2(
 			keynm,
@@ -288,8 +277,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		} else {
 			this.emit("pincall", response.pinCode);
 			const headers = {
-				"Host": this.endpoint,
-				"accept": "application/x-thrift",
+				Host: this.endpoint,
+				accept: "application/x-thrift",
 				"user-agent": this.system.userAgent,
 				"x-line-application": this.system.type,
 				"x-line-access": response.verifier,
@@ -368,9 +357,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 */
 	public async getRSAKeyInfo(provider = 0): Promise<ttype.RSAKey> {
 		return await this.request(
-			[
-				[8, 2, provider],
-			],
+			[[8, 2, provider]],
 			"getRSAKeyInfo",
 			3,
 			"RSAKey",
@@ -397,21 +384,17 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		path = "/S3",
 		headers = {},
 	): Promise<LooseType> {
-		return (await this.rawRequest(
-			path,
-			[
-				[
-					12,
-					1,
-					value,
-				],
-			],
-			methodName,
-			protocolType,
-			headers,
-			undefined,
-			parse,
-		)).value;
+		return (
+			await this.rawRequest(
+				path,
+				[[12, 1, value]],
+				methodName,
+				protocolType,
+				headers,
+				undefined,
+				parse,
+			)
+		).value;
 	}
 
 	/**
@@ -433,15 +416,17 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		path = "/S3",
 		headers = {},
 	): Promise<LooseType> {
-		return (await this.rawRequest(
-			path,
-			value,
-			methodName,
-			protocolType,
-			headers,
-			undefined,
-			parse,
-		)).value;
+		return (
+			await this.rawRequest(
+				path,
+				value,
+				methodName,
+				protocolType,
+				headers,
+				undefined,
+				parse,
+			)
+		).value;
 	}
 
 	/**
@@ -468,16 +453,13 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		parse: boolean | string = true,
 	): Promise<ParsedThrift> {
 		if (!this.system) {
-			throw new InternalError(
-				"Not setup yet",
-				"Please call 'login()' first",
-			);
+			throw new InternalError("Not setup yet", "Please call 'login()' first");
 		}
 
 		const Protocol = Protocols[protocolType];
 		let headers = {
-			"Host": this.endpoint,
-			"accept": "application/x-thrift",
+			Host: this.endpoint,
+			accept: "application/x-thrift",
 			"user-agent": this.system.userAgent,
 			"x-line-application": this.system.type,
 			"content-type": "application/x-thrift",
@@ -539,16 +521,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 				parsedData: res,
 			});
 		} catch (error) {
-			throw new InternalError(
-				"Request external failed",
-				error.stack,
-			);
+			throw new InternalError("Request external failed", error.stack);
 		}
 		if (res && res.e) {
-			throw new InternalError(
-				"Request internal failed",
-				JSON.stringify(res.e),
-			);
+			throw new InternalError("Request internal failed", JSON.stringify(res.e));
 		}
 		return res;
 	}
@@ -577,7 +553,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		continuationToken: string,
 	): Promise<ttype.GetJoinedSquaresResponse> {
 		return await this.request(
-			[[11, 2, continuationToken], [8, 3, limit]],
+			[
+				[11, 2, continuationToken],
+				[8, 3, limit],
+			],
 			"getJoinedSquares",
 			this.SquareService_PROTOCOL_TYPE,
 			true,
@@ -590,7 +569,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		squareChatMid: string,
 	): Promise<ttype.InviteIntoSquareChatResponse> {
 		return await this.request(
-			[[15, 1, [11, inviteeMids]], [11, 2, squareChatMid]],
+			[
+				[15, 1, [11, inviteeMids]],
+				[11, 2, squareChatMid],
+			],
 			"inviteIntoSquareChat",
 			this.SquareService_PROTOCOL_TYPE,
 			true,
@@ -604,11 +586,11 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		squareChatMid: string,
 	): Promise<ttype.InviteToSquareResponse> {
 		return await this.request(
-			[[11, 2, squareMid], [15, 3, [11, invitees]], [
-				11,
-				4,
-				squareChatMid,
-			]],
+			[
+				[11, 2, squareMid],
+				[15, 3, [11, invitees]],
+				[11, 4, squareChatMid],
+			],
 			"inviteToSquare",
 			this.SquareService_PROTOCOL_TYPE,
 			true,
@@ -621,7 +603,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		messageId: string,
 	): Promise<ttype.MarkAsReadResponse> {
 		return await this.request(
-			[[11, 2, squareChatMid], [11, 4, messageId]],
+			[
+				[11, 2, squareChatMid],
+				[11, 4, messageId],
+			],
 			"markAsRead",
 			this.SquareService_PROTOCOL_TYPE,
 			true,
@@ -730,11 +715,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			[13, 18, [11, 11, contentMetadata]],
 		];
 		if (relatedMessageId) {
-			msg.push(
-				[11, 21, relatedMessageId],
-				[8, 22, 3],
-				[8, 24, 2],
-			);
+			msg.push([11, 21, relatedMessageId], [8, 22, 3], [8, 24, 2]);
 		}
 		return await this.request(
 			[
@@ -782,7 +763,11 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		limit = 100,
 	): Promise<ttype.GetJoinableSquareChatsResponse> {
 		return await this.request(
-			[[11, 1, squareMid], [11, 10, continuationToken], [8, 11, limit]],
+			[
+				[11, 1, squareMid],
+				[11, 10, continuationToken],
+				[8, 11, limit],
+			],
 			"getJoinableSquareChats",
 			this.SquareService_PROTOCOL_TYPE,
 			true,
@@ -793,11 +778,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	public async createSquare(
 		name: string,
 		displayName: string,
-		profileImageObsHash =
-			"0h6tJf0hQsaVt3H0eLAsAWDFheczgHd3wTCTx2eApNKSoefHNVGRdwfgxbdgUMLi8MSngnPFMeNmpbLi8MSngnPFMeNmpbLi8MSngnOA",
+		profileImageObsHash = "0h6tJf0hQsaVt3H0eLAsAWDFheczgHd3wTCTx2eApNKSoefHNVGRdwfgxbdgUMLi8MSngnPFMeNmpbLi8MSngnPFMeNmpbLi8MSngnOA",
 		description = "",
 		searchable = true,
-		SquareJoinMethodType = 0,
+		SquareJoinMethodType: 0 | 1 | 2 = 0,
 	): Promise<ttype.CreateSquareResponse> {
 		/*
     		SquareJoinMethodType
@@ -879,10 +863,14 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			[10, 2, revision],
 		];
 		if (creatingSecretSquareChat) {
-			SquareFeatureSet.push([12, 11, [
-				[8, 1, 1],
-				[8, 2, creatingSecretSquareChat],
-			]]);
+			SquareFeatureSet.push([
+				12,
+				11,
+				[
+					[8, 1, 1],
+					[8, 2, creatingSecretSquareChat],
+				],
+			]);
 		}
 		return await this.request(
 			[
@@ -928,9 +916,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		subscriptionIds: number[] = [],
 	): Promise<ttype.RemoveSubscriptionsResponse> {
 		return await this.request(
-			[
-				[15, 2, [10, subscriptionIds]],
-			],
+			[[15, 2, [10, subscriptionIds]]],
 			"removeSubscriptions",
 			this.SquareService_PROTOCOL_TYPE,
 			true,
@@ -943,7 +929,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		messageId: string,
 	): Promise<ttype.UnsendMessageResponse> {
 		return await this.request(
-			[[11, 2, squareChatMid], [11, 3, messageId]],
+			[
+				[11, 2, squareChatMid],
+				[11, 3, messageId],
+			],
 			"unsendMessage",
 			this.SquareService_PROTOCOL_TYPE,
 			true,
@@ -1000,7 +989,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		continuationToken: string | undefined = undefined,
 		limit = 200,
 	): Promise<ttype.GetSquareChatMembersResponse> {
-		const req = [[11, 1, squareChatMid], [8, 3, limit]];
+		const req = [
+			[11, 1, squareChatMid],
+			[8, 3, limit],
+		];
 		if (continuationToken) {
 			req.push([11, 2, continuationToken]);
 		}
@@ -1017,9 +1009,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		squareMid: string,
 	): Promise<ttype.GetSquareFeatureSetResponse> {
 		return await this.request(
-			[
-				[11, 2, squareMid],
-			],
+			[[11, 2, squareMid]],
 			"getSquareFeatureSet",
 			this.SquareService_PROTOCOL_TYPE,
 			true,
@@ -1031,9 +1021,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		mid: string,
 	): Promise<ttype.GetInvitationTicketUrlResponse> {
 		return await this.request(
-			[
-				[11, 2, mid],
-			],
+			[[11, 2, mid]],
 			"getInvitationTicketUrl",
 			this.SquareService_PROTOCOL_TYPE,
 			true,
@@ -1103,11 +1091,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 				BANNED(6),
 				DELETED(7);
 		*/
-		const squareMember: NestedArray = [[11, 1, squareMemberMid], [
-			11,
-			2,
-			squareMid,
-		]];
+		const squareMember: NestedArray = [
+			[11, 1, squareMemberMid],
+			[11, 2, squareMid],
+		];
 		if (updatedAttrs.includes(1)) {
 			squareMember.push([11, 3, displayName]);
 		}
@@ -1217,9 +1204,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		squareMemberMid: string,
 	): Promise<ttype.GetSquareMemberResponse> {
 		return await this.request(
-			[
-				[11, 2, squareMemberMid],
-			],
+			[[11, 2, squareMemberMid]],
 			"getSquareMember",
 			this.SquareService_PROTOCOL_TYPE,
 			true,
@@ -1235,13 +1220,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	): Promise<LooseType> {
 		const req = [
 			[11, 1, squareChatMid],
-			[
-				12,
-				2,
-				[
-					[11, 1, displayName],
-				],
-			],
+			[12, 2, [[11, 1, displayName]]],
 			[8, 4, limit],
 			[11, 3, continuationToken],
 		];
@@ -1304,9 +1283,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		squareMid: string,
 	): Promise<ttype.LeaveSquareResponse> {
 		return await this.request(
-			[
-				[11, 2, squareMid],
-			],
+			[[11, 2, squareMid]],
 			"leaveSquare",
 			this.SquareService_PROTOCOL_TYPE,
 			true,

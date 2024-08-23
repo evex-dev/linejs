@@ -19,10 +19,9 @@ export class TypedEventEmitter<
 
 	public off<E2 extends E>(event: E2, listener: T[E2]): void {
 		if (this.listeners.has(event)) {
-			this.listeners.get(event)?.splice(
-				this.listeners.get(event)?.indexOf(listener) ?? 0,
-				1,
-			);
+			this.listeners
+				.get(event)
+				?.splice(this.listeners.get(event)?.indexOf(listener) ?? 0, 1);
 		}
 	}
 

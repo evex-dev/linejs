@@ -9,8 +9,6 @@ export type AuthTokenOptions = {
 	authToken?: string;
 };
 
-export type LoginOptions =
-	& (EmailOptions & AuthTokenOptions)
-	& {
-		device?: Device;
-	};
+export type LoginOptions = (EmailOptions & AuthTokenOptions) & {
+	device?: Device;
+};

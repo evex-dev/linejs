@@ -13,5 +13,8 @@
 	},
 	"imports": {
 		"@std/assert": "jsr:@std/assert@^1.0.2"
+	},
+	"tasks": {
+		"format": "deno run -A npm:prettier --write ./packages/**/*.ts"
 	}
 }

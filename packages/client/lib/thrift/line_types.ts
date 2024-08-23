@@ -1136,8 +1136,7 @@ export declare enum MessageReactionType {
 	OMG = 7,
 }
 
-export declare enum SquareChatAnnouncementType {
-}
+export declare enum SquareChatAnnouncementType {}
 
 export declare enum PictureSource {
 	NFT = 1,
@@ -1280,8 +1279,7 @@ export declare enum SquareChatState {
 	SUSPENDED = 2,
 }
 
-export declare enum MessageStatusType {
-}
+export declare enum MessageStatusType {}
 
 export declare enum NotifiedMessageType {
 	MENTION = 1,
@@ -1630,13 +1628,11 @@ export declare class TalkException {
 	reason: string;
 	parameterMap: { [k: string]: string };
 
-	constructor(
-		args?: {
-			code: ErrorCode;
-			reason: string;
-			parameterMap: { [k: string]: string };
-		},
-	);
+	constructor(args?: {
+		code: ErrorCode;
+		reason: string;
+		parameterMap: { [k: string]: string };
+	});
 }
 
 export declare class ChannelException {
@@ -1644,13 +1640,11 @@ export declare class ChannelException {
 	reason: string;
 	parameterMap: { [k: string]: string };
 
-	constructor(
-		args?: {
-			code: ChannelErrorCode;
-			reason: string;
-			parameterMap: { [k: string]: string };
-		},
-	);
+	constructor(args?: {
+		code: ChannelErrorCode;
+		reason: string;
+		parameterMap: { [k: string]: string };
+	});
 }
 
 export declare class SquareException {
@@ -1658,13 +1652,11 @@ export declare class SquareException {
 	errorExtraInfo: ErrorExtraInfo;
 	reason: string;
 
-	constructor(
-		args?: {
-			errorCode: SquareErrorCode;
-			errorExtraInfo: ErrorExtraInfo;
-			reason: string;
-		},
-	);
+	constructor(args?: {
+		errorCode: SquareErrorCode;
+		errorExtraInfo: ErrorExtraInfo;
+		reason: string;
+	});
 }
 
 export declare class LiffException {
@@ -1672,9 +1664,11 @@ export declare class LiffException {
 	message: string;
 	payload: LiffErrorPayload;
 
-	constructor(
-		args?: { code: LiffErrorCode; message: string; payload: LiffErrorPayload },
-	);
+	constructor(args?: {
+		code: LiffErrorCode;
+		message: string;
+		payload: LiffErrorPayload;
+	});
 }
 
 export declare class HomeException {
@@ -1682,13 +1676,11 @@ export declare class HomeException {
 	message: string;
 	retryTimeMillis: Int64;
 
-	constructor(
-		args?: {
-			exceptionCode: HomeExceptionCode;
-			message: string;
-			retryTimeMillis: Int64;
-		},
-	);
+	constructor(args?: {
+		exceptionCode: HomeExceptionCode;
+		message: string;
+		retryTimeMillis: Int64;
+	});
 }
 
 export declare class ChatappException {
@@ -1703,13 +1695,11 @@ export declare class MembershipException {
 	reason: string;
 	parameterMap: { [k: string]: string };
 
-	constructor(
-		args?: {
-			code: MembershipErrorCode;
-			reason: string;
-			parameterMap: { [k: string]: string };
-		},
-	);
+	constructor(args?: {
+		code: MembershipErrorCode;
+		reason: string;
+		parameterMap: { [k: string]: string };
+	});
 }
 
 export declare class BotException {
@@ -1717,13 +1707,11 @@ export declare class BotException {
 	reason: string;
 	parameterMap: { [k: string]: string };
 
-	constructor(
-		args?: {
-			errorCode: BotErrorCode;
-			reason: string;
-			parameterMap: { [k: string]: string };
-		},
-	);
+	constructor(args?: {
+		errorCode: BotErrorCode;
+		reason: string;
+		parameterMap: { [k: string]: string };
+	});
 }
 
 export declare class BotExternalException {
@@ -1738,22 +1726,21 @@ export declare class LiffChannelException {
 	reason: string;
 	parameterMap: { [k: string]: string };
 
-	constructor(
-		args?: {
-			code: ChannelErrorCode;
-			reason: string;
-			parameterMap: { [k: string]: string };
-		},
-	);
+	constructor(args?: {
+		code: ChannelErrorCode;
+		reason: string;
+		parameterMap: { [k: string]: string };
+	});
 }
 
 export declare class AccessTokenRefreshException {
 	errorCode: AccessTokenRefreshErrorCode;
 	reasonCode: Int64;
 
-	constructor(
-		args?: { errorCode: AccessTokenRefreshErrorCode; reasonCode: Int64 },
-	);
+	constructor(args?: {
+		errorCode: AccessTokenRefreshErrorCode;
+		reasonCode: Int64;
+	});
 }
 
 export declare class AccountEapConnectException {
@@ -1761,13 +1748,11 @@ export declare class AccountEapConnectException {
 	alertMessage: string;
 	webAuthDetails: WebAuthDetails;
 
-	constructor(
-		args?: {
-			code: AccountEapConnectErrorCode;
-			alertMessage: string;
-			webAuthDetails: WebAuthDetails;
-		},
-	);
+	constructor(args?: {
+		code: AccountEapConnectErrorCode;
+		alertMessage: string;
+		webAuthDetails: WebAuthDetails;
+	});
 }
 
 export declare class PwlessCredentialException {
@@ -1781,9 +1766,10 @@ export declare class SecondAuthFactorPinCodeException {
 	code: SecondAuthFactorPinCodeErrorCode;
 	alertMessage: string;
 
-	constructor(
-		args?: { code: SecondAuthFactorPinCodeErrorCode; alertMessage: string },
-	);
+	constructor(args?: {
+		code: SecondAuthFactorPinCodeErrorCode;
+		alertMessage: string;
+	});
 }
 
 export declare class AuthException {
@@ -1791,22 +1777,21 @@ export declare class AuthException {
 	alertMessage: string;
 	webAuthDetails: WebAuthDetails;
 
-	constructor(
-		args?: {
-			code: AuthErrorCode;
-			alertMessage: string;
-			webAuthDetails: WebAuthDetails;
-		},
-	);
+	constructor(args?: {
+		code: AuthErrorCode;
+		alertMessage: string;
+		webAuthDetails: WebAuthDetails;
+	});
 }
 
 export declare class SecondaryPwlessLoginException {
 	code: SecondaryPwlessLoginErrorCode;
 	alertMessage: string;
 
-	constructor(
-		args?: { code: SecondaryPwlessLoginErrorCode; alertMessage: string },
-	);
+	constructor(args?: {
+		code: SecondaryPwlessLoginErrorCode;
+		alertMessage: string;
+	});
 }
 
 export declare class SecondaryQrCodeException {
@@ -1822,14 +1807,12 @@ export declare class PaymentException {
 	serverDefinedMessage: string;
 	errorDetailMap: { [k: string]: string };
 
-	constructor(
-		args?: {
-			errorCode: PaymentErrorCode;
-			debugReason: string;
-			serverDefinedMessage: string;
-			errorDetailMap: { [k: string]: string };
-		},
-	);
+	constructor(args?: {
+		errorCode: PaymentErrorCode;
+		debugReason: string;
+		serverDefinedMessage: string;
+		errorDetailMap: { [k: string]: string };
+	});
 }
 
 export declare class SettingsException {
@@ -1837,13 +1820,11 @@ export declare class SettingsException {
 	reason: string;
 	parameterMap: { [k: string]: string };
 
-	constructor(
-		args?: {
-			code: SettingsErrorCode;
-			reason: string;
-			parameterMap: { [k: string]: string };
-		},
-	);
+	constructor(args?: {
+		code: SettingsErrorCode;
+		reason: string;
+		parameterMap: { [k: string]: string };
+	});
 }
 
 export declare class TicketException {
@@ -1851,13 +1832,11 @@ export declare class TicketException {
 	reason: string;
 	parameterMap: { [k: string]: string };
 
-	constructor(
-		args?: {
-			code: number;
-			reason: string;
-			parameterMap: { [k: string]: string };
-		},
-	);
+	constructor(args?: {
+		code: number;
+		reason: string;
+		parameterMap: { [k: string]: string };
+	});
 }
 
 export declare class ThingsException {
@@ -1872,13 +1851,11 @@ export declare class SuggestTrialException {
 	reason: string;
 	parameterMap: { [k: string]: string };
 
-	constructor(
-		args?: {
-			code: SuggestTrialErrorCode;
-			reason: string;
-			parameterMap: { [k: string]: string };
-		},
-	);
+	constructor(args?: {
+		code: SuggestTrialErrorCode;
+		reason: string;
+		parameterMap: { [k: string]: string };
+	});
 }
 
 export declare class LFLPremiumException {
@@ -1892,13 +1869,11 @@ export declare class WalletException {
 	reason: string;
 	attributes: { [k: string]: string };
 
-	constructor(
-		args?: {
-			code: WalletErrorCode;
-			reason: string;
-			attributes: { [k: string]: string };
-		},
-	);
+	constructor(args?: {
+		code: WalletErrorCode;
+		reason: string;
+		attributes: { [k: string]: string };
+	});
 }
 
 export declare class ShopException {
@@ -1906,13 +1881,11 @@ export declare class ShopException {
 	reason: string;
 	parameterMap: { [k: string]: string };
 
-	constructor(
-		args?: {
-			code: ShopErrorCode;
-			reason: string;
-			parameterMap: { [k: string]: string };
-		},
-	);
+	constructor(args?: {
+		code: ShopErrorCode;
+		reason: string;
+		parameterMap: { [k: string]: string };
+	});
 }
 
 export declare class PointException {
@@ -1920,13 +1893,11 @@ export declare class PointException {
 	reason: string;
 	extra: { [k: string]: string };
 
-	constructor(
-		args?: {
-			code: PointErrorCode;
-			reason: string;
-			extra: { [k: string]: string };
-		},
-	);
+	constructor(args?: {
+		code: PointErrorCode;
+		reason: string;
+		extra: { [k: string]: string };
+	});
 }
 
 export declare class E2EEKeyBackupException {
@@ -1934,13 +1905,11 @@ export declare class E2EEKeyBackupException {
 	reason: string;
 	parameterMap: { [k: string]: string };
 
-	constructor(
-		args?: {
-			code: E2EEKeyBackupErrorCode;
-			reason: string;
-			parameterMap: { [k: string]: string };
-		},
-	);
+	constructor(args?: {
+		code: E2EEKeyBackupErrorCode;
+		reason: string;
+		parameterMap: { [k: string]: string };
+	});
 }
 
 export declare class RejectedException {
@@ -1964,8 +1933,7 @@ export declare class UpdateChatRequest {
 	constructor(args?: { reqSeq: number; chat: Chat; updatedAttribute: number });
 }
 
-export declare class UpdateChatResponse {
-}
+export declare class UpdateChatResponse {}
 
 export declare class AcceptChatInvitationByTicketRequest {
 	reqSeq: number;
@@ -1975,8 +1943,7 @@ export declare class AcceptChatInvitationByTicketRequest {
 	constructor(args?: { reqSeq: number; chatMid: string; ticketId: string });
 }
 
-export declare class AcceptChatInvitationByTicketResponse {
-}
+export declare class AcceptChatInvitationByTicketResponse {}
 
 export declare class AcceptChatInvitationRequest {
 	reqSeq: number;
@@ -1992,8 +1959,7 @@ export declare class ReissueChatTicketRequest {
 	constructor(args?: { reqSeq: number; groupMid: string });
 }
 
-export declare class AcceptChatInvitationResponse {
-}
+export declare class AcceptChatInvitationResponse {}
 
 export declare class ReissueChatTicketResponse {
 	ticketId: string;
@@ -2015,8 +1981,7 @@ export declare class GetAllChatMidsRequest {
 	constructor(args?: { withMemberChats?: boolean; withInvitedChats?: boolean });
 }
 
-export declare class RejectChatInvitationResponse {
-}
+export declare class RejectChatInvitationResponse {}
 
 export declare class GetAllChatMidsResponse {
 	memberChatMids: string[];
@@ -2032,15 +1997,13 @@ export declare class CreateChatRequest {
 	targetUserMids: string[];
 	picturePath?: string;
 
-	constructor(
-		args?: {
-			reqSeq: number;
-			type: number;
-			name?: string;
-			targetUserMids: string[];
-			picturePath?: string;
-		},
-	);
+	constructor(args?: {
+		reqSeq: number;
+		type: number;
+		name?: string;
+		targetUserMids: string[];
+		picturePath?: string;
+	});
 }
 
 export declare class CreateChatResponse {
@@ -2054,9 +2017,11 @@ export declare class BeaconCondition {
 	notInFriends: string;
 	termsAgreed: boolean;
 
-	constructor(
-		args?: { inFriends: string; notInFriends: string; termsAgreed: boolean },
-	);
+	constructor(args?: {
+		inFriends: string;
+		notInFriends: string;
+		termsAgreed: boolean;
+	});
 }
 
 export declare class BeaconBackgroundNotification {
@@ -2065,14 +2030,12 @@ export declare class BeaconBackgroundNotification {
 	actionDelay: Int64;
 	actionConditions: BeaconCondition[];
 
-	constructor(
-		args?: {
-			actionInterval: Int64;
-			actionAndConditions: BeaconCondition[];
-			actionDelay: Int64;
-			actionConditions: BeaconCondition[];
-		},
-	);
+	constructor(args?: {
+		actionInterval: Int64;
+		actionAndConditions: BeaconCondition[];
+		actionDelay: Int64;
+		actionConditions: BeaconCondition[];
+	});
 }
 
 export declare class LiffErrorPayload {
@@ -2092,12 +2055,10 @@ export declare class ErrorExtraInfo {
 	preconditionFailedExtraInfo: PreconditionFailedExtraInfo;
 	userRestrictionInfo: UserRestrictionExtraInfo;
 
-	constructor(
-		args?: {
-			preconditionFailedExtraInfo: PreconditionFailedExtraInfo;
-			userRestrictionInfo: UserRestrictionExtraInfo;
-		},
-	);
+	constructor(args?: {
+		preconditionFailedExtraInfo: PreconditionFailedExtraInfo;
+		userRestrictionInfo: UserRestrictionExtraInfo;
+	});
 }
 
 export declare class UserRestrictionExtraInfo {
@@ -2134,29 +2095,27 @@ export declare class Profile {
 	nftProfile: boolean;
 	pictureSource: PictureSource;
 
-	constructor(
-		args?: {
-			mid: string;
-			userid: string;
-			phone: string;
-			email: string;
-			regionCode: string;
-			displayName: string;
-			phoneticName: string;
-			pictureStatus: string;
-			thumbnailUrl: string;
-			statusMessage: string;
-			allowSearchByUserid: boolean;
-			allowSearchByEmail: boolean;
-			picturePath: string;
-			musicProfile: string;
-			videoProfile: string;
-			statusMessageContentMetadata: { [k: string]: string };
-			avatarProfile: AvatarProfile;
-			nftProfile: boolean;
-			pictureSource: PictureSource;
-		},
-	);
+	constructor(args?: {
+		mid: string;
+		userid: string;
+		phone: string;
+		email: string;
+		regionCode: string;
+		displayName: string;
+		phoneticName: string;
+		pictureStatus: string;
+		thumbnailUrl: string;
+		statusMessage: string;
+		allowSearchByUserid: boolean;
+		allowSearchByEmail: boolean;
+		picturePath: string;
+		musicProfile: string;
+		videoProfile: string;
+		statusMessageContentMetadata: { [k: string]: string };
+		avatarProfile: AvatarProfile;
+		nftProfile: boolean;
+		pictureSource: PictureSource;
+	});
 }
 
 export declare class AvatarProfile {
@@ -2165,14 +2124,12 @@ export declare class AvatarProfile {
 	thumbnail: string;
 	usablePublicly: boolean;
 
-	constructor(
-		args?: {
-			version: string;
-			updatedMillis: Int64;
-			thumbnail: string;
-			usablePublicly: boolean;
-		},
-	);
+	constructor(args?: {
+		version: string;
+		updatedMillis: Int64;
+		thumbnail: string;
+		usablePublicly: boolean;
+	});
 }
 
 export declare class Operation {
@@ -2187,20 +2144,18 @@ export declare class Operation {
 	param3: string;
 	message: Message;
 
-	constructor(
-		args?: {
-			revision: Int64;
-			createdTime: Int64;
-			type: OpType;
-			reqSeq: number;
-			checksum: string;
-			status: OpStatus;
-			param1: string;
-			param2: string;
-			param3: string;
-			message: Message;
-		},
-	);
+	constructor(args?: {
+		revision: Int64;
+		createdTime: Int64;
+		type: OpType;
+		reqSeq: number;
+		checksum: string;
+		status: OpStatus;
+		param1: string;
+		param2: string;
+		param3: string;
+		message: Message;
+	});
 }
 
 export declare class Message {
@@ -2225,30 +2180,28 @@ export declare class Message {
 	appExtensionType: AppExtensionType;
 	reactions: Reaction[];
 
-	constructor(
-		args?: {
-			_from: string;
-			to: string;
-			toType: MIDType;
-			id: string;
-			createdTime: Int64;
-			deliveredTime: Int64;
-			text: string;
-			location: Location;
-			hasContent: boolean;
-			contentType: ContentType;
-			contentPreview: Buffer | string;
-			contentMetadata: { [k: string]: string };
-			sessionId: any;
-			chunks: Buffer[] | string[];
-			relatedMessageId: string;
-			messageRelationType: MessageRelationType;
-			readCount: Int64;
-			relatedMessageServiceCode: ServiceCode;
-			appExtensionType: AppExtensionType;
-			reactions: Reaction[];
-		},
-	);
+	constructor(args?: {
+		_from: string;
+		to: string;
+		toType: MIDType;
+		id: string;
+		createdTime: Int64;
+		deliveredTime: Int64;
+		text: string;
+		location: Location;
+		hasContent: boolean;
+		contentType: ContentType;
+		contentPreview: Buffer | string;
+		contentMetadata: { [k: string]: string };
+		sessionId: any;
+		chunks: Buffer[] | string[];
+		relatedMessageId: string;
+		messageRelationType: MessageRelationType;
+		readCount: Int64;
+		relatedMessageServiceCode: ServiceCode;
+		appExtensionType: AppExtensionType;
+		reactions: Reaction[];
+	});
 }
 
 export declare class Reaction {
@@ -2256,9 +2209,11 @@ export declare class Reaction {
 	atMillis: Int64;
 	reactionType: ReactionType;
 
-	constructor(
-		args?: { fromUserMid: string; atMillis: Int64; reactionType: ReactionType },
-	);
+	constructor(args?: {
+		fromUserMid: string;
+		atMillis: Int64;
+		reactionType: ReactionType;
+	});
 }
 
 export declare class ReactionType {
@@ -2272,9 +2227,11 @@ export declare class ReactRequest {
 	messageId: Int64;
 	reactionType: ReactionType;
 
-	constructor(
-		args?: { reqSeq: number; messageId: Int64; reactionType: ReactionType },
-	);
+	constructor(args?: {
+		reqSeq: number;
+		messageId: Int64;
+		reactionType: ReactionType;
+	});
 }
 
 export declare class Location {
@@ -2288,19 +2245,17 @@ export declare class Location {
 	accuracy: GeolocationAccuracy;
 	altitudeMeters: number;
 
-	constructor(
-		args?: {
-			title: string;
-			address: string;
-			latitude: number;
-			longitude: number;
-			phone: string;
-			categoryId: string;
-			provider: PlaceSearchProvider;
-			accuracy: GeolocationAccuracy;
-			altitudeMeters: number;
-		},
-	);
+	constructor(args?: {
+		title: string;
+		address: string;
+		latitude: number;
+		longitude: number;
+		phone: string;
+		categoryId: string;
+		provider: PlaceSearchProvider;
+		accuracy: GeolocationAccuracy;
+		altitudeMeters: number;
+	});
 }
 
 export declare class GeolocationAccuracy {
@@ -2311,16 +2266,14 @@ export declare class GeolocationAccuracy {
 	bearingAccuracy: number;
 	accuracyMode: GeolocationAccuracyMode;
 
-	constructor(
-		args?: {
-			radiusMeters: number;
-			radiusConfidence: number;
-			altitudeAccuracy: number;
-			velocityAccuracy: number;
-			bearingAccuracy: number;
-			accuracyMode: GeolocationAccuracyMode;
-		},
-	);
+	constructor(args?: {
+		radiusMeters: number;
+		radiusConfidence: number;
+		altitudeAccuracy: number;
+		velocityAccuracy: number;
+		bearingAccuracy: number;
+		accuracyMode: GeolocationAccuracyMode;
+	});
 }
 
 export declare class Contact {
@@ -2354,39 +2307,37 @@ export declare class Contact {
 	nftProfile: boolean;
 	pictureSource: PictureSource;
 
-	constructor(
-		args?: {
-			mid: string;
-			createdTime: Int64;
-			type: ContactType;
-			status: ContactStatus;
-			relation: ContactRelation;
-			displayName: string;
-			phoneticName: string;
-			pictureStatus: string;
-			thumbnailUrl: string;
-			statusMessage: string;
-			displayNameOverridden: string;
-			favoriteTime: Int64;
-			capableVoiceCall: boolean;
-			capableVideoCall: boolean;
-			capableMyhome: boolean;
-			capableBuddy: boolean;
-			attributes: number;
-			settings: Int64;
-			picturePath: string;
-			recommendParams: string;
-			friendRequestStatus: FriendRequestStatus;
-			musicProfile: string;
-			videoProfile: string;
-			statusMessageContentMetadata: { [k: string]: string };
-			avatarProfile: AvatarProfile;
-			friendRingtone: string;
-			friendRingbackTone: string;
-			nftProfile: boolean;
-			pictureSource: PictureSource;
-		},
-	);
+	constructor(args?: {
+		mid: string;
+		createdTime: Int64;
+		type: ContactType;
+		status: ContactStatus;
+		relation: ContactRelation;
+		displayName: string;
+		phoneticName: string;
+		pictureStatus: string;
+		thumbnailUrl: string;
+		statusMessage: string;
+		displayNameOverridden: string;
+		favoriteTime: Int64;
+		capableVoiceCall: boolean;
+		capableVideoCall: boolean;
+		capableMyhome: boolean;
+		capableBuddy: boolean;
+		attributes: number;
+		settings: Int64;
+		picturePath: string;
+		recommendParams: string;
+		friendRequestStatus: FriendRequestStatus;
+		musicProfile: string;
+		videoProfile: string;
+		statusMessageContentMetadata: { [k: string]: string };
+		avatarProfile: AvatarProfile;
+		friendRingtone: string;
+		friendRingbackTone: string;
+		nftProfile: boolean;
+		pictureSource: PictureSource;
+	});
 }
 
 export declare class GetContactsV2Request {
@@ -2394,13 +2345,11 @@ export declare class GetContactsV2Request {
 	neededContactCalendarEvents: ContactCalendarEventType[];
 	withUserStatus: boolean;
 
-	constructor(
-		args?: {
-			targetUserMids: string[];
-			neededContactCalendarEvents: ContactCalendarEventType[];
-			withUserStatus: boolean;
-		},
-	);
+	constructor(args?: {
+		targetUserMids: string[];
+		neededContactCalendarEvents: ContactCalendarEventType[];
+		withUserStatus: boolean;
+	});
 }
 
 export declare class GetContactsV2Response {
@@ -2415,26 +2364,22 @@ export declare class ContactEntry {
 	contact: Contact;
 	calendarEvents: ContactCalendarEvents;
 
-	constructor(
-		args?: {
-			userStatus: UserStatus;
-			snapshotTimeMillis: Int64;
-			contact: Contact;
-			calendarEvents: ContactCalendarEvents;
-		},
-	);
+	constructor(args?: {
+		userStatus: UserStatus;
+		snapshotTimeMillis: Int64;
+		contact: Contact;
+		calendarEvents: ContactCalendarEvents;
+	});
 }
 
 export declare class ContactCalendarEvents {
 	events: { [k: number /*ContactCalendarEventType*/]: ContactCalendarEvent };
 
-	constructor(
-		args?: {
-			events: {
-				[k: number /*ContactCalendarEventType*/]: ContactCalendarEvent;
-			};
-		},
-	);
+	constructor(args?: {
+		events: {
+			[k: number /*ContactCalendarEventType*/]: ContactCalendarEvent;
+		};
+	});
 }
 
 export declare class ContactCalendarEvent {
@@ -2444,15 +2389,13 @@ export declare class ContactCalendarEvent {
 	month: number;
 	day: number;
 
-	constructor(
-		args?: {
-			id: string;
-			state: ContactCalendarEventState;
-			year: number;
-			month: number;
-			day: number;
-		},
-	);
+	constructor(args?: {
+		id: string;
+		state: ContactCalendarEventState;
+		year: number;
+		month: number;
+		day: number;
+	});
 }
 
 export declare class Configurations {
@@ -2468,14 +2411,12 @@ export declare class E2EEPublicKey {
 	keyData: Buffer | string;
 	createdTime: Int64;
 
-	constructor(
-		args?: {
-			version: number;
-			keyId: number;
-			keyData: Buffer | string;
-			createdTime: Int64;
-		},
-	);
+	constructor(args?: {
+		version: number;
+		keyId: number;
+		keyData: Buffer | string;
+		createdTime: Int64;
+	});
 }
 
 export declare class RSAKey {
@@ -2484,14 +2425,12 @@ export declare class RSAKey {
 	evalue: string;
 	sessionKey: string;
 
-	constructor(
-		args?: {
-			keynm: string;
-			nvalue: string;
-			evalue: string;
-			sessionKey: string;
-		},
-	);
+	constructor(args?: {
+		keynm: string;
+		nvalue: string;
+		evalue: string;
+		sessionKey: string;
+	});
 }
 
 export declare class Settings {
@@ -2574,88 +2513,86 @@ export declare class Settings {
 	agreementLocationVersion: string;
 	zhdPageAllowedToShow: boolean;
 
-	constructor(
-		args?: {
-			notificationEnable: boolean;
-			notificationMuteExpiration: Int64;
-			notificationNewMessage: boolean;
-			notificationGroupInvitation: boolean;
-			notificationShowMessage: boolean;
-			notificationIncomingCall: boolean;
-			notificationSoundMessage: string;
-			notificationSoundGroup: string;
-			notificationDisabledWithSub: boolean;
-			notificationPayment: boolean;
-			privacySyncContacts: boolean;
-			privacySearchByPhoneNumber: boolean;
-			privacySearchByUserid: boolean;
-			privacySearchByEmail: boolean;
-			privacyAllowSecondaryDeviceLogin: boolean;
-			privacyProfileImagePostToMyhome: boolean;
-			privacyReceiveMessagesFromNotFriend: boolean;
-			privacyAgreeUseLineCoinToPaidCall: boolean;
-			privacyAgreeUsePaidCall: boolean;
-			privacyAllowFriendRequest: boolean;
-			contactMyTicket: string;
-			identityProvider: IdentityProvider;
-			identityIdentifier: string;
-			snsAccounts: { [k: number /*SnsIdType*/]: string };
-			phoneRegistration: boolean;
-			emailConfirmationStatus: EmailConfirmationStatus;
-			accountMigrationPincodeType: AccountMigrationPincodeType;
-			enforcedInputAccountMigrationPincode: boolean;
-			securityCenterSettingsType: SecurityCenterSettingsType;
-			allowUnregistrationSecondaryDevice: boolean;
-			pwlessPrimaryCredentialRegistration: boolean;
-			preferenceLocale: string;
-			customModes: { [k: number /*CustomMode*/]: string };
-			e2eeEnable: boolean;
-			hitokotoBackupRequested: boolean;
-			privacyProfileMusicPostToMyhome: boolean;
-			privacyAllowNearby: boolean;
-			agreementNearbyTime: Int64;
-			agreementSquareTime: Int64;
-			notificationMention: boolean;
-			botUseAgreementAcceptedAt: Int64;
-			agreementShakeFunction: Int64;
-			agreementMobileContactName: Int64;
-			agreementSoundToText: Int64;
-			privacyPolicyVersion: string;
-			agreementAdByWebAccess: Int64;
-			agreementPhoneNumberMatching: Int64;
-			agreementCommunicationInfo: Int64;
-			privacySharePersonalInfoToFriends: UserSharePersonalInfoToFriendsType;
-			agreementThingsWirelessCommunication: Int64;
-			agreementGdpr: Int64;
-			privacyStatusMessageHistory: UserStatusMessageHistoryType;
-			agreementProvideLocation: Int64;
-			agreementBeacon: Int64;
-			privacyAllowProfileHistory: UserAllowProfileHistoryType;
-			agreementContentsSuggest: Int64;
-			agreementContentsSuggestDataCollection: Int64;
-			privacyAgeResult: UserAgeType;
-			privacyAgeResultReceived: boolean;
-			notificationThumbnail: boolean;
-			agreementOcrImageCollection: Int64;
-			privacyAllowFollow: boolean;
-			privacyShowFollowList: boolean;
-			notificationBadgeTalkOnly: boolean;
-			agreementIcna: Int64;
-			notificationReaction: boolean;
-			agreementMid: Int64;
-			homeNotificationNewFriend: boolean;
-			homeNotificationFavoriteFriendUpdate: boolean;
-			homeNotificationGroupMemberUpdate: boolean;
-			homeNotificationBirthday: boolean;
-			eapAllowedToConnect: { [k: number /*SnsIdType*/]: boolean };
-			agreementLineOutUse: Int64;
-			agreementLineOutProvideInfo: Int64;
-			notificationShowProfileImage: boolean;
-			agreementPdpa: Int64;
-			agreementLocationVersion: string;
-			zhdPageAllowedToShow: boolean;
-		},
-	);
+	constructor(args?: {
+		notificationEnable: boolean;
+		notificationMuteExpiration: Int64;
+		notificationNewMessage: boolean;
+		notificationGroupInvitation: boolean;
+		notificationShowMessage: boolean;
+		notificationIncomingCall: boolean;
+		notificationSoundMessage: string;
+		notificationSoundGroup: string;
+		notificationDisabledWithSub: boolean;
+		notificationPayment: boolean;
+		privacySyncContacts: boolean;
+		privacySearchByPhoneNumber: boolean;
+		privacySearchByUserid: boolean;
+		privacySearchByEmail: boolean;
+		privacyAllowSecondaryDeviceLogin: boolean;
+		privacyProfileImagePostToMyhome: boolean;
+		privacyReceiveMessagesFromNotFriend: boolean;
+		privacyAgreeUseLineCoinToPaidCall: boolean;
+		privacyAgreeUsePaidCall: boolean;
+		privacyAllowFriendRequest: boolean;
+		contactMyTicket: string;
+		identityProvider: IdentityProvider;
+		identityIdentifier: string;
+		snsAccounts: { [k: number /*SnsIdType*/]: string };
+		phoneRegistration: boolean;
+		emailConfirmationStatus: EmailConfirmationStatus;
+		accountMigrationPincodeType: AccountMigrationPincodeType;
+		enforcedInputAccountMigrationPincode: boolean;
+		securityCenterSettingsType: SecurityCenterSettingsType;
+		allowUnregistrationSecondaryDevice: boolean;
+		pwlessPrimaryCredentialRegistration: boolean;
+		preferenceLocale: string;
+		customModes: { [k: number /*CustomMode*/]: string };
+		e2eeEnable: boolean;
+		hitokotoBackupRequested: boolean;
+		privacyProfileMusicPostToMyhome: boolean;
+		privacyAllowNearby: boolean;
+		agreementNearbyTime: Int64;
+		agreementSquareTime: Int64;
+		notificationMention: boolean;
+		botUseAgreementAcceptedAt: Int64;
+		agreementShakeFunction: Int64;
+		agreementMobileContactName: Int64;
+		agreementSoundToText: Int64;
+		privacyPolicyVersion: string;
+		agreementAdByWebAccess: Int64;
+		agreementPhoneNumberMatching: Int64;
+		agreementCommunicationInfo: Int64;
+		privacySharePersonalInfoToFriends: UserSharePersonalInfoToFriendsType;
+		agreementThingsWirelessCommunication: Int64;
+		agreementGdpr: Int64;
+		privacyStatusMessageHistory: UserStatusMessageHistoryType;
+		agreementProvideLocation: Int64;
+		agreementBeacon: Int64;
+		privacyAllowProfileHistory: UserAllowProfileHistoryType;
+		agreementContentsSuggest: Int64;
+		agreementContentsSuggestDataCollection: Int64;
+		privacyAgeResult: UserAgeType;
+		privacyAgeResultReceived: boolean;
+		notificationThumbnail: boolean;
+		agreementOcrImageCollection: Int64;
+		privacyAllowFollow: boolean;
+		privacyShowFollowList: boolean;
+		notificationBadgeTalkOnly: boolean;
+		agreementIcna: Int64;
+		notificationReaction: boolean;
+		agreementMid: Int64;
+		homeNotificationNewFriend: boolean;
+		homeNotificationFavoriteFriendUpdate: boolean;
+		homeNotificationGroupMemberUpdate: boolean;
+		homeNotificationBirthday: boolean;
+		eapAllowedToConnect: { [k: number /*SnsIdType*/]: boolean };
+		agreementLineOutUse: Int64;
+		agreementLineOutProvideInfo: Int64;
+		notificationShowProfileImage: boolean;
+		agreementPdpa: Int64;
+		agreementLocationVersion: string;
+		zhdPageAllowedToShow: boolean;
+	});
 }
 
 export declare class E2EENegotiationResult {
@@ -2663,13 +2600,11 @@ export declare class E2EENegotiationResult {
 	publicKey: E2EEPublicKey;
 	specVersion: number;
 
-	constructor(
-		args?: {
-			allowedTypes: ContentType[];
-			publicKey: E2EEPublicKey;
-			specVersion: number;
-		},
-	);
+	constructor(args?: {
+		allowedTypes: ContentType[];
+		publicKey: E2EEPublicKey;
+		specVersion: number;
+	});
 }
 
 export declare class ContactRegistration {
@@ -2678,14 +2613,12 @@ export declare class ContactRegistration {
 	contactType: ContactType;
 	contactKey: string;
 
-	constructor(
-		args?: {
-			contact: Contact;
-			luid: string;
-			contactType: ContactType;
-			contactKey: string;
-		},
-	);
+	constructor(args?: {
+		contact: Contact;
+		luid: string;
+		contactType: ContactType;
+		contactKey: string;
+	});
 }
 
 export declare class E2EEGroupSharedKey {
@@ -2699,19 +2632,17 @@ export declare class E2EEGroupSharedKey {
 	allowedTypes: ContentType[];
 	specVersion: number;
 
-	constructor(
-		args?: {
-			keyVersion: number;
-			groupKeyId: number;
-			creator: string;
-			creatorKeyId: number;
-			receiver: string;
-			receiverKeyId: number;
-			encryptedSharedKey: Buffer | string;
-			allowedTypes: ContentType[];
-			specVersion: number;
-		},
-	);
+	constructor(args?: {
+		keyVersion: number;
+		groupKeyId: number;
+		creator: string;
+		creatorKeyId: number;
+		receiver: string;
+		receiverKeyId: number;
+		encryptedSharedKey: Buffer | string;
+		allowedTypes: ContentType[];
+		specVersion: number;
+	});
 }
 
 export declare class VerificationSessionData {
@@ -2724,18 +2655,16 @@ export declare class VerificationSessionData {
 	availableVerificationMethods: VerificationMethod[];
 	callerIdMask: string;
 
-	constructor(
-		args?: {
-			sessionId: string;
-			method: VerificationMethod;
-			callback: string;
-			normalizedPhone: string;
-			countryCode: string;
-			nationalSignificantNumber: string;
-			availableVerificationMethods: VerificationMethod[];
-			callerIdMask: string;
-		},
-	);
+	constructor(args?: {
+		sessionId: string;
+		method: VerificationMethod;
+		callback: string;
+		normalizedPhone: string;
+		countryCode: string;
+		nationalSignificantNumber: string;
+		availableVerificationMethods: VerificationMethod[];
+		callerIdMask: string;
+	});
 }
 
 export declare class FollowRequest {
@@ -2762,9 +2691,11 @@ export declare class Ticket {
 	expirationTime: Int64;
 	maxUseCount: number;
 
-	constructor(
-		args?: { id: string; expirationTime: Int64; maxUseCount: number },
-	);
+	constructor(args?: {
+		id: string;
+		expirationTime: Int64;
+		maxUseCount: number;
+	});
 }
 
 export declare class GetChatsRequest {
@@ -2772,9 +2703,11 @@ export declare class GetChatsRequest {
 	withMembers: boolean;
 	withInvitees: boolean;
 
-	constructor(
-		args?: { chatMids: string[]; withMembers: boolean; withInvitees: boolean },
-	);
+	constructor(args?: {
+		chatMids: string[];
+		withMembers: boolean;
+		withInvitees: boolean;
+	});
 }
 
 export declare class GetChatsResponse {
@@ -2793,18 +2726,16 @@ export declare class Chat {
 	picturePath: string;
 	extra: Extra;
 
-	constructor(
-		args?: {
-			type: CharType;
-			chatMid: string;
-			createdTime: Int64;
-			notificationDisabled: boolean;
-			favoriteTimestamp: Int64;
-			chatName: string;
-			picturePath: string;
-			extra: Extra;
-		},
-	);
+	constructor(args?: {
+		type: CharType;
+		chatMid: string;
+		createdTime: Int64;
+		notificationDisabled: boolean;
+		favoriteTimestamp: Int64;
+		chatName: string;
+		picturePath: string;
+		extra: Extra;
+	});
 }
 
 export declare class Extra {
@@ -2823,21 +2754,18 @@ export declare class GroupExtra {
 	addFriendDisabled: boolean;
 	ticketDisabled: boolean;
 
-	constructor(
-		args?: {
-			creator: string;
-			preventedJoinByTicket: boolean;
-			invitationTicket: string;
-			memberMids: { [k: string]: Int64 };
-			inviteeMids: { [k: string]: Int64 };
-			addFriendDisabled: boolean;
-			ticketDisabled: boolean;
-		},
-	);
+	constructor(args?: {
+		creator: string;
+		preventedJoinByTicket: boolean;
+		invitationTicket: string;
+		memberMids: { [k: string]: Int64 };
+		inviteeMids: { [k: string]: Int64 };
+		addFriendDisabled: boolean;
+		ticketDisabled: boolean;
+	});
 }
 
-export declare class PeerExtra {
-}
+export declare class PeerExtra {}
 
 export declare class GetFollowersRequest {
 	followMid: FollowMid;
@@ -2852,14 +2780,12 @@ export declare class GetFollowersResponse {
 	followingCount: Int64;
 	followerCount: Int64;
 
-	constructor(
-		args?: {
-			profiles: FollowProfile[];
-			cursor: string;
-			followingCount: Int64;
-			followerCount: Int64;
-		},
-	);
+	constructor(args?: {
+		profiles: FollowProfile[];
+		cursor: string;
+		followingCount: Int64;
+		followerCount: Int64;
+	});
 }
 
 export declare class FollowProfile {
@@ -2870,16 +2796,14 @@ export declare class FollowProfile {
 	allowFollow: boolean;
 	followBuddyDetail: FollowBuddyDetail;
 
-	constructor(
-		args?: {
-			followMid: FollowMid;
-			displayName: string;
-			picturePath: string;
-			following: boolean;
-			allowFollow: boolean;
-			followBuddyDetail: FollowBuddyDetail;
-		},
-	);
+	constructor(args?: {
+		followMid: FollowMid;
+		displayName: string;
+		picturePath: string;
+		following: boolean;
+		allowFollow: boolean;
+		followBuddyDetail: FollowBuddyDetail;
+	});
 }
 
 export declare class FollowBuddyDetail {
@@ -2901,14 +2825,12 @@ export declare class GetFollowingsResponse {
 	followingCount: Int64;
 	followerCount: Int64;
 
-	constructor(
-		args?: {
-			profiles: FollowProfile[];
-			cursor: string;
-			followingCount: Int64;
-			followerCount: Int64;
-		},
-	);
+	constructor(args?: {
+		profiles: FollowProfile[];
+		cursor: string;
+		followingCount: Int64;
+		followerCount: Int64;
+	});
 }
 
 export declare class Room {
@@ -2918,15 +2840,13 @@ export declare class Room {
 	notificationDisabled: boolean;
 	memberMids: string[];
 
-	constructor(
-		args?: {
-			mid: string;
-			createdTime: Int64;
-			contacts: Contact[];
-			notificationDisabled: boolean;
-			memberMids: string[];
-		},
-	);
+	constructor(args?: {
+		mid: string;
+		createdTime: Int64;
+		contacts: Contact[];
+		notificationDisabled: boolean;
+		memberMids: string[];
+	});
 }
 
 export declare class ContactModification {
@@ -2936,19 +2856,16 @@ export declare class ContactModification {
 	emails: string[];
 	userids: string[];
 
-	constructor(
-		args?: {
-			type: ModificationType;
-			luid: string;
-			phones: string[];
-			emails: string[];
-			userids: string[];
-		},
-	);
+	constructor(args?: {
+		type: ModificationType;
+		luid: string;
+		phones: string[];
+		emails: string[];
+		userids: string[];
+	});
 }
 
-export declare class GetE2EEKeyBackupCertificatesRequest {
-}
+export declare class GetE2EEKeyBackupCertificatesRequest {}
 
 export declare class GetE2EEKeyBackupCertificatesResponse {
 	urlHashList: string[];
@@ -2961,39 +2878,42 @@ export declare class DeleteOtherFromChatRequest {
 	chatMid: string;
 	targetUserMids: string[];
 
-	constructor(
-		args?: { reqSeq: number; chatMid: string; targetUserMids: string[] },
-	);
+	constructor(args?: {
+		reqSeq: number;
+		chatMid: string;
+		targetUserMids: string[];
+	});
 }
 
-export declare class DeleteOtherFromChatResponse {
-}
+export declare class DeleteOtherFromChatResponse {}
 
 export declare class InviteIntoChatRequest {
 	reqSeq: number;
 	chatMid: string;
 	targetUserMids: string[];
 
-	constructor(
-		args?: { reqSeq: number; chatMid: string; targetUserMids: string[] },
-	);
+	constructor(args?: {
+		reqSeq: number;
+		chatMid: string;
+		targetUserMids: string[];
+	});
 }
 
-export declare class InviteIntoChatResponse {
-}
+export declare class InviteIntoChatResponse {}
 
 export declare class CancelChatInvitationRequest {
 	reqSeq: number;
 	chatMid: string;
 	targetUserMids: string[];
 
-	constructor(
-		args?: { reqSeq: number; chatMid: string; targetUserMids: string[] },
-	);
+	constructor(args?: {
+		reqSeq: number;
+		chatMid: string;
+		targetUserMids: string[];
+	});
 }
 
-export declare class CancelChatInvitationResponse {
-}
+export declare class CancelChatInvitationResponse {}
 
 export declare class DeleteSelfFromChatRequest {
 	reqSeq: number;
@@ -3003,20 +2923,17 @@ export declare class DeleteSelfFromChatRequest {
 	lastMessageDeliveredTime: Int64;
 	lastMessageId: string;
 
-	constructor(
-		args?: {
-			reqSeq: number;
-			chatMid: string;
-			lastSeenMessageDeliveredTime: Int64;
-			lastSeenMessageId: string;
-			lastMessageDeliveredTime: Int64;
-			lastMessageId: string;
-		},
-	);
+	constructor(args?: {
+		reqSeq: number;
+		chatMid: string;
+		lastSeenMessageDeliveredTime: Int64;
+		lastSeenMessageId: string;
+		lastMessageDeliveredTime: Int64;
+		lastMessageId: string;
+	});
 }
 
-export declare class DeleteSelfFromChatResponse {
-}
+export declare class DeleteSelfFromChatResponse {}
 
 export declare class FindChatByTicketRequest {
 	ticketId: string;
@@ -3043,15 +2960,13 @@ export declare class RefreshAccessTokenResponse {
 	tokenIssueTimeEpochSec: Int64;
 	refreshToken: string;
 
-	constructor(
-		args?: {
-			accessToken: string;
-			durationUntilRefreshInSec: Int64;
-			retryPolicy: RetryPolicy;
-			tokenIssueTimeEpochSec: Int64;
-			refreshToken: string;
-		},
-	);
+	constructor(args?: {
+		accessToken: string;
+		durationUntilRefreshInSec: Int64;
+		retryPolicy: RetryPolicy;
+		tokenIssueTimeEpochSec: Int64;
+		refreshToken: string;
+	});
 }
 
 export declare class RetryPolicy {
@@ -3060,26 +2975,22 @@ export declare class RetryPolicy {
 	multiplier: number;
 	jitterRate: number;
 
-	constructor(
-		args?: {
-			initialDelayInMillis: Int64;
-			maxDelayInMillis: Int64;
-			multiplier: number;
-			jitterRate: number;
-		},
-	);
+	constructor(args?: {
+		initialDelayInMillis: Int64;
+		maxDelayInMillis: Int64;
+		multiplier: number;
+		jitterRate: number;
+	});
 }
 
 export declare class TMessageReadRange {
 	chatId: string;
 	ranges: { [k: string]: TMessageReadRangeEntry[] };
 
-	constructor(
-		args?: {
-			chatId: string;
-			ranges: { [k: string]: TMessageReadRangeEntry[] };
-		},
-	);
+	constructor(args?: {
+		chatId: string;
+		ranges: { [k: string]: TMessageReadRangeEntry[] };
+	});
 }
 
 export declare class TMessageReadRangeEntry {
@@ -3088,14 +2999,12 @@ export declare class TMessageReadRangeEntry {
 	startTime: Int64;
 	endTime: Int64;
 
-	constructor(
-		args?: {
-			startMessageId: Int64;
-			endMessageId: Int64;
-			startTime: Int64;
-			endTime: Int64;
-		},
-	);
+	constructor(args?: {
+		startMessageId: Int64;
+		endMessageId: Int64;
+		startTime: Int64;
+		endTime: Int64;
+	});
 }
 
 export declare class BuddyDetail {
@@ -3130,40 +3039,38 @@ export declare class BuddyDetail {
 	botActiveStatus: BuddyBotActiveStatus;
 	membershipEnabled: boolean;
 
-	constructor(
-		args?: {
-			mid: string;
-			memberCount: Int64;
-			onAir: boolean;
-			businessAccount: boolean;
-			addable: boolean;
-			acceptableContentTypes: ContentType[];
-			capableMyhome: boolean;
-			freePhoneCallable: boolean;
-			phoneNumberToDial: string;
-			needPermissionApproval: boolean;
-			channelId: string;
-			channelProviderName: string;
-			iconType: number;
-			botType: BotType;
-			showRichMenu: boolean;
-			richMenuRevision: Int64;
-			onAirLabel: BuddyOnAirLabel;
-			useTheme: boolean;
-			themeId: string;
-			useBar: boolean;
-			barRevision: Int64;
-			useBackground: boolean;
-			backgroundId: string;
-			statusBarEnabled: boolean;
-			statusBarRevision: Int64;
-			searchId: string;
-			onAirVersion: number;
-			blockable: boolean;
-			botActiveStatus: BuddyBotActiveStatus;
-			membershipEnabled: boolean;
-		},
-	);
+	constructor(args?: {
+		mid: string;
+		memberCount: Int64;
+		onAir: boolean;
+		businessAccount: boolean;
+		addable: boolean;
+		acceptableContentTypes: ContentType[];
+		capableMyhome: boolean;
+		freePhoneCallable: boolean;
+		phoneNumberToDial: string;
+		needPermissionApproval: boolean;
+		channelId: string;
+		channelProviderName: string;
+		iconType: number;
+		botType: BotType;
+		showRichMenu: boolean;
+		richMenuRevision: Int64;
+		onAirLabel: BuddyOnAirLabel;
+		useTheme: boolean;
+		themeId: string;
+		useBar: boolean;
+		barRevision: Int64;
+		useBackground: boolean;
+		backgroundId: string;
+		statusBarEnabled: boolean;
+		statusBarRevision: Int64;
+		searchId: string;
+		onAirVersion: number;
+		blockable: boolean;
+		botActiveStatus: BuddyBotActiveStatus;
+		membershipEnabled: boolean;
+	});
 }
 
 export declare class MessageBoxV2MessageId {
@@ -3180,15 +3087,13 @@ export declare class GetPreviousMessagesV2Request {
 	withReadCount: boolean;
 	receivedOnly: boolean;
 
-	constructor(
-		args?: {
-			messageBoxId: string;
-			endMessageId: MessageBoxV2MessageId;
-			messagesCount: number;
-			withReadCount: boolean;
-			receivedOnly: boolean;
-		},
-	);
+	constructor(args?: {
+		messageBoxId: string;
+		endMessageId: MessageBoxV2MessageId;
+		messagesCount: number;
+		withReadCount: boolean;
+		receivedOnly: boolean;
+	});
 }
 
 export declare class ChannelToken {
@@ -3198,15 +3103,13 @@ export declare class ChannelToken {
 	refreshToken: string;
 	channelAccessToken: string;
 
-	constructor(
-		args?: {
-			token: string;
-			obsToken: string;
-			expiration: Int64;
-			refreshToken: string;
-			channelAccessToken: string;
-		},
-	);
+	constructor(args?: {
+		token: string;
+		obsToken: string;
+		expiration: Int64;
+		refreshToken: string;
+		channelAccessToken: string;
+	});
 }
 
 export declare class GroupCall {
@@ -3218,17 +3121,15 @@ export declare class GroupCall {
 	mediaType: GroupCallMediaType;
 	protocol: GroupCallProtocol;
 
-	constructor(
-		args?: {
-			online: boolean;
-			chatMid: string;
-			hostMids: string;
-			memberMids: string[];
-			started: Int64;
-			mediaType: GroupCallMediaType;
-			protocol: GroupCallProtocol;
-		},
-	);
+	constructor(args?: {
+		online: boolean;
+		chatMid: string;
+		hostMids: string;
+		memberMids: string[];
+		started: Int64;
+		mediaType: GroupCallMediaType;
+		protocol: GroupCallProtocol;
+	});
 }
 
 export declare class SyncResponse {
@@ -3236,13 +3137,11 @@ export declare class SyncResponse {
 	fullSyncResponse: FullSyncResponse;
 	partialFullSyncResponse: PartialFullSyncResponse;
 
-	constructor(
-		args?: {
-			operationResponse: OperationResponse;
-			fullSyncResponse: FullSyncResponse;
-			partialFullSyncResponse: PartialFullSyncResponse;
-		},
-	);
+	constructor(args?: {
+		operationResponse: OperationResponse;
+		fullSyncResponse: FullSyncResponse;
+		partialFullSyncResponse: PartialFullSyncResponse;
+	});
 }
 
 export declare class OperationResponse {
@@ -3251,14 +3150,12 @@ export declare class OperationResponse {
 	globalEvents: TGlobalEvents;
 	individualEvents: TIndividualEvents;
 
-	constructor(
-		args?: {
-			operations: Operation[];
-			hasMoreOps: boolean;
-			globalEvents: TGlobalEvents;
-			individualEvents: TIndividualEvents;
-		},
-	);
+	constructor(args?: {
+		operations: Operation[];
+		hasMoreOps: boolean;
+		globalEvents: TGlobalEvents;
+		individualEvents: TIndividualEvents;
+	});
 }
 
 export declare class FullSyncResponse {
@@ -3271,21 +3168,19 @@ export declare class FullSyncResponse {
 export declare class PartialFullSyncResponse {
 	targetCategories: { [k: number /*SyncCategories*/]: Int64 };
 
-	constructor(
-		args?: { targetCategories: { [k: number /*SyncCategories*/]: Int64 } },
-	);
+	constructor(args?: {
+		targetCategories: { [k: number /*SyncCategories*/]: Int64 };
+	});
 }
 
 export declare class TGlobalEvents {
 	events: { [k: number /*GlobalEventType*/]: GlobalEvent };
 	lastRevision: Int64;
 
-	constructor(
-		args?: {
-			events: { [k: number /*GlobalEventType*/]: GlobalEvent };
-			lastRevision: Int64;
-		},
-	);
+	constructor(args?: {
+		events: { [k: number /*GlobalEventType*/]: GlobalEvent };
+		lastRevision: Int64;
+	});
 }
 
 export declare class TIndividualEvents {
@@ -3302,27 +3197,23 @@ export declare class GlobalEvent {
 	createTimeMillis: Int64;
 	maxDelayHardLimit: boolean;
 
-	constructor(
-		args?: {
-			type: GlobalEventType;
-			minDelayInMinutes: number;
-			maxDelayInMinutes: number;
-			createTimeMillis: Int64;
-			maxDelayHardLimit: boolean;
-		},
-	);
+	constructor(args?: {
+		type: GlobalEventType;
+		minDelayInMinutes: number;
+		maxDelayInMinutes: number;
+		createTimeMillis: Int64;
+		maxDelayHardLimit: boolean;
+	});
 }
 
 export declare class DetermineMediaMessageFlowResponse {
 	flowMap: { [k: number /*ContentType*/]: MediaMessageFlow };
 	cacheTtlMillis: Int64;
 
-	constructor(
-		args?: {
-			flowMap: { [k: number /*ContentType*/]: MediaMessageFlow };
-			cacheTtlMillis: Int64;
-		},
-	);
+	constructor(args?: {
+		flowMap: { [k: number /*ContentType*/]: MediaMessageFlow };
+		cacheTtlMillis: Int64;
+	});
 }
 
 export declare class ChatRoomAnnouncementContentMetadata {
@@ -3330,13 +3221,11 @@ export declare class ChatRoomAnnouncementContentMetadata {
 	sticonOwnership: string;
 	postNotificationMetadata: string;
 
-	constructor(
-		args?: {
-			replace: string;
-			sticonOwnership: string;
-			postNotificationMetadata: string;
-		},
-	);
+	constructor(args?: {
+		replace: string;
+		sticonOwnership: string;
+		postNotificationMetadata: string;
+	});
 }
 
 export declare class ChatRoomAnnouncementContents {
@@ -3346,15 +3235,13 @@ export declare class ChatRoomAnnouncementContents {
 	thumbnail: string;
 	contentMetadata: ChatRoomAnnouncementContentMetadata;
 
-	constructor(
-		args?: {
-			displayFields: number;
-			text: string;
-			link: string;
-			thumbnail: string;
-			contentMetadata: ChatRoomAnnouncementContentMetadata;
-		},
-	);
+	constructor(args?: {
+		displayFields: number;
+		text: string;
+		link: string;
+		thumbnail: string;
+		contentMetadata: ChatRoomAnnouncementContentMetadata;
+	});
 }
 
 export declare class ChatRoomAnnouncement {
@@ -3365,16 +3252,14 @@ export declare class ChatRoomAnnouncement {
 	createdTime: Int64;
 	deletePermission: number;
 
-	constructor(
-		args?: {
-			announcementSeq: Int64;
-			type: number;
-			contents: ChatRoomAnnouncementContents;
-			creatorMid: string;
-			createdTime: Int64;
-			deletePermission: number;
-		},
-	);
+	constructor(args?: {
+		announcementSeq: Int64;
+		type: number;
+		contents: ChatRoomAnnouncementContents;
+		creatorMid: string;
+		createdTime: Int64;
+		deletePermission: number;
+	});
 }
 
 export declare class DisasterInfo {
@@ -3385,33 +3270,28 @@ export declare class DisasterInfo {
 	seeMoreUrl: string;
 	status: number;
 
-	constructor(
-		args?: {
-			disasterId: string;
-			title: string;
-			region: string;
-			disasterDescription: string;
-			seeMoreUrl: string;
-			status: number;
-		},
-	);
+	constructor(args?: {
+		disasterId: string;
+		title: string;
+		region: string;
+		disasterDescription: string;
+		seeMoreUrl: string;
+		status: number;
+	});
 }
 
-export declare class GetDisasterCasesRequest {
-}
+export declare class GetDisasterCasesRequest {}
 
 export declare class GetDisasterCasesResponse {
 	disasters: DisasterInfo[];
 	messageTemplate: string[];
 	ttlInMillis: Int64;
 
-	constructor(
-		args?: {
-			disasters: DisasterInfo[];
-			messageTemplate: string[];
-			ttlInMillis: Int64;
-		},
-	);
+	constructor(args?: {
+		disasters: DisasterInfo[];
+		messageTemplate: string[];
+		ttlInMillis: Int64;
+	});
 }
 
 export declare class SquareMessage {
@@ -3420,23 +3300,22 @@ export declare class SquareMessage {
 	squareMessageRevision: Int64;
 	state: SquareMessageState;
 
-	constructor(
-		args?: {
-			message: Message;
-			fromType: MIDType;
-			squareMessageRevision: Int64;
-			state: SquareMessageState;
-		},
-	);
+	constructor(args?: {
+		message: Message;
+		fromType: MIDType;
+		squareMessageRevision: Int64;
+		state: SquareMessageState;
+	});
 }
 
 export declare class SquarePreference {
 	favoriteTimestamp: Int64;
 	notiForNewJoinRequest: boolean;
 
-	constructor(
-		args?: { favoriteTimestamp: Int64; notiForNewJoinRequest: boolean },
-	);
+	constructor(args?: {
+		favoriteTimestamp: Int64;
+		notiForNewJoinRequest: boolean;
+	});
 }
 
 export declare class SquareMember {
@@ -3451,20 +3330,18 @@ export declare class SquareMember {
 	preference: SquarePreference;
 	joinMessage: string;
 
-	constructor(
-		args?: {
-			squareMemberMid: string;
-			squareMid: string;
-			displayName: string;
-			profileImageObsHash: string;
-			ableToReceiveMessage: boolean;
-			membershipState: SquareMembershipState;
-			role: SquareMemberRole;
-			revision: Int64;
-			preference: SquarePreference;
-			joinMessage: string;
-		},
-	);
+	constructor(args?: {
+		squareMemberMid: string;
+		squareMid: string;
+		displayName: string;
+		profileImageObsHash: string;
+		ableToReceiveMessage: boolean;
+		membershipState: SquareMembershipState;
+		role: SquareMemberRole;
+		revision: Int64;
+		preference: SquarePreference;
+		joinMessage: string;
+	});
 }
 
 export declare class SquareMessageReaction {
@@ -3473,14 +3350,12 @@ export declare class SquareMessageReaction {
 	createdAt: Int64;
 	updatedAt: Int64;
 
-	constructor(
-		args?: {
-			type: MessageReactionType;
-			reactor: SquareMember;
-			createdAt: Int64;
-			updatedAt: Int64;
-		},
-	);
+	constructor(args?: {
+		type: MessageReactionType;
+		reactor: SquareMember;
+		createdAt: Int64;
+		updatedAt: Int64;
+	});
 }
 
 export declare class SquareMessageReactionStatus {
@@ -3488,13 +3363,11 @@ export declare class SquareMessageReactionStatus {
 	countByReactionType: { [k: number /*MessageReactionType*/]: number };
 	myReaction: SquareMessageReaction;
 
-	constructor(
-		args?: {
-			totalCount: number;
-			countByReactionType: { [k: number /*MessageReactionType*/]: number };
-			myReaction: SquareMessageReaction;
-		},
-	);
+	constructor(args?: {
+		totalCount: number;
+		countByReactionType: { [k: number /*MessageReactionType*/]: number };
+		myReaction: SquareMessageReaction;
+	});
 }
 
 export declare class SquareEventReceiveMessage {
@@ -3505,16 +3378,14 @@ export declare class SquareEventReceiveMessage {
 	senderRevision: Int64;
 	squareMid: string;
 
-	constructor(
-		args?: {
-			squareChatMid: string;
-			squareMessage: SquareMessage;
-			senderDisplayName: string;
-			messageReactionStatus: SquareMessageReactionStatus;
-			senderRevision: Int64;
-			squareMid: string;
-		},
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		squareMessage: SquareMessage;
+		senderDisplayName: string;
+		messageReactionStatus: SquareMessageReactionStatus;
+		senderRevision: Int64;
+		squareMid: string;
+	});
 }
 
 export declare class SquareEventSendMessage {
@@ -3524,15 +3395,13 @@ export declare class SquareEventSendMessage {
 	senderDisplayName: string;
 	messageReactionStatus: SquareMessageReactionStatus;
 
-	constructor(
-		args?: {
-			squareChatMid: string;
-			squareMessage: SquareMessage;
-			reqSeq: number;
-			senderDisplayName: string;
-			messageReactionStatus: SquareMessageReactionStatus;
-		},
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		squareMessage: SquareMessage;
+		reqSeq: number;
+		senderDisplayName: string;
+		messageReactionStatus: SquareMessageReactionStatus;
+	});
 }
 
 export declare class SquareEventMutateMessage {
@@ -3541,14 +3410,12 @@ export declare class SquareEventMutateMessage {
 	reqSeq: number;
 	senderDisplayName: string;
 
-	constructor(
-		args?: {
-			squareChatMid: string;
-			squareMessage: SquareMessage;
-			reqSeq: number;
-			senderDisplayName: string;
-		},
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		squareMessage: SquareMessage;
+		reqSeq: number;
+		senderDisplayName: string;
+	});
 }
 
 export declare class SquareEventNotifiedJoinSquareChat {
@@ -3571,14 +3438,12 @@ export declare class SquareEventNotifiedInviteIntoSquareChat {
 	invitor: SquareMember;
 	invitorRelation: SquareMemberRelation;
 
-	constructor(
-		args?: {
-			squareChatMid: string;
-			invitees: SquareMember[];
-			invitor: SquareMember;
-			invitorRelation: SquareMemberRelation;
-		},
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		invitees: SquareMember[];
+		invitor: SquareMember;
+		invitorRelation: SquareMemberRelation;
+	});
 }
 
 export declare class SquareEventNotifiedLeaveSquareChat {
@@ -3587,14 +3452,12 @@ export declare class SquareEventNotifiedLeaveSquareChat {
 	sayGoodbye: boolean;
 	squareMember: SquareMember;
 
-	constructor(
-		args?: {
-			squareChatMid: string;
-			squareMemberMid: string;
-			sayGoodbye: boolean;
-			squareMember: SquareMember;
-		},
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		squareMemberMid: string;
+		sayGoodbye: boolean;
+		squareMember: SquareMember;
+	});
 }
 
 export declare class SquareEventNotifiedDestroyMessage {
@@ -3609,9 +3472,11 @@ export declare class SquareEventNotifiedMarkAsRead {
 	sMemberMid: string;
 	messageId: string;
 
-	constructor(
-		args?: { squareChatMid: string; sMemberMid: string; messageId: string },
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		sMemberMid: string;
+		messageId: string;
+	});
 }
 
 export declare class SquareEventNotifiedUpdateSquareMemberProfile {
@@ -3626,13 +3491,11 @@ export declare class SquareEventNotifiedKickoutFromSquare {
 	kickees: SquareMember[];
 	kicker: SquareMember;
 
-	constructor(
-		args?: {
-			squareChatMid: string;
-			kickees: SquareMember[];
-			kicker: SquareMember;
-		},
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		kickees: SquareMember[];
+		kicker: SquareMember;
+	});
 }
 
 export declare class ApprovalValue {
@@ -3658,9 +3521,10 @@ export declare class SquareJoinMethod {
 	type: SquareJoinMethodType;
 	value: SquareJoinMethodValue;
 
-	constructor(
-		args?: { type: SquareJoinMethodType; value: SquareJoinMethodValue },
-	);
+	constructor(args?: {
+		type: SquareJoinMethodType;
+		value: SquareJoinMethodValue;
+	});
 }
 
 export declare class Square {
@@ -3682,27 +3546,25 @@ export declare class Square {
 	svcTags: string[];
 	createdAt: Int64;
 
-	constructor(
-		args?: {
-			mid: string;
-			name: string;
-			welcomeMessage: string;
-			profileImageObsHash: string;
-			desc: string;
-			searchable: boolean;
-			type: SquareType;
-			categoryId: number;
-			invitationURL: string;
-			revision: Int64;
-			ableToUseInvitationTicket: boolean;
-			state: SquareState;
-			emblems: SquareEmblem[];
-			joinMethod: SquareJoinMethod;
-			adultOnly: BooleanState;
-			svcTags: string[];
-			createdAt: Int64;
-		},
-	);
+	constructor(args?: {
+		mid: string;
+		name: string;
+		welcomeMessage: string;
+		profileImageObsHash: string;
+		desc: string;
+		searchable: boolean;
+		type: SquareType;
+		categoryId: number;
+		invitationURL: string;
+		revision: Int64;
+		ableToUseInvitationTicket: boolean;
+		state: SquareState;
+		emblems: SquareEmblem[];
+		joinMethod: SquareJoinMethod;
+		adultOnly: BooleanState;
+		svcTags: string[];
+		createdAt: Int64;
+	});
 }
 
 export declare class SquareEventNotifiedShutdownSquare {
@@ -3717,13 +3579,11 @@ export declare class MessageVisibility {
 	showLeaveMessage: boolean;
 	showKickoutMessage: boolean;
 
-	constructor(
-		args?: {
-			showJoinMessage: boolean;
-			showLeaveMessage: boolean;
-			showKickoutMessage: boolean;
-		},
-	);
+	constructor(args?: {
+		showJoinMessage: boolean;
+		showLeaveMessage: boolean;
+		showKickoutMessage: boolean;
+	});
 }
 
 export declare class SquareChat {
@@ -3739,21 +3599,19 @@ export declare class SquareChat {
 	messageVisibility: MessageVisibility;
 	ableToSearchMessage: BooleanState;
 
-	constructor(
-		args?: {
-			squareChatMid: string;
-			squareMid: string;
-			type: SquareChatType;
-			name: string;
-			chatImageObsHash: string;
-			squareChatRevision: Int64;
-			maxMemberCount: number;
-			state: SquareChatState;
-			invitationUrl: string;
-			messageVisibility: MessageVisibility;
-			ableToSearchMessage: BooleanState;
-		},
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		squareMid: string;
+		type: SquareChatType;
+		name: string;
+		chatImageObsHash: string;
+		squareChatRevision: Int64;
+		maxMemberCount: number;
+		state: SquareChatState;
+		invitationUrl: string;
+		messageVisibility: MessageVisibility;
+		ableToSearchMessage: BooleanState;
+	});
 }
 
 export declare class SquareEventNotifiedDeleteSquareChat {
@@ -3767,13 +3625,11 @@ export declare class SquareEventNotifiedUpdateSquareChatProfileName {
 	editor: SquareMember;
 	updatedChatName: string;
 
-	constructor(
-		args?: {
-			squareChatMid: string;
-			editor: SquareMember;
-			updatedChatName: string;
-		},
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		editor: SquareMember;
+		updatedChatName: string;
+	});
 }
 
 export declare class SquareEventNotifiedUpdateSquareChatProfileImage {
@@ -3788,13 +3644,11 @@ export declare class SquareEventNotifiedUpdateSquareChatMaxMemberCount {
 	maxMemberCount: number;
 	editor: SquareMember;
 
-	constructor(
-		args?: {
-			squareChatMid: string;
-			maxMemberCount: number;
-			editor: SquareMember;
-		},
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		maxMemberCount: number;
+		editor: SquareMember;
+	});
 }
 
 export declare class SquareEventNotifiedAddBot {
@@ -3803,14 +3657,12 @@ export declare class SquareEventNotifiedAddBot {
 	botMid: string;
 	botDisplayName: string;
 
-	constructor(
-		args?: {
-			squareChatMid: string;
-			squareMember: SquareMember;
-			botMid: string;
-			botDisplayName: string;
-		},
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		squareMember: SquareMember;
+		botMid: string;
+		botDisplayName: string;
+	});
 }
 
 export declare class SquareEventNotifiedRemoveBot {
@@ -3819,14 +3671,12 @@ export declare class SquareEventNotifiedRemoveBot {
 	botMid: string;
 	botDisplayName: string;
 
-	constructor(
-		args?: {
-			squareChatMid: string;
-			squareMember: SquareMember;
-			botMid: string;
-			botDisplayName: string;
-		},
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		squareMember: SquareMember;
+		botMid: string;
+		botDisplayName: string;
+	});
 }
 
 export declare class SquareEventNotifiedUpdateReadonlyChat {
@@ -3849,15 +3699,13 @@ export declare class SquareMessageStatus {
 	contents: MessageStatusContents;
 	publishedAt: Int64;
 
-	constructor(
-		args?: {
-			squareChatMid: string;
-			globalMessageId: string;
-			type: MessageStatusType;
-			contents: MessageStatusContents;
-			publishedAt: Int64;
-		},
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		globalMessageId: string;
+		type: MessageStatusType;
+		contents: MessageStatusContents;
+		publishedAt: Int64;
+	});
 }
 
 export declare class SquareEventNotifiedUpdateMessageStatus {
@@ -3865,13 +3713,11 @@ export declare class SquareEventNotifiedUpdateMessageStatus {
 	messageId: string;
 	messageStatus: SquareMessageStatus;
 
-	constructor(
-		args?: {
-			squareChatMid: string;
-			messageId: string;
-			messageStatus: SquareMessageStatus;
-		},
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		messageId: string;
+		messageStatus: SquareMessageStatus;
+	});
 }
 
 export declare class UrlButton {
@@ -3898,9 +3744,11 @@ export declare class ButtonContent {
 	textButton: TextButton;
 	okButton: OkButton;
 
-	constructor(
-		args?: { urlButton: UrlButton; textButton: TextButton; okButton: OkButton },
-	);
+	constructor(args?: {
+		urlButton: UrlButton;
+		textButton: TextButton;
+		okButton: OkButton;
+	});
 }
 
 export declare class SquareEventChatPopup {
@@ -3909,14 +3757,12 @@ export declare class SquareEventChatPopup {
 	flexJson: string;
 	button: ButtonContent;
 
-	constructor(
-		args?: {
-			squareChatMid: string;
-			popupId: Int64;
-			flexJson: string;
-			button: ButtonContent;
-		},
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		popupId: Int64;
+		flexJson: string;
+		button: ButtonContent;
+	});
 }
 
 export declare class SquareEventNotifiedSystemMessage {
@@ -3939,14 +3785,12 @@ export declare class SquareStatus {
 	lastJoinRequestAt: Int64;
 	openChatCount: number;
 
-	constructor(
-		args?: {
-			memberCount: number;
-			joinRequestCount: number;
-			lastJoinRequestAt: Int64;
-			openChatCount: number;
-		},
-	);
+	constructor(args?: {
+		memberCount: number;
+		joinRequestCount: number;
+		lastJoinRequestAt: Int64;
+		openChatCount: number;
+	});
 }
 
 export declare class SquareEventNotifiedUpdateSquareStatus {
@@ -3961,13 +3805,11 @@ export declare class SquareEventNotifiedUpdateSquareMember {
 	squareMemberMid: string;
 	squareMember: SquareMember;
 
-	constructor(
-		args?: {
-			squareChatMid: string;
-			squareMemberMid: string;
-			squareMember: SquareMember;
-		},
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		squareMemberMid: string;
+		squareMember: SquareMember;
+	});
 }
 
 export declare class SquareEventNotifiedUpdateSquareChat {
@@ -3975,9 +3817,11 @@ export declare class SquareEventNotifiedUpdateSquareChat {
 	squareChatMid: string;
 	squareChat: SquareChat;
 
-	constructor(
-		args?: { squareMid: string; squareChatMid: string; squareChat: SquareChat },
-	);
+	constructor(args?: {
+		squareMid: string;
+		squareChatMid: string;
+		squareChat: SquareChat;
+	});
 }
 
 export declare class SquareChatStatusWithoutMessage {
@@ -3987,27 +3831,23 @@ export declare class SquareChatStatusWithoutMessage {
 	mentionedMessageId: string;
 	notifiedMessageType: NotifiedMessageType;
 
-	constructor(
-		args?: {
-			memberCount: number;
-			unreadMessageCount: number;
-			markedAsReadMessageId: string;
-			mentionedMessageId: string;
-			notifiedMessageType: NotifiedMessageType;
-		},
-	);
+	constructor(args?: {
+		memberCount: number;
+		unreadMessageCount: number;
+		markedAsReadMessageId: string;
+		mentionedMessageId: string;
+		notifiedMessageType: NotifiedMessageType;
+	});
 }
 
 export declare class SquareEventNotifiedUpdateSquareChatStatus {
 	squareChatMid: string;
 	statusWithoutMessage: SquareChatStatusWithoutMessage;
 
-	constructor(
-		args?: {
-			squareChatMid: string;
-			statusWithoutMessage: SquareChatStatusWithoutMessage;
-		},
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		statusWithoutMessage: SquareChatStatusWithoutMessage;
+	});
 }
 
 export declare class SquareChatMember {
@@ -4018,25 +3858,24 @@ export declare class SquareChatMember {
 	notificationForMessage: boolean;
 	notificationForNewMember: boolean;
 
-	constructor(
-		args?: {
-			squareMemberMid: string;
-			squareChatMid: string;
-			revision: Int64;
-			membershipState: SquareChatMembershipState;
-			notificationForMessage: boolean;
-			notificationForNewMember: boolean;
-		},
-	);
+	constructor(args?: {
+		squareMemberMid: string;
+		squareChatMid: string;
+		revision: Int64;
+		membershipState: SquareChatMembershipState;
+		notificationForMessage: boolean;
+		notificationForNewMember: boolean;
+	});
 }
 
 export declare class SquareEventNotifiedUpdateSquareChatMember {
 	squareChatMid: string;
 	squareChatMember: SquareChatMember;
 
-	constructor(
-		args?: { squareChatMid: string; squareChatMember: SquareChatMember },
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		squareChatMember: SquareChatMember;
+	});
 }
 
 export declare class SquareAuthority {
@@ -4055,24 +3894,22 @@ export declare class SquareAuthority {
 	updateMaxChatMemberCount: SquareMemberRole;
 	useReadonlyDefaultChat: SquareMemberRole;
 
-	constructor(
-		args?: {
-			squareMid: string;
-			updateSquareProfile: SquareMemberRole;
-			inviteNewMember: SquareMemberRole;
-			approveJoinRequest: SquareMemberRole;
-			createPost: SquareMemberRole;
-			createOpenSquareChat: SquareMemberRole;
-			deleteSquareChatOrPost: SquareMemberRole;
-			removeSquareMember: SquareMemberRole;
-			grantRole: SquareMemberRole;
-			enableInvitationTicket: SquareMemberRole;
-			revision: Int64;
-			createSquareChatAnnouncement: SquareMemberRole;
-			updateMaxChatMemberCount: SquareMemberRole;
-			useReadonlyDefaultChat: SquareMemberRole;
-		},
-	);
+	constructor(args?: {
+		squareMid: string;
+		updateSquareProfile: SquareMemberRole;
+		inviteNewMember: SquareMemberRole;
+		approveJoinRequest: SquareMemberRole;
+		createPost: SquareMemberRole;
+		createOpenSquareChat: SquareMemberRole;
+		deleteSquareChatOrPost: SquareMemberRole;
+		removeSquareMember: SquareMemberRole;
+		grantRole: SquareMemberRole;
+		enableInvitationTicket: SquareMemberRole;
+		revision: Int64;
+		createSquareChatAnnouncement: SquareMemberRole;
+		updateMaxChatMemberCount: SquareMemberRole;
+		useReadonlyDefaultChat: SquareMemberRole;
+	});
 }
 
 export declare class SquareEventNotifiedUpdateSquareAuthority {
@@ -4086,12 +3923,10 @@ export declare class SquareFeature {
 	controlState: SquareFeatureControlState;
 	booleanValue: BooleanState;
 
-	constructor(
-		args?: {
-			controlState: SquareFeatureControlState;
-			booleanValue: BooleanState;
-		},
-	);
+	constructor(args?: {
+		controlState: SquareFeatureControlState;
+		booleanValue: BooleanState;
+	});
 }
 
 export declare class SquareFeatureSet {
@@ -4109,23 +3944,21 @@ export declare class SquareFeatureSet {
 	creatingLiveTalk: SquareFeature;
 	disableUpdateSearchable: SquareFeature;
 
-	constructor(
-		args?: {
-			squareMid: string;
-			revision: Int64;
-			creatingSecretSquareChat: SquareFeature;
-			invitingIntoOpenSquareChat: SquareFeature;
-			creatingSquareChat: SquareFeature;
-			readonlyDefaultChat: SquareFeature;
-			showingAdvertisement: SquareFeature;
-			delegateJoinToPlug: SquareFeature;
-			delegateKickOutToPlug: SquareFeature;
-			disableUpdateJoinMethod: SquareFeature;
-			disableTransferAdmin: SquareFeature;
-			creatingLiveTalk: SquareFeature;
-			disableUpdateSearchable: SquareFeature;
-		},
-	);
+	constructor(args?: {
+		squareMid: string;
+		revision: Int64;
+		creatingSecretSquareChat: SquareFeature;
+		invitingIntoOpenSquareChat: SquareFeature;
+		creatingSquareChat: SquareFeature;
+		readonlyDefaultChat: SquareFeature;
+		showingAdvertisement: SquareFeature;
+		delegateJoinToPlug: SquareFeature;
+		delegateKickOutToPlug: SquareFeature;
+		disableUpdateJoinMethod: SquareFeature;
+		disableTransferAdmin: SquareFeature;
+		creatingLiveTalk: SquareFeature;
+		disableUpdateSearchable: SquareFeature;
+	});
 }
 
 export declare class NoteStatus {
@@ -4143,16 +3976,14 @@ export declare class SquareEventNotifiedCreateSquareMember {
 	squareFeatureSet: SquareFeatureSet;
 	noteStatus: NoteStatus;
 
-	constructor(
-		args?: {
-			square: Square;
-			squareAuthority: SquareAuthority;
-			squareStatus: SquareStatus;
-			squareMember: SquareMember;
-			squareFeatureSet: SquareFeatureSet;
-			noteStatus: NoteStatus;
-		},
-	);
+	constructor(args?: {
+		square: Square;
+		squareAuthority: SquareAuthority;
+		squareStatus: SquareStatus;
+		squareMember: SquareMember;
+		squareFeatureSet: SquareFeatureSet;
+		noteStatus: NoteStatus;
+	});
 }
 
 export declare class SquareChatStatus {
@@ -4160,25 +3991,21 @@ export declare class SquareChatStatus {
 	senderDisplayName: string;
 	otherStatus: SquareChatStatusWithoutMessage;
 
-	constructor(
-		args?: {
-			lastMessage: SquareMessage;
-			senderDisplayName: string;
-			otherStatus: SquareChatStatusWithoutMessage;
-		},
-	);
+	constructor(args?: {
+		lastMessage: SquareMessage;
+		senderDisplayName: string;
+		otherStatus: SquareChatStatusWithoutMessage;
+	});
 }
 
 export declare class SquareChatFeature {
 	controlState: SquareChatFeatureControlState;
 	booleanValue: BooleanState;
 
-	constructor(
-		args?: {
-			controlState: SquareChatFeatureControlState;
-			booleanValue: BooleanState;
-		},
-	);
+	constructor(args?: {
+		controlState: SquareChatFeatureControlState;
+		booleanValue: BooleanState;
+	});
 }
 
 export declare class SquareChatFeatureSet {
@@ -4187,14 +4014,12 @@ export declare class SquareChatFeatureSet {
 	disableUpdateMaxChatMemberCount: SquareChatFeature;
 	disableMarkAsReadEvent: SquareChatFeature;
 
-	constructor(
-		args?: {
-			squareChatMid: string;
-			revision: Int64;
-			disableUpdateMaxChatMemberCount: SquareChatFeature;
-			disableMarkAsReadEvent: SquareChatFeature;
-		},
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		revision: Int64;
+		disableUpdateMaxChatMemberCount: SquareChatFeature;
+		disableMarkAsReadEvent: SquareChatFeature;
+	});
 }
 
 export declare class SquareEventNotifiedCreateSquareChatMember {
@@ -4205,16 +4030,14 @@ export declare class SquareEventNotifiedCreateSquareChatMember {
 	peerSquareMember: SquareMember;
 	squareChatFeatureSet: SquareChatFeatureSet;
 
-	constructor(
-		args?: {
-			chat: SquareChat;
-			chatStatus: SquareChatStatus;
-			chatMember: SquareChatMember;
-			joinedAt: Int64;
-			peerSquareMember: SquareMember;
-			squareChatFeatureSet: SquareChatFeatureSet;
-		},
-	);
+	constructor(args?: {
+		chat: SquareChat;
+		chatStatus: SquareChatStatus;
+		chatMember: SquareChatMember;
+		joinedAt: Int64;
+		peerSquareMember: SquareMember;
+		squareChatFeatureSet: SquareChatFeatureSet;
+	});
 }
 
 export declare class SquareEventNotifiedUpdateSquareMemberRelation {
@@ -4223,14 +4046,12 @@ export declare class SquareEventNotifiedUpdateSquareMemberRelation {
 	targetSquareMemberMid: string;
 	squareMemberRelation: SquareMemberRelation;
 
-	constructor(
-		args?: {
-			squareMid: string;
-			myMemberMid: string;
-			targetSquareMemberMid: string;
-			squareMemberRelation: SquareMemberRelation;
-		},
-	);
+	constructor(args?: {
+		squareMid: string;
+		myMemberMid: string;
+		targetSquareMemberMid: string;
+		squareMemberRelation: SquareMemberRelation;
+	});
 }
 
 export declare class SquareEventNotifiedUpdateSquareFeatureSet {
@@ -4265,14 +4086,12 @@ export declare class SquareEventNotificationJoinRequest {
 	requestMemberName: string;
 	profileImageObsHash: string;
 
-	constructor(
-		args?: {
-			squareMid: string;
-			squareName: string;
-			requestMemberName: string;
-			profileImageObsHash: string;
-		},
-	);
+	constructor(args?: {
+		squareMid: string;
+		squareName: string;
+		requestMemberName: string;
+		profileImageObsHash: string;
+	});
 }
 
 export declare class SquareEventNotificationMemberUpdate {
@@ -4280,13 +4099,11 @@ export declare class SquareEventNotificationMemberUpdate {
 	squareName: string;
 	profileImageObsHash: string;
 
-	constructor(
-		args?: {
-			squareMid: string;
-			squareName: string;
-			profileImageObsHash: string;
-		},
-	);
+	constructor(args?: {
+		squareMid: string;
+		squareName: string;
+		profileImageObsHash: string;
+	});
 }
 
 export declare class SquareEventNotificationSquareDelete {
@@ -4294,13 +4111,11 @@ export declare class SquareEventNotificationSquareDelete {
 	squareName: string;
 	profileImageObsHash: string;
 
-	constructor(
-		args?: {
-			squareMid: string;
-			squareName: string;
-			profileImageObsHash: string;
-		},
-	);
+	constructor(args?: {
+		squareMid: string;
+		squareName: string;
+		profileImageObsHash: string;
+	});
 }
 
 export declare class SquareEventNotificationSquareChatDelete {
@@ -4308,13 +4123,11 @@ export declare class SquareEventNotificationSquareChatDelete {
 	squareChatName: string;
 	profileImageObsHash: string;
 
-	constructor(
-		args?: {
-			squareChatMid: string;
-			squareChatName: string;
-			profileImageObsHash: string;
-		},
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		squareChatName: string;
+		profileImageObsHash: string;
+	});
 }
 
 export declare class SquareEventNotificationMessage {
@@ -4327,18 +4140,16 @@ export declare class SquareEventNotificationMessage {
 	notifiedMessageType: NotifiedMessageType;
 	reqSeq: number;
 
-	constructor(
-		args?: {
-			squareChatMid: string;
-			squareMessage: SquareMessage;
-			senderDisplayName: string;
-			unreadCount: number;
-			requiredToFetchChatEvents: boolean;
-			mentionedMessageId: string;
-			notifiedMessageType: NotifiedMessageType;
-			reqSeq: number;
-		},
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		squareMessage: SquareMessage;
+		senderDisplayName: string;
+		unreadCount: number;
+		requiredToFetchChatEvents: boolean;
+		mentionedMessageId: string;
+		notifiedMessageType: NotifiedMessageType;
+		reqSeq: number;
+	});
 }
 
 export declare class SquareEventNotificationPostAnnouncement {
@@ -4347,14 +4158,12 @@ export declare class SquareEventNotificationPostAnnouncement {
 	squareProfileImageObsHash: string;
 	actionUri: string;
 
-	constructor(
-		args?: {
-			squareMid: string;
-			squareName: string;
-			squareProfileImageObsHash: string;
-			actionUri: string;
-		},
-	);
+	constructor(args?: {
+		squareMid: string;
+		squareName: string;
+		squareProfileImageObsHash: string;
+		actionUri: string;
+	});
 }
 
 export declare class SquareEventNotificationPost {
@@ -4364,15 +4173,13 @@ export declare class SquareEventNotificationPost {
 	text: string;
 	actionUri: string;
 
-	constructor(
-		args?: {
-			squareMid: string;
-			notificationPostType: NotificationPostType;
-			thumbnailObsHash: string;
-			text: string;
-			actionUri: string;
-		},
-	);
+	constructor(args?: {
+		squareMid: string;
+		notificationPostType: NotificationPostType;
+		thumbnailObsHash: string;
+		text: string;
+		actionUri: string;
+	});
 }
 
 export declare class SquareEventNotificationNewChatMember {
@@ -4391,17 +4198,15 @@ export declare class SquareEventNotificationMessageReaction {
 	messageText: string;
 	type: MessageReactionType;
 
-	constructor(
-		args?: {
-			squareChatMid: string;
-			messageId: string;
-			squareChatName: string;
-			reactorName: string;
-			thumbnailObsHash: string;
-			messageText: string;
-			type: MessageReactionType;
-		},
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		messageId: string;
+		squareChatName: string;
+		reactorName: string;
+		thumbnailObsHash: string;
+		messageText: string;
+		type: MessageReactionType;
+	});
 }
 
 export declare class SquareEventPayload {
@@ -4412,8 +4217,7 @@ export declare class SquareEventPayload {
 	notifiedLeaveSquareChat: SquareEventNotifiedLeaveSquareChat;
 	notifiedDestroyMessage: SquareEventNotifiedDestroyMessage;
 	notifiedMarkAsRead: SquareEventNotifiedMarkAsRead;
-	notifiedUpdateSquareMemberProfile:
-		SquareEventNotifiedUpdateSquareMemberProfile;
+	notifiedUpdateSquareMemberProfile: SquareEventNotifiedUpdateSquareMemberProfile;
 	notifiedUpdateSquare: SquareEventNotifiedUpdateSquare;
 	notifiedUpdateSquareMember: SquareEventNotifiedUpdateSquareMember;
 	notifiedUpdateSquareChat: SquareEventNotifiedUpdateSquareChat;
@@ -4423,8 +4227,7 @@ export declare class SquareEventPayload {
 	notifiedUpdateSquareChatStatus: SquareEventNotifiedUpdateSquareChatStatus;
 	notifiedCreateSquareMember: SquareEventNotifiedCreateSquareMember;
 	notifiedCreateSquareChatMember: SquareEventNotifiedCreateSquareChatMember;
-	notifiedUpdateSquareMemberRelation:
-		SquareEventNotifiedUpdateSquareMemberRelation;
+	notifiedUpdateSquareMemberRelation: SquareEventNotifiedUpdateSquareMemberRelation;
 	notifiedShutdownSquare: SquareEventNotifiedShutdownSquare;
 	notifiedKickoutFromSquare: SquareEventNotifiedKickoutFromSquare;
 	notifiedDeleteSquareChat: SquareEventNotifiedDeleteSquareChat;
@@ -4437,18 +4240,14 @@ export declare class SquareEventPayload {
 	notificationSquareDelete: SquareEventNotificationSquareDelete;
 	notificationSquareChatDelete: SquareEventNotificationSquareChatDelete;
 	notificationMessage: SquareEventNotificationMessage;
-	notifiedUpdateSquareChatProfileName:
-		SquareEventNotifiedUpdateSquareChatProfileName;
-	notifiedUpdateSquareChatProfileImage:
-		SquareEventNotifiedUpdateSquareChatProfileImage;
+	notifiedUpdateSquareChatProfileName: SquareEventNotifiedUpdateSquareChatProfileName;
+	notifiedUpdateSquareChatProfileImage: SquareEventNotifiedUpdateSquareChatProfileImage;
 	notifiedUpdateSquareFeatureSet: SquareEventNotifiedUpdateSquareFeatureSet;
 	notifiedAddBot: SquareEventNotifiedAddBot;
 	notifiedRemoveBot: SquareEventNotifiedRemoveBot;
 	notifiedUpdateSquareNoteStatus: SquareEventNotifiedUpdateSquareNoteStatus;
-	notifiedUpdateSquareChatAnnouncement:
-		SquareEventNotifiedUpdateSquareChatAnnouncement;
-	notifiedUpdateSquareChatMaxMemberCount:
-		SquareEventNotifiedUpdateSquareChatMaxMemberCount;
+	notifiedUpdateSquareChatAnnouncement: SquareEventNotifiedUpdateSquareChatAnnouncement;
+	notifiedUpdateSquareChatMaxMemberCount: SquareEventNotifiedUpdateSquareChatMaxMemberCount;
 	notificationPostAnnouncement: SquareEventNotificationPostAnnouncement;
 	notificationPost: SquareEventNotificationPost;
 	mutateMessage: SquareEventMutateMessage;
@@ -4458,68 +4257,58 @@ export declare class SquareEventPayload {
 	notificationMessageReaction: SquareEventNotificationMessageReaction;
 	chatPopup: SquareEventChatPopup;
 	notifiedSystemMessage: SquareEventNotifiedSystemMessage;
-	notifiedUpdateSquareChatFeatureSet:
-		SquareEventNotifiedUpdateSquareChatFeatureSet;
+	notifiedUpdateSquareChatFeatureSet: SquareEventNotifiedUpdateSquareChatFeatureSet;
 
-	constructor(
-		args?: {
-			receiveMessage: SquareEventReceiveMessage;
-			sendMessage: SquareEventSendMessage;
-			notifiedJoinSquareChat: SquareEventNotifiedJoinSquareChat;
-			notifiedInviteIntoSquareChat: SquareEventNotifiedInviteIntoSquareChat;
-			notifiedLeaveSquareChat: SquareEventNotifiedLeaveSquareChat;
-			notifiedDestroyMessage: SquareEventNotifiedDestroyMessage;
-			notifiedMarkAsRead: SquareEventNotifiedMarkAsRead;
-			notifiedUpdateSquareMemberProfile:
-				SquareEventNotifiedUpdateSquareMemberProfile;
-			notifiedUpdateSquare: SquareEventNotifiedUpdateSquare;
-			notifiedUpdateSquareMember: SquareEventNotifiedUpdateSquareMember;
-			notifiedUpdateSquareChat: SquareEventNotifiedUpdateSquareChat;
-			notifiedUpdateSquareChatMember: SquareEventNotifiedUpdateSquareChatMember;
-			notifiedUpdateSquareAuthority: SquareEventNotifiedUpdateSquareAuthority;
-			notifiedUpdateSquareStatus: SquareEventNotifiedUpdateSquareStatus;
-			notifiedUpdateSquareChatStatus: SquareEventNotifiedUpdateSquareChatStatus;
-			notifiedCreateSquareMember: SquareEventNotifiedCreateSquareMember;
-			notifiedCreateSquareChatMember: SquareEventNotifiedCreateSquareChatMember;
-			notifiedUpdateSquareMemberRelation:
-				SquareEventNotifiedUpdateSquareMemberRelation;
-			notifiedShutdownSquare: SquareEventNotifiedShutdownSquare;
-			notifiedKickoutFromSquare: SquareEventNotifiedKickoutFromSquare;
-			notifiedDeleteSquareChat: SquareEventNotifiedDeleteSquareChat;
-			notificationJoinRequest: SquareEventNotificationJoinRequest;
-			notificationJoined: SquareEventNotificationMemberUpdate;
-			notificationPromoteCoadmin: SquareEventNotificationMemberUpdate;
-			notificationPromoteAdmin: SquareEventNotificationMemberUpdate;
-			notificationDemoteMember: SquareEventNotificationMemberUpdate;
-			notificationKickedOut: SquareEventNotificationMemberUpdate;
-			notificationSquareDelete: SquareEventNotificationSquareDelete;
-			notificationSquareChatDelete: SquareEventNotificationSquareChatDelete;
-			notificationMessage: SquareEventNotificationMessage;
-			notifiedUpdateSquareChatProfileName:
-				SquareEventNotifiedUpdateSquareChatProfileName;
-			notifiedUpdateSquareChatProfileImage:
-				SquareEventNotifiedUpdateSquareChatProfileImage;
-			notifiedUpdateSquareFeatureSet: SquareEventNotifiedUpdateSquareFeatureSet;
-			notifiedAddBot: SquareEventNotifiedAddBot;
-			notifiedRemoveBot: SquareEventNotifiedRemoveBot;
-			notifiedUpdateSquareNoteStatus: SquareEventNotifiedUpdateSquareNoteStatus;
-			notifiedUpdateSquareChatAnnouncement:
-				SquareEventNotifiedUpdateSquareChatAnnouncement;
-			notifiedUpdateSquareChatMaxMemberCount:
-				SquareEventNotifiedUpdateSquareChatMaxMemberCount;
-			notificationPostAnnouncement: SquareEventNotificationPostAnnouncement;
-			notificationPost: SquareEventNotificationPost;
-			mutateMessage: SquareEventMutateMessage;
-			notificationNewChatMember: SquareEventNotificationNewChatMember;
-			notifiedUpdateReadonlyChat: SquareEventNotifiedUpdateReadonlyChat;
-			notifiedUpdateMessageStatus: SquareEventNotifiedUpdateMessageStatus;
-			notificationMessageReaction: SquareEventNotificationMessageReaction;
-			chatPopup: SquareEventChatPopup;
-			notifiedSystemMessage: SquareEventNotifiedSystemMessage;
-			notifiedUpdateSquareChatFeatureSet:
-				SquareEventNotifiedUpdateSquareChatFeatureSet;
-		},
-	);
+	constructor(args?: {
+		receiveMessage: SquareEventReceiveMessage;
+		sendMessage: SquareEventSendMessage;
+		notifiedJoinSquareChat: SquareEventNotifiedJoinSquareChat;
+		notifiedInviteIntoSquareChat: SquareEventNotifiedInviteIntoSquareChat;
+		notifiedLeaveSquareChat: SquareEventNotifiedLeaveSquareChat;
+		notifiedDestroyMessage: SquareEventNotifiedDestroyMessage;
+		notifiedMarkAsRead: SquareEventNotifiedMarkAsRead;
+		notifiedUpdateSquareMemberProfile: SquareEventNotifiedUpdateSquareMemberProfile;
+		notifiedUpdateSquare: SquareEventNotifiedUpdateSquare;
+		notifiedUpdateSquareMember: SquareEventNotifiedUpdateSquareMember;
+		notifiedUpdateSquareChat: SquareEventNotifiedUpdateSquareChat;
+		notifiedUpdateSquareChatMember: SquareEventNotifiedUpdateSquareChatMember;
+		notifiedUpdateSquareAuthority: SquareEventNotifiedUpdateSquareAuthority;
+		notifiedUpdateSquareStatus: SquareEventNotifiedUpdateSquareStatus;
+		notifiedUpdateSquareChatStatus: SquareEventNotifiedUpdateSquareChatStatus;
+		notifiedCreateSquareMember: SquareEventNotifiedCreateSquareMember;
+		notifiedCreateSquareChatMember: SquareEventNotifiedCreateSquareChatMember;
+		notifiedUpdateSquareMemberRelation: SquareEventNotifiedUpdateSquareMemberRelation;
+		notifiedShutdownSquare: SquareEventNotifiedShutdownSquare;
+		notifiedKickoutFromSquare: SquareEventNotifiedKickoutFromSquare;
+		notifiedDeleteSquareChat: SquareEventNotifiedDeleteSquareChat;
+		notificationJoinRequest: SquareEventNotificationJoinRequest;
+		notificationJoined: SquareEventNotificationMemberUpdate;
+		notificationPromoteCoadmin: SquareEventNotificationMemberUpdate;
+		notificationPromoteAdmin: SquareEventNotificationMemberUpdate;
+		notificationDemoteMember: SquareEventNotificationMemberUpdate;
+		notificationKickedOut: SquareEventNotificationMemberUpdate;
+		notificationSquareDelete: SquareEventNotificationSquareDelete;
+		notificationSquareChatDelete: SquareEventNotificationSquareChatDelete;
+		notificationMessage: SquareEventNotificationMessage;
+		notifiedUpdateSquareChatProfileName: SquareEventNotifiedUpdateSquareChatProfileName;
+		notifiedUpdateSquareChatProfileImage: SquareEventNotifiedUpdateSquareChatProfileImage;
+		notifiedUpdateSquareFeatureSet: SquareEventNotifiedUpdateSquareFeatureSet;
+		notifiedAddBot: SquareEventNotifiedAddBot;
+		notifiedRemoveBot: SquareEventNotifiedRemoveBot;
+		notifiedUpdateSquareNoteStatus: SquareEventNotifiedUpdateSquareNoteStatus;
+		notifiedUpdateSquareChatAnnouncement: SquareEventNotifiedUpdateSquareChatAnnouncement;
+		notifiedUpdateSquareChatMaxMemberCount: SquareEventNotifiedUpdateSquareChatMaxMemberCount;
+		notificationPostAnnouncement: SquareEventNotificationPostAnnouncement;
+		notificationPost: SquareEventNotificationPost;
+		mutateMessage: SquareEventMutateMessage;
+		notificationNewChatMember: SquareEventNotificationNewChatMember;
+		notifiedUpdateReadonlyChat: SquareEventNotifiedUpdateReadonlyChat;
+		notifiedUpdateMessageStatus: SquareEventNotifiedUpdateMessageStatus;
+		notificationMessageReaction: SquareEventNotificationMessageReaction;
+		chatPopup: SquareEventChatPopup;
+		notifiedSystemMessage: SquareEventNotifiedSystemMessage;
+		notifiedUpdateSquareChatFeatureSet: SquareEventNotifiedUpdateSquareChatFeatureSet;
+	});
 }
 
 export declare class SquareEvent {
@@ -4529,15 +4318,13 @@ export declare class SquareEvent {
 	syncToken: string;
 	eventStatus: SquareEventStatus;
 
-	constructor(
-		args?: {
-			createdTime: Int64;
-			type: SquareEventType;
-			payload: SquareEventPayload;
-			syncToken: string;
-			eventStatus: SquareEventStatus;
-		},
-	);
+	constructor(args?: {
+		createdTime: Int64;
+		type: SquareEventType;
+		payload: SquareEventPayload;
+		syncToken: string;
+		eventStatus: SquareEventStatus;
+	});
 }
 
 export declare class SendMessageResponse {
@@ -4558,14 +4345,12 @@ export declare class FetchMyEventsResponse {
 	syncToken: string;
 	continuationToken: string;
 
-	constructor(
-		args?: {
-			subscription: SubscriptionState;
-			events: SquareEvent[];
-			syncToken: string;
-			continuationToken: string;
-		},
-	);
+	constructor(args?: {
+		subscription: SubscriptionState;
+		events: SquareEvent[];
+		syncToken: string;
+		continuationToken: string;
+	});
 }
 
 export declare class GetSquareEmidResponse {
@@ -4585,13 +4370,11 @@ export declare class ManualRepairResponse {
 	syncToken: string;
 	continuationToken: string;
 
-	constructor(
-		args?: {
-			events: SquareEvent[];
-			syncToken: string;
-			continuationToken: string;
-		},
-	);
+	constructor(args?: {
+		events: SquareEvent[];
+		syncToken: string;
+		continuationToken: string;
+	});
 }
 
 export declare class InviteIntoSquareChatResponse {
@@ -4600,8 +4383,7 @@ export declare class InviteIntoSquareChatResponse {
 	constructor(args?: { inviteeMids: string[] });
 }
 
-export declare class InviteToSquareResponse {
-}
+export declare class InviteToSquareResponse {}
 
 export declare class GetJoinedSquaresResponse {
 	squares: Square[];
@@ -4611,31 +4393,26 @@ export declare class GetJoinedSquaresResponse {
 	continuationToken: string;
 	noteStatuses: { [k: string]: NoteStatus };
 
-	constructor(
-		args?: {
-			squares: Square[];
-			members: { [k: string]: SquareMember };
-			authorities: { [k: string]: SquareAuthority };
-			statuses: { [k: string]: SquareStatus };
-			continuationToken: string;
-			noteStatuses: { [k: string]: NoteStatus };
-		},
-	);
+	constructor(args?: {
+		squares: Square[];
+		members: { [k: string]: SquareMember };
+		authorities: { [k: string]: SquareAuthority };
+		statuses: { [k: string]: SquareStatus };
+		continuationToken: string;
+		noteStatuses: { [k: string]: NoteStatus };
+	});
 }
 
-export declare class MarkAsReadResponse {
-}
+export declare class MarkAsReadResponse {}
 
 export declare class ReactToMessageResponse {
 	reaction: SquareMessageReaction;
 	status: SquareMessageReactionStatus;
 
-	constructor(
-		args?: {
-			reaction: SquareMessageReaction;
-			status: SquareMessageReactionStatus;
-		},
-	);
+	constructor(args?: {
+		reaction: SquareMessageReaction;
+		status: SquareMessageReactionStatus;
+	});
 }
 
 export declare class FindSquareByInvitationTicketResponse {
@@ -4648,18 +4425,16 @@ export declare class FindSquareByInvitationTicketResponse {
 	chat: SquareChat;
 	chatStatus: SquareChatStatus;
 
-	constructor(
-		args?: {
-			square: Square;
-			myMembership: SquareMember;
-			squareAuthority: SquareAuthority;
-			squareStatus: SquareStatus;
-			squareFeatureSet: SquareFeatureSet;
-			noteStatus: NoteStatus;
-			chat: SquareChat;
-			chatStatus: SquareChatStatus;
-		},
-	);
+	constructor(args?: {
+		square: Square;
+		myMembership: SquareMember;
+		squareAuthority: SquareAuthority;
+		squareStatus: SquareStatus;
+		squareFeatureSet: SquareFeatureSet;
+		noteStatus: NoteStatus;
+		chat: SquareChat;
+		chatStatus: SquareChatStatus;
+	});
 }
 
 export declare class SubscriptionState {
@@ -4675,14 +4450,12 @@ export declare class FetchSquareChatEventsResponse {
 	syncToken: string;
 	continuationToken: string;
 
-	constructor(
-		args?: {
-			subscription: SubscriptionState;
-			events: SquareEvent[];
-			syncToken: string;
-			continuationToken: string;
-		},
-	);
+	constructor(args?: {
+		subscription: SubscriptionState;
+		events: SquareEvent[];
+		syncToken: string;
+		continuationToken: string;
+	});
 }
 
 export declare class GetSquareResponse {
@@ -4693,16 +4466,14 @@ export declare class GetSquareResponse {
 	squareFeatureSet: SquareFeatureSet;
 	noteStatus: NoteStatus;
 
-	constructor(
-		args?: {
-			square: Square;
-			myMembership: SquareMember;
-			squareAuthority: SquareAuthority;
-			squareStatus: SquareStatus;
-			squareFeatureSet: SquareFeatureSet;
-			noteStatus: NoteStatus;
-		},
-	);
+	constructor(args?: {
+		square: Square;
+		myMembership: SquareMember;
+		squareAuthority: SquareAuthority;
+		squareStatus: SquareStatus;
+		squareFeatureSet: SquareFeatureSet;
+		noteStatus: NoteStatus;
+	});
 }
 
 export declare class GetJoinableSquareChatsResponse {
@@ -4711,14 +4482,12 @@ export declare class GetJoinableSquareChatsResponse {
 	totalSquareChatCount: number;
 	squareChatStatuses: { [k: string]: SquareChatStatus };
 
-	constructor(
-		args?: {
-			squareChats: SquareChat[];
-			continuationToken: string;
-			totalSquareChatCount: number;
-			squareChatStatuses: { [k: string]: SquareChatStatus };
-		},
-	);
+	constructor(args?: {
+		squareChats: SquareChat[];
+		continuationToken: string;
+		totalSquareChatCount: number;
+		squareChatStatuses: { [k: string]: SquareChatStatus };
+	});
 }
 
 export declare class CreateSquareResponse {
@@ -4733,20 +4502,18 @@ export declare class CreateSquareResponse {
 	squareChatMember: SquareChatMember;
 	squareChatFeatureSet: SquareChatFeatureSet;
 
-	constructor(
-		args?: {
-			square: Square;
-			creator: SquareMember;
-			authority: SquareAuthority;
-			status: SquareStatus;
-			featureSet: SquareFeatureSet;
-			noteStatus: NoteStatus;
-			squareChat: SquareChat;
-			squareChatStatus: SquareChatStatus;
-			squareChatMember: SquareChatMember;
-			squareChatFeatureSet: SquareChatFeatureSet;
-		},
-	);
+	constructor(args?: {
+		square: Square;
+		creator: SquareMember;
+		authority: SquareAuthority;
+		status: SquareStatus;
+		featureSet: SquareFeatureSet;
+		noteStatus: NoteStatus;
+		squareChat: SquareChat;
+		squareChatStatus: SquareChatStatus;
+		squareChatMember: SquareChatMember;
+		squareChatFeatureSet: SquareChatFeatureSet;
+	});
 }
 
 export declare class TextMessageAnnouncementContents {
@@ -4756,23 +4523,21 @@ export declare class TextMessageAnnouncementContents {
 	createdAt: Int64;
 	senderMid: string;
 
-	constructor(
-		args?: {
-			messageId: string;
-			text: string;
-			senderSquareMemberMid: string;
-			createdAt: Int64;
-			senderMid: string;
-		},
-	);
+	constructor(args?: {
+		messageId: string;
+		text: string;
+		senderSquareMemberMid: string;
+		createdAt: Int64;
+		senderMid: string;
+	});
 }
 
 export declare class SquareChatAnnouncementContents {
 	textMessageAnnouncementContents: TextMessageAnnouncementContents;
 
-	constructor(
-		args?: { textMessageAnnouncementContents: TextMessageAnnouncementContents },
-	);
+	constructor(args?: {
+		textMessageAnnouncementContents: TextMessageAnnouncementContents;
+	});
 }
 
 export declare class SquareChatAnnouncement {
@@ -4782,15 +4547,13 @@ export declare class SquareChatAnnouncement {
 	createdAt: Int64;
 	creator: string;
 
-	constructor(
-		args?: {
-			announcementSeq: Int64;
-			type: SquareChatAnnouncementType;
-			contents: SquareChatAnnouncementContents;
-			createdAt: Int64;
-			creator: string;
-		},
-	);
+	constructor(args?: {
+		announcementSeq: Int64;
+		type: SquareChatAnnouncementType;
+		contents: SquareChatAnnouncementContents;
+		createdAt: Int64;
+		creator: string;
+	});
 }
 
 export declare class GetSquareChatAnnouncementsResponse {
@@ -4824,24 +4587,23 @@ export declare class SquareChatThread {
 	messageId: string;
 	state: SquareChatThreadState;
 
-	constructor(
-		args?: {
-			squareChatThreadMid: string;
-			squareChatMid: string;
-			squareMid: string;
-			messageId: string;
-			state: SquareChatThreadState;
-		},
-	);
+	constructor(args?: {
+		squareChatThreadMid: string;
+		squareChatMid: string;
+		squareMid: string;
+		messageId: string;
+		state: SquareChatThreadState;
+	});
 }
 
 export declare class GetJoinedSquareChatThreadsResponse {
 	squareChatThreads: SquareChatThread[];
 	continuationToken: string;
 
-	constructor(
-		args?: { squareChatThreads: SquareChatThread[]; continuationToken: string },
-	);
+	constructor(args?: {
+		squareChatThreads: SquareChatThread[];
+		continuationToken: string;
+	});
 }
 
 export declare class CreateSquareChatThreadResponse {
@@ -4856,26 +4618,22 @@ export declare class SquareChatThreadMember {
 	revision: Int64;
 	membershipState: SquareChatThreadeMembershipState;
 
-	constructor(
-		args?: {
-			squareMemberMid: string;
-			squareChatThreadMid: string;
-			revision: Int64;
-			membershipState: SquareChatThreadeMembershipState;
-		},
-	);
+	constructor(args?: {
+		squareMemberMid: string;
+		squareChatThreadMid: string;
+		revision: Int64;
+		membershipState: SquareChatThreadeMembershipState;
+	});
 }
 
 export declare class GetSquareChatThreadResponse {
 	squareChatThread: SquareChatThread;
 	mySquareChatThreadMember: SquareChatThreadMember;
 
-	constructor(
-		args?: {
-			squareChatThread: SquareChatThread;
-			mySquareChatThreadMember: SquareChatThreadMember;
-		},
-	);
+	constructor(args?: {
+		squareChatThread: SquareChatThread;
+		mySquareChatThreadMember: SquareChatThreadMember;
+	});
 }
 
 export declare class JoinSquareChatThreadResponse {
@@ -4884,23 +4642,17 @@ export declare class JoinSquareChatThreadResponse {
 	constructor(args?: { squareChatThread: SquareChatThread });
 }
 
-export declare class AcceptSpeakersResponse {
-}
+export declare class AcceptSpeakersResponse {}
 
-export declare class AcceptToChangeRoleResponse {
-}
+export declare class AcceptToChangeRoleResponse {}
 
-export declare class AcceptToListenResponse {
-}
+export declare class AcceptToListenResponse {}
 
-export declare class AcceptToSpeakResponse {
-}
+export declare class AcceptToSpeakResponse {}
 
-export declare class CancelToSpeakResponse {
-}
+export declare class CancelToSpeakResponse {}
 
-export declare class EndLiveTalkResponse {
-}
+export declare class EndLiveTalkResponse {}
 
 export declare class LiveTalkEventNotifiedUpdateLiveTalkTitle {
 	title: string;
@@ -4935,27 +4687,18 @@ export declare class LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak {
 
 export declare class LiveTalkEventPayload {
 	notifiedUpdateLiveTalkTitle: LiveTalkEventNotifiedUpdateLiveTalkTitle;
-	notifiedUpdateLiveTalkSpeakerSetting:
-		LiveTalkEventNotifiedUpdateLiveTalkSpeakerSetting;
-	notifiedUpdateLiveTalkAnnouncement:
-		LiveTalkEventNotifiedUpdateLiveTalkAnnouncement;
+	notifiedUpdateLiveTalkSpeakerSetting: LiveTalkEventNotifiedUpdateLiveTalkSpeakerSetting;
+	notifiedUpdateLiveTalkAnnouncement: LiveTalkEventNotifiedUpdateLiveTalkAnnouncement;
 	notifiedUpdateSquareMemberRole: LiveTalkEventNotifiedUpdateSquareMemberRole;
-	notifiedUpdateLiveTalkAllowRequestToSpeak:
-		LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak;
+	notifiedUpdateLiveTalkAllowRequestToSpeak: LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak;
 
-	constructor(
-		args?: {
-			notifiedUpdateLiveTalkTitle: LiveTalkEventNotifiedUpdateLiveTalkTitle;
-			notifiedUpdateLiveTalkSpeakerSetting:
-				LiveTalkEventNotifiedUpdateLiveTalkSpeakerSetting;
-			notifiedUpdateLiveTalkAnnouncement:
-				LiveTalkEventNotifiedUpdateLiveTalkAnnouncement;
-			notifiedUpdateSquareMemberRole:
-				LiveTalkEventNotifiedUpdateSquareMemberRole;
-			notifiedUpdateLiveTalkAllowRequestToSpeak:
-				LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak;
-		},
-	);
+	constructor(args?: {
+		notifiedUpdateLiveTalkTitle: LiveTalkEventNotifiedUpdateLiveTalkTitle;
+		notifiedUpdateLiveTalkSpeakerSetting: LiveTalkEventNotifiedUpdateLiveTalkSpeakerSetting;
+		notifiedUpdateLiveTalkAnnouncement: LiveTalkEventNotifiedUpdateLiveTalkAnnouncement;
+		notifiedUpdateSquareMemberRole: LiveTalkEventNotifiedUpdateSquareMemberRole;
+		notifiedUpdateLiveTalkAllowRequestToSpeak: LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak;
+	});
 }
 
 export declare class LiveTalkEvent {
@@ -4963,13 +4706,11 @@ export declare class LiveTalkEvent {
 	payload: LiveTalkEventPayload;
 	syncToken: string;
 
-	constructor(
-		args?: {
-			type: LiveTalkEventType;
-			payload: LiveTalkEventPayload;
-			syncToken: string;
-		},
-	);
+	constructor(args?: {
+		type: LiveTalkEventType;
+		payload: LiveTalkEventPayload;
+		syncToken: string;
+	});
 }
 
 export declare class FetchLiveTalkEventsResponse {
@@ -4977,9 +4718,11 @@ export declare class FetchLiveTalkEventsResponse {
 	syncToken: string;
 	hasMore: boolean;
 
-	constructor(
-		args?: { events: LiveTalkEvent[]; syncToken: string; hasMore: boolean },
-	);
+	constructor(args?: {
+		events: LiveTalkEvent[];
+		syncToken: string;
+		hasMore: boolean;
+	});
 }
 
 export declare class LiveTalk {
@@ -4994,20 +4737,18 @@ export declare class LiveTalk {
 	revision: Int64;
 	startedAt: Int64;
 
-	constructor(
-		args?: {
-			squareChatMid: string;
-			sessionId: string;
-			title: string;
-			type: LiveTalkType;
-			speakerSetting: LiveTalkSpeakerSetting;
-			allowRequestToSpeak: boolean;
-			announcement: string;
-			participantCount: number;
-			revision: Int64;
-			startedAt: Int64;
-		},
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		sessionId: string;
+		title: string;
+		type: LiveTalkType;
+		speakerSetting: LiveTalkSpeakerSetting;
+		allowRequestToSpeak: boolean;
+		announcement: string;
+		participantCount: number;
+		revision: Int64;
+		startedAt: Int64;
+	});
 }
 
 export declare class FindLiveTalkByInvitationTicketResponse {
@@ -5017,32 +4758,27 @@ export declare class FindLiveTalkByInvitationTicketResponse {
 	squareMember: SquareMember;
 	chatMembershipState: SquareChatMembershipState;
 
-	constructor(
-		args?: {
-			chatInvitationTicket: string;
-			liveTalk: LiveTalk;
-			chat: SquareChat;
-			squareMember: SquareMember;
-			chatMembershipState: SquareChatMembershipState;
-		},
-	);
+	constructor(args?: {
+		chatInvitationTicket: string;
+		liveTalk: LiveTalk;
+		chat: SquareChat;
+		squareMember: SquareMember;
+		chatMembershipState: SquareChatMembershipState;
+	});
 }
 
-export declare class ForceEndLiveTalkResponse {
-}
+export declare class ForceEndLiveTalkResponse {}
 
 export declare class LiveTalkSpeaker {
 	displayName: string;
 	profileImageObsHash: string;
 	role: SquareMemberRole;
 
-	constructor(
-		args?: {
-			displayName: string;
-			profileImageObsHash: string;
-			role: SquareMemberRole;
-		},
-	);
+	constructor(args?: {
+		displayName: string;
+		profileImageObsHash: string;
+		role: SquareMemberRole;
+	});
 }
 
 export declare class GetLiveTalkInfoForNonMemberResponse {
@@ -5051,14 +4787,12 @@ export declare class GetLiveTalkInfoForNonMemberResponse {
 	speakers: LiveTalkSpeaker[];
 	chatInvitationUrl: string;
 
-	constructor(
-		args?: {
-			chatName: string;
-			liveTalk: LiveTalk;
-			speakers: LiveTalkSpeaker[];
-			chatInvitationUrl: string;
-		},
-	);
+	constructor(args?: {
+		chatName: string;
+		liveTalk: LiveTalk;
+		speakers: LiveTalkSpeaker[];
+		chatInvitationUrl: string;
+	});
 }
 
 export declare class GetLiveTalkInvitationUrlResponse {
@@ -5078,19 +4812,18 @@ export declare class GetSquareInfoByChatMidResponse {
 	squareName: string;
 	squareDesc: string;
 
-	constructor(
-		args?: { defaultChatMid: string; squareName: string; squareDesc: string },
-	);
+	constructor(args?: {
+		defaultChatMid: string;
+		squareName: string;
+		squareDesc: string;
+	});
 }
 
-export declare class InviteToChangeRoleResponse {
-}
+export declare class InviteToChangeRoleResponse {}
 
-export declare class InviteToListenResponse {
-}
+export declare class InviteToListenResponse {}
 
-export declare class InviteToLiveTalkResponse {
-}
+export declare class InviteToLiveTalkResponse {}
 
 export declare class InviteToSpeakResponse {
 	inviteRequestId: string;
@@ -5114,46 +4847,37 @@ export declare class JoinLiveTalkResponse {
 	polarisZone: string;
 	polarisUdpPort: number;
 
-	constructor(
-		args?: {
-			hostMemberMid: string;
-			memberSessionId: string;
-			token: string;
-			proto: string;
-			voipAddress: string;
-			voipAddress6: string;
-			voipUdpPort: number;
-			voipTcpPort: number;
-			fromZone: string;
-			commParam: string;
-			orionAddress: string;
-			polarisAddress: string;
-			polarisZone: string;
-			polarisUdpPort: number;
-		},
-	);
+	constructor(args?: {
+		hostMemberMid: string;
+		memberSessionId: string;
+		token: string;
+		proto: string;
+		voipAddress: string;
+		voipAddress6: string;
+		voipUdpPort: number;
+		voipTcpPort: number;
+		fromZone: string;
+		commParam: string;
+		orionAddress: string;
+		polarisAddress: string;
+		polarisZone: string;
+		polarisUdpPort: number;
+	});
 }
 
-export declare class KickOutLiveTalkParticipantsResponse {
-}
+export declare class KickOutLiveTalkParticipantsResponse {}
 
-export declare class RejectSpeakersResponse {
-}
+export declare class RejectSpeakersResponse {}
 
-export declare class RejectToSpeakResponse {
-}
+export declare class RejectToSpeakResponse {}
 
-export declare class ReportLiveTalkResponse {
-}
+export declare class ReportLiveTalkResponse {}
 
-export declare class ReportLiveTalkSpeakerResponse {
-}
+export declare class ReportLiveTalkSpeakerResponse {}
 
-export declare class RequestToListenResponse {
-}
+export declare class RequestToListenResponse {}
 
-export declare class RequestToSpeakResponse {
-}
+export declare class RequestToSpeakResponse {}
 
 export declare class StartLiveTalkResponse {
 	liveTalk: LiveTalk;
@@ -5161,8 +4885,7 @@ export declare class StartLiveTalkResponse {
 	constructor(args?: { liveTalk: LiveTalk });
 }
 
-export declare class UpdateLiveTalkAttrsResponse {
-}
+export declare class UpdateLiveTalkAttrsResponse {}
 
 export declare class AcquireLiveTalkResponse {
 	liveTalk: LiveTalk;
@@ -5176,14 +4899,12 @@ export declare class CreateQrCodeForSecureResponse {
 	longPollingIntervalSec: number;
 	nonce: string;
 
-	constructor(
-		args?: {
-			callbackUrl: string;
-			longPollingMaxCount: number;
-			longPollingIntervalSec: number;
-			nonce: string;
-		},
-	);
+	constructor(args?: {
+		callbackUrl: string;
+		longPollingMaxCount: number;
+		longPollingIntervalSec: number;
+		nonce: string;
+	});
 }
 
 export declare class RefreshApiRetryPolicy {
@@ -5192,14 +4913,12 @@ export declare class RefreshApiRetryPolicy {
 	multiplier: number;
 	jitterRate: number;
 
-	constructor(
-		args?: {
-			initialDelayInMillis: Int64;
-			maxDelayInMillis: Int64;
-			multiplier: number;
-			jitterRate: number;
-		},
-	);
+	constructor(args?: {
+		initialDelayInMillis: Int64;
+		maxDelayInMillis: Int64;
+		multiplier: number;
+		jitterRate: number;
+	});
 }
 
 export declare class TokenV3IssueResult {
@@ -5210,16 +4929,14 @@ export declare class TokenV3IssueResult {
 	loginSessionId: string;
 	tokenIssueTimeEpochSec: Int64;
 
-	constructor(
-		args?: {
-			accessToken: string;
-			refreshToken: string;
-			durationUntilRefreshInSec: Int64;
-			refreshApiRetryPolicy: RefreshApiRetryPolicy;
-			loginSessionId: string;
-			tokenIssueTimeEpochSec: Int64;
-		},
-	);
+	constructor(args?: {
+		accessToken: string;
+		refreshToken: string;
+		durationUntilRefreshInSec: Int64;
+		refreshApiRetryPolicy: RefreshApiRetryPolicy;
+		loginSessionId: string;
+		tokenIssueTimeEpochSec: Int64;
+	});
 }
 
 export declare class QrCodeLoginV2Response {
@@ -5230,16 +4947,14 @@ export declare class QrCodeLoginV2Response {
 	lastBindTimestamp: Int64;
 	metaData: { [k: string]: string };
 
-	constructor(
-		args?: {
-			certificate: string;
-			accessTokenV2: string;
-			tokenV3IssueResult: TokenV3IssueResult;
-			mid: string;
-			lastBindTimestamp: Int64;
-			metaData: { [k: string]: string };
-		},
-	);
+	constructor(args?: {
+		certificate: string;
+		accessTokenV2: string;
+		tokenV3IssueResult: TokenV3IssueResult;
+		mid: string;
+		lastBindTimestamp: Int64;
+		metaData: { [k: string]: string };
+	});
 }
 
 export declare class RichString {
@@ -5260,19 +4975,17 @@ export declare class TargetProfileDetail {
 	pictureSource: PictureSource;
 	pictureStatus: string;
 
-	constructor(
-		args?: {
-			snapshotTimeMillis: Int64;
-			profileName: string;
-			picturePath: string;
-			statusMessage: RichString;
-			musicProfile: string;
-			videoProfile: string;
-			avatarProfile: AvatarProfile;
-			pictureSource: PictureSource;
-			pictureStatus: string;
-		},
-	);
+	constructor(args?: {
+		snapshotTimeMillis: Int64;
+		profileName: string;
+		picturePath: string;
+		statusMessage: RichString;
+		musicProfile: string;
+		videoProfile: string;
+		avatarProfile: AvatarProfile;
+		pictureSource: PictureSource;
+		pictureStatus: string;
+	});
 }
 
 export declare class UserFriendDetail {
@@ -5283,16 +4996,14 @@ export declare class UserFriendDetail {
 	ringtone: string;
 	ringbackTone: string;
 
-	constructor(
-		args?: {
-			createdTime: Int64;
-			overriddenName: string;
-			favoriteTime: Int64;
-			hidden: boolean;
-			ringtone: string;
-			ringbackTone: string;
-		},
-	);
+	constructor(args?: {
+		createdTime: Int64;
+		overriddenName: string;
+		favoriteTime: Int64;
+		hidden: boolean;
+		ringtone: string;
+		ringbackTone: string;
+	});
 }
 
 export declare class BotFriendDetail {
@@ -5300,26 +5011,25 @@ export declare class BotFriendDetail {
 	favoriteTime: Int64;
 	hidden: boolean;
 
-	constructor(
-		args?: { createdTime: Int64; favoriteTime: Int64; hidden: boolean },
-	);
+	constructor(args?: {
+		createdTime: Int64;
+		favoriteTime: Int64;
+		hidden: boolean;
+	});
 }
 
-export declare class NotFriend {
-}
+export declare class NotFriend {}
 
 export declare class FriendDetail {
 	user: UserFriendDetail;
 	bot: BotFriendDetail;
 	notFriend: NotFriend;
 
-	constructor(
-		args?: {
-			user: UserFriendDetail;
-			bot: BotFriendDetail;
-			notFriend: NotFriend;
-		},
-	);
+	constructor(args?: {
+		user: UserFriendDetail;
+		bot: BotFriendDetail;
+		notFriend: NotFriend;
+	});
 }
 
 export declare class UserBlockDetail {
@@ -5334,21 +5044,18 @@ export declare class BotBlockDetail {
 	constructor(args?: { deletedFromBlockList: boolean });
 }
 
-export declare class NotBlocked {
-}
+export declare class NotBlocked {}
 
 export declare class BlockDetail {
 	user: UserBlockDetail;
 	bot: BotBlockDetail;
 	notBlocked: NotBlocked;
 
-	constructor(
-		args?: {
-			user: UserBlockDetail;
-			bot: BotBlockDetail;
-			notBlocked: NotBlocked;
-		},
-	);
+	constructor(args?: {
+		user: UserBlockDetail;
+		bot: BotBlockDetail;
+		notBlocked: NotBlocked;
+	});
 }
 
 export declare class RecommendationReasonSharedChat {
@@ -5357,14 +5064,11 @@ export declare class RecommendationReasonSharedChat {
 	constructor(args?: { chatMid: string });
 }
 
-export declare class RecommendationReasonReverseFriendByUserId {
-}
+export declare class RecommendationReasonReverseFriendByUserId {}
 
-export declare class RecommendationReasonReverseFriendByQRCode {
-}
+export declare class RecommendationReasonReverseFriendByQRCode {}
 
-export declare class RecommendationReasonReverseFriendByPhone {
-}
+export declare class RecommendationReasonReverseFriendByPhone {}
 
 export declare class RecommendationReason {
 	sharedChat: RecommendationReasonSharedChat;
@@ -5372,14 +5076,12 @@ export declare class RecommendationReason {
 	reverseFriendByQrCode: RecommendationReasonReverseFriendByQRCode;
 	reverseFriendByPhone: RecommendationReasonReverseFriendByPhone;
 
-	constructor(
-		args?: {
-			sharedChat: RecommendationReasonSharedChat;
-			reverseFriendByUserId: RecommendationReasonReverseFriendByUserId;
-			reverseFriendByQrCode: RecommendationReasonReverseFriendByQRCode;
-			reverseFriendByPhone: RecommendationReasonReverseFriendByPhone;
-		},
-	);
+	constructor(args?: {
+		sharedChat: RecommendationReasonSharedChat;
+		reverseFriendByUserId: RecommendationReasonReverseFriendByUserId;
+		reverseFriendByQrCode: RecommendationReasonReverseFriendByQRCode;
+		reverseFriendByPhone: RecommendationReasonReverseFriendByPhone;
+	});
 }
 
 export declare class Recommended {
@@ -5387,28 +5089,23 @@ export declare class Recommended {
 	reasons: RecommendationReason[];
 	hidden: boolean;
 
-	constructor(
-		args?: {
-			createdTime: Int64;
-			reasons: RecommendationReason[];
-			hidden: boolean;
-		},
-	);
+	constructor(args?: {
+		createdTime: Int64;
+		reasons: RecommendationReason[];
+		hidden: boolean;
+	});
 }
 
-export declare class NotRecommended {
-}
+export declare class NotRecommended {}
 
 export declare class RecommendationDetail {
 	recommendationDetail: Recommended;
 	notRecommended: NotRecommended;
 
-	constructor(
-		args?: {
-			recommendationDetail: Recommended;
-			notRecommended: NotRecommended;
-		},
-	);
+	constructor(args?: {
+		recommendationDetail: Recommended;
+		notRecommended: NotRecommended;
+	});
 }
 
 export declare class NotificationSetting {
@@ -5432,17 +5129,15 @@ export declare class GetContactV3Response {
 	recommendationDetail: RecommendationDetail;
 	notificationSettingEntry: NotificationSettingEntry;
 
-	constructor(
-		args?: {
-			targetUserMid: string;
-			userType: UserType;
-			targetProfileDetail: TargetProfileDetail;
-			friendDetail: FriendDetail;
-			blockDetail: BlockDetail;
-			recommendationDetail: RecommendationDetail;
-			notificationSettingEntry: NotificationSettingEntry;
-		},
-	);
+	constructor(args?: {
+		targetUserMid: string;
+		userType: UserType;
+		targetProfileDetail: TargetProfileDetail;
+		friendDetail: FriendDetail;
+		blockDetail: BlockDetail;
+		recommendationDetail: RecommendationDetail;
+		notificationSettingEntry: NotificationSettingEntry;
+	});
 }
 
 export declare class GetContactsV3Response {
@@ -5451,8 +5146,7 @@ export declare class GetContactsV3Response {
 	constructor(args?: { responses: GetContactV3Response[] });
 }
 
-export declare class AddFriendByMidResponse {
-}
+export declare class AddFriendByMidResponse {}
 
 export declare class GetContactCalendarEventResponse {
 	targetUserMid: string;
@@ -5460,14 +5154,12 @@ export declare class GetContactCalendarEventResponse {
 	contactCalendarEvents: ContactCalendarEvents;
 	snapshotTimeMillis: Int64;
 
-	constructor(
-		args?: {
-			targetUserMid: string;
-			userType: UserType;
-			contactCalendarEvents: ContactCalendarEvents;
-			snapshotTimeMillis: Int64;
-		},
-	);
+	constructor(args?: {
+		targetUserMid: string;
+		userType: UserType;
+		contactCalendarEvents: ContactCalendarEvents;
+		snapshotTimeMillis: Int64;
+	});
 }
 
 export declare class GetContactCalendarEventsResponse {
@@ -5489,14 +5181,12 @@ export declare class GetProductRequest {
 	carrierCode: string;
 	saveBrowsingHistory: boolean;
 
-	constructor(
-		args?: {
-			productType: ProductType;
-			productId: string;
-			carrierCode: string;
-			saveBrowsingHistory: boolean;
-		},
-	);
+	constructor(args?: {
+		productType: ProductType;
+		productId: string;
+		carrierCode: string;
+		saveBrowsingHistory: boolean;
+	});
 }
 
 export declare class GetProductResponse {
@@ -5550,53 +5240,51 @@ export declare class ProductDetail {
 	madeWithStickerMaker: boolean;
 	customDownloadButtonLabel: string;
 
-	constructor(
-		args?: {
-			id: string;
-			billingItemId: string;
-			type: string;
-			subtype: SubType;
-			billingCpId: string;
-			name: string;
-			author: string;
-			details: string;
-			copyright: string;
-			notice: string;
-			promotionInfo: PromotionInfo;
-			latestVersion: Int64;
-			latestVersionString: string;
-			version: Int64;
-			versionString: string;
-			applicationVersionRange: ApplicationVersionRange;
-			owned: boolean;
-			grantedByDefault: boolean;
-			validFor: number;
-			validUntil: Int64;
-			onSale: boolean;
-			salesFlag: string[];
-			availableForPresent: boolean;
-			availableForMyself: boolean;
-			priceTier: number;
-			price: Price;
-			priceInLineCoin: string;
-			localizedPrice: Price;
-			images: { [k: string]: string[] };
-			attributes: { [k: string]: string };
-			authorId: string;
-			stickerResourceType: StickerResourceType;
-			productProperty: ProductProperty;
-			productSalesState: ProductSalesState;
-			installedTime: Int64;
-			wishProperty: ProductWishProperty;
-			subscriptionProperty: ProductSubscriptionProperty;
-			productPromotionProperty: ProductPromotionProperty;
-			availableInCountry: boolean;
-			editorsPickBanners: EditorsPickBannerForClient[];
-			ableToBeGivenAsPresent: boolean;
-			madeWithStickerMaker: boolean;
-			customDownloadButtonLabel: string;
-		},
-	);
+	constructor(args?: {
+		id: string;
+		billingItemId: string;
+		type: string;
+		subtype: SubType;
+		billingCpId: string;
+		name: string;
+		author: string;
+		details: string;
+		copyright: string;
+		notice: string;
+		promotionInfo: PromotionInfo;
+		latestVersion: Int64;
+		latestVersionString: string;
+		version: Int64;
+		versionString: string;
+		applicationVersionRange: ApplicationVersionRange;
+		owned: boolean;
+		grantedByDefault: boolean;
+		validFor: number;
+		validUntil: Int64;
+		onSale: boolean;
+		salesFlag: string[];
+		availableForPresent: boolean;
+		availableForMyself: boolean;
+		priceTier: number;
+		price: Price;
+		priceInLineCoin: string;
+		localizedPrice: Price;
+		images: { [k: string]: string[] };
+		attributes: { [k: string]: string };
+		authorId: string;
+		stickerResourceType: StickerResourceType;
+		productProperty: ProductProperty;
+		productSalesState: ProductSalesState;
+		installedTime: Int64;
+		wishProperty: ProductWishProperty;
+		subscriptionProperty: ProductSubscriptionProperty;
+		productPromotionProperty: ProductPromotionProperty;
+		availableInCountry: boolean;
+		editorsPickBanners: EditorsPickBannerForClient[];
+		ableToBeGivenAsPresent: boolean;
+		madeWithStickerMaker: boolean;
+		customDownloadButtonLabel: string;
+	});
 }
 
 export declare class ApplicationVersionRange {
@@ -5605,14 +5293,12 @@ export declare class ApplicationVersionRange {
 	upperBound: string;
 	upperBoundInclusive: boolean;
 
-	constructor(
-		args?: {
-			lowerBound: string;
-			lowerBoundInclusive: boolean;
-			upperBound: string;
-			upperBoundInclusive: boolean;
-		},
-	);
+	constructor(args?: {
+		lowerBound: string;
+		lowerBoundInclusive: boolean;
+		upperBound: string;
+		upperBoundInclusive: boolean;
+	});
 }
 
 export declare class EditorsPickBannerForClient {
@@ -5623,16 +5309,14 @@ export declare class EditorsPickBannerForClient {
 	name: string;
 	description: string;
 
-	constructor(
-		args?: {
-			id: Int64;
-			endPageBannerImageUrl: string;
-			defaulteditorsPickShowcaseType: EditorsPickShowcaseType;
-			showNewBadge: boolean;
-			name: string;
-			description: string;
-		},
-	);
+	constructor(args?: {
+		id: Int64;
+		endPageBannerImageUrl: string;
+		defaulteditorsPickShowcaseType: EditorsPickShowcaseType;
+		showNewBadge: boolean;
+		name: string;
+		description: string;
+	});
 }
 
 export declare class Price {
@@ -5648,13 +5332,11 @@ export declare class ProductProperty {
 	themeProperty: ThemeProperty;
 	sticonProperty: SticonProperty;
 
-	constructor(
-		args?: {
-			stickerProperty: StickerProperty;
-			themeProperty: ThemeProperty;
-			sticonProperty: SticonProperty;
-		},
-	);
+	constructor(args?: {
+		stickerProperty: StickerProperty;
+		themeProperty: ThemeProperty;
+		sticonProperty: SticonProperty;
+	});
 }
 
 export declare class StickerProperty {
@@ -5674,34 +5356,33 @@ export declare class StickerProperty {
 	cpdProduct: boolean;
 	availableForCombinationSticker: boolean;
 
-	constructor(
-		args?: {
-			hasAnimation: boolean;
-			hasSound: boolean;
-			hasPopup: boolean;
-			stickerResourceType: StickerResourceType;
-			stickerOptions: string;
-			compactStickerOptions: number;
-			stickerHash: string;
-			stickerIds: string[];
-			nameTextProperty: ImageTextProperty;
-			availableForPhotoEdit: boolean;
-			stickerDefaultTexts: { [k: string]: string };
-			stickerSize: StickerSize;
-			popupLayer: PopupLayer;
-			cpdProduct: boolean;
-			availableForCombinationSticker: boolean;
-		},
-	);
+	constructor(args?: {
+		hasAnimation: boolean;
+		hasSound: boolean;
+		hasPopup: boolean;
+		stickerResourceType: StickerResourceType;
+		stickerOptions: string;
+		compactStickerOptions: number;
+		stickerHash: string;
+		stickerIds: string[];
+		nameTextProperty: ImageTextProperty;
+		availableForPhotoEdit: boolean;
+		stickerDefaultTexts: { [k: string]: string };
+		stickerSize: StickerSize;
+		popupLayer: PopupLayer;
+		cpdProduct: boolean;
+		availableForCombinationSticker: boolean;
+	});
 }
 
 export declare class ThemeProperty {
 	thumbnail: string;
 	themeResourceType: ThemeResourceType;
 
-	constructor(
-		args?: { thumbnail: string; themeResourceType: ThemeResourceType },
-	);
+	constructor(args?: {
+		thumbnail: string;
+		themeResourceType: ThemeResourceType;
+	});
 }
 
 export declare class SticonProperty {
@@ -5710,14 +5391,12 @@ export declare class SticonProperty {
 	sticonResourceType: SticonResourceType;
 	endPageMainImages: string[][];
 
-	constructor(
-		args?: {
-			sticonIds: string[];
-			availableForPhotoEdit: boolean;
-			sticonResourceType: SticonResourceType;
-			endPageMainImages: string[][];
-		},
-	);
+	constructor(args?: {
+		sticonIds: string[];
+		availableForPhotoEdit: boolean;
+		sticonResourceType: SticonResourceType;
+		endPageMainImages: string[][];
+	});
 }
 
 export declare class ImageTextProperty {
@@ -5726,14 +5405,12 @@ export declare class ImageTextProperty {
 	nameTextMaxCharacterCount: number;
 	encryptedText: string;
 
-	constructor(
-		args?: {
-			status: ImageTextStatus;
-			plaintext: string;
-			nameTextMaxCharacterCount: number;
-			encryptedText: string;
-		},
-	);
+	constructor(args?: {
+		status: ImageTextStatus;
+		plaintext: string;
+		nameTextMaxCharacterCount: number;
+		encryptedText: string;
+	});
 }
 
 export declare class LpPromotionProperty {
@@ -5741,9 +5418,11 @@ export declare class LpPromotionProperty {
 	label: string;
 	buttonLabel: string;
 
-	constructor(
-		args?: { landingPageUrl: string; label: string; buttonLabel: string },
-	);
+	constructor(args?: {
+		landingPageUrl: string;
+		label: string;
+		buttonLabel: string;
+	});
 }
 
 export declare class ProductWishProperty {
@@ -5756,9 +5435,10 @@ export declare class ProductSubscriptionProperty {
 	availableForSubscribe: boolean;
 	subscriptionAvailability: number;
 
-	constructor(
-		args?: { availableForSubscribe: boolean; subscriptionAvailability: number },
-	);
+	constructor(args?: {
+		availableForSubscribe: boolean;
+		subscriptionAvailability: number;
+	});
 }
 
 export declare class ProductPromotionProperty {
@@ -5772,13 +5452,11 @@ export declare class PromotionDetail {
 	promotionInstallInfo: PromotionInstallInfo;
 	promotionMissionInfo: PromotionMissionInfo;
 
-	constructor(
-		args?: {
-			promotionBuddyInfo: PromotionBuddyInfo;
-			promotionInstallInfo: PromotionInstallInfo;
-			promotionMissionInfo: PromotionMissionInfo;
-		},
-	);
+	constructor(args?: {
+		promotionBuddyInfo: PromotionBuddyInfo;
+		promotionInstallInfo: PromotionInstallInfo;
+		promotionMissionInfo: PromotionMissionInfo;
+	});
 }
 
 export declare class PromotionInfo {
@@ -5786,13 +5464,11 @@ export declare class PromotionInfo {
 	promotionDetail: PromotionDetail;
 	buddyInfo: PromotionBuddyInfo;
 
-	constructor(
-		args?: {
-			promotionType: PromotionType;
-			promotionDetail: PromotionDetail;
-			buddyInfo: PromotionBuddyInfo;
-		},
-	);
+	constructor(args?: {
+		promotionType: PromotionType;
+		promotionDetail: PromotionDetail;
+		buddyInfo: PromotionBuddyInfo;
+	});
 }
 
 export declare class PromotionBuddyInfo {
@@ -5800,13 +5476,11 @@ export declare class PromotionBuddyInfo {
 	promotionBuddyDetail: PromotionBuddyDetail;
 	showBanner: boolean;
 
-	constructor(
-		args?: {
-			buddyMid: string;
-			promotionBuddyDetail: PromotionBuddyDetail;
-			showBanner: boolean;
-		},
-	);
+	constructor(args?: {
+		buddyMid: string;
+		promotionBuddyDetail: PromotionBuddyDetail;
+		showBanner: boolean;
+	});
 }
 
 export declare class PromotionInstallInfo {
@@ -5823,15 +5497,13 @@ export declare class PromotionMissionInfo {
 	customUrlSchema: string;
 	oaMid: string;
 
-	constructor(
-		args?: {
-			promotionMissionType: PromotionMissionType;
-			missionCompleted: boolean;
-			downloadUrl: string;
-			customUrlSchema: string;
-			oaMid: string;
-		},
-	);
+	constructor(args?: {
+		promotionMissionType: PromotionMissionType;
+		missionCompleted: boolean;
+		downloadUrl: string;
+		customUrlSchema: string;
+		oaMid: string;
+	});
 }
 
 export declare class PromotionBuddyDetail {
@@ -5842,16 +5514,14 @@ export declare class PromotionBuddyDetail {
 	statusMessage: string;
 	brandType: BrandType;
 
-	constructor(
-		args?: {
-			searchId: string;
-			contactStatus: ContactStatus;
-			name: string;
-			pictureUrl: string;
-			statusMessage: string;
-			brandType: BrandType;
-		},
-	);
+	constructor(args?: {
+		searchId: string;
+		contactStatus: ContactStatus;
+		name: string;
+		pictureUrl: string;
+		statusMessage: string;
+		brandType: BrandType;
+	});
 }
 
 export declare class PurchaseOrder {
@@ -5863,17 +5533,15 @@ export declare class PurchaseOrder {
 	locale: Locale;
 	presentAttributes: { [k: string]: string };
 
-	constructor(
-		args?: {
-			shopId: string;
-			productId: string;
-			recipientMid: string;
-			price: Price;
-			enableLinePointAutoExchange: boolean;
-			locale: Locale;
-			presentAttributes: { [k: string]: string };
-		},
-	);
+	constructor(args?: {
+		shopId: string;
+		productId: string;
+		recipientMid: string;
+		price: Price;
+		enableLinePointAutoExchange: boolean;
+		locale: Locale;
+		presentAttributes: { [k: string]: string };
+	});
 }
 
 export declare class PurchaseOrderResponse {
@@ -5881,13 +5549,11 @@ export declare class PurchaseOrderResponse {
 	attributes: { [k: string]: string };
 	billingConfirmUrl: string;
 
-	constructor(
-		args?: {
-			orderId: string;
-			attributes: { [k: string]: string };
-			billingConfirmUrl: string;
-		},
-	);
+	constructor(args?: {
+		orderId: string;
+		attributes: { [k: string]: string };
+		billingConfirmUrl: string;
+	});
 }
 
 export declare class PurchaseRecordList {
@@ -5895,13 +5561,11 @@ export declare class PurchaseRecordList {
 	offset: number;
 	totalSize: number;
 
-	constructor(
-		args?: {
-			purchaseRecords: PurchaseRecord[];
-			offset: number;
-			totalSize: number;
-		},
-	);
+	constructor(args?: {
+		purchaseRecords: PurchaseRecord[];
+		offset: number;
+		totalSize: number;
+	});
 }
 
 export declare class PurchaseRecord {
@@ -5911,15 +5575,13 @@ export declare class PurchaseRecord {
 	recipient: string;
 	purchasedPrice: Price;
 
-	constructor(
-		args?: {
-			productDetail: ProductDetail;
-			purchasedTime: Int64;
-			giver: string;
-			recipient: string;
-			purchasedPrice: Price;
-		},
-	);
+	constructor(args?: {
+		productDetail: ProductDetail;
+		purchasedTime: Int64;
+		giver: string;
+		recipient: string;
+		purchasedPrice: Price;
+	});
 }
 
 export declare class DetailedProductList {
@@ -5927,9 +5589,11 @@ export declare class DetailedProductList {
 	offset: number;
 	totalSize: number;
 
-	constructor(
-		args?: { productList: ProductDetail[]; offset: number; totalSize: number },
-	);
+	constructor(args?: {
+		productList: ProductDetail[];
+		offset: number;
+		totalSize: number;
+	});
 }
 
 export declare class CreateCombinationStickerResponse {
@@ -5961,31 +5625,29 @@ export declare class ProductSearchSummary {
 	interactionEventParameter: string;
 	editorsPickIds: Int64[];
 
-	constructor(
-		args?: {
-			id: string;
-			type: ProductType;
-			name: string;
-			author: string;
-			promotionInfo: PromotionInfo;
-			version: Int64;
-			newFlag: boolean;
-			priceTier: number;
-			priceInLineCoin: string;
-			property: ProductProperty;
-			subType: SubType;
-			onSale: boolean;
-			availableForPresent: boolean;
-			availableForPurchase: boolean;
-			validDays: number;
-			authorId: string;
-			bargainFlag: boolean;
-			copyright: string;
-			availability: ProductAvailability;
-			interactionEventParameter: string;
-			editorsPickIds: Int64[];
-		},
-	);
+	constructor(args?: {
+		id: string;
+		type: ProductType;
+		name: string;
+		author: string;
+		promotionInfo: PromotionInfo;
+		version: Int64;
+		newFlag: boolean;
+		priceTier: number;
+		priceInLineCoin: string;
+		property: ProductProperty;
+		subType: SubType;
+		onSale: boolean;
+		availableForPresent: boolean;
+		availableForPurchase: boolean;
+		validDays: number;
+		authorId: string;
+		bargainFlag: boolean;
+		copyright: string;
+		availability: ProductAvailability;
+		interactionEventParameter: string;
+		editorsPickIds: Int64[];
+	});
 }
 
 export declare class DemographicType {
@@ -5993,13 +5655,11 @@ export declare class DemographicType {
 	demographicAgeType: DemographicAgeType;
 	defaultOrder: boolean;
 
-	constructor(
-		args?: {
-			demographicGenderType: DemographicGenderType;
-			demographicAgeType: DemographicAgeType;
-			defaultOrder: boolean;
-		},
-	);
+	constructor(args?: {
+		demographicGenderType: DemographicGenderType;
+		demographicAgeType: DemographicAgeType;
+		defaultOrder: boolean;
+	});
 }
 
 export declare class ShowcaseV3 {
@@ -6011,17 +5671,15 @@ export declare class ShowcaseV3 {
 	subType: SubType;
 	demographicType: DemographicType;
 
-	constructor(
-		args?: {
-			productList: ProductSearchSummary[];
-			continuationToken: string;
-			totalSize: Int64;
-			showcaseType: ShowcaseType;
-			productType: ProductType;
-			subType: SubType;
-			demographicType: DemographicType;
-		},
-	);
+	constructor(args?: {
+		productList: ProductSearchSummary[];
+		continuationToken: string;
+		totalSize: Int64;
+		showcaseType: ShowcaseType;
+		productType: ProductType;
+		subType: SubType;
+		demographicType: DemographicType;
+	});
 }
 
 export declare class StickerIdRange {
@@ -6043,20 +5701,18 @@ export declare class StickerSummary {
 	stickerSize: StickerSize;
 	availableForCombinationSticker: boolean;
 
-	constructor(
-		args?: {
-			stickerIdRanges: StickerIdRange[];
-			suggestVersion: Int64;
-			stickerHash: string;
-			defaultDisplayOnKeyboard: boolean;
-			stickerResourceType: StickerResourceType;
-			nameTextProperty: ImageTextProperty;
-			availableForPhotoEdit: boolean;
-			popupLayer: PopupLayer;
-			stickerSize: StickerSize;
-			availableForCombinationSticker: boolean;
-		},
-	);
+	constructor(args?: {
+		stickerIdRanges: StickerIdRange[];
+		suggestVersion: Int64;
+		stickerHash: string;
+		defaultDisplayOnKeyboard: boolean;
+		stickerResourceType: StickerResourceType;
+		nameTextProperty: ImageTextProperty;
+		availableForPhotoEdit: boolean;
+		popupLayer: PopupLayer;
+		stickerSize: StickerSize;
+		availableForCombinationSticker: boolean;
+	});
 }
 
 export declare class ThemeSummary {
@@ -6064,9 +5720,11 @@ export declare class ThemeSummary {
 	version: Int64;
 	versionString: string;
 
-	constructor(
-		args?: { imagePath: string; version: Int64; versionString: string },
-	);
+	constructor(args?: {
+		imagePath: string;
+		version: Int64;
+		versionString: string;
+	});
 }
 
 export declare class SticonSummary {
@@ -6074,13 +5732,11 @@ export declare class SticonSummary {
 	availableForPhotoEdit: boolean;
 	sticonResourceType: SticonResourceType;
 
-	constructor(
-		args?: {
-			suggestVersion: Int64;
-			availableForPhotoEdit: boolean;
-			sticonResourceType: SticonResourceType;
-		},
-	);
+	constructor(args?: {
+		suggestVersion: Int64;
+		availableForPhotoEdit: boolean;
+		sticonResourceType: SticonResourceType;
+	});
 }
 
 export declare class ProductTypeSummary {
@@ -6088,13 +5744,11 @@ export declare class ProductTypeSummary {
 	themeSummary: ThemeSummary;
 	sticonSummary: SticonSummary;
 
-	constructor(
-		args?: {
-			stickerSummary: StickerSummary;
-			themeSummary: ThemeSummary;
-			sticonSummary: SticonSummary;
-		},
-	);
+	constructor(args?: {
+		stickerSummary: StickerSummary;
+		themeSummary: ThemeSummary;
+		sticonSummary: SticonSummary;
+	});
 }
 
 export declare class ProductSummary {
@@ -6113,24 +5767,22 @@ export declare class ProductSummary {
 	canAutoDownload: boolean;
 	promotionInfo: PromotionInfo;
 
-	constructor(
-		args?: {
-			id: string;
-			name: string;
-			latestVersion: Int64;
-			applicationVersionRange: ApplicationVersionRange;
-			grantedByDefault: boolean;
-			attributes: { [k: string]: string };
-			productTypeSummary: ProductTypeSummary;
-			validUntil: Int64;
-			validFor: number;
-			installedTime: Int64;
-			availability: ProductAvailability;
-			authorId: string;
-			canAutoDownload: boolean;
-			promotionInfo: PromotionInfo;
-		},
-	);
+	constructor(args?: {
+		id: string;
+		name: string;
+		latestVersion: Int64;
+		applicationVersionRange: ApplicationVersionRange;
+		grantedByDefault: boolean;
+		attributes: { [k: string]: string };
+		productTypeSummary: ProductTypeSummary;
+		validUntil: Int64;
+		validFor: number;
+		installedTime: Int64;
+		availability: ProductAvailability;
+		authorId: string;
+		canAutoDownload: boolean;
+		promotionInfo: PromotionInfo;
+	});
 }
 
 export declare class ProductSummaryList {
@@ -6138,9 +5790,11 @@ export declare class ProductSummaryList {
 	offset: number;
 	totalSize: number;
 
-	constructor(
-		args?: { productList: ProductSummary[]; offset: number; totalSize: number },
-	);
+	constructor(args?: {
+		productList: ProductSummary[];
+		offset: number;
+		totalSize: number;
+	});
 }
 
 export declare class ProductValidationScheme {
@@ -6169,13 +5823,11 @@ export declare class SearchProductsV2Response {
 	continuationToken: string;
 	totalSize: Int64;
 
-	constructor(
-		args?: {
-			results: ProductSearchSummary[];
-			continuationToken: string;
-			totalSize: Int64;
-		},
-	);
+	constructor(args?: {
+		results: ProductSearchSummary[];
+		continuationToken: string;
+		totalSize: Int64;
+	});
 }
 
 export declare class EditorsPickBanner {
@@ -6192,22 +5844,20 @@ export declare class EditorsPickBanner {
 	description: string;
 	showNewBadge: boolean;
 
-	constructor(
-		args?: {
-			id: Int64;
-			imageUrl: string;
-			homeBannerImageUrl: string;
-			showcaseBannerImageUrl: string;
-			enableEditorsPickShowcaseTypes: EditorsPickShowcaseType[];
-			defaulteditorsPickShowcaseType: EditorsPickShowcaseType;
-			homeBannerV2ImageUrl: string;
-			name: string;
-			containsProducts: boolean;
-			displayPeriodBegin: Int64;
-			description: string;
-			showNewBadge: boolean;
-		},
-	);
+	constructor(args?: {
+		id: Int64;
+		imageUrl: string;
+		homeBannerImageUrl: string;
+		showcaseBannerImageUrl: string;
+		enableEditorsPickShowcaseTypes: EditorsPickShowcaseType[];
+		defaulteditorsPickShowcaseType: EditorsPickShowcaseType;
+		homeBannerV2ImageUrl: string;
+		name: string;
+		containsProducts: boolean;
+		displayPeriodBegin: Int64;
+		description: string;
+		showNewBadge: boolean;
+	});
 }
 
 export declare class AuthorForShowcase {
@@ -6215,13 +5865,11 @@ export declare class AuthorForShowcase {
 	productList: ProductSearchSummary[];
 	productTotalSize: Int64;
 
-	constructor(
-		args?: {
-			authorId: Int64;
-			productList: ProductSearchSummary[];
-			productTotalSize: Int64;
-		},
-	);
+	constructor(args?: {
+		authorId: Int64;
+		productList: ProductSearchSummary[];
+		productTotalSize: Int64;
+	});
 }
 
 export declare class ImageSearchSummary {
@@ -6236,9 +5884,11 @@ export declare class KeywordImageList {
 	keyword: string;
 	imageList: ImageSearchSummary[];
 
-	constructor(
-		args?: { tagId: string; keyword: string; imageList: ImageSearchSummary[] },
-	);
+	constructor(args?: {
+		tagId: string;
+		keyword: string;
+		imageList: ImageSearchSummary[];
+	});
 }
 
 export declare class URLItem {
@@ -6260,12 +5910,10 @@ export declare class EditorsPick {
 	contentType: EditorsPickContentType;
 	editorsPickContent: EditorsPickContent;
 
-	constructor(
-		args?: {
-			contentType: EditorsPickContentType;
-			editorsPickContent: EditorsPickContent;
-		},
-	);
+	constructor(args?: {
+		contentType: EditorsPickContentType;
+		editorsPickContent: EditorsPickContent;
+	});
 }
 
 export declare class EditorsPickTab {
@@ -6273,9 +5921,11 @@ export declare class EditorsPickTab {
 	name: string;
 	showcaseType: ShowcaseType;
 
-	constructor(
-		args?: { editorsPickId: Int64; name: string; showcaseType: ShowcaseType },
-	);
+	constructor(args?: {
+		editorsPickId: Int64;
+		name: string;
+		showcaseType: ShowcaseType;
+	});
 }
 
 export declare class EditorsPickShowcase {
@@ -6289,19 +5939,17 @@ export declare class EditorsPickShowcase {
 	type: EditorsPickShowcaseType;
 	tabs: EditorsPickTab[];
 
-	constructor(
-		args?: {
-			id: Int64;
-			name: string;
-			banner: EditorsPickBanner;
-			editorsPicks: EditorsPick[];
-			continuationToken: string;
-			totalSize: number;
-			description: string;
-			type: EditorsPickShowcaseType;
-			tabs: EditorsPickTab[];
-		},
-	);
+	constructor(args?: {
+		id: Int64;
+		name: string;
+		banner: EditorsPickBanner;
+		editorsPicks: EditorsPick[];
+		continuationToken: string;
+		totalSize: number;
+		description: string;
+		type: EditorsPickShowcaseType;
+		tabs: EditorsPickTab[];
+	});
 }
 
 export declare class Category {
@@ -6311,15 +5959,13 @@ export declare class Category {
 	productCount: number;
 	thumbnailUrl: string;
 
-	constructor(
-		args?: {
-			id: Int64;
-			name: string;
-			newFlag: boolean;
-			productCount: number;
-			thumbnailUrl: string;
-		},
-	);
+	constructor(args?: {
+		id: Int64;
+		name: string;
+		newFlag: boolean;
+		productCount: number;
+		thumbnailUrl: string;
+	});
 }
 
 export declare class Tag {
@@ -6329,15 +5975,13 @@ export declare class Tag {
 	productCount: number;
 	thumbnailUrl: string;
 
-	constructor(
-		args?: {
-			id: Int64;
-			name: string;
-			tagType: TagType;
-			productCount: number;
-			thumbnailUrl: string;
-		},
-	);
+	constructor(args?: {
+		id: Int64;
+		name: string;
+		tagType: TagType;
+		productCount: number;
+		thumbnailUrl: string;
+	});
 }
 
 export declare class ProductList {
@@ -6346,14 +5990,12 @@ export declare class ProductList {
 	totalSize: number;
 	title: string;
 
-	constructor(
-		args?: {
-			productList: ProductDetail[];
-			offset: number;
-			totalSize: number;
-			title: string;
-		},
-	);
+	constructor(args?: {
+		productList: ProductDetail[];
+		offset: number;
+		totalSize: number;
+		title: string;
+	});
 }
 
 export declare class CategoryProductList {
@@ -6373,18 +6015,16 @@ export declare class AggregatedHomeV2Response {
 	categoryList: Category[];
 	tagList: Tag[];
 
-	constructor(
-		args?: {
-			showcases: ShowcaseV3[];
-			editorsPickBanners: EditorsPickBanner[];
-			authorList: AuthorForShowcase[];
-			keywordStickerList: KeywordImageList[];
-			detailedEditorsPick: EditorsPickShowcase;
-			detailedCategoryList: CategoryProductList[];
-			categoryList: Category[];
-			tagList: Tag[];
-		},
-	);
+	constructor(args?: {
+		showcases: ShowcaseV3[];
+		editorsPickBanners: EditorsPickBanner[];
+		authorList: AuthorForShowcase[];
+		keywordStickerList: KeywordImageList[];
+		detailedEditorsPick: EditorsPickShowcase;
+		detailedCategoryList: CategoryProductList[];
+		categoryList: Category[];
+		tagList: Tag[];
+	});
 }
 
 export declare class AggregatedCategory {
@@ -6394,15 +6034,13 @@ export declare class AggregatedCategory {
 	productCount: number;
 	thumbnailUrl: string;
 
-	constructor(
-		args?: {
-			id: Int64;
-			categoryType: CategoryType;
-			name: string;
-			productCount: number;
-			thumbnailUrl: string;
-		},
-	);
+	constructor(args?: {
+		id: Int64;
+		categoryType: CategoryType;
+		name: string;
+		productCount: number;
+		thumbnailUrl: string;
+	});
 }
 
 export declare class ListContentData {
@@ -6410,13 +6048,11 @@ export declare class ListContentData {
 	editorsPickBanners: EditorsPickBanner[];
 	categories: AggregatedCategory[];
 
-	constructor(
-		args?: {
-			showcase: ShowcaseV3;
-			editorsPickBanners: EditorsPickBanner[];
-			categories: AggregatedCategory[];
-		},
-	);
+	constructor(args?: {
+		showcase: ShowcaseV3;
+		editorsPickBanners: EditorsPickBanner[];
+		categories: AggregatedCategory[];
+	});
 }
 
 export declare class ListContent {
@@ -6425,14 +6061,12 @@ export declare class ListContent {
 	tsKey: string;
 	moreLinkFragment: string;
 
-	constructor(
-		args?: {
-			contentData: ListContentData;
-			localizedTitle: string;
-			tsKey: string;
-			moreLinkFragment: string;
-		},
-	);
+	constructor(args?: {
+		contentData: ListContentData;
+		localizedTitle: string;
+		tsKey: string;
+		moreLinkFragment: string;
+	});
 }
 
 export declare class AggregatedHomeNativeResponse {
@@ -6452,13 +6086,11 @@ export declare class TagsProductList {
 	characterTag: Tag;
 	products: ProductSearchSummary[];
 
-	constructor(
-		args?: {
-			tasteTag: Tag;
-			characterTag: Tag;
-			products: ProductSearchSummary[];
-		},
-	);
+	constructor(args?: {
+		tasteTag: Tag;
+		characterTag: Tag;
+		products: ProductSearchSummary[];
+	});
 }
 
 export declare class AggregatedPremiumHomeResponse {
@@ -6470,17 +6102,15 @@ export declare class AggregatedPremiumHomeResponse {
 	browsingHistory: ShowcaseV3;
 	subscriptionSlotHistory: ShowcaseV3;
 
-	constructor(
-		args?: {
-			showcases: ShowcaseV3[];
-			editorsPickBanners: EditorsPickBanner[];
-			popularCreator: AuthorForShowcase;
-			featuredCategory: TagsProductList;
-			categoryList: TagsProductList[];
-			browsingHistory: ShowcaseV3;
-			subscriptionSlotHistory: ShowcaseV3;
-		},
-	);
+	constructor(args?: {
+		showcases: ShowcaseV3[];
+		editorsPickBanners: EditorsPickBanner[];
+		popularCreator: AuthorForShowcase;
+		featuredCategory: TagsProductList;
+		categoryList: TagsProductList[];
+		browsingHistory: ShowcaseV3;
+		subscriptionSlotHistory: ShowcaseV3;
+	});
 }
 
 export declare class AggregatedShowcaseV4 {
@@ -6494,13 +6124,11 @@ export declare class GetRecommendationResponse {
 	continuationToken: string;
 	totalSize: Int64;
 
-	constructor(
-		args?: {
-			results: ProductSearchSummary[];
-			continuationToken: string;
-			totalSize: Int64;
-		},
-	);
+	constructor(args?: {
+		results: ProductSearchSummary[];
+		continuationToken: string;
+		totalSize: Int64;
+	});
 }
 
 export declare class AuthorListResponse {
@@ -6508,13 +6136,11 @@ export declare class AuthorListResponse {
 	totalSize: Int64;
 	continuationToken: string;
 
-	constructor(
-		args?: {
-			authorList: AuthorForShowcase[];
-			totalSize: Int64;
-			continuationToken: string;
-		},
-	);
+	constructor(args?: {
+		authorList: AuthorForShowcase[];
+		totalSize: Int64;
+		continuationToken: string;
+	});
 }
 
 export declare class ProductResourceType {
@@ -6522,13 +6148,11 @@ export declare class ProductResourceType {
 	themeResourceType: ThemeResourceType;
 	sticonResourceType: SticonResourceType;
 
-	constructor(
-		args?: {
-			stickerResourceType: StickerResourceType;
-			themeResourceType: ThemeResourceType;
-			sticonResourceType: SticonResourceType;
-		},
-	);
+	constructor(args?: {
+		stickerResourceType: StickerResourceType;
+		themeResourceType: ThemeResourceType;
+		sticonResourceType: SticonResourceType;
+	});
 }
 
 export declare class LatestProductByAuthorItem {
@@ -6539,16 +6163,14 @@ export declare class LatestProductByAuthorItem {
 	productResourceType: ProductResourceType;
 	popupLayer: PopupLayer;
 
-	constructor(
-		args?: {
-			productId: string;
-			displayName: string;
-			version: Int64;
-			newFlag: boolean;
-			productResourceType: ProductResourceType;
-			popupLayer: PopupLayer;
-		},
-	);
+	constructor(args?: {
+		productId: string;
+		displayName: string;
+		version: Int64;
+		newFlag: boolean;
+		productResourceType: ProductResourceType;
+		popupLayer: PopupLayer;
+	});
 }
 
 export declare class LatestProductsByAuthorResponse {
@@ -6556,13 +6178,11 @@ export declare class LatestProductsByAuthorResponse {
 	author: string;
 	items: LatestProductByAuthorItem[];
 
-	constructor(
-		args?: {
-			authorId: Int64;
-			author: string;
-			items: LatestProductByAuthorItem[];
-		},
-	);
+	constructor(args?: {
+		authorId: Int64;
+		author: string;
+		items: LatestProductByAuthorItem[];
+	});
 }
 
 export declare class GetExperimentsResponse {
@@ -6582,28 +6202,27 @@ export declare class ProductSummaryForAutoSuggest {
 	resourceType: ProductResourceType;
 	stickerSize: StickerSize;
 
-	constructor(
-		args?: {
-			id: string;
-			version: Int64;
-			name: string;
-			stickerResourceType: StickerResourceType;
-			suggestVersion: Int64;
-			popupLayer: PopupLayer;
-			type: ProductType;
-			resourceType: ProductResourceType;
-			stickerSize: StickerSize;
-		},
-	);
+	constructor(args?: {
+		id: string;
+		version: Int64;
+		name: string;
+		stickerResourceType: StickerResourceType;
+		suggestVersion: Int64;
+		popupLayer: PopupLayer;
+		type: ProductType;
+		resourceType: ProductResourceType;
+		stickerSize: StickerSize;
+	});
 }
 
 export declare class AutoSuggestionShowcaseResponse {
 	productList: ProductSummaryForAutoSuggest[];
 	totalSize: Int64;
 
-	constructor(
-		args?: { productList: ProductSummaryForAutoSuggest[]; totalSize: Int64 },
-	);
+	constructor(args?: {
+		productList: ProductSummaryForAutoSuggest[];
+		totalSize: Int64;
+	});
 }
 
 export declare class SuggestResource {
@@ -6624,18 +6243,16 @@ export declare class SuggestDictionarySetting {
 	tagPatch: any;
 	corpusResource: SuggestResource;
 
-	constructor(
-		args?: {
-			language: string;
-			name: string;
-			preload: boolean;
-			suggestResource: SuggestResource;
-			patch: any;
-			suggestTagResource: SuggestResource;
-			tagPatch: any;
-			corpusResource: SuggestResource;
-		},
-	);
+	constructor(args?: {
+		language: string;
+		name: string;
+		preload: boolean;
+		suggestResource: SuggestResource;
+		patch: any;
+		suggestTagResource: SuggestResource;
+		tagPatch: any;
+		corpusResource: SuggestResource;
+	});
 }
 
 export declare class GetSuggestDictionarySettingResponse {
@@ -6679,9 +6296,10 @@ export declare class BrowsingHistory {
 	productSearchSummary: ProductSearchSummary;
 	browsingTime: Int64;
 
-	constructor(
-		args?: { productSearchSummary: ProductSearchSummary; browsingTime: Int64 },
-	);
+	constructor(args?: {
+		productSearchSummary: ProductSearchSummary;
+		browsingTime: Int64;
+	});
 }
 
 export declare class GetBrowsingHistoryResponse {
@@ -6689,17 +6307,14 @@ export declare class GetBrowsingHistoryResponse {
 	continuationToken: string;
 	totalSize: number;
 
-	constructor(
-		args?: {
-			browsingHistory: BrowsingHistory[];
-			continuationToken: string;
-			totalSize: number;
-		},
-	);
+	constructor(args?: {
+		browsingHistory: BrowsingHistory[];
+		continuationToken: string;
+		totalSize: number;
+	});
 }
 
-export declare class DeleteAllBrowsingHistoryResponse {
-}
+export declare class DeleteAllBrowsingHistoryResponse {}
 
 export declare class SticonProductMapping {
 	productId: string;
@@ -6711,18 +6326,16 @@ export declare class SticonProductMapping {
 	stickerPackageVersion: number;
 	stickerIds: { [k: string]: string };
 
-	constructor(
-		args?: {
-			productId: string;
-			oldProductId: string;
-			newToOldSticonIdMapping: { [k: string]: string };
-			oldPackageVersion: number;
-			oldMetaVersion: number;
-			stickerPackageId: Int64;
-			stickerPackageVersion: number;
-			stickerIds: { [k: string]: string };
-		},
-	);
+	constructor(args?: {
+		productId: string;
+		oldProductId: string;
+		newToOldSticonIdMapping: { [k: string]: string };
+		oldPackageVersion: number;
+		oldMetaVersion: number;
+		stickerPackageId: Int64;
+		stickerPackageVersion: number;
+		stickerIds: { [k: string]: string };
+	});
 }
 
 export declare class GetOldSticonMappingResponse {
@@ -6730,13 +6343,11 @@ export declare class GetOldSticonMappingResponse {
 	updatedTimeMillis: Int64;
 	updated: boolean;
 
-	constructor(
-		args?: {
-			sticonProductMappings: SticonProductMapping[];
-			updatedTimeMillis: Int64;
-			updated: boolean;
-		},
-	);
+	constructor(args?: {
+		sticonProductMappings: SticonProductMapping[];
+		updatedTimeMillis: Int64;
+		updated: boolean;
+	});
 }
 
 export declare class SimilarImageShowcase {
@@ -6744,13 +6355,11 @@ export declare class SimilarImageShowcase {
 	similarImageList: ImageSearchSummary[];
 	continuationToken: string;
 
-	constructor(
-		args?: {
-			chosenImage: ImageSearchSummary;
-			similarImageList: ImageSearchSummary[];
-			continuationToken: string;
-		},
-	);
+	constructor(args?: {
+		chosenImage: ImageSearchSummary;
+		similarImageList: ImageSearchSummary[];
+		continuationToken: string;
+	});
 }
 
 export declare class CustomizeImageTextResponse {
@@ -6773,22 +6382,20 @@ export declare class SubscriptionPlan {
 	nameKey: string;
 	tier: SubscriptionPlanTier;
 
-	constructor(
-		args?: {
-			billingItemId: string;
-			subscriptionService: SubscriptionServiceType;
-			target: SubscriptionPlanTarget;
-			type: SubscriptionPlanType;
-			period: string;
-			freeTrial: string;
-			localizedName: string;
-			price: Price;
-			availability: SubscriptionPlanAvailability;
-			cpId: string;
-			nameKey: string;
-			tier: SubscriptionPlanTier;
-		},
-	);
+	constructor(args?: {
+		billingItemId: string;
+		subscriptionService: SubscriptionServiceType;
+		target: SubscriptionPlanTarget;
+		type: SubscriptionPlanType;
+		period: string;
+		freeTrial: string;
+		localizedName: string;
+		price: Price;
+		availability: SubscriptionPlanAvailability;
+		cpId: string;
+		nameKey: string;
+		tier: SubscriptionPlanTier;
+	});
 }
 
 export declare class GetSubscriptionPlansResponse {
@@ -6815,26 +6422,24 @@ export declare class SubscriptionStatus {
 	maxSlotCountsByProductType: { [k: number /*ProductType*/]: number };
 	agreementAccepted: boolean;
 
-	constructor(
-		args?: {
-			billingItemId: string;
-			subscriptionService: SubscriptionServiceType;
-			period: string;
-			localizedName: string;
-			freeTrial: boolean;
-			expired: boolean;
-			validUntil: Int64;
-			maxSlotCount: number;
-			target: SubscriptionPlanTarget;
-			type: SubscriptionPlanType;
-			storeCode: StoreCode;
-			nameKey: string;
-			tier: SubscriptionPlanTier;
-			accountHold: boolean;
-			maxSlotCountsByProductType: { [k: number /*ProductType*/]: number };
-			agreementAccepted: boolean;
-		},
-	);
+	constructor(args?: {
+		billingItemId: string;
+		subscriptionService: SubscriptionServiceType;
+		period: string;
+		localizedName: string;
+		freeTrial: boolean;
+		expired: boolean;
+		validUntil: Int64;
+		maxSlotCount: number;
+		target: SubscriptionPlanTarget;
+		type: SubscriptionPlanType;
+		storeCode: StoreCode;
+		nameKey: string;
+		tier: SubscriptionPlanTier;
+		accountHold: boolean;
+		maxSlotCountsByProductType: { [k: number /*ProductType*/]: number };
+		agreementAccepted: boolean;
+	});
 }
 
 export declare class GetSubscriptionStatusResponse {
@@ -6842,13 +6447,11 @@ export declare class GetSubscriptionStatusResponse {
 	hasValidStudentInformation: boolean;
 	otherOwnedSubscriptions: { [k: number]: SubscriptionStatus[] };
 
-	constructor(
-		args?: {
-			subscriptions: { [k: number]: SubscriptionStatus };
-			hasValidStudentInformation: boolean;
-			otherOwnedSubscriptions: { [k: number]: SubscriptionStatus[] };
-		},
-	);
+	constructor(args?: {
+		subscriptions: { [k: number]: SubscriptionStatus };
+		hasValidStudentInformation: boolean;
+		otherOwnedSubscriptions: { [k: number]: SubscriptionStatus[] };
+	});
 }
 
 export declare class GetProductSummariesInSubscriptionSlotsResponse {
@@ -6857,14 +6460,12 @@ export declare class GetProductSummariesInSubscriptionSlotsResponse {
 	totalSize: Int64;
 	maxSlotCount: number;
 
-	constructor(
-		args?: {
-			products: ProductSummary[];
-			continuationToken: string;
-			totalSize: Int64;
-			maxSlotCount: number;
-		},
-	);
+	constructor(args?: {
+		products: ProductSummary[];
+		continuationToken: string;
+		totalSize: Int64;
+		maxSlotCount: number;
+	});
 }
 
 export declare class AddProductToSubscriptionSlotResponse {
@@ -6890,13 +6491,11 @@ export declare class PurchaseSubscriptionResponse {
 	orderId: string;
 	confirmUrl: string;
 
-	constructor(
-		args?: {
-			result: SubscriptionBillingResult;
-			orderId: string;
-			confirmUrl: string;
-		},
-	);
+	constructor(args?: {
+		result: SubscriptionBillingResult;
+		orderId: string;
+		confirmUrl: string;
+	});
 }
 
 export declare class ChangeSubscriptionResponse {
@@ -6904,13 +6503,11 @@ export declare class ChangeSubscriptionResponse {
 	orderId: string;
 	confirmUrl: string;
 
-	constructor(
-		args?: {
-			result: SubscriptionBillingResult;
-			orderId: string;
-			confirmUrl: string;
-		},
-	);
+	constructor(args?: {
+		result: SubscriptionBillingResult;
+		orderId: string;
+		confirmUrl: string;
+	});
 }
 
 export declare class RestoreSubscriptionResponse {
@@ -6918,13 +6515,11 @@ export declare class RestoreSubscriptionResponse {
 	orderId: string;
 	confirmUrl: string;
 
-	constructor(
-		args?: {
-			result: SubscriptionBillingResult;
-			orderId: string;
-			confirmUrl: string;
-		},
-	);
+	constructor(args?: {
+		result: SubscriptionBillingResult;
+		orderId: string;
+		confirmUrl: string;
+	});
 }
 
 export declare class GetProductsByTagsV2Response {
@@ -6932,13 +6527,11 @@ export declare class GetProductsByTagsV2Response {
 	continuationToken: string;
 	totalSize: Int64;
 
-	constructor(
-		args?: {
-			results: ProductSearchSummary[];
-			continuationToken: string;
-			totalSize: Int64;
-		},
-	);
+	constructor(args?: {
+		results: ProductSearchSummary[];
+		continuationToken: string;
+		totalSize: Int64;
+	});
 }
 
 export declare class StudentInformation {
@@ -6952,13 +6545,13 @@ export declare class GetStudentInformationResponse {
 	studentInformation: StudentInformation;
 	isValid: boolean;
 
-	constructor(
-		args?: { studentInformation: StudentInformation; isValid: boolean },
-	);
+	constructor(args?: {
+		studentInformation: StudentInformation;
+		isValid: boolean;
+	});
 }
 
-export declare class SaveStudentInformationResponse {
-}
+export declare class SaveStudentInformationResponse {}
 
 export declare class PurchasedSubscription {
 	orderId: string;
@@ -6972,20 +6565,18 @@ export declare class PurchasedSubscription {
 	nameKey: string;
 	tier: SubscriptionPlanTier;
 
-	constructor(
-		args?: {
-			orderId: string;
-			subscriptionService: SubscriptionServiceType;
-			billingItemId: string;
-			type: SubscriptionPlanType;
-			localizedName: string;
-			purchasedTime: Int64;
-			validUntil: Int64;
-			price: Price;
-			nameKey: string;
-			tier: SubscriptionPlanTier;
-		},
-	);
+	constructor(args?: {
+		orderId: string;
+		subscriptionService: SubscriptionServiceType;
+		billingItemId: string;
+		type: SubscriptionPlanType;
+		localizedName: string;
+		purchasedTime: Int64;
+		validUntil: Int64;
+		price: Price;
+		nameKey: string;
+		tier: SubscriptionPlanTier;
+	});
 }
 
 export declare class GetPurchasedSubscriptionsResponse {
@@ -6993,13 +6584,11 @@ export declare class GetPurchasedSubscriptionsResponse {
 	continuationToken: string;
 	totalSize: Int64;
 
-	constructor(
-		args?: {
-			subscriptions: PurchasedSubscription[];
-			continuationToken: string;
-			totalSize: Int64;
-		},
-	);
+	constructor(args?: {
+		subscriptions: PurchasedSubscription[];
+		continuationToken: string;
+		totalSize: Int64;
+	});
 }
 
 export declare class FindRestorablePlanResponse {
@@ -7010,16 +6599,14 @@ export declare class FindRestorablePlanResponse {
 	orderId: string;
 	mid: string;
 
-	constructor(
-		args?: {
-			result: SubscriptionBillingResult;
-			billingItemId: string;
-			storeOrderId: string;
-			originalStoreOrderId: string;
-			orderId: string;
-			mid: string;
-		},
-	);
+	constructor(args?: {
+		result: SubscriptionBillingResult;
+		billingItemId: string;
+		storeOrderId: string;
+		originalStoreOrderId: string;
+		orderId: string;
+		mid: string;
+	});
 }
 
 export declare class SubscriptionMissionCampaign {
@@ -7042,15 +6629,13 @@ export declare class SubscriptionCampaign {
 	type: SubscriptionCampaignType;
 	payload: SubscriptionCampaignPayload;
 
-	constructor(
-		args?: {
-			campaignId: string;
-			fromInclusive: Int64;
-			toExclusive: Int64;
-			type: SubscriptionCampaignType;
-			payload: SubscriptionCampaignPayload;
-		},
-	);
+	constructor(args?: {
+		campaignId: string;
+		fromInclusive: Int64;
+		toExclusive: Int64;
+		type: SubscriptionCampaignType;
+		payload: SubscriptionCampaignPayload;
+	});
 }
 
 export declare class GetSubscriptionCampaignsResponse {
@@ -7088,12 +6673,10 @@ export declare class BirthdayGiftAssociationVerifyResponse {
 	tokenStatus: BirthdayGiftAssociationVerifyTokenStatus;
 	recipientUserMid: string;
 
-	constructor(
-		args?: {
-			tokenStatus: BirthdayGiftAssociationVerifyTokenStatus;
-			recipientUserMid: string;
-		},
-	);
+	constructor(args?: {
+		tokenStatus: BirthdayGiftAssociationVerifyTokenStatus;
+		recipientUserMid: string;
+	});
 }
 
 export declare class SubscriptionSlotHistory {
@@ -7101,13 +6684,11 @@ export declare class SubscriptionSlotHistory {
 	addedTime: Int64;
 	removedTime: Int64;
 
-	constructor(
-		args?: {
-			product: ProductSearchSummary;
-			addedTime: Int64;
-			removedTime: Int64;
-		},
-	);
+	constructor(args?: {
+		product: ProductSearchSummary;
+		addedTime: Int64;
+		removedTime: Int64;
+	});
 }
 
 export declare class GetSubscriptionSlotHistoryResponse {
@@ -7115,13 +6696,11 @@ export declare class GetSubscriptionSlotHistoryResponse {
 	continuationToken: string;
 	totalSize: Int64;
 
-	constructor(
-		args?: {
-			history: SubscriptionSlotHistory[];
-			continuationToken: string;
-			totalSize: Int64;
-		},
-	);
+	constructor(args?: {
+		history: SubscriptionSlotHistory[];
+		continuationToken: string;
+		totalSize: Int64;
+	});
 }
 
 export declare class PopupDisplaySettings {
@@ -7145,14 +6724,12 @@ export declare class PopupActionButton {
 	textColorCode: string;
 	backgroundColorCode: string;
 
-	constructor(
-		args?: {
-			label: string;
-			actionUrl: string;
-			textColorCode: string;
-			backgroundColorCode: string;
-		},
-	);
+	constructor(args?: {
+		label: string;
+		actionUrl: string;
+		textColorCode: string;
+		backgroundColorCode: string;
+	});
 }
 
 export declare class PopupDismissButton {
@@ -7160,13 +6737,11 @@ export declare class PopupDismissButton {
 	textColorCode: string;
 	backgroundColorCode: string;
 
-	constructor(
-		args?: {
-			label: string;
-			textColorCode: string;
-			backgroundColorCode: string;
-		},
-	);
+	constructor(args?: {
+		label: string;
+		textColorCode: string;
+		backgroundColorCode: string;
+	});
 }
 
 export declare class PopupContent {
@@ -7174,13 +6749,11 @@ export declare class PopupContent {
 	actionButton: PopupActionButton;
 	dismissButton: PopupDismissButton;
 
-	constructor(
-		args?: {
-			pages: PopupPage[];
-			actionButton: PopupActionButton;
-			dismissButton: PopupDismissButton;
-		},
-	);
+	constructor(args?: {
+		pages: PopupPage[];
+		actionButton: PopupActionButton;
+		dismissButton: PopupDismissButton;
+	});
 }
 
 export declare class ShopPopup {
@@ -7192,17 +6765,15 @@ export declare class ShopPopup {
 	visualType: PopupVisualType;
 	displayIntervalInDays: number;
 
-	constructor(
-		args?: {
-			popupId: string;
-			displaySettings: PopupDisplaySettings;
-			displayCount: PopupDisplayCount;
-			content: PopupContent;
-			displayPriority: number;
-			visualType: PopupVisualType;
-			displayIntervalInDays: number;
-		},
-	);
+	constructor(args?: {
+		popupId: string;
+		displaySettings: PopupDisplaySettings;
+		displayCount: PopupDisplayCount;
+		content: PopupContent;
+		displayPriority: number;
+		visualType: PopupVisualType;
+		displayIntervalInDays: number;
+	});
 }
 
 export declare class GetPopupsResponse {
@@ -7216,22 +6787,21 @@ export declare class GetSubscriptionSlotStatusResponse {
 	usedSlotCount: number;
 	maxSlotCount: number;
 
-	constructor(
-		args?: {
-			productIdsInSlots: string[];
-			usedSlotCount: number;
-			maxSlotCount: number;
-		},
-	);
+	constructor(args?: {
+		productIdsInSlots: string[];
+		usedSlotCount: number;
+		maxSlotCount: number;
+	});
 }
 
 export declare class GetProductKeyboardListResponse {
 	productType: ProductType;
 	keyboardProductIds: string[];
 
-	constructor(
-		args?: { productType: ProductType; keyboardProductIds: string[] },
-	);
+	constructor(args?: {
+		productType: ProductType;
+		keyboardProductIds: string[];
+	});
 }
 
 export declare class GetMusicSubscriptionStatusResponse {
@@ -7239,13 +6809,11 @@ export declare class GetMusicSubscriptionStatusResponse {
 	expired: boolean;
 	isStickersPremiumEnabled: boolean;
 
-	constructor(
-		args?: {
-			validUntil: Int64;
-			expired: boolean;
-			isStickersPremiumEnabled: boolean;
-		},
-	);
+	constructor(args?: {
+		validUntil: Int64;
+		expired: boolean;
+		isStickersPremiumEnabled: boolean;
+	});
 }
 
 export declare class StartBundleSubscriptionResponse {
@@ -7264,9 +6832,10 @@ export declare class GetSubscriptionCouponCodeResponse {
 	result: GetSubscriptionCouponCodeResult;
 	couponCode: string;
 
-	constructor(
-		args?: { result: GetSubscriptionCouponCodeResult; couponCode: string },
-	);
+	constructor(args?: {
+		result: GetSubscriptionCouponCodeResult;
+		couponCode: string;
+	});
 }
 
 export declare class GetSubscriptionCouponCampaignResponse {
@@ -7293,13 +6862,11 @@ export declare class GetFilteredProductsResponse {
 	continuationToken: string;
 	totalSize: Int64;
 
-	constructor(
-		args?: {
-			results: ProductSearchSummary[];
-			continuationToken: string;
-			totalSize: Int64;
-		},
-	);
+	constructor(args?: {
+		results: ProductSearchSummary[];
+		continuationToken: string;
+		totalSize: Int64;
+	});
 }
 
 export declare class GetProductLatestVersionForUserResponse {
@@ -7339,20 +6906,18 @@ export declare class StickerDisplayData {
 	version: Int64;
 	availableForCombinationSticker: boolean;
 
-	constructor(
-		args?: {
-			stickerHash: string;
-			stickerResourceType: StickerResourceType;
-			nameTextProperty: ImageTextProperty;
-			popupLayer: PopupLayer;
-			stickerSize: StickerSize;
-			productAvailability: ProductAvailability;
-			height: number;
-			width: number;
-			version: Int64;
-			availableForCombinationSticker: boolean;
-		},
-	);
+	constructor(args?: {
+		stickerHash: string;
+		stickerResourceType: StickerResourceType;
+		nameTextProperty: ImageTextProperty;
+		popupLayer: PopupLayer;
+		stickerSize: StickerSize;
+		productAvailability: ProductAvailability;
+		height: number;
+		width: number;
+		version: Int64;
+		availableForCombinationSticker: boolean;
+	});
 }
 
 export declare class DisplayData {
@@ -7367,14 +6932,12 @@ export declare class CollectionItem {
 	displayData: DisplayData;
 	sortId: number;
 
-	constructor(
-		args?: {
-			itemId: string;
-			productId: string;
-			displayData: DisplayData;
-			sortId: number;
-		},
-	);
+	constructor(args?: {
+		itemId: string;
+		productId: string;
+		displayData: DisplayData;
+		sortId: number;
+	});
 }
 
 export declare class Collection {
@@ -7384,15 +6947,13 @@ export declare class Collection {
 	createdTimeMillis: Int64;
 	updatedTimeMillis: Int64;
 
-	constructor(
-		args?: {
-			collectionId: string;
-			items: CollectionItem[];
-			productType: ProductType;
-			createdTimeMillis: Int64;
-			updatedTimeMillis: Int64;
-		},
-	);
+	constructor(args?: {
+		collectionId: string;
+		items: CollectionItem[];
+		productType: ProductType;
+		createdTimeMillis: Int64;
+		updatedTimeMillis: Int64;
+	});
 }
 
 export declare class GetUserCollectionsResponse {
@@ -7408,11 +6969,9 @@ export declare class CreateCollectionForUserResponse {
 	constructor(args?: { collection: Collection });
 }
 
-export declare class AddItemToCollectionResponse {
-}
+export declare class AddItemToCollectionResponse {}
 
-export declare class RemoveItemFromCollectionResponse {
-}
+export declare class RemoveItemFromCollectionResponse {}
 
 export declare class IsProductForCollectionsResponse {
 	isAvailable: boolean;
@@ -7420,8 +6979,7 @@ export declare class IsProductForCollectionsResponse {
 	constructor(args?: { isAvailable: boolean });
 }
 
-export declare enum ExtendedProfileAttribute {
-}
+export declare enum ExtendedProfileAttribute {}
 
 export declare enum PrivacyLevelType {
 	PUBLIC = 0,
@@ -7978,21 +7536,19 @@ export declare class MessageCommitResult {
 	unrelatedCount: Int64;
 	errorDescription: string;
 
-	constructor(
-		args?: {
-			requestId: string;
-			state: BuddyResultState;
-			messageStoreRequestId: string;
-			messageIds: string[];
-			receiverCount: Int64;
-			successCount: Int64;
-			failCount: Int64;
-			blockCount: Int64;
-			unregisteredCount: Int64;
-			unrelatedCount: Int64;
-			errorDescription: string;
-		},
-	);
+	constructor(args?: {
+		requestId: string;
+		state: BuddyResultState;
+		messageStoreRequestId: string;
+		messageIds: string[];
+		receiverCount: Int64;
+		successCount: Int64;
+		failCount: Int64;
+		blockCount: Int64;
+		unregisteredCount: Int64;
+		unrelatedCount: Int64;
+		errorDescription: string;
+	});
 }
 
 export declare class CallHost {
@@ -8026,17 +7582,15 @@ export declare class Announcement {
 	pictureUrl: string;
 	thumbnailUrl: string;
 
-	constructor(
-		args?: {
-			index: number;
-			forceUpdate: boolean;
-			title: string;
-			text: string;
-			createdTime: Int64;
-			pictureUrl: string;
-			thumbnailUrl: string;
-		},
-	);
+	constructor(args?: {
+		index: number;
+		forceUpdate: boolean;
+		title: string;
+		text: string;
+		createdTime: Int64;
+		pictureUrl: string;
+		thumbnailUrl: string;
+	});
 }
 
 export declare class ChannelProvider {
@@ -8064,13 +7618,11 @@ export declare class SquareInfo {
 	squareStatus: SquareStatus;
 	squareNoteStatus: NoteStatus;
 
-	constructor(
-		args?: {
-			square: Square;
-			squareStatus: SquareStatus;
-			squareNoteStatus: NoteStatus;
-		},
-	);
+	constructor(args?: {
+		square: Square;
+		squareStatus: SquareStatus;
+		squareNoteStatus: NoteStatus;
+	});
 }
 
 export declare class BotUseInfo {
@@ -8079,14 +7631,12 @@ export declare class BotUseInfo {
 	primaryApplication: string;
 	locale: string;
 
-	constructor(
-		args?: {
-			botUseAgreementAccepted: boolean;
-			botInFriends: boolean;
-			primaryApplication: string;
-			locale: string;
-		},
-	);
+	constructor(args?: {
+		botUseAgreementAccepted: boolean;
+		botInFriends: boolean;
+		primaryApplication: string;
+		locale: string;
+	});
 }
 
 export declare class PaidCallAdCountry {
@@ -8114,20 +7664,18 @@ export declare class PaidCallBalance {
 	endTime: Int64;
 	autopayEnabled: boolean;
 
-	constructor(
-		args?: {
-			productType: PaidCallProductType;
-			productName: string;
-			unit: string;
-			limitedPaidBalance: number;
-			limitedFreeBalance: number;
-			unlimitedPaidBalance: number;
-			unlimitedFreeBalance: number;
-			startTime: Int64;
-			endTime: Int64;
-			autopayEnabled: boolean;
-		},
-	);
+	constructor(args?: {
+		productType: PaidCallProductType;
+		productName: string;
+		unit: string;
+		limitedPaidBalance: number;
+		limitedFreeBalance: number;
+		unlimitedPaidBalance: number;
+		unlimitedFreeBalance: number;
+		startTime: Int64;
+		endTime: Int64;
+		autopayEnabled: boolean;
+	});
 }
 
 export declare class PaidCallCurrencyExchangeRate {
@@ -8138,16 +7686,14 @@ export declare class PaidCallCurrencyExchangeRate {
 	coinRate: string;
 	creditRate: string;
 
-	constructor(
-		args?: {
-			currencyCode: string;
-			currencyName: string;
-			currencySign: string;
-			preferred: boolean;
-			coinRate: string;
-			creditRate: string;
-		},
-	);
+	constructor(args?: {
+		currencyCode: string;
+		currencyName: string;
+		currencySign: string;
+		preferred: boolean;
+		coinRate: string;
+		creditRate: string;
+	});
 }
 
 export declare class ExtendedProfileBirthday {
@@ -8158,16 +7704,14 @@ export declare class ExtendedProfileBirthday {
 	dayPrivacyLevelType: PrivacyLevelType;
 	dayEnabled: boolean;
 
-	constructor(
-		args?: {
-			year: string;
-			yearPrivacyLevelType: PrivacyLevelType;
-			yearEnabled: boolean;
-			day: string;
-			dayPrivacyLevelType: PrivacyLevelType;
-			dayEnabled: boolean;
-		},
-	);
+	constructor(args?: {
+		year: string;
+		yearPrivacyLevelType: PrivacyLevelType;
+		yearEnabled: boolean;
+		day: string;
+		dayPrivacyLevelType: PrivacyLevelType;
+		dayEnabled: boolean;
+	});
 }
 
 export declare class ExtendedProfile {
@@ -8196,28 +7740,26 @@ export declare class PaidCallDialing {
 	adRemains: number;
 	adSessionId: string;
 
-	constructor(
-		args?: {
-			type: PaidCallType;
-			dialedNumber: string;
-			serviceDomain: string;
-			productType: PaidCallProductType;
-			productName: string;
-			multipleProduct: boolean;
-			callerIdStatus: PaidCallerIdStatus;
-			balance: number;
-			unit: string;
-			rate: number;
-			displayCode: string;
-			calledNumber: string;
-			calleeNationalNumber: string;
-			calleeCallingCode: string;
-			rateDivision: string;
-			adMaxMin: number;
-			adRemains: number;
-			adSessionId: string;
-		},
-	);
+	constructor(args?: {
+		type: PaidCallType;
+		dialedNumber: string;
+		serviceDomain: string;
+		productType: PaidCallProductType;
+		productName: string;
+		multipleProduct: boolean;
+		callerIdStatus: PaidCallerIdStatus;
+		balance: number;
+		unit: string;
+		rate: number;
+		displayCode: string;
+		calledNumber: string;
+		calleeNationalNumber: string;
+		calleeCallingCode: string;
+		rateDivision: string;
+		adMaxMin: number;
+		adRemains: number;
+		adSessionId: string;
+	});
 }
 
 export declare class SpotItem {
@@ -8228,16 +7770,14 @@ export declare class SpotItem {
 	countryAreaCode: string;
 	freePhoneCallable: boolean;
 
-	constructor(
-		args?: {
-			name: string;
-			phone: string;
-			category: SpotCategory;
-			mid: string;
-			countryAreaCode: string;
-			freePhoneCallable: boolean;
-		},
-	);
+	constructor(args?: {
+		name: string;
+		phone: string;
+		category: SpotCategory;
+		mid: string;
+		countryAreaCode: string;
+		freePhoneCallable: boolean;
+	});
 }
 
 export declare class SpotNearbyItem {
@@ -8276,25 +7816,23 @@ export declare class PaidCallHistory {
 	unit: string;
 	result: string;
 
-	constructor(
-		args?: {
-			seq: Int64;
-			type: PaidCallType;
-			dialedNumber: string;
-			calledNumber: string;
-			toMid: string;
-			toName: string;
-			setupTime: Int64;
-			startTime: Int64;
-			endTime: Int64;
-			duration: Int64;
-			terminate: number;
-			productType: PaidCallProductType;
-			charge: number;
-			unit: string;
-			result: string;
-		},
-	);
+	constructor(args?: {
+		seq: Int64;
+		type: PaidCallType;
+		dialedNumber: string;
+		calledNumber: string;
+		toMid: string;
+		toName: string;
+		setupTime: Int64;
+		startTime: Int64;
+		endTime: Int64;
+		duration: Int64;
+		terminate: number;
+		productType: PaidCallProductType;
+		charge: number;
+		unit: string;
+		result: string;
+	});
 }
 
 export declare class PaidCallHistoryResult {
@@ -8309,13 +7847,11 @@ export declare class PaidCallMetadataResult {
 	recommendedCountryCodes: string[];
 	adCountries: PaidCallAdCountry[];
 
-	constructor(
-		args?: {
-			currencyExchangeRates: PaidCallCurrencyExchangeRate[];
-			recommendedCountryCodes: string[];
-			adCountries: PaidCallAdCountry[];
-		},
-	);
+	constructor(args?: {
+		currencyExchangeRates: PaidCallCurrencyExchangeRate[];
+		recommendedCountryCodes: string[];
+		adCountries: PaidCallAdCountry[];
+	});
 }
 
 export declare class PaidCallRedeemResult {
@@ -8331,14 +7867,12 @@ export declare class PaidCallResponse {
 	token: string;
 	spotItems: SpotItem[];
 
-	constructor(
-		args?: {
-			host: CallHost;
-			dialing: PaidCallDialing;
-			token: string;
-			spotItems: SpotItem[];
-		},
-	);
+	constructor(args?: {
+		host: CallHost;
+		dialing: PaidCallDialing;
+		token: string;
+		spotItems: SpotItem[];
+	});
 }
 
 export declare class PaidCallUserRate {
@@ -8347,14 +7881,12 @@ export declare class PaidCallUserRate {
 	rateDivision: string;
 	rateName: string;
 
-	constructor(
-		args?: {
-			countryCode: string;
-			rate: number;
-			rateDivision: string;
-			rateName: string;
-		},
-	);
+	constructor(args?: {
+		countryCode: string;
+		rate: number;
+		rateDivision: string;
+		rateName: string;
+	});
 }
 
 export declare class ChannelInfo {
@@ -8373,24 +7905,22 @@ export declare class ChannelInfo {
 	channelDomains: ChannelDomain[];
 	updatedTimestamp: Int64;
 
-	constructor(
-		args?: {
-			channelId: string;
-			name: string;
-			entryPageUrl: string;
-			descriptionText: string;
-			provider: ChannelProvider;
-			publicType: PublicType;
-			iconImage: string;
-			permissions: string[];
-			iconThumbnailImage: string;
-			channelConfigurations: ChannelConfiguration[];
-			lcsAllApiUsable: boolean;
-			allowedPermissions: ChannelPermission[];
-			channelDomains: ChannelDomain[];
-			updatedTimestamp: Int64;
-		},
-	);
+	constructor(args?: {
+		channelId: string;
+		name: string;
+		entryPageUrl: string;
+		descriptionText: string;
+		provider: ChannelProvider;
+		publicType: PublicType;
+		iconImage: string;
+		permissions: string[];
+		iconThumbnailImage: string;
+		channelConfigurations: ChannelConfiguration[];
+		lcsAllApiUsable: boolean;
+		allowedPermissions: ChannelPermission[];
+		channelDomains: ChannelDomain[];
+		updatedTimestamp: Int64;
+	});
 }
 
 export declare class ApprovedChannelInfo {
@@ -8404,9 +7934,10 @@ export declare class ApprovedChannelInfos {
 	approvedChannelInfos: ApprovedChannelInfo[];
 	revision: Int64;
 
-	constructor(
-		args?: { approvedChannelInfos: ApprovedChannelInfo[]; revision: Int64 },
-	);
+	constructor(args?: {
+		approvedChannelInfos: ApprovedChannelInfo[];
+		revision: Int64;
+	});
 }
 
 export declare class AuthQrcode {
@@ -8430,14 +7961,12 @@ export declare class ContactTransition {
 	previousStatus: ContactStatus;
 	resultStatus: ContactStatus;
 
-	constructor(
-		args?: {
-			ownerMid: string;
-			targetMid: string;
-			previousStatus: ContactStatus;
-			resultStatus: ContactStatus;
-		},
-	);
+	constructor(args?: {
+		ownerMid: string;
+		targetMid: string;
+		previousStatus: ContactStatus;
+		resultStatus: ContactStatus;
+	});
 }
 
 export declare class UserTicketResponse {
@@ -8452,13 +7981,11 @@ export declare class BuddyBanner {
 	buddyBannerLink: string;
 	buddyBannerImageUrl: string;
 
-	constructor(
-		args?: {
-			buddyBannerLinkType: BuddyBannerLinkType;
-			buddyBannerLink: string;
-			buddyBannerImageUrl: string;
-		},
-	);
+	constructor(args?: {
+		buddyBannerLinkType: BuddyBannerLinkType;
+		buddyBannerLink: string;
+		buddyBannerImageUrl: string;
+	});
 }
 
 export declare class BuddyList {
@@ -8467,14 +7994,12 @@ export declare class BuddyList {
 	totalBuddyCount: number;
 	popularContacts: Contact[];
 
-	constructor(
-		args?: {
-			classification: string;
-			displayName: string;
-			totalBuddyCount: number;
-			popularContacts: Contact[];
-		},
-	);
+	constructor(args?: {
+		classification: string;
+		displayName: string;
+		totalBuddyCount: number;
+		popularContacts: Contact[];
+	});
 }
 
 export declare class RegisterWithPhoneNumberResult {
@@ -8482,13 +8007,11 @@ export declare class RegisterWithPhoneNumberResult {
 	recommendEmailRegistration: boolean;
 	certificate: string;
 
-	constructor(
-		args?: {
-			authToken: string;
-			recommendEmailRegistration: boolean;
-			certificate: string;
-		},
-	);
+	constructor(args?: {
+		authToken: string;
+		recommendEmailRegistration: boolean;
+		certificate: string;
+	});
 }
 
 export declare class BuddyMessageRequest {
@@ -8498,27 +8021,23 @@ export declare class BuddyMessageRequest {
 	content: Buffer;
 	contentMetadata: { [k: string]: string };
 
-	constructor(
-		args?: {
-			contentType: ContentType;
-			text: string;
-			location: Location;
-			content: Buffer;
-			contentMetadata: { [k: string]: string };
-		},
-	);
+	constructor(args?: {
+		contentType: ContentType;
+		text: string;
+		location: Location;
+		content: Buffer;
+		contentMetadata: { [k: string]: string };
+	});
 }
 
 export declare class BuddyOnAirUrls {
 	hls: { [k: string]: string };
 	smoothStreaming: { [k: string]: string };
 
-	constructor(
-		args?: {
-			hls: { [k: string]: string };
-			smoothStreaming: { [k: string]: string };
-		},
-	);
+	constructor(args?: {
+		hls: { [k: string]: string };
+		smoothStreaming: { [k: string]: string };
+	});
 }
 
 export declare class BuddyOnAir {
@@ -8532,19 +8051,17 @@ export declare class BuddyOnAir {
 	onAirType: BuddyOnAirType;
 	onAirUrls: BuddyOnAirUrls;
 
-	constructor(
-		args?: {
-			mid: string;
-			freshnessLifetime: Int64;
-			onAirId: string;
-			onAir: boolean;
-			text: string;
-			viewerCount: Int64;
-			targetCount: Int64;
-			onAirType: BuddyOnAirType;
-			onAirUrls: BuddyOnAirUrls;
-		},
-	);
+	constructor(args?: {
+		mid: string;
+		freshnessLifetime: Int64;
+		onAirId: string;
+		onAir: boolean;
+		text: string;
+		viewerCount: Int64;
+		targetCount: Int64;
+		onAirType: BuddyOnAirType;
+		onAirUrls: BuddyOnAirUrls;
+	});
 }
 
 export declare class BuddyProfile {
@@ -8555,16 +8072,14 @@ export declare class BuddyProfile {
 	statusMessage: string;
 	contactCount: Int64;
 
-	constructor(
-		args?: {
-			buddyId: string;
-			mid: string;
-			searchId: string;
-			displayName: string;
-			statusMessage: string;
-			contactCount: Int64;
-		},
-	);
+	constructor(args?: {
+		buddyId: string;
+		mid: string;
+		searchId: string;
+		displayName: string;
+		statusMessage: string;
+		contactCount: Int64;
+	});
 }
 
 export declare class CommitMessageResult {
@@ -8576,17 +8091,15 @@ export declare class CommitMessageResult {
 	unregisterCount: Int64;
 	blockCount: Int64;
 
-	constructor(
-		args?: {
-			message: Message;
-			code: CommitMessageResultCode;
-			reason: string;
-			successCount: Int64;
-			failCount: Int64;
-			unregisterCount: Int64;
-			blockCount: Int64;
-		},
-	);
+	constructor(args?: {
+		message: Message;
+		code: CommitMessageResultCode;
+		reason: string;
+		successCount: Int64;
+		failCount: Int64;
+		unregisterCount: Int64;
+		blockCount: Int64;
+	});
 }
 
 export declare class BuddySearchResult {
@@ -8597,16 +8110,14 @@ export declare class BuddySearchResult {
 	statusMessage: string;
 	businessAccount: boolean;
 
-	constructor(
-		args?: {
-			mid: string;
-			displayName: string;
-			pictureStatus: string;
-			picturePath: string;
-			statusMessage: string;
-			businessAccount: boolean;
-		},
-	);
+	constructor(args?: {
+		mid: string;
+		displayName: string;
+		pictureStatus: string;
+		picturePath: string;
+		statusMessage: string;
+		businessAccount: boolean;
+	});
 }
 
 export declare class SyncParamMid {
@@ -8628,9 +8139,10 @@ export declare class SyncParamContact {
 	syncParamMid: SyncParamMid;
 	contactStatus: ContactStatus;
 
-	constructor(
-		args?: { syncParamMid: SyncParamMid; contactStatus: ContactStatus },
-	);
+	constructor(args?: {
+		syncParamMid: SyncParamMid;
+		contactStatus: ContactStatus;
+	});
 }
 
 export declare class ChannelDomains {
@@ -8646,14 +8158,12 @@ export declare class ProductCategory {
 	productCount: number;
 	newFlag: boolean;
 
-	constructor(
-		args?: {
-			productCategoryId: Int64;
-			title: string;
-			productCount: number;
-			newFlag: boolean;
-		},
-	);
+	constructor(args?: {
+		productCategoryId: Int64;
+		title: string;
+		productCount: number;
+		newFlag: boolean;
+	});
 }
 
 export declare class ChannelInfos {
@@ -8670,15 +8180,13 @@ export declare class ChannelNotificationSetting {
 	messageReceivable: boolean;
 	showDefault: boolean;
 
-	constructor(
-		args?: {
-			channelId: string;
-			name: string;
-			notificationReceivable: boolean;
-			messageReceivable: boolean;
-			showDefault: boolean;
-		},
-	);
+	constructor(args?: {
+		channelId: string;
+		name: string;
+		notificationReceivable: boolean;
+		messageReceivable: boolean;
+		showDefault: boolean;
+	});
 }
 
 export declare class ChannelSyncDatas {
@@ -8687,14 +8195,12 @@ export declare class ChannelSyncDatas {
 	revision: Int64;
 	expires: Int64;
 
-	constructor(
-		args?: {
-			channelInfos: ChannelInfo[];
-			channelDomains: ChannelDomain[];
-			revision: Int64;
-			expires: Int64;
-		},
-	);
+	constructor(args?: {
+		channelInfos: ChannelInfo[];
+		channelDomains: ChannelDomain[];
+		revision: Int64;
+		expires: Int64;
+	});
 }
 
 export declare class NotiCenterEventData {
@@ -8709,20 +8215,18 @@ export declare class NotiCenterEventData {
 	content: { [k: string]: string };
 	push: { [k: string]: string };
 
-	constructor(
-		args?: {
-			id: string;
-			to: string;
-			from_: string;
-			toChannel: string;
-			fromChannel: string;
-			eventType: string;
-			createdTime: Int64;
-			operationRevision: Int64;
-			content: { [k: string]: string };
-			push: { [k: string]: string };
-		},
-	);
+	constructor(args?: {
+		id: string;
+		to: string;
+		from_: string;
+		toChannel: string;
+		fromChannel: string;
+		eventType: string;
+		createdTime: Int64;
+		operationRevision: Int64;
+		content: { [k: string]: string };
+		push: { [k: string]: string };
+	});
 }
 
 export declare class ChannelSettings {
@@ -8744,14 +8248,12 @@ export declare class Coin {
 	totalCoinBalance: number;
 	rewardCoinBalance: number;
 
-	constructor(
-		args?: {
-			freeCoinBalance: number;
-			payedCoinBalance: number;
-			totalCoinBalance: number;
-			rewardCoinBalance: number;
-		},
-	);
+	constructor(args?: {
+		freeCoinBalance: number;
+		payedCoinBalance: number;
+		totalCoinBalance: number;
+		rewardCoinBalance: number;
+	});
 }
 
 export declare class CoinPayLoad {
@@ -8760,14 +8262,12 @@ export declare class CoinPayLoad {
 	type: PayloadType;
 	rewardCoin: number;
 
-	constructor(
-		args?: {
-			payCoin: number;
-			freeCoin: number;
-			type: PayloadType;
-			rewardCoin: number;
-		},
-	);
+	constructor(args?: {
+		payCoin: number;
+		freeCoin: number;
+		type: PayloadType;
+		rewardCoin: number;
+	});
 }
 
 export declare class CoinHistory {
@@ -8784,22 +8284,20 @@ export declare class CoinHistory {
 	payload: CoinPayLoad;
 	channelId: string;
 
-	constructor(
-		args?: {
-			payDate: Int64;
-			coinBalance: number;
-			coin: number;
-			price: string;
-			title: string;
-			refund: boolean;
-			paySeq: string;
-			currency: string;
-			currencySign: string;
-			displayPrice: string;
-			payload: CoinPayLoad;
-			channelId: string;
-		},
-	);
+	constructor(args?: {
+		payDate: Int64;
+		coinBalance: number;
+		coin: number;
+		price: string;
+		title: string;
+		refund: boolean;
+		paySeq: string;
+		currency: string;
+		currencySign: string;
+		displayPrice: string;
+		payload: CoinPayLoad;
+		channelId: string;
+	});
 }
 
 export declare class CoinHistoryCondition {
@@ -8809,15 +8307,13 @@ export declare class CoinHistoryCondition {
 	eddt: string;
 	appStoreCode: PaymentType;
 
-	constructor(
-		args?: {
-			start: Int64;
-			size: number;
-			language: string;
-			eddt: string;
-			appStoreCode: PaymentType;
-		},
-	);
+	constructor(args?: {
+		start: Int64;
+		size: number;
+		language: string;
+		eddt: string;
+		appStoreCode: PaymentType;
+	});
 }
 
 export declare class CoinHistoryResult {
@@ -8825,9 +8321,11 @@ export declare class CoinHistoryResult {
 	balance: Coin;
 	hasNext: boolean;
 
-	constructor(
-		args?: { historys: CoinHistory[]; balance: Coin; hasNext: boolean },
-	);
+	constructor(args?: {
+		historys: CoinHistory[];
+		balance: Coin;
+		hasNext: boolean;
+	});
 }
 
 export declare class CoinProductItem {
@@ -8840,18 +8338,16 @@ export declare class CoinProductItem {
 	name: string;
 	desc: string;
 
-	constructor(
-		args?: {
-			itemId: string;
-			coin: number;
-			freeCoin: number;
-			currency: string;
-			price: string;
-			displayPrice: string;
-			name: string;
-			desc: string;
-		},
-	);
+	constructor(args?: {
+		itemId: string;
+		coin: number;
+		freeCoin: number;
+		currency: string;
+		price: string;
+		displayPrice: string;
+		name: string;
+		desc: string;
+	});
 }
 
 export declare class CoinPurchaseConfirm {
@@ -8863,17 +8359,15 @@ export declare class CoinPurchaseConfirm {
 	requestType: string;
 	ignoreReceipt: boolean;
 
-	constructor(
-		args?: {
-			orderId: string;
-			appStoreCode: PaymentType;
-			receipt: string;
-			signature: string;
-			seller: string;
-			requestType: string;
-			ignoreReceipt: boolean;
-		},
-	);
+	constructor(args?: {
+		orderId: string;
+		appStoreCode: PaymentType;
+		receipt: string;
+		signature: string;
+		seller: string;
+		requestType: string;
+		ignoreReceipt: boolean;
+	});
 }
 
 export declare class CoinPurchaseReservation {
@@ -8886,18 +8380,16 @@ export declare class CoinPurchaseReservation {
 	pgCode: PaymentPgType;
 	redirectUrl: string;
 
-	constructor(
-		args?: {
-			productId: string;
-			country: string;
-			currency: string;
-			price: string;
-			appStoreCode: PaymentType;
-			language: string;
-			pgCode: PaymentPgType;
-			redirectUrl: string;
-		},
-	);
+	constructor(args?: {
+		productId: string;
+		country: string;
+		currency: string;
+		price: string;
+		appStoreCode: PaymentType;
+		language: string;
+		pgCode: PaymentPgType;
+		redirectUrl: string;
+	});
 }
 
 export declare class CoinUseReservationItem {
@@ -8915,15 +8407,13 @@ export declare class CoinUseReservation {
 	items: CoinUseReservationItem[];
 	country: string;
 
-	constructor(
-		args?: {
-			channelId: string;
-			shopOrderId: string;
-			appStoreCode: PaymentType;
-			items: CoinUseReservationItem[];
-			country: string;
-		},
-	);
+	constructor(args?: {
+		channelId: string;
+		shopOrderId: string;
+		appStoreCode: PaymentType;
+		items: CoinUseReservationItem[];
+		country: string;
+	});
 }
 
 export declare class CompactContact {
@@ -8934,16 +8424,14 @@ export declare class CompactContact {
 	settings: Int64;
 	displayNameOverridden: string;
 
-	constructor(
-		args?: {
-			mid: string;
-			createdTime: Int64;
-			modifiedTime: Int64;
-			status: ContactStatus;
-			settings: Int64;
-			displayNameOverridden: string;
-		},
-	);
+	constructor(args?: {
+		mid: string;
+		createdTime: Int64;
+		modifiedTime: Int64;
+		status: ContactStatus;
+		settings: Int64;
+		displayNameOverridden: string;
+	});
 }
 
 export declare class ContactReport {
@@ -8970,17 +8458,15 @@ export declare class DeviceInfo {
 	carrierName: string;
 	applicationType: ApplicationType;
 
-	constructor(
-		args?: {
-			deviceName: string;
-			systemName: string;
-			systemVersion: string;
-			model: string;
-			carrierCode: CarrierCode;
-			carrierName: string;
-			applicationType: ApplicationType;
-		},
-	);
+	constructor(args?: {
+		deviceName: string;
+		systemName: string;
+		systemVersion: string;
+		model: string;
+		carrierCode: CarrierCode;
+		carrierName: string;
+		applicationType: ApplicationType;
+	});
 }
 
 export declare class EmailConfirmation {
@@ -8989,14 +8475,12 @@ export declare class EmailConfirmation {
 	password: string;
 	ignoreDuplication: boolean;
 
-	constructor(
-		args?: {
-			usePasswordSet: boolean;
-			email: string;
-			password: string;
-			ignoreDuplication: boolean;
-		},
-	);
+	constructor(args?: {
+		usePasswordSet: boolean;
+		email: string;
+		password: string;
+		ignoreDuplication: boolean;
+	});
 }
 
 export declare class EmailConfirmationSession {
@@ -9004,13 +8488,11 @@ export declare class EmailConfirmationSession {
 	verifier: string;
 	targetEmail: string;
 
-	constructor(
-		args?: {
-			emailConfirmationType: EmailConfirmationType;
-			verifier: string;
-			targetEmail: string;
-		},
-	);
+	constructor(args?: {
+		emailConfirmationType: EmailConfirmationType;
+		verifier: string;
+		targetEmail: string;
+	});
 }
 
 export declare class FriendChannelMatrix {
@@ -9019,14 +8501,12 @@ export declare class FriendChannelMatrix {
 	count: number;
 	point: number;
 
-	constructor(
-		args?: {
-			channelId: string;
-			representMid: string;
-			count: number;
-			point: number;
-		},
-	);
+	constructor(args?: {
+		channelId: string;
+		representMid: string;
+		count: number;
+		point: number;
+	});
 }
 
 export declare class FriendChannelMatricesResponse {
@@ -9048,20 +8528,18 @@ export declare class FriendRequest {
 	picturePath: string;
 	pictureStatus: string;
 
-	constructor(
-		args?: {
-			eMid: string;
-			mid: string;
-			direction: FriendRequestDirection;
-			method: FriendRequestMethod;
-			param: string;
-			timestamp: Int64;
-			seqId: Int64;
-			displayName: string;
-			picturePath: string;
-			pictureStatus: string;
-		},
-	);
+	constructor(args?: {
+		eMid: string;
+		mid: string;
+		direction: FriendRequestDirection;
+		method: FriendRequestMethod;
+		param: string;
+		timestamp: Int64;
+		seqId: Int64;
+		displayName: string;
+		picturePath: string;
+		pictureStatus: string;
+	});
 }
 
 export declare class FriendRequestsInfo {
@@ -9072,16 +8550,14 @@ export declare class FriendRequestsInfo {
 	totalIncomingLimit: number;
 	totalOutgoingLimit: number;
 
-	constructor(
-		args?: {
-			totalIncomingCount: number;
-			totalOutgoingCount: number;
-			recentIncomings: FriendRequest[];
-			recentOutgoings: FriendRequest[];
-			totalIncomingLimit: number;
-			totalOutgoingLimit: number;
-		},
-	);
+	constructor(args?: {
+		totalIncomingCount: number;
+		totalOutgoingCount: number;
+		recentIncomings: FriendRequest[];
+		recentOutgoings: FriendRequest[];
+		totalIncomingLimit: number;
+		totalOutgoingLimit: number;
+	});
 }
 
 export declare class Geolocation {
@@ -9096,13 +8572,11 @@ export declare class NotificationTarget {
 	applicationVersion: string;
 	region: string;
 
-	constructor(
-		args?: {
-			applicationType: string;
-			applicationVersion: string;
-			region: string;
-		},
-	);
+	constructor(args?: {
+		applicationType: string;
+		applicationVersion: string;
+		region: string;
+	});
 }
 
 export declare class GroupPreference {
@@ -9124,20 +8598,18 @@ export declare class Group {
 	invitee: Contact[];
 	notificationDisabled: boolean;
 
-	constructor(
-		args?: {
-			id: string;
-			createdTime: Int64;
-			name: string;
-			pictureStatus: string;
-			preventedJoinByTicket: boolean;
-			groupPreference: GroupPreference;
-			members: Contact[];
-			creator: Contact;
-			invitee: Contact[];
-			notificationDisabled: boolean;
-		},
-	);
+	constructor(args?: {
+		id: string;
+		createdTime: Int64;
+		name: string;
+		pictureStatus: string;
+		preventedJoinByTicket: boolean;
+		groupPreference: GroupPreference;
+		members: Contact[];
+		creator: Contact;
+		invitee: Contact[];
+		notificationDisabled: boolean;
+	});
 }
 
 export declare class IdentityCredential {
@@ -9145,9 +8617,11 @@ export declare class IdentityCredential {
 	identifier: string;
 	password: string;
 
-	constructor(
-		args?: { provider: IdentityProvider; identifier: string; password: string },
-	);
+	constructor(args?: {
+		provider: IdentityProvider;
+		identifier: string;
+		password: string;
+	});
 }
 
 export declare class LastReadMessageId {
@@ -9161,9 +8635,10 @@ export declare class LastReadMessageIds {
 	chatId: string;
 	lastReadMessageIds: LastReadMessageId[];
 
-	constructor(
-		args?: { chatId: string; lastReadMessageIds: LastReadMessageId[] },
-	);
+	constructor(args?: {
+		chatId: string;
+		lastReadMessageIds: LastReadMessageId[];
+	});
 }
 
 export declare class LoginResult {
@@ -9176,18 +8651,16 @@ export declare class LoginResult {
 	displayMessage: string;
 	sessionForSMSConfirm: VerificationSessionData;
 
-	constructor(
-		args?: {
-			authToken: string;
-			certificate: string;
-			verifier: string;
-			pinCode: string;
-			type: LoginResultType;
-			lastPrimaryBindTime: Int64;
-			displayMessage: string;
-			sessionForSMSConfirm: VerificationSessionData;
-		},
-	);
+	constructor(args?: {
+		authToken: string;
+		certificate: string;
+		verifier: string;
+		pinCode: string;
+		type: LoginResultType;
+		lastPrimaryBindTime: Int64;
+		displayMessage: string;
+		sessionForSMSConfirm: VerificationSessionData;
+	});
 }
 
 export declare class LoginRequest {
@@ -9203,21 +8676,19 @@ export declare class LoginRequest {
 	secret: string;
 	e2eeVersion: number;
 
-	constructor(
-		args?: {
-			type: number;
-			identityProvider: number;
-			identifier: string;
-			password: string;
-			keepLoggedIn: boolean;
-			accessLocation: string;
-			systemName: string;
-			certificate: string;
-			verifier: string;
-			secret: string;
-			e2eeVersion: number;
-		},
-	);
+	constructor(args?: {
+		type: number;
+		identityProvider: number;
+		identifier: string;
+		password: string;
+		keepLoggedIn: boolean;
+		accessLocation: string;
+		systemName: string;
+		certificate: string;
+		verifier: string;
+		secret: string;
+		e2eeVersion: number;
+	});
 }
 
 export declare class LoginSession {
@@ -9227,15 +8698,13 @@ export declare class LoginSession {
 	systemName: string;
 	accessLocation: string;
 
-	constructor(
-		args?: {
-			tokenKey: string;
-			expirationTime: Int64;
-			applicationType: ApplicationType;
-			systemName: string;
-			accessLocation: string;
-		},
-	);
+	constructor(args?: {
+		tokenKey: string;
+		expirationTime: Int64;
+		applicationType: ApplicationType;
+		systemName: string;
+		accessLocation: string;
+	});
 }
 
 export declare class MessageOperation {
@@ -9249,19 +8718,17 @@ export declare class MessageOperation {
 	param3: string;
 	message: Message;
 
-	constructor(
-		args?: {
-			revision: Int64;
-			createdTime: Int64;
-			type: MessageOperationType;
-			reqSeq: number;
-			status: OpStatus;
-			param1: string;
-			param2: string;
-			param3: string;
-			message: Message;
-		},
-	);
+	constructor(args?: {
+		revision: Int64;
+		createdTime: Int64;
+		type: MessageOperationType;
+		reqSeq: number;
+		status: OpStatus;
+		param1: string;
+		param2: string;
+		param3: string;
+		message: Message;
+	});
 }
 
 export declare class MessageOperations {
@@ -9283,13 +8750,11 @@ export declare class MetaProfile {
 	regionCode: string;
 	identities: { [k: number /*RegistrationType*/]: string };
 
-	constructor(
-		args?: {
-			createTime: Int64;
-			regionCode: string;
-			identities: { [k: number /*RegistrationType*/]: string };
-		},
-	);
+	constructor(args?: {
+		createTime: Int64;
+		regionCode: string;
+		identities: { [k: number /*RegistrationType*/]: string };
+	});
 }
 
 export declare class NotificationItem {
@@ -9302,30 +8767,26 @@ export declare class NotificationItem {
 	createdTime: Int64;
 	content: { [k: string]: string };
 
-	constructor(
-		args?: {
-			id: string;
-			_from: string;
-			to: string;
-			fromChannel: string;
-			toChannel: string;
-			revision: Int64;
-			createdTime: Int64;
-			content: { [k: string]: string };
-		},
-	);
+	constructor(args?: {
+		id: string;
+		_from: string;
+		to: string;
+		fromChannel: string;
+		toChannel: string;
+		revision: Int64;
+		createdTime: Int64;
+		content: { [k: string]: string };
+	});
 }
 
 export declare class NotificationFetchResult {
 	fetchMode: NotificationItemFetchMode;
 	itemList: NotificationItem[];
 
-	constructor(
-		args?: {
-			fetchMode: NotificationItemFetchMode;
-			itemList: NotificationItem[];
-		},
-	);
+	constructor(args?: {
+		fetchMode: NotificationItemFetchMode;
+		itemList: NotificationItem[];
+	});
 }
 
 export declare class PaymentReservation {
@@ -9340,20 +8801,18 @@ export declare class PaymentReservation {
 	messageTemplate: number;
 	packageId: Int64;
 
-	constructor(
-		args?: {
-			receiverMid: string;
-			productId: string;
-			language: string;
-			location: string;
-			currency: string;
-			price: string;
-			appStoreCode: PaymentType;
-			messageText: string;
-			messageTemplate: number;
-			packageId: Int64;
-		},
-	);
+	constructor(args?: {
+		receiverMid: string;
+		productId: string;
+		language: string;
+		location: string;
+		currency: string;
+		price: string;
+		appStoreCode: PaymentType;
+		messageText: string;
+		messageTemplate: number;
+		packageId: Int64;
+	});
 }
 
 export declare class PaymentReservationResult {
@@ -9361,13 +8820,11 @@ export declare class PaymentReservationResult {
 	confirmUrl: string;
 	extras: { [k: string]: string };
 
-	constructor(
-		args?: {
-			orderId: string;
-			confirmUrl: string;
-			extras: { [k: string]: string };
-		},
-	);
+	constructor(args?: {
+		orderId: string;
+		confirmUrl: string;
+		extras: { [k: string]: string };
+	});
 }
 
 export declare class Product {
@@ -9412,50 +8869,48 @@ export declare class Product {
 	recommendationsEnabled: boolean;
 	stickerResourceType: StickerResourceType;
 
-	constructor(
-		args?: {
-			productId: string;
-			packageId: Int64;
-			version: number;
-			authorName: string;
-			onSale: boolean;
-			validDays: number;
-			saleType: number;
-			copyright: string;
-			title: string;
-			descriptionText: string;
-			shopOrderId: Int64;
-			fromMid: string;
-			toMid: string;
-			validUntil: Int64;
-			priceTier: number;
-			price: string;
-			currency: string;
-			currencySymbol: string;
-			paymentType: PaymentType;
-			createDate: Int64;
-			ownFlag: boolean;
-			eventType: ProductEventType;
-			urlSchema: string;
-			downloadUrl: string;
-			buddyMid: string;
-			publishSince: Int64;
-			newFlag: boolean;
-			missionFlag: boolean;
-			categories: ProductCategory[];
-			missionButtonText: string;
-			missionShortDescription: string;
-			authorId: string;
-			grantedByDefault: boolean;
-			displayOrder: number;
-			availableForPresent: boolean;
-			availableForMyself: boolean;
-			hasAnimation: boolean;
-			hasSound: boolean;
-			recommendationsEnabled: boolean;
-			stickerResourceType: StickerResourceType;
-		},
-	);
+	constructor(args?: {
+		productId: string;
+		packageId: Int64;
+		version: number;
+		authorName: string;
+		onSale: boolean;
+		validDays: number;
+		saleType: number;
+		copyright: string;
+		title: string;
+		descriptionText: string;
+		shopOrderId: Int64;
+		fromMid: string;
+		toMid: string;
+		validUntil: Int64;
+		priceTier: number;
+		price: string;
+		currency: string;
+		currencySymbol: string;
+		paymentType: PaymentType;
+		createDate: Int64;
+		ownFlag: boolean;
+		eventType: ProductEventType;
+		urlSchema: string;
+		downloadUrl: string;
+		buddyMid: string;
+		publishSince: Int64;
+		newFlag: boolean;
+		missionFlag: boolean;
+		categories: ProductCategory[];
+		missionButtonText: string;
+		missionShortDescription: string;
+		authorId: string;
+		grantedByDefault: boolean;
+		displayOrder: number;
+		availableForPresent: boolean;
+		availableForMyself: boolean;
+		hasAnimation: boolean;
+		hasSound: boolean;
+		recommendationsEnabled: boolean;
+		stickerResourceType: StickerResourceType;
+	});
 }
 
 export declare class ProductSimple {
@@ -9468,18 +8923,16 @@ export declare class ProductSimple {
 	grantedByDefault: boolean;
 	displayOrder: number;
 
-	constructor(
-		args?: {
-			productId: string;
-			packageId: Int64;
-			version: number;
-			onSale: boolean;
-			validUntil: Int64;
-			stickerIdRanges: StickerIdRange[];
-			grantedByDefault: boolean;
-			displayOrder: number;
-		},
-	);
+	constructor(args?: {
+		productId: string;
+		packageId: Int64;
+		version: number;
+		onSale: boolean;
+		validUntil: Int64;
+		stickerIdRanges: StickerIdRange[];
+		grantedByDefault: boolean;
+		displayOrder: number;
+	});
 }
 
 export declare class ProductSimpleList {
@@ -9490,16 +8943,14 @@ export declare class ProductSimpleList {
 	recentNewReleaseDate: Int64;
 	recentEventReleaseDate: Int64;
 
-	constructor(
-		args?: {
-			hasNext: boolean;
-			reinvokeHour: number;
-			lastVersionSeq: Int64;
-			productList: ProductSimple[];
-			recentNewReleaseDate: Int64;
-			recentEventReleaseDate: Int64;
-		},
-	);
+	constructor(args?: {
+		hasNext: boolean;
+		reinvokeHour: number;
+		lastVersionSeq: Int64;
+		productList: ProductSimple[];
+		recentNewReleaseDate: Int64;
+		recentEventReleaseDate: Int64;
+	});
 }
 
 export declare class ProximityMatchCandidateResult {
@@ -9536,14 +8987,12 @@ export declare class SuggestItemDictionaryIncrement {
 	scheme: string;
 	data: Buffer;
 
-	constructor(
-		args?: {
-			status: SuggestDictionaryIncrementStatus;
-			revision: Int64;
-			scheme: string;
-			data: Buffer;
-		},
-	);
+	constructor(args?: {
+		status: SuggestDictionaryIncrementStatus;
+		revision: Int64;
+		scheme: string;
+		data: Buffer;
+	});
 }
 
 export declare class SuggestTagDictionaryIncrement {
@@ -9553,27 +9002,23 @@ export declare class SuggestTagDictionaryIncrement {
 	scheme: string;
 	data: Buffer;
 
-	constructor(
-		args?: {
-			status: SuggestDictionaryIncrementStatus;
-			language: string;
-			revision: Int64;
-			scheme: string;
-			data: Buffer;
-		},
-	);
+	constructor(args?: {
+		status: SuggestDictionaryIncrementStatus;
+		language: string;
+		revision: Int64;
+		scheme: string;
+		data: Buffer;
+	});
 }
 
 export declare class SuggestDictionaryIncrements {
 	itemIncrement: SuggestItemDictionaryIncrement;
 	tagIncrements: SuggestTagDictionaryIncrement[];
 
-	constructor(
-		args?: {
-			itemIncrement: SuggestItemDictionaryIncrement;
-			tagIncrements: SuggestTagDictionaryIncrement[];
-		},
-	);
+	constructor(args?: {
+		itemIncrement: SuggestItemDictionaryIncrement;
+		tagIncrements: SuggestTagDictionaryIncrement[];
+	});
 }
 
 export declare class SuggestItemDictionaryRevision {
@@ -9595,12 +9040,10 @@ export declare class SuggestDictionaryRevisions {
 	itemRevision: SuggestItemDictionaryRevision;
 	tagRevisions: SuggestTagDictionaryRevision[];
 
-	constructor(
-		args?: {
-			itemRevision: SuggestItemDictionaryRevision;
-			tagRevisions: SuggestTagDictionaryRevision[];
-		},
-	);
+	constructor(args?: {
+		itemRevision: SuggestItemDictionaryRevision;
+		tagRevisions: SuggestTagDictionaryRevision[];
+	});
 }
 
 export declare class SuggestDictionarySettings {
@@ -9609,14 +9052,12 @@ export declare class SuggestDictionarySettings {
 	dictionaries: SuggestDictionary[];
 	preloadedDictionaries: string[];
 
-	constructor(
-		args?: {
-			revision: Int64;
-			newRevision: Int64;
-			dictionaries: SuggestDictionary[];
-			preloadedDictionaries: string[];
-		},
-	);
+	constructor(args?: {
+		revision: Int64;
+		newRevision: Int64;
+		dictionaries: SuggestDictionary[];
+		preloadedDictionaries: string[];
+	});
 }
 
 export declare class PhoneInfoForChannel {
@@ -9626,15 +9067,13 @@ export declare class PhoneInfoForChannel {
 	allowedToReceiveMessageFromNonFriend: boolean;
 	region: string;
 
-	constructor(
-		args?: {
-			mid: string;
-			normalizedPhoneNumber: string;
-			allowedToSearchByPhoneNumber: boolean;
-			allowedToReceiveMessageFromNonFriend: boolean;
-			region: string;
-		},
-	);
+	constructor(args?: {
+		mid: string;
+		normalizedPhoneNumber: string;
+		allowedToSearchByPhoneNumber: boolean;
+		allowedToReceiveMessageFromNonFriend: boolean;
+		region: string;
+	});
 }
 
 export declare class PhoneVerificationResult {
@@ -9642,13 +9081,11 @@ export declare class PhoneVerificationResult {
 	accountMigrationCheckType: AccountMigrationCheckType;
 	recommendAddFriends: boolean;
 
-	constructor(
-		args?: {
-			verificationResult: VerificationResult;
-			accountMigrationCheckType: AccountMigrationCheckType;
-			recommendAddFriends: boolean;
-		},
-	);
+	constructor(args?: {
+		verificationResult: VerificationResult;
+		accountMigrationCheckType: AccountMigrationCheckType;
+		recommendAddFriends: boolean;
+	});
 }
 
 export declare class PlaceSearchInfo {
@@ -9657,14 +9094,12 @@ export declare class PlaceSearchInfo {
 	latitude: number;
 	longitude: number;
 
-	constructor(
-		args?: {
-			name: string;
-			address: string;
-			latitude: number;
-			longitude: number;
-		},
-	);
+	constructor(args?: {
+		name: string;
+		address: string;
+		latitude: number;
+		longitude: number;
+	});
 }
 
 export declare class SecurityCenterResult {
@@ -9673,9 +9108,12 @@ export declare class SecurityCenterResult {
 	cookiePath: string;
 	skip: boolean;
 
-	constructor(
-		args?: { uri: string; token: string; cookiePath: string; skip: boolean },
-	);
+	constructor(args?: {
+		uri: string;
+		token: string;
+		cookiePath: string;
+		skip: boolean;
+	});
 }
 
 export declare class SendBuddyMessageResult {
@@ -9692,22 +9130,20 @@ export declare class SendBuddyMessageResult {
 	timestamp: Int64;
 	message: string;
 
-	constructor(
-		args?: {
-			requestId: string;
-			state: BuddyResultState;
-			messageId: string;
-			eventNo: number;
-			receiverCount: Int64;
-			successCount: Int64;
-			failCount: Int64;
-			cancelCount: Int64;
-			blockCount: Int64;
-			unregisterCount: Int64;
-			timestamp: Int64;
-			message: string;
-		},
-	);
+	constructor(args?: {
+		requestId: string;
+		state: BuddyResultState;
+		messageId: string;
+		eventNo: number;
+		receiverCount: Int64;
+		successCount: Int64;
+		failCount: Int64;
+		cancelCount: Int64;
+		blockCount: Int64;
+		unregisterCount: Int64;
+		timestamp: Int64;
+		message: string;
+	});
 }
 
 export declare class SetBuddyOnAirResult {
@@ -9722,20 +9158,18 @@ export declare class SetBuddyOnAirResult {
 	timestamp: Int64;
 	message: string;
 
-	constructor(
-		args?: {
-			requestId: string;
-			state: BuddyResultState;
-			eventNo: number;
-			receiverCount: Int64;
-			successCount: Int64;
-			failCount: Int64;
-			cancelCount: Int64;
-			unregisterCount: Int64;
-			timestamp: Int64;
-			message: string;
-		},
-	);
+	constructor(args?: {
+		requestId: string;
+		state: BuddyResultState;
+		eventNo: number;
+		receiverCount: Int64;
+		successCount: Int64;
+		failCount: Int64;
+		cancelCount: Int64;
+		unregisterCount: Int64;
+		timestamp: Int64;
+		message: string;
+	});
 }
 
 export declare class SimpleChannelClient {
@@ -9743,13 +9177,11 @@ export declare class SimpleChannelClient {
 	applicationVersion: string;
 	locale: string;
 
-	constructor(
-		args?: {
-			applicationType: string;
-			applicationVersion: string;
-			locale: string;
-		},
-	);
+	constructor(args?: {
+		applicationType: string;
+		applicationVersion: string;
+		locale: string;
+	});
 }
 
 export declare class SimpleChannelContact {
@@ -9759,15 +9191,13 @@ export declare class SimpleChannelContact {
 	picturePath: string;
 	statusMessage: string;
 
-	constructor(
-		args?: {
-			mid: string;
-			displayName: string;
-			pictureStatus: string;
-			picturePath: string;
-			statusMessage: string;
-		},
-	);
+	constructor(args?: {
+		mid: string;
+		displayName: string;
+		pictureStatus: string;
+		picturePath: string;
+		statusMessage: string;
+	});
 }
 
 export declare class SnsFriend {
@@ -9775,9 +9205,11 @@ export declare class SnsFriend {
 	snsUserName: string;
 	snsIdType: SnsIdType;
 
-	constructor(
-		args?: { snsUserId: string; snsUserName: string; snsIdType: SnsIdType },
-	);
+	constructor(args?: {
+		snsUserId: string;
+		snsUserName: string;
+		snsIdType: SnsIdType;
+	});
 }
 
 export declare class SnsFriendContactRegistration {
@@ -9785,9 +9217,11 @@ export declare class SnsFriendContactRegistration {
 	snsIdType: SnsIdType;
 	snsUserId: string;
 
-	constructor(
-		args?: { contact: Contact; snsIdType: SnsIdType; snsUserId: string },
-	);
+	constructor(args?: {
+		contact: Contact;
+		snsIdType: SnsIdType;
+		snsUserId: string;
+	});
 }
 
 export declare class SnsFriendModification {
@@ -9809,13 +9243,11 @@ export declare class SnsIdUserStatus {
 	phoneNumberRegistered: boolean;
 	sameDevice: boolean;
 
-	constructor(
-		args?: {
-			userExisting: boolean;
-			phoneNumberRegistered: boolean;
-			sameDevice: boolean;
-		},
-	);
+	constructor(args?: {
+		userExisting: boolean;
+		phoneNumberRegistered: boolean;
+		sameDevice: boolean;
+	});
 }
 
 export declare class SnsProfile {
@@ -9824,14 +9256,12 @@ export declare class SnsProfile {
 	email: string;
 	thumbnailUrl: string;
 
-	constructor(
-		args?: {
-			snsUserId: string;
-			snsUserName: string;
-			email: string;
-			thumbnailUrl: string;
-		},
-	);
+	constructor(args?: {
+		snsUserId: string;
+		snsUserName: string;
+		email: string;
+		thumbnailUrl: string;
+	});
 }
 
 export declare class SystemConfiguration {
@@ -9841,15 +9271,13 @@ export declare class SystemConfiguration {
 	c2dmAccount: string;
 	nniServer: string;
 
-	constructor(
-		args?: {
-			endpoint: string;
-			endpointSsl: string;
-			updateUrl: string;
-			c2dmAccount: string;
-			nniServer: string;
-		},
-	);
+	constructor(args?: {
+		endpoint: string;
+		endpointSsl: string;
+		updateUrl: string;
+		c2dmAccount: string;
+		nniServer: string;
+	});
 }
 
 export declare class TMessageBox {
@@ -9862,18 +9290,16 @@ export declare class TMessageBox {
 	midType: MIDType;
 	lastMessages: Message[];
 
-	constructor(
-		args?: {
-			id: string;
-			channelId: string;
-			lastSeq: Int64;
-			unreadCount: Int64;
-			lastModifiedTime: Int64;
-			status: number;
-			midType: MIDType;
-			lastMessages: Message[];
-		},
-	);
+	constructor(args?: {
+		id: string;
+		channelId: string;
+		lastSeq: Int64;
+		unreadCount: Int64;
+		lastModifiedTime: Int64;
+		status: number;
+		midType: MIDType;
+		lastMessages: Message[];
+	});
 }
 
 export declare class TMessageBoxWrapUp {
@@ -9882,23 +9308,22 @@ export declare class TMessageBoxWrapUp {
 	contacts: Contact[];
 	pictureRevision: string;
 
-	constructor(
-		args?: {
-			messageBox: TMessageBox;
-			name: string;
-			contacts: Contact[];
-			pictureRevision: string;
-		},
-	);
+	constructor(args?: {
+		messageBox: TMessageBox;
+		name: string;
+		contacts: Contact[];
+		pictureRevision: string;
+	});
 }
 
 export declare class TMessageBoxWrapUpResponse {
 	messageBoxWrapUpList: TMessageBoxWrapUp[];
 	totalSize: number;
 
-	constructor(
-		args?: { messageBoxWrapUpList: TMessageBoxWrapUp[]; totalSize: number },
-	);
+	constructor(args?: {
+		messageBoxWrapUpList: TMessageBoxWrapUp[];
+		totalSize: number;
+	});
 }
 
 export declare class SyncRelations {
@@ -9906,13 +9331,11 @@ export declare class SyncRelations {
 	syncParamContact: SyncParamContact[];
 	syncParamMid: SyncParamMid[];
 
-	constructor(
-		args?: {
-			syncAll: boolean;
-			syncParamContact: SyncParamContact[];
-			syncParamMid: SyncParamMid[];
-		},
-	);
+	constructor(args?: {
+		syncAll: boolean;
+		syncParamContact: SyncParamContact[];
+		syncParamMid: SyncParamMid[];
+	});
 }
 
 export declare class SyncScope {
@@ -9925,18 +9348,16 @@ export declare class SyncScope {
 	room: SyncRelations;
 	chat: SyncRelations;
 
-	constructor(
-		args?: {
-			syncProfile: boolean;
-			syncSettings: boolean;
-			syncSticker: boolean;
-			syncThemeShop: boolean;
-			contact: SyncRelations;
-			group: SyncRelations;
-			room: SyncRelations;
-			chat: SyncRelations;
-		},
-	);
+	constructor(args?: {
+		syncProfile: boolean;
+		syncSettings: boolean;
+		syncSticker: boolean;
+		syncThemeShop: boolean;
+		contact: SyncRelations;
+		group: SyncRelations;
+		room: SyncRelations;
+		chat: SyncRelations;
+	});
 }
 
 export declare class JoinSquareResponse {
@@ -9947,16 +9368,14 @@ export declare class JoinSquareResponse {
 	squareFeatureSet: SquareFeatureSet;
 	noteStatus: NoteStatus;
 
-	constructor(
-		args?: {
-			square: Square;
-			squareAuthority: SquareAuthority;
-			squareStatus: SquareStatus;
-			squareMember: SquareMember;
-			squareFeatureSet: SquareFeatureSet;
-			noteStatus: NoteStatus;
-		},
-	);
+	constructor(args?: {
+		square: Square;
+		squareAuthority: SquareAuthority;
+		squareStatus: SquareStatus;
+		squareMember: SquareMember;
+		squareFeatureSet: SquareFeatureSet;
+		noteStatus: NoteStatus;
+	});
 }
 
 export declare class JoinSquareRequest {
@@ -9971,13 +9390,11 @@ export declare class JoinSquareChatResponse {
 	squareChatStatus: SquareChatStatus;
 	squareChatMember: SquareChatMember;
 
-	constructor(
-		args?: {
-			squareChat: SquareChat;
-			squareChatStatus: SquareChatStatus;
-			squareChatMember: SquareChatMember;
-		},
-	);
+	constructor(args?: {
+		squareChat: SquareChat;
+		squareChatStatus: SquareChatStatus;
+		squareChatMember: SquareChatMember;
+	});
 }
 
 export declare class JoinSquareChatRequest {
@@ -9991,13 +9408,11 @@ export declare class SendMessageRequest {
 	squareChatMid: string;
 	squareMessage: SquareMessage;
 
-	constructor(
-		args?: {
-			reqSeq: number;
-			squareChatMid: string;
-			squareMessage: SquareMessage;
-		},
-	);
+	constructor(args?: {
+		reqSeq: number;
+		squareChatMid: string;
+		squareMessage: SquareMessage;
+	});
 }
 
 export declare class MarkAsReadRequest {
@@ -10026,13 +9441,11 @@ export declare class CreateSquareChatResponse {
 	squareChatStatus: SquareChatStatus;
 	squareChatMember: SquareChatMember;
 
-	constructor(
-		args?: {
-			squareChat: SquareChat;
-			squareChatStatus: SquareChatStatus;
-			squareChatMember: SquareChatMember;
-		},
-	);
+	constructor(args?: {
+		squareChat: SquareChat;
+		squareChatStatus: SquareChatStatus;
+		squareChatMember: SquareChatMember;
+	});
 }
 
 export declare class CreateSquareChatRequest {
@@ -10040,13 +9453,11 @@ export declare class CreateSquareChatRequest {
 	squareChat: SquareChat;
 	squareMemberMids: string[];
 
-	constructor(
-		args?: {
-			reqSeq: number;
-			squareChat: SquareChat;
-			squareMemberMids: string[];
-		},
-	);
+	constructor(args?: {
+		reqSeq: number;
+		squareChat: SquareChat;
+		squareMemberMids: string[];
+	});
 }
 
 export declare class CreateSquareRequest {
@@ -10057,8 +9468,7 @@ export declare class CreateSquareRequest {
 	constructor(args?: { reqSeq: number; square: Square; creator: SquareMember });
 }
 
-export declare class DeleteSquareResponse {
-}
+export declare class DeleteSquareResponse {}
 
 export declare class DeleteSquareRequest {
 	mid: string;
@@ -10067,8 +9477,7 @@ export declare class DeleteSquareRequest {
 	constructor(args?: { mid: string; revision: Int64 });
 }
 
-export declare class DestroyMessageResponse {
-}
+export declare class DestroyMessageResponse {}
 
 export declare class DestroyMessageRequest {
 	squareChatMid: string;
@@ -10082,18 +9491,21 @@ export declare class GetSquareChatMembersRequest {
 	continuationToken: string;
 	limit: number;
 
-	constructor(
-		args?: { squareChatMid: string; continuationToken: string; limit: number },
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		continuationToken: string;
+		limit: number;
+	});
 }
 
 export declare class GetSquareChatMembersResponse {
 	squareChatMembers: SquareMember;
 	continuationToken: string;
 
-	constructor(
-		args?: { squareChatMembers: SquareMember; continuationToken: string },
-	);
+	constructor(args?: {
+		squareChatMembers: SquareMember;
+		continuationToken: string;
+	});
 }
 
 export declare class GetSquareChatStatusRequest {
@@ -10119,13 +9531,11 @@ export declare class GetSquareChatResponse {
 	squareChatMember: SquareChatMember;
 	squareChatStatus: SquareChatStatus;
 
-	constructor(
-		args?: {
-			squareChat: SquareChat;
-			squareChatMember: SquareChatMember;
-			squareChatStatus: SquareChatStatus;
-		},
-	);
+	constructor(args?: {
+		squareChat: SquareChat;
+		squareChatMember: SquareChatMember;
+		squareChatStatus: SquareChatStatus;
+	});
 }
 
 export declare class GetSquareAuthorityRequest {
@@ -10152,9 +9562,11 @@ export declare class GetJoinableSquareChatsRequest {
 	continuationToken: string;
 	limit: number;
 
-	constructor(
-		args?: { squareMid: string; continuationToken: string; limit: number },
-	);
+	constructor(args?: {
+		squareMid: string;
+		continuationToken: string;
+		limit: number;
+	});
 }
 
 export declare class GetInvitationTicketUrlRequest {
@@ -10175,25 +9587,21 @@ export declare class LeaveSquareRequest {
 	constructor(args?: { squareMid: string });
 }
 
-export declare class LeaveSquareResponse {
-}
+export declare class LeaveSquareResponse {}
 
 export declare class LeaveSquareChatRequest {
 	squareChatMid: string;
 	sayGoodbye: boolean;
 	squareChatMemberRevision: Int64;
 
-	constructor(
-		args?: {
-			squareChatMid: string;
-			sayGoodbye: boolean;
-			squareChatMemberRevision: Int64;
-		},
-	);
+	constructor(args?: {
+		squareChatMid: string;
+		sayGoodbye: boolean;
+		squareChatMemberRevision: Int64;
+	});
 }
 
-export declare class LeaveSquareChatResponse {
-}
+export declare class LeaveSquareChatResponse {}
 
 export declare class SquareMemberSearchOption {
 	membershipState: SquareMembershipState;
@@ -10204,17 +9612,15 @@ export declare class SquareMemberSearchOption {
 	chatMidToExcludeMembers: string;
 	includingMe: boolean;
 
-	constructor(
-		args?: {
-			membershipState: SquareMembershipState;
-			memberRoles: SquareMemberRole[];
-			displayName: string;
-			ableToReceiveMessage: BooleanState;
-			ableToReceiveFriendRequest: BooleanState;
-			chatMidToExcludeMembers: string;
-			includingMe: boolean;
-		},
-	);
+	constructor(args?: {
+		membershipState: SquareMembershipState;
+		memberRoles: SquareMemberRole[];
+		displayName: string;
+		ableToReceiveMessage: BooleanState;
+		ableToReceiveFriendRequest: BooleanState;
+		chatMidToExcludeMembers: string;
+		includingMe: boolean;
+	});
 }
 
 export declare class SearchSquareMembersRequest {
@@ -10223,14 +9629,12 @@ export declare class SearchSquareMembersRequest {
 	continuationToken: string;
 	limit: number;
 
-	constructor(
-		args?: {
-			squareMid: string;
-			searchOption: SquareMemberSearchOption;
-			continuationToken: string;
-			limit: number;
-		},
-	);
+	constructor(args?: {
+		squareMid: string;
+		searchOption: SquareMemberSearchOption;
+		continuationToken: string;
+		limit: number;
+	});
 }
 
 export declare class SearchSquareMembersResponse {
@@ -10239,14 +9643,12 @@ export declare class SearchSquareMembersResponse {
 	continuationToken: string;
 	totalCount: number;
 
-	constructor(
-		args?: {
-			members: SquareMember[];
-			revision: Int64;
-			continuationToken: string;
-			totalCount: number;
-		},
-	);
+	constructor(args?: {
+		members: SquareMember[];
+		revision: Int64;
+		continuationToken: string;
+		totalCount: number;
+	});
 }
 
 export declare class FindSquareByInvitationTicketRequest {
@@ -10261,14 +9663,12 @@ export declare class FetchMyEventsRequest {
 	limit: number;
 	continuationToken: string;
 
-	constructor(
-		args?: {
-			subscriptionId: Int64;
-			syncToken: string;
-			limit: number;
-			continuationToken: string;
-		},
-	);
+	constructor(args?: {
+		subscriptionId: Int64;
+		syncToken: string;
+		limit: number;
+		continuationToken: string;
+	});
 }
 
 export declare class FetchSquareChatEventsRequest {
@@ -10278,15 +9678,13 @@ export declare class FetchSquareChatEventsRequest {
 	limit: number;
 	direction: FetchDirection;
 
-	constructor(
-		args?: {
-			subscriptionId: Int64;
-			squareChatMid: string;
-			syncToken: string;
-			limit: number;
-			direction: FetchDirection;
-		},
-	);
+	constructor(args?: {
+		subscriptionId: Int64;
+		squareChatMid: string;
+		syncToken: string;
+		limit: number;
+		direction: FetchDirection;
+	});
 }
 
 export declare class InviteToSquareRequest {
@@ -10294,9 +9692,11 @@ export declare class InviteToSquareRequest {
 	invitees: string[];
 	squareChatMid: string;
 
-	constructor(
-		args?: { squareMid: string; invitees: string[]; squareChatMid: string },
-	);
+	constructor(args?: {
+		squareMid: string;
+		invitees: string[];
+		squareChatMid: string;
+	});
 }
 
 export declare class InviteToSquareChatRequest {
@@ -10323,13 +9723,11 @@ export declare class GetSquareMemberResponse {
 	relation: SquareMemberRelation;
 	oneOnOneChatMid: string;
 
-	constructor(
-		args?: {
-			squareMember: SquareMember;
-			relation: SquareMemberRelation;
-			oneOnOneChatMid: string;
-		},
-	);
+	constructor(args?: {
+		squareMember: SquareMember;
+		relation: SquareMemberRelation;
+		oneOnOneChatMid: string;
+	});
 }
 
 export declare class GetSquareMembersRequest {
@@ -10349,13 +9747,11 @@ export declare class GetSquareMemberRelationsRequest {
 	continuationToken: string;
 	limit: number;
 
-	constructor(
-		args?: {
-			state: SquareMemberRelationState;
-			continuationToken: string;
-			limit: number;
-		},
-	);
+	constructor(args?: {
+		state: SquareMemberRelationState;
+		continuationToken: string;
+		limit: number;
+	});
 }
 
 export declare class GetSquareMemberRelationsResponse {
@@ -10363,13 +9759,11 @@ export declare class GetSquareMemberRelationsResponse {
 	relations: { [k: string]: SquareMemberRelation };
 	continuationToken: string;
 
-	constructor(
-		args?: {
-			squareMembers: SquareMember[];
-			relations: { [k: string]: SquareMemberRelation };
-			continuationToken: string;
-		},
-	);
+	constructor(args?: {
+		squareMembers: SquareMember[];
+		relations: { [k: string]: SquareMemberRelation };
+		continuationToken: string;
+	});
 }
 
 export declare class GetSquareMemberRelationRequest {
@@ -10384,17 +9778,14 @@ export declare class GetSquareMemberRelationResponse {
 	targetSquareMemberMid: string;
 	relation: SquareMemberRelation;
 
-	constructor(
-		args?: {
-			squareMid: string;
-			targetSquareMemberMid: string;
-			relation: SquareMemberRelation;
-		},
-	);
+	constructor(args?: {
+		squareMid: string;
+		targetSquareMemberMid: string;
+		relation: SquareMemberRelation;
+	});
 }
 
-export declare class GetSquareCategoriesRequest {
-}
+export declare class GetSquareCategoriesRequest {}
 
 export declare class GetSquareCategoriesResponse {
 	categoryList: Category[];
@@ -10421,9 +9812,11 @@ export declare class SearchSquaresRequest {
 	continuationToken: string;
 	limit: number;
 
-	constructor(
-		args?: { query: string; continuationToken: string; limit: number },
-	);
+	constructor(args?: {
+		query: string;
+		continuationToken: string;
+		limit: number;
+	});
 }
 
 export declare class SearchSquaresResponse {
@@ -10433,15 +9826,13 @@ export declare class SearchSquaresResponse {
 	continuationToken: string;
 	noteStatuses: { [k: string]: NoteStatus };
 
-	constructor(
-		args?: {
-			squares: Square[];
-			squareStatuses: { [k: string]: SquareStatus };
-			myMemberships: { [k: string]: SquareMember };
-			continuationToken: string;
-			noteStatuses: { [k: string]: NoteStatus };
-		},
-	);
+	constructor(args?: {
+		squares: Square[];
+		squareStatuses: { [k: string]: SquareStatus };
+		myMemberships: { [k: string]: SquareMember };
+		continuationToken: string;
+		noteStatuses: { [k: string]: NoteStatus };
+	});
 }
 
 export declare class GetSquareFeatureSetRequest {
@@ -10454,24 +9845,20 @@ export declare class UpdateSquareFeatureSetRequest {
 	updateAttributes: SquareFeatureSetAttribute[];
 	squareFeatureSet: SquareFeatureSet;
 
-	constructor(
-		args?: {
-			updateAttributes: SquareFeatureSetAttribute[];
-			squareFeatureSet: SquareFeatureSet;
-		},
-	);
+	constructor(args?: {
+		updateAttributes: SquareFeatureSetAttribute[];
+		squareFeatureSet: SquareFeatureSet;
+	});
 }
 
 export declare class UpdateSquareFeatureSetResponse {
 	updateAttributes: SquareFeatureSetAttribute[];
 	squareFeatureSet: SquareFeatureSet;
 
-	constructor(
-		args?: {
-			updateAttributes: SquareFeatureSetAttribute[];
-			squareFeatureSet: SquareFeatureSet;
-		},
-	);
+	constructor(args?: {
+		updateAttributes: SquareFeatureSetAttribute[];
+		squareFeatureSet: SquareFeatureSet;
+	});
 }
 
 export declare class UpdateSquareMemberRequest {
@@ -10479,13 +9866,11 @@ export declare class UpdateSquareMemberRequest {
 	updatedPreferenceAttrs: SquarePreferenceAttribute[];
 	squareMember: SquareMember;
 
-	constructor(
-		args?: {
-			updatedAttrs: SquareMemberAttribute[];
-			updatedPreferenceAttrs: SquarePreferenceAttribute[];
-			squareMember: SquareMember;
-		},
-	);
+	constructor(args?: {
+		updatedAttrs: SquareMemberAttribute[];
+		updatedPreferenceAttrs: SquarePreferenceAttribute[];
+		squareMember: SquareMember;
+	});
 }
 
 export declare class UpdateSquareMemberResponse {
@@ -10493,22 +9878,21 @@ export declare class UpdateSquareMemberResponse {
 	squareMember: SquareMember;
 	updatedPreferenceAttrs: SquarePreferenceAttribute[];
 
-	constructor(
-		args?: {
-			updatedAttrs: SquareMemberAttribute[];
-			squareMember: SquareMember;
-			updatedPreferenceAttrs: SquarePreferenceAttribute[];
-		},
-	);
+	constructor(args?: {
+		updatedAttrs: SquareMemberAttribute[];
+		squareMember: SquareMember;
+		updatedPreferenceAttrs: SquarePreferenceAttribute[];
+	});
 }
 
 export declare class UpdateSquareMembersRequest {
 	updatedAttrs: SquareMemberAttribute[];
 	members: SquareMember[];
 
-	constructor(
-		args?: { updatedAttrs: SquareMemberAttribute[]; members: SquareMember[] },
-	);
+	constructor(args?: {
+		updatedAttrs: SquareMemberAttribute[];
+		members: SquareMember[];
+	});
 }
 
 export declare class UpdateSquareMembersResponse {
@@ -10516,13 +9900,11 @@ export declare class UpdateSquareMembersResponse {
 	editor: SquareMember;
 	members: { [k: string]: SquareMember };
 
-	constructor(
-		args?: {
-			updatedAttrs: SquareMemberAttribute[];
-			editor: SquareMember;
-			members: { [k: string]: SquareMember };
-		},
-	);
+	constructor(args?: {
+		updatedAttrs: SquareMemberAttribute[];
+		editor: SquareMember;
+		members: { [k: string]: SquareMember };
+	});
 }
 
 export declare class RejectSquareMembersRequest {
@@ -10545,8 +9927,7 @@ export declare class RemoveSubscriptionsRequest {
 	constructor(args?: { unsubscriptions: Int64[] });
 }
 
-export declare class RemoveSubscriptionsResponse {
-}
+export declare class RemoveSubscriptionsResponse {}
 
 export declare class RefreshSubscriptionsRequest {
 	subscriptions: Int64[];
@@ -10565,18 +9946,20 @@ export declare class UpdateSquareChatRequest {
 	updatedAttrs: SquareChatAttribute[];
 	squareChat: SquareChat;
 
-	constructor(
-		args?: { updatedAttrs: SquareChatAttribute[]; squareChat: SquareChat },
-	);
+	constructor(args?: {
+		updatedAttrs: SquareChatAttribute[];
+		squareChat: SquareChat;
+	});
 }
 
 export declare class UpdateSquareChatResponse {
 	updatedAttrs: SquareChatAttribute[];
 	squareChat: SquareChat;
 
-	constructor(
-		args?: { updatedAttrs: SquareChatAttribute[]; squareChat: SquareChat },
-	);
+	constructor(args?: {
+		updatedAttrs: SquareChatAttribute[];
+		squareChat: SquareChat;
+	});
 }
 
 export declare class DeleteSquareChatRequest {
@@ -10586,19 +9969,16 @@ export declare class DeleteSquareChatRequest {
 	constructor(args?: { squareChatMid: string; revision: Int64 });
 }
 
-export declare class DeleteSquareChatResponse {
-}
+export declare class DeleteSquareChatResponse {}
 
 export declare class UpdateSquareChatMemberRequest {
 	updatedAttrs: SquareChatMemberAttribute[];
 	chatMember: SquareChatMember;
 
-	constructor(
-		args?: {
-			updatedAttrs: SquareChatMemberAttribute[];
-			chatMember: SquareChatMember;
-		},
-	);
+	constructor(args?: {
+		updatedAttrs: SquareChatMemberAttribute[];
+		chatMember: SquareChatMember;
+	});
 }
 
 export declare class UpdateSquareChatMemberResponse {
@@ -10611,24 +9991,20 @@ export declare class UpdateSquareAuthorityRequest {
 	updateAttributes: SquareAuthorityAttribute[];
 	authority: SquareAuthority;
 
-	constructor(
-		args?: {
-			updateAttributes: SquareAuthorityAttribute[];
-			authority: SquareAuthority;
-		},
-	);
+	constructor(args?: {
+		updateAttributes: SquareAuthorityAttribute[];
+		authority: SquareAuthority;
+	});
 }
 
 export declare class UpdateSquareAuthorityResponse {
 	updatdAttributes: SquareAuthorityAttribute[];
 	authority: SquareAuthority;
 
-	constructor(
-		args?: {
-			updatdAttributes: SquareAuthorityAttribute[];
-			authority: SquareAuthority;
-		},
-	);
+	constructor(args?: {
+		updatdAttributes: SquareAuthorityAttribute[];
+		authority: SquareAuthority;
+	});
 }
 
 export declare class UpdateSquareMemberRelationRequest {
@@ -10637,14 +10013,12 @@ export declare class UpdateSquareMemberRelationRequest {
 	updatedAttrs: SquareMemberRelationAttribute[];
 	relation: SquareMemberRelation;
 
-	constructor(
-		args?: {
-			squareMid: string;
-			targetSquareMemberMid: string;
-			updatedAttrs: SquareMemberRelationAttribute[];
-			relation: SquareMemberRelation;
-		},
-	);
+	constructor(args?: {
+		squareMid: string;
+		targetSquareMemberMid: string;
+		updatedAttrs: SquareMemberRelationAttribute[];
+		relation: SquareMemberRelation;
+	});
 }
 
 export declare class UpdateSquareMemberRelationResponse {
@@ -10653,14 +10027,12 @@ export declare class UpdateSquareMemberRelationResponse {
 	updatedAttrs: SquareMemberRelationAttribute[];
 	relation: SquareMemberRelation;
 
-	constructor(
-		args?: {
-			squareMid: string;
-			targetSquareMemberMid: string;
-			updatedAttrs: SquareMemberRelationAttribute[];
-			relation: SquareMemberRelation;
-		},
-	);
+	constructor(args?: {
+		squareMid: string;
+		targetSquareMemberMid: string;
+		updatedAttrs: SquareMemberRelationAttribute[];
+		relation: SquareMemberRelation;
+	});
 }
 
 export declare class ReportSquareRequest {
@@ -10668,13 +10040,14 @@ export declare class ReportSquareRequest {
 	reportType: ReportType;
 	otherReason: string;
 
-	constructor(
-		args?: { squareMid: string; reportType: ReportType; otherReason: string },
-	);
+	constructor(args?: {
+		squareMid: string;
+		reportType: ReportType;
+		otherReason: string;
+	});
 }
 
-export declare class ReportSquareResponse {
-}
+export declare class ReportSquareResponse {}
 
 export declare class ReportSquareChatRequest {
 	squareMid: string;
@@ -10682,18 +10055,15 @@ export declare class ReportSquareChatRequest {
 	reportType: ReportType;
 	otherReason: string;
 
-	constructor(
-		args?: {
-			squareMid: string;
-			squareChatMid: string;
-			reportType: ReportType;
-			otherReason: string;
-		},
-	);
+	constructor(args?: {
+		squareMid: string;
+		squareChatMid: string;
+		reportType: ReportType;
+		otherReason: string;
+	});
 }
 
-export declare class ReportSquareChatResponse {
-}
+export declare class ReportSquareChatResponse {}
 
 export declare class ReportSquareMessageRequest {
 	squareMid: string;
@@ -10702,19 +10072,16 @@ export declare class ReportSquareMessageRequest {
 	reportType: ReportType;
 	otherReason: string;
 
-	constructor(
-		args?: {
-			squareMid: string;
-			squareChatMid: string;
-			squareMessageId: string;
-			reportType: ReportType;
-			otherReason: string;
-		},
-	);
+	constructor(args?: {
+		squareMid: string;
+		squareChatMid: string;
+		squareMessageId: string;
+		reportType: ReportType;
+		otherReason: string;
+	});
 }
 
-export declare class ReportSquareMessageResponse {
-}
+export declare class ReportSquareMessageResponse {}
 
 export declare class ReportSquareMemberRequest {
 	squareMemberMid: string;
@@ -10722,18 +10089,15 @@ export declare class ReportSquareMemberRequest {
 	otherReason: string;
 	squareChatMid: string;
 
-	constructor(
-		args?: {
-			squareMemberMid: string;
-			reportType: ReportType;
-			otherReason: string;
-			squareChatMid: string;
-		},
-	);
+	constructor(args?: {
+		squareMemberMid: string;
+		reportType: ReportType;
+		otherReason: string;
+		squareChatMid: string;
+	});
 }
 
-export declare class ReportSquareMemberResponse {
-}
+export declare class ReportSquareMemberResponse {}
 
 export declare class GetSquareRequest {
 	mid: string;
@@ -10771,13 +10135,11 @@ export declare class CreateSquareChatAnnouncementRequest {
 	squareChatMid: string;
 	squareChatAnnouncement: SquareChatAnnouncement;
 
-	constructor(
-		args?: {
-			reqSeq: number;
-			squareChatMid: string;
-			squareChatAnnouncement: SquareChatAnnouncement;
-		},
-	);
+	constructor(args?: {
+		reqSeq: number;
+		squareChatMid: string;
+		squareChatAnnouncement: SquareChatAnnouncement;
+	});
 }
 
 export declare class CreateSquareChatAnnouncementResponse {
@@ -10793,8 +10155,7 @@ export declare class DeleteSquareChatAnnouncementRequest {
 	constructor(args?: { squareChatMid: string; announcementSeq: Int64 });
 }
 
-export declare class DeleteSquareChatAnnouncementResponse {
-}
+export declare class DeleteSquareChatAnnouncementResponse {}
 
 export declare class GetSquareChatAnnouncementsRequest {
 	squareChatMid: string;
@@ -10815,26 +10176,22 @@ export declare class GetJoinedSquareChatsResponse {
 	statuses: { [k: string]: SquareChatStatus };
 	continuationToken: string;
 
-	constructor(
-		args?: {
-			chats: SquareChat[];
-			chatMembers: { [k: string]: SquareChatMember };
-			statuses: { [k: string]: SquareChatStatus };
-			continuationToken: string;
-		},
-	);
+	constructor(args?: {
+		chats: SquareChat[];
+		chatMembers: { [k: string]: SquareChatMember };
+		statuses: { [k: string]: SquareChatStatus };
+		continuationToken: string;
+	});
 }
 
 export declare class UserAuthStatus {
 	phoneNumberRegistered: boolean;
 	registeredSnsIdTypes: SnsIdType[];
 
-	constructor(
-		args?: {
-			phoneNumberRegistered: boolean;
-			registeredSnsIdTypes: SnsIdType[];
-		},
-	);
+	constructor(args?: {
+		phoneNumberRegistered: boolean;
+		registeredSnsIdTypes: SnsIdType[];
+	});
 }
 
 export declare class WapInvitation {
@@ -10843,14 +10200,12 @@ export declare class WapInvitation {
 	inviterMid: string;
 	roomMid: string;
 
-	constructor(
-		args?: {
-			type: WapInvitationType;
-			inviteeEmail: string;
-			inviterMid: string;
-			roomMid: string;
-		},
-	);
+	constructor(args?: {
+		type: WapInvitationType;
+		inviteeEmail: string;
+		inviterMid: string;
+		roomMid: string;
+	});
 }
 
 export declare class GroupCallRoute {

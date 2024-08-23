@@ -17,9 +17,7 @@ type LINE_OBS_PREFIX =
  * @param {LINE_OBS_PREFIX} [prefix="https://obs.line-apps.com/"] obs prefix (e.x. 'https://obs.line-apps.com/')
  */
 class LINE_OBS_BASE {
-	constructor(
-		public prefix: LINE_OBS_PREFIX = "https://obs.line-apps.com/",
-	) {}
+	constructor(public prefix: LINE_OBS_PREFIX = "https://obs.line-apps.com/") {}
 
 	/**
 	 * Gets a OBS URI by appending the given hash to the prefixSticker
@@ -57,8 +55,12 @@ class LINE_OBS_BASE {
 		squareMemberId: string,
 		isPreview = false,
 	): string {
-		return this.prefix + "r/g2/member/" + squareMemberId +
-			(isPreview ? "/preview" : "");
+		return (
+			this.prefix +
+			"r/g2/member/" +
+			squareMemberId +
+			(isPreview ? "/preview" : "")
+		);
 	}
 }
 

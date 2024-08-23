@@ -21,13 +21,7 @@ TBinaryProtocol.genHeader = (name: string) => {
 };
 
 TCompactProtocol.genHeader = (name: string) => {
-	return Buffer.from([
-		0x82,
-		0x21,
-		0,
-		name.length,
-		...Buffer.from(name),
-	]);
+	return Buffer.from([0x82, 0x21, 0, name.length, ...Buffer.from(name)]);
 };
 
 export const Protocols = {

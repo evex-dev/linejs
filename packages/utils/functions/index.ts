@@ -15,25 +15,27 @@ interface Square {
 	badges: number[];
 }
 
-type SearchSquareResult = {
-	error: string;
-	data: null;
-} | {
-	error: null;
-	data: {
-		squares: {
-			square: Square;
-			memberCount: number;
-			chatCount: number;
-			postCount: number;
-			latestMessageCreatedAt: number;
-			lastestMessageCreatedAt: number;
-		}[];
-		continuationToken: `${number}`;
-		totalCount: number;
-		showNewForOneMember: boolean;
-	};
-};
+type SearchSquareResult =
+	| {
+			error: string;
+			data: null;
+	  }
+	| {
+			error: null;
+			data: {
+				squares: {
+					square: Square;
+					memberCount: number;
+					chatCount: number;
+					postCount: number;
+					latestMessageCreatedAt: number;
+					lastestMessageCreatedAt: number;
+				}[];
+				continuationToken: `${number}`;
+				totalCount: number;
+				showNewForOneMember: boolean;
+			};
+	  };
 
 /**
  * Search square by query.
@@ -54,11 +56,9 @@ export async function searchSquare(
 	}
 
 	const result = await fetch(
-		`https://openchat.line.me/api/square/search?query=${
-			encodeURIComponent(
-				query,
-			)
-		}&limit=${limit}`,
+		`https://openchat.line.me/api/square/search?query=${encodeURIComponent(
+			query,
+		)}&limit=${limit}`,
 		{
 			headers: {
 				accept: "application/json, text/plain, */*",
@@ -93,21 +93,23 @@ export async function searchSquare(
 	};
 }
 
-type getSquareResult = {
-	error: string;
-	data: null;
-} | {
-	error: null;
-	data: {
-		square: Square;
-		noteCount: number;
-		isFull: boolean;
-		isReadOnly: boolean;
-		isYoutubeSquare: boolean;
-		country: string;
-		isOASquare: boolean;
-	};
-};
+type getSquareResult =
+	| {
+			error: string;
+			data: null;
+	  }
+	| {
+			error: null;
+			data: {
+				square: Square;
+				noteCount: number;
+				isFull: boolean;
+				isReadOnly: boolean;
+				isYoutubeSquare: boolean;
+				country: string;
+				isOASquare: boolean;
+			};
+	  };
 
 /**
  * Gets a Square by its ticket or emid.
@@ -126,29 +128,26 @@ export async function getSquare(
 		? `https://square-api.line.me/smw/api/v2p/sm/square?ticket=${ticketOrEmid}`
 		: `https://square-api.line.me/smw/api/v2p/sm/square?emid=${ticketOrEmid}`;
 
-	const result = await fetch(
-		url,
-		{
-			"headers": {
-				"accept": "application/json, text/plain, */*",
-				"accept-language":
-					"ja-JP,ja;q=0.9,ar-SS;q=0.8,ar;q=0.7,en-US;q=0.6,en;q=0.5,ko-KR;q=0.4,ko;q=0.3",
-				"cache-control": "no-cache",
-				"pragma": "no-cache",
-				"sec-fetch-dest": "empty",
-				"sec-fetch-mode": "cors",
-				"sec-fetch-site": "same-origin",
-				"x-lal": "ja-JP_JP",
-				"x-web-client-version": "4.3.3",
-				...appendHeaders,
-			},
-			"referrerPolicy": "strict-origin-when-cross-origin",
-			"body": null,
-			"method": "GET",
-			"mode": "cors",
-			"credentials": "include",
+	const result = await fetch(url, {
+		headers: {
+			accept: "application/json, text/plain, */*",
+			"accept-language":
+				"ja-JP,ja;q=0.9,ar-SS;q=0.8,ar;q=0.7,en-US;q=0.6,en;q=0.5,ko-KR;q=0.4,ko;q=0.3",
+			"cache-control": "no-cache",
+			pragma: "no-cache",
+			"sec-fetch-dest": "empty",
+			"sec-fetch-mode": "cors",
+			"sec-fetch-site": "same-origin",
+			"x-lal": "ja-JP_JP",
+			"x-web-client-version": "4.3.3",
+			...appendHeaders,
 		},
-	);
+		referrerPolicy: "strict-origin-when-cross-origin",
+		body: null,
+		method: "GET",
+		mode: "cors",
+		credentials: "include",
+	});
 
 	if (!result.ok) {
 		return {

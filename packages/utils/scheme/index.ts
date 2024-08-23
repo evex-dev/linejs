@@ -16,9 +16,7 @@ type LINE_SCHEME_PREFIX =
  * @param {LINE_SCHEME_PREFIX} prefix scheme prefix (e.x. 'line://')
  */
 class LINE_SCHEME_BASE {
-	constructor(
-		public prefix: LINE_SCHEME_PREFIX = "line://",
-	) {}
+	constructor(public prefix: LINE_SCHEME_PREFIX = "line://") {}
 
 	/**
 	 * Returns the URL for the home page
@@ -809,8 +807,10 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the square note post page
 	 */
 	public getSquareNotePost(squareMid: string, postId: string): string {
-		return this.prefix +
-			`square/post?squareMid=${squareMid}&postId=${postId}&sourceType=TALKROOM_HOME`;
+		return (
+			this.prefix +
+			`square/post?squareMid=${squareMid}&postId=${postId}&sourceType=TALKROOM_HOME`
+		);
 	}
 
 	/**
@@ -927,8 +927,9 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the oa post page
 	 */
 	public getOaPost(oaIdWithoutAT: string, postId: string): string {
-		return this.prefix +
-			`home/public/post?id=${oaIdWithoutAT}&postId=${postId}`;
+		return (
+			this.prefix + `home/public/post?id=${oaIdWithoutAT}&postId=${postId}`
+		);
 	}
 
 	/**
@@ -949,8 +950,9 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the group post page
 	 */
 	public getGroupPost(groupId: string, postId: string): string {
-		return this.prefix +
-			`group/home/posts/post?homeId=${groupId}&postId=${postId}`;
+		return (
+			this.prefix + `group/home/posts/post?homeId=${groupId}&postId=${postId}`
+		);
 	}
 
 	/**
@@ -961,8 +963,10 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the group album page
 	 */
 	public getGroupAlbum(albumId: string, groupId: string): string {
-		return this.prefix +
-			`group/home/albums/album?albumId=${albumId}&homeId=${groupId}&albumIdV2=${albumId}`;
+		return (
+			this.prefix +
+			`group/home/albums/album?albumId=${albumId}&homeId=${groupId}&albumIdV2=${albumId}`
+		);
 	}
 }
 

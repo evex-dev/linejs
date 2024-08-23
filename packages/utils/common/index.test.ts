@@ -45,14 +45,8 @@ Deno.test({
 				"OpenChat: https://line.me/ti/g2/abcdefghijklmnopqrstuvwxyzABCDEFGH01-_?utm_source=invitation&utm_medium=link_copy&utm_campaign=default",
 				"abcdefghijklmnopqrstuvwxyzABCDEFGH01-_",
 			],
-			[
-				"",
-				null,
-			],
-			[
-				"https://line.me",
-				null,
-			],
+			["", null],
+			["https://line.me", null],
 		] as const;
 
 		const EMID_MOCK_DATA = [
@@ -60,14 +54,8 @@ Deno.test({
 				"line://square/join?emid=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSRYVWXYZ01234-_",
 				"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSRYVWXYZ01234-_",
 			],
-			[
-				"",
-				null,
-			],
-			[
-				"https://line.me",
-				null,
-			],
+			["", null],
+			["https://line.me", null],
 		] as const;
 
 		const regex = new LINE_REGEX();

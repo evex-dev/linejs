@@ -10,6 +10,7 @@
       "npm:curve25519-js": "npm:curve25519-js@0.0.4",
       "npm:node-bignumber": "npm:node-bignumber@1.2.2",
       "npm:node-bignumber@1.2.2": "npm:node-bignumber@1.2.2",
+      "npm:prettier": "npm:prettier@3.3.3",
       "npm:thrift@0.20.0": "npm:thrift@0.20.0_ws@5.2.4"
     },
     "jsr": {
@@ -62,6 +63,10 @@
       },
       "node-int64@0.4.0": {
         "integrity": "sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==",
+        "dependencies": {}
+      },
+      "prettier@3.3.3": {
+        "integrity": "sha512-i2tDNA0O5IrMO757lfrdQZCc2jPNDVntV0m/+4whiDfWaTKfMNgR7Qz0NAeGz/nRqF4m5/6CLzbP4/liHt12Ew==",
         "dependencies": {}
       },
       "q@1.5.1": {

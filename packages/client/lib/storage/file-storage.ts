@@ -5,7 +5,10 @@ import * as fs from "node:fs";
  * @description File Storage for LINE Client
  */
 export class FileStorage extends BaseStorage {
-	constructor(private path: string, extendData?: string) {
+	constructor(
+		private path: string,
+		extendData?: string,
+	) {
 		super();
 
 		try {
