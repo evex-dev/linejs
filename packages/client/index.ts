@@ -1353,7 +1353,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			this.SquareService_API_PATH,
 		);
 	}
-	private async sync(
+	public async sync(
 		revision: number,
 		limit: number = 100,
 		globalRev = 0,
