@@ -1270,7 +1270,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		continuationToken: string | undefined = undefined,
 		subscriptionId = 0,
 		limit = 100,
-	): Promise<LooseType> {
+	): Promise<ttype.FetchSquareChatEventsResponse> {
 		return await this.direct_request(
 			[
 				[
