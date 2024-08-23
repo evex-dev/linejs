@@ -33,7 +33,7 @@ class LINE_OBS_BASE {
 	 * @return {string} The getted profile image URISticker
 	 */
 	public getProfileImage(memberId: string): string {
-		return this.prefix + "os/p/" + memberId;
+		return `${this.prefix}os/p/${memberId}`;
 	}
 
 	/**
@@ -42,7 +42,7 @@ class LINE_OBS_BASE {
 	 * @return {string} The getted line-obs group-image URLSticker
 	 */
 	public getGroupImage(groupId: string): string {
-		return this.prefix + "os/g/" + groupId;
+		return `${this.prefix}os/g/${groupId}`;
 	}
 
 	/**
@@ -56,10 +56,7 @@ class LINE_OBS_BASE {
 		isPreview = false,
 	): string {
 		return (
-			this.prefix +
-			"r/g2/member/" +
-			squareMemberId +
-			(isPreview ? "/preview" : "")
+			`${this.prefix}r/g2/member/${squareMemberId}${isPreview ? "/preview" : ""}`
 		);
 	}
 }

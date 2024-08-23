@@ -15,7 +15,9 @@ export interface DeviceDetails {
 }
 
 export function getDeviceDetails(device: Device): DeviceDetails | null {
-	let appVersion, systemName, systemVersion;
+	let appVersion;
+	let systemName;
+	let systemVersion;
 	systemVersion = "12.1.4";
 
 	switch (device) {

@@ -6,7 +6,6 @@ export class TypedEventEmitter<
 	T extends RecordEvent,
 	E extends keyof T = keyof T,
 > {
-	constructor() {}
 
 	public listeners: Map<E, T[E][]> = new Map();
 

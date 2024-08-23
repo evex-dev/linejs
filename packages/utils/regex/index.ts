@@ -7,7 +7,6 @@
  * @description LINE Regex Utility
  */
 class LINE_REGEX_BASE {
-	constructor() {}
 
 	/**
 	 * Extracts a ticket from a given link using a regular expression.

@@ -24,7 +24,7 @@ class LINE_SCHEME_BASE {
 	 * @return {string} The URL for the home page
 	 */
 	public getHome(): string {
-		return this.prefix + "home";
+		return `${this.prefix}home`;
 	}
 
 	/**
@@ -35,10 +35,9 @@ class LINE_SCHEME_BASE {
 	 */
 	public getProfile(useNv = true): string {
 		if (useNv) {
-			return this.prefix + "nv/profile";
-		} else {
-			return this.prefix + "profile";
+			return `${this.prefix}nv/profile`;
 		}
+			return `${this.prefix}profile`;
 	}
 
 	/**
@@ -48,7 +47,7 @@ class LINE_SCHEME_BASE {
 	 * @return {string} The URL for the nv page
 	 */
 	public getNv(nv = ""): string {
-		return this.prefix + "nv" + nv;
+		return `${this.prefix}nv${nv}`;
 	}
 
 	/**
@@ -57,7 +56,7 @@ class LINE_SCHEME_BASE {
 	 * @return {string} The URL for the friend page
 	 */
 	public getFriend(): string {
-		return this.prefix + "nv/friend";
+		return `${this.prefix}nv/friend`;
 	}
 
 	/**
@@ -66,7 +65,7 @@ class LINE_SCHEME_BASE {
 	 * @return {string} The URL for the chat page
 	 */
 	public getChat(): string {
-		return this.prefix + "nv/chat";
+		return `${this.prefix}nv/chat`;
 	}
 
 	/**
@@ -75,7 +74,7 @@ class LINE_SCHEME_BASE {
 	 * @return {string} The URL for the timeline page
 	 */
 	public getTimeline(): string {
-		return this.prefix + "nv/timeline";
+		return `${this.prefix}nv/timeline`;
 	}
 
 	/**
@@ -84,7 +83,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the voom page
 	 */
 	public getVoom(): string {
-		return this.prefix + "nv/timeline";
+		return `${this.prefix}nv/timeline`;
 	}
 
 	/**
@@ -93,7 +92,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the news page
 	 */
 	public getNews(): string {
-		return this.prefix + "nv/news";
+		return `${this.prefix}nv/news`;
 	}
 
 	/**
@@ -102,7 +101,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the wallet page
 	 */
 	public getWallet(): string {
-		return this.prefix + "nv/wallet";
+		return `${this.prefix}nv/wallet`;
 	}
 
 	/**
@@ -111,7 +110,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the call page
 	 */
 	public getCall(): string {
-		return this.prefix + "nv/call";
+		return `${this.prefix}nv/call`;
 	}
 
 	/**
@@ -120,7 +119,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the settings page
 	 */
 	public getSettings(): string {
-		return this.prefix + "nv/settings";
+		return `${this.prefix}nv/settings`;
 	}
 
 	/**
@@ -129,7 +128,7 @@ class LINE_SCHEME_BASE {
 	 * @return {string} The URL for the add friend page
 	 */
 	public getAddFriends(): string {
-		return this.prefix + "nv/addFriends";
+		return `${this.prefix}nv/addFriends`;
 	}
 
 	/**
@@ -138,7 +137,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the invite email page
 	 */
 	public getInvitationEmail(): string {
-		return this.prefix + "nv/invitationEmail";
+		return `${this.prefix}nv/invitationEmail`;
 	}
 
 	/**
@@ -147,7 +146,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the invite sms page
 	 */
 	public getInvitationSms(): string {
-		return this.prefix + "nv/invitationSms";
+		return `${this.prefix}nv/invitationSms`;
 	}
 
 	/**
@@ -156,7 +155,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the qr reader page
 	 */
 	public getQRCodeReader(): string {
-		return this.prefix + "nv/QRCodeReader";
+		return `${this.prefix}nv/QRCodeReader`;
 	}
 
 	/**
@@ -165,7 +164,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the qr code page
 	 */
 	public getQRCode(): string {
-		return this.prefix + "nv/QRCode";
+		return `${this.prefix}nv/QRCode`;
 	}
 
 	/**
@@ -174,7 +173,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the keep page
 	 */
 	public getKeep(): string {
-		return this.prefix + "nv/keep";
+		return `${this.prefix}nv/keep`;
 	}
 
 	/**
@@ -183,7 +182,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the set id page
 	 */
 	public getProfileSetId(): string {
-		return this.prefix + "nv/profileSetId";
+		return `${this.prefix}nv/profileSetId`;
 	}
 
 	/**
@@ -192,7 +191,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the connect app page
 	 */
 	public getConnectedApps(): string {
-		return this.prefix + "nv/connectedApps";
+		return `${this.prefix}nv/connectedApps`;
 	}
 
 	/**
@@ -201,7 +200,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the connected app page
 	 */
 	public getConnectedDevices(): string {
-		return this.prefix + "nv/connectedDevices";
+		return `${this.prefix}nv/connectedDevices`;
 	}
 
 	/**
@@ -210,7 +209,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the theme settings menu page
 	 */
 	public getThemeSettingsMenu(): string {
-		return this.prefix + "nv/themeSettingsMenu";
+		return `${this.prefix}nv/themeSettingsMenu`;
 	}
 
 	/**
@@ -219,7 +218,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the coin settings page
 	 */
 	public getCoinsSettings(): string {
-		return this.prefix + "nv/coinsSettings";
+		return `${this.prefix}nv/coinsSettings`;
 	}
 
 	/**
@@ -228,7 +227,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the notification settings page
 	 */
 	public getNotificationSettings(): string {
-		return this.prefix + "nv/notificationSettings";
+		return `${this.prefix}nv/notificationSettings`;
 	}
 
 	/**
@@ -237,7 +236,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the notification service detail page
 	 */
 	public getNotificationServiceDetail(): string {
-		return this.prefix + "nv/notificationServiceDetail";
+		return `${this.prefix}nv/notificationServiceDetail`;
 	}
 
 	/**
@@ -246,7 +245,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the image/video settings page
 	 */
 	public getImageVideoSettings(): string {
-		return this.prefix + "nv/imageVideoSettings";
+		return `${this.prefix}nv/imageVideoSettings`;
 	}
 
 	/**
@@ -255,7 +254,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the suggest settings page
 	 */
 	public getSuggestSettings(): string {
-		return this.prefix + "nv/suggestSettings";
+		return `${this.prefix}nv/suggestSettings`;
 	}
 
 	/**
@@ -264,7 +263,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the notification page
 	 */
 	public getNotifications(): string {
-		return this.prefix + "nv/notifications";
+		return `${this.prefix}nv/notifications`;
 	}
 
 	/**
@@ -273,7 +272,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the help page
 	 */
 	public getHelp(): string {
-		return this.prefix + "nv/help";
+		return `${this.prefix}nv/help`;
 	}
 
 	/**
@@ -282,7 +281,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the about page
 	 */
 	public getAbout(): string {
-		return this.prefix + "nv/about";
+		return `${this.prefix}nv/about`;
 	}
 
 	/**
@@ -291,7 +290,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the official account page
 	 */
 	public getOfficialAccounts(): string {
-		return this.prefix + "nv/officialAccounts";
+		return `${this.prefix}nv/officialAccounts`;
 	}
 
 	/**
@@ -300,7 +299,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the camera page
 	 */
 	public getCamera(): string {
-		return this.prefix + "nv/camera";
+		return `${this.prefix}nv/camera`;
 	}
 
 	/**
@@ -309,7 +308,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the location page
 	 */
 	public getLocation(): string {
-		return this.prefix + "nv/location";
+		return `${this.prefix}nv/location`;
 	}
 
 	/**
@@ -318,7 +317,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the multi camera page
 	 */
 	public getCameraRollMulti(): string {
-		return this.prefix + "nv/cameraRoll/multi";
+		return `${this.prefix}nv/cameraRoll/multi`;
 	}
 
 	/**
@@ -327,7 +326,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the single camera page
 	 */
 	public getCameraRollSingle(): string {
-		return this.prefix + "nv/cameraRoll/single";
+		return `${this.prefix}nv/cameraRoll/single`;
 	}
 
 	/**
@@ -336,7 +335,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the call settings page
 	 */
 	public getCallSettings(): string {
-		return this.prefix + "nv/settings/callSettings";
+		return `${this.prefix}nv/settings/callSettings`;
 	}
 
 	/**
@@ -345,7 +344,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the ringbacktone settings page
 	 */
 	public getRingbacktoneSettings(): string {
-		return this.prefix + "nv/settings/ringbacktone";
+		return `${this.prefix}nv/settings/ringbacktone`;
 	}
 
 	/**
@@ -354,7 +353,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the ringtone settings page
 	 */
 	public getRingtoneSettings(): string {
-		return this.prefix + "nv/settings/ringtone";
+		return `${this.prefix}nv/settings/ringtone`;
 	}
 
 	/**
@@ -363,7 +362,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the theme settings page
 	 */
 	public getThemeSettings(): string {
-		return this.prefix + "nv/settings/themeSettings";
+		return `${this.prefix}nv/settings/themeSettings`;
 	}
 
 	/**
@@ -373,10 +372,9 @@ class LINE_SCHEME_BASE {
 	 */
 	public getPrivacySettings(useSettings = true): string {
 		if (useSettings) {
-			return this.prefix + "nv/settings/privacy";
-		} else {
-			return this.prefix + "nv/privacy";
+			return `${this.prefix}nv/settings/privacy`;
 		}
+			return `${this.prefix}nv/privacy`;
 	}
 
 	/**
@@ -386,10 +384,9 @@ class LINE_SCHEME_BASE {
 	 */
 	public getAccountSettings(useSettings = true): string {
 		if (useSettings) {
-			return this.prefix + "nv/settings/account";
-		} else {
-			return this.prefix + "nv/account";
+			return `${this.prefix}nv/settings/account`;
 		}
+			return `${this.prefix}nv/account`;
 	}
 
 	/**
@@ -399,10 +396,9 @@ class LINE_SCHEME_BASE {
 	 */
 	public getStickerSettings(useSettings = true): string {
 		if (useSettings) {
-			return this.prefix + "nv/settings/sticker";
-		} else {
-			return this.prefix + "nv/stickerSettings";
+			return `${this.prefix}nv/settings/sticker`;
 		}
+			return `${this.prefix}nv/stickerSettings`;
 	}
 
 	/**
@@ -412,10 +408,9 @@ class LINE_SCHEME_BASE {
 	 */
 	public getChatSettings(useSettings = true): string {
 		if (useSettings) {
-			return this.prefix + "nv/settings/chatSettings";
-		} else {
-			return this.prefix + "nv/chatVoiceCallSettings";
+			return `${this.prefix}nv/settings/chatSettings`;
 		}
+			return `${this.prefix}nv/chatVoiceCallSettings`;
 	}
 
 	/**
@@ -425,10 +420,9 @@ class LINE_SCHEME_BASE {
 	 */
 	public getAddressBookSync(useSettings = true): string {
 		if (useSettings) {
-			return this.prefix + "nv/settings/addressBookSync";
-		} else {
-			return this.prefix + "nv/friendsSettings";
+			return `${this.prefix}nv/settings/addressBookSync`;
 		}
+			return `${this.prefix}nv/friendsSettings`;
 	}
 
 	/**
@@ -438,10 +432,9 @@ class LINE_SCHEME_BASE {
 	 */
 	public getTimelineSettings(useSettings = true): string {
 		if (useSettings) {
-			return this.prefix + "nv/settings/timelineSettings";
-		} else {
-			return this.prefix + "nv/timelineSettings";
+			return `${this.prefix}nv/settings/timelineSettings`;
 		}
+			return `${this.prefix}nv/timelineSettings`;
 	}
 
 	/**
@@ -450,7 +443,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the my sticker page
 	 */
 	public getMySticker(): string {
-		return this.prefix + "nv/stickerShop/mySticker";
+		return `${this.prefix}nv/stickerShop/mySticker`;
 	}
 
 	/**
@@ -459,7 +452,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the device link page
 	 */
 	public getDeviceLink(): string {
-		return this.prefix + "nv/things/deviceLink";
+		return `${this.prefix}nv/things/deviceLink`;
 	}
 
 	/**
@@ -468,7 +461,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the new post page
 	 */
 	public getNewPost(): string {
-		return this.prefix + "nv/timeline/post";
+		return `${this.prefix}nv/timeline/post`;
 	}
 
 	/**
@@ -478,7 +471,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the profile popup page
 	 */
 	public getProfilePopup(mid: string): string {
-		return this.prefix + `nv/profilePopup/mid=${mid}`;
+		return `${this.prefix}nv/profilePopup/mid=${mid}`;
 	}
 
 	/**
@@ -487,7 +480,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the jump to chat message page
 	 */
 	public getJumpToChatMsg(groupId: string, messageId: string): string {
-		return this.prefix + `nv/chatMsg?chatId=${groupId}&messageId=${messageId}`;
+		return `${this.prefix}nv/chatMsg?chatId=${groupId}&messageId=${messageId}`;
 	}
 
 	/**
@@ -496,7 +489,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the recommend Q&A page
 	 */
 	public getRecommendOA(oaId: string): string {
-		return this.prefix + `nv/recommendOA/${oaId}`;
+		return `${this.prefix}nv/recommendOA/${oaId}`;
 	}
 
 	/**
@@ -506,7 +499,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for any channel page
 	 */
 	public getCh(ch = ""): string {
-		return this.prefix + "ch" + ch;
+		return `${this.prefix}ch${ch}`;
 	}
 
 	/**
@@ -522,12 +515,11 @@ class LINE_SCHEME_BASE {
 		useLiff = false,
 		param: Record<string, string> = {},
 	): string {
-		const urlParam = "?" + new URLSearchParams(param).toString();
+		const urlParam = `?${new URLSearchParams(param).toString()}`;
 		if (useLiff) {
-			return "https://" + "liff.line.me/" + id + urlParam;
-		} else {
-			return this.prefix + "app/" + id + urlParam;
+			return `https://liff.line.me/${id}${urlParam}`;
 		}
+			return `${this.prefix}app/${id}${urlParam}`;
 	}
 
 	/**
@@ -705,7 +697,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the sticker category page
 	 */
 	public getStickerCategory(categoryId: string): string {
-		return this.prefix + `shop/sticker/category/${categoryId}`;
+		return `${this.prefix}shop/sticker/category/${categoryId}`;
 	}
 
 	/**
@@ -715,7 +707,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the sticker package page
 	 */
 	public getStickerPackage(packageId: string): string {
-		return this.prefix + `shop/sticker/detail/${packageId}`;
+		return `${this.prefix}shop/sticker/detail/${packageId}`;
 	}
 
 	/**
@@ -725,7 +717,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the sticker author page
 	 */
 	public getStickerAuthor(authorId: string): string {
-		return this.prefix + `shop/sticker/author/${authorId}`;
+		return `${this.prefix}shop/sticker/author/${authorId}`;
 	}
 
 	/**
@@ -735,7 +727,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the sticker product page
 	 */
 	public getStickerProduct(productId: string): string {
-		return this.prefix + `shop/theme/detail?id=${productId}`;
+		return `${this.prefix}shop/theme/detail?id=${productId}`;
 	}
 
 	/**
@@ -744,7 +736,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the square main page
 	 */
 	public getSquareMain(): string {
-		return this.prefix + "square/main";
+		return `${this.prefix}square/main`;
 	}
 
 	/**
@@ -753,7 +745,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the square create page
 	 */
 	public getSquareCreate(): string {
-		return this.prefix + "square/createSquare";
+		return `${this.prefix}square/createSquare`;
 	}
 
 	/**
@@ -765,10 +757,9 @@ class LINE_SCHEME_BASE {
 	 */
 	public getSquareReport(ticketOrEmid: string, isTicket = true): string {
 		if (isTicket) {
-			return this.prefix + `square/report?ticket=${ticketOrEmid}`;
-		} else {
-			return this.prefix + `square/report?emid=${ticketOrEmid}`;
+			return `${this.prefix}square/report?ticket=${ticketOrEmid}`;
 		}
+			return `${this.prefix}square/report?emid=${ticketOrEmid}`;
 	}
 
 	/**
@@ -780,10 +771,9 @@ class LINE_SCHEME_BASE {
 	 */
 	public getSquareJoin(ticketOrEmid: string, isTicket = true): string {
 		if (isTicket) {
-			return this.prefix + `square/join?ticket=${ticketOrEmid}`;
-		} else {
-			return this.prefix + `square/join?emid=${ticketOrEmid}`;
+			return `${this.prefix}square/join?ticket=${ticketOrEmid}`;
 		}
+			return `${this.prefix}square/join?emid=${ticketOrEmid}`;
 	}
 
 	/**
@@ -793,7 +783,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the square home page
 	 */
 	public getSquareHome(emid: string): string {
-		return this.prefix + `square/home?encryptedSquareMid=${emid}`;
+		return `${this.prefix}square/home?encryptedSquareMid=${emid}`;
 	}
 
 	/**
@@ -805,8 +795,7 @@ class LINE_SCHEME_BASE {
 	 */
 	public getSquareNotePost(squareMid: string, postId: string): string {
 		return (
-			this.prefix +
-			`square/post?squareMid=${squareMid}&postId=${postId}&sourceType=TALKROOM_HOME`
+			`${this.prefix}square/post?squareMid=${squareMid}&postId=${postId}&sourceType=TALKROOM_HOME`
 		);
 	}
 
@@ -817,7 +806,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the user ticket page
 	 */
 	public getUserTicket(ticket: string): string {
-		return this.prefix + `ti/p/${ticket}`;
+		return `${this.prefix}ti/p/${ticket}`;
 	}
 
 	/**
@@ -827,7 +816,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the userId search page
 	 */
 	public getUserIdSearch(userId: string): string {
-		return this.prefix + `ti/p/~${userId}`;
+		return `${this.prefix}ti/p/~${userId}`;
 	}
 
 	/**
@@ -837,7 +826,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the group ticket page
 	 */
 	public getGroupTicket(ticket: string): string {
-		return this.prefix + `ti/g/${ticket}`;
+		return `${this.prefix}ti/g/${ticket}`;
 	}
 
 	/**
@@ -847,7 +836,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the square group ticket page
 	 */
 	public getSquareTicket(ticket: string): string {
-		return this.prefix + `ti/g2/${ticket}`;
+		return `${this.prefix}ti/g2/${ticket}`;
 	}
 
 	/**
@@ -859,10 +848,9 @@ class LINE_SCHEME_BASE {
 	 */
 	public getTextShare(text: string, useShare = true): string {
 		if (useShare) {
-			return this.prefix + "share?text=" + encodeURIComponent(text);
-		} else {
-			return this.prefix + "msg/text/" + encodeURIComponent(text);
+			return `${this.prefix}share?text=${encodeURIComponent(text)}`;
 		}
+			return `${this.prefix}msg/text/${encodeURIComponent(text)}`;
 	}
 
 	/**
@@ -873,7 +861,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the oa message page
 	 */
 	public getOaMessage(oaId: string, text: string): string {
-		return this.prefix + `oaMessage/${oaId}/?${text}`;
+		return `${this.prefix}oaMessage/${oaId}/?${text}`;
 	}
 
 	/**
@@ -882,7 +870,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the album page
 	 */
 	public getAlbums(): string {
-		return this.prefix + "moa/albums/album";
+		return `${this.prefix}moa/albums/album`;
 	}
 
 	/**
@@ -893,7 +881,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the user post page
 	 */
 	public getUserPost(userMid: string, postId: string): string {
-		return this.prefix + `home/post?userMid=${userMid}&postId=${postId}`;
+		return `${this.prefix}home/post?userMid=${userMid}&postId=${postId}`;
 	}
 
 	/**
@@ -903,7 +891,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the oa main page
 	 */
 	public getOaMain(oaIdWithoutAT: string): string {
-		return this.prefix + `home/public/main?id=${oaIdWithoutAT}`;
+		return `${this.prefix}home/public/main?id=${oaIdWithoutAT}`;
 	}
 
 	/**
@@ -913,7 +901,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the oa profile page
 	 */
 	public getOaProfile(oaIdWithoutAT: string): string {
-		return this.prefix + `home/public/profile?id=${oaIdWithoutAT}`;
+		return `${this.prefix}home/public/profile?id=${oaIdWithoutAT}`;
 	}
 
 	/**
@@ -925,7 +913,7 @@ class LINE_SCHEME_BASE {
 	 */
 	public getOaPost(oaIdWithoutAT: string, postId: string): string {
 		return (
-			this.prefix + `home/public/post?id=${oaIdWithoutAT}&postId=${postId}`
+			`${this.prefix}home/public/post?id=${oaIdWithoutAT}&postId=${postId}`
 		);
 	}
 
@@ -936,7 +924,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the group camera page
 	 */
 	public getGroupCreate(): string {
-		return this.prefix + "group/create";
+		return `${this.prefix}group/create`;
 	}
 
 	/**
@@ -948,7 +936,7 @@ class LINE_SCHEME_BASE {
 	 */
 	public getGroupPost(groupId: string, postId: string): string {
 		return (
-			this.prefix + `group/home/posts/post?homeId=${groupId}&postId=${postId}`
+			`${this.prefix}group/home/posts/post?homeId=${groupId}&postId=${postId}`
 		);
 	}
 
@@ -961,8 +949,7 @@ class LINE_SCHEME_BASE {
 	 */
 	public getGroupAlbum(albumId: string, groupId: string): string {
 		return (
-			this.prefix +
-			`group/home/albums/album?albumId=${albumId}&homeId=${groupId}&albumIdV2=${albumId}`
+			`${this.prefix}group/home/albums/album?albumId=${albumId}&homeId=${groupId}&albumIdV2=${albumId}`
 		);
 	}
 }

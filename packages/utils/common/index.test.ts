@@ -21,10 +21,10 @@ Deno.test({
 		const MOCK_TEXT = "mock";
 
 		const obs = new LINE_OBS();
-		assert(obs.getURI(MOCK_TEXT) === "https://obs.line-apps.com/" + MOCK_TEXT);
+		assert(obs.getURI(MOCK_TEXT) === `https://obs.line-apps.com/${MOCK_TEXT}`);
 		const obs_with_custom = new LINE_OBS("https://example.com/");
 		assert(
-			obs_with_custom.getURI(MOCK_TEXT) === "https://example.com/" + MOCK_TEXT,
+			obs_with_custom.getURI(MOCK_TEXT) === `https://example.com/${MOCK_TEXT}`,
 		);
 	},
 });

@@ -33,6 +33,7 @@ import {
 } from "./utils/regex.ts";
 import type { System } from "./utils/system.ts";
 import type { User } from "./utils/user.ts";
+import { defaultSquareCoverImageObsHash } from "./utils/default.ts";
 
 interface ClientOptions {
 	storage?: BaseStorage;
@@ -274,7 +275,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 				this.emit("update:cert", response.certificate);
 			}
 			return response.authToken;
-		} else {
+		}
 			this.emit("pincall", response.pinCode);
 			const headers = {
 				Host: this.endpoint,
@@ -303,7 +304,6 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 				this.emit("update:cert", loginReponse.certificate);
 			}
 			return loginReponse.authToken;
-		}
 	}
 
 	private async requestLoginV2(
@@ -471,7 +471,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 		headers = { ...headers, ...appendHeaders };
 
-		if (this.metadata && this.metadata.authToken) {
+		if (this.metadata?.authToken) {
 			headers["x-line-access"] = this.metadata.authToken;
 		}
 
@@ -523,7 +523,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		} catch (error) {
 			throw new InternalError("Request external failed", error.stack);
 		}
-		if (res && res.e) {
+		if (res?.e) {
 			throw new InternalError("Request internal failed", JSON.stringify(res.e));
 		}
 		return res;
@@ -533,6 +533,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	private LINEService_PROTOCOL_TYPE: ProtocolKey = 4;
 	private SquareService_API_PATH = "/SQ1";
 	private SquareService_PROTOCOL_TYPE: ProtocolKey = 4;
+
 	/**
 	 * @description Get the profile of the current user.
 	 *
@@ -549,7 +550,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	}
 
 	public async getJoinedSquares(
-		limit = 50,
+		limit = 100,
 		continuationToken: string,
 	): Promise<ttype.GetJoinedSquaresResponse> {
 		return await this.request(
@@ -617,19 +618,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	public async reactToMessage(
 		squareChatMid: string,
 		messageId: string,
-		reactionType = 2,
+		reactionType: ttype.MessageReactionType = 2,
 	): Promise<ttype.ReactToMessageResponse> {
-		/*
-    		reactionType
-       			 ALL     = 0,
-        		UNDO    = 1,
-        		NICE    = 2,
-        		LOVE    = 3,
-        		FUN     = 4,
-        		AMAZING = 5,
-       			SAD     = 6,
-        		OMG     = 7,
-    	*/
 		return await this.request(
 			[
 				[8, 1, 0],
@@ -703,8 +693,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 	public async sendSquareMessage(
 		squareChatMid: string,
-		text = "test Message",
-		contentType = 0,
+		text: string | undefined,
+		contentType: ttype.ContentType = 0,
 		contentMetadata: LooseType = {},
 		relatedMessageId: string | undefined = undefined,
 	): Promise<ttype.SendMessageResponse> {
@@ -780,17 +770,11 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	public async createSquare(
 		name: string,
 		displayName: string,
-		profileImageObsHash = "0h6tJf0hQsaVt3H0eLAsAWDFheczgHd3wTCTx2eApNKSoefHNVGRdwfgxbdgUMLi8MSngnPFMeNmpbLi8MSngnPFMeNmpbLi8MSngnOA",
+		profileImageObsHash = defaultSquareCoverImageObsHash,
 		description = "",
 		searchable = true,
-		SquareJoinMethodType = 0,
+		SquareJoinMethodType: ttype.SquareJoinMethodType = 0,
 	): Promise<ttype.CreateSquareResponse> {
-		/*
-    		SquareJoinMethodType
-        		NONE(0),
-        		APPROVAL(1),
-        		CODE(2);
-        */
 		return await this.request(
 			[
 				[8, 2, 0],
@@ -842,24 +826,11 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	}
 
 	public async updateSquareFeatureSet(
-		updateAttributes: number[] = [],
+		updateAttributes: ttype.SquareFeatureSetAttribute[],
 		squareMid: string,
 		revision: number,
 		creatingSecretSquareChat = 0,
 	): Promise<ttype.UpdateSquareFeatureSetResponse> {
-		/*
-    		updateAttributes:
-        		CREATING_SECRET_SQUARE_CHAT(1),
-        		INVITING_INTO_OPEN_SQUARE_CHAT(2),
-        		CREATING_SQUARE_CHAT(3),
-        		READONLY_DEFAULT_CHAT(4),
-        		SHOWING_ADVERTISEMENT(5),
-        		DELEGATE_JOIN_TO_PLUG(6),
-        		DELEGATE_KICK_OUT_TO_PLUG(7),
-        		DISABLE_UPDATE_JOIN_METHOD(8),
-        		DISABLE_TRANSFER_ADMIN(9),
-        		CREATING_LIVE_TALK(10);
-    	*/
 		const SquareFeatureSet: NestedArray = [
 			[11, 1, squareMid],
 			[10, 2, revision],
@@ -945,23 +916,12 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	public async createSquareChat(
 		squareChatMid: string,
 		name: string,
-		chatImageObsHash = "0h",
-		squareChatType = 1,
+		chatImageObsHash = defaultSquareCoverImageObsHash,
+		squareChatType: ttype.SquareChatType = 1,
 		maxMemberCount = 5000,
-		ableToSearchMessage = 1,
+		ableToSearchMessage: ttype.BooleanState = 1,
 		squareMemberMids = [],
 	): Promise<ttype.CreateSquareChatResponse> {
-		/*
-    	- SquareChatType:
-        	OPEN(1),
-        	SECRET(2),
-        	ONE_ON_ONE(3),
-        	SQUARE_DEFAULT(4);
-    	- ableToSearchMessage:
-        	NONE(0),
-        	OFF(1),
-        	ON(2);
-    	*/
 		return await this.request(
 			[
 				[8, 1, 0],
@@ -1036,14 +996,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		squareChatMid: string,
 		notificationForMessage = true,
 		notificationForNewMember = true,
-		updatedAttrs = [6],
+		updatedAttrs: ttype.SquareChatMemberAttribute[] = [6],
 	): Promise<ttype.UpdateSquareChatMemberResponse> {
-		/*
-    		- SquareChatMemberAttribute:
-        		MEMBERSHIP_STATE(4),
-        		NOTIFICATION_MESSAGE(6),
-        		NOTIFICATION_NEW_MEMBER(7);
-    	*/
 		return await this.request(
 			[
 				[14, 2, [8, updatedAttrs]],
@@ -1070,29 +1024,11 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		squareMid: string,
 		revision: number,
 		displayName: string | undefined,
-		membershipState: number | undefined,
-		role: number | undefined,
-		updatedAttrs: number[] = [],
+		membershipState: ttype.SquareMembershipState | undefined,
+		role: ttype.SquareMemberRole | undefined,
+		updatedAttrs: ttype.SquareMemberAttribute[] = [],
 		updatedPreferenceAttrs: number[] = [],
 	): Promise<ttype.UpdateSquareMemberResponse> {
-		/*
-			SquareMemberAttribute:
-				DISPLAY_NAME(1),
-				PROFILE_IMAGE(2),
-				ABLE_TO_RECEIVE_MESSAGE(3),
-				MEMBERSHIP_STATE(5),
-				ROLE(6),
-				PREFERENCE(7);
-
-			SquareMembershipState:
-				JOIN_REQUESTED(1),
-				JOINED(2),
-				REJECTED(3),
-				LEFT(4),
-				KICK_OUT(5),
-				BANNED(6),
-				DELETED(7);
-		*/
 		const squareMember: NestedArray = [
 			[11, 1, squareMemberMid],
 			[11, 2, squareMid],
@@ -1127,7 +1063,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	): Promise<ttype.UpdateSquareMemberResponse> {
 		const UPDATE_PREF_ATTRS: number[] = [];
 		const UPDATE_ATTRS = [5];
-		const MEMBERSHIP_STATE = 5;
+		const MEMBERSHIP_STATE = allowRejoin ? 5 : 6;
 		const getSquareMemberResp = await this.getSquareMember(squareMemberMid);
 		const squareMember = getSquareMemberResp.squareMember;
 		const squareMemberRevision = squareMember.revision;
@@ -1137,7 +1073,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			squareMemberRevision,
 			undefined,
 			MEMBERSHIP_STATE,
-			allowRejoin ? undefined : 6,
+			undefined,
 			UPDATE_ATTRS,
 			UPDATE_PREF_ATTRS,
 		);
@@ -1295,16 +1231,9 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 	public async reportSquare(
 		squareMid: string,
-		reportType: number,
+		reportType: ttype.ReportType,
 		otherReason: string | undefined = undefined,
 	): Promise<ttype.ReportSquareResponse> {
-		/*
-		ReportType:
-			ADVERTISING = 1;
-			GENDER_HARASSMENT = 2;
-			HARASSMENT = 3;
-			OTHER = 4;
-		*/
 		return await this.request(
 			[
 				[11, 2, squareMid],
