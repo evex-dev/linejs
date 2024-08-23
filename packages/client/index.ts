@@ -3,13 +3,29 @@
  * LINE SelfBot Client
  */
 
+import * as fs from "node:fs/promises";
+import { getRSACrypto } from "./lib/rsa/rsa-verify.ts";
+import type { BaseStorage } from "./lib/storage/base-storage.ts";
+import { MemoryStorage } from "./lib/storage/memory-storage.ts";
+import {
+	type NestedArray,
+	type ParsedThrift,
+	type ProtocolKey,
+	Protocols,
+} from "./lib/thrift/declares.ts";
+import type * as ttype from "./lib/thrift/line_types.ts";
 import ThriftRenameParser from "./lib/thrift/parser.js";
+import { readThrift } from "./lib/thrift/read.js";
 import { Thrift } from "./lib/thrift/thrift.ts";
+import { writeThrift } from "./lib/thrift/write.js";
 import { TypedEventEmitter } from "./lib/typed-event-emitter/index.ts";
+import type { LogType } from "./method/log.ts";
 import type { LoginOptions } from "./method/login.ts";
+import type { LooseType } from "./utils/common.ts";
 import { type Device, getDeviceDetails } from "./utils/device.ts";
 import { InternalError } from "./utils/errors.ts";
 import type { ClientEvents } from "./utils/events.ts";
+import type { Metadata } from "./utils/metadata.ts";
 import {
 	AUTH_TOKEN_REGEX,
 	EMAIL_REGEX,
@@ -17,22 +33,6 @@ import {
 } from "./utils/regex.ts";
 import type { System } from "./utils/system.ts";
 import type { User } from "./utils/user.ts";
-import type { Metadata } from "./utils/metadata.ts";
-import {
-	type NestedArray,
-	type ParsedThrift,
-	type ProtocolKey,
-	Protocols,
-} from "./lib/thrift/declares.ts";
-import { writeThrift } from "./lib/thrift/write.js";
-import { readThrift } from "./lib/thrift/read.js";
-import type * as ttype from "./lib/thrift/line_types.ts";
-import type { LooseType } from "./utils/common.ts";
-import { getRSACrypto } from "./lib/rsa/rsa-verify.ts";
-import * as fs from "node:fs/promises";
-import { MemoryStorage } from "./lib/storage/memory-storage.ts";
-import type { BaseStorage } from "./lib/storage/base-storage.ts";
-import type { LogType } from "./method/log.ts";
 
 interface ClientOptions {
 	storage?: BaseStorage;
@@ -227,7 +227,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	public async requestEmailLogin(
 		email: string,
 		password: string,
-		enableE2EE: boolean = false,
+		enableE2EE = false,
 	): Promise<string> {
 		this.log("login", {
 			method: "email",
@@ -660,7 +660,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		syncToken: string | undefined = undefined,
 		limit = 100,
 		continuationToken: string | undefined = undefined,
-		subscriptionId: number = 0,
+		subscriptionId = 0,
 	): Promise<ttype.FetchMyEventsResponse> {
 		return await this.request(
 			[
@@ -746,6 +746,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			this.SquareService_API_PATH,
 		);
 	}
+
 	public async getSquareChat(
 		squareChatMid: string,
 	): Promise<ttype.GetSquareChatResponse> {
@@ -757,6 +758,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			this.SquareService_API_PATH,
 		);
 	}
+
 	public async getJoinableSquareChats(
 		squareMid: string,
 		continuationToken: string | undefined = undefined,
@@ -781,7 +783,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		profileImageObsHash = "0h6tJf0hQsaVt3H0eLAsAWDFheczgHd3wTCTx2eApNKSoefHNVGRdwfgxbdgUMLi8MSngnPFMeNmpbLi8MSngnPFMeNmpbLi8MSngnOA",
 		description = "",
 		searchable = true,
-		SquareJoinMethodType: 0 | 1 | 2 = 0,
+		SquareJoinMethodType = 0,
 	): Promise<ttype.CreateSquareResponse> {
 		/*
     		SquareJoinMethodType
@@ -943,7 +945,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	public async createSquareChat(
 		squareChatMid: string,
 		name: string,
-		chatImageObsHash: string = "0h",
+		chatImageObsHash = "0h",
 		squareChatType = 1,
 		maxMemberCount = 5000,
 		ableToSearchMessage = 1,
@@ -1163,7 +1165,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		text: string,
 		senderSquareMemberMid: string,
 		createdAt: number,
-		announcementType: number = 0,
+		announcementType = 0,
 	): Promise<ttype.CreateSquareChatAnnouncementResponse> {
 		return await this.request(
 			[
@@ -1214,9 +1216,9 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 	public async searchSquareChatMembers(
 		squareChatMid: string,
-		displayName: string = "",
+		displayName = "",
 		continuationToken: string | undefined = undefined,
-		limit: number = 20,
+		limit = 20,
 	): Promise<LooseType> {
 		const req = [
 			[11, 1, squareChatMid],
@@ -1263,7 +1265,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 	public async manualRepair(
 		syncToken: string | undefined = undefined,
-		limit: number = 100,
+		limit = 100,
 		continuationToken: string | undefined = undefined,
 	): Promise<ttype.ManualRepairResponse> {
 		return await this.request(

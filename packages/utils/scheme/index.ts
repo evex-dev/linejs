@@ -33,7 +33,7 @@ class LINE_SCHEME_BASE {
 	 * @param {boolean} [useNv=true] - Whether to use Nv.
 	 * @return {string} The profile URLSticker
 	 */
-	public getProfile(useNv: boolean = true): string {
+	public getProfile(useNv = true): string {
 		if (useNv) {
 			return this.prefix + "nv/profile";
 		} else {
@@ -47,7 +47,7 @@ class LINE_SCHEME_BASE {
 	 * @param {string} nv - nv path
 	 * @return {string} The URL for the nv page
 	 */
-	public getNv(nv: string = ""): string {
+	public getNv(nv = ""): string {
 		return this.prefix + "nv" + nv;
 	}
 
@@ -371,7 +371,7 @@ class LINE_SCHEME_BASE {
 	 *
 	 * @returns {string} The URL for the privacy settings page
 	 */
-	public getPrivacySettings(useSettings: boolean = true): string {
+	public getPrivacySettings(useSettings = true): string {
 		if (useSettings) {
 			return this.prefix + "nv/settings/privacy";
 		} else {
@@ -384,7 +384,7 @@ class LINE_SCHEME_BASE {
 	 *
 	 * @returns {string} The URL for the account settings page
 	 */
-	public getAccountSettings(useSettings: boolean = true): string {
+	public getAccountSettings(useSettings = true): string {
 		if (useSettings) {
 			return this.prefix + "nv/settings/account";
 		} else {
@@ -397,7 +397,7 @@ class LINE_SCHEME_BASE {
 	 *
 	 * @returns {string} The URL for the sticker settings page
 	 */
-	public getStickerSettings(useSettings: boolean = true): string {
+	public getStickerSettings(useSettings = true): string {
 		if (useSettings) {
 			return this.prefix + "nv/settings/sticker";
 		} else {
@@ -410,7 +410,7 @@ class LINE_SCHEME_BASE {
 	 *
 	 * @returns {string} The URL for the chat settings page
 	 */
-	public getChatSettings(useSettings: boolean = true): string {
+	public getChatSettings(useSettings = true): string {
 		if (useSettings) {
 			return this.prefix + "nv/settings/chatSettings";
 		} else {
@@ -423,7 +423,7 @@ class LINE_SCHEME_BASE {
 	 *
 	 * @returns {string} The URL for the address book sync page
 	 */
-	public getAddressBookSync(useSettings: boolean = true): string {
+	public getAddressBookSync(useSettings = true): string {
 		if (useSettings) {
 			return this.prefix + "nv/settings/addressBookSync";
 		} else {
@@ -436,7 +436,7 @@ class LINE_SCHEME_BASE {
 	 *
 	 * @returns {string} The URL for the timeline settings page
 	 */
-	public getTimelineSettings(useSettings: boolean = true): string {
+	public getTimelineSettings(useSettings = true): string {
 		if (useSettings) {
 			return this.prefix + "nv/settings/timelineSettings";
 		} else {
@@ -505,7 +505,7 @@ class LINE_SCHEME_BASE {
 	 * @param {string} ch channelId
 	 * @returns {string} The URL for any channel page
 	 */
-	public getCh(ch: string = ""): string {
+	public getCh(ch = ""): string {
 		return this.prefix + "ch" + ch;
 	}
 
@@ -518,8 +518,8 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the liff app page
 	 */
 	public getLiffApp(
-		id: string = "",
-		useLiff: boolean = false,
+		id = "",
+		useLiff = false,
 		param: Record<string, string> = {},
 	): string {
 		const urlParam = "?" + new URLSearchParams(param).toString();
@@ -538,7 +538,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the official account liffSticker
 	 */
 	public getOfficialAccountLiff(
-		useLiff: boolean = false,
+		useLiff = false,
 		param: Record<string, string> = {},
 	): string {
 		return this.getLiffApp("1645278921-kWRPP32q", useLiff, param);
@@ -552,7 +552,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the vote liffSticker
 	 */
 	public getVoteLiff(
-		useLiff: boolean = false,
+		useLiff = false,
 		param: Record<string, string> = {},
 	): string {
 		return this.getLiffApp("1477715170-Pl2JnXpR", useLiff, param);
@@ -566,7 +566,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the spam filter liffSticker
 	 */
 	public getSpamFilterLiff(
-		useLiff: boolean = false,
+		useLiff = false,
 		param: Record<string, string> = {},
 	): string {
 		return this.getLiffApp("1556150347-zL2b31Eq", useLiff, param);
@@ -580,7 +580,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the auto reply liffSticker
 	 */
 	public getAutoReplyLiff(
-		useLiff: boolean = false,
+		useLiff = false,
 		param: Record<string, string> = {},
 	): string {
 		return this.getLiffApp("1655702173-mvkgA1yR", useLiff, param);
@@ -594,7 +594,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the translate liffSticker
 	 */
 	public getTlanslateLiff(
-		useLiff: boolean = false,
+		useLiff = false,
 		param: Record<string, string> = {},
 	): string {
 		return this.getLiffApp("1506931274-R5LDWmAW", useLiff, param);
@@ -608,7 +608,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the gift liffSticker
 	 */
 	public getGiftLiff(
-		useLiff: boolean = false,
+		useLiff = false,
 		param: Record<string, string> = {},
 	): string {
 		return this.getLiffApp("1654120723-lYaWZEb6", useLiff, param);
@@ -622,7 +622,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the square liffSticker
 	 */
 	public getSquareLiff(
-		useLiff: boolean = false,
+		useLiff = false,
 		param: Record<string, string> = {},
 	): string {
 		return this.getLiffApp("1573545970-LlNdaE20", useLiff, param);
@@ -636,7 +636,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the point club liffSticker
 	 */
 	public getPointClubLiff(
-		useLiff: boolean = false,
+		useLiff = false,
 		param: Record<string, string> = {},
 	): string {
 		return this.getLiffApp("1370466387-VxxzrzRW", useLiff, param);
@@ -650,7 +650,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the schedule liffSticker
 	 */
 	public getScheduleLiff(
-		useLiff: boolean = false,
+		useLiff = false,
 		param: Record<string, string> = {},
 	): string {
 		return this.getLiffApp("1655112642-8v0aXBwM", useLiff, param);
@@ -664,7 +664,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the coupon liffSticker
 	 */
 	public getCouponLiff(
-		useLiff: boolean = false,
+		useLiff = false,
 		param: Record<string, string> = {},
 	): string {
 		return this.getLiffApp("1611905212-3bydBEmv", useLiff, param);
@@ -678,7 +678,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the sticker shop liffSticker
 	 */
 	public getStickerShopLiff(
-		useLiff: boolean = false,
+		useLiff = false,
 		param: Record<string, string> = {},
 	): string {
 		return this.getLiffApp("1359301715-JKd7Y7j1", useLiff, param);
@@ -692,7 +692,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the dress-up shop liffSticker
 	 */
 	public getDressUpShopLiff(
-		useLiff: boolean = false,
+		useLiff = false,
 		param: Record<string, string> = {},
 	): string {
 		return this.getLiffApp("1359301715-lw9jxjqV", useLiff, param);
@@ -763,10 +763,7 @@ class LINE_SCHEME_BASE {
 	 * @param {boolean} [isTicket=true] is ticket.
 	 * @returns {string} The URL for the square report page
 	 */
-	public getSquareReport(
-		ticketOrEmid: string,
-		isTicket: boolean = true,
-	): string {
+	public getSquareReport(ticketOrEmid: string, isTicket = true): string {
 		if (isTicket) {
 			return this.prefix + `square/report?ticket=${ticketOrEmid}`;
 		} else {
@@ -781,7 +778,7 @@ class LINE_SCHEME_BASE {
 	 * @param {boolean} [isTicket=true] is ticket.
 	 * @returns {string} The URL for the square join page
 	 */
-	public getSquareJoin(ticketOrEmid: string, isTicket: boolean = true): string {
+	public getSquareJoin(ticketOrEmid: string, isTicket = true): string {
 		if (isTicket) {
 			return this.prefix + `square/join?ticket=${ticketOrEmid}`;
 		} else {
@@ -860,7 +857,7 @@ class LINE_SCHEME_BASE {
 	 * @param {boolean} [useShare=true] use share.
 	 * @returns {string} The URL for the text share page
 	 */
-	public getTextShare(text: string, useShare: boolean = true): string {
+	public getTextShare(text: string, useShare = true): string {
 		if (useShare) {
 			return this.prefix + "share?text=" + encodeURIComponent(text);
 		} else {

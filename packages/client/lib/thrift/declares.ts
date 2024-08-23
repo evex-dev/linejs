@@ -1,5 +1,5 @@
-import { TBinaryProtocol, TCompactProtocol } from "npm:thrift@0.20.0";
 import { Buffer } from "node:buffer";
+import { TBinaryProtocol, TCompactProtocol } from "npm:thrift@0.20.0";
 import type { LooseType } from "../../utils/common.ts";
 
 TBinaryProtocol.genHeader = (name: string) => {

@@ -5,6 +5,7 @@
       "jsr:@std/assert@^1.0.2": "jsr:@std/assert@1.0.2",
       "jsr:@std/internal@^1.0.1": "jsr:@std/internal@1.0.1",
       "jsr:@std/testing@^1.0.0": "jsr:@std/testing@1.0.0",
+      "npm:@biomejs/biome": "npm:@biomejs/biome@1.8.3",
       "npm:@types/node": "npm:@types/node@18.16.19",
       "npm:crypto-js": "npm:crypto-js@4.2.0",
       "npm:curve25519-js": "npm:curve25519-js@0.0.4",
@@ -31,6 +32,51 @@
       }
     },
     "npm": {
+      "@biomejs/biome@1.8.3": {
+        "integrity": "sha512-/uUV3MV+vyAczO+vKrPdOW0Iaet7UnJMU4bNMinggGJTAnBPjCoLEYcyYtYHNnUNYlv4xZMH6hVIQCAozq8d5w==",
+        "dependencies": {
+          "@biomejs/cli-darwin-arm64": "@biomejs/cli-darwin-arm64@1.8.3",
+          "@biomejs/cli-darwin-x64": "@biomejs/cli-darwin-x64@1.8.3",
+          "@biomejs/cli-linux-arm64": "@biomejs/cli-linux-arm64@1.8.3",
+          "@biomejs/cli-linux-arm64-musl": "@biomejs/cli-linux-arm64-musl@1.8.3",
+          "@biomejs/cli-linux-x64": "@biomejs/cli-linux-x64@1.8.3",
+          "@biomejs/cli-linux-x64-musl": "@biomejs/cli-linux-x64-musl@1.8.3",
+          "@biomejs/cli-win32-arm64": "@biomejs/cli-win32-arm64@1.8.3",
+          "@biomejs/cli-win32-x64": "@biomejs/cli-win32-x64@1.8.3"
+        }
+      },
+      "@biomejs/cli-darwin-arm64@1.8.3": {
+        "integrity": "sha512-9DYOjclFpKrH/m1Oz75SSExR8VKvNSSsLnVIqdnKexj6NwmiMlKk94Wa1kZEdv6MCOHGHgyyoV57Cw8WzL5n3A==",
+        "dependencies": {}
+      },
+      "@biomejs/cli-darwin-x64@1.8.3": {
+        "integrity": "sha512-UeW44L/AtbmOF7KXLCoM+9PSgPo0IDcyEUfIoOXYeANaNXXf9mLUwV1GeF2OWjyic5zj6CnAJ9uzk2LT3v/wAw==",
+        "dependencies": {}
+      },
+      "@biomejs/cli-linux-arm64-musl@1.8.3": {
+        "integrity": "sha512-9yjUfOFN7wrYsXt/T/gEWfvVxKlnh3yBpnScw98IF+oOeCYb5/b/+K7YNqKROV2i1DlMjg9g/EcN9wvj+NkMuQ==",
+        "dependencies": {}
+      },
+      "@biomejs/cli-linux-arm64@1.8.3": {
+        "integrity": "sha512-fed2ji8s+I/m8upWpTJGanqiJ0rnlHOK3DdxsyVLZQ8ClY6qLuPc9uehCREBifRJLl/iJyQpHIRufLDeotsPtw==",
+        "dependencies": {}
+      },
+      "@biomejs/cli-linux-x64-musl@1.8.3": {
+        "integrity": "sha512-UHrGJX7PrKMKzPGoEsooKC9jXJMa28TUSMjcIlbDnIO4EAavCoVmNQaIuUSH0Ls2mpGMwUIf+aZJv657zfWWjA==",
+        "dependencies": {}
+      },
+      "@biomejs/cli-linux-x64@1.8.3": {
+        "integrity": "sha512-I8G2QmuE1teISyT8ie1HXsjFRz9L1m5n83U1O6m30Kw+kPMPSKjag6QGUn+sXT8V+XWIZxFFBoTDEDZW2KPDDw==",
+        "dependencies": {}
+      },
+      "@biomejs/cli-win32-arm64@1.8.3": {
+        "integrity": "sha512-J+Hu9WvrBevfy06eU1Na0lpc7uR9tibm9maHynLIoAjLZpQU3IW+OKHUtyL8p6/3pT2Ju5t5emReeIS2SAxhkQ==",
+        "dependencies": {}
+      },
+      "@biomejs/cli-win32-x64@1.8.3": {
+        "integrity": "sha512-/PJ59vA1pnQeKahemaQf4Nyj7IKUvGQSc3Ze1uIGi+Wvr1xF7rGobSrAAG01T/gUDG21vkDsZYM03NAmPiVkqg==",
+        "dependencies": {}
+      },
       "@types/node@18.16.19": {
         "integrity": "sha512-IXl7o+R9iti9eBW4Wg2hx1xQDig183jj7YLn8F7udNceyfkbn1ZxmzZXuak20gR40D7pIkIY1kYGx5VIGbaHKA==",
         "dependencies": {}
@@ -98,7 +144,8 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@std/assert@^1.0.2"
+      "jsr:@std/assert@^1.0.2",
+      "npm:@trivago/prettier-plugin-sort-imports"
     ]
   }
 }

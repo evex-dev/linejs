@@ -1,7 +1,7 @@
 import { assert } from "@std/assert";
-import { LINE_SCHEME } from "../scheme/index.ts";
-import { LINE_OBS } from "../obs/index.ts";
 import { LINE_REGEX } from "../index.ts";
+import { LINE_OBS } from "../obs/index.ts";
+import { LINE_SCHEME } from "../scheme/index.ts";
 
 Deno.test({
 	name: "Scheme Test",

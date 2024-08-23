@@ -1,5 +1,5 @@
-import { BaseStorage, type Storage } from "./base-storage.ts";
 import * as fs from "node:fs";
+import { BaseStorage, type Storage } from "./base-storage.ts";
 
 /**
  * @description File Storage for LINE Client

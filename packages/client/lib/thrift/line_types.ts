@@ -5,7 +5,7 @@
 //
 
 type Int64 = number;
-import { Buffer } from "node:buffer";
+import type { Buffer } from "node:buffer";
 
 export declare enum ApplicationType {
 	IOS = 16,
