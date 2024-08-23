@@ -306,7 +306,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		secret: string | undefined,
 		cert: string | undefined,
 		calledName = "loginV2",
-	): Promise<any /*ttype.LoginResult*/> {
+	): Promise<ttype.LoginResult> {
 		let loginType = 2;
 		if (!secret) loginType = 0;
 		if (verifier) {
@@ -534,7 +534,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async getJoinedSquares(limit = 50, continuationToken: string) {
+	public async getJoinedSquares(
+		limit = 50,
+		continuationToken: string,
+	): Promise<ttype.GetJoinedSquaresResponse> {
 		return await this.request(
 			[[11, 2, continuationToken], [8, 3, limit]],
 			"getJoinedSquares",
@@ -547,7 +550,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	public async inviteIntoSquareChat(
 		inviteeMids: string[],
 		squareChatMid: string,
-	) {
+	): Promise<ttype.InviteIntoSquareChatResponse> {
 		return await this.request(
 			[[15, 1, [11, inviteeMids]], [11, 2, squareChatMid]],
 			"inviteIntoSquareChat",
@@ -561,7 +564,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		squareMid: string,
 		invitees: string[],
 		squareChatMid: string,
-	) {
+	): Promise<ttype.InviteToSquareResponse> {
 		return await this.request(
 			[[11, 2, squareMid], [15, 3, [11, invitees]], [
 				11,
@@ -575,7 +578,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async markAsRead(squareChatMid: string, messageId: string) {
+	public async markAsRead(
+		squareChatMid: string,
+		messageId: string,
+	): Promise<ttype.MarkAsReadResponse> {
 		return await this.request(
 			[[11, 2, squareChatMid], [11, 4, messageId]],
 			"markAsRead",
@@ -589,7 +595,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		squareChatMid: string,
 		messageId: string,
 		reactionType = 2,
-	) {
+	): Promise<ttype.ReactToMessageResponse> {
 		/*
     		reactionType
        			 ALL     = 0,
@@ -615,7 +621,9 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async findSquareByInvitationTicket(invitationTicket: string) {
+	public async findSquareByInvitationTicket(
+		invitationTicket: string,
+	): Promise<ttype.FindSquareByInvitationTicketResponse> {
 		return await this.request(
 			[[11, 2, invitationTicket]],
 			"findSquareByInvitationTicket",
@@ -630,7 +638,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		limit = 100,
 		continuationToken: string | undefined = undefined,
 		subscriptionId: number = 0,
-	) {
+	): Promise<ttype.FetchMyEventsResponse> {
 		return await this.request(
 			[
 				[10, 1, subscriptionId],
@@ -651,7 +659,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		continuationToken: string | undefined = undefined,
 		subscriptionId = 0,
 		limit = 100,
-	) {
+	): Promise<ttype.FetchSquareChatEventsResponse> {
 		return await this.request(
 			[
 				[10, 1, subscriptionId],
@@ -676,7 +684,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		contentType = 0,
 		contentMetadata: LooseType = {},
 		relatedMessageId: string | undefined = undefined,
-	) {
+	): Promise<ttype.SendMessageResponse> {
 		const msg = [
 			[11, 2, squareChatMid],
 			[11, 10, text],
@@ -710,7 +718,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async getSquare(squareMid: string) {
+	public async getSquare(squareMid: string): Promise<ttype.GetSquareResponse> {
 		return await this.request(
 			[[11, 2, squareMid]],
 			"getSquare",
@@ -719,7 +727,9 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			this.SquareService_API_PATH,
 		);
 	}
-	public async getSquareChat(squareChatMid: string) {
+	public async getSquareChat(
+		squareChatMid: string,
+	): Promise<ttype.GetSquareChatResponse> {
 		return await this.request(
 			[[11, 1, squareChatMid]],
 			"getSquareChat",
@@ -732,7 +742,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		squareMid: string,
 		continuationToken: string | undefined = undefined,
 		limit = 100,
-	) {
+	): Promise<ttype.GetJoinableSquareChatsResponse> {
 		return await this.request(
 			[[11, 1, squareMid], [11, 10, continuationToken], [8, 11, limit]],
 			"getJoinableSquareChats",
@@ -750,7 +760,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		description = "",
 		searchable = true,
 		SquareJoinMethodType = 0,
-	) {
+	): Promise<ttype.CreateSquareResponse> {
 		/*
     		SquareJoinMethodType
         		NONE(0),
@@ -795,7 +805,9 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async getSquareChatAnnouncements(squareChatMid: string) {
+	public async getSquareChatAnnouncements(
+		squareChatMid: string,
+	): Promise<ttype.GetSquareChatAnnouncementsResponse> {
 		return await this.request(
 			[[11, 2, squareChatMid]],
 			"getSquareChatAnnouncements",
@@ -810,7 +822,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		squareMid: string,
 		revision: number,
 		creatingSecretSquareChat = 0,
-	) {
+	): Promise<ttype.UpdateSquareFeatureSetResponse> {
 		/*
     		updateAttributes:
         		CREATING_SECRET_SQUARE_CHAT(1),
@@ -851,7 +863,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		displayName: string,
 		ableToReceiveMessage = false,
 		passCode: string | undefined = undefined,
-	) {
+	): Promise<ttype.JoinSquareResponse> {
 		return await this.request(
 			[
 				[11, 2, squareMid],
@@ -874,7 +886,9 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async removeSubscriptions(subscriptionIds: number[] = []) {
+	public async removeSubscriptions(
+		subscriptionIds: number[] = [],
+	): Promise<ttype.RemoveSubscriptionsResponse> {
 		return await this.request(
 			[
 				[15, 2, [10, subscriptionIds]],
@@ -886,7 +900,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async unsendSquareMessage(squareChatMid: string, messageId: string) {
+	public async unsendSquareMessage(
+		squareChatMid: string,
+		messageId: string,
+	): Promise<ttype.UnsendMessageResponse> {
 		return await this.request(
 			[[11, 2, squareChatMid], [11, 3, messageId]],
 			"unsendMessage",
@@ -904,7 +921,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		maxMemberCount = 5000,
 		ableToSearchMessage = 1,
 		squareMemberMids = [],
-	) {
+	): Promise<ttype.CreateSquareChatResponse> {
 		/*
     	- SquareChatType:
         	OPEN(1),
@@ -944,7 +961,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		squareChatMid: string,
 		continuationToken: string | undefined = undefined,
 		limit = 200,
-	) {
+	): Promise<ttype.GetSquareChatMembersResponse> {
 		const req = [[11, 1, squareChatMid], [8, 3, limit]];
 		if (continuationToken) {
 			req.push([11, 2, continuationToken]);
@@ -958,7 +975,9 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async getSquareFeatureSet(squareMid: string) {
+	public async getSquareFeatureSet(
+		squareMid: string,
+	): Promise<ttype.GetSquareFeatureSetResponse> {
 		return await this.request(
 			[
 				[11, 2, squareMid],
@@ -970,7 +989,9 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async getSquareInvitationTicketUrl(mid: string) {
+	public async getSquareInvitationTicketUrl(
+		mid: string,
+	): Promise<ttype.GetInvitationTicketUrlResponse> {
 		return await this.request(
 			[
 				[11, 2, mid],
@@ -988,7 +1009,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		notificationForMessage = true,
 		notificationForNewMember = true,
 		updatedAttrs = [6],
-	) {
+	): Promise<ttype.UpdateSquareChatMemberResponse> {
 		/*
     		- SquareChatMemberAttribute:
         		MEMBERSHIP_STATE(4),
@@ -1025,7 +1046,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		role: number | undefined,
 		updatedAttrs: number[] = [],
 		updatedPreferenceAttrs: number[] = [],
-	) {
+	): Promise<ttype.UpdateSquareMemberResponse> {
 		/*
 			SquareMemberAttribute:
 				DISPLAY_NAME(1),
@@ -1076,7 +1097,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		squareMid: string,
 		squareMemberMid: string,
 		allowRejoin = true,
-	) {
+	): Promise<ttype.UpdateSquareMemberResponse> {
 		const UPDATE_PREF_ATTRS: number[] = [];
 		const UPDATE_ATTRS = [5];
 		const MEMBERSHIP_STATE = 5;
@@ -1095,7 +1116,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async checkSquareJoinCode(squareMid: string, code: string) {
+	public async checkSquareJoinCode(
+		squareMid: string,
+		code: string,
+	): Promise<LooseType> {
 		return await this.request(
 			[
 				[11, 2, squareMid],
@@ -1115,7 +1139,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		senderSquareMemberMid: string,
 		createdAt: number,
 		announcementType: number = 0,
-	) {
+	): Promise<ttype.CreateSquareChatAnnouncementResponse> {
 		return await this.request(
 			[
 				[8, 1, 0],
@@ -1151,7 +1175,9 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async getSquareMember(squareMemberMid: string) {
+	public async getSquareMember(
+		squareMemberMid: string,
+	): Promise<ttype.GetSquareMemberResponse> {
 		return await this.request(
 			[
 				[11, 2, squareMemberMid],
@@ -1168,7 +1194,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		displayName: string = "",
 		continuationToken: string | undefined = undefined,
 		limit: number = 20,
-	) {
+	): Promise<LooseType> {
 		const req = [
 			[11, 1, squareChatMid],
 			[
@@ -1185,12 +1211,14 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			[[12, 1, req]],
 			"searchSquareChatMembers",
 			this.SquareService_PROTOCOL_TYPE,
-			true,
+			false,
 			this.SquareService_API_PATH,
 		);
 	}
 
-	public async getSquareEmid(squareMid: string) {
+	public async getSquareEmid(
+		squareMid: string,
+	): Promise<ttype.GetSquareEmidResponse> {
 		return await this.request(
 			[[11, 1, squareMid]],
 			"getSquareEmid",
@@ -1203,7 +1231,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	public async getSquareMembersBySquare(
 		squareMid: string,
 		squareMemberMids: Array<string> = [],
-	) {
+	): Promise<ttype.GetSquareMembersBySquareResponse> {
 		return await this.request(
 			[
 				[11, 2, squareMid],
@@ -1220,7 +1248,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		syncToken: string | undefined = undefined,
 		limit: number = 100,
 		continuationToken: string | undefined = undefined,
-	) {
+	): Promise<ttype.ManualRepairResponse> {
 		return await this.request(
 			[
 				[11, 1, syncToken],
@@ -1234,7 +1262,9 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async leaveSquare(squareMid: string) {
+	public async leaveSquare(
+		squareMid: string,
+	): Promise<ttype.LeaveSquareResponse> {
 		return await this.request(
 			[
 				[11, 2, squareMid],
@@ -1250,7 +1280,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		squareMid: string,
 		reportType: number,
 		otherReason: string | undefined = undefined,
-	) {
+	): Promise<ttype.ReportSquareResponse> {
 		/*
 		ReportType:
 			ADVERTISING = 1;
@@ -1273,7 +1303,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	public async sendSquareRequestByName(
 		METHOD_NAME: string,
 		params: NestedArray,
-	): Promise<string> {
+	): Promise<Map<string, any>> {
 		return await this.request(
 			params,
 			METHOD_NAME,
