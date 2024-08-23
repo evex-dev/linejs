@@ -95,8 +95,7 @@ function writeValue(output, ftype, fid, val) {
 			output.writeListBegin(val[0], val[1].length);
 			for (const iter483 in val[1]) {
 				if (val[1].hasOwnProperty(iter483)) {
-					iter483 = val[1][iter483];
-					writeValue_(output, val[0], iter483);
+					writeValue_(output, val[0], val[1][iter483]);
 				}
 			}
 			output.writeListEnd();

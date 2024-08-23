@@ -26,7 +26,7 @@ import {
 } from "./lib/thrift/declares.ts";
 import { writeThrift } from "./lib/thrift/write.js";
 import { readThrift } from "./lib/thrift/read.js";
-import type * as ttype from "./lib/thrift/line__types.ts";
+import type * as ttype from "./lib/thrift/line_types.ts";
 import type { LooseType } from "./utils/common.ts";
 import { getRSACrypto } from "./lib/rsa/rsa-verify.ts";
 import * as fs from "node:fs/promises";
@@ -51,7 +51,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		this.parser.def = Thrift;
 		const requiredOptions = {
 			storage: new MemoryStorage(),
-			endpoint: "gw.line.naver.jp",
+			endpoint: "https://gw.line.naver.jp",
 			...options,
 		};
 
@@ -87,6 +87,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 * @emits ready
 	 * @emits update:authtoken
 	 */
+	public log(data: LooseType) {
+		this.emit("log", data, new Date());
+	}
+
 	public async login(options: LoginOptions): Promise<void> {
 		if (options.authToken) {
 			if (!AUTH_TOKEN_REGEX.test(options.authToken)) {
@@ -224,6 +228,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		password: string,
 		enableE2EE: boolean = false,
 	): Promise<string> {
+		this.log(`requestEmailLogin: ${email} / ${"*".repeat(password.length)}`);
 		if (!this.system) {
 			throw new InternalError(
 				"Not setup yet",
@@ -476,7 +481,21 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 		let res;
 		try {
+			this.log(
+				`Thrift: name = ${methodName}, protocol = ${protocolType}\n${
+					JSON.stringify(value, null, 2)
+				}`,
+			);
 			const Trequest = writeThrift(value, methodName, Protocol);
+			this.log(
+				`${overrideMethod}: ${this.endpoint + path}`,
+			);
+			this.log(
+				`data: ${[...Trequest].map((e) => e.toString(16)).join("")}`,
+			);
+			this.log(
+				`headers: ${JSON.stringify(headers, null, 2)}`,
+			);
 			const response = await fetch(this.endpoint + path, {
 				method: overrideMethod,
 				headers,
@@ -491,19 +510,27 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 				this.emit("update:authtoken", this.metadata.authToken);
 			}
-
+			this.log(
+				`response: ${response.status} ${response.statusText}`,
+			);
 			const body = await response.arrayBuffer();
 			const parsedBody = new Uint8Array(body);
+			this.log(
+				`resdata: ${[...parsedBody].map((e) => e.toString(16)).join("")}`,
+			);
 			res = readThrift(parsedBody, Protocol);
 			if (parse === true) {
 				this.parser.rename_data(res);
 			} else if (typeof parse === "string") {
 				res.value = this.parser.rename_thrift(parse, res.value);
 			}
+			this.log(
+				`res: ${JSON.stringify(res, null, 2)}`,
+			);
 		} catch (error) {
 			throw new InternalError(
 				"Request external failed",
-				JSON.stringify(error),
+				error.stack,
 			);
 		}
 		if (res && res.e) {

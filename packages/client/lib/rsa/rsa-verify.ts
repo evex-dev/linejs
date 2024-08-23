@@ -1,5 +1,5 @@
 import { Key } from "npm:node-bignumber@1.2.2";
-import type { RSAKey } from "../thrift/line__types.ts";
+import type { RSAKey } from "../thrift/line_types.ts";
 
 export function getRSACrypto(message: string, json: RSAKey) {
 	const rsa = new Key();
