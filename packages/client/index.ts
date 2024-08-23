@@ -1296,7 +1296,6 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	}
 
 	public async sendSquareThreadMessage(
-		from: string,
 		squareThreadMid: string,
 		text: string | undefined,
 		contentType: ttype.ContentType = 0,
@@ -1304,7 +1303,6 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		relatedMessageId: string | undefined = undefined,
 	): Promise<ttype.SendMessageResponse> {
 		const msg = [
-			[11, 1, from],
 			[11, 2, squareThreadMid],
 			[8, 3, 7],
 			[11, 10, text],
@@ -1316,22 +1314,30 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		if (relatedMessageId) {
 			msg.push([11, 21, relatedMessageId], [8, 22, 3], [8, 24, 2]);
 		}
-		return await this.request(
+		const tmp_req = [
+			12,
+			1,
 			[
-				[12, 1, msg],
-				[8, 3, 5],
-				[10, 4, 1],
-				[8, 5, 1],
 				[
-					12,
-					6,
+					[12, 1, msg],
+					[8, 3, 5],
+					[10, 4, 1],
+					[8, 5, 1],
 					[
-						[11, 1, squareThreadMid],
-						[2, 2, false],
+						12,
+						6,
+						[
+							[11, 1, squareThreadMid],
+							[2, 2, false],
+						],
 					],
 				],
 			],
-			"sendMessage",
+		];
+
+		return await this.direct_request(
+			tmp_req,
+			"sendSquareThreadMessage",
 			this.SquareService_PROTOCOL_TYPE,
 			true,
 			this.SquareService_API_PATH,
