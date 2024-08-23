@@ -80,7 +80,7 @@ function writeValue(output, ftype, fid, val) {
 			output.writeFieldBegin("", Thrift.Type.MAP, fid);
 			output.writeMapBegin(val[0], val[1], Thrift.objectLength(val[2]));
 			for (const kiter85 in val[2]) {
-				if (val[2].hasOwnProperty(kiter85)) {
+				if (Object.prototype.hasOwnProperty.call(val[2], kiter85)) {
 					const viter86 = val[2][kiter85];
 					writeValue_(output, val[0], kiter85);
 					writeValue_(output, val[1], viter86);
