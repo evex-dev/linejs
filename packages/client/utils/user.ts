@@ -1,4 +1,4 @@
-import type { Profile } from "./profile.ts";
+import type * as LINETypes from "../lib/thrift/line_types.ts";
 
 type UserType = "friend" | "other" | "me";
 
@@ -9,10 +9,10 @@ export type User<T extends UserType = UserType> = {
 	mid: string;
 	iconObsHash: string;
 	statusMessage: string;
-	statusMessageContentMetadata: Profile["statusMessageContentMetadata"];
+	statusMessageContentMetadata: LINETypes.Profile["statusMessageContentMetadata"];
 } & (T extends "me"
 	? {
-			profile: Profile;
+			profile: LINETypes.Profile;
 		}
 	: {
 			profile: undefined;
