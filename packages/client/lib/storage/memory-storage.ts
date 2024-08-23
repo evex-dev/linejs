@@ -1,9 +1,15 @@
 import { BaseStorage, type Storage } from "./base-storage.ts";
 
 /**
- * @description Mmemory Storage for LINE Client
+ * @lassdesc Mmemory Storage for LINE Client
+ * @constructor
  */
 export class MemoryStorage extends BaseStorage {
+	/**
+	 * Create a new MemoryStorage instance, with initial data.
+	 *
+	 * @param {Record<Storage["Key"], Storage["Value"]>} [extendData] - Initial data to be stored in the memory storage.
+	 */
 	constructor(extendData?: Record<Storage["Key"], Storage["Value"]>) {
 		super();
 		if (extendData) {

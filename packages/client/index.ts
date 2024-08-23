@@ -41,11 +41,17 @@ interface ClientOptions {
 }
 
 /**
- * @description LINE SelfBot Client
- *
- * @param {BaseStorage} [storge] Storage
+ * @classdesc LINE SelfBot Client
+ * @constructor
  */
 export class Client extends TypedEventEmitter<ClientEvents> {
+	/**
+	 * @description Create a new LINE SelfBot Client instance
+	 *
+	 * @param {ClientOptions} [options] Options for the client
+	 * @param {BaseStorage} [options.storage] Storage for the client
+	 * @param {string} [options.endpoint] Endpoint for the client
+	 */
 	constructor(options: ClientOptions = {}) {
 		super();
 		this.parser.def = Thrift;

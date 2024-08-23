@@ -4,7 +4,7 @@ export interface Storage {
 }
 
 /**
- * @description Base Storage for LINE Client
+ * @classdesc Base Storage for LINE Client
  */
 export abstract class BaseStorage {
 	/**

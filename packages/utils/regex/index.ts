@@ -4,7 +4,7 @@
  */
 
 /**
- * @description LINE Regex Utility
+ * @classdesc LINE Regex Utility
  */
 class LINE_REGEX_BASE {
 	/**

@@ -12,10 +12,15 @@ type LINE_SCHEME_PREFIX =
 	| ALL_STRING;
 
 /**
- * @description LINE Scheme Utility
- * @param {LINE_SCHEME_PREFIX} prefix scheme prefix (e.x. 'line://')
+ * @classdesc LINE Scheme Utility
+ * @constructor
  */
 class LINE_SCHEME_BASE {
+	/**
+	 * Create a new LINE Scheme instance, with prefix.
+	 *
+	 * @param {LINE_SCHEME_PREFIX} [prefix="line://"] the prefix of line scheme uri
+	 */
 	constructor(public prefix: LINE_SCHEME_PREFIX = "line://") {}
 
 	/**

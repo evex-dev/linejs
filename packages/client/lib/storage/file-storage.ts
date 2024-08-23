@@ -2,9 +2,16 @@ import * as fs from "node:fs";
 import { BaseStorage, type Storage } from "./base-storage.ts";
 
 /**
- * @description File Storage for LINE Client
+ * @classdesc File Storage for LINE Client
+ * @constructor
  */
 export class FileStorage extends BaseStorage {
+	/**
+	 * @description Construct a FileStorage with the given path and data.
+	 *
+	 * @param {string} path - The path to the file.
+	 * @param {string} [extendData] - The data to extend the file with. If the file does not exist, it will be created with the given data. If the file does exist, the data will be appended to the file. If no data is given, the file will be created with an empty object.
+	 */
 	constructor(
 		private path: string,
 		extendData?: string,

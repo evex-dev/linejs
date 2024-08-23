@@ -13,10 +13,15 @@ type LINE_OBS_PREFIX =
 	| ALL_STRING;
 
 /**
- * @description LINE Obs Utility
- * @param {LINE_OBS_PREFIX} [prefix="https://obs.line-apps.com/"] obs prefix (e.x. 'https://obs.line-apps.com/')
+ * @classdesc LINE Obs Utility
+ * @constructor
  */
 class LINE_OBS_BASE {
+	/**
+	 * Create a new LINE Scheme instance, with prefix.
+	 *
+	 * @param {LINE_OBS_PREFIX} [prefix="https://obs.line-apps.com/"] the prefix of line obs uri
+	 */
 	constructor(public prefix: LINE_OBS_PREFIX = "https://obs.line-apps.com/") {}
 
 	/**
