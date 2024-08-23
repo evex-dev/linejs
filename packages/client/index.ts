@@ -545,10 +545,12 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 	private LINEService_API_PATH = "/S4";
 	private LINEService_PROTOCOL_TYPE: ProtocolKey = 4;
+
+	private LiffService_API_PATH = "/LIFF1";
+	private LiffService_PROTOCOL_TYPE: ProtocolKey = 4;
+
 	private SquareService_API_PATH = "/SQ1";
 	private SquareService_PROTOCOL_TYPE: ProtocolKey = 4;
-	private SyncService_API_PATH = "/SYNC4";
-	private SyncService_PROTOCOL_TYPE: ProtocolKey = 4;
 
 	/**
 	 * @description Get the profile of the current user.
@@ -565,9 +567,21 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
+	// -- Liff --
+
+	// -- Channel --
+
+	// -- External --
+
+	// -- Talk --
+
+	// -- Group --
+
+	// -- Square --
+
 	public async getJoinedSquares(
 		limit = 100,
-		continuationToken: string,
+		continuationToken: string | undefined = undefined,
 	): Promise<ttype.GetJoinedSquaresResponse> {
 		return await this.request(
 			[
@@ -582,12 +596,12 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	}
 
 	public async inviteIntoSquareChat(
-		inviteeMids: string[],
 		squareChatMid: string,
+		targetMids: string[],
 	): Promise<ttype.InviteIntoSquareChatResponse> {
 		return await this.request(
 			[
-				[15, 1, [11, inviteeMids]],
+				[15, 1, [11, targetMids]],
 				[11, 2, squareChatMid],
 			],
 			"inviteIntoSquareChat",
@@ -599,13 +613,13 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 	public async inviteToSquare(
 		squareMid: string,
-		invitees: string[],
 		squareChatMid: string,
+		targetMids: string[],
 	): Promise<ttype.InviteToSquareResponse> {
 		return await this.request(
 			[
 				[11, 2, squareMid],
-				[15, 3, [11, invitees]],
+				[15, 3, [11, targetMids]],
 				[11, 4, squareChatMid],
 			],
 			"inviteToSquare",
