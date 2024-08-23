@@ -94,7 +94,7 @@ function writeValue(output, ftype, fid, val) {
 			output.writeFieldBegin("", Thrift.Type.LIST, fid);
 			output.writeListBegin(val[0], val[1].length);
 			for (const iter483 in val[1]) {
-				if (val[1].hasOwnProperty(iter483)) {
+				if (Object.prototype.hasOwnProperty.call(val[1], iter483)) {
 					writeValue_(output, val[0], val[1][iter483]);
 				}
 			}
