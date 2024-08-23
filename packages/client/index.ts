@@ -583,7 +583,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		limit: number = 100,
 		globalRev: number = 0,
 		individualRev: number = 0,
-	) {
+	):Promise<ttype.SyncResponse> {
 		return await this.request(
 			[
 				[10, 1, revision],
