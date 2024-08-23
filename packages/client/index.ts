@@ -1364,10 +1364,13 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async getFetchMyEventsNowSyncToken(): Promise<string> {
+	public async getFetchMyEventsCurrentSyncToken(): Promise<string> {
 		return (await this.manualRepair(1, undefined)).continuationToken;
 	}
 
+	/**
+	 * @experimental
+	 */
 	public async fetchSquareThreadEvents(
 		squareChatMid: string,
 		squareThreadMid: string,
