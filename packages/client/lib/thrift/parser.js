@@ -263,6 +263,7 @@ export default class ThriftRenameParser {
 					thisValue[0] = TYPE.STRUCT;
 				} else {
 					thisValue[0] = TYPE.I64;
+					thisValue[2] = `${EPYT[TYPE.I64]}(${finfo.struct}): ${value}`;
 				}
 			} else if (finfo.list) {
 				thisValue[0] = TYPE.LIST;
@@ -271,7 +272,7 @@ export default class ThriftRenameParser {
 				} else {
 					thisValue[2] = [
 						TYPE.STRUCT,
-						[this.get_cl(finfo.list),]
+						[this.get_cl(finfo.list)]
 					];
 				}
 			} else if (finfo.map) {
