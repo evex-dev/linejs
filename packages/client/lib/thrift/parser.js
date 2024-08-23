@@ -19,6 +19,17 @@ const TYPE = {
 	UTF8: 16,
 	UTF16: 17,
 };
+const EPYT = {
+	0:"stop",
+	1:"void",
+	2:"bool",
+	3:"byte",
+	4:"double",
+	6:"i16",
+	8:"i32",
+	10:"i64",
+	11:"string",
+};
 function getType(obj) {
 	if (obj.type === "BaseType") {
 		return TYPE[obj.baseType.toUpperCase()];
@@ -231,6 +242,60 @@ export default class ThriftRenameParser {
 			} else if (finfo.type) {
 				thisValue[0] = finfo.type;
 				thisValue[2] = value;
+			}
+			newThrift.push(thisValue);
+		}
+		return newThrift;
+	}
+
+	get_cl(struct_name) {
+		const newThrift = [];
+		const thisStruct = this.def[struct_name]
+		for (const i in thisStruct) {
+			const finfo = thisStruct[i];
+			const value = finfo.name
+			const thisValue = [null, finfo.fid, value];
+			if (finfo.struct) {
+				if (isStruct(this.def[finfo.struct])) {
+					thisValue[2] = this.get_cl(
+						finfo.struct,
+					);
+					thisValue[0] = TYPE.STRUCT;
+				} else {
+					thisValue[0] = TYPE.I64;
+				}
+			} else if (finfo.list) {
+				thisValue[0] = TYPE.LIST;
+				if (typeof finfo.list === "number") {
+					thisValue[2] = [finfo.list, [value]];
+				} else {
+					thisValue[2] = [
+						TYPE.STRUCT,
+						[this.get_cl(finfo.list),]
+					];
+				}
+			} else if (finfo.map) {
+				thisValue[0] = TYPE.MAP;
+				if (typeof finfo.map === "number") {
+					thisValue[2] = [TYPE.STRING, finfo.map, { key: value }];
+				} else {
+					const obj = {};
+					obj.key = this.get_cl(finfo.map);
+					thisValue[2] = [TYPE.STRING, TYPE.STRUCT, obj];
+				}
+			} else if (finfo.set) {
+				thisValue[0] = TYPE.SET;
+				if (typeof finfo.map === "number") {
+					thisValue[2] = [finfo.map, [value]];
+				} else {
+					thisValue[2] = [
+						TYPE.STRUCT,
+						[this.parse_data(finfo.map)],
+					];
+				}
+			} else if (finfo.type) {
+				thisValue[0] = finfo.type;
+				thisValue[2] = `${EPYT[finfo.type]}: ${value}`;
 			}
 			newThrift.push(thisValue);
 		}

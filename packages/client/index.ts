@@ -535,6 +535,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		return res;
 	}
 
+	public getArgHelper(name:string){
+		return this.parser.get_cl(name)
+	}
+
 	private LINEService_API_PATH = "/S4";
 	private LINEService_PROTOCOL_TYPE: ProtocolKey = 4;
 	private SquareService_API_PATH = "/SQ1";
@@ -1343,4 +1347,5 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			this.SquareService_API_PATH,
 		);
 	}
+
 }
