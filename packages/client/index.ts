@@ -552,6 +552,9 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	private SquareService_API_PATH = "/SQ1";
 	private SquareService_PROTOCOL_TYPE: ProtocolKey = 4;
 
+	private SyncService_API_PATH = "/SYNC4";
+	private SyncService_PROTOCOL_TYPE: ProtocolKey = 4;
+
 	/**
 	 * @description Get the profile of the current user.
 	 *
@@ -1367,6 +1370,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			this.SquareService_API_PATH,
 		);
 	}
+
 	private async sync(
 		revision: number,
 		limit: number = 100,
