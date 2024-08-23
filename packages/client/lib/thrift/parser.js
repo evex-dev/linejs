@@ -1,5 +1,3 @@
-//import thriftIdl from "./thrift-ast-parser.js";
-
 const TYPE = {
 	STOP: 0,
 	VOID: 1,
@@ -30,68 +28,21 @@ const EPYT = {
 	10:"i64",
 	11:"string",
 };
-function getType(obj) {
-	if (obj.type === "BaseType") {
-		return TYPE[obj.baseType.toUpperCase()];
-	} else if (obj.type === "Identifier") {
-		return obj.name;
-	}
-}
+
 function isStruct(obj) {
 	return obj && obj.constructor === Array;
 }
+
 export default class ThriftRenameParser {
 	constructor(input) {
 		this.def = {};
 		if (!input) {
 			return;
 		}
-		//this.add_def(input);
 	}
-	/*
-	add_def(input) {
-		const def = thriftIdl.parse(input);
-		const thrift_def = {};
-		def.definitions.forEach((e) => {
-			if (e.type === "Struct") {
-				const name = e.id.name;
-				const fields_def = [];
-				const fields = e.fields;
-				for (let i = 0; i < fields.length; i++) {
-					const field = fields[i];
-					const field_fid = field.id.value;
-					const field_name = field.name;
-					const field_def = { fid: field_fid, name: field_name };
-					if (field.valueType.type == "Identifier") {
-						field_def.struct = field.valueType.name;
-					} else if (field.valueType.type == "Map") {
-						field_def.map = getType(field.valueType.valueType);
-					} else if (field.valueType.type == "List") {
-						field_def.list = getType(field.valueType.valueType);
-					} else if (field.valueType.type == "Set") {
-						field_def.set = getType(field.valueType.valueType);
-					} else if (field.valueType.baseType) {
-						field_def.type = TYPE[field.valueType.baseType.toUpperCase()];
-					}
-					fields_def.push(field_def);
-				}
-				thrift_def[name] = fields_def;
-			} else if (e.type === "Enum") {
-				const name = e.id.name;
-				const defs_def = {};
-				const defs = e.definitions;
-				for (let i = 0; i < defs.length; i++) {
-					const def = defs[i];
-					defs_def[def.value.value] = def.id.name;
-				}
-				thrift_def[name] = defs_def;
-			}
-		});
-		this.def = { ...this.def, ...thrift_def };
-	}
-	*/
-	name2fid(struct_name, name) {
-		const struct = this.def[struct_name];
+
+	name2fid(structName, name) {
+		const struct = this.def[structName];
 		if (struct) {
 			const result = struct.findIndex((e) => {
 				return e.name == name;
@@ -105,8 +56,9 @@ export default class ThriftRenameParser {
 			return { name: name, fid: -1 };
 		}
 	}
-	fid2name(struct_name, fid) {
-		const struct = this.def[struct_name];
+	
+	fid2name(structName, fid) {
+		const struct = this.def[structName];
 		if (struct) {
 			const result = struct.findIndex((e) => {
 				return e.fid == fid;
@@ -120,11 +72,12 @@ export default class ThriftRenameParser {
 			return { name: fid, fid: fid };
 		}
 	}
-	rename_thrift(struct_name, object) {
+
+	rename_thrift(structName, object) {
 		const newObject = {};
 		for (const fid in object) {
 			const value = object[fid];
-			const finfo = this.fid2name(struct_name, fid);
+			const finfo = this.fid2name(structName, fid);
 			if (finfo.struct) {
 				if (isStruct(this.def[finfo.struct])) {
 					newObject[finfo.name] = this.rename_thrift(
@@ -166,19 +119,21 @@ export default class ThriftRenameParser {
 		}
 		return newObject;
 	}
+
 	rename_data(data) {
 		const name = data._info.fname;
 		const value = data.value;
-		const struct_name = name.substr(0, 1).toUpperCase() + name.substr(1) +
+		const structName = name.substr(0, 1).toUpperCase() + name.substr(1) +
 			"Response";
-		data.value = this.rename_thrift(struct_name, value);
+		data.value = this.rename_thrift(structName, value);
 		return data;
 	}
-	parse_data(struct_name, object) {
+
+	parse_data(structName, object) {
 		const newThrift = [];
 		for (const fname in object) {
 			const value = object[fname];
-			const finfo = this.name2fid(struct_name, fname);
+			const finfo = this.name2fid(structName, fname);
 			if (finfo.fid == -1) {
 				continue;
 			}
@@ -248,9 +203,9 @@ export default class ThriftRenameParser {
 		return newThrift;
 	}
 
-	get_cl(struct_name) {
+	get_cl(structName) {
 		const newThrift = [];
-		const thisStruct = this.def[struct_name]
+		const thisStruct = this.def[structName]
 		for (const i in thisStruct) {
 			const finfo = thisStruct[i];
 			const value = finfo.name

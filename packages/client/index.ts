@@ -535,7 +535,11 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		return res;
 	}
 
-	public getArgHelper(name: string) {
+	/**
+	 * Gets arugments of thrift
+	 * @experimental
+	 */
+	public getArgumentsHelper(name: string) {
 		return this.parser.get_cl(name);
 	}
 
@@ -1303,7 +1307,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		squareThreadMid: string,
 		text: string | undefined,
 		contentType: ttype.ContentType = 0,
-		contentMetadata: LooseType = {},
+		_contentMetadata: LooseType = {},
 		relatedMessageId: string | undefined = undefined,
 	): Promise<ttype.SendMessageResponse> {
 		const msg = [
