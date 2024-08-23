@@ -1271,22 +1271,16 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		subscriptionId = 0,
 		limit = 100,
 	): Promise<ttype.FetchSquareChatEventsResponse> {
-		return await this.direct_request(
+		return await this.request(
 			[
-				[
-					12,
-					1,
-					[
-						[10, 1, subscriptionId],
-						[11, 2, squareChatMid],
-						[11, 3, syncToken],
-						[8, 4, limit],
-						[8, 5, 1],
-						[8, 6, 1],
-						[11, 7, continuationToken],
-						[11, 9, squareThreadMid],
-					],
-				],
+				[10, 1, subscriptionId],
+				[11, 2, squareChatMid],
+				[11, 3, syncToken],
+				[8, 4, limit],
+				[8, 5, 1],
+				[8, 6, 1],
+				[11, 7, continuationToken],
+				[11, 9, squareThreadMid],
 			],
 			"fetchSquareChatEvents",
 			this.SquareService_PROTOCOL_TYPE,
