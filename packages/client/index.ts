@@ -1381,9 +1381,9 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 				[10, 4, individualRev],
 			],
 			"sync",
-			this.SyncService_PROTOCOL_TYPE,
+			4,
 			"SyncResponse",
-			this.SyncService_API_PATH,
+			"/SYNC4",
 		);
 	}
 }
