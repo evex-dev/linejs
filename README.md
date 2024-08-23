@@ -71,7 +71,8 @@ await client.login({
 ## ToDo
 
 - [x] Migrate Client to [packages](./packages) from [archive](./archive)
-- [ ] Migrate Method to [packages](./packages) from [archive](./archive)
+- [x] Migrate Method to [packages](./packages) from [archive](./archive)
+- [ ] Support E2EE (Group Chat)
 - [x] Create Utils for LINE
   - [x] Add [LINE Scheme](./packages/utils/line-scheme/index.ts)
   - [x] Create REGEX for LINE URI
