@@ -556,9 +556,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	// -- LINE --
 
 	/**
-	 * @description Get the profile of the current user.
-	 *
-	 * @returns {Promise<LINETypes.Profile>} The profile of the user.
+	 * @description Gets the profile of the current user.
 	 */
 	public async getProfile(): Promise<LINETypes.Profile> {
 		return await this.request(
@@ -696,14 +694,16 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async markAsRead(
+	public async markAsReadInSquare(
 		squareChatMid: string,
-		messageId: string,
+		squareMessageId: string,
+		squareThreadMid: string | undefined = undefined,
 	): Promise<LINETypes.MarkAsReadResponse> {
 		return await this.request(
 			[
 				[11, 2, squareChatMid],
-				[11, 4, messageId],
+				[11, 4, squareMessageId],
+				squareThreadMid && [11, 5, squareThreadMid],
 			],
 			"markAsRead",
 			this.SquareService_PROTOCOL_TYPE,
@@ -714,15 +714,17 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 	public async reactToMessage(
 		squareChatMid: string,
-		messageId: string,
 		reactionType: LINETypes.MessageReactionType = 2,
+		squareMessageId: string,
+		squareThreadMid: string | undefined = undefined,
 	): Promise<LINETypes.ReactToMessageResponse> {
 		return await this.request(
 			[
 				[8, 1, 0],
 				[11, 2, squareChatMid],
-				[11, 3, messageId],
+				[11, 3, squareMessageId],
 				[8, 4, reactionType],
+				squareThreadMid && [11, 5, squareThreadMid],
 			],
 			"reactToMessage",
 			this.SquareService_PROTOCOL_TYPE,
@@ -769,6 +771,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		syncToken: string | undefined = undefined,
 		continuationToken: string | undefined = undefined,
 		subscriptionId: number = 0,
+		squareThreadMid: string | undefined = undefined,
 	): Promise<LINETypes.FetchSquareChatEventsResponse> {
 		return await this.request(
 			[
@@ -780,6 +783,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 				[8, 6, 1],
 				[11, 7, continuationToken],
 				[8, 8, 1],
+				[11, 9, squareThreadMid],
 			],
 			"fetchSquareChatEvents",
 			this.SquareService_PROTOCOL_TYPE,
@@ -998,12 +1002,12 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 	public async unsendSquareMessage(
 		squareChatMid: string,
-		messageId: string,
+		squareMessageId: string,
 	): Promise<LINETypes.UnsendMessageResponse> {
 		return await this.request(
 			[
 				[11, 2, squareChatMid],
-				[11, 3, messageId],
+				[11, 3, squareMessageId],
 			],
 			"unsendMessage",
 			this.SquareService_PROTOCOL_TYPE,
@@ -1196,7 +1200,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 	public async createSquareChatAnnouncement(
 		squareChatMid: string,
-		messageId: string,
+		squareMessageId: string,
 		text: string,
 		senderSquareMemberMid: string,
 		createdAt: number,
@@ -1219,7 +1223,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 									12,
 									1,
 									[
-										[11, 1, messageId],
+										[11, 1, squareMessageId],
 										[11, 2, text],
 										[11, 3, senderSquareMemberMid],
 										[10, 4, createdAt],
@@ -1346,10 +1350,56 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async sendSquareRequestByName(
+	public async reportSquareMessage(
+		squareMid: string,
+		squareChatMid: string,
+		squareMessageId: string,
+		reportType: LINETypes.ReportType,
+		otherReason: string | undefined = undefined,
+		threadMid: string | undefined = undefined,
+	): Promise<LINETypes.ReportSquareMessageResponse> {
+		return await this.request(
+			[
+				[11, 2, squareMid],
+				[11, 3, squareChatMid],
+				[11, 4, squareMessageId],
+				[8, 5, reportType],
+				otherReason && [11, 6, otherReason],
+				threadMid && [11, 7, threadMid],
+			],
+			"reportSquareMessage",
+			this.SquareService_PROTOCOL_TYPE,
+			true,
+			this.SquareService_API_PATH,
+		);
+	}
+
+	public async reportSquareMember(
+		squareMemberMid: string,
+		reportType: LINETypes.ReportType,
+		otherReason: string | undefined = undefined,
+		squareChatMid: string | undefined = undefined,
+		threadMid: string | undefined = undefined,
+	) {
+		return await this.request(
+			[
+				[11, 2, squareMemberMid],
+				[8, 3, reportType],
+				otherReason && [11, 4, otherReason],
+				squareChatMid && [11, 5, squareChatMid],
+				threadMid && [11, 6, threadMid],
+			],
+			"reportSquareMessage",
+			this.SquareService_PROTOCOL_TYPE,
+			true,
+			this.SquareService_API_PATH,
+		);
+	}
+
+	public async sendSquareRequest(
 		methodName: string,
 		params: NestedArray,
-	): Promise<Map<string, LooseType>> {
+	): Promise<LooseType> {
 		return await this.request(
 			params,
 			methodName,
@@ -1414,7 +1464,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		if (relatedMessageId) {
 			msg.push([11, 21, relatedMessageId], [8, 22, 3], [8, 24, 2]);
 		}
-		const tmp_req = [
+		const params = [
 			12,
 			1,
 			[
@@ -1436,7 +1486,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		];
 
 		return await this.direct_request(
-			tmp_req,
+			params,
 			"sendSquareThreadMessage",
 			this.SquareService_PROTOCOL_TYPE,
 			true,
