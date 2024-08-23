@@ -240,10 +240,11 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		}
 
 		const rsaKey = await this.getRSAKeyInfo();
-		const { keynm } = rsaKey;
+		const { keynm, sessionKey } = rsaKey;
+
 		const message =
-			String.fromCharCode(rsaKey.sessionKey.length) +
-			rsaKey.sessionKey +
+			String.fromCharCode(sessionKey.length) +
+			sessionKey +
 			String.fromCharCode(email.length) +
 			email +
 			String.fromCharCode(password.length) +
