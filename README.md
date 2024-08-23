@@ -78,7 +78,7 @@ await client.login({
 - [x] Migrate Method to [packages](./packages) from [archive](./archive)
 - [ ] Support E2EE (Group Chat)
 - [ ] Add JSDoc for All Method (Only @description)
-- [ ] Support Object Argument
+- [ ] Support Object Arguments
 - [x] Update to latest thrift version
 - [ ] Receive message event
 - [x] Create Utils for LINE
