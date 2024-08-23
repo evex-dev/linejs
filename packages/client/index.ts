@@ -32,6 +32,7 @@ import { getRSACrypto } from "./lib/rsa/rsa-verify.ts";
 import * as fs from "node:fs/promises";
 import { MemoryStorage } from "./lib/storage/memory-storage.ts";
 import type { BaseStorage } from "./lib/storage/base-storage.ts";
+import type { LogType } from "./method/log.ts";
 
 interface ClientOptions {
 	storage?: BaseStorage;
@@ -76,6 +77,19 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	public metadata: Metadata | undefined;
 
 	/**
+	 * @description Emit log event
+	 *
+	 * @param {LooseType} data Log data
+	 * @emits log
+	 */
+	public log(type: LogType, data: LooseType) {
+		this.emit("log", {
+			type,
+			data,
+		});
+	}
+
+	/**
 	 * @description Login to LINE server with auth token or email/password
 	 *
 	 * @param {LoginOptions} options Options for login
@@ -87,10 +101,6 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 * @emits ready
 	 * @emits update:authtoken
 	 */
-	public log(data: LooseType) {
-		this.emit("log", data, new Date());
-	}
-
 	public async login(options: LoginOptions): Promise<void> {
 		if (options.authToken) {
 			if (!AUTH_TOKEN_REGEX.test(options.authToken)) {
@@ -228,7 +238,11 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		password: string,
 		enableE2EE: boolean = false,
 	): Promise<string> {
-		this.log(`requestEmailLogin: ${email} / ${"*".repeat(password.length)}`);
+		this.log("login", {
+			method: "email",
+			email,
+			password,
+		});
 		if (!this.system) {
 			throw new InternalError(
 				"Not setup yet",
@@ -481,21 +495,19 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 		let res;
 		try {
-			this.log(
-				`Thrift: name = ${methodName}, protocol = ${protocolType}\n${
-					JSON.stringify(value, null, 2)
-				}`,
-			);
 			const Trequest = writeThrift(value, methodName, Protocol);
-			this.log(
-				`${overrideMethod}: ${this.endpoint + path}`,
-			);
-			this.log(
-				`data: ${[...Trequest].map((e) => e.toString(16)).join("")}`,
-			);
-			this.log(
-				`headers: ${JSON.stringify(headers, null, 2)}`,
-			);
+
+			this.log("request", {
+				method: "thrift",
+				thriftMethodName: methodName,
+				httpMethod: overrideMethod,
+				protocolType,
+				value,
+				requestPath: path,
+				data: Trequest,
+				headers,
+			});
+
 			const response = await fetch(this.endpoint + path, {
 				method: overrideMethod,
 				headers,
@@ -510,23 +522,22 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 				this.emit("update:authtoken", this.metadata.authToken);
 			}
-			this.log(
-				`response: ${response.status} ${response.statusText}`,
-			);
 			const body = await response.arrayBuffer();
 			const parsedBody = new Uint8Array(body);
-			this.log(
-				`resdata: ${[...parsedBody].map((e) => e.toString(16)).join("")}`,
-			);
+
 			res = readThrift(parsedBody, Protocol);
 			if (parse === true) {
 				this.parser.rename_data(res);
 			} else if (typeof parse === "string") {
 				res.value = this.parser.rename_thrift(parse, res.value);
 			}
-			this.log(
-				`res: ${JSON.stringify(res, null, 2)}`,
-			);
+
+			this.log("response", {
+				method: "thrift",
+				response,
+				data: parsedBody,
+				parsedData: res,
+			});
 		} catch (error) {
 			throw new InternalError(
 				"Request external failed",
@@ -1129,8 +1140,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		const UPDATE_ATTRS = [5];
 		const MEMBERSHIP_STATE = 5;
 		const getSquareMemberResp = await this.getSquareMember(squareMemberMid);
-		const squareMember = getSquareMemberResp[1];
-		const squareMemberRevision = squareMember[9];
+		const squareMember = getSquareMemberResp.squareMember;
+		const squareMemberRevision = squareMember.revision;
 		return await this.updateSquareMember(
 			squareMemberMid,
 			squareMid,
@@ -1330,7 +1341,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	public async sendSquareRequestByName(
 		METHOD_NAME: string,
 		params: NestedArray,
-	): Promise<Map<string, any>> {
+	): Promise<Map<string, LooseType>> {
 		return await this.request(
 			params,
 			METHOD_NAME,
@@ -1339,6 +1350,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			this.SquareService_API_PATH,
 		);
 	}
+
 	public async getFetchMyEventsNowSyncToken(): Promise<string> {
 		return (await this.manualRepair(undefined, 1)).continuationToken;
 	}
