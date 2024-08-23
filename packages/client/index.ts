@@ -26,10 +26,9 @@ import {
 } from "./lib/thrift/declares.ts";
 import { writeThrift } from "./lib/thrift/write.js";
 import { readThrift } from "./lib/thrift/read.js";
-import type { RSAKeyInfo } from "./lib/rsa/rsa-key.ts";
+import type * as ttype from "./lib/thrift/line__types.ts";
 import type { LooseType } from "./utils/common.ts";
-import { RSAPincodeVerifier } from "./lib/rsa/rsa-verify.ts";
-import type { Profile } from "./utils/profile.ts";
+import { getRSACrypto } from "./lib/rsa/rsa-verify.ts";
 import * as fs from "node:fs/promises";
 import { MemoryStorage } from "./lib/storage/memory-storage.ts";
 import type { BaseStorage } from "./lib/storage/base-storage.ts";
@@ -248,8 +247,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			throw new InternalError("Not supported login type", "'e2ee'");
 		}
 
-		const encryptedMessage =
-			new RSAPincodeVerifier(message).getRSACrypto(rsaKey).credentials;
+		const encryptedMessage = getRSACrypto(message, rsaKey).credentials;
 
 		const cert = await this.getCert() || undefined;
 
@@ -308,7 +306,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		secret: string | undefined,
 		cert: string | undefined,
 		calledName = "loginV2",
-	) {
+	): Promise<any /*ttype.LoginResult*/> {
 		let loginType = 2;
 		if (!secret) loginType = 0;
 		if (verifier) {
@@ -346,10 +344,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 * @description Get RSA key info for login.
 	 *
 	 * @param {number} [provider=0] Provider to get RSA key info from.
-	 * @returns {Promise<RSAKeyInfo>} RSA key info.
+	 * @returns {Promise<ttype.RSAKey>} RSA key info.
 	 * @throws {FetchError} If failed to fetch RSA key info.
 	 */
-	public async getRSAKeyInfo(provider = 0): Promise<RSAKeyInfo> {
+	public async getRSAKeyInfo(provider = 0): Promise<ttype.RSAKey> {
 		return await this.request(
 			[
 				[8, 2, provider],
@@ -524,9 +522,9 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Get the profile of the current user.
 	 *
-	 * @returns {Promise<Profile>} The profile of the user.
+	 * @returns {Promise<ttype.Profile>} The profile of the user.
 	 */
-	public async getProfile(): Promise<Profile> {
+	public async getProfile(): Promise<ttype.Profile> {
 		return await this.request(
 			[],
 			"getProfile",
@@ -1074,7 +1072,11 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async kickOutSquareMember(squareMid: string, squareMemberMid: string, allowRejoin = true) {
+	public async kickOutSquareMember(
+		squareMid: string,
+		squareMemberMid: string,
+		allowRejoin = true,
+	) {
 		const UPDATE_PREF_ATTRS: number[] = [];
 		const UPDATE_ATTRS = [5];
 		const MEMBERSHIP_STATE = 5;
