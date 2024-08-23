@@ -55,9 +55,9 @@ class LINE_OBS_BASE {
 		squareMemberId: string,
 		isPreview = false,
 	): string {
-		return (
-			`${this.prefix}r/g2/member/${squareMemberId}${isPreview ? "/preview" : ""}`
-		);
+		return `${this.prefix}r/g2/member/${squareMemberId}${
+			isPreview ? "/preview" : ""
+		}`;
 	}
 }
 

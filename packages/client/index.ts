@@ -276,34 +276,34 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			}
 			return response.authToken;
 		}
-			this.emit("pincall", response.pinCode);
-			const headers = {
-				Host: this.endpoint,
-				accept: "application/x-thrift",
-				"user-agent": this.system.userAgent,
-				"x-line-application": this.system.type,
-				"x-line-access": response.verifier,
-				"x-lal": "ja_JP",
-				"x-lpv": "1",
-				"x-lhm": "GET",
-				"accept-encoding": "gzip",
-			};
-			const verifier = await fetch(`https://${this.endpoint}/Q`, {
-				headers: headers,
-			}).then((res) => res.json());
-			const loginReponse = await this.requestLoginV2(
-				keynm,
-				encryptedMessage,
-				this.system.device,
-				verifier.result.verifier,
-				e2eeData,
-				undefined,
-				"loginZ",
-			);
-			if (loginReponse.certificate) {
-				this.emit("update:cert", loginReponse.certificate);
-			}
-			return loginReponse.authToken;
+		this.emit("pincall", response.pinCode);
+		const headers = {
+			Host: this.endpoint,
+			accept: "application/x-thrift",
+			"user-agent": this.system.userAgent,
+			"x-line-application": this.system.type,
+			"x-line-access": response.verifier,
+			"x-lal": "ja_JP",
+			"x-lpv": "1",
+			"x-lhm": "GET",
+			"accept-encoding": "gzip",
+		};
+		const verifier = await fetch(`https://${this.endpoint}/Q`, {
+			headers: headers,
+		}).then((res) => res.json());
+		const loginReponse = await this.requestLoginV2(
+			keynm,
+			encryptedMessage,
+			this.system.device,
+			verifier.result.verifier,
+			e2eeData,
+			undefined,
+			"loginZ",
+		);
+		if (loginReponse.certificate) {
+			this.emit("update:cert", loginReponse.certificate);
+		}
+		return loginReponse.authToken;
 	}
 
 	private async requestLoginV2(
@@ -1261,5 +1261,37 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 	public async getFetchMyEventsNowSyncToken(): Promise<string> {
 		return (await this.manualRepair(undefined, 1)).continuationToken;
+	}
+
+	public async fetchSquareThreadEvents(
+		squareChatMid: string,
+		squareThreadMid: string,
+		syncToken: string | undefined = undefined,
+		continuationToken: string | undefined = undefined,
+		subscriptionId = 0,
+		limit = 100,
+	): Promise<LooseType> {
+		return await this.direct_request(
+			[
+				[
+					12,
+					1,
+					[
+						[10, 1, subscriptionId],
+						[11, 2, squareChatMid],
+						[11, 3, syncToken],
+						[8, 4, limit],
+						[8, 5, 1],
+						[8, 6, 1],
+						[11, 7, continuationToken],
+						[11, 9, squareThreadMid],
+					],
+				],
+			],
+			"fetchSquareChatEvents",
+			this.SquareService_PROTOCOL_TYPE,
+			true,
+			this.SquareService_API_PATH,
+		);
 	}
 }

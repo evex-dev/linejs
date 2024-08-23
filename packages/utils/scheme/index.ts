@@ -37,7 +37,7 @@ class LINE_SCHEME_BASE {
 		if (useNv) {
 			return `${this.prefix}nv/profile`;
 		}
-			return `${this.prefix}profile`;
+		return `${this.prefix}profile`;
 	}
 
 	/**
@@ -374,7 +374,7 @@ class LINE_SCHEME_BASE {
 		if (useSettings) {
 			return `${this.prefix}nv/settings/privacy`;
 		}
-			return `${this.prefix}nv/privacy`;
+		return `${this.prefix}nv/privacy`;
 	}
 
 	/**
@@ -386,7 +386,7 @@ class LINE_SCHEME_BASE {
 		if (useSettings) {
 			return `${this.prefix}nv/settings/account`;
 		}
-			return `${this.prefix}nv/account`;
+		return `${this.prefix}nv/account`;
 	}
 
 	/**
@@ -398,7 +398,7 @@ class LINE_SCHEME_BASE {
 		if (useSettings) {
 			return `${this.prefix}nv/settings/sticker`;
 		}
-			return `${this.prefix}nv/stickerSettings`;
+		return `${this.prefix}nv/stickerSettings`;
 	}
 
 	/**
@@ -410,7 +410,7 @@ class LINE_SCHEME_BASE {
 		if (useSettings) {
 			return `${this.prefix}nv/settings/chatSettings`;
 		}
-			return `${this.prefix}nv/chatVoiceCallSettings`;
+		return `${this.prefix}nv/chatVoiceCallSettings`;
 	}
 
 	/**
@@ -422,7 +422,7 @@ class LINE_SCHEME_BASE {
 		if (useSettings) {
 			return `${this.prefix}nv/settings/addressBookSync`;
 		}
-			return `${this.prefix}nv/friendsSettings`;
+		return `${this.prefix}nv/friendsSettings`;
 	}
 
 	/**
@@ -434,7 +434,7 @@ class LINE_SCHEME_BASE {
 		if (useSettings) {
 			return `${this.prefix}nv/settings/timelineSettings`;
 		}
-			return `${this.prefix}nv/timelineSettings`;
+		return `${this.prefix}nv/timelineSettings`;
 	}
 
 	/**
@@ -519,7 +519,7 @@ class LINE_SCHEME_BASE {
 		if (useLiff) {
 			return `https://liff.line.me/${id}${urlParam}`;
 		}
-			return `${this.prefix}app/${id}${urlParam}`;
+		return `${this.prefix}app/${id}${urlParam}`;
 	}
 
 	/**
@@ -759,7 +759,7 @@ class LINE_SCHEME_BASE {
 		if (isTicket) {
 			return `${this.prefix}square/report?ticket=${ticketOrEmid}`;
 		}
-			return `${this.prefix}square/report?emid=${ticketOrEmid}`;
+		return `${this.prefix}square/report?emid=${ticketOrEmid}`;
 	}
 
 	/**
@@ -773,7 +773,7 @@ class LINE_SCHEME_BASE {
 		if (isTicket) {
 			return `${this.prefix}square/join?ticket=${ticketOrEmid}`;
 		}
-			return `${this.prefix}square/join?emid=${ticketOrEmid}`;
+		return `${this.prefix}square/join?emid=${ticketOrEmid}`;
 	}
 
 	/**
@@ -794,9 +794,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the square note post page
 	 */
 	public getSquareNotePost(squareMid: string, postId: string): string {
-		return (
-			`${this.prefix}square/post?squareMid=${squareMid}&postId=${postId}&sourceType=TALKROOM_HOME`
-		);
+		return `${this.prefix}square/post?squareMid=${squareMid}&postId=${postId}&sourceType=TALKROOM_HOME`;
 	}
 
 	/**
@@ -850,7 +848,7 @@ class LINE_SCHEME_BASE {
 		if (useShare) {
 			return `${this.prefix}share?text=${encodeURIComponent(text)}`;
 		}
-			return `${this.prefix}msg/text/${encodeURIComponent(text)}`;
+		return `${this.prefix}msg/text/${encodeURIComponent(text)}`;
 	}
 
 	/**
@@ -912,9 +910,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the oa post page
 	 */
 	public getOaPost(oaIdWithoutAT: string, postId: string): string {
-		return (
-			`${this.prefix}home/public/post?id=${oaIdWithoutAT}&postId=${postId}`
-		);
+		return `${this.prefix}home/public/post?id=${oaIdWithoutAT}&postId=${postId}`;
 	}
 
 	/**
@@ -935,9 +931,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the group post page
 	 */
 	public getGroupPost(groupId: string, postId: string): string {
-		return (
-			`${this.prefix}group/home/posts/post?homeId=${groupId}&postId=${postId}`
-		);
+		return `${this.prefix}group/home/posts/post?homeId=${groupId}&postId=${postId}`;
 	}
 
 	/**
@@ -948,9 +942,7 @@ class LINE_SCHEME_BASE {
 	 * @returns {string} The URL for the group album page
 	 */
 	public getGroupAlbum(albumId: string, groupId: string): string {
-		return (
-			`${this.prefix}group/home/albums/album?albumId=${albumId}&homeId=${groupId}&albumIdV2=${albumId}`
-		);
+		return `${this.prefix}group/home/albums/album?albumId=${albumId}&homeId=${groupId}&albumIdV2=${albumId}`;
 	}
 }
 
