@@ -508,6 +508,13 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		return res;
 	}
 
+	/**
+	 * Get HTTP headers for a request.
+	 * @param {string | undefined} [lineAccessToken] The auth token to use in the `x-line-access` header.
+	 * @param {string} [overrideMethod="POST"] The HTTP method to use in the `x-lhm` header.
+	 * @returns {Record<string, string>} An object with the headers as key-value pairs.
+	 * @throws {InternalError} If the client has not been setup yet.
+	 */
 	public getHeader(
 		lineAccessToken: string | undefined,
 		overrideMethod = "POST",
@@ -536,7 +543,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	}
 
 	/**
-	 * Gets arugments of thrift
+	 * @description Gets arugments of thrift
 	 * @experimental
 	 */
 	public getArgumentsHelper(structName: string): LooseType[][] {
