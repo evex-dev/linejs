@@ -4217,8 +4217,7 @@ export declare class SquareEventPayload {
 	notifiedLeaveSquareChat: SquareEventNotifiedLeaveSquareChat;
 	notifiedDestroyMessage: SquareEventNotifiedDestroyMessage;
 	notifiedMarkAsRead: SquareEventNotifiedMarkAsRead;
-	notifiedUpdateSquareMemberProfile:
-		SquareEventNotifiedUpdateSquareMemberProfile;
+	notifiedUpdateSquareMemberProfile: SquareEventNotifiedUpdateSquareMemberProfile;
 	notifiedUpdateSquare: SquareEventNotifiedUpdateSquare;
 	notifiedUpdateSquareMember: SquareEventNotifiedUpdateSquareMember;
 	notifiedUpdateSquareChat: SquareEventNotifiedUpdateSquareChat;
@@ -4228,8 +4227,7 @@ export declare class SquareEventPayload {
 	notifiedUpdateSquareChatStatus: SquareEventNotifiedUpdateSquareChatStatus;
 	notifiedCreateSquareMember: SquareEventNotifiedCreateSquareMember;
 	notifiedCreateSquareChatMember: SquareEventNotifiedCreateSquareChatMember;
-	notifiedUpdateSquareMemberRelation:
-		SquareEventNotifiedUpdateSquareMemberRelation;
+	notifiedUpdateSquareMemberRelation: SquareEventNotifiedUpdateSquareMemberRelation;
 	notifiedShutdownSquare: SquareEventNotifiedShutdownSquare;
 	notifiedKickoutFromSquare: SquareEventNotifiedKickoutFromSquare;
 	notifiedDeleteSquareChat: SquareEventNotifiedDeleteSquareChat;
@@ -4242,18 +4240,14 @@ export declare class SquareEventPayload {
 	notificationSquareDelete: SquareEventNotificationSquareDelete;
 	notificationSquareChatDelete: SquareEventNotificationSquareChatDelete;
 	notificationMessage: SquareEventNotificationMessage;
-	notifiedUpdateSquareChatProfileName:
-		SquareEventNotifiedUpdateSquareChatProfileName;
-	notifiedUpdateSquareChatProfileImage:
-		SquareEventNotifiedUpdateSquareChatProfileImage;
+	notifiedUpdateSquareChatProfileName: SquareEventNotifiedUpdateSquareChatProfileName;
+	notifiedUpdateSquareChatProfileImage: SquareEventNotifiedUpdateSquareChatProfileImage;
 	notifiedUpdateSquareFeatureSet: SquareEventNotifiedUpdateSquareFeatureSet;
 	notifiedAddBot: SquareEventNotifiedAddBot;
 	notifiedRemoveBot: SquareEventNotifiedRemoveBot;
 	notifiedUpdateSquareNoteStatus: SquareEventNotifiedUpdateSquareNoteStatus;
-	notifiedUpdateSquareChatAnnouncement:
-		SquareEventNotifiedUpdateSquareChatAnnouncement;
-	notifiedUpdateSquareChatMaxMemberCount:
-		SquareEventNotifiedUpdateSquareChatMaxMemberCount;
+	notifiedUpdateSquareChatAnnouncement: SquareEventNotifiedUpdateSquareChatAnnouncement;
+	notifiedUpdateSquareChatMaxMemberCount: SquareEventNotifiedUpdateSquareChatMaxMemberCount;
 	notificationPostAnnouncement: SquareEventNotificationPostAnnouncement;
 	notificationPost: SquareEventNotificationPost;
 	mutateMessage: SquareEventMutateMessage;
@@ -4263,8 +4257,7 @@ export declare class SquareEventPayload {
 	notificationMessageReaction: SquareEventNotificationMessageReaction;
 	chatPopup: SquareEventChatPopup;
 	notifiedSystemMessage: SquareEventNotifiedSystemMessage;
-	notifiedUpdateSquareChatFeatureSet:
-		SquareEventNotifiedUpdateSquareChatFeatureSet;
+	notifiedUpdateSquareChatFeatureSet: SquareEventNotifiedUpdateSquareChatFeatureSet;
 
 	constructor(args?: {
 		receiveMessage: SquareEventReceiveMessage;
@@ -4274,8 +4267,7 @@ export declare class SquareEventPayload {
 		notifiedLeaveSquareChat: SquareEventNotifiedLeaveSquareChat;
 		notifiedDestroyMessage: SquareEventNotifiedDestroyMessage;
 		notifiedMarkAsRead: SquareEventNotifiedMarkAsRead;
-		notifiedUpdateSquareMemberProfile:
-			SquareEventNotifiedUpdateSquareMemberProfile;
+		notifiedUpdateSquareMemberProfile: SquareEventNotifiedUpdateSquareMemberProfile;
 		notifiedUpdateSquare: SquareEventNotifiedUpdateSquare;
 		notifiedUpdateSquareMember: SquareEventNotifiedUpdateSquareMember;
 		notifiedUpdateSquareChat: SquareEventNotifiedUpdateSquareChat;
@@ -4285,8 +4277,7 @@ export declare class SquareEventPayload {
 		notifiedUpdateSquareChatStatus: SquareEventNotifiedUpdateSquareChatStatus;
 		notifiedCreateSquareMember: SquareEventNotifiedCreateSquareMember;
 		notifiedCreateSquareChatMember: SquareEventNotifiedCreateSquareChatMember;
-		notifiedUpdateSquareMemberRelation:
-			SquareEventNotifiedUpdateSquareMemberRelation;
+		notifiedUpdateSquareMemberRelation: SquareEventNotifiedUpdateSquareMemberRelation;
 		notifiedShutdownSquare: SquareEventNotifiedShutdownSquare;
 		notifiedKickoutFromSquare: SquareEventNotifiedKickoutFromSquare;
 		notifiedDeleteSquareChat: SquareEventNotifiedDeleteSquareChat;
@@ -4299,18 +4290,14 @@ export declare class SquareEventPayload {
 		notificationSquareDelete: SquareEventNotificationSquareDelete;
 		notificationSquareChatDelete: SquareEventNotificationSquareChatDelete;
 		notificationMessage: SquareEventNotificationMessage;
-		notifiedUpdateSquareChatProfileName:
-			SquareEventNotifiedUpdateSquareChatProfileName;
-		notifiedUpdateSquareChatProfileImage:
-			SquareEventNotifiedUpdateSquareChatProfileImage;
+		notifiedUpdateSquareChatProfileName: SquareEventNotifiedUpdateSquareChatProfileName;
+		notifiedUpdateSquareChatProfileImage: SquareEventNotifiedUpdateSquareChatProfileImage;
 		notifiedUpdateSquareFeatureSet: SquareEventNotifiedUpdateSquareFeatureSet;
 		notifiedAddBot: SquareEventNotifiedAddBot;
 		notifiedRemoveBot: SquareEventNotifiedRemoveBot;
 		notifiedUpdateSquareNoteStatus: SquareEventNotifiedUpdateSquareNoteStatus;
-		notifiedUpdateSquareChatAnnouncement:
-			SquareEventNotifiedUpdateSquareChatAnnouncement;
-		notifiedUpdateSquareChatMaxMemberCount:
-			SquareEventNotifiedUpdateSquareChatMaxMemberCount;
+		notifiedUpdateSquareChatAnnouncement: SquareEventNotifiedUpdateSquareChatAnnouncement;
+		notifiedUpdateSquareChatMaxMemberCount: SquareEventNotifiedUpdateSquareChatMaxMemberCount;
 		notificationPostAnnouncement: SquareEventNotificationPostAnnouncement;
 		notificationPost: SquareEventNotificationPost;
 		mutateMessage: SquareEventMutateMessage;
@@ -4320,8 +4307,7 @@ export declare class SquareEventPayload {
 		notificationMessageReaction: SquareEventNotificationMessageReaction;
 		chatPopup: SquareEventChatPopup;
 		notifiedSystemMessage: SquareEventNotifiedSystemMessage;
-		notifiedUpdateSquareChatFeatureSet:
-			SquareEventNotifiedUpdateSquareChatFeatureSet;
+		notifiedUpdateSquareChatFeatureSet: SquareEventNotifiedUpdateSquareChatFeatureSet;
 	});
 }
 
@@ -4701,23 +4687,17 @@ export declare class LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak {
 
 export declare class LiveTalkEventPayload {
 	notifiedUpdateLiveTalkTitle: LiveTalkEventNotifiedUpdateLiveTalkTitle;
-	notifiedUpdateLiveTalkSpeakerSetting:
-		LiveTalkEventNotifiedUpdateLiveTalkSpeakerSetting;
-	notifiedUpdateLiveTalkAnnouncement:
-		LiveTalkEventNotifiedUpdateLiveTalkAnnouncement;
+	notifiedUpdateLiveTalkSpeakerSetting: LiveTalkEventNotifiedUpdateLiveTalkSpeakerSetting;
+	notifiedUpdateLiveTalkAnnouncement: LiveTalkEventNotifiedUpdateLiveTalkAnnouncement;
 	notifiedUpdateSquareMemberRole: LiveTalkEventNotifiedUpdateSquareMemberRole;
-	notifiedUpdateLiveTalkAllowRequestToSpeak:
-		LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak;
+	notifiedUpdateLiveTalkAllowRequestToSpeak: LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak;
 
 	constructor(args?: {
 		notifiedUpdateLiveTalkTitle: LiveTalkEventNotifiedUpdateLiveTalkTitle;
-		notifiedUpdateLiveTalkSpeakerSetting:
-			LiveTalkEventNotifiedUpdateLiveTalkSpeakerSetting;
-		notifiedUpdateLiveTalkAnnouncement:
-			LiveTalkEventNotifiedUpdateLiveTalkAnnouncement;
+		notifiedUpdateLiveTalkSpeakerSetting: LiveTalkEventNotifiedUpdateLiveTalkSpeakerSetting;
+		notifiedUpdateLiveTalkAnnouncement: LiveTalkEventNotifiedUpdateLiveTalkAnnouncement;
 		notifiedUpdateSquareMemberRole: LiveTalkEventNotifiedUpdateSquareMemberRole;
-		notifiedUpdateLiveTalkAllowRequestToSpeak:
-			LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak;
+		notifiedUpdateLiveTalkAllowRequestToSpeak: LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak;
 	});
 }
 
