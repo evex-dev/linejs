@@ -1,7 +1,7 @@
 archive (list)
 
 ```ts
-    // -- Liff --
+	// -- Liff --
 	public async issueLiffView(
 		chatMid: string,
 		liffId: string,
@@ -877,52 +877,41 @@ archive (list)
 	/**
 	 * @experimental
 	 */
-	public async sendSquareThreadMessage(
+	
+	public async function sendSquareThreadMessage(
 		squareThreadMid: string,
+		squareChatMid: string,
 		text: string | undefined,
-		contentType: LINETypes.ContentType = 0,
-		_contentMetadata: LooseType = {},
+		contentType = 0,
+		contentMetadata: LooseType = {},
 		relatedMessageId: string | undefined = undefined,
 	): Promise<LINETypes.SendMessageResponse> {
 		const msg = [
 			[11, 2, squareThreadMid],
-			[8, 3, 7],
 			[11, 10, text],
-			[2, 14, false],
 			[8, 15, contentType],
-			[3, 19, null],
-			[15, 27, [12, []]],
+			[13, 18, [11, 11, contentMetadata]],
 		];
 		if (relatedMessageId) {
 			msg.push([11, 21, relatedMessageId], [8, 22, 3], [8, 24, 2]);
-		}
-		const params = [
-			12,
-			1,
-			[
-				[
-					[12, 1, msg],
-					[8, 3, 5],
-					[10, 4, 1],
-					[8, 5, 1],
-					[
-						12,
-						6,
-						[
-							[11, 1, squareThreadMid],
-							[2, 2, false],
-						],
-					],
-				],
-			],
-		];
-
-		return await this.direct_request(
-			params,
-			"sendSquareThreadMessage",
-			this.SquareService_PROTOCOL_TYPE,
-			true,
-			this.SquareService_API_PATH,
-		);
 	}
+
+
+		return await client.request(
+			[
+				[8, 1, 0],
+				[11, 2, squareChatMid],
+				[11, 3, squareThreadMid],
+				[12, 4, [
+						[12, 1, msg],
+						[8, 3, 5],
+					]
+				]
+			],
+			"sendSquareThreadMessage",
+			4,
+			"SendMessageResponse",
+			"/SQ1",
+		);
+}
 ```

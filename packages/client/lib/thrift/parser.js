@@ -189,12 +189,12 @@ export default class ThriftRenameParser {
 				}
 			} else if (finfo.set) {
 				thisValue[0] = TYPE.SET;
-				if (typeof finfo.map === "number") {
-					thisValue[2] = [finfo.map, value];
+				if (typeof finfo.set === "number") {
+					thisValue[2] = [finfo.set, value];
 				} else {
 					thisValue[2] = [
 						TYPE.STRUCT,
-						value.map((e) => this.parse_data(finfo.map, e)),
+						value.map((e) => this.parse_data(finfo.set, e)),
 					];
 				}
 			} else if (finfo.type) {
