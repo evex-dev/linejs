@@ -155,9 +155,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			authToken,
 		};
 
-		this.emit("update:authtoken", authToken);
-
 		const profile = await this.getProfile();
+
+        this.emit("update:authtoken", authToken);
 
 		this.user = {
 			type: "me",
@@ -422,6 +422,19 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		).value;
 	}
 
+    private EXCEPTION_TYPES = {
+		"/S3": "TalkException",
+		"/S4": "TalkException",
+		"/SYNC4": "TalkException",
+		"/SYNC3": "TalkException",
+		"/CH3": "ChannelException",
+		"/CH4": "ChannelException",
+		"/SQ1": "SquareException",
+		"/LIFF1": "LiffException",
+		"/api/v3p/rs": "TalkException",
+		"/api/v3/TalkService.do": "TalkException",
+	} as Record<string, string | undefined>;
+
 	/**
 	 * @description Request to LINE API by raw.
 	 *
@@ -493,6 +506,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				this.parser.rename_data(res);
 			} else if (typeof parse === "string") {
 				res.value = this.parser.rename_thrift(parse, res.value);
+                if (res.e) {
+                    const structName = this.EXCEPTION_TYPES[path];
+
+                    if (structName) {
+				        res.e = this.parser.rename_thrift(structName, res.e);
+                    }else {
+                        throw new InternalError("Unknown Exception", JSON.stringify(res.e))
+                    }
+                }
 			}
 
 			this.log("response", {
@@ -502,7 +524,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				parsedData: res,
 			});
 
-			const isRefresh = res.e["1"] === 8 && nextToken;
+			const isRefresh = res.e["code"] === "NOT_AUTHORIZED_DEVICE" && nextToken;
 
 			if (res.e && !isRefresh) {
 				throw new InternalError(
