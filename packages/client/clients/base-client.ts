@@ -1,4 +1,4 @@
-// For Base (login, request, line, etc)
+// For Base (login, request, line, relation, etc)
 
 import * as fs from "node:fs/promises";
 import { getRSACrypto } from "../libs/rsa/rsa-verify.ts";
