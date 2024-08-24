@@ -16,7 +16,7 @@
 		"@trivago/prettier-plugin-sort-imports": "npm:@trivago/prettier-plugin-sort-imports"
 	},
 	"tasks": {
-		"format": "deno run -A npm:@biomejs/biome format --write ./packages/**/*.ts",
+		"format": "deno fmt & deno run -A npm:@biomejs/biome format --write ./packages/**/*.ts",
 		"lint": "deno run -A npm:@biomejs/biome lint ./packages/**/*.ts",
 		"check": "deno run -A npm:@biomejs/biome check ./packages/**/*.ts"
 	}
