@@ -499,11 +499,12 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				data: parsedBody,
 				parsedData: res,
 			});
+
+            if (res.e && !(res.e["1"] === 8 && nextToken)) {
+                throw new InternalError("Request internal failed", JSON.stringify(res.e));
+            }
 		} catch (error) {
 			throw new InternalError("Request external failed", error.message);
-		}
-		if (res.e) {
-			throw new InternalError("Request internal failed", JSON.stringify(res.e));
 		}
 		return res;
 	}
