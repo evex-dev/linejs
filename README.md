@@ -16,12 +16,14 @@ deno add @evex/linejs
 
 ### Sample
 
-Do not login with email/password more than once.  
-Please use 'authToken' instead.  
-You can get 'authToken' from `client.on("update:authtoken", (authToken) => console.log(authToken))`.
+Do not login with email/password more than once.\
+Please use 'authToken' instead.\
+You can get 'authToken' from
+`client.on("update:authtoken", (authToken) => console.log(authToken))`.
 
-Documentation is coming soon.  
-Don't see the feature you want? You can extend the client and create your own client! (explanation is coming soon)    
+Documentation is coming soon.\
+Don't see the feature you want? You can extend the client and create your own
+client! (explanation is coming soon)
 
 ```ts
 import { Client } from "@evex/linejs";

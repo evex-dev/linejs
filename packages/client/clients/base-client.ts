@@ -129,7 +129,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			appVersion: details.appVersion,
 			systemName: details.systemName,
 			systemVersion: details.systemVersion,
-			type: `${device}\t${details.appVersion}\t${details.systemName}\t${details.systemVersion}`,
+			type:
+				`${device}\t${details.appVersion}\t${details.systemName}\t${details.systemVersion}`,
 			userAgent: `Line/${details.appVersion}`,
 			device,
 		};
@@ -234,8 +235,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		const rsaKey = await this.getRSAKeyInfo();
 		const { keynm, sessionKey } = rsaKey;
 
-		const message =
-			String.fromCharCode(sessionKey.length) +
+		const message = String.fromCharCode(sessionKey.length) +
 			sessionKey +
 			String.fromCharCode(email.length) +
 			email +

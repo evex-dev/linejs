@@ -18,15 +18,15 @@ const TYPE = {
 	UTF16: 17,
 };
 const EPYT = {
-	0:"stop",
-	1:"void",
-	2:"bool",
-	3:"byte",
-	4:"double",
-	6:"i16",
-	8:"i32",
-	10:"i64",
-	11:"string",
+	0: "stop",
+	1: "void",
+	2: "bool",
+	3: "byte",
+	4: "double",
+	6: "i16",
+	8: "i32",
+	10: "i64",
+	11: "string",
 };
 
 function isStruct(obj) {
@@ -56,7 +56,7 @@ export default class ThriftRenameParser {
 			return { name: name, fid: -1 };
 		}
 	}
-	
+
 	fid2name(structName, fid) {
 		const struct = this.def[structName];
 		if (struct) {
@@ -78,8 +78,8 @@ export default class ThriftRenameParser {
 		for (const fid in object) {
 			const value = object[fid];
 			const finfo = this.fid2name(structName, fid);
-			if (typeof value==="undefined") {
-				continue
+			if (typeof value === "undefined") {
+				continue;
 			}
 			if (finfo.struct) {
 				if (isStruct(this.def[finfo.struct])) {
@@ -208,10 +208,10 @@ export default class ThriftRenameParser {
 
 	get_cl(structName) {
 		const newThrift = [];
-		const thisStruct = this.def[structName]
+		const thisStruct = this.def[structName];
 		for (const i in thisStruct) {
 			const finfo = thisStruct[i];
-			const value = finfo.name
+			const value = finfo.name;
 			const thisValue = [null, finfo.fid, value];
 			if (finfo.struct) {
 				if (isStruct(this.def[finfo.struct])) {
@@ -230,7 +230,7 @@ export default class ThriftRenameParser {
 				} else {
 					thisValue[2] = [
 						TYPE.STRUCT,
-						[this.get_cl(finfo.list)]
+						[this.get_cl(finfo.list)],
 					];
 				}
 			} else if (finfo.map) {

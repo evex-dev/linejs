@@ -76,7 +76,6 @@ export function readThrift(data, Protocol = thrift.TCompactProtocol) {
 	return _readThrift(data, Protocol);
 }
 
-
 function TreadValue(input, ftype) {
 	var Thrift = thrift.Thrift;
 	if (ftype == Thrift.Type.STRUCT) {
@@ -97,7 +96,7 @@ function TreadValue(input, ftype) {
 			returnData.push(elem);
 		}
 		input.readListEnd();
-		return [_rtmp.etype,returnData];
+		return [_rtmp.etype, returnData];
 	} else if (ftype == Thrift.Type.MAP) {
 		let returnData = {};
 		var _rtmp3384 = input.readMapBegin();
@@ -110,7 +109,7 @@ function TreadValue(input, ftype) {
 			returnData[key386] = val387;
 		}
 		input.readMapEnd();
-		return [_rtmp3384.ktype,_rtmp3384.vtype,returnData];
+		return [_rtmp3384.ktype, _rtmp3384.vtype, returnData];
 	} else if (ftype == Thrift.Type.BOOL) {
 		return input.readBool();
 	} else if (ftype == Thrift.Type.DOUBLE) {
@@ -133,7 +132,7 @@ function TreadStruct(input) {
 		if (ftype == Thrift.Type.STOP) {
 			break;
 		}
-		returnData.push([ftype,fid,TreadValue(input, ftype)]);
+		returnData.push([ftype, fid, TreadValue(input, ftype)]);
 		input.readFieldEnd();
 	}
 	input.readStructEnd();
