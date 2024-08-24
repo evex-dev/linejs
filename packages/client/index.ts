@@ -576,6 +576,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		"/CH4": "ChannelException",
 		"/SQ1": "SquareException",
 		"/LIFF1": "LiffException",
+		"/api/v3p/rs": "TalkException",
+		"/api/v3/TalkService.do": "TalkException",
 	};
 	/**
 	 * @description Gets the profile of the current user.
