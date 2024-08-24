@@ -383,6 +383,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		parse: boolean | string = true,
 		path: string = "/S3",
 		headers: Record<string, string | undefined> = {},
+		eparse: boolean | string = true,
 	): Promise<LooseType> {
 		return (
 			await this.rawRequest(
@@ -393,6 +394,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 				headers,
 				undefined,
 				parse,
+				eparse,
 			)
 		).value;
 	}
@@ -415,6 +417,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		parse: boolean | string = true,
 		path: string = "/S3",
 		headers: Record<string, string | undefined> = {},
+		eparse: boolean | string = true,
 	): Promise<LooseType> {
 		return (
 			await this.rawRequest(
@@ -425,6 +428,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 				headers,
 				undefined,
 				parse,
+				eparse,
 			)
 		).value;
 	}
@@ -451,6 +455,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		appendHeaders = {},
 		overrideMethod = "POST",
 		parse: boolean | string = true,
+		eparse: boolean | string = true,
 	): Promise<ParsedThrift> {
 		if (!this.system) {
 			throw new InternalError("Not setup yet", "Please call 'login()' first");
@@ -524,6 +529,16 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			throw new InternalError("Request external failed", error.stack);
 		}
 		if (res?.e) {
+			if (eparse === true) {
+				const etype = this.exceptionType[path];
+				if (etype) {
+					res.e = this.parser.rename_thrift(etype, res.e);
+				} else {
+					res.e = this.parser.rename_thrift("TalkException", res.e);
+				}
+			} else if (typeof eparse === "string") {
+				res.e = this.parser.rename_thrift(eparse, res.e);
+			}
 			throw new InternalError("Request internal failed", JSON.stringify(res.e));
 		}
 		return res;
@@ -552,6 +567,16 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	private SquareService_API_PATH = "/SQ1";
 	private SquareService_PROTOCOL_TYPE: ProtocolKey = 4;
 
+	private exceptionType = {
+		"/S3": "TalkException",
+		"/S4": "TalkException",
+		"/SYNC4": "TalkException",
+		"/SYNC3": "TalkException",
+		"/CH3": "ChannelException",
+		"/CH4": "ChannelException",
+		"/SQ1": "SquareException",
+		"/LIFF1": "LiffException",
+	};
 	/**
 	 * @description Gets the profile of the current user.
 	 */

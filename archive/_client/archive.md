@@ -36,12 +36,12 @@ archive (list)
 
 	public async approveChannelAndIssueChannelToken(
 		channelId: string = "1341209850",
-	): Promise<LooseType> {
+	): Promise<LINETypes.ChannelToken> {
 		return await this.direct_request(
 			[[11, 1, channelId]],
 			"approveChannelAndIssueChannelToken",
 			this.ChannelService_PROTOCOL_TYPE,
-			true,
+			"ChannelToken",
 			this.ChannelService_API_PATH,
 		);
 	}
