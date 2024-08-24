@@ -157,7 +157,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		const profile = await this.getProfile();
 
-        this.emit("update:authtoken", authToken);
+		this.emit("update:authtoken", authToken);
 
 		this.user = {
 			type: "me",
@@ -422,7 +422,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		).value;
 	}
 
-    private EXCEPTION_TYPES = {
+	public EXCEPTION_TYPES = {
 		"/S3": "TalkException",
 		"/S4": "TalkException",
 		"/SYNC4": "TalkException",
@@ -506,15 +506,13 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				this.parser.rename_data(res);
 			} else if (typeof parse === "string") {
 				res.value = this.parser.rename_thrift(parse, res.value);
-                if (res.e) {
-                    const structName = this.EXCEPTION_TYPES[path];
+				if (res.e) {
+					const structName = this.EXCEPTION_TYPES[path];
 
-                    if (structName) {
-				        res.e = this.parser.rename_thrift(structName, res.e);
-                    }else {
-                        throw new InternalError("Unknown Exception", JSON.stringify(res.e))
-                    }
-                }
+					if (structName) {
+						res.e = this.parser.rename_thrift(structName, res.e);
+					}
+				}
 			}
 
 			this.log("response", {
@@ -595,6 +593,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 	private LINEService_API_PATH = "/S4";
 	private LINEService_PROTOCOL_TYPE: ProtocolKey = 4;
+
+	private RelationService_API_PATH = "/RE4";
+	private RelationService_PROTOCOL_TYPE: ProtocolKey = 4;
 
 	/**
 	 * @description Gets the profile of the current user.
