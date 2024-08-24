@@ -432,6 +432,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @param {object} [appendHeaders={}] - The headers to append to the request.
 	 * @param {string} [overrideMethod="POST"] - The method of the request.
 	 * @param {boolean | string} [parse=true] - Whether to parse the response.
+	 * @param {boolean} [isReRequest=false] - Is Re-Request.
 	 * @returns {Promise<ParsedThrift>} The response.
 	 *
 	 * @throws {InternalError} If the request fails.
@@ -444,6 +445,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		appendHeaders = {},
 		overrideMethod = "POST",
 		parse: boolean | string = true,
+		isReRequest: boolean = false,
 	): Promise<ParsedThrift> {
 		if (!this.system) {
 			throw new InternalError("Not setup yet", "Please call 'login()' first");
@@ -500,9 +502,27 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				parsedData: res,
 			});
 
-            if (res.e && !(res.e["1"] === 8 && nextToken)) {
-                throw new InternalError("Request internal failed", JSON.stringify(res.e));
-            }
+			const isRefresh = res.e["1"] === 8 && nextToken;
+
+			if (res.e && !isRefresh) {
+				throw new InternalError(
+					"Request internal failed",
+					JSON.stringify(res.e),
+				);
+			}
+
+			if (isRefresh && !isReRequest) {
+				return await this.rawRequest(
+					path,
+					value,
+					methodName,
+					protocolType,
+					appendHeaders,
+					overrideMethod,
+					parse,
+					true,
+				);
+			}
 		} catch (error) {
 			throw new InternalError("Request external failed", error.message);
 		}
