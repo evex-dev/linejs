@@ -8720,6 +8720,113 @@ export const Thrift = {
 			type: 11,
 		},
 	],
+	TalkException: [
+		{
+			fid: 1,
+			name: "code",
+			struct: "ErrorCode",
+		},
+		{
+			fid: 2,
+			name: "reason",
+			type: 11,
+		},
+		{
+			fid: 3,
+			name: "parameterMap",
+			map: 11,
+		},
+	],
+	ShouldSyncException: [
+		{
+			fid: 1,
+			name: "syncOpRevision",
+			type: 10,
+		},
+		{
+			fid: 2,
+			name: "syncScope",
+			struct: "SyncScope",
+		},
+		{
+			fid: 3,
+			name: "syncReason",
+			struct: "SyncTriggerReason",
+		},
+		{
+			fid: 4,
+			name: "message",
+			type: 11,
+		},
+	],
+	PointException: [
+		{
+			fid: 1,
+			name: "code",
+			struct: "PointErrorCode",
+		},
+		{
+			fid: 2,
+			name: "reason",
+			type: 11,
+		},
+		{
+			fid: 3,
+			name: "extra",
+			map: 11,
+		},
+	],
+	ChannelException: [
+		{
+			fid: 1,
+			name: "code",
+			struct: "ChannelErrorCode",
+		},
+		{
+			fid: 2,
+			name: "reason",
+			type: 11,
+		},
+		{
+			fid: 3,
+			name: "parameterMap",
+			map: 11,
+		},
+	],
+	SquareException: [
+		{
+			fid: 1,
+			name: "errorCode",
+			struct: "SquareErrorCode",
+		},
+		{
+			fid: 2,
+			name: "errorExtraInfo",
+			struct: "ErrorExtraInfo",
+		},
+		{
+			fid: 3,
+			name: "reason",
+			type: 11,
+		},
+	],
+	UniversalNotificationServiceException: [
+		{
+			fid: 1,
+			name: "code",
+			struct: "UniversalNotificationServiceErrorCode",
+		},
+		{
+			fid: 2,
+			name: "reason",
+			type: 11,
+		},
+		{
+			fid: 3,
+			name: "parameterMap",
+			map: 11,
+		},
+	],
 	UpdateBuddyProfileResult: [
 		{
 			fid: 1,
@@ -9261,6 +9368,371 @@ export const Thrift = {
 		"4": "TOO_MANY_REQUESTS",
 		"5": "MALFORMED_REQUEST",
 	},
+	LiffException: [
+		{
+			fid: 1,
+			name: "code",
+			struct: "LiffErrorCode",
+		},
+		{
+			fid: 2,
+			name: "message",
+			type: 11,
+		},
+		{
+			fid: 3,
+			name: "payload",
+			struct: "LiffErrorPayload",
+		},
+	],
+	HomeException: [
+		{
+			fid: 1,
+			name: "exceptionCode",
+			struct: "HomeExceptionCode",
+		},
+		{
+			fid: 2,
+			name: "message",
+			type: 11,
+		},
+		{
+			fid: 3,
+			name: "retryTimeMillis",
+			type: 10,
+		},
+	],
+	ChatappException: [
+		{
+			fid: 1,
+			name: "code",
+			struct: "ChatappErrorCode",
+		},
+		{
+			fid: 2,
+			name: "reason",
+			type: 11,
+		},
+	],
+	MembershipException: [
+		{
+			fid: 1,
+			name: "code",
+			struct: "MembershipErrorCode",
+		},
+		{
+			fid: 2,
+			name: "reason",
+			type: 11,
+		},
+		{
+			fid: 3,
+			name: "parameterMap",
+			map: 11,
+		},
+	],
+	BotException: [
+		{
+			fid: 1,
+			name: "errorCode",
+			struct: "BotErrorCode",
+		},
+		{
+			fid: 2,
+			name: "reason",
+			type: 11,
+		},
+		{
+			fid: 3,
+			name: "parameterMap",
+			map: 11,
+		},
+	],
+	BotExternalException: [
+		{
+			fid: 1,
+			name: "errorCode",
+			struct: "BotExternalErrorCode",
+		},
+		{
+			fid: 2,
+			name: "reason",
+			type: 11,
+		},
+	],
+	LiffChannelException: [
+		{
+			fid: 1,
+			name: "code",
+			struct: "ChannelErrorCode",
+		},
+		{
+			fid: 2,
+			name: "reason",
+			type: 11,
+		},
+		{
+			fid: 3,
+			name: "parameterMap",
+			map: 11,
+		},
+	],
+	AccessTokenRefreshException: [
+		{
+			fid: 1,
+			name: "errorCode",
+			struct: "AccessTokenRefreshErrorCode",
+		},
+		{
+			fid: 2,
+			name: "reasonCode",
+			type: 10,
+		},
+	],
+	AccountEapConnectException: [
+		{
+			fid: 1,
+			name: "code",
+			struct: "AccountEapConnectErrorCode",
+		},
+		{
+			fid: 2,
+			name: "alertMessage",
+			type: 11,
+		},
+		{
+			fid: 11,
+			name: "webAuthDetails",
+			struct: "WebAuthDetails",
+		},
+	],
+	PwlessCredentialException: [
+		{
+			fid: 1,
+			name: "code",
+			struct: "PwlessCredentialErrorCode",
+		},
+		{
+			fid: 2,
+			name: "alertMessage",
+			type: 11,
+		},
+	],
+	SecondAuthFactorPinCodeException: [
+		{
+			fid: 1,
+			name: "code",
+			struct: "SecondAuthFactorPinCodeErrorCode",
+		},
+		{
+			fid: 2,
+			name: "alertMessage",
+			type: 11,
+		},
+	],
+	AuthException: [
+		{
+			fid: 1,
+			name: "code",
+			struct: "AuthErrorCode",
+		},
+		{
+			fid: 2,
+			name: "alertMessage",
+			type: 11,
+		},
+		{
+			fid: 11,
+			name: "webAuthDetails",
+			struct: "WebAuthDetails",
+		},
+	],
+	SecondaryPwlessLoginException: [
+		{
+			fid: 1,
+			name: "code",
+			struct: "SecondaryPwlessLoginErrorCode",
+		},
+		{
+			fid: 2,
+			name: "alertMessage",
+			type: 11,
+		},
+	],
+	SecondaryQrCodeException: [
+		{
+			fid: 1,
+			name: "code",
+			struct: "SecondaryQrCodeErrorCode",
+		},
+		{
+			fid: 2,
+			name: "alertMessage",
+			type: 11,
+		},
+	],
+	PaymentException: [
+		{
+			fid: 1,
+			name: "errorCode",
+			struct: "PaymentErrorCode",
+		},
+		{
+			fid: 2,
+			name: "debugReason",
+			type: 11,
+		},
+		{
+			fid: 3,
+			name: "serverDefinedMessage",
+			type: 11,
+		},
+		{
+			fid: 4,
+			name: "errorDetailMap",
+			map: 11,
+		},
+	],
+	SettingsException: [
+		{
+			fid: 1,
+			name: "code",
+			struct: "SettingsErrorCode",
+		},
+		{
+			fid: 2,
+			name: "reason",
+			type: 11,
+		},
+		{
+			fid: 3,
+			name: "parameterMap",
+			map: 11,
+		},
+	],
+	TicketException: [
+		{
+			fid: 1,
+			name: "code",
+			type: 8,
+		},
+		{
+			fid: 2,
+			name: "reason",
+			type: 11,
+		},
+		{
+			fid: 3,
+			name: "parameterMap",
+			map: 11,
+		},
+	],
+	ThingsException: [
+		{
+			fid: 1,
+			name: "code",
+			struct: "ThingsErrorCode",
+		},
+		{
+			fid: 2,
+			name: "reason",
+			type: 11,
+		},
+	],
+	SuggestTrialException: [
+		{
+			fid: 1,
+			name: "code",
+			struct: "SuggestTrialErrorCode",
+		},
+		{
+			fid: 2,
+			name: "reason",
+			type: 11,
+		},
+		{
+			fid: 3,
+			name: "parameterMap",
+			map: 11,
+		},
+	],
+	LFLPremiumException: [
+		{
+			fid: 1,
+			name: "code",
+			struct: "LFLPremiumErrorCode",
+		},
+	],
+	WalletException: [
+		{
+			fid: 1,
+			name: "code",
+			struct: "WalletErrorCode",
+		},
+		{
+			fid: 2,
+			name: "reason",
+			type: 11,
+		},
+		{
+			fid: 3,
+			name: "attributes",
+			map: 11,
+		},
+	],
+	ShopException: [
+		{
+			fid: 1,
+			name: "code",
+			struct: "ShopErrorCode",
+		},
+		{
+			fid: 2,
+			name: "reason",
+			type: 11,
+		},
+		{
+			fid: 3,
+			name: "parameterMap",
+			map: 11,
+		},
+	],
+	E2EEKeyBackupException: [
+		{
+			fid: 1,
+			name: "code",
+			struct: "E2EEKeyBackupErrorCode",
+		},
+		{
+			fid: 2,
+			name: "reason",
+			type: 11,
+		},
+		{
+			fid: 3,
+			name: "parameterMap",
+			map: 11,
+		},
+	],
+	RejectedException: [
+		{
+			fid: 1,
+			name: "rejectionReason",
+			struct: "RejectionReason",
+		},
+		{
+			fid: 2,
+			name: "hint",
+			type: 11,
+		},
+	],
+	ServerFailureException: [
+		{
+			fid: 1,
+			name: "hint",
+			type: 11,
+		},
+	],
 	UpdateChatRequest: [
 		{
 			fid: 1,
