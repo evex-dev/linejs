@@ -1,4 +1,4 @@
-import type { Log } from "../method/log.ts";
+import type { Log } from "./log.ts";
 import type { User } from "./user.ts";
 
 export type ClientEvents = {

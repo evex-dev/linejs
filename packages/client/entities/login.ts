@@ -1,4 +1,4 @@
-import type { Device } from "../utils/device.ts";
+import type { Device } from "./device.ts";
 
 export type EmailOptions = {
 	email?: string;

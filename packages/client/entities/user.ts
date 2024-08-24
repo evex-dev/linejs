@@ -1,4 +1,4 @@
-import type * as LINETypes from "../lib/thrift/line_types.ts";
+import type * as LINETypes from "../libs/thrift/line_types.ts";
 
 type UserType = "friend" | "other" | "me";
 

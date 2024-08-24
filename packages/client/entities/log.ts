@@ -1,4 +1,4 @@
-import type { AlwaysType, LooseType } from "../utils/common.ts";
+import type { AlwaysType, LooseType } from "./common.ts";
 
 export type LogType = "login" | "request" | "response" | (string & AlwaysType);
 

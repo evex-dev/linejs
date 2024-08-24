@@ -1,4 +1,4 @@
-import type { LooseType } from "../../utils/common.ts";
+import type { LooseType } from "../../entities/common.ts";
 
 type RecordEvent = Record<string, (...args: LooseType[]) => LooseType>;
 
