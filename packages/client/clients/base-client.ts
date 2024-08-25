@@ -525,7 +525,11 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			res.e && res.e["code"] === "NOT_AUTHORIZED_DEVICE" && nextToken;
 
 		if (res.e && !isRefresh) {
-			throw new InternalError("Request internal failed", JSON.stringify(res.e), res.e);
+			throw new InternalError(
+				"Request internal failed",
+				JSON.stringify(res.e),
+				res.e,
+			);
 		}
 
 		if (isRefresh && !isReRequest) {

@@ -17,13 +17,15 @@ export class SquareClient extends LiffClient {
 	 */
 	public async getJoinedSquares(options: {
 		limit?: number;
-		continuationToken?: string | undefined;
+		continuationToken?: string;
+		continueRequest?: boolean;
 	}): Promise<LINETypes.GetJoinedSquaresResponse> {
-		const { limit, continuationToken } = {
+		const { limit, continuationToken, continueRequest } = {
 			limit: 100,
+			continueRequest: true && !options.limit && !options.continuationToken,
 			...options,
 		};
-		return await this.request(
+		const response = await this.request(
 			[
 				[11, 2, continuationToken],
 				[8, 3, limit],
@@ -33,6 +35,33 @@ export class SquareClient extends LiffClient {
 			true,
 			this.SquareService_API_PATH,
 		);
+		if (continueRequest && response.continuationToken) {
+			const responseSum = { ...response }
+			while (true) {
+				options.continuationToken = response.continuationToken
+				const _response = await this.getJoinedSquares(options)
+				for (const key in _response) {
+					if (Object.prototype.hasOwnProperty.call(_response, key)) {
+						const value = _response[key];
+						if (typeof value === "object") {
+							if (Array.isArray(value)) {
+								responseSum[key] = [...value, ...responseSum[key]]
+							} else {
+								responseSum[key] = { ...value, ...responseSum[key] }
+							}
+						} else {
+							responseSum[key] = value
+						}
+					}
+				}
+				if (!_response.continuationToken) {
+					break
+				}
+			}
+			return responseSum
+		} else {
+			return response
+		}
 	}
 
 	/**
@@ -588,9 +617,11 @@ export class SquareClient extends LiffClient {
 		squareChatMid: string;
 		limit?: number;
 		continuationToken?: string;
+		continueRequest?:boolean;
 	}): Promise<LINETypes.GetSquareChatMembersResponse> {
-		const { squareChatMid, limit, continuationToken } = {
+		const { squareChatMid, limit, continuationToken,continueRequest } = {
 			limit: 100,
+			continueRequest: true && !options.limit && !options.continuationToken,
 			...options,
 		};
 		const req = [
@@ -600,13 +631,41 @@ export class SquareClient extends LiffClient {
 		if (continuationToken) {
 			req.push([11, 2, continuationToken]);
 		}
-		return await this.request(
+		const response = await this.request(
 			req,
 			"getSquareChatMembers",
 			this.SquareService_PROTOCOL_TYPE,
 			true,
 			this.SquareService_API_PATH,
 		);
+
+		if (continueRequest && response.continuationToken) {
+			const responseSum = { ...response }
+			while (true) {
+				options.continuationToken = response.continuationToken
+				const _response = await this.getSquareChatMembers(options)
+				for (const key in _response) {
+					if (Object.prototype.hasOwnProperty.call(_response, key)) {
+						const value = _response[key];
+						if (typeof value === "object") {
+							if (Array.isArray(value)) {
+								responseSum[key] = [...value, ...responseSum[key]]
+							} else {
+								responseSum[key] = { ...value, ...responseSum[key] }
+							}
+						} else {
+							responseSum[key] = value
+						}
+					}
+				}
+				if (!_response.continuationToken) {
+					break
+				}
+			}
+			return responseSum
+		} else {
+			return response
+		}
 	}
 
 	/**
