@@ -3,21 +3,69 @@
 import type { NestedArray, ProtocolKey } from "../../libs/thrift/declares.ts";
 import type * as LINETypes from "../../libs/thrift/line_types.ts";
 import type { LooseType } from "../../entities/common.ts";
-import { SquareClient } from "./square-client.ts";
+import { ChannelClient } from "./channel-client.ts";
 
-export class TalkClient extends SquareClient {
+export class TalkClient extends ChannelClient {
 	private TalkService_API_PATH = "/S4";
 	private TalkService_PROTOCOL_TYPE: ProtocolKey = 4;
+	private SyncService_API_PATH = "/SYNC4";
+	private SyncService_PROTOCOL_TYPE: ProtocolKey = 4;
 
-	public async sendMessage(
-		to: string,
-		text: string | null,
-		contentType: number = 0,
-		contentMetadata: LooseType = {},
-		relatedMessageId: string | null = null,
-		location: LINETypes.Location | null = null,
-		chunk: string[] | null = null,
-	): Promise<LINETypes.SendMessageResponse> {
+	/**
+	 * @description Get line events.
+	 */
+	public async sync(options: {
+		limit?: number;
+		revision?: number;
+		globalRev?: number;
+		individualRev?: number;
+	}): Promise<LINETypes.SyncResponse> {
+		const { limit, revision, individualRev, globalRev } = {
+			limit: 100,
+			revision: 0,
+			globalRev: 0,
+			individualRev: 0,
+			...options,
+		};
+		return await this.request(
+			[
+				[10, 1, revision],
+				[8, 2, limit],
+				[10, 3, globalRev],
+				[10, 4, individualRev],
+			],
+			"sync",
+			this.SyncService_PROTOCOL_TYPE,
+			"SyncResponse",
+			this.SyncService_API_PATH,
+		);
+	}
+
+	/**
+	 * @description Send message to talk.
+	 */
+	public async sendMessage(options: {
+		to: string;
+		text?: string;
+		contentType?: number;
+		contentMetadata?: LooseType;
+		relatedMessageId?: string;
+		location?: LINETypes.Location;
+		chunk?: string[];
+	}): Promise<LINETypes.SendMessageResponse> {
+		const {
+			to,
+			text,
+			contentType,
+			contentMetadata,
+			relatedMessageId,
+			location,
+			chunk,
+		} = {
+			contentType: 0,
+			contentMetadata: {},
+			...options,
+		};
 		const message: NestedArray = [
 			[11, 2, to],
 			[10, 5, 0], // createdTime
@@ -28,11 +76,11 @@ export class TalkClient extends SquareClient {
 			[3, 19, 0], // sessionId
 		];
 
-		if (text !== null) {
+		if (text !== undefined) {
 			message.push([11, 10, text]);
 		}
 
-		if (location !== null) {
+		if (location !== undefined) {
 			const locationObj = [
 				[11, 1, location.title || "LINEJS"],
 				[11, 2, location.address || "https://github.com/evex-dev/linejs"],
@@ -44,11 +92,11 @@ export class TalkClient extends SquareClient {
 			message.push([12, 11, locationObj]);
 		}
 
-		if (chunk !== null) {
+		if (chunk !== undefined) {
 			message.push([15, 20, [11, chunk]]);
 		}
 
-		if (relatedMessageId !== null) {
+		if (relatedMessageId !== undefined) {
 			message.push([11, 21, relatedMessageId]);
 			message.push([8, 22, 3]); // messageRelationType; FORWARD(0), AUTO_REPLY(1), SUBORDINATE(2), REPLY(3);
 			message.push([8, 24, 1]);

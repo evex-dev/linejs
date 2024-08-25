@@ -2,9 +2,9 @@
 
 import type { NestedArray, ProtocolKey } from "../../libs/thrift/declares.ts";
 import type { LooseType } from "../../entities/common.ts";
-import { SyncClient } from "./sync-client.ts";
+import { BaseClient } from "../base-client.ts";
 
-export class LiffClient extends SyncClient {
+export class LiffClient extends BaseClient {
 	private LiffService_API_PATH = "/LIFF1";
 	private LiffService_PROTOCOL_TYPE: ProtocolKey = 4;
 
