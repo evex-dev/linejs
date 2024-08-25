@@ -564,7 +564,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	public getHeader(
 		lineAccessToken: string | undefined,
 		overrideMethod = "POST",
-	) {
+	): Record<string, string> {
 		if (!this.system) {
 			throw new InternalError("Not setup yet", "Please call 'login()' first");
 		}

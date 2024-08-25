@@ -1092,7 +1092,7 @@ export class SquareClient extends LiffClient {
 		otherReason?: string;
 		squareChatMid?: string;
 		threadMid?: string;
-	}) {
+	}): Promise<LINETypes.ReportSquareMemberResponse> {
 		const {
 			squareMemberMid,
 			reportType,
