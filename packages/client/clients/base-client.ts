@@ -470,81 +470,76 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		headers = { ...headers, ...appendHeaders };
 
 		let res;
-		try {
-			const Trequest = writeThrift(value, methodName, Protocol);
+		const Trequest = writeThrift(value, methodName, Protocol);
 
-			this.log("request", {
-				method: "thrift",
-				thriftMethodName: methodName,
-				httpMethod: overrideMethod,
-				protocolType,
+		this.log("request", {
+			method: "thrift",
+			thriftMethodName: methodName,
+			httpMethod: overrideMethod,
+			protocolType,
+			value,
+			requestPath: path,
+			data: Trequest,
+			headers,
+		});
+
+		const response = await fetch(`https://${this.endpoint}${path}`, {
+			method: overrideMethod,
+			headers,
+			body: Trequest,
+		});
+		const nextToken = response.headers.get("x-line-next-access");
+
+		if (nextToken) {
+			this.metadata = {
+				authToken: nextToken,
+			};
+
+			this.emit("update:authtoken", this.metadata.authToken);
+		}
+		const body = await response.arrayBuffer();
+		const parsedBody = new Uint8Array(body);
+
+		res = readThrift(parsedBody, Protocol);
+		if (parse === true) {
+			this.parser.rename_data(res);
+		} else if (typeof parse === "string") {
+			res.value = this.parser.rename_thrift(parse, res.value);
+		}
+
+		if (res.e) {
+			const structName = this.EXCEPTION_TYPES[path];
+
+			if (structName) {
+				res.e = this.parser.rename_thrift(structName, res.e);
+			}
+		}
+
+		this.log("response", {
+			method: "thrift",
+			response,
+			data: parsedBody,
+			parsedData: res,
+		});
+
+		const isRefresh =
+			res.e && res.e["code"] === "NOT_AUTHORIZED_DEVICE" && nextToken;
+
+		if (res.e && !isRefresh) {
+			throw new InternalError("Request internal failed", JSON.stringify(res.e));
+		}
+
+		if (isRefresh && !isReRequest) {
+			return await this.rawRequest(
+				path,
 				value,
-				requestPath: path,
-				data: Trequest,
-				headers,
-			});
-
-			const response = await fetch(`https://${this.endpoint}${path}`, {
-				method: overrideMethod,
-				headers,
-				body: Trequest,
-			});
-			const nextToken = response.headers.get("x-line-next-access");
-
-			if (nextToken) {
-				this.metadata = {
-					authToken: nextToken,
-				};
-
-				this.emit("update:authtoken", this.metadata.authToken);
-			}
-			const body = await response.arrayBuffer();
-			const parsedBody = new Uint8Array(body);
-
-			res = readThrift(parsedBody, Protocol);
-			if (parse === true) {
-				this.parser.rename_data(res);
-			} else if (typeof parse === "string") {
-				res.value = this.parser.rename_thrift(parse, res.value);
-				if (res.e) {
-					const structName = this.EXCEPTION_TYPES[path];
-
-					if (structName) {
-						res.e = this.parser.rename_thrift(structName, res.e);
-					}
-				}
-			}
-
-			this.log("response", {
-				method: "thrift",
-				response,
-				data: parsedBody,
-				parsedData: res,
-			});
-
-			const isRefresh = res.e["code"] === "NOT_AUTHORIZED_DEVICE" && nextToken;
-
-			if (res.e && !isRefresh) {
-				throw new InternalError(
-					"Request internal failed",
-					JSON.stringify(res.e),
-				);
-			}
-
-			if (isRefresh && !isReRequest) {
-				return await this.rawRequest(
-					path,
-					value,
-					methodName,
-					protocolType,
-					appendHeaders,
-					overrideMethod,
-					parse,
-					true,
-				);
-			}
-		} catch (error) {
-			throw new InternalError("Request external failed", error.message);
+				methodName,
+				protocolType,
+				appendHeaders,
+				overrideMethod,
+				parse,
+				true,
+			);
 		}
 		return res;
 	}
