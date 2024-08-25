@@ -1,6 +1,8 @@
 export class InternalError extends Error {
-	constructor(type: string, message: string) {
+	public data = {}
+	constructor(type: string, message: string, data = {}) {
 		super(message);
 		this.name = type;
+		this.data = data
 	}
 }
