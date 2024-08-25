@@ -42,7 +42,7 @@ export class SquareClient extends LiffClient {
 				const _response = await this.getJoinedSquares(options);
 				for (const key in _response) {
 					if (Object.prototype.hasOwnProperty.call(_response, key)) {
-						const value = _response[key];
+						const value = (_response as Record<string, LooseType>)[key];
 						if (typeof value === "object") {
 							if (Array.isArray(value)) {
 								responseSum[key] = [...value, ...responseSum[key]];
@@ -646,7 +646,7 @@ export class SquareClient extends LiffClient {
 				const _response = await this.getSquareChatMembers(options);
 				for (const key in _response) {
 					if (Object.prototype.hasOwnProperty.call(_response, key)) {
-						const value = _response[key];
+						const value = (_response as Record<string, LooseType>)[key];
 						if (typeof value === "object") {
 							if (Array.isArray(value)) {
 								responseSum[key] = [...value, ...responseSum[key]];

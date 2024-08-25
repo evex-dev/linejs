@@ -25,7 +25,7 @@ deno add @evex/linejs
 Do not login with email/password more than once.\
 Please use 'authToken' instead.\
 You can get 'authToken' from
-`client.on("update:authtoken", (authToken) => console.log(authToken))`.
+`client.on("update:authtoken", (authToken) => console.log(authToken))`. (primaryToken is best)
 
 Documentation is coming soon.\
 Don't see the feature you want? You can extend the client and create your own
