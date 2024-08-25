@@ -10,7 +10,7 @@ import {
 	type ProtocolKey,
 	Protocols,
 } from "../libs/thrift/declares.ts";
-import type * as LINETypes from "../libs/thrift/line_types.ts";
+import * as LINETypes from "../libs/thrift/line_types.ts";
 import ThriftRenameParser from "../libs/thrift/parser.js";
 import { readThrift } from "../libs/thrift/read.js";
 import { Thrift } from "../libs/thrift/thrift.ts";
@@ -508,7 +508,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 
 		if (res.e) {
-			const structName = this.EXCEPTION_TYPES[path];
+			const structName = this.EXCEPTION_TYPES[path]||"TalkException";
 
 			if (structName) {
 				res.e = this.parser.rename_thrift(structName, res.e);

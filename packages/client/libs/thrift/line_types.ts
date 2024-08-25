@@ -1623,7 +1623,7 @@ export declare enum PopupVisualType {
 	FULLSCREEN = 1,
 }
 
-export declare class TalkException {
+export declare class TalkException extends Error {
 	code: ErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
@@ -1635,7 +1635,7 @@ export declare class TalkException {
 	});
 }
 
-export declare class ChannelException {
+export declare class ChannelException extends Error {
 	code: ChannelErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
@@ -1647,7 +1647,7 @@ export declare class ChannelException {
 	});
 }
 
-export declare class SquareException {
+export declare class SquareException extends Error {
 	errorCode: SquareErrorCode;
 	errorExtraInfo: ErrorExtraInfo;
 	reason: string;
@@ -1659,7 +1659,7 @@ export declare class SquareException {
 	});
 }
 
-export declare class LiffException {
+export declare class LiffException extends Error {
 	code: LiffErrorCode;
 	message: string;
 	payload: LiffErrorPayload;
@@ -1671,7 +1671,7 @@ export declare class LiffException {
 	});
 }
 
-export declare class HomeException {
+export declare class HomeException extends Error {
 	exceptionCode: HomeExceptionCode;
 	message: string;
 	retryTimeMillis: Int64;
@@ -1683,14 +1683,14 @@ export declare class HomeException {
 	});
 }
 
-export declare class ChatappException {
+export declare class ChatappException extends Error {
 	code: ChatappErrorCode;
 	reason: string;
 
 	constructor(args?: { code: ChatappErrorCode; reason: string });
 }
 
-export declare class MembershipException {
+export declare class MembershipException extends Error {
 	code: MembershipErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
@@ -1702,7 +1702,7 @@ export declare class MembershipException {
 	});
 }
 
-export declare class BotException {
+export declare class BotException extends Error {
 	errorCode: BotErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
@@ -1714,14 +1714,14 @@ export declare class BotException {
 	});
 }
 
-export declare class BotExternalException {
+export declare class BotExternalException extends Error {
 	errorCode: BotExternalErrorCode;
 	reason: string;
 
 	constructor(args?: { errorCode: BotExternalErrorCode; reason: string });
 }
 
-export declare class LiffChannelException {
+export declare class LiffChannelException extends Error {
 	code: ChannelErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
@@ -1733,7 +1733,7 @@ export declare class LiffChannelException {
 	});
 }
 
-export declare class AccessTokenRefreshException {
+export declare class AccessTokenRefreshException extends Error {
 	errorCode: AccessTokenRefreshErrorCode;
 	reasonCode: Int64;
 
@@ -1743,7 +1743,7 @@ export declare class AccessTokenRefreshException {
 	});
 }
 
-export declare class AccountEapConnectException {
+export declare class AccountEapConnectException extends Error {
 	code: AccountEapConnectErrorCode;
 	alertMessage: string;
 	webAuthDetails: WebAuthDetails;
@@ -1755,14 +1755,14 @@ export declare class AccountEapConnectException {
 	});
 }
 
-export declare class PwlessCredentialException {
+export declare class PwlessCredentialException extends Error {
 	code: PwlessCredentialErrorCode;
 	alertMessage: string;
 
 	constructor(args?: { code: PwlessCredentialErrorCode; alertMessage: string });
 }
 
-export declare class SecondAuthFactorPinCodeException {
+export declare class SecondAuthFactorPinCodeException extends Error {
 	code: SecondAuthFactorPinCodeErrorCode;
 	alertMessage: string;
 
@@ -1772,7 +1772,7 @@ export declare class SecondAuthFactorPinCodeException {
 	});
 }
 
-export declare class AuthException {
+export declare class AuthException extends Error {
 	code: AuthErrorCode;
 	alertMessage: string;
 	webAuthDetails: WebAuthDetails;
@@ -1784,7 +1784,7 @@ export declare class AuthException {
 	});
 }
 
-export declare class SecondaryPwlessLoginException {
+export declare class SecondaryPwlessLoginException extends Error {
 	code: SecondaryPwlessLoginErrorCode;
 	alertMessage: string;
 
@@ -1794,14 +1794,14 @@ export declare class SecondaryPwlessLoginException {
 	});
 }
 
-export declare class SecondaryQrCodeException {
+export declare class SecondaryQrCodeException extends Error {
 	code: SecondaryQrCodeErrorCode;
 	alertMessage: string;
 
 	constructor(args?: { code: SecondaryQrCodeErrorCode; alertMessage: string });
 }
 
-export declare class PaymentException {
+export declare class PaymentException extends Error {
 	errorCode: PaymentErrorCode;
 	debugReason: string;
 	serverDefinedMessage: string;
@@ -1815,7 +1815,7 @@ export declare class PaymentException {
 	});
 }
 
-export declare class SettingsException {
+export declare class SettingsException extends Error {
 	code: SettingsErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
@@ -1827,7 +1827,7 @@ export declare class SettingsException {
 	});
 }
 
-export declare class TicketException {
+export declare class TicketException extends Error {
 	code: number;
 	reason: string;
 	parameterMap: { [k: string]: string };
@@ -1839,14 +1839,14 @@ export declare class TicketException {
 	});
 }
 
-export declare class ThingsException {
+export declare class ThingsException extends Error {
 	code: ThingsErrorCode;
 	reason: string;
 
 	constructor(args?: { code: ThingsErrorCode; reason: string });
 }
 
-export declare class SuggestTrialException {
+export declare class SuggestTrialException extends Error {
 	code: SuggestTrialErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
@@ -1858,13 +1858,13 @@ export declare class SuggestTrialException {
 	});
 }
 
-export declare class LFLPremiumException {
+export declare class LFLPremiumException extends Error {
 	code: LFLPremiumErrorCode;
 
 	constructor(args?: { code: LFLPremiumErrorCode });
 }
 
-export declare class WalletException {
+export declare class WalletException extends Error {
 	code: WalletErrorCode;
 	reason: string;
 	attributes: { [k: string]: string };
@@ -1876,7 +1876,7 @@ export declare class WalletException {
 	});
 }
 
-export declare class ShopException {
+export declare class ShopException extends Error {
 	code: ShopErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
@@ -1888,7 +1888,7 @@ export declare class ShopException {
 	});
 }
 
-export declare class PointException {
+export declare class PointException extends Error {
 	code: PointErrorCode;
 	reason: string;
 	extra: { [k: string]: string };
@@ -1900,7 +1900,7 @@ export declare class PointException {
 	});
 }
 
-export declare class E2EEKeyBackupException {
+export declare class E2EEKeyBackupException extends Error {
 	code: E2EEKeyBackupErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
@@ -1912,14 +1912,14 @@ export declare class E2EEKeyBackupException {
 	});
 }
 
-export declare class RejectedException {
+export declare class RejectedException extends Error {
 	rejectionReason: RejectionReason;
 	hint: string;
 
 	constructor(args?: { rejectionReason: RejectionReason; hint: string });
 }
 
-export declare class ServerFailureException {
+export declare class ServerFailureException extends Error {
 	hint: string;
 
 	constructor(args?: { hint: string });
