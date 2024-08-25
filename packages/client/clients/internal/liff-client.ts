@@ -1,9 +1,6 @@
 // For Liff (liff, etc)
 
-import type {
-	NestedArray,
-	ProtocolKey,
-} from "../../libs/thrift/declares.ts";
+import type { NestedArray, ProtocolKey } from "../../libs/thrift/declares.ts";
 import type { LooseType } from "../../entities/common.ts";
 import { SyncClient } from "./sync-client.ts";
 

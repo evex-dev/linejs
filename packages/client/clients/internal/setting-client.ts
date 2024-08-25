@@ -1,8 +1,6 @@
 // For Settings (settings, etc)
 
-import type {
-	ProtocolKey,
-} from "../../libs/thrift/declares.ts";
+import type { ProtocolKey } from "../../libs/thrift/declares.ts";
 import { TalkClient } from "./talk-client.ts";
 
 export class SettingsClient extends TalkClient {

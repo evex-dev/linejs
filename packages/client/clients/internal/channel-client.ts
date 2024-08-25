@@ -1,8 +1,6 @@
 // For Channel (channel, etc)
 
-import type {
-	ProtocolKey,
-} from "../../libs/thrift/declares.ts";
+import type { ProtocolKey } from "../../libs/thrift/declares.ts";
 import type * as LINETypes from "../../libs/thrift/line_types.ts";
 import { SquareClient } from "./square-client.ts";
 
