@@ -36,31 +36,31 @@ export class SquareClient extends LiffClient {
 			this.SquareService_API_PATH,
 		);
 		if (continueRequest && response.continuationToken) {
-			const responseSum = { ...response }
+			const responseSum = { ...response };
 			while (true) {
-				options.continuationToken = response.continuationToken
-				const _response = await this.getJoinedSquares(options)
+				options.continuationToken = response.continuationToken;
+				const _response = await this.getJoinedSquares(options);
 				for (const key in _response) {
 					if (Object.prototype.hasOwnProperty.call(_response, key)) {
 						const value = _response[key];
 						if (typeof value === "object") {
 							if (Array.isArray(value)) {
-								responseSum[key] = [...value, ...responseSum[key]]
+								responseSum[key] = [...value, ...responseSum[key]];
 							} else {
-								responseSum[key] = { ...value, ...responseSum[key] }
+								responseSum[key] = { ...value, ...responseSum[key] };
 							}
 						} else {
-							responseSum[key] = value
+							responseSum[key] = value;
 						}
 					}
 				}
 				if (!_response.continuationToken) {
-					break
+					break;
 				}
 			}
-			return responseSum
+			return responseSum;
 		} else {
-			return response
+			return response;
 		}
 	}
 
@@ -617,9 +617,9 @@ export class SquareClient extends LiffClient {
 		squareChatMid: string;
 		limit?: number;
 		continuationToken?: string;
-		continueRequest?:boolean;
+		continueRequest?: boolean;
 	}): Promise<LINETypes.GetSquareChatMembersResponse> {
-		const { squareChatMid, limit, continuationToken,continueRequest } = {
+		const { squareChatMid, limit, continuationToken, continueRequest } = {
 			limit: 100,
 			continueRequest: true && !options.limit && !options.continuationToken,
 			...options,
@@ -640,31 +640,31 @@ export class SquareClient extends LiffClient {
 		);
 
 		if (continueRequest && response.continuationToken) {
-			const responseSum = { ...response }
+			const responseSum = { ...response };
 			while (true) {
-				options.continuationToken = response.continuationToken
-				const _response = await this.getSquareChatMembers(options)
+				options.continuationToken = response.continuationToken;
+				const _response = await this.getSquareChatMembers(options);
 				for (const key in _response) {
 					if (Object.prototype.hasOwnProperty.call(_response, key)) {
 						const value = _response[key];
 						if (typeof value === "object") {
 							if (Array.isArray(value)) {
-								responseSum[key] = [...value, ...responseSum[key]]
+								responseSum[key] = [...value, ...responseSum[key]];
 							} else {
-								responseSum[key] = { ...value, ...responseSum[key] }
+								responseSum[key] = { ...value, ...responseSum[key] };
 							}
 						} else {
-							responseSum[key] = value
+							responseSum[key] = value;
 						}
 					}
 				}
 				if (!_response.continuationToken) {
-					break
+					break;
 				}
 			}
-			return responseSum
+			return responseSum;
 		} else {
-			return response
+			return response;
 		}
 	}
 
