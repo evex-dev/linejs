@@ -4,6 +4,12 @@
 
 **LINEJS** is a JavaScript library for LINE SelfBot.
 
+---
+
+##### <center>Develop now</center>
+
+---
+
 ## Installation
 
 Support all runtimes (Node.js, Deno, and Bun) and typescript.
