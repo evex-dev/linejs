@@ -12,8 +12,7 @@
 		"useTabs": true
 	},
 	"imports": {
-		"@std/assert": "jsr:@std/assert@^1.0.2",
-		"@trivago/prettier-plugin-sort-imports": "npm:@trivago/prettier-plugin-sort-imports"
+		"@std/assert": "jsr:@std/assert@^1.0.2"
 	},
 	"tasks": {
 		"format": "deno fmt & deno run -A npm:@biomejs/biome format --write ./packages/**/*.ts",

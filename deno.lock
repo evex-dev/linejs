@@ -144,8 +144,7 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@std/assert@^1.0.2",
-      "npm:@trivago/prettier-plugin-sort-imports"
+      "jsr:@std/assert@^1.0.2"
     ]
   }
 }
