@@ -878,7 +878,7 @@ archive (list)
 	 * @experimental
 	 */
 	
-	public async function sendSquareThreadMessage(
+	public async sendSquareThreadMessage(
 		squareThreadMid: string,
 		squareChatMid: string,
 		text: string | undefined,
