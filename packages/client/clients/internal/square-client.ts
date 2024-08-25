@@ -1,9 +1,6 @@
 // For Square (square, etc)
 
-import {
-	type NestedArray,
-	type ProtocolKey,
-} from "../../libs/thrift/declares.ts";
+import type { NestedArray, ProtocolKey } from "../../libs/thrift/declares.ts";
 import type * as LINETypes from "../../libs/thrift/line_types.ts";
 import type { LooseType } from "../../entities/common.ts";
 import { LiffClient } from "./liff-client.ts";
@@ -241,7 +238,8 @@ export class SquareClient extends LiffClient {
 		);
 	}
 
-	private defaultSquareCoverImageObsHash = "0h6tJfahRYaVt3H0eLAsAWDFheczgHd3wTCTx2eApNKSoefHNVGRdwfgxbdgUMLi8MSngnPFMeNmpbLi8MSngnPFMeNmpbLi8MSngnPQ"
+	private defaultSquareCoverImageObsHash =
+		"0h6tJfahRYaVt3H0eLAsAWDFheczgHd3wTCTx2eApNKSoefHNVGRdwfgxbdgUMLi8MSngnPFMeNmpbLi8MSngnPFMeNmpbLi8MSngnPQ";
 	public async createSquare(
 		squareName: string,
 		displayName: string,
@@ -817,7 +815,7 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @experimental
 	 */
-	
+
 	public async sendSquareThreadMessage(
 		squareThreadMid: string,
 		squareChatMid: string,
@@ -834,24 +832,26 @@ export class SquareClient extends LiffClient {
 		];
 		if (relatedMessageId) {
 			msg.push([11, 21, relatedMessageId], [8, 22, 3], [8, 24, 2]);
-	}
-
+		}
 
 		return await this.request(
 			[
 				[8, 1, 0],
 				[11, 2, squareChatMid],
 				[11, 3, squareThreadMid],
-				[12, 4, [
+				[
+					12,
+					4,
+					[
 						[12, 1, msg],
 						[8, 3, 5],
-					]
-				]
+					],
+				],
 			],
 			"sendSquareThreadMessage",
 			4,
 			"SendMessageResponse",
 			"/SQ1",
 		);
-}
+	}
 }

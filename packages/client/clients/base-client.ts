@@ -10,7 +10,7 @@ import {
 	type ProtocolKey,
 	Protocols,
 } from "../libs/thrift/declares.ts";
-import * as LINETypes from "../libs/thrift/line_types.ts";
+import type * as LINETypes from "../libs/thrift/line_types.ts";
 import ThriftRenameParser from "../libs/thrift/parser.js";
 import { readThrift } from "../libs/thrift/read.js";
 import { Thrift } from "../libs/thrift/thrift.ts";
@@ -469,7 +469,6 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		headers = { ...headers, ...appendHeaders };
 
-		let res;
 		const Trequest = writeThrift(value, methodName, Protocol);
 
 		this.log("request", {
@@ -500,7 +499,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		const body = await response.arrayBuffer();
 		const parsedBody = new Uint8Array(body);
 
-		res = readThrift(parsedBody, Protocol);
+		const res = readThrift(parsedBody, Protocol);
 		if (parse === true) {
 			this.parser.rename_data(res);
 		} else if (typeof parse === "string") {
@@ -508,7 +507,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 
 		if (res.e) {
-			const structName = this.EXCEPTION_TYPES[path]||"TalkException";
+			const structName = this.EXCEPTION_TYPES[path] || "TalkException";
 
 			if (structName) {
 				res.e = this.parser.rename_thrift(structName, res.e);

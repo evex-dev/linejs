@@ -1,11 +1,9 @@
 // For Channel (channel, etc)
 
-import {
-	type NestedArray,
-	type ProtocolKey,
+import type {
+	ProtocolKey,
 } from "../../libs/thrift/declares.ts";
 import type * as LINETypes from "../../libs/thrift/line_types.ts";
-import type { LooseType } from "../../entities/common.ts";
 import { SquareClient } from "./square-client.ts";
 
 export class ChannelClient extends SquareClient {

@@ -1,10 +1,6 @@
 // For Sync (sync, etc)
-import {
-	type NestedArray,
-	type ProtocolKey,
-} from "../../libs/thrift/declares.ts";
+import type { ProtocolKey } from "../../libs/thrift/declares.ts";
 import type * as LINETypes from "../../libs/thrift/line_types.ts";
-import type { LooseType } from "../../entities/common.ts";
 import { BaseClient } from "../base-client.ts";
 
 export class SyncClient extends BaseClient {

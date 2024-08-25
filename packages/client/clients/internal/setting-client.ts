@@ -1,11 +1,8 @@
 // For Settings (settings, etc)
 
-import {
-	type NestedArray,
-	type ProtocolKey,
+import type {
+	ProtocolKey,
 } from "../../libs/thrift/declares.ts";
-import type * as LINETypes from "../../libs/thrift/line_types.ts";
-import type { LooseType } from "../../entities/common.ts";
 import { TalkClient } from "./talk-client.ts";
 
 export class SettingsClient extends TalkClient {

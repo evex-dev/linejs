@@ -1,9 +1,6 @@
 // For Talk (talk, group, etc)
 
-import {
-	type NestedArray,
-	type ProtocolKey,
-} from "../../libs/thrift/declares.ts";
+import type { NestedArray, ProtocolKey } from "../../libs/thrift/declares.ts";
 import type * as LINETypes from "../../libs/thrift/line_types.ts";
 import type { LooseType } from "../../entities/common.ts";
 import { SquareClient } from "./square-client.ts";
@@ -12,17 +9,16 @@ export class TalkClient extends SquareClient {
 	private TalkService_API_PATH = "/S4";
 	private TalkService_PROTOCOL_TYPE: ProtocolKey = 4;
 
-	public sendMessage(
+	public async sendMessage(
 		to: string,
 		text: string | null,
 		contentType: number = 0,
 		contentMetadata: LooseType = {},
 		relatedMessageId: string | null = null,
 		location: LINETypes.Location | null = null,
-		chunk: string[] | null = null
-	): any {
-
-		let message: NestedArray = [
+		chunk: string[] | null = null,
+	): Promise<LINETypes.SendMessageResponse> {
+		const message: NestedArray = [
 			[11, 2, to],
 			[10, 5, 0], // createdTime
 			[10, 6, 0], // deliveredTime
@@ -37,9 +33,9 @@ export class TalkClient extends SquareClient {
 		}
 
 		if (location !== null) {
-			let locationObj = [
-				[11, 1, location.title || "CHRLINE API"],
-				[11, 2, location.address || "https://github.com/DeachSword/CHRLINE"],
+			const locationObj = [
+				[11, 1, location.title || "LINEJS"],
+				[11, 2, location.address || "https://github.com/evex-dev/linejs"],
 				[4, 3, location.latitude || 0],
 				[4, 4, location.longitude || 0],
 				[11, 6, location.categoryId || "PC0"],
@@ -57,6 +53,15 @@ export class TalkClient extends SquareClient {
 			message.push([8, 22, 3]); // messageRelationType; FORWARD(0), AUTO_REPLY(1), SUBORDINATE(2), REPLY(3);
 			message.push([8, 24, 1]);
 		}
-		return this.direct_request([[8, 1, 0], [12, 2, message]], "sendMessage", 4, "Message", this.TalkService_API_PATH)
+		return await this.direct_request(
+			[
+				[8, 1, 0],
+				[12, 2, message],
+			],
+			"sendMessage",
+			this.TalkService_PROTOCOL_TYPE,
+			"Message",
+			this.TalkService_API_PATH,
+		);
 	}
 }
