@@ -27,6 +27,7 @@ import {
 	AUTH_TOKEN_REGEX,
 	EMAIL_REGEX,
 	PASSWORD_REGEX,
+	PRIMARY_TOKEN_REGEX,
 } from "../entities/regex.ts";
 import type { System } from "../entities/system.ts";
 import type { User } from "../entities/user.ts";
@@ -118,7 +119,13 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			);
 		}
 
-		const device = options.device || "IOSIPAD";
+		const device: Device =
+			options.device ||
+			(options.authToken
+				? PRIMARY_TOKEN_REGEX.test(options.authToken)
+					? "ANDROID"
+					: "IOSIPAD"
+				: "IOSIPAD");
 		const details = getDeviceDetails(device);
 
 		if (!details) {
@@ -129,8 +136,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			appVersion: details.appVersion,
 			systemName: details.systemName,
 			systemVersion: details.systemVersion,
-			type:
-				`${device}\t${details.appVersion}\t${details.systemName}\t${details.systemVersion}`,
+			type: `${device}\t${details.appVersion}\t${details.systemName}\t${details.systemVersion}`,
 			userAgent: `Line/${details.appVersion}`,
 			device,
 		};
@@ -235,7 +241,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		const rsaKey = await this.getRSAKeyInfo();
 		const { keynm, sessionKey } = rsaKey;
 
-		const message = String.fromCharCode(sessionKey.length) +
+		const message =
+			String.fromCharCode(sessionKey.length) +
 			sessionKey +
 			String.fromCharCode(email.length) +
 			email +
@@ -521,8 +528,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			parsedData: res,
 		});
 
-		const isRefresh = res.e && res.e["code"] === "NOT_AUTHORIZED_DEVICE" &&
-			nextToken;
+		const isRefresh =
+			res.e && res.e["code"] === "NOT_AUTHORIZED_DEVICE" && nextToken;
 
 		if (res.e && !isRefresh) {
 			throw new InternalError(

@@ -12,6 +12,41 @@ export class SquareClient extends LiffClient {
 	private SquareLiveTalkService_API_PATH = "/SQLV1";
 	private SquareLiveTalkService_PROTOCOL_TYPE: ProtocolKey = 4;
 
+	private async continueRequest<
+		T extends (...args: LooseType) => LooseType,
+	>(options: {
+		response: ReturnType<T>;
+		continuationToken: string;
+		method: {
+			handler: T;
+			args: Parameters<T>;
+		};
+	}) {
+		const responseSum = { ...options.response };
+		while (true) {
+			options.continuationToken = options.response.continuationToken;
+			const _response = await options.method.handler(options.method.args);
+			for (const key in _response) {
+				if (Object.prototype.hasOwnProperty.call(_response, key)) {
+					const value = (_response as Record<string, LooseType>)[key];
+					if (typeof value === "object") {
+						if (Array.isArray(value)) {
+							responseSum[key] = [...value, ...responseSum[key]];
+						} else {
+							responseSum[key] = { ...value, ...responseSum[key] };
+						}
+					} else {
+						responseSum[key] = value;
+					}
+				}
+			}
+			if (!_response.continuationToken) {
+				break;
+			}
+		}
+		return responseSum;
+	}
+
 	/**
 	 * @description Get joined squares.
 	 */
@@ -22,7 +57,7 @@ export class SquareClient extends LiffClient {
 	}): Promise<LINETypes.GetJoinedSquaresResponse> {
 		const { limit, continuationToken, continueRequest } = {
 			limit: 100,
-			continueRequest: true && !options.limit && !options.continuationToken,
+			continueRequest: !options.limit && !options.continuationToken,
 			...options,
 		};
 		const response = await this.request(
@@ -35,30 +70,16 @@ export class SquareClient extends LiffClient {
 			true,
 			this.SquareService_API_PATH,
 		);
+
 		if (continueRequest && response.continuationToken) {
-			const responseSum = { ...response };
-			while (true) {
-				options.continuationToken = response.continuationToken;
-				const _response = await this.getJoinedSquares(options);
-				for (const key in _response) {
-					if (Object.prototype.hasOwnProperty.call(_response, key)) {
-						const value = (_response as Record<string, LooseType>)[key];
-						if (typeof value === "object") {
-							if (Array.isArray(value)) {
-								responseSum[key] = [...value, ...responseSum[key]];
-							} else {
-								responseSum[key] = { ...value, ...responseSum[key] };
-							}
-						} else {
-							responseSum[key] = value;
-						}
-					}
-				}
-				if (!_response.continuationToken) {
-					break;
-				}
-			}
-			return responseSum;
+			return await this.continueRequest({
+				response,
+				continuationToken: response.continuationToken,
+				method: {
+					handler: this.getJoinedSquares,
+					args: [options],
+				},
+			});
 		} else {
 			return response;
 		}
@@ -621,7 +642,7 @@ export class SquareClient extends LiffClient {
 	}): Promise<LINETypes.GetSquareChatMembersResponse> {
 		const { squareChatMid, limit, continuationToken, continueRequest } = {
 			limit: 100,
-			continueRequest: true && !options.limit && !options.continuationToken,
+			continueRequest: !options.limit && !options.continuationToken,
 			...options,
 		};
 		const req = [
@@ -640,29 +661,14 @@ export class SquareClient extends LiffClient {
 		);
 
 		if (continueRequest && response.continuationToken) {
-			const responseSum = { ...response };
-			while (true) {
-				options.continuationToken = response.continuationToken;
-				const _response = await this.getSquareChatMembers(options);
-				for (const key in _response) {
-					if (Object.prototype.hasOwnProperty.call(_response, key)) {
-						const value = (_response as Record<string, LooseType>)[key];
-						if (typeof value === "object") {
-							if (Array.isArray(value)) {
-								responseSum[key] = [...value, ...responseSum[key]];
-							} else {
-								responseSum[key] = { ...value, ...responseSum[key] };
-							}
-						} else {
-							responseSum[key] = value;
-						}
-					}
-				}
-				if (!_response.continuationToken) {
-					break;
-				}
-			}
-			return responseSum;
+			return await this.continueRequest({
+				response,
+				continuationToken: response.continueationToken,
+				method: {
+					handler: this.getSquareChatMembers,
+					args: [options],
+				},
+			});
 		} else {
 			return response;
 		}
