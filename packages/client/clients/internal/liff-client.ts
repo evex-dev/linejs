@@ -8,8 +8,11 @@ export class LiffClient extends SyncClient {
 	private LiffService_API_PATH = "/LIFF1";
 	private LiffService_PROTOCOL_TYPE: ProtocolKey = 4;
 
+	/**
+	 * @description Gets the LiffToken by liffId and chatMid.
+	 */
 	public async issueLiffView(options: {
-		chatMid: string;
+		chatMid?: string;
 		liffId: string;
 		lang?: string;
 	}): Promise<LooseType> {

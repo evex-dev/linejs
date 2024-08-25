@@ -8,9 +8,17 @@ export class ChannelClient extends SquareClient {
 	private ChannelService_API_PATH = "/CH3";
 	private ChannelService_PROTOCOL_TYPE: ProtocolKey = 3;
 
-	public async approveChannelAndIssueChannelToken(
-		channelId: string = "1341209850",
-	): Promise<LINETypes.ChannelToken> {
+	/**
+	 * @description Gets the ChannelToken by channelId.\
+	 * channelIds:
+	 * - linevoom: 1341209850
+	 */
+	public async approveChannelAndIssueChannelToken(options: {
+		channelId: string;
+	}): Promise<LINETypes.ChannelToken> {
+		const { channelId } = {
+			...options,
+		};
 		return await this.direct_request(
 			[[11, 1, channelId]],
 			"approveChannelAndIssueChannelToken",
