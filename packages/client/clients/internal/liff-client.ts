@@ -8,11 +8,16 @@ export class LiffClient extends SyncClient {
 	private LiffService_API_PATH = "/LIFF1";
 	private LiffService_PROTOCOL_TYPE: ProtocolKey = 4;
 
-	public async issueLiffView(
-		chatMid: string,
-		liffId: string,
-		lang: string = "ja_JP",
-	): Promise<LooseType> {
+	public async issueLiffView(options: {
+		chatMid: string;
+		liffId: string;
+		lang?: string;
+	}): Promise<LooseType> {
+		const { chatMid, liffId, lang } = {
+			lang: "ja_JP",
+			...options,
+		};
+
 		let context: NestedArray = [12, 1, []];
 		let chaLINETypes;
 		let chat;
