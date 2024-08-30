@@ -21,9 +21,9 @@ function readStruct(input) {
 }
 
 function isBinary(str) {
-	str = str.toString()
-	const json = JSON.stringify(str)
-	return json.search(/\\u/) !== -1
+	str = str.toString();
+	const json = JSON.stringify(str);
+	return json.search(/\\u/) !== -1;
 }
 
 function readValue(input, ftype) {
@@ -37,9 +37,9 @@ function readValue(input, ftype) {
 	} else if (ftype == Thrift.Type.STRING) {
 		const bin = input.readBinary();
 		if (isBinary(bin)) {
-			return bin
-		}else{
-			return bin.toString()
+			return bin;
+		} else {
+			return bin.toString();
 		}
 	} else if (ftype == Thrift.Type.LIST) {
 		let returnData = [];

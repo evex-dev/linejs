@@ -163,20 +163,24 @@ class E2EE extends Client {
 				const aes_key = this.getSHA256Sum(aesKey, "Key");
 				const aes_iv = this._xor(this.getSHA256Sum(aesKey, "IV"));
 
-				this._log({aes_key,aes_iv,encryptedSharedKey})
+				this._log({ aes_key, aes_iv, encryptedSharedKey });
 
 				const cipherParams = CryptoJS.lib.CipherParams.create({
 					ciphertext: (encryptedSharedKey.toString()),
 					iv: (aes_iv.toString()),
 					mode: CryptoJS.mode.CBC,
 					padding: CryptoJS.pad.Pkcs7,
-				})
-				
-				const plainText = CryptoJS.AES.decrypt(cipherParams, (aes_key.toString()), {mode: CryptoJS.mode.CBC})
+				});
 
-				this._log({plainText})
+				const plainText = CryptoJS.AES.decrypt(
+					cipherParams,
+					aes_key.toString(),
+					{ mode: CryptoJS.mode.CBC },
+				);
 
-				let decrypted = plainText.toString(CryptoJS.enc.Base64)
+				this._log({ plainText });
+
+				let decrypted = plainText.toString(CryptoJS.enc.Base64);
 				this._log(`[getE2EELocalPublicKey] decrypted: ${decrypted}`, true);
 				const data = {
 					"privKey": decrypted,
@@ -191,7 +195,7 @@ class E2EE extends Client {
 	}
 
 	generateSharedSecret(privateKey, publicKey) {
-		this._log({privateKey:privateKey.length, publicKey:publicKey.length});
+		this._log({ privateKey: privateKey.length, publicKey: publicKey.length });
 		return curve25519.sharedKey(
 			Uint8Array.from(privateKey),
 			Uint8Array.from(publicKey),
@@ -493,7 +497,7 @@ class E2EE extends Client {
 		let privK = Buffer.from(selfKey.privKey, "base64");
 		let pubK;
 
-		if (toType === 0) {
+		if (toType === 0 || toType === "USER") {
 			pubK = await this.getE2EELocalPublicKey(
 				isSelf ? to : _from,
 				isSelf ? receiverKeyId : senderKeyId,
