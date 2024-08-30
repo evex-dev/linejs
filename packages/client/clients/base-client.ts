@@ -174,7 +174,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.emit("ready", this.user);
 	}
 
-	private parser: ThriftRenameParser = new ThriftRenameParser();
+	protected parser: ThriftRenameParser = new ThriftRenameParser();
 	private cert: string | null = null;
 
 	/**

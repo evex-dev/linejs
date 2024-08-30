@@ -6,20 +6,22 @@ import type { LooseType } from "../../entities/common.ts";
 import { ChannelClient } from "./channel-client.ts";
 
 export class TalkClient extends ChannelClient {
-	private TalkService_API_PATH = "/S4";
-	private TalkService_PROTOCOL_TYPE: ProtocolKey = 4;
-	private SyncService_API_PATH = "/SYNC4";
-	private SyncService_PROTOCOL_TYPE: ProtocolKey = 4;
+	protected TalkService_API_PATH = "/S4";
+	protected TalkService_PROTOCOL_TYPE: ProtocolKey = 4;
+	protected SyncService_API_PATH = "/SYNC4";
+	protected SyncService_PROTOCOL_TYPE: ProtocolKey = 4;
 
 	/**
 	 * @description Get line events.
 	 */
-	public async sync(options: {
-		limit?: number;
-		revision?: number;
-		globalRev?: number;
-		individualRev?: number;
-	}): Promise<LINETypes.SyncResponse> {
+	public async sync(
+		options: {
+			limit?: number;
+			revision?: number;
+			globalRev?: number;
+			individualRev?: number;
+		} = {},
+	): Promise<LINETypes.SyncResponse> {
 		const { limit, revision, individualRev, globalRev } = {
 			limit: 100,
 			revision: 0,

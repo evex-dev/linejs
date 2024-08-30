@@ -5,8 +5,8 @@ import type * as LINETypes from "../../libs/thrift/line_types.ts";
 import { SquareClient } from "./square-client.ts";
 
 export class ChannelClient extends SquareClient {
-	private ChannelService_API_PATH = "/CH3";
-	private ChannelService_PROTOCOL_TYPE: ProtocolKey = 3;
+	protected ChannelService_API_PATH = "/CH3";
+	protected ChannelService_PROTOCOL_TYPE: ProtocolKey = 3;
 
 	/**
 	 * @description Gets the ChannelToken by channelId.\

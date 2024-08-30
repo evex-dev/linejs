@@ -98,7 +98,7 @@ class TMoreCompactProtocol extends TCompactProtocol {
 		} else {
 			const _type = this.w(); // read data
 			[a, d] = this.g(_type); // read data
-			throw new EOFError(
+			throw new Error(
 				`recv fid \`${_fid}\`, expected \`1\`, message: \`${a}\``,
 			); // err
 		}
