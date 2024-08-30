@@ -1,4 +1,4 @@
-import * as CryptoJS from "npm:crypto-js";
+import CryptoJS from "npm:crypto-js";
 import * as curve25519 from "npm:curve25519-js";
 import * as crypto from "node:crypto";
 import * as thrift from "npm:thrift@0.20.0";
@@ -107,16 +107,13 @@ class E2EE extends Client {
 		let fd, fn;
 
 		if (toType === 0) {
-			console.log("u", key);
 			fd = "e2eePublicKeys";
 			fn = `:${keyId}`;
 			if (keyId !== undefined) {
 				key = this.getStorageData(fd + fn);
-				console.log("u-k", key);
 			}
 			let receiverKeyData;
 			if (!key) {
-				console.log("u-!", key);
 				receiverKeyData = await this.negotiateE2EEPublicKey(mid);
 				const specVersion = receiverKeyData.specVersion;
 				if (specVersion === -1) {
@@ -126,9 +123,7 @@ class E2EE extends Client {
 				const receiverKeyId = publicKey.keyId;
 				receiverKeyData = publicKey.keyData;
 				if (receiverKeyId === keyId) {
-					console.log("u-!", receiverKeyData);
 					key = Buffer.from(receiverKeyData).toString("base64");
-					console.log("u-!!", key);
 					this.saveStorageData(fd + fn, key);
 				} else {
 					throw new Error(
@@ -167,30 +162,28 @@ class E2EE extends Client {
 				const aesKey = this.generateSharedSecret(selfKey, creatorKey);
 				const aes_key = this.getSHA256Sum(aesKey, "Key");
 				const aes_iv = this._xor(this.getSHA256Sum(aesKey, "IV"));
-				const aes = CryptoJS.AES.decrypt(
-					{ ciphertext: encryptedSharedKey },
-					aes_key,
-					{
-						iv: aes_iv,
-						mode: CryptoJS.mode.CBC,
-						padding: CryptoJS.pad.Pkcs7,
-					},
-				);
 
-				let decrypted;
-				try {
-					decrypted = CryptoJS.enc.Utf8.stringify(aes);
-				} catch (e) {
-					decrypted = aes;
-				}
+				this._log({aes_key,aes_iv,encryptedSharedKey})
+
+				const cipherParams = CryptoJS.lib.CipherParams.create({
+					ciphertext: (encryptedSharedKey.toString()),
+					iv: (aes_iv.toString()),
+					mode: CryptoJS.mode.CBC,
+					padding: CryptoJS.pad.Pkcs7,
+				})
+				
+				const plainText = CryptoJS.AES.decrypt(cipherParams, (aes_key.toString()), {mode: CryptoJS.mode.CBC})
+
+				this._log({plainText})
+
+				let decrypted = plainText.toString(CryptoJS.enc.Base64)
 				this._log(`[getE2EELocalPublicKey] decrypted: ${decrypted}`, true);
 				const data = {
-					"privKey": btoa(decrypted),
+					"privKey": decrypted,
 					"keyId": groupKeyId,
 				};
 				key = JSON.stringify(data);
 				this.saveStorageData(fd + fn, key);
-				console.log("e2eeGroupKeys", key);
 			}
 			return JSON.parse(key);
 		}
@@ -198,7 +191,7 @@ class E2EE extends Client {
 	}
 
 	generateSharedSecret(privateKey, publicKey) {
-		console.log(privateKey.length, publicKey.length);
+		this._log({privateKey:privateKey.length, publicKey:publicKey.length});
 		return curve25519.sharedKey(
 			Uint8Array.from(privateKey),
 			Uint8Array.from(publicKey),
@@ -491,7 +484,6 @@ class E2EE extends Client {
 		let chunks = messageObj.chunks.map((chunk) =>
 			typeof chunk === "string" ? Buffer.from(chunk, "utf-8") : chunk
 		);
-
 		const senderKeyId = byte2int(chunks[3]);
 		const receiverKeyId = byte2int(chunks[4]);
 		this._log(`senderKeyId: ${senderKeyId}`, true);
@@ -533,7 +525,7 @@ class E2EE extends Client {
 		return decrypted.text || "";
 	}
 
-	decryptE2EELocationMessage(messageObj, isSelf = true) {
+	async decryptE2EELocationMessage(messageObj, isSelf = true) {
 		const _from = messageObj._from;
 		const to = messageObj.to;
 		const toType = messageObj.toType;
@@ -551,21 +543,21 @@ class E2EE extends Client {
 		this._log(`senderKeyId: ${senderKeyId}`, true);
 		this._log(`receiverKeyId: ${receiverKeyId}`, true);
 
-		const selfKey = this.getE2EESelfKeyData(this.mid);
+		const selfKey = await this.getE2EESelfKeyData(this.mid);
 		let privK = Buffer.from(selfKey.privKey, "base64");
 		let pubK;
 
 		if (toType === 0) {
-			pubK = this.getE2EELocalPublicKey(
+			pubK = await this.getE2EELocalPublicKey(
 				to,
 				isSelf ? receiverKeyId : senderKeyId,
 			);
 		} else {
-			const groupK = this.getE2EELocalPublicKey(to, receiverKeyId);
+			const groupK = await this.getE2EELocalPublicKey(to, receiverKeyId);
 			privK = Buffer.from(groupK.privKey, "base64");
 			pubK = Buffer.from(selfKey.pubKey, "base64");
 			if (_from !== this.mid) {
-				pubK = this.getE2EELocalPublicKey(_from, senderKeyId);
+				pubK = await this.getE2EELocalPublicKey(_from, senderKeyId);
 			}
 		}
 
@@ -629,8 +621,8 @@ class E2EE extends Client {
 		);
 
 		const decipher = crypto.createDecipheriv("aes-256-gcm", gcmKey, sign);
-		decipher.setAAD(aad);
 		decipher.setAuthTag(tag);
+		decipher.setAAD(aad);
 		let decrypted;
 		try {
 			decrypted = decipher.update(ciphertext);
