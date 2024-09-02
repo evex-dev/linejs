@@ -11,7 +11,7 @@ const Thrift = thrift.Thrift;
 class E2EE extends Client {
 	async getE2EESelfKeyData(mid) {
 		try {
-			return JSON.parse(this.getStorageData("e2eeKeys:" + mid));
+			return JSON.parse(this.storage.get("e2eeKeys:" + mid));
 		} catch (e) {
 		}
 		const keys = await this.getE2EEPublicKeys();
@@ -27,49 +27,11 @@ class E2EE extends Client {
 	}
 	getE2EESelfKeyDataByKeyId(keyId) {
 		try {
-			return JSON.parse(this.getStorageData("e2eeKeys:" + keyId));
-		} catch {}
+			return JSON.parse(this.storage.get("e2eeKeys:" + keyId));
+		} catch { }
 	}
 	saveE2EESelfKeyDataByKeyId(keyId, value) {
-		this.saveStorageData("e2eeKeys:" + keyId, JSON.stringify(value));
-	}
-	async getE2EEPublicKeys() {
-		return (await this.direct_request(
-			[],
-			"getE2EEPublicKeys",
-			this.TalkService_PROTOCOL_TYPE,
-			false,
-			this.TalkService_API_PATH,
-		)).map((e) => this.parser.rename_thrift("E2EEPublicKey", e));
-	}
-	async negotiateE2EEPublicKey(mid) {
-		return await this.direct_request(
-			[
-				[11, 2, mid],
-			],
-			"negotiateE2EEPublicKey",
-			this.TalkService_PROTOCOL_TYPE,
-			"E2EENegotiationResult",
-			this.TalkService_API_PATH,
-		);
-	}
-	async getLastE2EEGroupSharedKey(keyVersion, chatMid) {
-		return await this.direct_request(
-			[
-				[8, 2, keyVersion],
-				[11, 3, chatMid],
-			],
-			"getLastE2EEGroupSharedKey",
-			this.TalkService_PROTOCOL_TYPE,
-			"E2EEGroupSharedKey",
-			this.TalkService_API_PATH,
-		);
-	}
-	getStorageData(key) {
-		return this.storage.get(key);
-	}
-	saveStorageData(key, value) {
-		return this.storage.set(key, value);
+		this.storage.set("e2eeKeys:" + keyId, JSON.stringify(value));
 	}
 	getToType(mid) {
 		/**
@@ -110,7 +72,7 @@ class E2EE extends Client {
 			fd = "e2eePublicKeys";
 			fn = `:${keyId}`;
 			if (keyId !== undefined) {
-				key = this.getStorageData(fd + fn);
+				key = this.storage.get(fd + fn);
 			}
 			let receiverKeyData;
 			if (!key) {
@@ -124,7 +86,7 @@ class E2EE extends Client {
 				receiverKeyData = publicKey.keyData;
 				if (receiverKeyId === keyId) {
 					key = Buffer.from(receiverKeyData).toString("base64");
-					this.saveStorageData(fd + fn, key);
+					this.storage.set(fd + fn, key);
 				} else {
 					throw new Error(
 						`E2EE key id-${keyId} not found on ${mid}, key id should be ${receiverKeyId}`,
@@ -134,7 +96,7 @@ class E2EE extends Client {
 		} else {
 			fd = "e2eeGroupKeys";
 			fn = `:${mid}`;
-			key = this.getStorageData(fd + fn);
+			key = this.storage.get(fd + fn);
 			if (keyId !== undefined && key !== undefined) {
 				const keyData = JSON.parse(key);
 				if (keyId !== keyData["keyId"]) {
@@ -187,7 +149,7 @@ class E2EE extends Client {
 					"keyId": groupKeyId,
 				};
 				key = JSON.stringify(data);
-				this.saveStorageData(fd + fn, key);
+				this.storage.set(fd + fn, key);
 			}
 			return JSON.parse(key);
 		}
@@ -201,27 +163,7 @@ class E2EE extends Client {
 			Uint8Array.from(publicKey),
 		);
 	}
-
-	_xor(buf) {
-		const bufLength = Math.floor(buf.length / 2);
-		const buf2 = Buffer.alloc(bufLength);
-		for (let i = 0; i < bufLength; i++) {
-			buf2[i] = buf[i] ^ buf[bufLength + i];
-		}
-		return buf2;
-	}
-
-	getSHA256Sum(...args) {
-		const hash = crypto.createHash("sha256");
-		for (let arg of args) {
-			if (typeof arg === "string") {
-				arg = Buffer.from(arg);
-			}
-			hash.update(arg);
-		}
-		return hash.digest();
-	}
-
+	
 	_encryptAESECB(aesKey, plainData) {
 		const cipher = crypto.createCipheriv("aes-128-ecb", aesKey, null);
 		cipher.setAutoPadding(false);
@@ -308,7 +250,7 @@ class E2EE extends Client {
 		return buf2;
 	}
 
-	encryptE2EEMessage(
+	async encryptE2EEMessage(
 		to,
 		text,
 		specVersion = 2,
@@ -316,7 +258,7 @@ class E2EE extends Client {
 		contentType = 0,
 	) {
 		const _from = this.mid;
-		const selfKeyData = this.getE2EESelfKeyData(_from);
+		const selfKeyData = await this.getE2EESelfKeyData(_from);
 
 		if (to.length === 0 || ![0, 1, 2].includes(this.getToType(to))) {
 			throw new Error("Invalid mid");
@@ -327,7 +269,7 @@ class E2EE extends Client {
 
 		if (this.getToType(to) === 0) {
 			const privateKey = Buffer.from(selfKeyData.privKey, "base64");
-			const receiverKeyData = this.negotiateE2EEPublicKey(to);
+			const receiverKeyData = await this.negotiateE2EEPublicKey(to);
 			specVersion = receiverKeyData.specVersion;
 
 			if (specVersion === -1) {
@@ -339,7 +281,7 @@ class E2EE extends Client {
 			const receiverKeyDataBuffer = publicKey.keyData;
 			keyData = this.generateSharedSecret(privateKey, receiverKeyDataBuffer);
 		} else {
-			const groupK = this.getE2EELocalPublicKey(to, undefined);
+			const groupK = await this.getE2EELocalPublicKey(to, undefined);
 			const privK = Buffer.from(groupK.privKey, "base64");
 			const pubK = Buffer.from(selfKeyData.pubKey, "base64");
 			receiverKeyId = groupK.keyId;
@@ -551,7 +493,7 @@ class E2EE extends Client {
 		let privK = Buffer.from(selfKey.privKey, "base64");
 		let pubK;
 
-		if (toType === 0) {
+		if (toType === 0 || toType === "USER") {
 			pubK = await this.getE2EELocalPublicKey(
 				to,
 				isSelf ? receiverKeyId : senderKeyId,

@@ -88,6 +88,12 @@ export function readThrift(data, Protocol = thrift.TCompactProtocol) {
 	return _readThrift(data, Protocol);
 }
 
+export function RawReadStruct(data, Protocol = thrift.TCompactProtocol) {
+	const bufTrans = new thrift.TFramedTransport(Buffer.from(data));
+	const proto = new Protocol(bufTrans);
+	return readStruct(proto);
+}
+
 function TreadValue(input, ftype) {
 	var Thrift = thrift.Thrift;
 	if (ftype == Thrift.Type.STRUCT) {

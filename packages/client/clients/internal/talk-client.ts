@@ -114,4 +114,38 @@ export class TalkClient extends ChannelClient {
 			this.TalkService_API_PATH,
 		);
 	}
+	public async getE2EEPublicKeys(): Promise<Array<LINETypes.E2EEPublicKey>> {
+		return (await this.direct_request(
+			[],
+			"getE2EEPublicKeys",
+			this.TalkService_PROTOCOL_TYPE,
+			false,
+			this.TalkService_API_PATH,
+		)).map((e) => this.parser.rename_thrift("E2EEPublicKey", e));
+	}
+	public async negotiateE2EEPublicKey(options: { mid: string }): Promise<LINETypes.E2EENegotiationResult> {
+		const { mid } = { ...options };
+		return await this.direct_request(
+			[
+				[11, 2, mid],
+			],
+			"negotiateE2EEPublicKey",
+			this.TalkService_PROTOCOL_TYPE,
+			"E2EENegotiationResult",
+			this.TalkService_API_PATH,
+		);
+	}
+	public async getLastE2EEGroupSharedKey(options: { keyVersion: number, chatMid: string }): Promise<LINETypes.E2EEGroupSharedKey> {
+		const { keyVersion, chatMid } = { ...options };
+		return await this.direct_request(
+			[
+				[8, 2, keyVersion],
+				[11, 3, chatMid],
+			],
+			"getLastE2EEGroupSharedKey",
+			this.TalkService_PROTOCOL_TYPE,
+			"E2EEGroupSharedKey",
+			this.TalkService_API_PATH,
+		);
+	}
 }
