@@ -28,7 +28,7 @@ class E2EE extends Client {
 	getE2EESelfKeyDataByKeyId(keyId) {
 		try {
 			return JSON.parse(this.storage.get("e2eeKeys:" + keyId));
-		} catch { }
+		} catch {}
 	}
 	saveE2EESelfKeyDataByKeyId(keyId, value) {
 		this.storage.set("e2eeKeys:" + keyId, JSON.stringify(value));
@@ -163,7 +163,7 @@ class E2EE extends Client {
 			Uint8Array.from(publicKey),
 		);
 	}
-	
+
 	_encryptAESECB(aesKey, plainData) {
 		const cipher = crypto.createCipheriv("aes-128-ecb", aesKey, null);
 		cipher.setAutoPadding(false);
