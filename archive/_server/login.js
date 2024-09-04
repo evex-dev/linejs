@@ -165,12 +165,12 @@ class lineClient extends LoginAPI {
 		sysVer = "12.1.4";
 		switch (device) {
 			case "DESKTOPWIN":
-				appVer = "7.16.1.3000";
+				appVer = "9.2.0.3403";
 				sysName = "WINDOWS";
 				sysVer = "10.0.0-NT-x64";
 				break;
 			case "DESKTOPMAC":
-				appVer = "7.16.1.3000";
+				appVer = "9.2.0.3402";
 				sysName = "MAC";
 				break;
 			case "CHROMEOS":

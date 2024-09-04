@@ -22,12 +22,12 @@ export function getDeviceDetails(device: Device): DeviceDetails | null {
 
 	switch (device) {
 		case "DESKTOPWIN":
-			appVersion = "7.16.1.3000";
+			appVersion = "9.2.0.3403";
 			systemName = "WINDOWS";
 			systemVersion = "10.0.0-NT-x64";
 			break;
 		case "DESKTOPMAC":
-			appVersion = "7.16.1.3000";
+			appVersion = "9.2.0.3402";
 			systemName = "MAC";
 			break;
 		case "CHROMEOS":
