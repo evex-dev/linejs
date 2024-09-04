@@ -154,7 +154,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			authToken = await this.requestEmailLogin(
 				options.email,
 				options.password,
-				false,
+				options.e2ee,
 			);
 		}
 

@@ -11,4 +11,5 @@ export type AuthTokenOptions = {
 
 export type LoginOptions = (EmailOptions & AuthTokenOptions) & {
 	device?: Device;
+	e2ee?: boolean;
 };

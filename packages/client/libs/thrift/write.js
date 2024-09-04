@@ -102,7 +102,6 @@ function writeValue(output, ftype, fid, val) {
 			output.writeFieldEnd();
 			break;
 		default:
-			console.log(fid, ftype, val, "unknown");
 			break;
 	}
 }
@@ -134,7 +133,6 @@ function writeValue_(output, ftype, val) {
 			break;
 
 		default:
-			console.log(fid, ftype, val, "unknown");
 			break;
 	}
 }
