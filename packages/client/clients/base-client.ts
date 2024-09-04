@@ -51,7 +51,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.parser.def = Thrift;
 		const requiredOptions = {
 			storage: new MemoryStorage(),
-			endpoint: "legy-jp.line-apps.com",
+			endpoint: "gw.line.naver.jp",
 			...options,
 		};
 

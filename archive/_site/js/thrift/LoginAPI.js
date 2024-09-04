@@ -53,7 +53,7 @@ class LoginAPI {
 		} else {
 			pin(res[4]);
 			const headers = {
-				"Host": "legy-jp.line-apps.com",
+				"Host": "gw.line.naver.jp",
 				"accept": "application/x-thrift",
 				"user-agent": this.ua,
 				"x-line-application": this.type,
@@ -66,7 +66,7 @@ class LoginAPI {
 				"accept-encoding": "gzip",
 			};
 			const verifier = await this.proxyFetch(
-				"https://legy-jp.line-apps.com/Q",
+				"https://gw.line.naver.jp/Q",
 				headers,
 			).then((res) => res.json());
 			const login_res = await this.loginV2(

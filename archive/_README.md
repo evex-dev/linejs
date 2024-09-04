@@ -63,7 +63,7 @@ await Line.request(
 	methodName, // Method Name
 	protocol_type = 3, // 3:TBINARY 4:TCOMPACT
 	parse = true, // true:auto-parse false:no-parse "name":name-parse
-	path = "/S3", // legy-jp.line-apps.com{path}
+	path = "/S3", // gw.line.naver.jp{path}
 	headers = {}, // HTTP headers
 );
 // return Promise<Object(thriftData)>

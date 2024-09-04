@@ -48,7 +48,7 @@ export default function ws(request) {
 		authToken: url.searchParams.get("auth"),
 	};
 	const base_headers = {
-		"Host": "legy-jp.line-apps.com",
+		"Host": "gw.line.naver.jp",
 		"accept": "application/x-thrift",
 		"user-agent": Account.ua,
 		"x-line-application": Account.type,
@@ -104,7 +104,7 @@ export default function ws(request) {
 			try {
 				res = {};
 				const Trequest = write(value, name, Protocol);
-				const fet = await fetch("https://legy-jp.line-apps.com" + path, {
+				const fet = await fetch("https://gw.line.naver.jp" + path, {
 					method: "POST",
 					headers: send_headers,
 					body: Trequest,
@@ -129,7 +129,7 @@ export default function ws(request) {
 					...Buffer.from(value, "base64"),
 				);
 				//await Deno.writeFile("./tmpReq.bin", Trequest); /////////////////////////
-				const fet = await fetch("https://legy-jp.line-apps.com" + path, {
+				const fet = await fetch("https://gw.line.naver.jp" + path, {
 					method: "POST",
 					headers: headers,
 					body: Trequest,

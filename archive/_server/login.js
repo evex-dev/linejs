@@ -77,7 +77,7 @@ class LoginAPI {
 		} else {
 			pin(res[4]);
 			const headers = {
-				"Host": "legy-jp.line-apps.com",
+				"Host": "gw.line.naver.jp",
 				"accept": "application/x-thrift",
 				"user-agent": this.ua,
 				"x-line-application": this.type,
@@ -89,7 +89,7 @@ class LoginAPI {
 				//"x-lcs":'0005svgBAiJMiGMJdzBkKqR/78GAZEMOQ6E0p3FJkMBZA/NXe10zfYnVQDufzNaRMEW1nvYJYsLWZaWb4ww7EsebLNXGbuhmyAT2V4Fr3tA23xzvvbOaLjCahQK/4qrha2gC54XuPRbtSFNzALjs3rAyfWyczSnlenV/KFv06iqMmt1v+l3KBQdBkN9uLqGRTXzII0Y/rXtkw1wTYvMZZB7b6KunfzHf9AbFOMCqyveInGhYAetFN9Ly9x3kf2uC2czTSlynvelkYn4qn2VeGmAWOLqZrbQelyh/rRIFPttCILbOrWNEwv71Y7Pa1C0MTGFGlWWQQKlBHj0lcK+kJL13Ww==',
 				"accept-encoding": "gzip",
 			};
-			const verifier = await fetch("https://legy-jp.line-apps.com/Q", {
+			const verifier = await fetch("https://gw.line.naver.jp/Q", {
 				headers: headers,
 			}).then((res) => res.json());
 			const login_res = await this.loginV2(
@@ -210,7 +210,7 @@ class lineClient extends LoginAPI {
 	async _request(path, value, name, ptype, add_headers = {}, parse = true) {
 		const Protocol = Protocols[ptype];
 		let headers = {
-			"Host": "legy-jp.line-apps.com",
+			"Host": "gw.line.naver.jp",
 			"accept": "application/x-thrift",
 			"user-agent": this.ua,
 			"x-line-application": this.type,
@@ -231,7 +231,7 @@ class lineClient extends LoginAPI {
 				res = {};
 				const Trequest = write(value, name, Protocol);
 				//await Deno.writeFile("./tmpReq.bin", Trequest); /////////////////////////
-				const fet = await fetch("https://legy-jp.line-apps.com" + path, {
+				const fet = await fetch("https://gw.line.naver.jp" + path, {
 					method: "POST",
 					headers: headers,
 					body: Trequest,
@@ -249,7 +249,7 @@ class lineClient extends LoginAPI {
 				res = {};
 				const Trequest = value;
 				//await Deno.writeFile("./tmpReq.bin", Trequest); /////////////////////////
-				const fet = await fetch("https://legy-jp.line-apps.com" + path, {
+				const fet = await fetch("https://gw.line.naver.jp" + path, {
 					method: "POST",
 					headers: headers,
 					body: Trequest,

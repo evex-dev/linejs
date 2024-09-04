@@ -1162,7 +1162,7 @@ class ChannelService {
 class LineMethod {
 	async voom2mid(postId) {
 		const postf = await this.proxyFetchx(
-			"https://legy-jp.line-apps.com/mh/api/v57/post/get.json?postId=" +
+			"https://gw.line.naver.jp/mh/api/v57/post/get.json?postId=" +
 				postId +
 				"&sourceType=TALKROOM",
 			{
