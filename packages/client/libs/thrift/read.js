@@ -1,11 +1,14 @@
 import * as thrift from "npm:thrift@0.20.0";
 import { Buffer } from "node:buffer";
 
+/**
+ * @returns {any}
+ */
 function readStruct(input) {
-	var Thrift = thrift.Thrift;
-	var returnData = {};
+	const Thrift = thrift.Thrift;
+	const returnData = {};
 	input.readStructBegin();
-	var ret, ftype, fid;
+	let ret, ftype, fid;
 	while (true) {
 		ret = input.readFieldBegin();
 		ftype = ret.ftype;
@@ -27,7 +30,7 @@ function isBinary(str) {
 }
 
 function readValue(input, ftype) {
-	var Thrift = thrift.Thrift;
+	const Thrift = thrift.Thrift;
 	if (ftype == Thrift.Type.STRUCT) {
 		return readStruct(input);
 	} else if (ftype == Thrift.Type.I32) {
@@ -42,23 +45,23 @@ function readValue(input, ftype) {
 			return bin.toString();
 		}
 	} else if (ftype == Thrift.Type.LIST) {
-		let returnData = [];
-		var _rtmp = input.readListBegin();
-		var _size = _rtmp.size || 0;
-		for (var _i = 0; _i < _size; ++_i) {
-			var elem = null;
+		const returnData = [];
+		const _rtmp = input.readListBegin();
+		const _size = _rtmp.size || 0;
+		for (let _i = 0; _i < _size; ++_i) {
+			let elem = null;
 			elem = readValue(input, _rtmp.etype);
 			returnData.push(elem);
 		}
 		input.readListEnd();
 		return returnData;
 	} else if (ftype == Thrift.Type.MAP) {
-		let returnData = {};
-		var _rtmp3384 = input.readMapBegin();
-		var _size383 = _rtmp3384.size || 0;
-		for (var _i385 = 0; _i385 < _size383; ++_i385) {
-			var key386 = null;
-			var val387 = null;
+		const returnData = {};
+		const _rtmp3384 = input.readMapBegin();
+		const _size383 = _rtmp3384.size || 0;
+		for (let _i385 = 0; _i385 < _size383; ++_i385) {
+			let key386 = null;
+			let val387 = null;
 			key386 = readValue(input, _rtmp3384.ktype);
 			val387 = readValue(input, _rtmp3384.vtype);
 			returnData[key386] = val387;
@@ -95,7 +98,7 @@ export function rawReadStruct(data, Protocol = thrift.TCompactProtocol) {
 }
 
 function TreadValue(input, ftype) {
-	var Thrift = thrift.Thrift;
+	const Thrift = thrift.Thrift;
 	if (ftype == Thrift.Type.STRUCT) {
 		return TreadStruct(input);
 	} else if (ftype == Thrift.Type.I32) {
@@ -105,23 +108,23 @@ function TreadValue(input, ftype) {
 	} else if (ftype == Thrift.Type.STRING) {
 		return input.readString();
 	} else if (ftype == Thrift.Type.LIST) {
-		let returnData = [];
-		var _rtmp = input.readListBegin();
-		var _size = _rtmp.size || 0;
-		for (var _i = 0; _i < _size; ++_i) {
-			var elem = null;
+		const returnData = [];
+		const _rtmp = input.readListBegin();
+		const _size = _rtmp.size || 0;
+		for (let _i = 0; _i < _size; ++_i) {
+			let elem = null;
 			elem = TreadValue(input, _rtmp.etype);
 			returnData.push(elem);
 		}
 		input.readListEnd();
 		return [_rtmp.etype, returnData];
 	} else if (ftype == Thrift.Type.MAP) {
-		let returnData = {};
-		var _rtmp3384 = input.readMapBegin();
-		var _size383 = _rtmp3384.size || 0;
-		for (var _i385 = 0; _i385 < _size383; ++_i385) {
-			var key386 = null;
-			var val387 = null;
+		const returnData = {};
+		const _rtmp3384 = input.readMapBegin();
+		const _size383 = _rtmp3384.size || 0;
+		for (let _i385 = 0; _i385 < _size383; ++_i385) {
+			let key386 = null;
+			let val387 = null;
 			key386 = TreadValue(input, _rtmp3384.ktype);
 			val387 = TreadValue(input, _rtmp3384.vtype);
 			returnData[key386] = val387;
@@ -139,10 +142,10 @@ function TreadValue(input, ftype) {
 }
 
 function TreadStruct(input) {
-	var Thrift = thrift.Thrift;
-	var returnData = [];
+	const Thrift = thrift.Thrift;
+	const returnData = [];
 	input.readStructBegin();
-	var ret, ftype, fid;
+	let ret, ftype, fid;
 	while (true) {
 		ret = input.readFieldBegin();
 		ftype = ret.ftype;

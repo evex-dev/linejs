@@ -114,6 +114,7 @@ export class TalkClient extends ChannelClient {
 			this.TalkService_API_PATH,
 		);
 	}
+
 	public async getE2EEPublicKeys(): Promise<LINETypes.E2EEPublicKey[]> {
 		return (
 			await this.direct_request(
@@ -123,8 +124,9 @@ export class TalkClient extends ChannelClient {
 				false,
 				this.TalkService_API_PATH,
 			)
-		).map((e) => this.parser.rename_thrift("E2EEPublicKey", e));
+		).map((e: LooseType) => this.parser.rename_thrift("E2EEPublicKey", e));
 	}
+
 	public async negotiateE2EEPublicKey(options: {
 		mid: string;
 	}): Promise<LINETypes.E2EENegotiationResult> {
