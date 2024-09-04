@@ -11,7 +11,7 @@ import {
 	Protocols,
 } from "../libs/thrift/declares.ts";
 import type * as LINETypes from "../libs/thrift/line_types.ts";
-import ThriftRenameParser from "../libs/thrift/parser.js";
+import ThriftRenameParser from "../libs/thrift/parser.ts";
 import { readThrift } from "../libs/thrift/read.js";
 import { Thrift } from "../libs/thrift/thrift.ts";
 import { writeThrift } from "../libs/thrift/write.js";
@@ -407,10 +407,10 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	public createSqrSecret(_base64Only?: boolean): [Uint8Array, string] {
 		return [new Uint8Array(), ""];
 	}
-	public getSHA256Sum(..._args: string[] | Buffer[]) {
+	public getSHA256Sum(..._args: string[] | Buffer[]): Buffer {
 		return Buffer.from([]);
 	}
-	public _encryptAESECB(_aesKey: LooseType, _plainData: LooseType) {
+	public _encryptAESECB(_aesKey: LooseType, _plainData: LooseType): Buffer {
 		return Buffer.from([]);
 	}
 	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
@@ -419,7 +419,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		_publicKey: Buffer,
 		_privateKey: Buffer,
 		_encryptedKeyChain: Buffer,
-	) {
+	): Buffer {
 		return Buffer.from([]);
 	}
 
@@ -433,7 +433,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async createQrCode(qrcode: string) {
+	public async createQrCode(qrcode: string): Promise<LooseType> {
 		return await this.request(
 			[
 				[11, 1, qrcode],
@@ -445,7 +445,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async checkQrCodeVerified(qrcode: string) {
+	public async checkQrCodeVerified(qrcode: string): Promise<boolean> {
 		try {
 			await this.request(
 				[
@@ -466,7 +466,10 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 	}
 
-	public async verifyCertificate(qrcode: string, cert?: string | undefined) {
+	public async verifyCertificate(
+		qrcode: string,
+		cert?: string | undefined,
+	): Promise<LooseType> {
 		return await this.request(
 			[
 				[11, 1, qrcode],
@@ -479,7 +482,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async createPinCode(qrcode: string) {
+	public async createPinCode(qrcode: string): Promise<LooseType> {
 		return await this.request(
 			[
 				[11, 1, qrcode],
@@ -491,7 +494,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async checkPinCodeVerified(qrcode: string) {
+	public async checkPinCodeVerified(qrcode: string): Promise<boolean> {
 		try {
 			await this.request(
 				[
@@ -515,7 +518,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	public async qrCodeLogin(
 		authSessionId: string,
 		autoLoginIsRequired: boolean = true,
-	) {
+	): Promise<LooseType> {
 		return await this.request(
 			[
 				[11, 1, authSessionId],
@@ -529,7 +532,10 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async confirmE2EELogin(verifier: string, deviceSecret: Buffer) {
+	public async confirmE2EELogin(
+		verifier: string,
+		deviceSecret: Buffer,
+	): Promise<LooseType> {
 		return await this.direct_request(
 			[
 				[11, 1, verifier],

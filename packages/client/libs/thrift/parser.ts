@@ -1,3 +1,5 @@
+import type { LooseType } from "../../entities/common.ts";
+
 const TYPE = {
 	STOP: 0,
 	VOID: 1,
@@ -27,24 +29,23 @@ const EPYT = {
 	8: "i32",
 	10: "i64",
 	11: "string",
-};
+} as Record<number, string>;
 
-function isStruct(obj) {
+function isStruct(obj: LooseType) {
 	return obj && obj.constructor === Array;
 }
 
 export default class ThriftRenameParser {
-	constructor(input) {
+	def: LooseType;
+
+	constructor() {
 		this.def = {};
-		if (!input) {
-			return;
-		}
 	}
 
-	name2fid(structName, name) {
+	name2fid(structName: string, name: string): LooseType {
 		const struct = this.def[structName];
 		if (struct) {
-			const result = struct.findIndex((e) => {
+			const result = struct.findIndex((e: LooseType) => {
 				return e.name == name;
 			});
 			if (result === -1) {
@@ -57,10 +58,10 @@ export default class ThriftRenameParser {
 		}
 	}
 
-	fid2name(structName, fid) {
+	fid2name(structName: string, fid: string): LooseType {
 		const struct = this.def[structName];
 		if (struct) {
-			const result = struct.findIndex((e) => {
+			const result = struct.findIndex((e: LooseType) => {
 				return e.fid == fid;
 			});
 			if (result === -1) {
@@ -73,8 +74,8 @@ export default class ThriftRenameParser {
 		}
 	}
 
-	rename_thrift(structName, object) {
-		const newObject = {};
+	rename_thrift(structName: string, object: LooseType): LooseType {
+		const newObject: LooseType = {};
 		for (const fid in object) {
 			const value = object[fid];
 			const finfo = this.fid2name(structName, fid);
@@ -93,7 +94,7 @@ export default class ThriftRenameParser {
 				}
 			} else if (typeof finfo.list === "string") {
 				newObject[finfo.name] = [];
-				value.forEach((e, i) => {
+				value.forEach((e: LooseType, i: number) => {
 					newObject[finfo.name][i] = this.rename_thrift(
 						finfo.list,
 						e,
@@ -110,7 +111,7 @@ export default class ThriftRenameParser {
 				}
 			} else if (typeof finfo.set === "string") {
 				newObject[finfo.name] = [];
-				value.forEach((e, i) => {
+				value.forEach((e: LooseType, i: number) => {
 					newObject[finfo.name][i] = this.rename_thrift(
 						finfo.set,
 						e,
@@ -123,7 +124,7 @@ export default class ThriftRenameParser {
 		return newObject;
 	}
 
-	rename_data(data) {
+	rename_data(data: LooseType): LooseType {
 		const name = data._info.fname;
 		const value = data.value;
 		const structName = name.substr(0, 1).toUpperCase() + name.substr(1) +
@@ -132,7 +133,7 @@ export default class ThriftRenameParser {
 		return data;
 	}
 
-	parse_data(structName, object) {
+	parse_data(structName: string, object?: LooseType): LooseType[][] {
 		const newThrift = [];
 		for (const fname in object) {
 			const value = object[fname];
@@ -172,7 +173,7 @@ export default class ThriftRenameParser {
 				} else {
 					thisValue[2] = [
 						TYPE.STRUCT,
-						value.map((e) => this.parse_data(finfo.list, e)),
+						value.map((e: LooseType) => this.parse_data(finfo.list, e)),
 					];
 				}
 			} else if (finfo.map) {
@@ -180,7 +181,7 @@ export default class ThriftRenameParser {
 				if (typeof finfo.map === "number") {
 					thisValue[2] = [TYPE.STRING, finfo.map, value];
 				} else {
-					const obj = {};
+					const obj: LooseType = {};
 					for (const key in value) {
 						const e = value[key];
 						obj[key] = this.parse_data(finfo.map, e);
@@ -194,7 +195,7 @@ export default class ThriftRenameParser {
 				} else {
 					thisValue[2] = [
 						TYPE.STRUCT,
-						value.map((e) => this.parse_data(finfo.set, e)),
+						value.map((e: LooseType) => this.parse_data(finfo.set, e)),
 					];
 				}
 			} else if (finfo.type) {
@@ -206,7 +207,7 @@ export default class ThriftRenameParser {
 		return newThrift;
 	}
 
-	get_cl(structName) {
+	get_cl(structName: string): LooseType[][] {
 		const newThrift = [];
 		const thisStruct = this.def[structName];
 		for (const i in thisStruct) {
@@ -238,7 +239,7 @@ export default class ThriftRenameParser {
 				if (typeof finfo.map === "number") {
 					thisValue[2] = [TYPE.STRING, finfo.map, { key: value }];
 				} else {
-					const obj = {};
+					const obj: LooseType = {};
 					obj.key = this.get_cl(finfo.map);
 					thisValue[2] = [TYPE.STRING, TYPE.STRUCT, obj];
 				}

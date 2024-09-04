@@ -10,6 +10,7 @@
       "npm:crypto-js": "npm:crypto-js@4.2.0",
       "npm:curve25519-js": "npm:curve25519-js@0.0.4",
       "npm:elliptic": "npm:elliptic@6.5.7",
+      "npm:elliptic@6.5.7": "npm:elliptic@6.5.7",
       "npm:node-bignumber": "npm:node-bignumber@1.2.2",
       "npm:node-bignumber@1.2.2": "npm:node-bignumber@1.2.2",
       "npm:prettier": "npm:prettier@3.3.3",

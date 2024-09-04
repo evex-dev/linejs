@@ -1,5 +1,5 @@
-import CryptoJS from "npm:crypto-js";
-import * as curve25519 from "npm:curve25519-js";
+import CryptoJS from "npm:crypto-js@4.2.0";
+import * as curve25519 from "npm:curve25519-js@0.0.4";
 import * as crypto from "node:crypto";
 import { Buffer } from "node:buffer";
 import { TalkClient } from "../internal/talk-client.ts";
@@ -11,13 +11,13 @@ import {
 	MIDType,
 } from "../../libs/thrift/line_types.ts";
 
-import elliptic from "npm:elliptic";
+import elliptic from "npm:elliptic@6.5.7";
 
 const EC = elliptic.ec;
 const ec = new EC("curve25519"); // Curve25519
 
 class E2EE extends TalkClient {
-	public async getE2EESelfKeyData(mid: string) {
+	public async getE2EESelfKeyData(mid: string): Promise<LooseType> {
 		try {
 			return JSON.parse(this.storage.get("e2eeKeys:" + mid) as string);
 		} catch (_e) { /* Do Nothing */ }
@@ -32,7 +32,7 @@ class E2EE extends TalkClient {
 			"E2EE Key has not been saved, try register `saveE2EESelfKeyDataByKeyId` or use E2EE Login",
 		);
 	}
-	public getE2EESelfKeyDataByKeyId(keyId: string | number) {
+	public getE2EESelfKeyDataByKeyId(keyId: string | number): LooseType {
 		try {
 			return JSON.parse(this.storage.get("e2eeKeys:" + keyId) as string);
 		} catch { /* DoNothing */ }
@@ -73,7 +73,7 @@ class E2EE extends TalkClient {
 	public async getE2EELocalPublicKey(
 		mid: string,
 		keyId: string | number | undefined,
-	) {
+	): Promise<LooseType> {
 		const toType = this.getToType(mid);
 		let key: LooseType = undefined;
 		let fd: LooseType, fn: LooseType;
@@ -174,7 +174,10 @@ class E2EE extends TalkClient {
 		return Buffer.from(key, "base64");
 	}
 
-	public generateSharedSecret(privateKey: Buffer, publicKey: Buffer) {
+	public generateSharedSecret(
+		privateKey: Buffer,
+		publicKey: Buffer,
+	): Uint8Array {
 		this.e2eeLog("generateSharedSecretKeyInfo", {
 			privateKey: privateKey.length,
 			publicKey: publicKey.length,
@@ -185,7 +188,7 @@ class E2EE extends TalkClient {
 		);
 	}
 
-	public _xor(buf: Buffer) {
+	public _xor(buf: Buffer): Buffer {
 		const bufLength = Math.floor(buf.length / 2);
 		const buf2 = Buffer.alloc(bufLength);
 		for (let i = 0; i < bufLength; i++) {
@@ -194,7 +197,7 @@ class E2EE extends TalkClient {
 		return buf2;
 	}
 
-	public getSHA256Sum(...args: (string | Buffer)[]) {
+	public getSHA256Sum(...args: (string | Buffer)[]): Buffer {
 		const hash = crypto.createHash("sha256");
 		for (let arg of args) {
 			if (typeof arg === "string") {
@@ -205,7 +208,7 @@ class E2EE extends TalkClient {
 		return hash.digest();
 	}
 
-	public _encryptAESECB(aesKey: Buffer, plainData: Buffer) {
+	public _encryptAESECB(aesKey: Buffer, plainData: Buffer): Buffer {
 		const cipher = crypto.createCipheriv(
 			"aes-256-ecb",
 			aesKey,
@@ -215,7 +218,12 @@ class E2EE extends TalkClient {
 		return Buffer.concat([cipher.update(plainData), cipher.final()]);
 	}
 
-	public decodeE2EEKeyV1(data: LooseType, secret: Buffer) {
+	public decodeE2EEKeyV1(data: LooseType, secret: Buffer): {
+		keyId: LooseType;
+		privKey: Buffer;
+		pubKey: Buffer;
+		e2eeVersion: LooseType;
+	} | undefined {
 		if (data.encryptedKeyChain) {
 			const encryptedKeyChain = Buffer.from(
 				data["encryptedKeyChain"],
@@ -258,7 +266,7 @@ class E2EE extends TalkClient {
 		publicKey: Buffer,
 		privateKey: Buffer,
 		encryptedKeyChain: Buffer,
-	) {
+	): Buffer[] {
 		this.e2eeLog("decryptKeyChainKeyInfo", {
 			decryptKeyChain: {
 				publicKey: publicKey.toString("base64"),
@@ -288,7 +296,7 @@ class E2EE extends TalkClient {
 		publicKey: Buffer,
 		privateKey: Buffer,
 		encryptedKeyChain: Buffer,
-	) {
+	): Buffer {
 		const sharedSecret = this.generateSharedSecret(privateKey, publicKey);
 		const aesKey = this.getSHA256Sum(Buffer.from(sharedSecret), "Key");
 		encryptedKeyChain = this._xor(this.getSHA256Sum(encryptedKeyChain));
@@ -301,7 +309,14 @@ class E2EE extends TalkClient {
 		return keychainData;
 	}
 
-	public generateAAD(a: string, b: string, c: number, d: number, e = 2, f = 0) {
+	public generateAAD(
+		a: string,
+		b: string,
+		c: number,
+		d: number,
+		e = 2,
+		f = 0,
+	): Buffer {
 		let aad = Buffer.alloc(0);
 		aad = Buffer.concat([aad, Buffer.from(a)]);
 		aad = Buffer.concat([aad, Buffer.from(b)]);
@@ -311,7 +326,7 @@ class E2EE extends TalkClient {
 		aad = Buffer.concat([aad, this.getIntBytes(f)]);
 		return aad;
 	}
-	public getIntBytes(i: number) {
+	public getIntBytes(i: number): Uint8Array {
 		const j = 4;
 		let res: Uint8Array;
 
@@ -473,7 +488,7 @@ class E2EE extends TalkClient {
 		gcmKey: Buffer,
 		nonce: Buffer,
 		aad: Buffer,
-	) {
+	): Buffer {
 		const cipher = crypto.createCipheriv("aes-256-gcm", gcmKey, nonce);
 		cipher.setAAD(aad);
 		const encrypted = Buffer.concat([cipher.update(data), cipher.final()]);
@@ -590,7 +605,11 @@ class E2EE extends TalkClient {
 		return decrypted.location || undefined;
 	}
 
-	public decryptE2EEMessageV1(chunks: Buffer[], privK: Buffer, pubK: Buffer) {
+	public decryptE2EEMessageV1(
+		chunks: Buffer[],
+		privK: Buffer,
+		pubK: Buffer,
+	): LooseType {
 		const salt = chunks[0];
 		const message = chunks[1];
 		const _sign = chunks[2];
@@ -624,7 +643,7 @@ class E2EE extends TalkClient {
 		pubK: Buffer,
 		specVersion = 2,
 		contentType = 0,
-	) {
+	): LooseType {
 		const salt = chunks[0];
 		const message = chunks[1];
 		const ciphertext = message.subarray(0, -16);
