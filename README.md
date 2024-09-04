@@ -75,6 +75,7 @@ await client.login({
 - storage - (@evex/linejs/storage)
   - BaseStorage - LINE Client Base Storage
   - MemoryStorage - LINE Client Memory Storage
+  - FileStorage - LINE Client File Storage
 
 ## Authors
 

@@ -41,9 +41,15 @@ function writeValue(output, ftype, fid, val) {
 	}
 	switch (ftype) {
 		case Thrift.Type.STRING:
-			output.writeFieldBegin("", Thrift.Type.STRING, fid);
-			output.writeString(val);
-			output.writeFieldEnd();
+			if (Buffer === val.constructor) {
+				output.writeFieldBegin("", Thrift.Type.STRING, fid);
+				output.writeBinary(val);
+				output.writeFieldEnd();
+			} else {
+				output.writeFieldBegin("", Thrift.Type.STRING, fid);
+				output.writeString(val);
+				output.writeFieldEnd();
+			}
 			break;
 
 		case Thrift.Type.DOUBLE:

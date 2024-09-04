@@ -19,6 +19,13 @@ function readStruct(input) {
 	input.readStructEnd();
 	return returnData;
 }
+
+function isBinary(str) {
+	str = str.toString();
+	const json = JSON.stringify(str);
+	return json.search(/\\u/) !== -1;
+}
+
 function readValue(input, ftype) {
 	var Thrift = thrift.Thrift;
 	if (ftype == Thrift.Type.STRUCT) {
@@ -28,7 +35,12 @@ function readValue(input, ftype) {
 	} else if (ftype == Thrift.Type.I64) {
 		return parseInt(input.readI64().buffer.toString("hex"), 16);
 	} else if (ftype == Thrift.Type.STRING) {
-		return input.readString();
+		const bin = input.readBinary();
+		if (isBinary(bin)) {
+			return bin;
+		} else {
+			return bin.toString();
+		}
 	} else if (ftype == Thrift.Type.LIST) {
 		let returnData = [];
 		var _rtmp = input.readListBegin();
@@ -74,6 +86,12 @@ function _readThrift(data, Protocol = thrift.TCompactProtocol) {
 
 export function readThrift(data, Protocol = thrift.TCompactProtocol) {
 	return _readThrift(data, Protocol);
+}
+
+export function rawReadStruct(data, Protocol = thrift.TCompactProtocol) {
+	const bufTrans = new thrift.TFramedTransport(Buffer.from(data));
+	const proto = new Protocol(bufTrans);
+	return readStruct(proto);
 }
 
 function TreadValue(input, ftype) {

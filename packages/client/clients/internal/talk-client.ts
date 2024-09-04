@@ -6,20 +6,22 @@ import type { LooseType } from "../../entities/common.ts";
 import { ChannelClient } from "./channel-client.ts";
 
 export class TalkClient extends ChannelClient {
-	private TalkService_API_PATH = "/S4";
-	private TalkService_PROTOCOL_TYPE: ProtocolKey = 4;
-	private SyncService_API_PATH = "/SYNC4";
-	private SyncService_PROTOCOL_TYPE: ProtocolKey = 4;
+	protected TalkService_API_PATH = "/S4";
+	protected TalkService_PROTOCOL_TYPE: ProtocolKey = 4;
+	protected SyncService_API_PATH = "/SYNC4";
+	protected SyncService_PROTOCOL_TYPE: ProtocolKey = 4;
 
 	/**
 	 * @description Get line events.
 	 */
-	public async sync(options: {
-		limit?: number;
-		revision?: number;
-		globalRev?: number;
-		individualRev?: number;
-	}): Promise<LINETypes.SyncResponse> {
+	public async sync(
+		options: {
+			limit?: number;
+			revision?: number;
+			globalRev?: number;
+			individualRev?: number;
+		} = {},
+	): Promise<LINETypes.SyncResponse> {
 		const { limit, revision, individualRev, globalRev } = {
 			limit: 100,
 			revision: 0,
@@ -109,6 +111,45 @@ export class TalkClient extends ChannelClient {
 			"sendMessage",
 			this.TalkService_PROTOCOL_TYPE,
 			"Message",
+			this.TalkService_API_PATH,
+		);
+	}
+	public async getE2EEPublicKeys(): Promise<LINETypes.E2EEPublicKey[]> {
+		return (
+			await this.direct_request(
+				[],
+				"getE2EEPublicKeys",
+				this.TalkService_PROTOCOL_TYPE,
+				false,
+				this.TalkService_API_PATH,
+			)
+		).map((e) => this.parser.rename_thrift("E2EEPublicKey", e));
+	}
+	public async negotiateE2EEPublicKey(options: {
+		mid: string;
+	}): Promise<LINETypes.E2EENegotiationResult> {
+		const { mid } = { ...options };
+		return await this.direct_request(
+			[[11, 2, mid]],
+			"negotiateE2EEPublicKey",
+			this.TalkService_PROTOCOL_TYPE,
+			"E2EENegotiationResult",
+			this.TalkService_API_PATH,
+		);
+	}
+	public async getLastE2EEGroupSharedKey(options: {
+		keyVersion: number;
+		chatMid: string;
+	}): Promise<LINETypes.E2EEGroupSharedKey> {
+		const { keyVersion, chatMid } = { ...options };
+		return await this.direct_request(
+			[
+				[8, 2, keyVersion],
+				[11, 3, chatMid],
+			],
+			"getLastE2EEGroupSharedKey",
+			this.TalkService_PROTOCOL_TYPE,
+			"E2EEGroupSharedKey",
 			this.TalkService_API_PATH,
 		);
 	}

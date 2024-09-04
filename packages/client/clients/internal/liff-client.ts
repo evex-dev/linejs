@@ -5,8 +5,8 @@ import type { LooseType } from "../../entities/common.ts";
 import { BaseClient } from "../base-client.ts";
 
 export class LiffClient extends BaseClient {
-	private LiffService_API_PATH = "/LIFF1";
-	private LiffService_PROTOCOL_TYPE: ProtocolKey = 4;
+	protected LiffService_API_PATH = "/LIFF1";
+	protected LiffService_PROTOCOL_TYPE: ProtocolKey = 4;
 
 	/**
 	 * @description Gets the LiffToken by liffId and chatMid.

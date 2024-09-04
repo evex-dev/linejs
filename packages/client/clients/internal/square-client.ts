@@ -6,11 +6,11 @@ import type { LooseType } from "../../entities/common.ts";
 import { LiffClient } from "./liff-client.ts";
 
 export class SquareClient extends LiffClient {
-	private SquareService_API_PATH = "/SQ1";
-	private SquareService_PROTOCOL_TYPE: ProtocolKey = 4;
+	protected SquareService_API_PATH = "/SQ1";
+	protected SquareService_PROTOCOL_TYPE: ProtocolKey = 4;
 
-	private SquareLiveTalkService_API_PATH = "/SQLV1";
-	private SquareLiveTalkService_PROTOCOL_TYPE: ProtocolKey = 4;
+	protected SquareLiveTalkService_API_PATH = "/SQLV1";
+	protected SquareLiveTalkService_PROTOCOL_TYPE: ProtocolKey = 4;
 
 	private async continueRequest<
 		T extends (...args: LooseType) => LooseType,
@@ -50,11 +50,13 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Get joined squares.
 	 */
-	public async getJoinedSquares(options: {
-		limit?: number;
-		continuationToken?: string;
-		continueRequest?: boolean;
-	}): Promise<LINETypes.GetJoinedSquaresResponse> {
+	public async getJoinedSquares(
+		options: {
+			limit?: number;
+			continuationToken?: string;
+			continueRequest?: boolean;
+		} = {},
+	): Promise<LINETypes.GetJoinedSquaresResponse> {
 		const { limit, continuationToken, continueRequest } = {
 			limit: 100,
 			continueRequest: !options.limit && !options.continuationToken,
@@ -212,12 +214,14 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Fetch square events.
 	 */
-	public async fetchMyEvents(options: {
-		limit?: number;
-		syncToken?: string;
-		continuationToken?: string;
-		subscriptionId?: number;
-	}): Promise<LINETypes.FetchMyEventsResponse> {
+	public async fetchMyEvents(
+		options: {
+			limit?: number;
+			syncToken?: string;
+			continuationToken?: string;
+			subscriptionId?: number;
+		} = {},
+	): Promise<LINETypes.FetchMyEventsResponse> {
 		const { limit, syncToken, continuationToken, subscriptionId } = {
 			limit: 100,
 			...options,

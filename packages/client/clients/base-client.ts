@@ -31,6 +31,7 @@ import {
 } from "../entities/regex.ts";
 import type { System } from "../entities/system.ts";
 import type { User } from "../entities/user.ts";
+import { Buffer } from "node:buffer";
 
 interface ClientOptions {
 	storage?: BaseStorage;
@@ -154,7 +155,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			authToken = await this.requestEmailLogin(
 				options.email,
 				options.password,
-				options.e2ee,
+				false,
 			);
 		}
 
@@ -174,7 +175,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.emit("ready", this.user);
 	}
 
-	private parser: ThriftRenameParser = new ThriftRenameParser();
+	protected parser: ThriftRenameParser = new ThriftRenameParser();
 	private cert: string | null = null;
 
 	/**
@@ -249,64 +250,133 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			String.fromCharCode(password.length) +
 			password;
 
-		let e2eeData;
+		let e2eeData, pincode, secret, secretPK;
 		if (enableE2EE) {
-			e2eeData =
-				"0\x8aEH\x96\xa7\x8d#5<\xfb\x91c\x12\x15\xbd\x13H\xfa\x04d\xcf\x96\xee1e\xa0]v,\x9f\xf2";
-			throw new InternalError("Not supported login type", "'e2ee'");
+			[secret, secretPK] = this.createSqrSecret(true);
+			pincode = "202202";
+			e2eeData = this._encryptAESECB(
+				this.getSHA256Sum(pincode),
+				Buffer.from(secretPK, "base64"),
+			);
 		}
 
 		const encryptedMessage = getRSACrypto(message, rsaKey).credentials;
 
-		const cert = (await this.getCert()) || undefined;
+		const cert = this.getCert() || undefined;
 
-		const response = await this.requestLoginV2(
+		let response = await this.loginV2(
 			keynm,
 			encryptedMessage,
 			this.system?.device,
 			undefined,
 			e2eeData,
-			cert || undefined,
+			cert,
 			"loginZ",
 		);
 
-		if (response.authToken) {
-			if (response.certificate) {
-				this.emit("update:cert", response.certificate);
+		if (!response.authToken) {
+			this.emit("pincall", response.pinCode || pincode);
+			if (enableE2EE) {
+				const headers = {
+					Host: this.endpoint,
+					accept: "application/x-thrift",
+					"user-agent": this.system.userAgent,
+					"x-line-application": this.system.type,
+					"x-line-access": response.verifier,
+					"x-lal": "ja_JP",
+					"x-lpv": "1",
+					"x-lhm": "GET",
+					"accept-encoding": "gzip",
+				};
+				const e2eeInfo = (
+					await fetch(`https://${this.endpoint}/LF1`, {
+						headers: headers,
+					}).then((res) => res.json())
+				).result;
+				this.log("response", e2eeInfo);
+				this.decodeE2EEKeyV1(e2eeInfo.metadata, secret);
+				const deviceSecret = this.encryptDeviceSecret(
+					Buffer.from(e2eeInfo.publicKey, "base64"),
+					secret,
+					e2eeInfo.encryptedKeyChain,
+				);
+				const e2eeLogin = await this.confirmE2EELogin(
+					response.verifier,
+					deviceSecret,
+				);
+				response = await this.loginV2(
+					keynm,
+					encryptedMessage,
+					this.system.device,
+					e2eeLogin,
+					e2eeData,
+					cert,
+					"loginZ",
+				);
+			} else {
+				const headers = {
+					Host: this.endpoint,
+					accept: "application/x-thrift",
+					"user-agent": this.system.userAgent,
+					"x-line-application": this.system.type,
+					"x-line-access": response.verifier,
+					"x-lal": "ja_JP",
+					"x-lpv": "1",
+					"x-lhm": "GET",
+					"accept-encoding": "gzip",
+				};
+				const verifier = await fetch(`https://${this.endpoint}/Q`, {
+					headers: headers,
+				}).then((res) => res.json());
+				this.log("response", verifier);
+				response = await this.loginV2(
+					keynm,
+					encryptedMessage,
+					this.system.device,
+					verifier.result.verifier,
+					e2eeData,
+					cert,
+					"loginZ",
+				);
 			}
-			return response.authToken;
 		}
-		this.emit("pincall", response.pinCode);
-		const headers = {
-			Host: this.endpoint,
-			accept: "application/x-thrift",
-			"user-agent": this.system.userAgent,
-			"x-line-application": this.system.type,
-			"x-line-access": response.verifier,
-			"x-lal": "ja_JP",
-			"x-lpv": "1",
-			"x-lhm": "GET",
-			"accept-encoding": "gzip",
-		};
-		const verifier = await fetch(`https://${this.endpoint}/Q`, {
-			headers: headers,
-		}).then((res) => res.json());
-		const loginReponse = await this.requestLoginV2(
-			keynm,
-			encryptedMessage,
-			this.system.device,
-			verifier.result.verifier,
-			e2eeData,
-			undefined,
-			"loginZ",
-		);
-		if (loginReponse.certificate) {
-			this.emit("update:cert", loginReponse.certificate);
+		if (response.certificate) {
+			this.emit("update:cert", response.certificate);
 		}
-		return loginReponse.authToken;
+		return response.authToken;
 	}
 
-	private async requestLoginV2(
+	public createSqrSecret(base64Only: boolean): [Uint8Array, string] {
+		return [new Uint8Array(), ""];
+	}
+	public getSHA256Sum(...args: string[] | Buffer[]) {
+		return Buffer.from([]);
+	}
+	public _encryptAESECB(aesKey: LooseType, plainData: LooseType) {
+		return Buffer.from([]);
+	}
+	public decodeE2EEKeyV1(data: LooseType, secret: Buffer): LooseType {}
+	public encryptDeviceSecret(
+		publicKey: Buffer,
+		privateKey: Buffer,
+		encryptedKeyChain: Buffer,
+	) {
+		return Buffer.from([]);
+	}
+
+	public confirmE2EELogin(verifier: string, deviceSecret: Buffer) {
+		return this.direct_request(
+			[
+				[11, 1, verifier],
+				[11, 2, deviceSecret],
+			],
+			"confirmE2EELogin",
+			3,
+			false,
+			"/api/v3p/rs",
+		);
+	}
+	private async loginV2(
 		keynm: string,
 		encryptedMessage: string,
 		deviceName: Device,
