@@ -1,14 +1,16 @@
 import CryptoJS from "npm:crypto-js";
 import * as curve25519 from "npm:curve25519-js";
 import * as crypto from "node:crypto";
-import * as thrift from "npm:thrift@0.20.0";
 import { Buffer } from "node:buffer";
 import { TalkClient } from "../internal/talk-client.ts";
 import { LooseType } from "../../entities/common.ts";
-import { RawReadStruct as readStruct } from "../../libs/thrift/read.js";
+import { rawReadStruct as readStruct } from "../../libs/thrift/read.js";
 import { Location, Message } from "../../libs/thrift/line_types.ts";
 
-const Thrift = thrift.Thrift;
+import elliptic from "npm:elliptic";
+
+const EC = elliptic.ec;
+const ec = new EC("curve25519"); // 例として、Curve25519を使用
 
 class E2EE extends TalkClient {
 	public async getE2EESelfKeyData(mid: string) {
@@ -192,12 +194,51 @@ class E2EE extends TalkClient {
 		return hash.digest();
 	}
 
-	public _encryptAESECB(aesKey: LooseType, plainData: LooseType) {
-		const cipher = crypto.createCipheriv("aes-128-ecb", aesKey, null);
+	public _encryptAESECB(aesKey: Buffer, plainData: Buffer) {
+		const cipher = crypto.createCipheriv("aes-256-ecb", aesKey, null);
 		cipher.setAutoPadding(false);
 		return Buffer.concat([cipher.update(plainData), cipher.final()]);
 	}
 
+	public decodeE2EEKeyV1(data: LooseType, secret: Buffer) {
+		if (data.encryptedKeyChain) {
+			const encryptedKeyChain = Buffer.from(
+				data["encryptedKeyChain"],
+				"base64",
+			);
+			const keyId = data["keyId"];
+			const publicKey = Buffer.from(data["publicKey"], "base64");
+			const e2eeVersion = data["e2eeVersion"];
+			const [privKey, pubKey] = this.decryptKeyChain(
+				publicKey,
+				secret,
+				encryptedKeyChain,
+			);
+			this._log({
+				e2eeKey: {
+					keyId,
+					privKey,
+					pubKey,
+					e2eeVersion,
+				},
+			});
+			this.storage.set(
+				"e2eeKeys:" + keyId,
+				JSON.stringify({
+					keyId,
+					privKey,
+					pubKey,
+					e2eeVersion,
+				}),
+			);
+			return {
+				keyId,
+				privKey,
+				pubKey,
+				e2eeVersion,
+			};
+		}
+	}
 	public decryptKeyChain(
 		publicKey: Buffer,
 		privateKey: Buffer,
@@ -206,7 +247,7 @@ class E2EE extends TalkClient {
 		const sharedSecret = this.generateSharedSecret(privateKey, publicKey);
 		const aesKey = this.getSHA256Sum(sharedSecret, "Key");
 		const aesIv = this._xor(this.getSHA256Sum(sharedSecret, "IV"));
-		const decipher = crypto.createDecipheriv("aes-128-cbc", aesKey, aesIv);
+		const decipher = crypto.createDecipheriv("aes-256-cbc", aesKey, aesIv);
 		let keychainData = Buffer.concat([
 			decipher.update(encryptedKeyChain),
 			decipher.final(),
@@ -418,7 +459,7 @@ class E2EE extends TalkClient {
 		const specVersion = metadata.e2eeVersion || "2";
 		const contentType = messageObj.contentType;
 		const chunks = messageObj.chunks.map((chunk) =>
-			typeof chunk === "string" ? Buffer.from(chunk, "utf-8") : chunk,
+			typeof chunk === "string" ? Buffer.from(chunk, "utf-8") : chunk
 		);
 		const senderKeyId = byte2int(chunks[3]);
 		const receiverKeyId = byte2int(chunks[4]);
@@ -452,7 +493,7 @@ class E2EE extends TalkClient {
 				privK,
 				pubK,
 				parseInt(specVersion),
-				contentType,
+				contentType as number,
 			);
 		} else {
 			decrypted = this.decryptE2EEMessageV1(chunks, privK, pubK);
@@ -472,7 +513,7 @@ class E2EE extends TalkClient {
 		const specVersion = metadata.e2eeVersion || "2";
 		const contentType = messageObj.contentType;
 		const chunks = messageObj.chunks.map((chunk) =>
-			typeof chunk === "string" ? Buffer.from(chunk, "utf-8") : chunk,
+			typeof chunk === "string" ? Buffer.from(chunk, "utf-8") : chunk
 		);
 
 		const senderKeyId = byte2int(chunks[3]);
@@ -507,7 +548,7 @@ class E2EE extends TalkClient {
 				privK,
 				pubK,
 				parseInt(specVersion),
-				contentType,
+				contentType as number,
 			);
 		} else {
 			decrypted = this.decryptE2EEMessageV1(chunks, privK, pubK);
@@ -575,6 +616,22 @@ class E2EE extends TalkClient {
 
 	private _log(str: LooseType) {
 		this.log("e2ee", { message: str });
+	}
+
+	public override createSqrSecret(
+		base64Only: boolean = false,
+	): [Uint8Array, string] {
+		const privateKey = crypto.randomBytes(32);
+		const keyPair = ec.keyFromPrivate(privateKey);
+		const _publicKey = keyPair.getPublic().encodeCompressed();
+		const publicKey = Buffer.from(_publicKey);
+		const secret = encodeURIComponent(publicKey.toString("base64"));
+		const version = 1;
+
+		if (base64Only) {
+			return [privateKey, publicKey.toString("base64")];
+		}
+		return [privateKey, `?secret=${secret}&e2eeVersion=${version}`];
 	}
 }
 

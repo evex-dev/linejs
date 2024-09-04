@@ -88,7 +88,7 @@ export function readThrift(data, Protocol = thrift.TCompactProtocol) {
 	return _readThrift(data, Protocol);
 }
 
-export function RawReadStruct(data, Protocol = thrift.TCompactProtocol) {
+export function rawReadStruct(data, Protocol = thrift.TCompactProtocol) {
 	const bufTrans = new thrift.TFramedTransport(Buffer.from(data));
 	const proto = new Protocol(bufTrans);
 	return readStruct(proto);
