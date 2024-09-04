@@ -138,7 +138,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		let authToken = options.authToken;
 
 		if (!authToken) {
-			if (!options.email || !options.password) {
+			if ((!options.email || !options.password) || options.qr) {
 				authToken = await this.requestSQR();
 			} else {
 				authToken = await this.requestEmailLogin(
