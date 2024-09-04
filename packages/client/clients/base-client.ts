@@ -155,7 +155,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			authToken = await this.requestEmailLogin(
 				options.email,
 				options.password,
-				options.e2ee || false,
+				options.e2ee,
 			);
 		}
 
@@ -250,12 +250,13 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			String.fromCharCode(password.length) +
 			password;
 
-		let e2eeData, pincode, secret, secretPK;
+		let e2eeData: Buffer | undefined, secret: Uint8Array | undefined, secretPK: string | undefined;
+		
+		const constantPincode = "202202";
 		if (enableE2EE) {
 			[secret, secretPK] = this.createSqrSecret(true);
-			pincode = "202202";
 			e2eeData = this._encryptAESECB(
-				this.getSHA256Sum(pincode),
+				this.getSHA256Sum(constantPincode),
 				Buffer.from(secretPK, "base64"),
 			);
 		}
@@ -275,8 +276,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		);
 
 		if (!response.authToken) {
-			this.emit("pincall", response.pinCode || pincode);
-			if (enableE2EE) {
+			this.emit("pincall", response.pinCode || constantPincode);
+			if (enableE2EE && secret) {
 				const headers = {
 					Host: this.endpoint,
 					accept: "application/x-thrift",
@@ -294,10 +295,10 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					}).then((res) => res.json())
 				).result;
 				this.log("response", e2eeInfo);
-				this.decodeE2EEKeyV1(e2eeInfo.metadata, secret);
+				this.decodeE2EEKeyV1(e2eeInfo.metadata, Buffer.from(secret));
 				const deviceSecret = this.encryptDeviceSecret(
 					Buffer.from(e2eeInfo.publicKey, "base64"),
-					secret,
+					Buffer.from(secret),
 					e2eeInfo.encryptedKeyChain,
 				);
 				const e2eeLogin = await this.confirmE2EELogin(
@@ -346,20 +347,21 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		return response.authToken;
 	}
 
-	public createSqrSecret(base64Only: boolean): [Uint8Array, string] {
+	public createSqrSecret(_base64Only: boolean): [Uint8Array, string] {
 		return [new Uint8Array(), ""];
 	}
-	public getSHA256Sum(...args: string[] | Buffer[]) {
+	public getSHA256Sum(..._args: string[] | Buffer[]) {
 		return Buffer.from([]);
 	}
-	public _encryptAESECB(aesKey: LooseType, plainData: LooseType) {
+	public _encryptAESECB(_aesKey: LooseType, _plainData: LooseType) {
 		return Buffer.from([]);
 	}
-	public decodeE2EEKeyV1(data: LooseType, secret: Buffer): LooseType {}
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
+
 	public encryptDeviceSecret(
-		publicKey: Buffer,
-		privateKey: Buffer,
-		encryptedKeyChain: Buffer,
+		_publicKey: Buffer,
+		_privateKey: Buffer,
+		_encryptedKeyChain: Buffer,
 	) {
 		return Buffer.from([]);
 	}
@@ -381,7 +383,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		encryptedMessage: string,
 		deviceName: Device,
 		verifier: string | undefined,
-		secret: string | undefined,
+		secret: Buffer | undefined,
 		cert: string | undefined,
 		methodName: string = "loginV2",
 	): Promise<LINETypes.LoginResult> {

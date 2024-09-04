@@ -1847,7 +1847,7 @@ export const Thrift = {
 		},
 		{
 			fid: 14,
-			name: "readonlyDefaultChat",
+			name: "DefaultChat",
 			struct: "SquareFeature",
 		},
 		{

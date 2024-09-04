@@ -3,20 +3,20 @@ import * as curve25519 from "npm:curve25519-js";
 import * as crypto from "node:crypto";
 import { Buffer } from "node:buffer";
 import { TalkClient } from "../internal/talk-client.ts";
-import { LooseType } from "../../entities/common.ts";
+import type { LooseType } from "../../entities/common.ts";
 import { rawReadStruct as readStruct } from "../../libs/thrift/read.js";
-import { Location, Message } from "../../libs/thrift/line_types.ts";
+import { MIDType, type Location, type Message } from "../../libs/thrift/line_types.ts";
 
 import elliptic from "npm:elliptic";
 
 const EC = elliptic.ec;
-const ec = new EC("curve25519"); // 例として、Curve25519を使用
+const ec = new EC("curve25519"); // Curve25519
 
 class E2EE extends TalkClient {
 	public async getE2EESelfKeyData(mid: string) {
 		try {
 			return JSON.parse(this.storage.get("e2eeKeys:" + mid) as string);
-		} catch (e) {}
+		} catch (_e) {/* Do Nothing */}
 		const keys = await this.getE2EEPublicKeys();
 		for (let i = 0; i < keys.length; i++) {
 			const key = keys[i];
@@ -31,7 +31,7 @@ class E2EE extends TalkClient {
 	public getE2EESelfKeyDataByKeyId(keyId: string | number) {
 		try {
 			return JSON.parse(this.storage.get("e2eeKeys:" + keyId) as string);
-		} catch {}
+		} catch {/* DoNothing */}
 	}
 	public saveE2EESelfKeyDataByKeyId(keyId: string | number, value: LooseType) {
 		this.storage.set("e2eeKeys:" + keyId, JSON.stringify(value));
@@ -113,14 +113,14 @@ class E2EE extends TalkClient {
 				key = undefined;
 			}
 			if (!key) {
-				let E2EEGroupSharedKey = await this.getLastE2EEGroupSharedKey({
+				const E2EEGroupSharedKey = await this.getLastE2EEGroupSharedKey({
 					keyVersion: 2,
 					chatMid: mid,
 				});
 				const groupKeyId = E2EEGroupSharedKey.groupKeyId;
 				const creator = E2EEGroupSharedKey.creator;
 				const creatorKeyId = E2EEGroupSharedKey.creatorKeyId;
-				const receiver = E2EEGroupSharedKey.receiver;
+				const _receiver = E2EEGroupSharedKey.receiver;
 				const receiverKeyId = E2EEGroupSharedKey.receiverKeyId;
 				const encryptedSharedKey = E2EEGroupSharedKey.encryptedSharedKey;
 				const selfKey = Buffer.from(
@@ -132,8 +132,8 @@ class E2EE extends TalkClient {
 					creatorKeyId,
 				);
 				const aesKey = this.generateSharedSecret(selfKey, creatorKey);
-				const aes_key = this.getSHA256Sum(aesKey, "Key");
-				const aes_iv = this._xor(this.getSHA256Sum(aesKey, "IV"));
+				const aes_key = this.getSHA256Sum(Buffer.from(aesKey), "Key");
+				const aes_iv = this._xor(this.getSHA256Sum(Buffer.from(aesKey), "IV"));
 
 				this._log({ aes_key, aes_iv, encryptedSharedKey });
 
@@ -152,7 +152,7 @@ class E2EE extends TalkClient {
 
 				this._log({ plainText });
 
-				let decrypted = plainText.toString(CryptoJS.enc.Base64);
+				const decrypted = plainText.toString(CryptoJS.enc.Base64);
 				this._log(`[getE2EELocalPublicKey] decrypted: ${decrypted}`);
 				const data = {
 					privKey: decrypted,
@@ -183,7 +183,7 @@ class E2EE extends TalkClient {
 		return buf2;
 	}
 
-	public getSHA256Sum(...args: string[] | Buffer[]) {
+	public getSHA256Sum(...args: (string | Buffer)[]) {
 		const hash = crypto.createHash("sha256");
 		for (let arg of args) {
 			if (typeof arg === "string") {
@@ -245,10 +245,10 @@ class E2EE extends TalkClient {
 		encryptedKeyChain: Buffer,
 	) {
 		const sharedSecret = this.generateSharedSecret(privateKey, publicKey);
-		const aesKey = this.getSHA256Sum(sharedSecret, "Key");
-		const aesIv = this._xor(this.getSHA256Sum(sharedSecret, "IV"));
+		const aesKey = this.getSHA256Sum(Buffer.from(sharedSecret), "Key");
+		const aesIv = this._xor(this.getSHA256Sum(Buffer.from(sharedSecret), "IV"));
 		const decipher = crypto.createDecipheriv("aes-256-cbc", aesKey, aesIv);
-		let keychainData = Buffer.concat([
+		const keychainData = Buffer.concat([
 			decipher.update(encryptedKeyChain),
 			decipher.final(),
 		]);
@@ -265,7 +265,7 @@ class E2EE extends TalkClient {
 		encryptedKeyChain: Buffer,
 	) {
 		const sharedSecret = this.generateSharedSecret(privateKey, publicKey);
-		const aesKey = this.getSHA256Sum(sharedSecret, "Key");
+		const aesKey = this.getSHA256Sum(Buffer.from(sharedSecret), "Key");
 		encryptedKeyChain = this._xor(this.getSHA256Sum(encryptedKeyChain));
 		const cipher = crypto.createCipheriv("aes-128-ecb", aesKey, null);
 		cipher.setAutoPadding(false);
@@ -346,7 +346,7 @@ class E2EE extends TalkClient {
 			chunks = this.encryptE2EELocationMessage(
 				senderKeyId,
 				receiverKeyId,
-				keyData,
+				Buffer.from(keyData),
 				specVersion,
 				text as Location,
 				to,
@@ -356,7 +356,7 @@ class E2EE extends TalkClient {
 			chunks = this.encryptE2EETextMessage(
 				senderKeyId,
 				receiverKeyId,
-				keyData,
+				Buffer.from(keyData),
 				specVersion,
 				text as string,
 				to,
@@ -390,8 +390,8 @@ class E2EE extends TalkClient {
 		const data = Buffer.from(JSON.stringify({ text: text }));
 		const encData = this.encryptE2EEMessageV2(data, gcmKey, sign, aad);
 
-		let bSenderKeyId = Buffer.from(this.getIntBytes(senderKeyId));
-		let bReceiverKeyId = Buffer.from(this.getIntBytes(receiverKeyId));
+		const bSenderKeyId = Buffer.from(this.getIntBytes(senderKeyId));
+		const bReceiverKeyId = Buffer.from(this.getIntBytes(receiverKeyId));
 
 		this._log(`senderKeyId: ${senderKeyId} (${bSenderKeyId.toString("hex")})`);
 		this._log(
@@ -424,8 +424,8 @@ class E2EE extends TalkClient {
 		const data = Buffer.from(JSON.stringify({ location: location }));
 		const encData = this.encryptE2EEMessageV2(data, gcmKey, sign, aad);
 
-		let bSenderKeyId = Buffer.from(this.getIntBytes(senderKeyId));
-		let bReceiverKeyId = Buffer.from(this.getIntBytes(receiverKeyId));
+		const bSenderKeyId = Buffer.from(this.getIntBytes(senderKeyId));
+		const bReceiverKeyId = Buffer.from(this.getIntBytes(receiverKeyId));
 
 		this._log(`senderKeyId: ${senderKeyId} (${bSenderKeyId.toString("hex")})`);
 		this._log(
@@ -470,7 +470,7 @@ class E2EE extends TalkClient {
 		let privK = Buffer.from(selfKey.privKey, "base64");
 		let pubK;
 
-		if (toType === 0 || toType === "USER") {
+		if (toType === MIDType.USER || (toType as number) === 0) {
 			pubK = await this.getE2EELocalPublicKey(
 				isSelf ? to : _from,
 				isSelf ? receiverKeyId : senderKeyId,
@@ -525,7 +525,7 @@ class E2EE extends TalkClient {
 		let privK = Buffer.from(selfKey.privKey, "base64");
 		let pubK;
 
-		if (toType === 0 || toType === "USER") {
+		if (toType === MIDType.USER || (toType as number) === 0) {
 			pubK = await this.getE2EELocalPublicKey(
 				to,
 				isSelf ? receiverKeyId : senderKeyId,
@@ -560,12 +560,12 @@ class E2EE extends TalkClient {
 	public decryptE2EEMessageV1(chunks: Buffer[], privK: Buffer, pubK: Buffer) {
 		const salt = chunks[0];
 		const message = chunks[1];
-		const sign = chunks[2];
+		const _sign = chunks[2];
 		const aesKey = this.generateSharedSecret(privK, pubK);
-		const aes_key = this.getSHA256Sum(aesKey, salt, Buffer.from("Key"));
-		const aes_iv = this._xor(this.getSHA256Sum(aesKey, salt, "IV"));
+		const aes_key = this.getSHA256Sum(Buffer.from(aesKey), salt, Buffer.from("Key"));
+		const aes_iv = this._xor(this.getSHA256Sum(Buffer.from(aesKey), salt, "IV"));
 		const decipher = crypto.createDecipheriv("aes-256-cbc", aes_key, aes_iv);
-		let decrypted = Buffer.concat([decipher.update(message), decipher.final()]);
+		const decrypted = Buffer.concat([decipher.update(message), decipher.final()]);
 		this._log(`decrypted: ${decrypted.toString("utf-8")}`);
 		decrypted; // = this.unpad(decrypted, 16);
 		return JSON.parse(decrypted.toString("utf-8"));
@@ -588,7 +588,7 @@ class E2EE extends TalkClient {
 		const senderKeyId = byte2int(chunks[3]);
 		const receiverKeyId = byte2int(chunks[4]);
 		const aesKey = this.generateSharedSecret(privK, pubK);
-		const gcmKey = this.getSHA256Sum(aesKey, salt, "Key");
+		const gcmKey = this.getSHA256Sum(Buffer.from(aesKey), salt, "Key");
 		const aad = this.generateAAD(
 			to,
 			from,
