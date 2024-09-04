@@ -195,7 +195,7 @@ class E2EE extends TalkClient {
 	}
 
 	public _encryptAESECB(aesKey: Buffer, plainData: Buffer) {
-		const cipher = crypto.createCipheriv("aes-256-ecb", aesKey, null);
+		const cipher = crypto.createCipheriv("aes-256-ecb", aesKey, new Uint8Array(0));
 		cipher.setAutoPadding(false);
 		return Buffer.concat([cipher.update(plainData), cipher.final()]);
 	}
