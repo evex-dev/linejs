@@ -137,7 +137,7 @@ class E2EE extends TalkClient {
 				);
 				const aesKey = this.generateSharedSecret(selfKey, creatorKey);
 				const aes_key = this.getSHA256Sum(Buffer.from(aesKey), "Key");
-				const aes_iv = this._xor(this.getSHA256Sum(Buffer.from(aesKey), "IV"));
+				const aes_iv = this.xor(this.getSHA256Sum(Buffer.from(aesKey), "IV"));
 
 				this.e2eeLog("getE2EELocalPublicKeyAESInfo", {
 					aes_key,
@@ -188,7 +188,7 @@ class E2EE extends TalkClient {
 		);
 	}
 
-	public _xor(buf: Buffer): Buffer {
+	public xor(buf: Buffer): Buffer {
 		const bufLength = Math.floor(buf.length / 2);
 		const buf2 = Buffer.alloc(bufLength);
 		for (let i = 0; i < bufLength; i++) {
@@ -208,7 +208,7 @@ class E2EE extends TalkClient {
 		return hash.digest();
 	}
 
-	public _encryptAESECB(aesKey: Buffer, plainData: Buffer): Buffer {
+	public encryptAESECB(aesKey: Buffer, plainData: Buffer): Buffer {
 		const cipher = crypto.createCipheriv(
 			"aes-256-ecb",
 			aesKey,
@@ -276,7 +276,7 @@ class E2EE extends TalkClient {
 		});
 		const sharedSecret = this.generateSharedSecret(privateKey, publicKey);
 		const aesKey = this.getSHA256Sum(Buffer.from(sharedSecret), "Key");
-		const aesIv = this._xor(this.getSHA256Sum(Buffer.from(sharedSecret), "IV"));
+		const aesIv = this.xor(this.getSHA256Sum(Buffer.from(sharedSecret), "IV"));
 		const decipher = crypto.createDecipheriv("aes-256-cbc", aesKey, aesIv);
 		decipher.setAutoPadding(false);
 		const keychainData = Buffer.concat([
@@ -299,7 +299,7 @@ class E2EE extends TalkClient {
 	): Buffer {
 		const sharedSecret = this.generateSharedSecret(privateKey, publicKey);
 		const aesKey = this.getSHA256Sum(Buffer.from(sharedSecret), "Key");
-		encryptedKeyChain = this._xor(this.getSHA256Sum(encryptedKeyChain));
+		encryptedKeyChain = this.xor(this.getSHA256Sum(encryptedKeyChain));
 		const cipher = crypto.createCipheriv("aes-128-ecb", aesKey, null);
 		cipher.setAutoPadding(false);
 		const keychainData = Buffer.concat([
@@ -619,7 +619,7 @@ class E2EE extends TalkClient {
 			salt,
 			Buffer.from("Key"),
 		);
-		const aes_iv = this._xor(
+		const aes_iv = this.xor(
 			this.getSHA256Sum(Buffer.from(aesKey), salt, "IV"),
 		);
 		const decipher = crypto.createDecipheriv("aes-256-cbc", aes_key, aes_iv);
@@ -637,7 +637,7 @@ class E2EE extends TalkClient {
 
 	public decryptE2EEMessageV2(
 		to: string,
-		from: string,
+		_from: string,
 		chunks: Buffer[],
 		privK: Buffer,
 		pubK: Buffer,
@@ -655,7 +655,7 @@ class E2EE extends TalkClient {
 		const gcmKey = this.getSHA256Sum(Buffer.from(aesKey), salt, "Key");
 		const aad = this.generateAAD(
 			to,
-			from,
+			_from,
 			senderKeyId,
 			receiverKeyId,
 			specVersion,

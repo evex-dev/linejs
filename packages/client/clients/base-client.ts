@@ -282,7 +282,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		const constantPincode = "202202";
 		if (enableE2EE) {
 			[secret, secretPK] = this.createSqrSecret(true);
-			e2eeData = this._encryptAESECB(
+			e2eeData = this.encryptAESECB(
 				this.getSHA256Sum(constantPincode),
 				Buffer.from(secretPK, "base64"),
 			);
@@ -410,7 +410,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	public getSHA256Sum(..._args: string[] | Buffer[]): Buffer {
 		return Buffer.from([]);
 	}
-	public _encryptAESECB(_aesKey: LooseType, _plainData: LooseType): Buffer {
+	public encryptAESECB(_aesKey: LooseType, _plainData: LooseType): Buffer {
 		return Buffer.from([]);
 	}
 	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
@@ -836,11 +836,11 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		return this.parser.get_cl(structName);
 	}
 
-	private LINEService_API_PATH = "/S4";
-	private LINEService_PROTOCOL_TYPE: ProtocolKey = 4;
+	protected LINEService_API_PATH = "/S4";
+	protected LINEService_PROTOCOL_TYPE: ProtocolKey = 4;
 
-	private RelationService_API_PATH = "/RE4";
-	private RelationService_PROTOCOL_TYPE: ProtocolKey = 4;
+	protected RelationService_API_PATH = "/RE4";
+	protected RelationService_PROTOCOL_TYPE: ProtocolKey = 4;
 
 	/**
 	 * @description Gets the profile of the current user.
