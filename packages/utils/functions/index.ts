@@ -17,25 +17,25 @@ interface Square {
 
 type SearchSquareResult =
 	| {
-		error: string;
-		data: null;
-	}
+			error: string;
+			data: null;
+	  }
 	| {
-		error: null;
-		data: {
-			squares: {
-				square: Square;
-				memberCount: number;
-				chatCount: number;
-				postCount: number;
-				latestMessageCreatedAt: number;
-				lastestMessageCreatedAt: number;
-			}[];
-			continuationToken: `${number}`;
-			totalCount: number;
-			showNewForOneMember: boolean;
-		};
-	};
+			error: null;
+			data: {
+				squares: {
+					square: Square;
+					memberCount: number;
+					chatCount: number;
+					postCount: number;
+					latestMessageCreatedAt: number;
+					lastestMessageCreatedAt: number;
+				}[];
+				continuationToken: `${number}`;
+				totalCount: number;
+				showNewForOneMember: boolean;
+			};
+	  };
 
 /**
  * Search square by query.
@@ -56,11 +56,9 @@ export async function searchSquare(
 	}
 
 	const result = await fetch(
-		`https://openchat.line.me/api/square/search?query=${
-			encodeURIComponent(
-				query,
-			)
-		}&limit=${limit}`,
+		`https://openchat.line.me/api/square/search?query=${encodeURIComponent(
+			query,
+		)}&limit=${limit}`,
 		{
 			headers: {
 				accept: "application/json, text/plain, */*",
@@ -97,21 +95,21 @@ export async function searchSquare(
 
 type getSquareResult =
 	| {
-		error: string;
-		data: null;
-	}
+			error: string;
+			data: null;
+	  }
 	| {
-		error: null;
-		data: {
-			square: Square;
-			noteCount: number;
-			isFull: boolean;
-			isReadOnly: boolean;
-			isYoutubeSquare: boolean;
-			country: string;
-			isOASquare: boolean;
-		};
-	};
+			error: null;
+			data: {
+				square: Square;
+				noteCount: number;
+				isFull: boolean;
+				isReadOnly: boolean;
+				isYoutubeSquare: boolean;
+				country: string;
+				isOASquare: boolean;
+			};
+	  };
 
 /**
  * Gets a Square by its ticket or emid.

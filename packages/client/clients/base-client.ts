@@ -115,9 +115,12 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				throw new InternalError("Invalid password", `'${options.password}'`);
 			}
 		}
-		const device: Device = options.device ||
+		const device: Device =
+			options.device ||
 			(options.authToken
-				? PRIMARY_TOKEN_REGEX.test(options.authToken) ? "ANDROID" : "IOSIPAD"
+				? PRIMARY_TOKEN_REGEX.test(options.authToken)
+					? "ANDROID"
+					: "IOSIPAD"
 				: "IOSIPAD");
 		const details = getDeviceDetails(device);
 
@@ -129,8 +132,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			appVersion: details.appVersion,
 			systemName: details.systemName,
 			systemVersion: details.systemVersion,
-			type:
-				`${device}\t${details.appVersion}\t${details.systemName}\t${details.systemVersion}`,
+			type: `${device}\t${details.appVersion}\t${details.systemName}\t${details.systemVersion}`,
 			userAgent: `Line/${details.appVersion}`,
 			device,
 		};
@@ -138,7 +140,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		let authToken = options.authToken;
 
 		if (!authToken) {
-			if ((!options.email || !options.password) || options.qr) {
+			if (!options.email || !options.password || options.qr) {
 				authToken = await this.requestSQR();
 			} else {
 				authToken = await this.requestEmailLogin(
@@ -268,7 +270,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		const rsaKey = await this.getRSAKeyInfo();
 		const { keynm, sessionKey } = rsaKey;
 
-		const message = String.fromCharCode(sessionKey.length) +
+		const message =
+			String.fromCharCode(sessionKey.length) +
 			sessionKey +
 			String.fromCharCode(email.length) +
 			email +
@@ -389,12 +392,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				await this.checkPinCodeVerified(sqr);
 			}
 			const response = await this.qrCodeLogin(sqr);
-			const {
-				1: pem,
-				2: authToken,
-				4: e2eeInfo,
-				5: _mid,
-			} = response;
+			const { 1: pem, 2: authToken, 4: e2eeInfo, 5: _mid } = response;
 			this.emit("update:qrcert", pem);
 			if (e2eeInfo) {
 				this.decodeE2EEKeyV1(e2eeInfo, Buffer.from(secret));
@@ -435,9 +433,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 	public async createQrCode(qrcode: string): Promise<LooseType> {
 		return await this.request(
-			[
-				[11, 1, qrcode],
-			],
+			[[11, 1, qrcode]],
 			"createQrCode",
 			4,
 			false,
@@ -448,9 +444,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	public async checkQrCodeVerified(qrcode: string): Promise<boolean> {
 		try {
 			await this.request(
-				[
-					[11, 1, qrcode],
-				],
+				[[11, 1, qrcode]],
 				"checkQrCodeVerified",
 				4,
 				false,
@@ -484,9 +478,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 	public async createPinCode(qrcode: string): Promise<LooseType> {
 		return await this.request(
-			[
-				[11, 1, qrcode],
-			],
+			[[11, 1, qrcode]],
 			"createPinCode",
 			4,
 			false,
@@ -497,9 +489,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	public async checkPinCodeVerified(qrcode: string): Promise<boolean> {
 		try {
 			await this.request(
-				[
-					[11, 1, qrcode],
-				],
+				[[11, 1, qrcode]],
 				"checkPinCodeVerified",
 				4,
 				false,
@@ -768,8 +758,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			parsedData: res,
 		});
 
-		const isRefresh = res.e && res.e["code"] === "NOT_AUTHORIZED_DEVICE" &&
-			nextToken;
+		const isRefresh =
+			res.e && res.e["code"] === "NOT_AUTHORIZED_DEVICE" && nextToken;
 
 		if (res.e && !isRefresh) {
 			throw new InternalError(
