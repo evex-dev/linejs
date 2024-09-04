@@ -6,7 +6,7 @@
 type Int64 = number;
 import type { Buffer } from "node:buffer";
 
-export declare enum ApplicationType {
+export enum ApplicationType {
 	_IOS = "IOS",
 	IOS = 16,
 	_IOS_RC = "IOS_RC",
@@ -267,7 +267,7 @@ export declare enum ApplicationType {
 	WEAROS_ALPHA = 547,
 }
 
-export declare enum ErrorCode {
+export enum ErrorCode {
 	_ILLEGAL_ARGUMENT = "ILLEGAL_ARGUMENT",
 	ILLEGAL_ARGUMENT = 0,
 	_AUTHENTICATION_FAILED = "AUTHENTICATION_FAILED",
@@ -514,7 +514,7 @@ export declare enum ErrorCode {
 	EXCEED_FOLLOWER_LIMIT = 123,
 }
 
-export declare enum LiffErrorCode {
+export enum LiffErrorCode {
 	_INVALID_REQUEST = "INVALID_REQUEST",
 	INVALID_REQUEST = 1,
 	_UNAUTHORIZED = "UNAUTHORIZED",
@@ -531,7 +531,7 @@ export declare enum LiffErrorCode {
 	SERVER_ERROR = 100,
 }
 
-export declare enum ChannelErrorCode {
+export enum ChannelErrorCode {
 	_ILLEGAL_ARGUMENT = "ILLEGAL_ARGUMENT",
 	ILLEGAL_ARGUMENT = 0,
 	_INTERNAL_ERROR = "INTERNAL_ERROR",
@@ -548,12 +548,12 @@ export declare enum ChannelErrorCode {
 	WEBVIEW_NOT_ALLOWED = 6,
 }
 
-export declare enum PreconditionFailedExtraInfo {
+export enum PreconditionFailedExtraInfo {
 	_DUPLICATED_DISPLAY_NAME = "DUPLICATED_DISPLAY_NAME",
 	DUPLICATED_DISPLAY_NAME = 0,
 }
 
-export declare enum SquareErrorCode {
+export enum SquareErrorCode {
 	_UNKNOWN = "UNKNOWN",
 	UNKNOWN = 0,
 	_INTERNAL_ERROR = "INTERNAL_ERROR",
@@ -580,7 +580,7 @@ export declare enum SquareErrorCode {
 	PRECONDITION_FAILED = 410,
 }
 
-export declare enum HomeExceptionCode {
+export enum HomeExceptionCode {
 	_INTERNAL_ERROR = "INTERNAL_ERROR",
 	INTERNAL_ERROR = 0,
 	_ILLEGAL_ARGUMENT = "ILLEGAL_ARGUMENT",
@@ -601,7 +601,7 @@ export declare enum HomeExceptionCode {
 	NO_CONTENT = 102,
 }
 
-export declare enum ChatappErrorCode {
+export enum ChatappErrorCode {
 	_INVALID_REQUEST = "INVALID_REQUEST",
 	INVALID_REQUEST = 1,
 	_UNAUTHORIZED = "UNAUTHORIZED",
@@ -610,7 +610,7 @@ export declare enum ChatappErrorCode {
 	SERVER_ERROR = 100,
 }
 
-export declare enum MembershipErrorCode {
+export enum MembershipErrorCode {
 	_ILLEGAL_ARGUMENT = "ILLEGAL_ARGUMENT",
 	ILLEGAL_ARGUMENT = 0,
 	_AUTHENTICATION_FAILED = "AUTHENTICATION_FAILED",
@@ -623,7 +623,7 @@ export declare enum MembershipErrorCode {
 	MAINTENANCE_ERROR = 33,
 }
 
-export declare enum BotErrorCode {
+export enum BotErrorCode {
 	_UNKNOWN = "UNKNOWN",
 	UNKNOWN = 0,
 	_BOT_NOT_FOUND = "BOT_NOT_FOUND",
@@ -640,21 +640,21 @@ export declare enum BotErrorCode {
 	INTERNAL_ERROR = 500,
 }
 
-export declare enum BotExternalErrorCode {
+export enum BotExternalErrorCode {
 	_ILLEGAL_ARGUMENT = "ILLEGAL_ARGUMENT",
 	ILLEGAL_ARGUMENT = 0,
 	_INTERNAL_ERROR = "INTERNAL_ERROR",
 	INTERNAL_ERROR = 1,
 }
 
-export declare enum AccessTokenRefreshErrorCode {
+export enum AccessTokenRefreshErrorCode {
 	_INVALID_REQUEST = "INVALID_REQUEST",
 	INVALID_REQUEST = 1000,
 	_RETRY_REQUIRED = "RETRY_REQUIRED",
 	RETRY_REQUIRED = 1001,
 }
 
-export declare enum AccountEapConnectErrorCode {
+export enum AccountEapConnectErrorCode {
 	_INTERNAL_ERROR = "INTERNAL_ERROR",
 	INTERNAL_ERROR = 0,
 	_ILLEGAL_ARGUMENT = "ILLEGAL_ARGUMENT",
@@ -669,7 +669,7 @@ export declare enum AccountEapConnectErrorCode {
 	APP_UPGRADE_REQUIRED = 101,
 }
 
-export declare enum PwlessCredentialErrorCode {
+export enum PwlessCredentialErrorCode {
 	_INTERNAL_ERROR = "INTERNAL_ERROR",
 	INTERNAL_ERROR = 0,
 	_ILLEGAL_ARGUMENT = "ILLEGAL_ARGUMENT",
@@ -691,7 +691,7 @@ export declare enum PwlessCredentialErrorCode {
 	FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR = 201,
 }
 
-export declare enum SecondAuthFactorPinCodeErrorCode {
+export enum SecondAuthFactorPinCodeErrorCode {
 	_INTERNAL_ERROR = "INTERNAL_ERROR",
 	INTERNAL_ERROR = 0,
 	_ILLEGAL_ARGUMENT = "ILLEGAL_ARGUMENT",
@@ -706,7 +706,7 @@ export declare enum SecondAuthFactorPinCodeErrorCode {
 	APP_UPGRADE_REQUIRED = 101,
 }
 
-export declare enum AuthErrorCode {
+export enum AuthErrorCode {
 	_INTERNAL_ERROR = "INTERNAL_ERROR",
 	INTERNAL_ERROR = 0,
 	_ILLEGAL_ARGUMENT = "ILLEGAL_ARGUMENT",
@@ -725,7 +725,7 @@ export declare enum AuthErrorCode {
 	APP_UPGRADE_REQUIRED = 101,
 }
 
-export declare enum SecondaryPwlessLoginErrorCode {
+export enum SecondaryPwlessLoginErrorCode {
 	_INTERNAL_ERROR = "INTERNAL_ERROR",
 	INTERNAL_ERROR = 0,
 	_VERIFICATION_FAILED = "VERIFICATION_FAILED",
@@ -753,7 +753,7 @@ export declare enum SecondaryPwlessLoginErrorCode {
 	FIDO_UNACCEPTABLE_CONTENT = 202,
 }
 
-export declare enum SecondaryQrCodeErrorCode {
+export enum SecondaryQrCodeErrorCode {
 	_INTERNAL_ERROR = "INTERNAL_ERROR",
 	INTERNAL_ERROR = 0,
 	_ILLEGAL_ARGUMENT = "ILLEGAL_ARGUMENT",
@@ -772,7 +772,7 @@ export declare enum SecondaryQrCodeErrorCode {
 	APP_UPGRADE_REQUIRED = 101,
 }
 
-export declare enum PaymentErrorCode {
+export enum PaymentErrorCode {
 	_SUCCESS = "SUCCESS",
 	SUCCESS = 0,
 	_GENERAL_USER_ERROR = "GENERAL_USER_ERROR",
@@ -881,7 +881,7 @@ export declare enum PaymentErrorCode {
 	UNKNOWN_ERROR = 10000,
 }
 
-export declare enum SettingsErrorCode {
+export enum SettingsErrorCode {
 	_UNKNOWN = "UNKNOWN",
 	UNKNOWN = 0,
 	_NONE = "NONE",
@@ -910,7 +910,7 @@ export declare enum SettingsErrorCode {
 	SERVICE_UNAVAILABLE = 20739,
 }
 
-export declare enum ThingsErrorCode {
+export enum ThingsErrorCode {
 	_INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR",
 	INTERNAL_SERVER_ERROR = 0,
 	_UNAUTHORIZED = "UNAUTHORIZED",
@@ -925,7 +925,7 @@ export declare enum ThingsErrorCode {
 	UNSUPPORTED_REGION = 4097,
 }
 
-export declare enum SuggestTrialErrorCode {
+export enum SuggestTrialErrorCode {
 	_UNKNOWN = "UNKNOWN",
 	UNKNOWN = 0,
 	_NONE = "NONE",
@@ -944,7 +944,7 @@ export declare enum SuggestTrialErrorCode {
 	SERVICE_UNAVAILABLE = 20739,
 }
 
-export declare enum LFLPremiumErrorCode {
+export enum LFLPremiumErrorCode {
 	_ILLEGAL_ARGUMENT = "ILLEGAL_ARGUMENT",
 	ILLEGAL_ARGUMENT = 16641,
 	_MAJOR_VERSION_NOT_SUPPORTED = "MAJOR_VERSION_NOT_SUPPORTED",
@@ -955,7 +955,7 @@ export declare enum LFLPremiumErrorCode {
 	INTERNAL_SERVER_ERROR = 20737,
 }
 
-export declare enum WalletErrorCode {
+export enum WalletErrorCode {
 	_INVALID_PARAMETER = "INVALID_PARAMETER",
 	INVALID_PARAMETER = 400,
 	_AUTHENTICATION_FAILED = "AUTHENTICATION_FAILED",
@@ -966,7 +966,7 @@ export declare enum WalletErrorCode {
 	SERVICE_IN_MAINTENANCE_MODE = 503,
 }
 
-export declare enum ShopErrorCode {
+export enum ShopErrorCode {
 	_UNKNOWN = "UNKNOWN",
 	UNKNOWN = 0,
 	_NONE = "NONE",
@@ -1015,7 +1015,7 @@ export declare enum ShopErrorCode {
 	SERVICE_UNAVAILABLE = 20739,
 }
 
-export declare enum PointErrorCode {
+export enum PointErrorCode {
 	_REQUEST_DUPLICATION = "REQUEST_DUPLICATION",
 	REQUEST_DUPLICATION = 3001,
 	_INVALID_PARAMETER = "INVALID_PARAMETER",
@@ -1058,7 +1058,7 @@ export declare enum PointErrorCode {
 	SYSTEM_ERROR = 5999,
 }
 
-export declare enum E2EEKeyBackupErrorCode {
+export enum E2EEKeyBackupErrorCode {
 	_ILLEGAL_ARGUMENT = "ILLEGAL_ARGUMENT",
 	ILLEGAL_ARGUMENT = 0,
 	_AUTHENTICATION_FAILED = "AUTHENTICATION_FAILED",
@@ -1075,7 +1075,7 @@ export declare enum E2EEKeyBackupErrorCode {
 	INVALID_PIN = 6,
 }
 
-export declare enum TalkSyncReason {
+export enum TalkSyncReason {
 	_UNSPECIFIED = "UNSPECIFIED",
 	UNSPECIFIED = 0,
 	_UNKNOWN = "UNKNOWN",
@@ -1096,7 +1096,7 @@ export declare enum TalkSyncReason {
 	USER_INITIATED = 8,
 }
 
-export declare enum OpType {
+export enum OpType {
 	_END_OF_OPERATION = "END_OF_OPERATION",
 	END_OF_OPERATION = 0,
 	_UPDATE_PROFILE = "UPDATE_PROFILE",
@@ -1353,7 +1353,7 @@ export declare enum OpType {
 	FAILED_DELIVERY_MESSAGE = 142,
 }
 
-export declare enum OpStatus {
+export enum OpStatus {
 	_NORMAL = "NORMAL",
 	NORMAL = 0,
 	_ALERT_DISABLED = "ALERT_DISABLED",
@@ -1362,7 +1362,7 @@ export declare enum OpStatus {
 	ALWAYS = 2,
 }
 
-export declare enum MIDType {
+export enum MIDType {
 	_USER = "USER",
 	USER = 0,
 	_ROOM = "ROOM",
@@ -1379,7 +1379,7 @@ export declare enum MIDType {
 	BOT = 6,
 }
 
-export declare enum MessageRelationType {
+export enum MessageRelationType {
 	_FORWARD = "FORWARD",
 	FORWARD = 0,
 	_AUTO_REPLY = "AUTO_REPLY",
@@ -1390,7 +1390,7 @@ export declare enum MessageRelationType {
 	REPLY = 3,
 }
 
-export declare enum ServiceCode {
+export enum ServiceCode {
 	_UNKNOWN = "UNKNOWN",
 	UNKNOWN = 0,
 	_TALK = "TALK",
@@ -1399,7 +1399,7 @@ export declare enum ServiceCode {
 	SQUARE = 2,
 }
 
-export declare enum AppExtensionType {
+export enum AppExtensionType {
 	_SIRI = "SIRI",
 	SIRI = 1,
 	_GOOGLE_ASSISTANT = "GOOGLE_ASSISTANT",
@@ -1408,7 +1408,7 @@ export declare enum AppExtensionType {
 	OS_SHARE = 3,
 }
 
-export declare enum PredefinedReactionType {
+export enum PredefinedReactionType {
 	_NICE = "NICE",
 	NICE = 2,
 	_LOVE = "LOVE",
@@ -1423,7 +1423,7 @@ export declare enum PredefinedReactionType {
 	OMG = 7,
 }
 
-export declare enum PlaceSearchProvider {
+export enum PlaceSearchProvider {
 	_GOOGLE = "GOOGLE",
 	GOOGLE = 0,
 	_BAIDU = "BAIDU",
@@ -1432,7 +1432,7 @@ export declare enum PlaceSearchProvider {
 	FOURSQUARE = 2,
 }
 
-export declare enum GeolocationAccuracyMode {
+export enum GeolocationAccuracyMode {
 	_UNKNOWN = "UNKNOWN",
 	UNKNOWN = 0,
 	_IOS_REDUCED_ACCURACY = "IOS_REDUCED_ACCURACY",
@@ -1445,7 +1445,7 @@ export declare enum GeolocationAccuracyMode {
 	AOS_APPROXIMATE_LOCATION = 4,
 }
 
-export declare enum ContentType {
+export enum ContentType {
 	_NONE = "NONE",
 	NONE = 0,
 	_IMAGE = "IMAGE",
@@ -1494,7 +1494,7 @@ export declare enum ContentType {
 	FLEX = 22,
 }
 
-export declare enum ContactType {
+export enum ContactType {
 	_MID = "MID",
 	MID = 0,
 	_PHONE = "PHONE",
@@ -1533,7 +1533,7 @@ export declare enum ContactType {
 	BBM = 2309,
 }
 
-export declare enum ContactStatus {
+export enum ContactStatus {
 	_UNSPECIFIED = "UNSPECIFIED",
 	UNSPECIFIED = 0,
 	_FRIEND = "FRIEND",
@@ -1550,7 +1550,7 @@ export declare enum ContactStatus {
 	DELETED_BLOCKED = 6,
 }
 
-export declare enum ContactRelation {
+export enum ContactRelation {
 	_ONEWAY = "ONEWAY",
 	ONEWAY = 0,
 	_BOTH = "BOTH",
@@ -1559,7 +1559,7 @@ export declare enum ContactRelation {
 	NOT_REGISTERED = 2,
 }
 
-export declare enum FriendRequestStatus {
+export enum FriendRequestStatus {
 	_NONE = "NONE",
 	NONE = 0,
 	_AVAILABLE = "AVAILABLE",
@@ -1570,12 +1570,12 @@ export declare enum FriendRequestStatus {
 	UNAVAILABLE = 3,
 }
 
-export declare enum ContactCalendarEventType {
+export enum ContactCalendarEventType {
 	_BIRTHDAY = "BIRTHDAY",
 	BIRTHDAY = 0,
 }
 
-export declare enum UserStatus {
+export enum UserStatus {
 	_NORMAL = "NORMAL",
 	NORMAL = 0,
 	_UNBOUND = "UNBOUND",
@@ -1586,14 +1586,14 @@ export declare enum UserStatus {
 	UNKNOWN = 3,
 }
 
-export declare enum ContactCalendarEventState {
+export enum ContactCalendarEventState {
 	_SHOW = "SHOW",
 	SHOW = 0,
 	_HIDE = "HIDE",
 	HIDE = 1,
 }
 
-export declare enum SnsIdType {
+export enum SnsIdType {
 	_FACEBOOK = "FACEBOOK",
 	FACEBOOK = 1,
 	_SINA = "SINA",
@@ -1610,7 +1610,7 @@ export declare enum SnsIdType {
 	YAHOOJAPAN = 7,
 }
 
-export declare enum UserAgeType {
+export enum UserAgeType {
 	_OVER = "OVER",
 	OVER = 1,
 	_UNDER = "UNDER",
@@ -1619,21 +1619,21 @@ export declare enum UserAgeType {
 	UNDEFINED = 3,
 }
 
-export declare enum UserAllowProfileHistoryType {
+export enum UserAllowProfileHistoryType {
 	_OWNER = "OWNER",
 	OWNER = 0,
 	_FRIEND = "FRIEND",
 	FRIEND = 1,
 }
 
-export declare enum UserStatusMessageHistoryType {
+export enum UserStatusMessageHistoryType {
 	_NONE = "NONE",
 	NONE = 1,
 	_ALL = "ALL",
 	ALL = 2,
 }
 
-export declare enum UserSharePersonalInfoToFriendsType {
+export enum UserSharePersonalInfoToFriendsType {
 	_NEVER_SHOW = "NEVER_SHOW",
 	NEVER_SHOW = 0,
 	_ONE_WAY = "ONE_WAY",
@@ -1642,7 +1642,7 @@ export declare enum UserSharePersonalInfoToFriendsType {
 	MUTUAL = 2,
 }
 
-export declare enum IdentityProvider {
+export enum IdentityProvider {
 	_UNKNOWN = "UNKNOWN",
 	UNKNOWN = 0,
 	_LINE = "LINE",
@@ -1653,7 +1653,7 @@ export declare enum IdentityProvider {
 	LINE_PHONE = 3,
 }
 
-export declare enum EmailConfirmationStatus {
+export enum EmailConfirmationStatus {
 	_NOT_SPECIFIED = "NOT_SPECIFIED",
 	NOT_SPECIFIED = 0,
 	_NOT_YET = "NOT_YET",
@@ -1664,7 +1664,7 @@ export declare enum EmailConfirmationStatus {
 	NEED_ENFORCED_INPUT = 4,
 }
 
-export declare enum AccountMigrationPincodeType {
+export enum AccountMigrationPincodeType {
 	_NOT_APPLICABLE = "NOT_APPLICABLE",
 	NOT_APPLICABLE = 0,
 	_NOT_SET = "NOT_SET",
@@ -1675,7 +1675,7 @@ export declare enum AccountMigrationPincodeType {
 	NEED_ENFORCED_INPUT = 3,
 }
 
-export declare enum SecurityCenterSettingsType {
+export enum SecurityCenterSettingsType {
 	_NOT_APPLICABLE = "NOT_APPLICABLE",
 	NOT_APPLICABLE = 0,
 	_NOT_SET = "NOT_SET",
@@ -1686,7 +1686,7 @@ export declare enum SecurityCenterSettingsType {
 	NEED_ENFORCED_INPUT = 3,
 }
 
-export declare enum CustomMode {
+export enum CustomMode {
 	_PROMOTION_FRIENDS_INVITE = "PROMOTION_FRIENDS_INVITE",
 	PROMOTION_FRIENDS_INVITE = 1,
 	_CAPABILITY_SERVER_SIDE_SMS = "CAPABILITY_SERVER_SIDE_SMS",
@@ -1695,7 +1695,7 @@ export declare enum CustomMode {
 	LINE_CLIENT_ANALYTICS_CONFIGURATION = 3,
 }
 
-export declare enum VerificationMethod {
+export enum VerificationMethod {
 	_NO_AVAILABLE = "NO_AVAILABLE",
 	NO_AVAILABLE = 0,
 	_PIN_VIA_SMS = "PIN_VIA_SMS",
@@ -1708,7 +1708,7 @@ export declare enum VerificationMethod {
 	SKIP = 10,
 }
 
-export declare enum ContactSetting {
+export enum ContactSetting {
 	_CONTACT_SETTING_NOTIFICATION_DISABLE =
 		"CONTACT_SETTING_NOTIFICATION_DISABLE",
 	CONTACT_SETTING_NOTIFICATION_DISABLE = 1,
@@ -1723,7 +1723,7 @@ export declare enum ContactSetting {
 	CONTACT_SETTING_DELETE = 16,
 }
 
-export declare enum FriendRequestMethod {
+export enum FriendRequestMethod {
 	_TIMELINE = "TIMELINE",
 	TIMELINE = 1,
 	_NEARBY = "NEARBY",
@@ -1732,7 +1732,7 @@ export declare enum FriendRequestMethod {
 	SQUARE = 3,
 }
 
-export declare enum CharType {
+export enum CharType {
 	_GROUP = "GROUP",
 	GROUP = 0,
 	_ROOM = "ROOM",
@@ -1741,7 +1741,7 @@ export declare enum CharType {
 	PEER = 2,
 }
 
-export declare enum FeatureType {
+export enum FeatureType {
 	_OBS_VIDEO = "OBS_VIDEO",
 	OBS_VIDEO = 1,
 	_OBS_GENERAL = "OBS_GENERAL",
@@ -1750,7 +1750,7 @@ export declare enum FeatureType {
 	OBS_RINGBACK_TONE = 3,
 }
 
-export declare enum NotificationType {
+export enum NotificationType {
 	_APPLE_APNS = "APPLE_APNS",
 	APPLE_APNS = 1,
 	_GOOGLE_C2DM = "GOOGLE_C2DM",
@@ -1789,7 +1789,7 @@ export declare enum NotificationType {
 	HUAWEI_HCM = 24,
 }
 
-export declare enum ModificationType {
+export enum ModificationType {
 	_ADD = "ADD",
 	ADD = 0,
 	_REMOVE = "REMOVE",
@@ -1798,7 +1798,7 @@ export declare enum ModificationType {
 	MODIFY = 2,
 }
 
-export declare enum ChatAttribute {
+export enum ChatAttribute {
 	_NAME = "NAME",
 	NAME = 1,
 	_PICTURE_STATUS = "PICTURE_STATUS",
@@ -1815,7 +1815,7 @@ export declare enum ChatAttribute {
 	CHAT_TYPE = 64,
 }
 
-export declare enum BotType {
+export enum BotType {
 	_RESERVED = "RESERVED",
 	RESERVED = 0,
 	_OFFICIAL = "OFFICIAL",
@@ -1826,7 +1826,7 @@ export declare enum BotType {
 	LINE_AT = 3,
 }
 
-export declare enum BuddyOnAirLabel {
+export enum BuddyOnAirLabel {
 	_ON_AIR = "ON_AIR",
 	ON_AIR = 0,
 	_LIVE = "LIVE",
@@ -1835,7 +1835,7 @@ export declare enum BuddyOnAirLabel {
 	GLP = 2,
 }
 
-export declare enum BuddyBotActiveStatus {
+export enum BuddyBotActiveStatus {
 	_UNSPECIFIED = "UNSPECIFIED",
 	UNSPECIFIED = 0,
 	_INACTIVE = "INACTIVE",
@@ -1846,7 +1846,7 @@ export declare enum BuddyBotActiveStatus {
 	DELETED = 3,
 }
 
-export declare enum GroupCallMediaType {
+export enum GroupCallMediaType {
 	_AUDIO = "AUDIO",
 	AUDIO = 1,
 	_VIDEO = "VIDEO",
@@ -1855,14 +1855,14 @@ export declare enum GroupCallMediaType {
 	LIVE = 3,
 }
 
-export declare enum GroupCallProtocol {
+export enum GroupCallProtocol {
 	_STANDARD = "STANDARD",
 	STANDARD = 1,
 	_CONSTELLA = "CONSTELLA",
 	CONSTELLA = 2,
 }
 
-export declare enum SyncTriggerReason {
+export enum SyncTriggerReason {
 	_UNKNOWN = "UNKNOWN",
 	UNKNOWN = 0,
 	_REVISION_GAP_TOO_LARGE_CLIENT = "REVISION_GAP_TOO_LARGE_CLIENT",
@@ -1877,7 +1877,7 @@ export declare enum SyncTriggerReason {
 	FORCE_TRIGGERED = 5,
 }
 
-export declare enum NotificationStatus {
+export enum NotificationStatus {
 	_NOTIFICATION_ITEM_EXIST = "NOTIFICATION_ITEM_EXIST",
 	NOTIFICATION_ITEM_EXIST = 1,
 	_TIMELINE_ITEM_EXIST = "TIMELINE_ITEM_EXIST",
@@ -1920,7 +1920,7 @@ export declare enum NotificationStatus {
 	TIMELINE_GUIDE_STORY_UPDATED = 524288,
 }
 
-export declare enum GlobalEventType {
+export enum GlobalEventType {
 	_DUMMY = "DUMMY",
 	DUMMY = 0,
 	_NOTICE = "NOTICE",
@@ -2007,7 +2007,7 @@ export declare enum GlobalEventType {
 	HOME_SAFETY_CHECK = 41,
 }
 
-export declare enum SyncCategories {
+export enum SyncCategories {
 	_ALL = "ALL",
 	ALL = 0,
 	_PROFILE = "PROFILE",
@@ -2026,14 +2026,14 @@ export declare enum SyncCategories {
 	MESSAGE = 7,
 }
 
-export declare enum MediaMessageFlow {
+export enum MediaMessageFlow {
 	_V1 = "V1",
 	V1 = 1,
 	_V2 = "V2",
 	V2 = 2,
 }
 
-export declare enum MessageReactionType {
+export enum MessageReactionType {
 	_ALL = "ALL",
 	ALL = 0,
 	_UNDO = "UNDO",
@@ -2052,9 +2052,9 @@ export declare enum MessageReactionType {
 	OMG = 7,
 }
 
-export declare enum SquareChatAnnouncementType {}
+export enum SquareChatAnnouncementType {}
 
-export declare enum PictureSource {
+export enum PictureSource {
 	_NFT = "NFT",
 	NFT = 1,
 	_AVATAR = "AVATAR",
@@ -2065,7 +2065,7 @@ export declare enum PictureSource {
 	ARCZ = 4,
 }
 
-export declare enum RejectionReason {
+export enum RejectionReason {
 	_UNKNOWN = "UNKNOWN",
 	UNKNOWN = 0,
 	_INVALID_TARGET_USER = "INVALID_TARGET_USER",
@@ -2080,7 +2080,7 @@ export declare enum RejectionReason {
 	MALFORMED_REQUEST = 5,
 }
 
-export declare enum SquareMessageState {
+export enum SquareMessageState {
 	_SENT = "SENT",
 	SENT = 1,
 	_DELETED = "DELETED",
@@ -2091,7 +2091,7 @@ export declare enum SquareMessageState {
 	UNSENT = 4,
 }
 
-export declare enum SquareEventType {
+export enum SquareEventType {
 	_RECEIVE_MESSAGE = "RECEIVE_MESSAGE",
 	RECEIVE_MESSAGE = 0,
 	_SEND_MESSAGE = "SEND_MESSAGE",
@@ -2197,14 +2197,14 @@ export declare enum SquareEventType {
 	NOTIFICATION_MESSAGE_REACTION = 47,
 }
 
-export declare enum SquareEventStatus {
+export enum SquareEventStatus {
 	_NORMAL = "NORMAL",
 	NORMAL = 1,
 	_ALERT_DISABLED = "ALERT_DISABLED",
 	ALERT_DISABLED = 2,
 }
 
-export declare enum SquareMembershipState {
+export enum SquareMembershipState {
 	_JOIN_REQUESTED = "JOIN_REQUESTED",
 	JOIN_REQUESTED = 1,
 	_JOINED = "JOINED",
@@ -2221,7 +2221,7 @@ export declare enum SquareMembershipState {
 	DELETED = 7,
 }
 
-export declare enum SquareMemberRole {
+export enum SquareMemberRole {
 	_ADMIN = "ADMIN",
 	ADMIN = 1,
 	_CO_ADMIN = "CO_ADMIN",
@@ -2230,21 +2230,21 @@ export declare enum SquareMemberRole {
 	MEMBER = 10,
 }
 
-export declare enum SquareMemberRelationState {
+export enum SquareMemberRelationState {
 	_NONE = "NONE",
 	NONE = 1,
 	_BLOCKED = "BLOCKED",
 	BLOCKED = 2,
 }
 
-export declare enum SquareType {
+export enum SquareType {
 	_CLOSED = "CLOSED",
 	CLOSED = 0,
 	_OPEN = "OPEN",
 	OPEN = 1,
 }
 
-export declare enum SquareState {
+export enum SquareState {
 	_ALIVE = "ALIVE",
 	ALIVE = 0,
 	_DELETED = "DELETED",
@@ -2253,14 +2253,14 @@ export declare enum SquareState {
 	SUSPENDED = 2,
 }
 
-export declare enum SquareEmblem {
+export enum SquareEmblem {
 	_SUPER = "SUPER",
 	SUPER = 1,
 	_OFFICIAL = "OFFICIAL",
 	OFFICIAL = 2,
 }
 
-export declare enum SquareJoinMethodType {
+export enum SquareJoinMethodType {
 	_NONE = "NONE",
 	NONE = 0,
 	_APPROVAL = "APPROVAL",
@@ -2269,7 +2269,7 @@ export declare enum SquareJoinMethodType {
 	CODE = 2,
 }
 
-export declare enum BooleanState {
+export enum BooleanState {
 	_NONE = "NONE",
 	NONE = 0,
 	_OFF = "OFF",
@@ -2278,7 +2278,7 @@ export declare enum BooleanState {
 	ON = 2,
 }
 
-export declare enum SquareChatType {
+export enum SquareChatType {
 	_OPEN = "OPEN",
 	OPEN = 1,
 	_SECRET = "SECRET",
@@ -2289,7 +2289,7 @@ export declare enum SquareChatType {
 	SQUARE_DEFAULT = 4,
 }
 
-export declare enum SquareChatState {
+export enum SquareChatState {
 	_ALIVE = "ALIVE",
 	ALIVE = 0,
 	_DELETED = "DELETED",
@@ -2298,37 +2298,37 @@ export declare enum SquareChatState {
 	SUSPENDED = 2,
 }
 
-export declare enum MessageStatusType {}
+export enum MessageStatusType {}
 
-export declare enum NotifiedMessageType {
+export enum NotifiedMessageType {
 	_MENTION = "MENTION",
 	MENTION = 1,
 	_REPLY = "REPLY",
 	REPLY = 2,
 }
 
-export declare enum SquareChatMembershipState {
+export enum SquareChatMembershipState {
 	_JOINED = "JOINED",
 	JOINED = 1,
 	_LEFT = "LEFT",
 	LEFT = 2,
 }
 
-export declare enum SquareFeatureControlState {
+export enum SquareFeatureControlState {
 	_DISABLED = "DISABLED",
 	DISABLED = 1,
 	_ENABLED = "ENABLED",
 	ENABLED = 2,
 }
 
-export declare enum SquareChatFeatureControlState {
+export enum SquareChatFeatureControlState {
 	_DISABLED = "DISABLED",
 	DISABLED = 1,
 	_ENABLED = "ENABLED",
 	ENABLED = 2,
 }
 
-export declare enum NotificationPostType {
+export enum NotificationPostType {
 	_POST_MENTION = "POST_MENTION",
 	POST_MENTION = 2,
 	_POST_LIKE = "POST_LIKE",
@@ -2343,21 +2343,21 @@ export declare enum NotificationPostType {
 	POST_RELAY_JOIN = 7,
 }
 
-export declare enum SquareChatThreadState {
+export enum SquareChatThreadState {
 	_ACTIVE = "ACTIVE",
 	ACTIVE = 1,
 	_INACTIVE = "INACTIVE",
 	INACTIVE = 2,
 }
 
-export declare enum SquareChatThreadeMembershipState {
+export enum SquareChatThreadeMembershipState {
 	_ACTIVATED = "ACTIVATED",
 	ACTIVATED = 1,
 	_DEACTIVATED = "DEACTIVATED",
 	DEACTIVATED = 2,
 }
 
-export declare enum LiveTalkEventType {
+export enum LiveTalkEventType {
 	_NOTIFIED_UPDATE_LIVE_TALK_TITLE = "NOTIFIED_UPDATE_LIVE_TALK_TITLE",
 	NOTIFIED_UPDATE_LIVE_TALK_TITLE = 1,
 	_NOTIFIED_UPDATE_LIVE_TALK_SPEAKER_SETTING =
@@ -2373,28 +2373,28 @@ export declare enum LiveTalkEventType {
 	NOTIFIED_UPDATE_LIVE_TALK_ALLOW_REQUEST_TO_SPEAK = 5,
 }
 
-export declare enum LiveTalkSpeakerSetting {
+export enum LiveTalkSpeakerSetting {
 	_LIMITED_SPEAKERS = "LIMITED_SPEAKERS",
 	LIMITED_SPEAKERS = 1,
 	_ALL_AS_SPEAKERS = "ALL_AS_SPEAKERS",
 	ALL_AS_SPEAKERS = 2,
 }
 
-export declare enum LiveTalkType {
+export enum LiveTalkType {
 	_PUBLIC = "PUBLIC",
 	PUBLIC = 1,
 	_PRIVATE = "PRIVATE",
 	PRIVATE = 2,
 }
 
-export declare enum UserType {
+export enum UserType {
 	_USER = "USER",
 	USER = 1,
 	_BOT = "BOT",
 	BOT = 2,
 }
 
-export declare enum ProductType {
+export enum ProductType {
 	_STICKER = "STICKER",
 	STICKER = 1,
 	_THEME = "THEME",
@@ -2403,7 +2403,7 @@ export declare enum ProductType {
 	STICON = 3,
 }
 
-export declare enum StickerResourceType {
+export enum StickerResourceType {
 	_STATIC = "STATIC",
 	STATIC = 1,
 	_ANIMATION = "ANIMATION",
@@ -2422,21 +2422,21 @@ export declare enum StickerResourceType {
 	PER_STICKER_TEXT = 8,
 }
 
-export declare enum ThemeResourceType {
+export enum ThemeResourceType {
 	_STATIC = "STATIC",
 	STATIC = 1,
 	_ANIMATION = "ANIMATION",
 	ANIMATION = 2,
 }
 
-export declare enum SticonResourceType {
+export enum SticonResourceType {
 	_STATIC = "STATIC",
 	STATIC = 1,
 	_ANIMATION = "ANIMATION",
 	ANIMATION = 2,
 }
 
-export declare enum ImageTextStatus {
+export enum ImageTextStatus {
 	_OK = "OK",
 	OK = 0,
 	_PRODUCT_UNSUPPORTED = "PRODUCT_UNSUPPORTED",
@@ -2451,7 +2451,7 @@ export declare enum ImageTextStatus {
 	CONTAINS_INVALID_WORD = 5,
 }
 
-export declare enum SubType {
+export enum SubType {
 	_GENERAL = "GENERAL",
 	GENERAL = 0,
 	_CREATORS = "CREATORS",
@@ -2460,21 +2460,21 @@ export declare enum SubType {
 	STICON = 2,
 }
 
-export declare enum StickerSize {
+export enum StickerSize {
 	_NORMAL = "NORMAL",
 	NORMAL = 0,
 	_BIG = "BIG",
 	BIG = 1,
 }
 
-export declare enum PopupLayer {
+export enum PopupLayer {
 	_FOREGROUND = "FOREGROUND",
 	FOREGROUND = 0,
 	_BACKGROUND = "BACKGROUND",
 	BACKGROUND = 1,
 }
 
-export declare enum ProductSalesState {
+export enum ProductSalesState {
 	_ON_SALE = "ON_SALE",
 	ON_SALE = 0,
 	_OUTDATED_VERSION = "OUTDATED_VERSION",
@@ -2483,7 +2483,7 @@ export declare enum ProductSalesState {
 	NOT_ON_SALE = 2,
 }
 
-export declare enum PromotionType {
+export enum PromotionType {
 	_NONE = "NONE",
 	NONE = 0,
 	_CARRIER = "CARRIER",
@@ -2498,14 +2498,14 @@ export declare enum PromotionType {
 	MUSTBUY = 5,
 }
 
-export declare enum PromotionMissionType {
+export enum PromotionMissionType {
 	_DEFAULT = "DEFAULT",
 	DEFAULT = 1,
 	_VIEW_VIDEO = "VIEW_VIDEO",
 	VIEW_VIDEO = 2,
 }
 
-export declare enum BrandType {
+export enum BrandType {
 	_PREMIUM = "PREMIUM",
 	PREMIUM = 1,
 	_VERIFIED = "VERIFIED",
@@ -2514,7 +2514,7 @@ export declare enum BrandType {
 	UNVERIFIED = 3,
 }
 
-export declare enum EditorsPickShowcaseType {
+export enum EditorsPickShowcaseType {
 	_STATIC = "STATIC",
 	STATIC = 0,
 	_POPULAR = "POPULAR",
@@ -2523,7 +2523,7 @@ export declare enum EditorsPickShowcaseType {
 	NEW_RELEASE = 2,
 }
 
-export declare enum ProductAvailability {
+export enum ProductAvailability {
 	_PURCHASE_ONLY = "PURCHASE_ONLY",
 	PURCHASE_ONLY = 0,
 	_PURCHASE_OR_SUBSCRIPTION = "PURCHASE_OR_SUBSCRIPTION",
@@ -2532,7 +2532,7 @@ export declare enum ProductAvailability {
 	SUBSCRIPTION_ONLY = 2,
 }
 
-export declare enum DemographicGenderType {
+export enum DemographicGenderType {
 	_ALL = "ALL",
 	ALL = 0,
 	_MALE = "MALE",
@@ -2541,7 +2541,7 @@ export declare enum DemographicGenderType {
 	FEMALE = 2,
 }
 
-export declare enum DemographicAgeType {
+export enum DemographicAgeType {
 	_ALL = "ALL",
 	ALL = 0,
 	_AGE_0_19 = "AGE_0_19",
@@ -2558,7 +2558,7 @@ export declare enum DemographicAgeType {
 	AGE_50_INF = 6,
 }
 
-export declare enum ShowcaseType {
+export enum ShowcaseType {
 	_POPULAR = "POPULAR",
 	POPULAR = 0,
 	_NEW_RELEASE = "NEW_RELEASE",
@@ -2591,7 +2591,7 @@ export declare enum ShowcaseType {
 	POPULAR_WITH_FREE = 14,
 }
 
-export declare enum EditorsPickContentType {
+export enum EditorsPickContentType {
 	_STICKER = "STICKER",
 	STICKER = 1,
 	_URL = "URL",
@@ -2602,7 +2602,7 @@ export declare enum EditorsPickContentType {
 	EMOJI = 4,
 }
 
-export declare enum TagType {
+export enum TagType {
 	_UNKNOWN = "UNKNOWN",
 	UNKNOWN = 0,
 	_CHARACTER = "CHARACTER",
@@ -2611,14 +2611,14 @@ export declare enum TagType {
 	TASTE = 2,
 }
 
-export declare enum CategoryType {
+export enum CategoryType {
 	_GENERAL_CATEGORY = "GENERAL_CATEGORY",
 	GENERAL_CATEGORY = 1,
 	_CREATORS_TAG = "CREATORS_TAG",
 	CREATORS_TAG = 2,
 }
 
-export declare enum SubscriptionPlanAvailability {
+export enum SubscriptionPlanAvailability {
 	_AVAILABLE = "AVAILABLE",
 	AVAILABLE = 0,
 	_DIFFERENT_STORE = "DIFFERENT_STORE",
@@ -2629,33 +2629,33 @@ export declare enum SubscriptionPlanAvailability {
 	ALREADY_PURCHASED = 3,
 }
 
-export declare enum SubscriptionServiceType {
+export enum SubscriptionServiceType {
 	_STICKERS_PREMIUM = "STICKERS_PREMIUM",
 	STICKERS_PREMIUM = 1,
 }
 
-export declare enum SubscriptionPlanTarget {
+export enum SubscriptionPlanTarget {
 	_GENERAL = "GENERAL",
 	GENERAL = 1,
 	_STUDENT = "STUDENT",
 	STUDENT = 2,
 }
 
-export declare enum SubscriptionPlanType {
+export enum SubscriptionPlanType {
 	_MONTHLY = "MONTHLY",
 	MONTHLY = 1,
 	_YEARLY = "YEARLY",
 	YEARLY = 2,
 }
 
-export declare enum SubscriptionPlanTier {
+export enum SubscriptionPlanTier {
 	_BASIC = "BASIC",
 	BASIC = 1,
 	_DELUXE = "DELUXE",
 	DELUXE = 2,
 }
 
-export declare enum SubscriptionSlotModificationResult {
+export enum SubscriptionSlotModificationResult {
 	_OK = "OK",
 	OK = 0,
 	_UNKNOWN = "UNKNOWN",
@@ -2672,7 +2672,7 @@ export declare enum SubscriptionSlotModificationResult {
 	NOT_AVAILABLE = 6,
 }
 
-export declare enum SubscriptionBillingResult {
+export enum SubscriptionBillingResult {
 	_OK = "OK",
 	OK = 0,
 	_UNKNOWN = "UNKNOWN",
@@ -2697,21 +2697,21 @@ export declare enum SubscriptionBillingResult {
 	RETRY_STATE = 10,
 }
 
-export declare enum SubscriptionCampaignType {
+export enum SubscriptionCampaignType {
 	_MISSION = "MISSION",
 	MISSION = 1,
 	_FREE_TRIAL = "FREE_TRIAL",
 	FREE_TRIAL = 2,
 }
 
-export declare enum SubscriptionSortType {
+export enum SubscriptionSortType {
 	_DATE_ASC = "DATE_ASC",
 	DATE_ASC = 1,
 	_DATE_DESC = "DATE_DESC",
 	DATE_DESC = 2,
 }
 
-export declare enum StartBundleSubscriptionResult {
+export enum StartBundleSubscriptionResult {
 	_OK = "OK",
 	OK = 0,
 	_UNKNOWN = "UNKNOWN",
@@ -2728,7 +2728,7 @@ export declare enum StartBundleSubscriptionResult {
 	RETRY_STATE = 6,
 }
 
-export declare enum StopBundleSubscriptionResult {
+export enum StopBundleSubscriptionResult {
 	_OK = "OK",
 	OK = 0,
 	_INVALID_PARAMETER = "INVALID_PARAMETER",
@@ -2743,7 +2743,7 @@ export declare enum StopBundleSubscriptionResult {
 	NOT_ELIGIBLE = 5,
 }
 
-export declare enum GetSubscriptionCouponCodeResult {
+export enum GetSubscriptionCouponCodeResult {
 	_OK = "OK",
 	OK = 0,
 	_UNKNOWN = "UNKNOWN",
@@ -2756,7 +2756,7 @@ export declare enum GetSubscriptionCouponCodeResult {
 	NOT_APPLICABLE = 4,
 }
 
-export declare enum GetFriendStatusWithPremiumOaResult {
+export enum GetFriendStatusWithPremiumOaResult {
 	_FRIEND = "FRIEND",
 	FRIEND = 0,
 	_BLOCKED = "BLOCKED",
@@ -2767,7 +2767,7 @@ export declare enum GetFriendStatusWithPremiumOaResult {
 	ERROR = 3,
 }
 
-export declare enum SubscriptionCouponCampaignStatus {
+export enum SubscriptionCouponCampaignStatus {
 	_OK = "OK",
 	OK = 0,
 	_UNKNOWN = "UNKNOWN",
@@ -2780,7 +2780,7 @@ export declare enum SubscriptionCouponCampaignStatus {
 	NOT_APPLICABLE = 4,
 }
 
-export declare enum AcceptSubscriptionAgreementResult {
+export enum AcceptSubscriptionAgreementResult {
 	_OK = "OK",
 	OK = 0,
 	_UNKNOWN = "UNKNOWN",
@@ -2791,7 +2791,7 @@ export declare enum AcceptSubscriptionAgreementResult {
 	NO_SUBSCRIPTION = 3,
 }
 
-export declare enum StoreCode {
+export enum StoreCode {
 	_GOOGLE = "GOOGLE",
 	GOOGLE = 0,
 	_APPLE = "APPLE",
@@ -2810,24 +2810,24 @@ export declare enum StoreCode {
 	FREEMIUM = 7,
 }
 
-export declare enum BirthdayGiftAssociationVerifyTokenStatus {
+export enum BirthdayGiftAssociationVerifyTokenStatus {
 	_VALID = "VALID",
 	VALID = 0,
 	_INVALID = "INVALID",
 	INVALID = 1,
 }
 
-export declare enum PopupDesignTemplate {
+export enum PopupDesignTemplate {
 	_FIXED = "FIXED",
 	FIXED = 0,
 }
 
-export declare enum PopupDisplayCount {
+export enum PopupDisplayCount {
 	_ONCE = "ONCE",
 	ONCE = 0,
 }
 
-export declare enum PopupVisualType {
+export enum PopupVisualType {
 	_BASIC = "BASIC",
 	BASIC = 0,
 	_FULLSCREEN = "FULLSCREEN",
@@ -8210,14 +8210,14 @@ export declare class IsProductForCollectionsResponse {
 	constructor(args?: { isAvailable: boolean });
 }
 
-export declare enum ExtendedProfileAttribute {}
+export enum ExtendedProfileAttribute {}
 
-export declare enum PrivacyLevelType {
+export enum PrivacyLevelType {
 	PUBLIC = 0,
 	PRIVATE = 1,
 }
 
-export declare enum PaidCallerIdStatus {
+export enum PaidCallerIdStatus {
 	NOT_SPECIFIED = 0,
 	VALID = 1,
 	VERIFICATION_REQUIRED = 2,
@@ -8226,13 +8226,13 @@ export declare enum PaidCallerIdStatus {
 	LIMIT_EXCEEDED_AND_VERIFICATION_REQUIRED = 5,
 }
 
-export declare enum PaidCallProductType {
+export enum PaidCallProductType {
 	COIN = 0,
 	CREDIT = 1,
 	MONTHLY = 2,
 }
 
-export declare enum PaidCallType {
+export enum PaidCallType {
 	OUT = 0,
 	IN = 1,
 	TOLLFREE = 2,
@@ -8241,39 +8241,39 @@ export declare enum PaidCallType {
 	CS = 5,
 }
 
-export declare enum BuddyBannerLinkType {
+export enum BuddyBannerLinkType {
 	BUDDY_BANNER_LINK_HIDDEN = 0,
 	BUDDY_BANNER_LINK_MID = 1,
 	BUDDY_BANNER_LINK_URL = 2,
 }
 
-export declare enum BuddyOnAirType {
+export enum BuddyOnAirType {
 	NORMAL = 0,
 	LIVE = 1,
 	VOIP = 2,
 }
 
-export declare enum Diff {
+export enum Diff {
 	ADDED = 0,
 	UPDATED = 1,
 	REMOVED = 2,
 }
 
-export declare enum ReportType {
+export enum ReportType {
 	ADVERTISING = 1,
 	GENDER_HARASSMENT = 2,
 	HARASSMENT = 3,
 	OTHER = 4,
 }
 
-export declare enum ReportCategory {
+export enum ReportCategory {
 	PUSH_NORMAL_PLAIN = 0,
 	PUSH_NORMAL_E2EE = 1,
 	PUSH_VOIP_PLAIN = 2,
 	PUSH_VOIP_E2EE = 3,
 }
 
-export declare enum BuddyResultState {
+export enum BuddyResultState {
 	ACCEPTED = 1,
 	SUCCEEDED = 2,
 	FAILED = 3,
@@ -8287,13 +8287,13 @@ export declare enum BuddyResultState {
 	NOTIFYING_LEAVE_CHAT = 43,
 }
 
-export declare enum BuddySearchRequestSource {
+export enum BuddySearchRequestSource {
 	NA = 0,
 	FRIEND_VIEW = 1,
 	OFFICIAL_ACCOUNT_VIEW = 2,
 }
 
-export declare enum CarrierCode {
+export enum CarrierCode {
 	NOT_SPECIFIED = 0,
 	JP_DOCOMO = 1,
 	JP_AU = 2,
@@ -8304,85 +8304,85 @@ export declare enum CarrierCode {
 	KR_LGT = 19,
 }
 
-export declare enum ChannelConfiguration {
+export enum ChannelConfiguration {
 	MESSAGE = 0,
 	MESSAGE_NOTIFICATION = 1,
 	NOTIFICATION_CENTER = 2,
 }
 
-export declare enum ChannelPermission {
+export enum ChannelPermission {
 	PROFILE = 0,
 	FRIENDS = 1,
 	GROUP = 2,
 }
 
-export declare enum ChannelFeatureLicense {
+export enum ChannelFeatureLicense {
 	BLE_LCS_API_USABLE = 26,
 	PROHIBIT_MINIMIZE_CHANNEL_BROWSER = 27,
 	ALLOW_IOS_WEBKIT = 28,
 }
 
-export declare enum ChannelSyncType {
+export enum ChannelSyncType {
 	SYNC = 0,
 	REMOVE = 1,
 	REMOVE_ALL = 2,
 }
 
-export declare enum LoginType {
+export enum LoginType {
 	ID_CREDENTIAL = 0,
 	QRCODE = 1,
 	ID_CREDENTIAL_WITH_E2EE = 2,
 }
 
-export declare enum ContactAttribute {
+export enum ContactAttribute {
 	CONTACT_ATTRIBUTE_CAPABLE_VOICE_CALL = 1,
 	CONTACT_ATTRIBUTE_CAPABLE_VIDEO_CALL = 2,
 	CONTACT_ATTRIBUTE_CAPABLE_MY_HOME = 16,
 	CONTACT_ATTRIBUTE_CAPABLE_BUDDY = 32,
 }
 
-export declare enum ContactCategory {
+export enum ContactCategory {
 	NORMAL = 0,
 	RECOMMEND = 1,
 }
 
-export declare enum AsymmetricKeyAlgorithm {
+export enum AsymmetricKeyAlgorithm {
 	ASYMMETRIC_KEY_ALGORITHM_RSA = 1,
 	ASYMMETRIC_KEY_ALGORITHM_ECDH = 2,
 }
 
-export declare enum GroupPreferenceAttribute {
+export enum GroupPreferenceAttribute {
 	INVITATION_TICKET = 1,
 	FAVORITE_TIMESTAMP = 2,
 }
 
-export declare enum RoomAttribute {
+export enum RoomAttribute {
 	ALL = 255,
 	NOTIFICATION_SETTING = 1,
 }
 
-export declare enum AccountMigrationCheckType {
+export enum AccountMigrationCheckType {
 	SKIP = 0,
 	PINCODE = 1,
 	SECURITY_CENTER = 2,
 }
 
-export declare enum EmailConfirmationType {
+export enum EmailConfirmationType {
 	SERVER_SIDE_EMAIL = 0,
 	CLIENT_SIDE_EMAIL = 1,
 }
 
-export declare enum SquareChatAnnouncementType {
+export enum SquareChatAnnouncementType {
 	TEXT_MESSAGE = 0,
 }
 
-export declare enum SquareChatAttribute {
+export enum SquareChatAttribute {
 	NAME = 2,
 	SQUARE_CHAT_IMAGE = 3,
 	STATE = 4,
 }
 
-export declare enum SquareMemberAttribute {
+export enum SquareMemberAttribute {
 	DISPLAY_NAME = 1,
 	PROFILE_IMAGE = 2,
 	ABLE_TO_RECEIVE_MESSAGE = 3,
@@ -8391,22 +8391,22 @@ export declare enum SquareMemberAttribute {
 	PREFERENCE = 7,
 }
 
-export declare enum SquareMemberRelationAttribute {
+export enum SquareMemberRelationAttribute {
 	BLOCKED = 1,
 }
 
-export declare enum SquarePreferenceAttribute {
+export enum SquarePreferenceAttribute {
 	FAVORITE = 1,
 	NOTI_FOR_NEW_JOIN_REQUEST = 2,
 }
 
-export declare enum CommitMessageResultCode {
+export enum CommitMessageResultCode {
 	DELIVERED = 0,
 	DELIVERY_SKIPPED = 1,
 	DELIVERY_RESTRICTED = 2,
 }
 
-export declare enum GroupAttribute {
+export enum GroupAttribute {
 	NAME = 1,
 	PICTURE_STATUS = 2,
 	ALL = 255,
@@ -8414,14 +8414,14 @@ export declare enum GroupAttribute {
 	NOTIFICATION_SETTING = 8,
 }
 
-export declare enum LoginResultType {
+export enum LoginResultType {
 	SUCCESS = 1,
 	REQUIRE_QRCODE = 2,
 	REQUIRE_DEVICE_CONFIRM = 3,
 	REQUIRE_SMS_CONFIRM = 4,
 }
 
-export declare enum MessageOperationType {
+export enum MessageOperationType {
 	SEND_MESSAGE = 1,
 	RECEIVE_MESSAGE = 2,
 	READ_MESSAGE = 3,
@@ -8434,55 +8434,55 @@ export declare enum MessageOperationType {
 	REMOVE_ALL_MESSAGES = 10,
 }
 
-export declare enum FriendRequestDirection {
+export enum FriendRequestDirection {
 	INCOMING = 1,
 	OUTGOING = 2,
 }
 
-export declare enum NotificationItemFetchMode {
+export enum NotificationItemFetchMode {
 	ALL = 0,
 	APPEND = 1,
 }
 
-export declare enum NotificationQueueType {
+export enum NotificationQueueType {
 	GLOBAL = 1,
 	MESSAGE = 2,
 	PRIMARY = 3,
 }
 
-export declare enum PersonalInfo {
+export enum PersonalInfo {
 	EMAIL = 0,
 	PHONE = 1,
 	BIRTHDAY = 2,
 	RAW_BIRTHDAY = 3,
 }
 
-export declare enum PayloadType {
+export enum PayloadType {
 	PAYLOAD_BUY = 101,
 	PAYLOAD_CS = 111,
 	PAYLOAD_BONUS = 121,
 	PAYLOAD_EVENT = 131,
 }
 
-export declare enum PaymentPgType {
+export enum PaymentPgType {
 	PAYMENT_PG_NONE = 0,
 	PAYMENT_PG_AU = 1,
 	PAYMENT_PG_AL = 2,
 }
 
-export declare enum PaymentType {
+export enum PaymentType {
 	PAYMENT_APPLE = 1,
 	PAYMENT_GOOGLE = 2,
 }
 
-export declare enum ProductBannerLinkType {
+export enum ProductBannerLinkType {
 	BANNER_LINK_NONE = 0,
 	BANNER_LINK_ITEM = 1,
 	BANNER_LINK_URL = 2,
 	BANNER_LINK_CATEGORY = 3,
 }
 
-export declare enum ProductEventType {
+export enum ProductEventType {
 	NO_EVENT = 0,
 	CARRIER_ANY = 65537,
 	BUDDY_ANY = 131073,
@@ -8492,7 +8492,7 @@ export declare enum ProductEventType {
 	MUSTBUY_ANY = 327681,
 }
 
-export declare enum ProfileAttribute {
+export enum ProfileAttribute {
 	ALL = 511,
 	EMAIL = 1,
 	DISPLAY_NAME = 2,
@@ -8505,17 +8505,17 @@ export declare enum ProfileAttribute {
 	MUSIC_PROFILE = 256,
 }
 
-export declare enum PublicType {
+export enum PublicType {
 	HIDDEN = 0,
 	PUBLIC = 1000,
 }
 
-export declare enum RedirectType {
+export enum RedirectType {
 	NONE = 0,
 	EXPIRE_SECOND = 1,
 }
 
-export declare enum RegistrationType {
+export enum RegistrationType {
 	PHONE = 0,
 	EMAIL_WAP = 1,
 	FACEBOOK = 2305,
@@ -8524,12 +8524,12 @@ export declare enum RegistrationType {
 	FEIXIN = 2308,
 }
 
-export declare enum ChatRoomAnnouncementType {
+export enum ChatRoomAnnouncementType {
 	MESSAGE = 0,
 	NOTE = 1,
 }
 
-export declare enum SettingsAttribute {
+export enum SettingsAttribute {
 	ALL = 2147483647,
 	NOTIFICATION_ENABLE = 1,
 	NOTIFICATION_MUTE_EXPIRATION = 2,
@@ -8564,7 +8564,7 @@ export declare enum SettingsAttribute {
 	SECURITY_CENTER_SETTINGS = 262144,
 }
 
-export declare enum SettingsAttributeEx {
+export enum SettingsAttributeEx {
 	NOTIFICATION_ENABLE = 0,
 	NOTIFICATION_MUTE_EXPIRATION = 1,
 	NOTIFICATION_NEW_MESSAGE = 2,
@@ -8613,19 +8613,19 @@ export declare enum SettingsAttributeEx {
 	AGREEMENT_SOUND_TO_TEXT = 46,
 }
 
-export declare enum SpammerReason {
+export enum SpammerReason {
 	OTHER = 0,
 	ADVERTISING = 1,
 	GENDER_HARASSMENT = 2,
 	HARASSMENT = 3,
 }
 
-export declare enum SyncActionType {
+export enum SyncActionType {
 	SYNC = 0,
 	REPORT = 1,
 }
 
-export declare enum SpotCategory {
+export enum SpotCategory {
 	UNKNOWN = 0,
 	GOURMET = 1,
 	BEAUTY = 2,
@@ -8642,7 +8642,7 @@ export declare enum SpotCategory {
 	ALL = 10000,
 }
 
-export declare enum SyncCategory {
+export enum SyncCategory {
 	PROFILE = 0,
 	SETTINGS = 1,
 	OPS = 2,
@@ -8655,12 +8655,12 @@ export declare enum SyncCategory {
 	ADDRESS_BOOK = 9,
 }
 
-export declare enum TMessageBoxStatus {
+export enum TMessageBoxStatus {
 	ACTIVATED = 1,
 	UNREAD = 2,
 }
 
-export declare enum UniversalNotificationServiceErrorCode {
+export enum UniversalNotificationServiceErrorCode {
 	INTERNAL_ERROR = 0,
 	INVALID_KEY = 1,
 	ILLEGAL_ARGUMENT = 2,
@@ -8669,29 +8669,29 @@ export declare enum UniversalNotificationServiceErrorCode {
 	NO_WRITE_PERMISSION = 5,
 }
 
-export declare enum UnregistrationReason {
+export enum UnregistrationReason {
 	UNREGISTRATION_REASON_UNREGISTER_USER = 1,
 	UNREGISTRATION_REASON_UNBIND_DEVICE = 2,
 }
 
-export declare enum VerificationResult {
+export enum VerificationResult {
 	FAILED = 0,
 	OK_NOT_REGISTERED_YET = 1,
 	OK_REGISTERED_WITH_SAME_DEVICE = 2,
 	OK_REGISTERED_WITH_ANOTHER_DEVICE = 3,
 }
 
-export declare enum WapInvitationType {
+export enum WapInvitationType {
 	REGISTRATION = 1,
 	CHAT = 2,
 }
 
-export declare enum MediaType {
+export enum MediaType {
 	AUDIO = 1,
 	VIDEO = 2,
 }
 
-export declare enum SQErrorCode {
+export enum SQErrorCode {
 	UNKNOWN = 0,
 	ILLEGAL_ARGUMENT = 400,
 	AUTHENTICATION_FAILURE = 401,
@@ -8704,22 +8704,22 @@ export declare enum SQErrorCode {
 	TRY_AGAIN_LATER = 505,
 }
 
-export declare enum SquareFeatureSetAttribute {
+export enum SquareFeatureSetAttribute {
 	CREATING_SECRET_SQUARE_CHAT = 1,
 	INVITING_INTO_OPEN_SQUARE_CHAT = 2,
 }
 
-export declare enum SquareChatMemberAttribute {
+export enum SquareChatMemberAttribute {
 	MEMBERSHIP_STATE = 4,
 	NOTIFICATION_MESSAGE = 6,
 }
 
-export declare enum FetchDirection {
+export enum FetchDirection {
 	FORWARD = 1,
 	BACKWARD = 2,
 }
 
-export declare enum SquareAttribute {
+export enum SquareAttribute {
 	NAME = 1,
 	WELCOME_MESSAGE = 2,
 	PROFILE_IMAGE = 3,
@@ -8731,7 +8731,7 @@ export declare enum SquareAttribute {
 	STATE = 10,
 }
 
-export declare enum SquareAuthorityAttribute {
+export enum SquareAuthorityAttribute {
 	UPDATE_SQUARE_PROFILE = 1,
 	INVITE_NEW_MEMBER = 2,
 	APPROVE_JOIN_REQUEST = 3,
@@ -8744,7 +8744,7 @@ export declare enum SquareAuthorityAttribute {
 	CREATE_CHAT_ANNOUNCEMENT = 10,
 }
 
-export declare enum SuggestDictionaryIncrementStatus {
+export enum SuggestDictionaryIncrementStatus {
 	SUCCESS = 0,
 	INVALID_REVISION = 1,
 	TOO_LARGE_DATA = 2,

@@ -113,13 +113,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			if (!PASSWORD_REGEX.test(options.password)) {
 				throw new InternalError("Invalid password", `'${options.password}'`);
 			}
-		} else {
-			throw new InternalError(
-				"Invalid login options",
-				`Login options need 'authToken' or 'email' and 'password'`,
-			);
 		}
-
 		const device: Device =
 			options.device ||
 			(options.authToken
@@ -146,17 +140,14 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		if (!authToken) {
 			if (!options.email || !options.password) {
-				throw new InternalError(
-					"Invalid login options",
-					`Login options need 'authToken' or 'email' and 'password'`,
+				authToken = await this.requestSQR()
+			} else {
+				authToken = await this.requestEmailLogin(
+					options.email,
+					options.password,
+					options.e2ee,
 				);
 			}
-
-			authToken = await this.requestEmailLogin(
-				options.email,
-				options.password,
-				options.e2ee,
-			);
 		}
 
 		this.metadata = {
@@ -177,6 +168,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 	protected parser: ThriftRenameParser = new ThriftRenameParser();
 	private cert: string | null = null;
+	private qrCert: string | null = null;
 
 	/**
 	 * @description Registers a certificate path to be used for login.
@@ -211,6 +203,41 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 */
 	public getCert(): string | null {
 		return this.cert;
+	}
+
+	/**
+	 * @description Registers a certificate path to be used for login.
+	 *
+	 * @param {string} [path]  - The path to the certificate.
+	 */
+	public async registerQrCertPath(path: string): Promise<void> {
+		let cert;
+
+		try {
+			cert = await fs.readFile(path, "utf8");
+		} catch (_) {
+			cert = null;
+		}
+
+		this.registerQrCert(cert);
+	}
+
+	/**
+	 * @description Registers a certificate to be used for login.
+	 *
+	 * @param {string | null} cert - The certificate to register. If null, the certificate will be cleared.
+	 */
+	public registerQrCert(cert: string | null): void {
+		this.qrCert = cert;
+	}
+
+	/**
+	 * @description Reads the certificate from the registered path, if it exists.
+	 *
+	 * @return {Promise<string | null>} The certificate, or null if it does not exist or an error occurred.
+	 */
+	public getQrCert(): string | null {
+		return this.qrCert;
 	}
 
 	/**
@@ -251,7 +278,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			password;
 
 		let e2eeData: Buffer | undefined, secret: Uint8Array | undefined, secretPK: string | undefined;
-		
+
 		const constantPincode = "202202";
 		if (enableE2EE) {
 			[secret, secretPK] = this.createSqrSecret(true);
@@ -347,7 +374,37 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		return response.authToken;
 	}
 
-	public createSqrSecret(_base64Only: boolean): [Uint8Array, string] {
+	public async requestSQR():Promise<string> {
+		const { 1: sqr } = await this.createSession()
+		let { 1: url } = await this.createQrCode(sqr)
+		const [secret, secretUrl] = this.createSqrSecret()
+		url = url + secretUrl
+		this.emit("qrcall", url)
+		if (await this.checkQrCodeVerified(sqr)) {
+			try {
+				await this.verifyCertificate(sqr, this.getQrCert() as string)
+			} catch (error) {
+				const { 1: pincode } = await this.createPinCode(sqr)
+				this.emit("pincall", pincode)
+				await this.checkPinCodeVerified(sqr)
+			}
+			const response = await this.qrCodeLogin(sqr)
+			const {
+				1: pem,
+				2: authToken,
+				4: e2eeInfo,
+				5: _mid
+			} = response
+			this.emit("update:qrcert", pem)
+			if (e2eeInfo) {
+				this.decodeE2EEKeyV1(e2eeInfo, Buffer.from(secret))
+			}
+			return authToken
+		}
+		return ""
+	}
+
+	public createSqrSecret(_base64Only?: boolean): [Uint8Array, string] {
 		return [new Uint8Array(), ""];
 	}
 	public getSHA256Sum(..._args: string[] | Buffer[]) {
@@ -356,7 +413,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	public _encryptAESECB(_aesKey: LooseType, _plainData: LooseType) {
 		return Buffer.from([]);
 	}
-	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType { }
 
 	public encryptDeviceSecret(
 		_publicKey: Buffer,
@@ -366,14 +423,117 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		return Buffer.from([]);
 	}
 
-	public confirmE2EELogin(verifier: string, deviceSecret: Buffer) {
-		return this.direct_request(
+	public async createSession(): Promise<string> {
+		return await this.direct_request(
+			[],
+			"createSession",
+			4,
+			false,
+			"/acct/lgn/sq/v1",
+		);
+	}
+
+	public async createQrCode(qrcode: string) {
+		return await this.request(
+			[
+				[11, 1, qrcode],
+			],
+			"createQrCode",
+			4,
+			false,
+			"/acct/lgn/sq/v1",
+		);
+	}
+
+	public async checkQrCodeVerified(qrcode: string) {
+		try {
+			await this.request(
+				[
+					[11, 1, qrcode],
+				],
+				"checkQrCodeVerified",
+				4,
+				false,
+				"/acct/lp/lgn/sq/v1",
+				{
+					"x-lst": "150000",
+					"x-line-access": qrcode,
+				},
+			);
+			return true
+		} catch (error) {
+			throw error
+		}
+	}
+
+	public async verifyCertificate(qrcode: string, cert?: string | undefined) {
+		return await this.request(
+			[
+				[11, 1, qrcode],
+				[11, 2, cert],
+			],
+			"verifyCertificate",
+			4,
+			false,
+			"/acct/lgn/sq/v1",
+		);
+	}
+
+	public async createPinCode(qrcode: string) {
+		return await this.request(
+			[
+				[11, 1, qrcode],
+			],
+			"createPinCode",
+			4,
+			false,
+			"/acct/lgn/sq/v1",
+		);
+	}
+
+	public async checkPinCodeVerified(qrcode: string) {
+		try {
+			await this.request(
+				[
+					[11, 1, qrcode],
+				],
+				"checkPinCodeVerified",
+				4,
+				false,
+				"/acct/lp/lgn/sq/v1",
+				{
+					"x-lst": "150000",
+					"x-line-access": qrcode
+				},
+			);
+			return true
+		} catch (error) {
+			throw error
+		}
+	}
+
+	public async qrCodeLogin(authSessionId: string, autoLoginIsRequired: boolean = true) {
+		return await this.request(
+			[
+				[11, 1, authSessionId],
+				[11, 2, this.system?.device],
+				[2, 3, autoLoginIsRequired],
+			],
+			"qrCodeLogin",
+			4,
+			false,
+			"/acct/lgn/sq/v1",
+		);
+	}
+
+	public async confirmE2EELogin(verifier: string, deviceSecret: Buffer) {
+		return await this.direct_request(
 			[
 				[11, 1, verifier],
 				[11, 2, deviceSecret],
 			],
 			"confirmE2EELogin",
-			3,
+			4,
 			false,
 			"/api/v3p/rs",
 		);
@@ -577,7 +737,6 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 		const body = await response.arrayBuffer();
 		const parsedBody = new Uint8Array(body);
-
 		const res = readThrift(parsedBody, Protocol);
 		if (parse === true) {
 			this.parser.rename_data(res);
