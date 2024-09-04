@@ -5,7 +5,11 @@ import { Buffer } from "node:buffer";
 import { TalkClient } from "../internal/talk-client.ts";
 import type { LooseType } from "../../entities/common.ts";
 import { rawReadStruct as readStruct } from "../../libs/thrift/read.js";
-import { MIDType, type Location, type Message } from "../../libs/thrift/line_types.ts";
+import {
+	type Location,
+	type Message,
+	MIDType,
+} from "../../libs/thrift/line_types.ts";
 
 import elliptic from "npm:elliptic";
 
@@ -16,7 +20,7 @@ class E2EE extends TalkClient {
 	public async getE2EESelfKeyData(mid: string) {
 		try {
 			return JSON.parse(this.storage.get("e2eeKeys:" + mid) as string);
-		} catch (_e) {/* Do Nothing */ }
+		} catch (_e) { /* Do Nothing */ }
 		const keys = await this.getE2EEPublicKeys();
 		for (let i = 0; i < keys.length; i++) {
 			const key = keys[i];
@@ -31,7 +35,7 @@ class E2EE extends TalkClient {
 	public getE2EESelfKeyDataByKeyId(keyId: string | number) {
 		try {
 			return JSON.parse(this.storage.get("e2eeKeys:" + keyId) as string);
-		} catch {/* DoNothing */ }
+		} catch { /* DoNothing */ }
 	}
 	public saveE2EESelfKeyDataByKeyId(keyId: string | number, value: LooseType) {
 		this.storage.set("e2eeKeys:" + keyId, JSON.stringify(value));
@@ -63,7 +67,7 @@ class E2EE extends TalkClient {
 			case "v":
 				return 6;
 			default:
-				return null; // 必要に応じてデフォルト値を追加
+				return null;
 		}
 	}
 	public async getE2EELocalPublicKey(
@@ -106,7 +110,7 @@ class E2EE extends TalkClient {
 			if (keyId !== undefined && key !== undefined) {
 				const keyData = JSON.parse(key);
 				if (keyId !== keyData["keyId"]) {
-					this.e2eeLog(`keyId mismatch: ${mid}`);
+					this.e2eeLog("getE2EELocalPublicKeykeyIdMismatch", mid);
 					key = undefined;
 				}
 			} else {
@@ -135,7 +139,11 @@ class E2EE extends TalkClient {
 				const aes_key = this.getSHA256Sum(Buffer.from(aesKey), "Key");
 				const aes_iv = this._xor(this.getSHA256Sum(Buffer.from(aesKey), "IV"));
 
-				this.e2eeLog({ aes_key, aes_iv, encryptedSharedKey });
+				this.e2eeLog("getE2EELocalPublicKeyAESInfo", {
+					aes_key,
+					aes_iv,
+					encryptedSharedKey,
+				});
 
 				const cipherParams = CryptoJS.lib.CipherParams.create({
 					ciphertext: encryptedSharedKey.toString(),
@@ -150,10 +158,10 @@ class E2EE extends TalkClient {
 					{ mode: CryptoJS.mode.CBC },
 				);
 
-				this.e2eeLog({ plainText });
+				this.e2eeLog("getE2EELocalPublicKeyPlainText", plainText);
 
 				const decrypted = plainText.toString(CryptoJS.enc.Base64);
-				this.e2eeLog(`[getE2EELocalPublicKey] decrypted: ${decrypted}`);
+				this.e2eeLog("getE2EELocalPublicKeyDecrypted", decrypted);
 				const data = {
 					privKey: decrypted,
 					keyId: groupKeyId,
@@ -167,7 +175,10 @@ class E2EE extends TalkClient {
 	}
 
 	public generateSharedSecret(privateKey: Buffer, publicKey: Buffer) {
-		this.e2eeLog({ privateKey: privateKey.length, publicKey: publicKey.length });
+		this.e2eeLog("generateSharedSecretKeyInfo", {
+			privateKey: privateKey.length,
+			publicKey: publicKey.length,
+		});
 		return curve25519.sharedKey(
 			Uint8Array.from(privateKey),
 			Uint8Array.from(publicKey),
@@ -195,7 +206,11 @@ class E2EE extends TalkClient {
 	}
 
 	public _encryptAESECB(aesKey: Buffer, plainData: Buffer) {
-		const cipher = crypto.createCipheriv("aes-256-ecb", aesKey, new Uint8Array(0));
+		const cipher = crypto.createCipheriv(
+			"aes-256-ecb",
+			aesKey,
+			new Uint8Array(0),
+		);
 		cipher.setAutoPadding(false);
 		return Buffer.concat([cipher.update(plainData), cipher.final()]);
 	}
@@ -214,7 +229,7 @@ class E2EE extends TalkClient {
 				secret,
 				encryptedKeyChain,
 			);
-			this.e2eeLog({
+			this.e2eeLog("decodeE2EEKeyV1E2EEKeyInfo", {
 				e2eeKey: {
 					keyId,
 					privKey,
@@ -244,13 +259,13 @@ class E2EE extends TalkClient {
 		privateKey: Buffer,
 		encryptedKeyChain: Buffer,
 	) {
-		this.e2eeLog({
+		this.e2eeLog("decryptKeyChainKeyInfo", {
 			decryptKeyChain: {
 				publicKey: publicKey.toString("base64"),
 				privateKey: privateKey.toString("base64"),
 				encryptedKeyChain: encryptedKeyChain.toString("base64"),
-			}
-		})
+			},
+		});
 		const sharedSecret = this.generateSharedSecret(privateKey, publicKey);
 		const aesKey = this.getSHA256Sum(Buffer.from(sharedSecret), "Key");
 		const aesIv = this._xor(this.getSHA256Sum(Buffer.from(sharedSecret), "IV"));
@@ -260,7 +275,9 @@ class E2EE extends TalkClient {
 			decipher.update(encryptedKeyChain),
 			decipher.final(),
 		]);
-		this.e2eeLog({ binkey: keychainData.toString("hex") })
+		this.e2eeLog("decryptKeyChainBinKeyInfo", {
+			binkey: keychainData.toString("hex"),
+		});
 		const key = readStruct(keychainData)[1];
 		const publicKeyBytes = Buffer.from(key[0][4]);
 		const privateKeyBytes = Buffer.from(key[0][5]);
@@ -401,9 +418,13 @@ class E2EE extends TalkClient {
 		const bSenderKeyId = Buffer.from(this.getIntBytes(senderKeyId));
 		const bReceiverKeyId = Buffer.from(this.getIntBytes(receiverKeyId));
 
-		this.e2eeLog(`senderKeyId: ${senderKeyId} (${bSenderKeyId.toString("hex")})`);
 		this.e2eeLog(
-			`receiverKeyId: ${receiverKeyId} (${bReceiverKeyId.toString("hex")})`,
+			"encryptE2EETextMessageSenderKeyId",
+			`${senderKeyId} (${bSenderKeyId.toString("hex")})`,
+		);
+		this.e2eeLog(
+			"encryptE2EETextMessageReceiverKeyId",
+			`${receiverKeyId} (${bReceiverKeyId.toString("hex")})`,
 		);
 
 		return [salt, encData, sign, bSenderKeyId, bReceiverKeyId];
@@ -435,9 +456,13 @@ class E2EE extends TalkClient {
 		const bSenderKeyId = Buffer.from(this.getIntBytes(senderKeyId));
 		const bReceiverKeyId = Buffer.from(this.getIntBytes(receiverKeyId));
 
-		this.e2eeLog(`senderKeyId: ${senderKeyId} (${bSenderKeyId.toString("hex")})`);
 		this.e2eeLog(
-			`receiverKeyId: ${receiverKeyId} (${bReceiverKeyId.toString("hex")})`,
+			"encryptE2EELocationMessageSenderKeyId",
+			`${senderKeyId} (${bSenderKeyId.toString("hex")})`,
+		);
+		this.e2eeLog(
+			"encryptE2EELocationMessageReceiverKeyId",
+			`${receiverKeyId} (${bReceiverKeyId.toString("hex")})`,
 		);
 
 		return [salt, encData, sign, bSenderKeyId, bReceiverKeyId];
@@ -471,8 +496,8 @@ class E2EE extends TalkClient {
 		);
 		const senderKeyId = byte2int(chunks[3]);
 		const receiverKeyId = byte2int(chunks[4]);
-		this.e2eeLog(`senderKeyId: ${senderKeyId}`);
-		this.e2eeLog(`receiverKeyId: ${receiverKeyId}`);
+		this.e2eeLog("decryptE2EETextMessageSenderKeyId", senderKeyId);
+		this.e2eeLog("decryptE2EETextMessageReceiverKeyId", receiverKeyId);
 
 		const selfKey = await this.getE2EESelfKeyData(this.user?.mid as string);
 		let privK = Buffer.from(selfKey.privKey, "base64");
@@ -526,8 +551,8 @@ class E2EE extends TalkClient {
 
 		const senderKeyId = byte2int(chunks[3]);
 		const receiverKeyId = byte2int(chunks[4]);
-		this.e2eeLog(`senderKeyId: ${senderKeyId}`);
-		this.e2eeLog(`receiverKeyId: ${receiverKeyId}`);
+		this.e2eeLog("decryptE2EELocationMessageSenderKeyId", senderKeyId);
+		this.e2eeLog("decryptE2EELocationMessageReceiverKeyId", receiverKeyId);
 
 		const selfKey = await this.getE2EESelfKeyData(this.user?.mid as string);
 		let privK = Buffer.from(selfKey.privKey, "base64");
@@ -570,11 +595,23 @@ class E2EE extends TalkClient {
 		const message = chunks[1];
 		const _sign = chunks[2];
 		const aesKey = this.generateSharedSecret(privK, pubK);
-		const aes_key = this.getSHA256Sum(Buffer.from(aesKey), salt, Buffer.from("Key"));
-		const aes_iv = this._xor(this.getSHA256Sum(Buffer.from(aesKey), salt, "IV"));
+		const aes_key = this.getSHA256Sum(
+			Buffer.from(aesKey),
+			salt,
+			Buffer.from("Key"),
+		);
+		const aes_iv = this._xor(
+			this.getSHA256Sum(Buffer.from(aesKey), salt, "IV"),
+		);
 		const decipher = crypto.createDecipheriv("aes-256-cbc", aes_key, aes_iv);
-		const decrypted = Buffer.concat([decipher.update(message), decipher.final()]);
-		this.e2eeLog(`decrypted: ${decrypted.toString("utf-8")}`);
+		const decrypted = Buffer.concat([
+			decipher.update(message),
+			decipher.final(),
+		]);
+		this.e2eeLog(
+			"decryptE2EEMessageV1DecryptedMessage",
+			decrypted.toString("utf-8"),
+		);
 		decrypted; // = this.unpad(decrypted, 16);
 		return JSON.parse(decrypted.toString("utf-8"));
 	}
@@ -614,16 +651,16 @@ class E2EE extends TalkClient {
 			decrypted = decipher.update(ciphertext);
 			decrypted = Buffer.concat([decrypted, decipher.final()]);
 		} catch (err) {
-			this.e2eeLog(`Decryption failed: ${err.message}`);
+			this.e2eeLog("decryptE2EEMessageV2DecryptionFailed", err.message);
 			throw err;
 		}
 
-		this.e2eeLog(`decrypted: ${decrypted}`);
+		this.e2eeLog("decryptE2EEMessageV2DecryptedMessage", decrypted);
 		return JSON.parse(decrypted.toString());
 	}
 
-	private e2eeLog(str: LooseType) {
-		this.log("e2ee", { message: str });
+	private e2eeLog(type: string, message: LooseType) {
+		this.log("e2ee", { type, message });
 	}
 
 	public override createSqrSecret(
@@ -652,7 +689,7 @@ function byte2int(t: Buffer) {
 	return e;
 }
 
-function bin2bytes(k: string) {
+function _bin2bytes(k: string) {
 	const e: number[] = [];
 	for (let i = 0; i < k.length / 2; i++) {
 		const _i = parseInt(k.substring(i * 2, i * 2 + 2), 16);

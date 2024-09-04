@@ -78,6 +78,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Emit log event
 	 *
+	 * @param {LogType} type Log type
 	 * @param {LooseType} [data] Log data
 	 * @emits log
 	 */
@@ -114,12 +115,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				throw new InternalError("Invalid password", `'${options.password}'`);
 			}
 		}
-		const device: Device =
-			options.device ||
+		const device: Device = options.device ||
 			(options.authToken
-				? PRIMARY_TOKEN_REGEX.test(options.authToken)
-					? "ANDROID"
-					: "IOSIPAD"
+				? PRIMARY_TOKEN_REGEX.test(options.authToken) ? "ANDROID" : "IOSIPAD"
 				: "IOSIPAD");
 		const details = getDeviceDetails(device);
 
@@ -131,7 +129,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			appVersion: details.appVersion,
 			systemName: details.systemName,
 			systemVersion: details.systemVersion,
-			type: `${device}\t${details.appVersion}\t${details.systemName}\t${details.systemVersion}`,
+			type:
+				`${device}\t${details.appVersion}\t${details.systemName}\t${details.systemVersion}`,
 			userAgent: `Line/${details.appVersion}`,
 			device,
 		};
@@ -140,7 +139,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		if (!authToken) {
 			if (!options.email || !options.password) {
-				authToken = await this.requestSQR()
+				authToken = await this.requestSQR();
 			} else {
 				authToken = await this.requestEmailLogin(
 					options.email,
@@ -269,15 +268,16 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		const rsaKey = await this.getRSAKeyInfo();
 		const { keynm, sessionKey } = rsaKey;
 
-		const message =
-			String.fromCharCode(sessionKey.length) +
+		const message = String.fromCharCode(sessionKey.length) +
 			sessionKey +
 			String.fromCharCode(email.length) +
 			email +
 			String.fromCharCode(password.length) +
 			password;
 
-		let e2eeData: Buffer | undefined, secret: Uint8Array | undefined, secretPK: string | undefined;
+		let e2eeData: Buffer | undefined,
+			secret: Uint8Array | undefined,
+			secretPK: string | undefined;
 
 		const constantPincode = "202202";
 		if (enableE2EE) {
@@ -374,34 +374,34 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		return response.authToken;
 	}
 
-	public async requestSQR():Promise<string> {
-		const { 1: sqr } = await this.createSession()
-		let { 1: url } = await this.createQrCode(sqr)
-		const [secret, secretUrl] = this.createSqrSecret()
-		url = url + secretUrl
-		this.emit("qrcall", url)
+	public async requestSQR(): Promise<string> {
+		const { 1: sqr } = await this.createSession();
+		let { 1: url } = await this.createQrCode(sqr);
+		const [secret, secretUrl] = this.createSqrSecret();
+		url = url + secretUrl;
+		this.emit("qrcall", url);
 		if (await this.checkQrCodeVerified(sqr)) {
 			try {
-				await this.verifyCertificate(sqr, this.getQrCert() as string)
-			} catch (error) {
-				const { 1: pincode } = await this.createPinCode(sqr)
-				this.emit("pincall", pincode)
-				await this.checkPinCodeVerified(sqr)
+				await this.verifyCertificate(sqr, this.getQrCert() as string);
+			} catch {
+				const { 1: pincode } = await this.createPinCode(sqr);
+				this.emit("pincall", pincode);
+				await this.checkPinCodeVerified(sqr);
 			}
-			const response = await this.qrCodeLogin(sqr)
+			const response = await this.qrCodeLogin(sqr);
 			const {
 				1: pem,
 				2: authToken,
 				4: e2eeInfo,
-				5: _mid
-			} = response
-			this.emit("update:qrcert", pem)
+				5: _mid,
+			} = response;
+			this.emit("update:qrcert", pem);
 			if (e2eeInfo) {
-				this.decodeE2EEKeyV1(e2eeInfo, Buffer.from(secret))
+				this.decodeE2EEKeyV1(e2eeInfo, Buffer.from(secret));
 			}
-			return authToken
+			return authToken;
 		}
-		return ""
+		return "";
 	}
 
 	public createSqrSecret(_base64Only?: boolean): [Uint8Array, string] {
@@ -413,7 +413,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	public _encryptAESECB(_aesKey: LooseType, _plainData: LooseType) {
 		return Buffer.from([]);
 	}
-	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType { }
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
 
 	public encryptDeviceSecret(
 		_publicKey: Buffer,
@@ -460,9 +460,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					"x-line-access": qrcode,
 				},
 			);
-			return true
+			return true;
 		} catch (error) {
-			throw error
+			throw error;
 		}
 	}
 
@@ -503,16 +503,19 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				"/acct/lp/lgn/sq/v1",
 				{
 					"x-lst": "150000",
-					"x-line-access": qrcode
+					"x-line-access": qrcode,
 				},
 			);
-			return true
+			return true;
 		} catch (error) {
-			throw error
+			throw error;
 		}
 	}
 
-	public async qrCodeLogin(authSessionId: string, autoLoginIsRequired: boolean = true) {
+	public async qrCodeLogin(
+		authSessionId: string,
+		autoLoginIsRequired: boolean = true,
+	) {
 		return await this.request(
 			[
 				[11, 1, authSessionId],
@@ -759,8 +762,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			parsedData: res,
 		});
 
-		const isRefresh =
-			res.e && res.e["code"] === "NOT_AUTHORIZED_DEVICE" && nextToken;
+		const isRefresh = res.e && res.e["code"] === "NOT_AUTHORIZED_DEVICE" &&
+			nextToken;
 
 		if (res.e && !isRefresh) {
 			throw new InternalError(
