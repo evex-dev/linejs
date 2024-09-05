@@ -146,7 +146,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					options.email,
 					options.password,
 					options.e2ee || true,
-					options.pincode
+					options.pincode,
 				);
 			}
 		}
@@ -218,10 +218,13 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		email: string,
 		password: string,
 		enableE2EE: boolean = false,
-		constantPincode: string = "114514"
+		constantPincode: string = "114514",
 	): Promise<string> {
 		if (constantPincode.length !== 6) {
-			throw new InternalError("Invalid constant pincode", "The constant pincode should be 6 digits");
+			throw new InternalError(
+				"Invalid constant pincode",
+				"The constant pincode should be 6 digits",
+			);
 		}
 
 		this.log("login", {
@@ -229,7 +232,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			email,
 			password,
 			enableE2EE,
-			constantPincode
+			constantPincode,
 		});
 
 		if (!this.system) {
