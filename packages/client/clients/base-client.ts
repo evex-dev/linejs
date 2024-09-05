@@ -1,6 +1,5 @@
 // For Base (login, request, line, relation, etc)
 
-import * as fs from "node:fs/promises";
 import { getRSACrypto } from "../libs/rsa/rsa-verify.ts";
 import type { BaseStorage } from "../libs/storage/base-storage.ts";
 import { MemoryStorage } from "../libs/storage/memory-storage.ts";
@@ -147,6 +146,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					options.email,
 					options.password,
 					options.e2ee || true,
+					options.pincode,
 				);
 			}
 		}
@@ -155,38 +155,14 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			authToken,
 		};
 
-		const profile = await this.getProfile();
-
 		this.emit("update:authtoken", authToken);
 
-		this.user = {
-			type: "me",
-			...profile,
-		};
-
-		this.emit("ready", this.user);
+		this.emit("ready", await this.refreshProfile(true));
 	}
 
 	protected parser: ThriftRenameParser = new ThriftRenameParser();
 	private cert: string | null = null;
 	private qrCert: string | null = null;
-
-	/**
-	 * @description Registers a certificate path to be used for login.
-	 *
-	 * @param {string} [path]  - The path to the certificate.
-	 */
-	public async registerCertPath(path: string): Promise<void> {
-		let cert;
-
-		try {
-			cert = await fs.readFile(path, "utf8");
-		} catch (_) {
-			cert = null;
-		}
-
-		this.registerCert(cert);
-	}
 
 	/**
 	 * @description Registers a certificate to be used for login.
@@ -207,29 +183,12 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	}
 
 	/**
-	 * @description Registers a certificate path to be used for login.
-	 *
-	 * @param {string} [path]  - The path to the certificate.
-	 */
-	public async registerQrCertPath(path: string): Promise<void> {
-		let cert;
-
-		try {
-			cert = await fs.readFile(path, "utf8");
-		} catch (_) {
-			cert = null;
-		}
-
-		this.registerQrCert(cert);
-	}
-
-	/**
 	 * @description Registers a certificate to be used for login.
 	 *
-	 * @param {string | null} cert - The certificate to register. If null, the certificate will be cleared.
+	 * @param {string | null} qrCert - The certificate to register. If null, the certificate will be cleared.
 	 */
-	public registerQrCert(cert: string | null): void {
-		this.qrCert = cert;
+	public registerQrCert(qrCert: string | null): void {
+		this.qrCert = qrCert;
 	}
 
 	/**
@@ -247,9 +206,11 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @param {string} [email] The email to login with.
 	 * @param {string} [password] The password to login with.
 	 * @param {boolean} [enableE2EE=false] Enable E2EE or not.
+	 * @param {string} [constantPincode="114514"] The constant pincode.
 	 * @returns {Promise<string>} The auth token.
 	 * @throws {InternalError} If the system is not setup yet.
 	 * @throws {InternalError} If the login type is not supported.
+	 * @throws {InternalError} If the constant pincode is not valid.
 	 * @emits pincall
 	 * @emits update:cert
 	 */
@@ -257,12 +218,23 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		email: string,
 		password: string,
 		enableE2EE: boolean = false,
+		constantPincode: string = "114514",
 	): Promise<string> {
+		if (constantPincode.length !== 6) {
+			throw new InternalError(
+				"Invalid constant pincode",
+				"The constant pincode should be 6 digits",
+			);
+		}
+
 		this.log("login", {
 			method: "email",
 			email,
 			password,
+			enableE2EE,
+			constantPincode,
 		});
+
 		if (!this.system) {
 			throw new InternalError("Not setup yet", "Please call 'login()' first");
 		}
@@ -282,7 +254,6 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			secret: Uint8Array | undefined,
 			secretPK: string | undefined;
 
-		const constantPincode = "202202";
 		if (enableE2EE) {
 			[secret, secretPK] = this.createSqrSecret(true);
 			e2eeData = this.encryptAESECB(
@@ -386,7 +357,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		if (await this.checkQrCodeVerified(sqr)) {
 			try {
 				await this.verifyCertificate(sqr, this.getQrCert() as string);
-			} catch {
+			} catch (_e) {
 				const { 1: pincode } = await this.createPinCode(sqr);
 				this.emit("pincall", pincode);
 				await this.checkPinCodeVerified(sqr);
@@ -843,5 +814,21 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			"Profile",
 			this.LINEService_API_PATH,
 		);
+	}
+
+	/**
+	 * @description Refresh the profile of the current user.
+	 */
+	public async refreshProfile(noEmit: boolean = false): Promise<User<"me">> {
+		const profile = await this.getProfile();
+
+		if (!noEmit) this.emit("update:profile", profile);
+
+		this.user = {
+			type: "me",
+			...profile,
+		};
+
+		return this.user;
 	}
 }

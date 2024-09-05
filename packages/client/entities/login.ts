@@ -13,4 +13,5 @@ export type LoginOptions = (EmailOptions & AuthTokenOptions) & {
 	device?: Device;
 	e2ee?: boolean;
 	qr?: boolean;
+	pincode?: string;
 };

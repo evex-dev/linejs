@@ -9,12 +9,15 @@
       "npm:@types/node": "npm:@types/node@18.16.19",
       "npm:crypto-js": "npm:crypto-js@4.2.0",
       "npm:curve25519-js": "npm:curve25519-js@0.0.4",
+      "npm:curve25519-js@0.0.4": "npm:curve25519-js@0.0.4",
       "npm:elliptic": "npm:elliptic@6.5.7",
       "npm:elliptic@6.5.7": "npm:elliptic@6.5.7",
       "npm:node-bignumber": "npm:node-bignumber@1.2.2",
       "npm:node-bignumber@1.2.2": "npm:node-bignumber@1.2.2",
       "npm:prettier": "npm:prettier@3.3.3",
-      "npm:thrift@0.20.0": "npm:thrift@0.20.0_ws@5.2.4"
+      "npm:thrift@0.20.0": "npm:thrift@0.20.0_ws@5.2.4",
+      "npm:tweetnacl": "npm:tweetnacl@1.0.3",
+      "npm:tweetnacl@1.0.3": "npm:tweetnacl@1.0.3"
     },
     "jsr": {
       "@std/assert@1.0.2": {
@@ -177,6 +180,10 @@
           "q": "q@1.5.1",
           "ws": "ws@5.2.4"
         }
+      },
+      "tweetnacl@1.0.3": {
+        "integrity": "sha512-6rt+RN7aOi1nGMyC4Xa5DdYiukl2UWCbcJft7YhxReBGQD7OAM8Pbxw6YMo4r2diNEA8FEmu32YOn9rhaiE5yw==",
+        "dependencies": {}
       },
       "ws@5.2.4": {
         "integrity": "sha512-fFCejsuC8f9kOSu9FYaOw8CdO68O3h5v0lg4p74o8JqWpwTf9tniOD+nOB78aWoVSS6WptVUmDrp/KPsMVBWFQ==",

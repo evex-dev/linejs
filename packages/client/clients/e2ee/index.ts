@@ -11,7 +11,7 @@ import {
 	MIDType,
 } from "../../libs/thrift/line_types.ts";
 
-import nacl from "npm:tweetnacl";
+import nacl from "npm:tweetnacl@1.0.3";
 
 class E2EE extends TalkClient {
 	public async getE2EESelfKeyData(mid: string): Promise<LooseType> {
@@ -34,7 +34,7 @@ class E2EE extends TalkClient {
 	public getE2EESelfKeyDataByKeyId(keyId: string | number): LooseType {
 		try {
 			return JSON.parse(this.storage.get("e2eeKeys:" + keyId) as string);
-		} catch {
+		} catch (_e) {
 			/* DoNothing */
 		}
 	}
@@ -127,7 +127,8 @@ class E2EE extends TalkClient {
 				const creatorKeyId = E2EEGroupSharedKey.creatorKeyId;
 				const _receiver = E2EEGroupSharedKey.receiver;
 				const receiverKeyId = E2EEGroupSharedKey.receiverKeyId;
-				const encryptedSharedKey = E2EEGroupSharedKey.encryptedSharedKey as Buffer;
+				const encryptedSharedKey =
+					E2EEGroupSharedKey.encryptedSharedKey as Buffer;
 				const selfKey = Buffer.from(
 					this.getE2EESelfKeyDataByKeyId(receiverKeyId)["privKey"],
 					"base64",
@@ -146,8 +147,12 @@ class E2EE extends TalkClient {
 					aes_iv,
 					encryptedSharedKey,
 				});
-				const decipher = crypto.createDecipheriv("aes-256-cbc", aes_key, aes_iv);
-				decipher.setAutoPadding(false)
+				const decipher = crypto.createDecipheriv(
+					"aes-256-cbc",
+					aes_key,
+					aes_iv,
+				);
+				decipher.setAutoPadding(false);
 				const plainText = Buffer.concat([
 					decipher.update(encryptedSharedKey),
 					decipher.final(),
@@ -167,7 +172,7 @@ class E2EE extends TalkClient {
 				);
 				*/
 				this.e2eeLog("getE2EELocalPublicKeyDecryptedLength", plainText.length);
-				const decrypted = plainText.toString("base64")//.toString(CryptoJS.enc.Base64);
+				const decrypted = plainText.toString("base64"); //.toString(CryptoJS.enc.Base64);
 				this.e2eeLog("getE2EELocalPublicKeyDecrypted", decrypted);
 				const data = {
 					privKey: decrypted,
@@ -175,7 +180,7 @@ class E2EE extends TalkClient {
 				};
 				key = JSON.stringify(data);
 				this.storage.set(fd + fn, key);
-				return data
+				return data;
 			}
 			return JSON.parse(key);
 		}
@@ -231,11 +236,11 @@ class E2EE extends TalkClient {
 		secret: Buffer,
 	):
 		| {
-			keyId: LooseType;
-			privKey: Buffer;
-			pubKey: Buffer;
-			e2eeVersion: LooseType;
-		}
+				keyId: LooseType;
+				privKey: Buffer;
+				pubKey: Buffer;
+				e2eeVersion: LooseType;
+		  }
 		| undefined {
 		if (data.encryptedKeyChain) {
 			const encryptedKeyChain = Buffer.from(data.encryptedKeyChain, "base64");
@@ -682,9 +687,9 @@ class E2EE extends TalkClient {
 		try {
 			decrypted = decipher.update(ciphertext);
 			decrypted = Buffer.concat([decrypted, decipher.final()]);
-		} catch (err) {
-			this.e2eeLog("decryptE2EEMessageV2DecryptionFailed", err.message);
-			throw err;
+		} catch (error) {
+			this.e2eeLog("decryptE2EEMessageV2DecryptionFailed", error.message);
+			throw error;
 		}
 
 		this.e2eeLog("decryptE2EEMessageV2DecryptedMessage", decrypted);

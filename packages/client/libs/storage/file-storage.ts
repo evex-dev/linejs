@@ -24,7 +24,7 @@ export class FileStorage extends BaseStorage {
 			if (extendData) {
 				fs.writeFileSync(this.path, extendData, "utf-8");
 			}
-		} catch (_) {
+		} catch (_e) {
 			fs.writeFileSync(this.path, extendData || "{}", "utf-8");
 		}
 	}
