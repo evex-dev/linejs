@@ -1,7 +1,7 @@
 import type { Log } from "./log.ts";
 import type { User } from "./user.ts";
 import type * as LINETypes from "../libs/thrift/line_types.ts";
-import type { SquareMessage } from "./message.ts";
+import type { SquareMessage, Message } from "./message.ts";
 import type { LooseType } from "./common.ts";
 
 export type ClientEvents = {
@@ -16,6 +16,6 @@ export type ClientEvents = {
 	log: (data: Log) => void;
 	"square:message": (squareMessage: SquareMessage) => void;
 	"square:event": (squareEvent: LINETypes.SquareEvent) => void;
-	"talk:message": (message: SquareMessage) => void;
-	"talk:event": (talkEvent: LooseType) => void;
+	"talk:message": (message: Message) => void;
+	"talk:event": (talkEvent: LINETypes.Operation) => void;
 };

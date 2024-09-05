@@ -13,6 +13,7 @@ export type SquareMessage = LINETypes.SquareEventNotificationMessage & {
 		pid: string;
 		displayName: string;
 	};
+	//author: () => Promise<LINETypes.SquareMember>;
 	square: () => Promise<LINETypes.GetSquareChatResponse>;
 };
 
@@ -26,7 +27,6 @@ export type Message = LINETypes.Operation & {
 	) => Promise<LINETypes.Message>;
 	author: {
 		mid: string;
-		displayName: string;
 	};
 	chat: () => Promise<LINETypes.Profile>|Promise<LINETypes.Group>;
 };

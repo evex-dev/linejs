@@ -55,7 +55,7 @@ export class TalkClient extends ChannelClient {
 		location?: LINETypes.Location;
 		chunk?: string[] | Buffer[];
 		e2ee?: boolean;
-	}): Promise<LINETypes.SendMessageResponse> {
+	}): Promise<LINETypes.Message> {
 		const {
 			to,
 			text,

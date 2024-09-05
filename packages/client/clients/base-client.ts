@@ -54,7 +54,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	constructor(options: ClientOptions = {}) {
 		super();
 		this.parser.def = Thrift;
-		
+
 		this.storage = options.storage || new MemoryStorage();
 		this.endpoint = options.endpoint || "gw.line.naver.jp";
 		this.obsEndpoint = options.obsEndpoint || "https://obs.line-apps.com";
@@ -168,6 +168,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	}
 
 	protected IS_POLLING_SQUARE = false;
+	protected IS_POLLING_TALK = false;
 
 	private async pollingSquareEvents() {
 		if (this.IS_POLLING_SQUARE) {
@@ -257,6 +258,121 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 			await new Promise((resolve) => setTimeout(resolve));
 		}
+	}
+
+	private async pollingTalkEvents() {
+		if (this.IS_POLLING_TALK) {
+			return;
+		}
+
+		this.IS_POLLING_TALK = true;
+
+		const noopEvents = await this.sync();
+
+		let revision = noopEvents.fullSyncResponse.nextRevision;
+
+		while (true) {
+			if (!this.metadata) {
+				this.IS_POLLING_TALK = false;
+				return;
+			}
+
+			const myEvents = await this.sync({ revision })
+			myEvents.operationResponse.operations.forEach(async operation => {
+				if (operation.type === "RECEIVE_MESSAGE") {
+					const message = await this.decryptE2EEMessage(operation.message);
+					let sendIn = "";
+					if (message.toType === "USER") {
+						sendIn = message._from
+					} else {
+						sendIn = message.to
+					}
+					const send = async (options: SquareMessageSendOptions) => {
+						if (typeof options === "string") {
+							return await this.sendMessage({
+								to: sendIn,
+								text: options,
+								relatedMessageId: undefined,
+							});
+						} else {
+							return await this.sendMessage({
+								to: sendIn,
+								relatedMessageId: undefined,
+								...options,
+							});
+						}
+					};
+
+					const reply = async (options: MessageReplyOptions) => {
+						if (typeof options === "string") {
+							return await this.sendMessage({
+								to: sendIn,
+								text: options,
+								relatedMessageId: message.id,
+							});
+						} else {
+							return await this.sendMessage({
+								to: sendIn,
+								relatedMessageId: message.id,
+								...options,
+							});
+						}
+					};
+
+					this.emit("talk:message", {
+						...operation,
+						content:
+							message.text,
+						reply,
+						send,
+						author: {
+							mid: message._from,
+						},
+						chat: async () =>{
+							//wait...
+						}
+					});
+				}
+				this.emit("talk:event", operation)
+			})
+		}
+	}
+
+	/**
+	 * @description Will override.
+	 */
+	public async sync(
+		_options: {
+			limit?: number;
+			revision?: number;
+			globalRev?: number;
+			individualRev?: number;
+		} = {},
+	): Promise<LINETypes.SyncResponse> {
+		return (await Symbol("Unreachable")) as LooseType;
+	}
+
+	/**
+	 * @description Will override.
+	 */
+	public async sendMessage(_options: {
+		to: string;
+		text?: string;
+		contentType?: LINETypes.ContentType;
+		contentMetadata?: LooseType;
+		relatedMessageId?: string;
+		location?: LINETypes.Location;
+		chunk?: string[] | Buffer[];
+		e2ee?: boolean;
+	}): Promise<LINETypes.Message> {
+		return (await Symbol("Unreachable")) as LooseType;
+	}
+
+	/**
+	 * @description Will override.
+	 */
+	public async decryptE2EEMessage(messageObj: LINETypes.Message): Promise<LINETypes.Message> {
+		return (await Symbol("Unreachable")) as LooseType;
 	}
 
 	/**
@@ -507,17 +623,35 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		return "";
 	}
 
+	/**
+	 * @description Will override.
+	 */
 	public createSqrSecret(_base64Only?: boolean): [Uint8Array, string] {
 		return [new Uint8Array(), ""];
 	}
+
+	/**
+	 * @description Will override.
+	 */
 	public getSHA256Sum(..._args: string[] | Buffer[]): Buffer {
 		return Buffer.from([]);
 	}
+
+	/**
+	 * @description Will override.
+	 */
 	public encryptAESECB(_aesKey: LooseType, _plainData: LooseType): Buffer {
 		return Buffer.from([]);
 	}
-	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
 
+	/**
+	 * @description Will override.
+	 */
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType { }
+
+	/**
+	 * @description Will override.
+	 */
 	public encryptDeviceSecret(
 		_publicKey: Buffer,
 		_privateKey: Buffer,
