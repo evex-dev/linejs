@@ -312,7 +312,8 @@ export enum ErrorCode {
 	INTERNAL_ERROR = 20,
 	_NO_SUCH_IDENTITY_IDENFIER = "NO_SUCH_IDENTITY_IDENFIER",
 	NO_SUCH_IDENTITY_IDENFIER = 21,
-	_DEACTIVATED_ACCOUNT_BOUND_TO_THIS_IDENTITY = "DEACTIVATED_ACCOUNT_BOUND_TO_THIS_IDENTITY",
+	_DEACTIVATED_ACCOUNT_BOUND_TO_THIS_IDENTITY =
+		"DEACTIVATED_ACCOUNT_BOUND_TO_THIS_IDENTITY",
 	DEACTIVATED_ACCOUNT_BOUND_TO_THIS_IDENTITY = 22,
 	_ILLEGAL_IDENTITY_CREDENTIAL = "ILLEGAL_IDENTITY_CREDENTIAL",
 	ILLEGAL_IDENTITY_CREDENTIAL = 23,
@@ -390,13 +391,16 @@ export enum ErrorCode {
 	NO_CALLER_ID_LIMIT_EXCEEDED = 61,
 	_CALLER_ID_VERIFICATION_REQUIRED = "CALLER_ID_VERIFICATION_REQUIRED",
 	CALLER_ID_VERIFICATION_REQUIRED = 62,
-	_NO_CALLER_ID_LIMIT_EXCEEDED_AND_VERIFICATION_REQUIRED = "NO_CALLER_ID_LIMIT_EXCEEDED_AND_VERIFICATION_REQUIRED",
+	_NO_CALLER_ID_LIMIT_EXCEEDED_AND_VERIFICATION_REQUIRED =
+		"NO_CALLER_ID_LIMIT_EXCEEDED_AND_VERIFICATION_REQUIRED",
 	NO_CALLER_ID_LIMIT_EXCEEDED_AND_VERIFICATION_REQUIRED = 63,
 	_MESSAGE_NOT_FOUND = "MESSAGE_NOT_FOUND",
 	MESSAGE_NOT_FOUND = 64,
-	_INVALID_ACCOUNT_MIGRATION_PINCODE_FORMAT = "INVALID_ACCOUNT_MIGRATION_PINCODE_FORMAT",
+	_INVALID_ACCOUNT_MIGRATION_PINCODE_FORMAT =
+		"INVALID_ACCOUNT_MIGRATION_PINCODE_FORMAT",
 	INVALID_ACCOUNT_MIGRATION_PINCODE_FORMAT = 65,
-	_ACCOUNT_MIGRATION_PINCODE_NOT_MATCHED = "ACCOUNT_MIGRATION_PINCODE_NOT_MATCHED",
+	_ACCOUNT_MIGRATION_PINCODE_NOT_MATCHED =
+		"ACCOUNT_MIGRATION_PINCODE_NOT_MATCHED",
 	ACCOUNT_MIGRATION_PINCODE_NOT_MATCHED = 66,
 	_ACCOUNT_MIGRATION_PINCODE_BLOCKED = "ACCOUNT_MIGRATION_PINCODE_BLOCKED",
 	ACCOUNT_MIGRATION_PINCODE_BLOCKED = 67,
@@ -410,9 +414,11 @@ export enum ErrorCode {
 	PAID_CALL_REDEEM_FAILED = 72,
 	_PREVENTED_JOIN_BY_TICKET = "PREVENTED_JOIN_BY_TICKET",
 	PREVENTED_JOIN_BY_TICKET = 73,
-	_SEND_MESSAGE_NOT_PERMITTED_FROM_LINE_AT = "SEND_MESSAGE_NOT_PERMITTED_FROM_LINE_AT",
+	_SEND_MESSAGE_NOT_PERMITTED_FROM_LINE_AT =
+		"SEND_MESSAGE_NOT_PERMITTED_FROM_LINE_AT",
 	SEND_MESSAGE_NOT_PERMITTED_FROM_LINE_AT = 75,
-	_SEND_MESSAGE_NOT_PERMITTED_WHILE_AUTO_REPLY = "SEND_MESSAGE_NOT_PERMITTED_WHILE_AUTO_REPLY",
+	_SEND_MESSAGE_NOT_PERMITTED_WHILE_AUTO_REPLY =
+		"SEND_MESSAGE_NOT_PERMITTED_WHILE_AUTO_REPLY",
 	SEND_MESSAGE_NOT_PERMITTED_WHILE_AUTO_REPLY = 76,
 	_SECURITY_CENTER_NOT_VERIFIED = "SECURITY_CENTER_NOT_VERIFIED",
 	SECURITY_CENTER_NOT_VERIFIED = 77,
@@ -680,7 +686,8 @@ export enum PwlessCredentialErrorCode {
 	NOT_SUPPORTED = 101,
 	_FORBIDDEN = "FORBIDDEN",
 	FORBIDDEN = 102,
-	_FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR = "FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR",
+	_FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR =
+		"FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR",
 	FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR = 201,
 }
 
@@ -739,7 +746,8 @@ export enum SecondaryPwlessLoginErrorCode {
 	FORBIDDEN = 103,
 	_FIDO_UNKNOWN_CREDENTIAL_ID = "FIDO_UNKNOWN_CREDENTIAL_ID",
 	FIDO_UNKNOWN_CREDENTIAL_ID = 200,
-	_FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR = "FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR",
+	_FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR =
+		"FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR",
 	FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR = 201,
 	_FIDO_UNACCEPTABLE_CONTENT = "FIDO_UNACCEPTABLE_CONTENT",
 	FIDO_UNACCEPTABLE_CONTENT = 202,
@@ -1701,9 +1709,11 @@ export enum VerificationMethod {
 }
 
 export enum ContactSetting {
-	_CONTACT_SETTING_NOTIFICATION_DISABLE = "CONTACT_SETTING_NOTIFICATION_DISABLE",
+	_CONTACT_SETTING_NOTIFICATION_DISABLE =
+		"CONTACT_SETTING_NOTIFICATION_DISABLE",
 	CONTACT_SETTING_NOTIFICATION_DISABLE = 1,
-	_CONTACT_SETTING_DISPLAY_NAME_OVERRIDE = "CONTACT_SETTING_DISPLAY_NAME_OVERRIDE",
+	_CONTACT_SETTING_DISPLAY_NAME_OVERRIDE =
+		"CONTACT_SETTING_DISPLAY_NAME_OVERRIDE",
 	CONTACT_SETTING_DISPLAY_NAME_OVERRIDE = 2,
 	_CONTACT_SETTING_CONTACT_HIDE = "CONTACT_SETTING_CONTACT_HIDE",
 	CONTACT_SETTING_CONTACT_HIDE = 4,
@@ -2098,7 +2108,8 @@ export enum SquareEventType {
 	NOTIFIED_DESTROY_MESSAGE = 5,
 	_NOTIFIED_MARK_AS_READ = "NOTIFIED_MARK_AS_READ",
 	NOTIFIED_MARK_AS_READ = 6,
-	_NOTIFIED_UPDATE_SQUARE_MEMBER_PROFILE = "NOTIFIED_UPDATE_SQUARE_MEMBER_PROFILE",
+	_NOTIFIED_UPDATE_SQUARE_MEMBER_PROFILE =
+		"NOTIFIED_UPDATE_SQUARE_MEMBER_PROFILE",
 	NOTIFIED_UPDATE_SQUARE_MEMBER_PROFILE = 7,
 	_NOTIFIED_KICKOUT_FROM_SQUARE = "NOTIFIED_KICKOUT_FROM_SQUARE",
 	NOTIFIED_KICKOUT_FROM_SQUARE = 19,
@@ -2106,13 +2117,17 @@ export enum SquareEventType {
 	NOTIFIED_SHUTDOWN_SQUARE = 18,
 	_NOTIFIED_DELETE_SQUARE_CHAT = "NOTIFIED_DELETE_SQUARE_CHAT",
 	NOTIFIED_DELETE_SQUARE_CHAT = 20,
-	_NOTIFIED_UPDATE_SQUARE_CHAT_PROFILE_NAME = "NOTIFIED_UPDATE_SQUARE_CHAT_PROFILE_NAME",
+	_NOTIFIED_UPDATE_SQUARE_CHAT_PROFILE_NAME =
+		"NOTIFIED_UPDATE_SQUARE_CHAT_PROFILE_NAME",
 	NOTIFIED_UPDATE_SQUARE_CHAT_PROFILE_NAME = 30,
-	_NOTIFIED_UPDATE_SQUARE_CHAT_PROFILE_IMAGE = "NOTIFIED_UPDATE_SQUARE_CHAT_PROFILE_IMAGE",
+	_NOTIFIED_UPDATE_SQUARE_CHAT_PROFILE_IMAGE =
+		"NOTIFIED_UPDATE_SQUARE_CHAT_PROFILE_IMAGE",
 	NOTIFIED_UPDATE_SQUARE_CHAT_PROFILE_IMAGE = 31,
-	_NOTIFIED_UPDATE_SQUARE_CHAT_MAX_MEMBER_COUNT = "NOTIFIED_UPDATE_SQUARE_CHAT_MAX_MEMBER_COUNT",
+	_NOTIFIED_UPDATE_SQUARE_CHAT_MAX_MEMBER_COUNT =
+		"NOTIFIED_UPDATE_SQUARE_CHAT_MAX_MEMBER_COUNT",
 	NOTIFIED_UPDATE_SQUARE_CHAT_MAX_MEMBER_COUNT = 38,
-	_NOTIFIED_UPDATE_SQUARE_CHAT_ANNOUNCEMENT = "NOTIFIED_UPDATE_SQUARE_CHAT_ANNOUNCEMENT",
+	_NOTIFIED_UPDATE_SQUARE_CHAT_ANNOUNCEMENT =
+		"NOTIFIED_UPDATE_SQUARE_CHAT_ANNOUNCEMENT",
 	NOTIFIED_UPDATE_SQUARE_CHAT_ANNOUNCEMENT = 37,
 	_NOTIFIED_ADD_BOT = "NOTIFIED_ADD_BOT",
 	NOTIFIED_ADD_BOT = 33,
@@ -2144,11 +2159,13 @@ export enum SquareEventType {
 	NOTIFIED_CREATE_SQUARE_MEMBER = 15,
 	_NOTIFIED_CREATE_SQUARE_CHAT_MEMBER = "NOTIFIED_CREATE_SQUARE_CHAT_MEMBER",
 	NOTIFIED_CREATE_SQUARE_CHAT_MEMBER = 16,
-	_NOTIFIED_UPDATE_SQUARE_MEMBER_RELATION = "NOTIFIED_UPDATE_SQUARE_MEMBER_RELATION",
+	_NOTIFIED_UPDATE_SQUARE_MEMBER_RELATION =
+		"NOTIFIED_UPDATE_SQUARE_MEMBER_RELATION",
 	NOTIFIED_UPDATE_SQUARE_MEMBER_RELATION = 17,
 	_NOTIFIED_UPDATE_SQUARE_FEATURE_SET = "NOTIFIED_UPDATE_SQUARE_FEATURE_SET",
 	NOTIFIED_UPDATE_SQUARE_FEATURE_SET = 32,
-	_NOTIFIED_UPDATE_SQUARE_CHAT_FEATURE_SET = "NOTIFIED_UPDATE_SQUARE_CHAT_FEATURE_SET",
+	_NOTIFIED_UPDATE_SQUARE_CHAT_FEATURE_SET =
+		"NOTIFIED_UPDATE_SQUARE_CHAT_FEATURE_SET",
 	NOTIFIED_UPDATE_SQUARE_CHAT_FEATURE_SET = 50,
 	_NOTIFIED_UPDATE_SQUARE_NOTE_STATUS = "NOTIFIED_UPDATE_SQUARE_NOTE_STATUS",
 	NOTIFIED_UPDATE_SQUARE_NOTE_STATUS = 36,
@@ -2343,13 +2360,16 @@ export enum SquareChatThreadeMembershipState {
 export enum LiveTalkEventType {
 	_NOTIFIED_UPDATE_LIVE_TALK_TITLE = "NOTIFIED_UPDATE_LIVE_TALK_TITLE",
 	NOTIFIED_UPDATE_LIVE_TALK_TITLE = 1,
-	_NOTIFIED_UPDATE_LIVE_TALK_SPEAKER_SETTING = "NOTIFIED_UPDATE_LIVE_TALK_SPEAKER_SETTING",
+	_NOTIFIED_UPDATE_LIVE_TALK_SPEAKER_SETTING =
+		"NOTIFIED_UPDATE_LIVE_TALK_SPEAKER_SETTING",
 	NOTIFIED_UPDATE_LIVE_TALK_SPEAKER_SETTING = 2,
-	_NOTIFIED_UPDATE_LIVE_TALK_ANNOUNCEMENT = "NOTIFIED_UPDATE_LIVE_TALK_ANNOUNCEMENT",
+	_NOTIFIED_UPDATE_LIVE_TALK_ANNOUNCEMENT =
+		"NOTIFIED_UPDATE_LIVE_TALK_ANNOUNCEMENT",
 	NOTIFIED_UPDATE_LIVE_TALK_ANNOUNCEMENT = 3,
 	_NOTIFIED_UPDATE_SQUARE_MEMBER_ROLE = "NOTIFIED_UPDATE_SQUARE_MEMBER_ROLE",
 	NOTIFIED_UPDATE_SQUARE_MEMBER_ROLE = 4,
-	_NOTIFIED_UPDATE_LIVE_TALK_ALLOW_REQUEST_TO_SPEAK = "NOTIFIED_UPDATE_LIVE_TALK_ALLOW_REQUEST_TO_SPEAK",
+	_NOTIFIED_UPDATE_LIVE_TALK_ALLOW_REQUEST_TO_SPEAK =
+		"NOTIFIED_UPDATE_LIVE_TALK_ALLOW_REQUEST_TO_SPEAK",
 	NOTIFIED_UPDATE_LIVE_TALK_ALLOW_REQUEST_TO_SPEAK = 5,
 }
 
@@ -5408,7 +5428,8 @@ export declare class SquareEventPayload {
 	notifiedLeaveSquareChat: SquareEventNotifiedLeaveSquareChat;
 	notifiedDestroyMessage: SquareEventNotifiedDestroyMessage;
 	notifiedMarkAsRead: SquareEventNotifiedMarkAsRead;
-	notifiedUpdateSquareMemberProfile: SquareEventNotifiedUpdateSquareMemberProfile;
+	notifiedUpdateSquareMemberProfile:
+		SquareEventNotifiedUpdateSquareMemberProfile;
 	notifiedUpdateSquare: SquareEventNotifiedUpdateSquare;
 	notifiedUpdateSquareMember: SquareEventNotifiedUpdateSquareMember;
 	notifiedUpdateSquareChat: SquareEventNotifiedUpdateSquareChat;
@@ -5418,7 +5439,8 @@ export declare class SquareEventPayload {
 	notifiedUpdateSquareChatStatus: SquareEventNotifiedUpdateSquareChatStatus;
 	notifiedCreateSquareMember: SquareEventNotifiedCreateSquareMember;
 	notifiedCreateSquareChatMember: SquareEventNotifiedCreateSquareChatMember;
-	notifiedUpdateSquareMemberRelation: SquareEventNotifiedUpdateSquareMemberRelation;
+	notifiedUpdateSquareMemberRelation:
+		SquareEventNotifiedUpdateSquareMemberRelation;
 	notifiedShutdownSquare: SquareEventNotifiedShutdownSquare;
 	notifiedKickoutFromSquare: SquareEventNotifiedKickoutFromSquare;
 	notifiedDeleteSquareChat: SquareEventNotifiedDeleteSquareChat;
@@ -5431,14 +5453,18 @@ export declare class SquareEventPayload {
 	notificationSquareDelete: SquareEventNotificationSquareDelete;
 	notificationSquareChatDelete: SquareEventNotificationSquareChatDelete;
 	notificationMessage: SquareEventNotificationMessage;
-	notifiedUpdateSquareChatProfileName: SquareEventNotifiedUpdateSquareChatProfileName;
-	notifiedUpdateSquareChatProfileImage: SquareEventNotifiedUpdateSquareChatProfileImage;
+	notifiedUpdateSquareChatProfileName:
+		SquareEventNotifiedUpdateSquareChatProfileName;
+	notifiedUpdateSquareChatProfileImage:
+		SquareEventNotifiedUpdateSquareChatProfileImage;
 	notifiedUpdateSquareFeatureSet: SquareEventNotifiedUpdateSquareFeatureSet;
 	notifiedAddBot: SquareEventNotifiedAddBot;
 	notifiedRemoveBot: SquareEventNotifiedRemoveBot;
 	notifiedUpdateSquareNoteStatus: SquareEventNotifiedUpdateSquareNoteStatus;
-	notifiedUpdateSquareChatAnnouncement: SquareEventNotifiedUpdateSquareChatAnnouncement;
-	notifiedUpdateSquareChatMaxMemberCount: SquareEventNotifiedUpdateSquareChatMaxMemberCount;
+	notifiedUpdateSquareChatAnnouncement:
+		SquareEventNotifiedUpdateSquareChatAnnouncement;
+	notifiedUpdateSquareChatMaxMemberCount:
+		SquareEventNotifiedUpdateSquareChatMaxMemberCount;
 	notificationPostAnnouncement: SquareEventNotificationPostAnnouncement;
 	notificationPost: SquareEventNotificationPost;
 	mutateMessage: SquareEventMutateMessage;
@@ -5448,7 +5474,8 @@ export declare class SquareEventPayload {
 	notificationMessageReaction: SquareEventNotificationMessageReaction;
 	chatPopup: SquareEventChatPopup;
 	notifiedSystemMessage: SquareEventNotifiedSystemMessage;
-	notifiedUpdateSquareChatFeatureSet: SquareEventNotifiedUpdateSquareChatFeatureSet;
+	notifiedUpdateSquareChatFeatureSet:
+		SquareEventNotifiedUpdateSquareChatFeatureSet;
 
 	constructor(args?: {
 		receiveMessage: SquareEventReceiveMessage;
@@ -5458,7 +5485,8 @@ export declare class SquareEventPayload {
 		notifiedLeaveSquareChat: SquareEventNotifiedLeaveSquareChat;
 		notifiedDestroyMessage: SquareEventNotifiedDestroyMessage;
 		notifiedMarkAsRead: SquareEventNotifiedMarkAsRead;
-		notifiedUpdateSquareMemberProfile: SquareEventNotifiedUpdateSquareMemberProfile;
+		notifiedUpdateSquareMemberProfile:
+			SquareEventNotifiedUpdateSquareMemberProfile;
 		notifiedUpdateSquare: SquareEventNotifiedUpdateSquare;
 		notifiedUpdateSquareMember: SquareEventNotifiedUpdateSquareMember;
 		notifiedUpdateSquareChat: SquareEventNotifiedUpdateSquareChat;
@@ -5468,7 +5496,8 @@ export declare class SquareEventPayload {
 		notifiedUpdateSquareChatStatus: SquareEventNotifiedUpdateSquareChatStatus;
 		notifiedCreateSquareMember: SquareEventNotifiedCreateSquareMember;
 		notifiedCreateSquareChatMember: SquareEventNotifiedCreateSquareChatMember;
-		notifiedUpdateSquareMemberRelation: SquareEventNotifiedUpdateSquareMemberRelation;
+		notifiedUpdateSquareMemberRelation:
+			SquareEventNotifiedUpdateSquareMemberRelation;
 		notifiedShutdownSquare: SquareEventNotifiedShutdownSquare;
 		notifiedKickoutFromSquare: SquareEventNotifiedKickoutFromSquare;
 		notifiedDeleteSquareChat: SquareEventNotifiedDeleteSquareChat;
@@ -5481,14 +5510,18 @@ export declare class SquareEventPayload {
 		notificationSquareDelete: SquareEventNotificationSquareDelete;
 		notificationSquareChatDelete: SquareEventNotificationSquareChatDelete;
 		notificationMessage: SquareEventNotificationMessage;
-		notifiedUpdateSquareChatProfileName: SquareEventNotifiedUpdateSquareChatProfileName;
-		notifiedUpdateSquareChatProfileImage: SquareEventNotifiedUpdateSquareChatProfileImage;
+		notifiedUpdateSquareChatProfileName:
+			SquareEventNotifiedUpdateSquareChatProfileName;
+		notifiedUpdateSquareChatProfileImage:
+			SquareEventNotifiedUpdateSquareChatProfileImage;
 		notifiedUpdateSquareFeatureSet: SquareEventNotifiedUpdateSquareFeatureSet;
 		notifiedAddBot: SquareEventNotifiedAddBot;
 		notifiedRemoveBot: SquareEventNotifiedRemoveBot;
 		notifiedUpdateSquareNoteStatus: SquareEventNotifiedUpdateSquareNoteStatus;
-		notifiedUpdateSquareChatAnnouncement: SquareEventNotifiedUpdateSquareChatAnnouncement;
-		notifiedUpdateSquareChatMaxMemberCount: SquareEventNotifiedUpdateSquareChatMaxMemberCount;
+		notifiedUpdateSquareChatAnnouncement:
+			SquareEventNotifiedUpdateSquareChatAnnouncement;
+		notifiedUpdateSquareChatMaxMemberCount:
+			SquareEventNotifiedUpdateSquareChatMaxMemberCount;
 		notificationPostAnnouncement: SquareEventNotificationPostAnnouncement;
 		notificationPost: SquareEventNotificationPost;
 		mutateMessage: SquareEventMutateMessage;
@@ -5498,7 +5531,8 @@ export declare class SquareEventPayload {
 		notificationMessageReaction: SquareEventNotificationMessageReaction;
 		chatPopup: SquareEventChatPopup;
 		notifiedSystemMessage: SquareEventNotifiedSystemMessage;
-		notifiedUpdateSquareChatFeatureSet: SquareEventNotifiedUpdateSquareChatFeatureSet;
+		notifiedUpdateSquareChatFeatureSet:
+			SquareEventNotifiedUpdateSquareChatFeatureSet;
 	});
 }
 
@@ -5878,17 +5912,23 @@ export declare class LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak {
 
 export declare class LiveTalkEventPayload {
 	notifiedUpdateLiveTalkTitle: LiveTalkEventNotifiedUpdateLiveTalkTitle;
-	notifiedUpdateLiveTalkSpeakerSetting: LiveTalkEventNotifiedUpdateLiveTalkSpeakerSetting;
-	notifiedUpdateLiveTalkAnnouncement: LiveTalkEventNotifiedUpdateLiveTalkAnnouncement;
+	notifiedUpdateLiveTalkSpeakerSetting:
+		LiveTalkEventNotifiedUpdateLiveTalkSpeakerSetting;
+	notifiedUpdateLiveTalkAnnouncement:
+		LiveTalkEventNotifiedUpdateLiveTalkAnnouncement;
 	notifiedUpdateSquareMemberRole: LiveTalkEventNotifiedUpdateSquareMemberRole;
-	notifiedUpdateLiveTalkAllowRequestToSpeak: LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak;
+	notifiedUpdateLiveTalkAllowRequestToSpeak:
+		LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak;
 
 	constructor(args?: {
 		notifiedUpdateLiveTalkTitle: LiveTalkEventNotifiedUpdateLiveTalkTitle;
-		notifiedUpdateLiveTalkSpeakerSetting: LiveTalkEventNotifiedUpdateLiveTalkSpeakerSetting;
-		notifiedUpdateLiveTalkAnnouncement: LiveTalkEventNotifiedUpdateLiveTalkAnnouncement;
+		notifiedUpdateLiveTalkSpeakerSetting:
+			LiveTalkEventNotifiedUpdateLiveTalkSpeakerSetting;
+		notifiedUpdateLiveTalkAnnouncement:
+			LiveTalkEventNotifiedUpdateLiveTalkAnnouncement;
 		notifiedUpdateSquareMemberRole: LiveTalkEventNotifiedUpdateSquareMemberRole;
-		notifiedUpdateLiveTalkAllowRequestToSpeak: LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak;
+		notifiedUpdateLiveTalkAllowRequestToSpeak:
+			LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak;
 	});
 }
 
