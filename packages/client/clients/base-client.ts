@@ -157,7 +157,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		this.emit("update:authtoken", authToken);
 
-		this.emit("ready", await this.updateProfile(true));
+		this.emit("ready", await this.refreshProfile(true));
 	}
 
 	protected parser: ThriftRenameParser = new ThriftRenameParser();
@@ -839,9 +839,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	}
 
 	/**
-	 * @description Updates the profile of the current user.
+	 * @description Refresh the profile of the current user.
 	 */
-	public async updateProfile(noEmit: boolean = false): Promise<User<"me">> {
+	public async refreshProfile(noEmit: boolean = false): Promise<User<"me">> {
 		const profile = await this.getProfile();
 
 		if (!noEmit) this.emit("update:profile", profile);
@@ -851,6 +851,6 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			...profile,
 		};
 
-		return this.user
+		return this.user;
 	}
 }
