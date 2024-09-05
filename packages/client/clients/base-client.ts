@@ -181,7 +181,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		try {
 			cert = await fs.readFile(path, "utf8");
-		} catch (_) {
+		} catch (_e) {
 			cert = null;
 		}
 
@@ -216,7 +216,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		try {
 			cert = await fs.readFile(path, "utf8");
-		} catch (_) {
+		} catch (_e) {
 			cert = null;
 		}
 
@@ -386,7 +386,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		if (await this.checkQrCodeVerified(sqr)) {
 			try {
 				await this.verifyCertificate(sqr, this.getQrCert() as string);
-			} catch {
+			} catch (_e) {
 				const { 1: pincode } = await this.createPinCode(sqr);
 				this.emit("pincall", pincode);
 				await this.checkPinCodeVerified(sqr);
