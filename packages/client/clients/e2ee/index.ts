@@ -361,8 +361,8 @@ class E2EE extends TalkClient {
 	public async encryptE2EEMessage(
 		to: string,
 		text: string | Location,
-		specVersion = 2,
 		contentType = 0,
+		specVersion = 2,
 	): Promise<Buffer[]> {
 		const _from = this.user?.mid as string;
 		const selfKeyData = await this.getE2EESelfKeyData(_from);
@@ -440,7 +440,7 @@ class E2EE extends TalkClient {
 			specVersion,
 			0,
 		);
-		const sign = crypto.randomBytes(16);
+		const sign = crypto.randomBytes(12);
 		const data = Buffer.from(JSON.stringify({ text: text }));
 		const encData = this.encryptE2EEMessageV2(data, gcmKey, sign, aad);
 
@@ -478,7 +478,7 @@ class E2EE extends TalkClient {
 			specVersion,
 			15,
 		);
-		const sign = crypto.randomBytes(16);
+		const sign = crypto.randomBytes(12);
 		const data = Buffer.from(JSON.stringify({ location: location }));
 		const encData = this.encryptE2EEMessageV2(data, gcmKey, sign, aad);
 
@@ -503,6 +503,7 @@ class E2EE extends TalkClient {
 		nonce: Buffer,
 		aad: Buffer,
 	): Buffer {
+		this.e2eeLog("createCipheriv",{data,gcmKey,nonce,aad})
 		const cipher = crypto.createCipheriv("aes-256-gcm", gcmKey, nonce);
 		cipher.setAAD(aad);
 		const encrypted = Buffer.concat([cipher.update(data), cipher.final()]);
@@ -694,7 +695,7 @@ class E2EE extends TalkClient {
 		this.log("e2ee", { type, message });
 	}
 
-	public override createSqrSecret(
+	public createSqrSecret(
 		base64Only: boolean = false,
 	): [Uint8Array, string] {
 		const { secretKey, publicKey } = nacl.box.keyPair();

@@ -53,7 +53,8 @@ export class TalkClient extends ChannelClient {
 		contentMetadata?: LooseType;
 		relatedMessageId?: string;
 		location?: LINETypes.Location;
-		chunk?: string[];
+		chunk?: string[] | Buffer[];
+		e2ee?: boolean;
 	}): Promise<LINETypes.SendMessageResponse> {
 		const {
 			to,
@@ -62,12 +63,39 @@ export class TalkClient extends ChannelClient {
 			contentMetadata,
 			relatedMessageId,
 			location,
+			e2ee,
 			chunk,
 		} = {
 			contentType: 0,
 			contentMetadata: {},
+			e2ee: false,
 			...options,
 		};
+		if (e2ee && !chunk) {
+			const chunk = await this.encryptE2EEMessage(
+				to,
+				text || location,
+				contentType,
+			)
+			const _contentMetadata = {
+				...contentMetadata,
+				...{
+					e2eeVersion: "2",
+					contentType: contentType.toString(),
+					e2eeMark: "2"
+				},
+			}
+			const options = {
+				to,
+				contentType,
+				contentMetadata:_contentMetadata,
+				relatedMessageId,
+				e2ee,
+				chunk,
+			}
+			return await this.sendMessage(options)
+		}
+
 		const message: NestedArray = [
 			[11, 2, to],
 			[10, 5, 0], // createdTime
@@ -103,16 +131,29 @@ export class TalkClient extends ChannelClient {
 			message.push([8, 22, 3]); // messageRelationType; FORWARD(0), AUTO_REPLY(1), SUBORDINATE(2), REPLY(3);
 			message.push([8, 24, 1]);
 		}
-		return await this.direct_request(
-			[
-				[8, 1, 0],
-				[12, 2, message],
-			],
-			"sendMessage",
-			this.TalkService_PROTOCOL_TYPE,
-			"Message",
-			this.TalkService_API_PATH,
-		);
+		try {
+			return await this.direct_request(
+				[
+					[8, 1, 0],
+					[12, 2, message],
+				],
+				"sendMessage",
+				this.TalkService_PROTOCOL_TYPE,
+				"Message",
+				this.TalkService_API_PATH,
+			);
+		} catch (error) {
+			if ((error.data?.code as string).includes("E2EE") && !e2ee) {
+				options.e2ee = true;
+				return await this.sendMessage(options);
+			} else {
+				throw error
+			}
+		}
+	}
+
+	public async encryptE2EEMessage(...arg: any): Promise<any[]> {
+		return []
 	}
 
 	public async getE2EEPublicKeys(): Promise<LINETypes.E2EEPublicKey[]> {
@@ -139,6 +180,7 @@ export class TalkClient extends ChannelClient {
 			this.TalkService_API_PATH,
 		);
 	}
+
 	public async getLastE2EEGroupSharedKey(options: {
 		keyVersion: number;
 		chatMid: string;
@@ -155,4 +197,6 @@ export class TalkClient extends ChannelClient {
 			this.TalkService_API_PATH,
 		);
 	}
+
+
 }
