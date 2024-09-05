@@ -192,22 +192,27 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						const reply = async (options: SquareMessageReplyOptions) => {
 							if (typeof options === "string") {
 								return await this.sendSquareMessage({
-									squareChatMid: event.payload.notificationMessage.squareChatMid,
+									squareChatMid:
+										event.payload.notificationMessage.squareChatMid,
 									text: "pong!",
-									relatedMessageId: event.payload.notificationMessage.squareMessage.message.id
+									relatedMessageId:
+										event.payload.notificationMessage.squareMessage.message.id,
 								});
-							}else {
+							} else {
 								return await this.sendSquareMessage({
-									squareChatMid: event.payload.notificationMessage.squareChatMid,
-									relatedMessageId: event.payload.notificationMessage.squareMessage.message.id,
-									...options
+									squareChatMid:
+										event.payload.notificationMessage.squareChatMid,
+									relatedMessageId:
+										event.payload.notificationMessage.squareMessage.message.id,
+									...options,
 								});
 							}
-						}
+						};
 
 						this.emit("square:message", {
 							...event.payload.notificationMessage,
-							content: event.payload.notificationMessage.squareMessage.message.text,
+							content:
+								event.payload.notificationMessage.squareMessage.message.text,
 							reply,
 							author: {
 								pid: event.payload.notificationMessage.squareMessage.message

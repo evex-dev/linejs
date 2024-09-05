@@ -2,8 +2,10 @@ import type * as LINETypes from "../libs/thrift/line_types.ts";
 import type { LooseType } from "./common.ts";
 
 export type SquareMessage = LINETypes.SquareEventNotificationMessage & {
-    content: string,
-    reply: (options: SquareMessageReplyOptions) => Promise<LINETypes.SendMessageResponse>;
+	content: string;
+	reply: (
+		options: SquareMessageReplyOptions,
+	) => Promise<LINETypes.SendMessageResponse>;
 	author: {
 		pid: string;
 		displayName: string;
@@ -11,8 +13,10 @@ export type SquareMessage = LINETypes.SquareEventNotificationMessage & {
 	square: () => Promise<LINETypes.GetSquareChatResponse>;
 };
 
-export type SquareMessageReplyOptions = {
-    text?: string;
-    contentType?: LINETypes.ContentType;
-    contentMetadata?: LooseType;
-} | string
+export type SquareMessageReplyOptions =
+	| {
+			text?: string;
+			contentType?: LINETypes.ContentType;
+			contentMetadata?: LooseType;
+	  }
+	| string;
