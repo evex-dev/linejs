@@ -31,6 +31,7 @@ import {
 import type { System } from "../entities/system.ts";
 import type { User } from "../entities/user.ts";
 import { Buffer } from "node:buffer";
+import type { SquareMessageReplyOptions } from "../entities/message.ts";
 
 interface ClientOptions {
 	storage?: BaseStorage;
@@ -188,8 +189,26 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			if (myEvents.syncToken !== myEventsSyncToken) {
 				for (const event of myEvents.events) {
 					if (event.type === "NOTIFICATION_MESSAGE") {
+						const reply = async (options: SquareMessageReplyOptions) => {
+							if (typeof options === "string") {
+								return await this.sendSquareMessage({
+									squareChatMid: event.payload.notificationMessage.squareChatMid,
+									text: "pong!",
+									relatedMessageId: event.payload.notificationMessage.squareMessage.message.id
+								});
+							}else {
+								return await this.sendSquareMessage({
+									squareChatMid: event.payload.notificationMessage.squareChatMid,
+									relatedMessageId: event.payload.notificationMessage.squareMessage.message.id,
+									...options
+								});
+							}
+						}
+
 						this.emit("square:message", {
 							...event.payload.notificationMessage,
+							content: event.payload.notificationMessage.squareMessage.message.text,
+							reply,
 							author: {
 								pid: event.payload.notificationMessage.squareMessage.message
 									._from,
@@ -232,6 +251,19 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	public async getSquareChat(_options: {
 		squareChatMid: string;
 	}): Promise<LINETypes.GetSquareChatResponse> {
+		return (await Symbol("Unreachable")) as LooseType;
+	}
+
+	/**
+	 * @description Will override.
+	 */
+	public async sendSquareMessage(_options: {
+		squareChatMid: string;
+		text?: string;
+		contentType?: LINETypes.ContentType;
+		contentMetadata?: LooseType;
+		relatedMessageId?: string;
+	}): Promise<LINETypes.SendMessageResponse> {
 		return (await Symbol("Unreachable")) as LooseType;
 	}
 
