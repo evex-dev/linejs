@@ -54,7 +54,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	constructor(options: ClientOptions = {}) {
 		super();
 		this.parser.def = Thrift;
-		
+
 		this.storage = options.storage || new MemoryStorage();
 		this.endpoint = options.endpoint || "gw.line.naver.jp";
 		this.obsEndpoint = options.obsEndpoint || "https://obs.line-apps.com";
@@ -176,7 +176,12 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		this.IS_POLLING_SQUARE = true;
 
-		const noopMyEvents = await this.fetchMyEvents();
+		let noopMyEvents: LINETypes.FetchMyEventsResponse | undefined;
+		try {
+			noopMyEvents = await this.fetchMyEvents();
+		}catch (_e) {
+			return;
+		}
 
 		let myEventsSyncToken = noopMyEvents.syncToken;
 
