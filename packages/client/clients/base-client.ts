@@ -161,7 +161,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		this.emit("ready", await this.refreshProfile(true));
 
-		if (options.pollingSquare) {
+		const polling = options.polling || ["talk", "square"];
+
+		if (polling.includes("square")) {
 			await this.pollingSquareEvents();
 		}
 	}
@@ -249,8 +251,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 								}),
 						});
 					}
-					const eventData = Object.values(event.payload)[0]
-					this.emit("square:event", eventData)
+					this.emit("square:event", event)
 				}
 				myEventsSyncToken = myEvents.syncToken;
 			}

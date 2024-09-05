@@ -15,7 +15,7 @@ export type ClientEvents = {
 	"update:qrcert": (qrCert: string) => void;
 	log: (data: Log) => void;
 	"square:message": (squareMessage: SquareMessage) => void;
-	"square:event": (squareEvent: LooseType) => void;
+	"square:event": (squareEvent: LINETypes.SquareEvent) => void;
 	"talk:message": (message: SquareMessage) => void;
 	"talk:event": (talkEvent: LooseType) => void;
 };
