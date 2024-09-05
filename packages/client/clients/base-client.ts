@@ -161,17 +161,19 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		this.emit("ready", await this.refreshProfile(true));
 
-		await this.pollingSquareEvents();
+		if (options.pollingSquare) {
+			await this.pollingSquareEvents();
+		}
 	}
 
-	private IS_POLLING = false;
+	private IS_POLLING_SQUARE = false;
 
 	private async pollingSquareEvents() {
-		if (this.IS_POLLING) {
+		if (this.IS_POLLING_SQUARE) {
 			return;
 		}
 
-		this.IS_POLLING = true;
+		this.IS_POLLING_SQUARE = true;
 
 		const noopMyEvents = await this.fetchMyEvents();
 
@@ -179,7 +181,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		while (true) {
 			if (!this.metadata) {
-				this.IS_POLLING = false;
+				this.IS_POLLING_SQUARE = false;
 				return;
 			}
 
