@@ -1,6 +1,5 @@
 // For Base (login, request, line, relation, etc)
 
-import * as fs from "node:fs/promises";
 import { getRSACrypto } from "../libs/rsa/rsa-verify.ts";
 import type { BaseStorage } from "../libs/storage/base-storage.ts";
 import { MemoryStorage } from "../libs/storage/memory-storage.ts";
@@ -184,29 +183,12 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	}
 
 	/**
-	 * @description Registers a certificate path to be used for login.
-	 *
-	 * @param {string} [path]  - The path to the certificate.
-	 */
-	public async registerQrCertPath(path: string): Promise<void> {
-		let cert;
-
-		try {
-			cert = await fs.readFile(path, "utf8");
-		} catch (_e) {
-			cert = null;
-		}
-
-		this.registerQrCert(cert);
-	}
-
-	/**
 	 * @description Registers a certificate to be used for login.
 	 *
-	 * @param {string | null} cert - The certificate to register. If null, the certificate will be cleared.
+	 * @param {string | null} qrCert - The certificate to register. If null, the certificate will be cleared.
 	 */
-	public registerQrCert(cert: string | null): void {
-		this.qrCert = cert;
+	public registerQrCert(qrCert: string | null): void {
+		this.qrCert = qrCert;
 	}
 
 	/**
