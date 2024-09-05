@@ -246,7 +246,6 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 										event.payload.notificationMessage.squareChatMid,
 								}),
 						});
-					} else {
 					}
 					const eventData = Object.values(event.payload)[0]
 					this.emit("square:event", eventData)
