@@ -23,10 +23,13 @@ function readStruct(input) {
 	return returnData;
 }
 
-function isBinary(str) {
-	str = str.toString();
-	const json = JSON.stringify(str);
-	return json.search(/\\u/) !== -1;
+function isBinary(bin) {
+	const str = bin.toString()
+	if (JSON.stringify(str).includes("\\u")) {
+		return true
+	}
+	const bin2 = Buffer.from(str)
+	return bin.toString("base64") !== bin2.toString("base64")
 }
 
 function readValue(input, ftype) {

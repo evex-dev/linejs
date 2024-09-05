@@ -236,11 +236,11 @@ class E2EE extends TalkClient {
 		secret: Buffer,
 	):
 		| {
-				keyId: LooseType;
-				privKey: Buffer;
-				pubKey: Buffer;
-				e2eeVersion: LooseType;
-		  }
+			keyId: LooseType;
+			privKey: Buffer;
+			pubKey: Buffer;
+			e2eeVersion: LooseType;
+		}
 		| undefined {
 		if (data.encryptedKeyChain) {
 			const encryptedKeyChain = Buffer.from(data.encryptedKeyChain, "base64");
@@ -535,10 +535,13 @@ class E2EE extends TalkClient {
 
 	public async decryptE2EETextMessage(
 		messageObj: Message,
-		isSelf = true,
+		isSelf = false,
 	): Promise<string> {
 		const _from = messageObj._from;
 		const to = messageObj.to;
+		if (_from === this.user?.mid) {
+			isSelf = true
+		}
 		const toType = messageObj.toType;
 		const metadata = messageObj.contentMetadata;
 		const specVersion = metadata.e2eeVersion || "2";
@@ -647,6 +650,9 @@ class E2EE extends TalkClient {
 		privK: Buffer,
 		pubK: Buffer,
 	): LooseType {
+		this.e2eeLog("decryptE2EEMessageV1_arg", {
+			chunks, privK, pubK
+		})
 		const salt = chunks[0];
 		const message = chunks[1];
 		const _sign = chunks[2];
@@ -654,10 +660,14 @@ class E2EE extends TalkClient {
 		const aes_key = this.getSHA256Sum(
 			Buffer.from(aesKey),
 			salt,
-			Buffer.from("Key"),
+			"Key",
 		);
 		const aes_iv = this.xor(this.getSHA256Sum(Buffer.from(aesKey), salt, "IV"));
+		this.e2eeLog("decryptE2EEMessageV1", {
+			aes_key, aes_iv, message
+		})
 		const decipher = crypto.createDecipheriv("aes-256-cbc", aes_key, aes_iv);
+		decipher.setAutoPadding(false)
 		const decrypted = Buffer.concat([
 			decipher.update(message),
 			decipher.final(),
@@ -666,7 +676,6 @@ class E2EE extends TalkClient {
 			"decryptE2EEMessageV1DecryptedMessage",
 			decrypted.toString("utf-8"),
 		);
-		decrypted; // = this.unpad(decrypted, 16);
 		return JSON.parse(decrypted.toString("utf-8"));
 	}
 
