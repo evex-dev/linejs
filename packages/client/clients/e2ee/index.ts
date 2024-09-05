@@ -12,6 +12,7 @@ import {
 } from "../../libs/thrift/line_types.ts";
 
 import elliptic from "npm:elliptic@6.5.7";
+import nacl from "npm:tweetnacl";
 
 const EC = elliptic.ec;
 const ec = new EC("curve25519"); // Curve25519
@@ -20,7 +21,9 @@ class E2EE extends TalkClient {
 	public async getE2EESelfKeyData(mid: string): Promise<LooseType> {
 		try {
 			return JSON.parse(this.storage.get("e2eeKeys:" + mid) as string);
-		} catch (_e) { /* Do Nothing */ }
+		} catch (_e) {
+			/* Do Nothing */
+		}
 		const keys = await this.getE2EEPublicKeys();
 		for (let i = 0; i < keys.length; i++) {
 			const key = keys[i];
@@ -35,7 +38,9 @@ class E2EE extends TalkClient {
 	public getE2EESelfKeyDataByKeyId(keyId: string | number): LooseType {
 		try {
 			return JSON.parse(this.storage.get("e2eeKeys:" + keyId) as string);
-		} catch { /* DoNothing */ }
+		} catch {
+			/* DoNothing */
+		}
 	}
 	public saveE2EESelfKeyDataByKeyId(keyId: string | number, value: LooseType) {
 		this.storage.set("e2eeKeys:" + keyId, JSON.stringify(value));
@@ -218,17 +223,19 @@ class E2EE extends TalkClient {
 		return Buffer.concat([cipher.update(plainData), cipher.final()]);
 	}
 
-	public decodeE2EEKeyV1(data: LooseType, secret: Buffer): {
-		keyId: LooseType;
-		privKey: Buffer;
-		pubKey: Buffer;
-		e2eeVersion: LooseType;
-	} | undefined {
+	public decodeE2EEKeyV1(
+		data: LooseType,
+		secret: Buffer,
+	):
+		| {
+				keyId: LooseType;
+				privKey: Buffer;
+				pubKey: Buffer;
+				e2eeVersion: LooseType;
+		  }
+		| undefined {
 		if (data.encryptedKeyChain) {
-			const encryptedKeyChain = Buffer.from(
-				data["encryptedKeyChain"],
-				"base64",
-			);
+			const encryptedKeyChain = Buffer.from(data.encryptedKeyChain, "base64");
 			const keyId = data.keyId;
 			const publicKey = Buffer.from(data.publicKey, "base64");
 			const e2eeVersion = data.e2eeVersion;
@@ -249,8 +256,8 @@ class E2EE extends TalkClient {
 				"e2eeKeys:" + keyId,
 				JSON.stringify({
 					keyId,
-					privKey,
-					pubKey,
+					privKey: privKey.toString("base64"),
+					pubKey: pubKey.toString("base64"),
 					e2eeVersion,
 				}),
 			);
@@ -300,7 +307,11 @@ class E2EE extends TalkClient {
 		const sharedSecret = this.generateSharedSecret(privateKey, publicKey);
 		const aesKey = this.getSHA256Sum(Buffer.from(sharedSecret), "Key");
 		encryptedKeyChain = this._xor(this.getSHA256Sum(encryptedKeyChain));
-		const cipher = crypto.createCipheriv("aes-128-ecb", aesKey, null);
+		const cipher = crypto.createCipheriv(
+			"aes-256-ecb",
+			aesKey,
+			new Uint8Array(0),
+		);
 		cipher.setAutoPadding(false);
 		const keychainData = Buffer.concat([
 			cipher.update(encryptedKeyChain),
@@ -507,7 +518,7 @@ class E2EE extends TalkClient {
 		const specVersion = metadata.e2eeVersion || "2";
 		const contentType = messageObj.contentType;
 		const chunks = messageObj.chunks.map((chunk) =>
-			typeof chunk === "string" ? Buffer.from(chunk, "utf-8") : chunk
+			typeof chunk === "string" ? Buffer.from(chunk, "utf-8") : chunk,
 		);
 		const senderKeyId = byte2int(chunks[3]);
 		const receiverKeyId = byte2int(chunks[4]);
@@ -561,7 +572,7 @@ class E2EE extends TalkClient {
 		const specVersion = metadata.e2eeVersion || "2";
 		const contentType = messageObj.contentType;
 		const chunks = messageObj.chunks.map((chunk) =>
-			typeof chunk === "string" ? Buffer.from(chunk, "utf-8") : chunk
+			typeof chunk === "string" ? Buffer.from(chunk, "utf-8") : chunk,
 		);
 
 		const senderKeyId = byte2int(chunks[3]);
@@ -685,17 +696,19 @@ class E2EE extends TalkClient {
 	public override createSqrSecret(
 		base64Only: boolean = false,
 	): [Uint8Array, string] {
-		const privateKey = crypto.randomBytes(32);
-		const keyPair = ec.keyFromPrivate(privateKey);
-		const _publicKey = keyPair.getPublic().encodeCompressed();
-		const publicKey = Buffer.from(_publicKey);
-		const secret = encodeURIComponent(publicKey.toString("base64"));
+		const { secretKey, publicKey } = nacl.box.keyPair();
+		const secret = encodeURIComponent(
+			Buffer.from(publicKey).toString("base64"),
+		);
 		const version = 1;
 
 		if (base64Only) {
-			return [privateKey, publicKey.toString("base64")];
+			return [
+				Buffer.from(secretKey),
+				Buffer.from(publicKey).toString("base64"),
+			];
 		}
-		return [privateKey, `?secret=${secret}&e2eeVersion=${version}`];
+		return [Buffer.from(secretKey), `?secret=${secret}&e2eeVersion=${version}`];
 	}
 }
 

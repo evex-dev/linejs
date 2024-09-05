@@ -84,38 +84,25 @@ export default class ThriftRenameParser {
 			}
 			if (finfo.struct) {
 				if (isStruct(this.def[finfo.struct])) {
-					newObject[finfo.name] = this.rename_thrift(
-						finfo.struct,
-						value,
-					);
+					newObject[finfo.name] = this.rename_thrift(finfo.struct, value);
 				} else {
-					newObject[finfo.name] = this.def[finfo.struct][value] ||
-						value;
+					newObject[finfo.name] = this.def[finfo.struct][value] || value;
 				}
 			} else if (typeof finfo.list === "string") {
 				newObject[finfo.name] = [];
 				value.forEach((e: LooseType, i: number) => {
-					newObject[finfo.name][i] = this.rename_thrift(
-						finfo.list,
-						e,
-					);
+					newObject[finfo.name][i] = this.rename_thrift(finfo.list, e);
 				});
 			} else if (typeof finfo.map === "string") {
 				newObject[finfo.name] = {};
 				for (const key in value) {
 					const e = value[key];
-					newObject[finfo.name][key] = this.rename_thrift(
-						finfo.map,
-						e,
-					);
+					newObject[finfo.name][key] = this.rename_thrift(finfo.map, e);
 				}
 			} else if (typeof finfo.set === "string") {
 				newObject[finfo.name] = [];
 				value.forEach((e: LooseType, i: number) => {
-					newObject[finfo.name][i] = this.rename_thrift(
-						finfo.set,
-						e,
-					);
+					newObject[finfo.name][i] = this.rename_thrift(finfo.set, e);
 				});
 			} else {
 				newObject[finfo.name] = value;
@@ -127,8 +114,8 @@ export default class ThriftRenameParser {
 	rename_data(data: LooseType): LooseType {
 		const name = data._info.fname;
 		const value = data.value;
-		const structName = name.substr(0, 1).toUpperCase() + name.substr(1) +
-			"Response";
+		const structName =
+			name.substr(0, 1).toUpperCase() + name.substr(1) + "Response";
 		data.value = this.rename_thrift(structName, value);
 		return data;
 	}
@@ -144,10 +131,7 @@ export default class ThriftRenameParser {
 			const thisValue = [null, finfo.fid, null];
 			if (finfo.struct) {
 				if (isStruct(this.def[finfo.struct])) {
-					thisValue[2] = this.parse_data(
-						finfo.struct,
-						value,
-					);
+					thisValue[2] = this.parse_data(finfo.struct, value);
 					thisValue[0] = TYPE.STRUCT;
 				} else {
 					if (typeof value === "number") {
@@ -216,9 +200,7 @@ export default class ThriftRenameParser {
 			const thisValue = [null, finfo.fid, value];
 			if (finfo.struct) {
 				if (isStruct(this.def[finfo.struct])) {
-					thisValue[2] = this.get_cl(
-						finfo.struct,
-					);
+					thisValue[2] = this.get_cl(finfo.struct);
 					thisValue[0] = TYPE.STRUCT;
 				} else {
 					thisValue[0] = TYPE.I64;
@@ -229,10 +211,7 @@ export default class ThriftRenameParser {
 				if (typeof finfo.list === "number") {
 					thisValue[2] = [finfo.list, [value]];
 				} else {
-					thisValue[2] = [
-						TYPE.STRUCT,
-						[this.get_cl(finfo.list)],
-					];
+					thisValue[2] = [TYPE.STRUCT, [this.get_cl(finfo.list)]];
 				}
 			} else if (finfo.map) {
 				thisValue[0] = TYPE.MAP;
@@ -248,10 +227,7 @@ export default class ThriftRenameParser {
 				if (typeof finfo.map === "number") {
 					thisValue[2] = [finfo.map, [value]];
 				} else {
-					thisValue[2] = [
-						TYPE.STRUCT,
-						[this.parse_data(finfo.map)],
-					];
+					thisValue[2] = [TYPE.STRUCT, [this.parse_data(finfo.map)]];
 				}
 			} else if (finfo.type) {
 				thisValue[0] = finfo.type;
