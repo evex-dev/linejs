@@ -32,7 +32,7 @@ import type { System } from "../entities/system.ts";
 import type { User } from "../entities/user.ts";
 import { Buffer } from "node:buffer";
 import type {
-	SquareMessageReplyOptions,
+	MessageReplyOptions,
 	SquareMessageSendOptions,
 } from "../entities/message.ts";
 
@@ -161,12 +161,12 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		this.emit("ready", await this.refreshProfile(true));
 
-		await this.pollingEvents();
+		await this.pollingSquareEvents();
 	}
 
 	private IS_POLLING = false;
 
-	private async pollingEvents() {
+	private async pollingSquareEvents() {
 		if (this.IS_POLLING) {
 			return;
 		}
@@ -208,7 +208,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							}
 						};
 
-						const reply = async (options: SquareMessageReplyOptions) => {
+						const reply = async (options: MessageReplyOptions) => {
 							if (typeof options === "string") {
 								return await this.sendSquareMessage({
 									squareChatMid:
@@ -246,9 +246,11 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 										event.payload.notificationMessage.squareChatMid,
 								}),
 						});
+					} else {
 					}
+					const eventData = Object.values(event.payload)[0]
+					this.emit("square:event", eventData)
 				}
-
 				myEventsSyncToken = myEvents.syncToken;
 			}
 

@@ -14,4 +14,6 @@ export type LoginOptions = (EmailOptions & AuthTokenOptions) & {
 	e2ee?: boolean;
 	qr?: boolean;
 	pincode?: string;
+	pollingSquare?: boolean;
+	pollingTalk?: boolean;
 };

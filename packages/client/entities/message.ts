@@ -4,7 +4,7 @@ import type { LooseType } from "./common.ts";
 export type SquareMessage = LINETypes.SquareEventNotificationMessage & {
 	content: string;
 	reply: (
-		options: SquareMessageReplyOptions,
+		options: MessageReplyOptions,
 	) => Promise<LINETypes.SendMessageResponse>;
 	send: (
 		options: SquareMessageSendOptions,
@@ -16,7 +16,22 @@ export type SquareMessage = LINETypes.SquareEventNotificationMessage & {
 	square: () => Promise<LINETypes.GetSquareChatResponse>;
 };
 
-export type SquareMessageReplyOptions =
+export type Message = LINETypes.Operation & {
+	content: string;
+	reply: (
+		options: MessageReplyOptions,
+	) => Promise<LINETypes.Message>;
+	send: (
+		options: SquareMessageSendOptions,
+	) => Promise<LINETypes.Message>;
+	author: {
+		mid: string;
+		displayName: string;
+	};
+	chat: () => Promise<LINETypes.Profile>|Promise<LINETypes.Group>;
+};
+
+export type MessageReplyOptions =
 	| {
 		text?: string;
 		contentType?: LINETypes.ContentType;
@@ -24,4 +39,4 @@ export type SquareMessageReplyOptions =
 	}
 	| string;
 
-export type SquareMessageSendOptions = SquareMessageReplyOptions;
+export type SquareMessageSendOptions = MessageReplyOptions;
