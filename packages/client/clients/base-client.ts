@@ -224,9 +224,11 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @param {string} [email] The email to login with.
 	 * @param {string} [password] The password to login with.
 	 * @param {boolean} [enableE2EE=false] Enable E2EE or not.
+	 * @param {string} [constantPincode="114514"] The constant pincode.
 	 * @returns {Promise<string>} The auth token.
 	 * @throws {InternalError} If the system is not setup yet.
 	 * @throws {InternalError} If the login type is not supported.
+	 * @throws {InternalError} If the constant pincode is not valid.
 	 * @emits pincall
 	 * @emits update:cert
 	 */
@@ -236,11 +238,18 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		enableE2EE: boolean = false,
 		constantPincode: string = "114514"
 	): Promise<string> {
+		if (constantPincode.length !== 6) {
+			throw new InternalError("Invalid constant pincode", "The constant pincode should be 6 digits");
+		}
+
 		this.log("login", {
 			method: "email",
 			email,
 			password,
+			enableE2EE,
+			constantPincode
 		});
+
 		if (!this.system) {
 			throw new InternalError("Not setup yet", "Please call 'login()' first");
 		}
