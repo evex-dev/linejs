@@ -39,6 +39,7 @@ import type {
 interface ClientOptions {
 	storage?: BaseStorage;
 	endpoint?: string;
+	obsEndpoint?: string;
 }
 
 export class BaseClient extends TypedEventEmitter<ClientEvents> {
@@ -48,22 +49,20 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @param {ClientOptions} [options] Options for the client
 	 * @param {BaseStorage} [options.storage] Storage for the client
 	 * @param {string} [options.endpoint] Endpoint for the client
+	 * @param {string} [options.obsEndpoint] Endpoint for the obs
 	 */
 	constructor(options: ClientOptions = {}) {
 		super();
 		this.parser.def = Thrift;
-		const requiredOptions = {
-			storage: new MemoryStorage(),
-			endpoint: "gw.line.naver.jp",
-			...options,
-		};
-
-		this.storage = requiredOptions.storage;
-		this.endpoint = requiredOptions.endpoint;
+		
+		this.storage = options.storage || new MemoryStorage();
+		this.endpoint = options.endpoint || "gw.line.naver.jp";
+		this.obsEndpoint = options.obsEndpoint || "https://obs.line-apps.com";
 	}
 
 	public storage: BaseStorage;
 	public endpoint: string;
+	public obsEndpoint: string;
 
 	/**
 	 * @description THe information of user
@@ -168,7 +167,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 	}
 
-	private IS_POLLING_SQUARE = false;
+	protected IS_POLLING_SQUARE = false;
 
 	private async pollingSquareEvents() {
 		if (this.IS_POLLING_SQUARE) {
