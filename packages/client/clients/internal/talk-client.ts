@@ -4,6 +4,7 @@ import type { NestedArray, ProtocolKey } from "../../libs/thrift/declares.ts";
 import type * as LINETypes from "../../libs/thrift/line_types.ts";
 import type { LooseType } from "../../entities/common.ts";
 import { ChannelClient } from "./channel-client.ts";
+import type { Buffer } from "node:buffer";
 
 export class TalkClient extends ChannelClient {
 	protected TalkService_API_PATH = "/S4";
@@ -152,8 +153,8 @@ export class TalkClient extends ChannelClient {
 		}
 	}
 
-	public async encryptE2EEMessage(...arg: any): Promise<any[]> {
-		return [];
+	public async encryptE2EEMessage(..._arg: LooseType): Promise<LooseType[]> {
+		return await [];
 	}
 
 	public async getE2EEPublicKeys(): Promise<LINETypes.E2EEPublicKey[]> {

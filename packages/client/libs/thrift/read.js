@@ -24,12 +24,12 @@ function readStruct(input) {
 }
 
 function isBinary(bin) {
-	const str = bin.toString()
+	const str = bin.toString();
 	if (JSON.stringify(str).includes("\\u")) {
-		return true
+		return true;
 	}
-	const bin2 = Buffer.from(str)
-	return bin.toString("base64") !== bin2.toString("base64")
+	const bin2 = Buffer.from(str);
+	return bin.toString("base64") !== bin2.toString("base64");
 }
 
 function readValue(input, ftype) {
