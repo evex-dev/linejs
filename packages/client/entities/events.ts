@@ -1,6 +1,7 @@
 import type { Log } from "./log.ts";
 import type { User } from "./user.ts";
 import type * as LINETypes from "../libs/thrift/line_types.ts";
+import type { SquareMessage } from "./message.ts";
 
 export type ClientEvents = {
 	pincall: (pincode: string) => void;
@@ -12,4 +13,5 @@ export type ClientEvents = {
 	"update:cert": (cert: string) => void;
 	"update:qrcert": (qrCert: string) => void;
 	log: (data: Log) => void;
+	"square:message": (squareMessage: SquareMessage) => void;
 };

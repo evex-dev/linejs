@@ -31,6 +31,10 @@ import {
 import type { System } from "../entities/system.ts";
 import type { User } from "../entities/user.ts";
 import { Buffer } from "node:buffer";
+import type {
+	SquareMessageReplyOptions,
+	SquareMessageSendOptions,
+} from "../entities/message.ts";
 
 interface ClientOptions {
 	storage?: BaseStorage;
@@ -114,12 +118,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				throw new InternalError("Invalid password", `'${options.password}'`);
 			}
 		}
-		const device: Device =
-			options.device ||
+		const device: Device = options.device ||
 			(options.authToken
-				? PRIMARY_TOKEN_REGEX.test(options.authToken)
-					? "ANDROID"
-					: "IOSIPAD"
+				? PRIMARY_TOKEN_REGEX.test(options.authToken) ? "ANDROID" : "IOSIPAD"
 				: "IOSIPAD");
 		const details = getDeviceDetails(device);
 
@@ -131,7 +132,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			appVersion: details.appVersion,
 			systemName: details.systemName,
 			systemVersion: details.systemVersion,
-			type: `${device}\t${details.appVersion}\t${details.systemName}\t${details.systemVersion}`,
+			type:
+				`${device}\t${details.appVersion}\t${details.systemName}\t${details.systemVersion}`,
 			userAgent: `Line/${details.appVersion}`,
 			device,
 		};
@@ -159,7 +161,6 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		this.emit("ready", await this.refreshProfile(true));
 
-		this.IS_POLLING = true;
 		await this.pollingEvents();
 	}
 
@@ -170,12 +171,125 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			return;
 		}
 
+		this.IS_POLLING = true;
+
+		const noopMyEvents = await this.fetchMyEvents();
+
+		let myEventsSyncToken = noopMyEvents.syncToken;
+
 		while (true) {
 			if (!this.metadata) {
 				this.IS_POLLING = false;
 				return;
 			}
+
+			const myEvents = await this.fetchMyEvents({
+				syncToken: myEventsSyncToken,
+			});
+
+			if (myEvents.syncToken !== myEventsSyncToken) {
+				for (const event of myEvents.events) {
+					if (event.type === "NOTIFICATION_MESSAGE") {
+						const send = async (options: SquareMessageSendOptions) => {
+							if (typeof options === "string") {
+								return await this.sendSquareMessage({
+									squareChatMid:
+										event.payload.notificationMessage.squareChatMid,
+									text: options,
+									relatedMessageId: undefined,
+								});
+							} else {
+								return await this.sendSquareMessage({
+									squareChatMid:
+										event.payload.notificationMessage.squareChatMid,
+									relatedMessageId: undefined,
+									...options,
+								});
+							}
+						};
+
+						const reply = async (options: SquareMessageReplyOptions) => {
+							if (typeof options === "string") {
+								return await this.sendSquareMessage({
+									squareChatMid:
+										event.payload.notificationMessage.squareChatMid,
+									text: options,
+									relatedMessageId:
+										event.payload.notificationMessage.squareMessage.message.id,
+								});
+							} else {
+								return await this.sendSquareMessage({
+									squareChatMid:
+										event.payload.notificationMessage.squareChatMid,
+									relatedMessageId:
+										event.payload.notificationMessage.squareMessage.message.id,
+									...options,
+								});
+							}
+						};
+
+						this.emit("square:message", {
+							...event.payload.notificationMessage,
+							content:
+								event.payload.notificationMessage.squareMessage.message.text,
+							reply,
+							send,
+							author: {
+								pid: event.payload.notificationMessage.squareMessage.message
+									._from,
+								displayName:
+									event.payload.notificationMessage.senderDisplayName,
+							},
+							square: async () =>
+								await this.getSquareChat({
+									squareChatMid:
+										event.payload.notificationMessage.squareChatMid,
+								}),
+						});
+					}
+				}
+
+				myEventsSyncToken = myEvents.syncToken;
+			}
+
+			await new Promise((resolve) => setTimeout(resolve));
 		}
+	}
+
+	/**
+	 * @description Will override.
+	 */
+	public async fetchMyEvents(
+		_options: {
+			limit?: number;
+			syncToken?: string;
+			continuationToken?: string;
+			subscriptionId?: number;
+		} = {},
+	): Promise<LINETypes.FetchMyEventsResponse> {
+		return (await Symbol("Unreachable")) as LooseType;
+	}
+
+	/**
+	 * @description Will override.
+	 */
+	public async getSquareChat(_options: {
+		squareChatMid: string;
+	}): Promise<LINETypes.GetSquareChatResponse> {
+		return (await Symbol("Unreachable")) as LooseType;
+	}
+
+	/**
+	 * @description Will override.
+	 */
+	public async sendSquareMessage(_options: {
+		squareChatMid: string;
+		text?: string;
+		contentType?: LINETypes.ContentType;
+		contentMetadata?: LooseType;
+		relatedMessageId?: string;
+	}): Promise<LINETypes.SendMessageResponse> {
+		return (await Symbol("Unreachable")) as LooseType;
 	}
 
 	protected parser: ThriftRenameParser = new ThriftRenameParser();
@@ -260,8 +374,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		const rsaKey = await this.getRSAKeyInfo();
 		const { keynm, sessionKey } = rsaKey;
 
-		const message =
-			String.fromCharCode(sessionKey.length) +
+		const message = String.fromCharCode(sessionKey.length) +
 			sessionKey +
 			String.fromCharCode(email.length) +
 			email +
@@ -747,8 +860,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			parsedData: res,
 		});
 
-		const isRefresh =
-			res.e && res.e["code"] === "NOT_AUTHORIZED_DEVICE" && nextToken;
+		const isRefresh = res.e && res.e["code"] === "NOT_AUTHORIZED_DEVICE" &&
+			nextToken;
 
 		if (res.e && !isRefresh) {
 			throw new InternalError(
@@ -829,7 +942,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 */
 	public async logout(__force: boolean = false): Promise<void> {
 		if (!this.metadata || !this.user) {
-			throw new InternalError("Not setup yet", "Please call 'login()' first")
+			throw new InternalError("Not setup yet", "Please call 'login()' first");
 		}
 
 		this.emit("end", this.user);

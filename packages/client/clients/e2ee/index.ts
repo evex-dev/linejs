@@ -127,8 +127,8 @@ class E2EE extends TalkClient {
 				const creatorKeyId = E2EEGroupSharedKey.creatorKeyId;
 				const _receiver = E2EEGroupSharedKey.receiver;
 				const receiverKeyId = E2EEGroupSharedKey.receiverKeyId;
-				const encryptedSharedKey =
-					E2EEGroupSharedKey.encryptedSharedKey as Buffer;
+				const encryptedSharedKey = E2EEGroupSharedKey
+					.encryptedSharedKey as Buffer;
 				const selfKey = Buffer.from(
 					this.getE2EESelfKeyDataByKeyId(receiverKeyId)["privKey"],
 					"base64",
@@ -528,7 +528,7 @@ class E2EE extends TalkClient {
 		) {
 			messageObj.location = await this.decryptE2EELocationMessage(messageObj);
 		}
-		if (messageObj.chunks) messageObj.chunks = (undefined as LooseType);
+		if (messageObj.chunks) messageObj.chunks = undefined as LooseType;
 
 		return messageObj;
 	}
@@ -547,7 +547,7 @@ class E2EE extends TalkClient {
 		const specVersion = metadata.e2eeVersion || "2";
 		const contentType = messageObj.contentType;
 		const chunks = messageObj.chunks.map((chunk) =>
-			typeof chunk === "string" ? Buffer.from(chunk, "utf-8") : chunk,
+			typeof chunk === "string" ? Buffer.from(chunk, "utf-8") : chunk
 		);
 		const senderKeyId = byte2int(chunks[3]);
 		const receiverKeyId = byte2int(chunks[4]);
@@ -601,7 +601,7 @@ class E2EE extends TalkClient {
 		const specVersion = metadata.e2eeVersion || "2";
 		const contentType = messageObj.contentType;
 		const chunks = messageObj.chunks.map((chunk) =>
-			typeof chunk === "string" ? Buffer.from(chunk, "utf-8") : chunk,
+			typeof chunk === "string" ? Buffer.from(chunk, "utf-8") : chunk
 		);
 
 		const senderKeyId = byte2int(chunks[3]);
