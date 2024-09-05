@@ -6,6 +6,9 @@ export type SquareMessage = LINETypes.SquareEventNotificationMessage & {
 	reply: (
 		options: SquareMessageReplyOptions,
 	) => Promise<LINETypes.SendMessageResponse>;
+	send: (
+		options: SquareMessageSendOptions,
+	) => Promise<LINETypes.SendMessageResponse>;
 	author: {
 		pid: string;
 		displayName: string;
@@ -15,8 +18,10 @@ export type SquareMessage = LINETypes.SquareEventNotificationMessage & {
 
 export type SquareMessageReplyOptions =
 	| {
-			text?: string;
-			contentType?: LINETypes.ContentType;
-			contentMetadata?: LooseType;
-	  }
+		text?: string;
+		contentType?: LINETypes.ContentType;
+		contentMetadata?: LooseType;
+	}
 	| string;
+
+export type SquareMessageSendOptions = SquareMessageReplyOptions;

@@ -114,8 +114,8 @@ export default class ThriftRenameParser {
 	rename_data(data: LooseType): LooseType {
 		const name = data._info.fname;
 		const value = data.value;
-		const structName =
-			name.substr(0, 1).toUpperCase() + name.substr(1) + "Response";
+		const structName = name.substr(0, 1).toUpperCase() + name.substr(1) +
+			"Response";
 		data.value = this.rename_thrift(structName, value);
 		return data;
 	}

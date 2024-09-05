@@ -31,7 +31,10 @@ import {
 import type { System } from "../entities/system.ts";
 import type { User } from "../entities/user.ts";
 import { Buffer } from "node:buffer";
-import type { SquareMessageReplyOptions } from "../entities/message.ts";
+import type {
+	SquareMessageReplyOptions,
+	SquareMessageSendOptions,
+} from "../entities/message.ts";
 
 interface ClientOptions {
 	storage?: BaseStorage;
@@ -115,12 +118,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				throw new InternalError("Invalid password", `'${options.password}'`);
 			}
 		}
-		const device: Device =
-			options.device ||
+		const device: Device = options.device ||
 			(options.authToken
-				? PRIMARY_TOKEN_REGEX.test(options.authToken)
-					? "ANDROID"
-					: "IOSIPAD"
+				? PRIMARY_TOKEN_REGEX.test(options.authToken) ? "ANDROID" : "IOSIPAD"
 				: "IOSIPAD");
 		const details = getDeviceDetails(device);
 
@@ -132,7 +132,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			appVersion: details.appVersion,
 			systemName: details.systemName,
 			systemVersion: details.systemVersion,
-			type: `${device}\t${details.appVersion}\t${details.systemName}\t${details.systemVersion}`,
+			type:
+				`${device}\t${details.appVersion}\t${details.systemName}\t${details.systemVersion}`,
 			userAgent: `Line/${details.appVersion}`,
 			device,
 		};
@@ -189,12 +190,30 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			if (myEvents.syncToken !== myEventsSyncToken) {
 				for (const event of myEvents.events) {
 					if (event.type === "NOTIFICATION_MESSAGE") {
+						const send = async (options: SquareMessageSendOptions) => {
+							if (typeof options === "string") {
+								return await this.sendSquareMessage({
+									squareChatMid:
+										event.payload.notificationMessage.squareChatMid,
+									text: options,
+									relatedMessageId: undefined,
+								});
+							} else {
+								return await this.sendSquareMessage({
+									squareChatMid:
+										event.payload.notificationMessage.squareChatMid,
+									relatedMessageId: undefined,
+									...options,
+								});
+							}
+						};
+
 						const reply = async (options: SquareMessageReplyOptions) => {
 							if (typeof options === "string") {
 								return await this.sendSquareMessage({
 									squareChatMid:
 										event.payload.notificationMessage.squareChatMid,
-									text: "pong!",
+									text: options,
 									relatedMessageId:
 										event.payload.notificationMessage.squareMessage.message.id,
 								});
@@ -214,6 +233,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							content:
 								event.payload.notificationMessage.squareMessage.message.text,
 							reply,
+							send,
 							author: {
 								pid: event.payload.notificationMessage.squareMessage.message
 									._from,
@@ -354,8 +374,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		const rsaKey = await this.getRSAKeyInfo();
 		const { keynm, sessionKey } = rsaKey;
 
-		const message =
-			String.fromCharCode(sessionKey.length) +
+		const message = String.fromCharCode(sessionKey.length) +
 			sessionKey +
 			String.fromCharCode(email.length) +
 			email +
@@ -841,8 +860,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			parsedData: res,
 		});
 
-		const isRefresh =
-			res.e && res.e["code"] === "NOT_AUTHORIZED_DEVICE" && nextToken;
+		const isRefresh = res.e && res.e["code"] === "NOT_AUTHORIZED_DEVICE" &&
+			nextToken;
 
 		if (res.e && !isRefresh) {
 			throw new InternalError(
