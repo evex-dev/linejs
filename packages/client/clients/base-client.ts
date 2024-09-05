@@ -158,6 +158,24 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.emit("update:authtoken", authToken);
 
 		this.emit("ready", await this.refreshProfile(true));
+
+		this.IS_POLLING = true;
+		await this.pollingEvents();
+	}
+
+	private IS_POLLING = false;
+
+	private async pollingEvents() {
+		if (this.IS_POLLING) {
+			return;
+		}
+
+		while (true) {
+			if (!this.metadata) {
+				this.IS_POLLING = false;
+				return;
+			}
+		}
 	}
 
 	protected parser: ThriftRenameParser = new ThriftRenameParser();
@@ -800,8 +818,35 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	protected LINEService_API_PATH = "/S4";
 	protected LINEService_PROTOCOL_TYPE: ProtocolKey = 4;
 
+	protected AuthService_API_PATH = "/RS4";
+	protected AuthService_PROTOCOL_TYPE: ProtocolKey = 4;
+
 	protected RelationService_API_PATH = "/RE4";
 	protected RelationService_PROTOCOL_TYPE: ProtocolKey = 4;
+
+	/**
+	 * @description Logouts from LINE server
+	 */
+	public async logout(__force: boolean = false): Promise<void> {
+		if (!this.metadata || !this.user) {
+			throw new InternalError("Not setup yet", "Please call 'login()' first")
+		}
+
+		this.emit("end", this.user);
+		this.metadata = undefined;
+		this.user = undefined;
+		this.system = undefined;
+
+		if (__force) {
+			await this.request(
+				[],
+				"logoutZ",
+				this.AuthService_PROTOCOL_TYPE,
+				false,
+				this.AuthService_API_PATH,
+			);
+		}
+	}
 
 	/**
 	 * @description Gets the profile of the current user.

@@ -6,6 +6,7 @@ export type ClientEvents = {
 	pincall: (pincode: string) => void;
 	qrcall: (pincode: string) => void;
 	ready: (user: User<"me">) => void;
+	end: (user: User<"me">) => void;
 	"update:authtoken": (authtoken: string) => void;
 	"update:profile": (profile: LINETypes.Profile) => void;
 	"update:cert": (cert: string) => void;
