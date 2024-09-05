@@ -165,23 +165,6 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	private qrCert: string | null = null;
 
 	/**
-	 * @description Registers a certificate path to be used for login.
-	 *
-	 * @param {string} [path]  - The path to the certificate.
-	 */
-	public async registerCertPath(path: string): Promise<void> {
-		let cert;
-
-		try {
-			cert = await fs.readFile(path, "utf8");
-		} catch (_e) {
-			cert = null;
-		}
-
-		this.registerCert(cert);
-	}
-
-	/**
 	 * @description Registers a certificate to be used for login.
 	 *
 	 * @param {string | null} cert - The certificate to register. If null, the certificate will be cleared.
