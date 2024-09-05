@@ -18,25 +18,21 @@ export type SquareMessage = LINETypes.SquareEventNotificationMessage & {
 
 export type Message = LINETypes.Operation & {
 	content: string;
-	reply: (
-		options: MessageReplyOptions,
-	) => Promise<LINETypes.Message>;
-	send: (
-		options: SquareMessageSendOptions,
-	) => Promise<LINETypes.Message>;
+	reply: (options: MessageReplyOptions) => Promise<LINETypes.Message>;
+	send: (options: SquareMessageSendOptions) => Promise<LINETypes.Message>;
 	author: {
 		mid: string;
 		displayName: string;
 	};
-	chat: () => Promise<LINETypes.Profile>|Promise<LINETypes.Group>;
+	chat: () => Promise<LINETypes.Profile> | Promise<LINETypes.Group>;
 };
 
 export type MessageReplyOptions =
 	| {
-		text?: string;
-		contentType?: LINETypes.ContentType;
-		contentMetadata?: LooseType;
-	}
+			text?: string;
+			contentType?: LINETypes.ContentType;
+			contentMetadata?: LooseType;
+	  }
 	| string;
 
 export type SquareMessageSendOptions = MessageReplyOptions;

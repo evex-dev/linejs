@@ -117,9 +117,12 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				throw new InternalError("Invalid password", `'${options.password}'`);
 			}
 		}
-		const device: Device = options.device ||
+		const device: Device =
+			options.device ||
 			(options.authToken
-				? PRIMARY_TOKEN_REGEX.test(options.authToken) ? "ANDROID" : "IOSIPAD"
+				? PRIMARY_TOKEN_REGEX.test(options.authToken)
+					? "ANDROID"
+					: "IOSIPAD"
 				: "IOSIPAD");
 		const details = getDeviceDetails(device);
 
@@ -131,8 +134,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			appVersion: details.appVersion,
 			systemName: details.systemName,
 			systemVersion: details.systemVersion,
-			type:
-				`${device}\t${details.appVersion}\t${details.systemName}\t${details.systemVersion}`,
+			type: `${device}\t${details.appVersion}\t${details.systemName}\t${details.systemVersion}`,
 			userAgent: `Line/${details.appVersion}`,
 			device,
 		};
@@ -179,7 +181,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		let noopMyEvents: LINETypes.FetchMyEventsResponse | undefined;
 		try {
 			noopMyEvents = await this.fetchMyEvents();
-		}catch (_e) {
+		} catch (_e) {
+			this.IS_POLLING_SQUARE = false;
 			return;
 		}
 
@@ -255,7 +258,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 								}),
 						});
 					}
-					this.emit("square:event", event)
+					this.emit("square:event", event);
 				}
 				myEventsSyncToken = myEvents.syncToken;
 			}
@@ -382,7 +385,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		const rsaKey = await this.getRSAKeyInfo();
 		const { keynm, sessionKey } = rsaKey;
 
-		const message = String.fromCharCode(sessionKey.length) +
+		const message =
+			String.fromCharCode(sessionKey.length) +
 			sessionKey +
 			String.fromCharCode(email.length) +
 			email +
@@ -868,8 +872,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			parsedData: res,
 		});
 
-		const isRefresh = res.e && res.e["code"] === "NOT_AUTHORIZED_DEVICE" &&
-			nextToken;
+		const isRefresh =
+			res.e && res.e["code"] === "NOT_AUTHORIZED_DEVICE" && nextToken;
 
 		if (res.e && !isRefresh) {
 			throw new InternalError(
