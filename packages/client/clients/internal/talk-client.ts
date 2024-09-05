@@ -76,24 +76,24 @@ export class TalkClient extends ChannelClient {
 				to,
 				text || location,
 				contentType,
-			)
+			);
 			const _contentMetadata = {
 				...contentMetadata,
 				...{
 					e2eeVersion: "2",
 					contentType: contentType.toString(),
-					e2eeMark: "2"
+					e2eeMark: "2",
 				},
-			}
+			};
 			const options = {
 				to,
 				contentType,
-				contentMetadata:_contentMetadata,
+				contentMetadata: _contentMetadata,
 				relatedMessageId,
 				e2ee,
 				chunk,
-			}
-			return await this.sendMessage(options)
+			};
+			return await this.sendMessage(options);
 		}
 
 		const message: NestedArray = [
@@ -147,13 +147,13 @@ export class TalkClient extends ChannelClient {
 				options.e2ee = true;
 				return await this.sendMessage(options);
 			} else {
-				throw error
+				throw error;
 			}
 		}
 	}
 
 	public async encryptE2EEMessage(...arg: any): Promise<any[]> {
-		return []
+		return [];
 	}
 
 	public async getE2EEPublicKeys(): Promise<LINETypes.E2EEPublicKey[]> {
@@ -197,6 +197,4 @@ export class TalkClient extends ChannelClient {
 			this.TalkService_API_PATH,
 		);
 	}
-
-
 }

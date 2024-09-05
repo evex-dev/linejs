@@ -6,11 +6,11 @@ import { TalkClient } from "../internal/talk-client.ts";
 import type { LooseType } from "../../entities/common.ts";
 import { rawReadStruct as readStruct } from "../../libs/thrift/read.js";
 import {
+	ContentType,
 	type Location,
 	type Message,
 	MIDType,
 } from "../../libs/thrift/line_types.ts";
-
 import nacl from "npm:tweetnacl@1.0.3";
 
 class E2EE extends TalkClient {
@@ -508,12 +508,28 @@ class E2EE extends TalkClient {
 		nonce: Buffer,
 		aad: Buffer,
 	): Buffer {
-		this.e2eeLog("createCipheriv",{data,gcmKey,nonce,aad})
+		this.e2eeLog("createCipheriv", { data, gcmKey, nonce, aad });
 		const cipher = crypto.createCipheriv("aes-256-gcm", gcmKey, nonce);
 		cipher.setAAD(aad);
 		const encrypted = Buffer.concat([cipher.update(data), cipher.final()]);
 		const tag = cipher.getAuthTag();
 		return Buffer.concat([encrypted, tag]);
+	}
+
+	public async decryptE2EEMessage(messageObj: Message) {
+		if (
+			messageObj.contentType === "NONE" ||
+			messageObj.contentType === ContentType.NONE
+		) {
+			messageObj.text = await this.decryptE2EETextMessage(messageObj);
+		} else if (
+			messageObj.contentType === "LOCATION" ||
+			messageObj.contentType === ContentType.LOCATION
+		) {
+			messageObj.location = await this.decryptE2EELocationMessage(messageObj);
+		}
+		messageObj.chunks = undefined;
+		return messageObj;
 	}
 
 	public async decryptE2EETextMessage(
@@ -700,9 +716,7 @@ class E2EE extends TalkClient {
 		this.log("e2ee", { type, message });
 	}
 
-	public createSqrSecret(
-		base64Only: boolean = false,
-	): [Uint8Array, string] {
+	public createSqrSecret(base64Only: boolean = false): [Uint8Array, string] {
 		const { secretKey, publicKey } = nacl.box.keyPair();
 		const secret = encodeURIComponent(
 			Buffer.from(publicKey).toString("base64"),
