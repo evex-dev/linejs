@@ -528,7 +528,8 @@ class E2EE extends TalkClient {
 		) {
 			messageObj.location = await this.decryptE2EELocationMessage(messageObj);
 		}
-		messageObj.chunks = undefined;
+		if (messageObj.chunks) messageObj.chunks = (undefined as LooseType);
+
 		return messageObj;
 	}
 
