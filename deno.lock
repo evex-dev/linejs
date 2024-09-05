@@ -16,7 +16,8 @@
       "npm:node-bignumber@1.2.2": "npm:node-bignumber@1.2.2",
       "npm:prettier": "npm:prettier@3.3.3",
       "npm:thrift@0.20.0": "npm:thrift@0.20.0_ws@5.2.4",
-      "npm:tweetnacl": "npm:tweetnacl@1.0.3"
+      "npm:tweetnacl": "npm:tweetnacl@1.0.3",
+      "npm:tweetnacl@1.0.3": "npm:tweetnacl@1.0.3"
     },
     "jsr": {
       "@std/assert@1.0.2": {

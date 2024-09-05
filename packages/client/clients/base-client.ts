@@ -147,6 +147,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					options.email,
 					options.password,
 					options.e2ee || true,
+					options.pincode
 				);
 			}
 		}
@@ -233,6 +234,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		email: string,
 		password: string,
 		enableE2EE: boolean = false,
+		constantPincode: string = "114514"
 	): Promise<string> {
 		this.log("login", {
 			method: "email",
@@ -258,7 +260,6 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			secret: Uint8Array | undefined,
 			secretPK: string | undefined;
 
-		const constantPincode = "202202";
 		if (enableE2EE) {
 			[secret, secretPK] = this.createSqrSecret(true);
 			e2eeData = this.encryptAESECB(
