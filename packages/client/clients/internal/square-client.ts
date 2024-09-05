@@ -214,7 +214,7 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Fetch square events.
 	 */
-	public async fetchMyEvents(
+	public override async fetchMyEvents(
 		options: {
 			limit?: number;
 			syncToken?: string;

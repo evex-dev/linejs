@@ -159,7 +159,6 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		this.emit("ready", await this.refreshProfile(true));
 
-		this.IS_POLLING = true;
 		await this.pollingEvents();
 	}
 
@@ -170,12 +169,70 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			return;
 		}
 
+		this.IS_POLLING = true;
+
+		const noopMyEvents = await this.fetchMyEvents();
+
+		let myEventsSyncToken = noopMyEvents.syncToken;
+
 		while (true) {
 			if (!this.metadata) {
 				this.IS_POLLING = false;
 				return;
 			}
+
+			const myEvents = await this.fetchMyEvents({
+				syncToken: myEventsSyncToken,
+			});
+
+			if (myEvents.syncToken !== myEventsSyncToken) {
+				for (const event of myEvents.events) {
+					if (event.type === "NOTIFICATION_MESSAGE") {
+						this.emit("square:message", {
+							...event.payload.notificationMessage,
+							author: {
+								pid: event.payload.notificationMessage.squareMessage.message
+									._from,
+								displayName:
+									event.payload.notificationMessage.senderDisplayName,
+							},
+							square: async () =>
+								await this.getSquareChat({
+									squareChatMid:
+										event.payload.notificationMessage.squareChatMid,
+								}),
+						});
+					}
+				}
+
+				myEventsSyncToken = myEvents.syncToken;
+			}
+
+			await new Promise((resolve) => setTimeout(resolve));
 		}
+	}
+
+	/**
+	 * @description Will override.
+	 */
+	public async fetchMyEvents(
+		_options: {
+			limit?: number;
+			syncToken?: string;
+			continuationToken?: string;
+			subscriptionId?: number;
+		} = {},
+	): Promise<LINETypes.FetchMyEventsResponse> {
+		return (await Symbol("Unreachable")) as LooseType;
+	}
+
+	/**
+	 * @description Will override.
+	 */
+	public async getSquareChat(_options: {
+		squareChatMid: string;
+	}): Promise<LINETypes.GetSquareChatResponse> {
+		return (await Symbol("Unreachable")) as LooseType;
 	}
 
 	protected parser: ThriftRenameParser = new ThriftRenameParser();
@@ -829,7 +886,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 */
 	public async logout(__force: boolean = false): Promise<void> {
 		if (!this.metadata || !this.user) {
-			throw new InternalError("Not setup yet", "Please call 'login()' first")
+			throw new InternalError("Not setup yet", "Please call 'login()' first");
 		}
 
 		this.emit("end", this.user);
