@@ -198,4 +198,118 @@ export class TalkClient extends ChannelClient {
 			this.TalkService_API_PATH,
 		);
 	}
+
+	public async sendChatChecked(options: {
+		chatMid: string;
+		lastMessageId: string;
+	}): Promise<void> {
+		const { lastMessageId, chatMid } = { ...options };
+		return await this.direct_request(
+			[
+				[8, 1, 0],
+				[11, 2, chatMid],
+				[11, 3, lastMessageId],
+			],
+			"sendChatChecked",
+			this.TalkService_PROTOCOL_TYPE,
+			false,
+			this.TalkService_API_PATH,
+		);
+	}
+
+	public async getContact(options: {
+		mid: string;
+	}): Promise<LINETypes.Contact> {
+		const { mid } = { ...options };
+		return await this.direct_request(
+			[[11, 2, mid]],
+			"getContact",
+			this.TalkService_PROTOCOL_TYPE,
+			"Contact",
+			this.TalkService_API_PATH,
+		);
+	}
+
+	public async getContacts(options: {
+		mids: string[];
+	}): Promise<LINETypes.Contact> {
+		const { mids } = { ...options };
+		return (
+			await this.direct_request(
+				[[15, 2, [11, mids]]],
+				"getContacts",
+				this.TalkService_PROTOCOL_TYPE,
+				false,
+				this.TalkService_API_PATH,
+			)
+		).map((e) => this.parser.rename_thrift("Contact", e));
+	}
+
+	public async getContactsV2(options: {
+		mids: string[];
+	}): Promise<LINETypes.Contact[]> {
+		const { mids } = { ...options };
+		return (
+			await this.request(
+				[[15, 1, [11, mids]]],
+				"getContactsV2",
+				this.TalkService_PROTOCOL_TYPE,
+				false,
+				this.TalkService_API_PATH,
+			)
+		).map((e) => this.parser.rename_thrift("Contact", e));
+	}
+
+	public async getChats(options: {
+		mids: string[];
+		withMembers?: boolean;
+		withInvitees?: boolean;
+	}): Promise<LINETypes.GetChatsResponse> {
+		const { mids, withInvitees, withMembers } = {
+			withInvitees: true,
+			withMembers: true,
+			...options,
+		};
+		return await this.request(
+			[
+				[15, 1, [11, mids]],
+				[2, 2, withMembers],
+				[2, 3, withInvitees],
+			],
+			"getChats",
+			this.TalkService_PROTOCOL_TYPE,
+			"GetChatsResponse",
+			this.TalkService_API_PATH,
+		);
+	}
+
+	public async getAllChatMids(
+		options: {
+			withMembers?: boolean;
+			withInvitees?: boolean;
+		} = {},
+	): Promise<LINETypes.GetAllChatMidsResponse> {
+		const { withInvitees, withMembers } = {
+			withInvitees: true,
+			withMembers: true,
+			...options,
+		};
+		return await this.direct_request(
+			[
+				[
+					12,
+					1,
+					[
+						[2, 1, withMembers],
+						[2, 2, withInvitees],
+					],
+				],
+				[8, 2, 7],
+			],
+			"getAllChatMids",
+			this.TalkService_PROTOCOL_TYPE,
+			"GetAllChatMidsResponse",
+			this.TalkService_API_PATH,
+		);
+	}
 }

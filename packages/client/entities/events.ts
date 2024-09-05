@@ -1,7 +1,7 @@
 import type { Log } from "./log.ts";
 import type { User } from "./user.ts";
 import type * as LINETypes from "../libs/thrift/line_types.ts";
-import type { SquareMessage, Message } from "./message.ts";
+import type { Message, SquareMessage } from "./message.ts";
 import type { LooseType } from "./common.ts";
 
 export type ClientEvents = {

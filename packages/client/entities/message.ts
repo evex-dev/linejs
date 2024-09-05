@@ -24,7 +24,7 @@ export type Message = LINETypes.Operation & {
 	author: {
 		mid: string;
 	};
-	chat: () => Promise<LINETypes.Profile> | Promise<LINETypes.Group>;
+	chat: () => Promise<LINETypes.Contact> | Promise<LINETypes.Chat>;
 };
 
 export type MessageReplyOptions =

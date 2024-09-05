@@ -518,13 +518,15 @@ class E2EE extends TalkClient {
 
 	public async decryptE2EEMessage(messageObj: Message): Promise<Message> {
 		if (
-			messageObj.contentType === "NONE" ||
-			messageObj.contentType === ContentType.NONE
+			(messageObj.contentType === "NONE" ||
+				messageObj.contentType === ContentType.NONE) &&
+			messageObj.chunks
 		) {
 			messageObj.text = await this.decryptE2EETextMessage(messageObj);
 		} else if (
-			messageObj.contentType === "LOCATION" ||
-			messageObj.contentType === ContentType.LOCATION
+			(messageObj.contentType === "LOCATION" ||
+				messageObj.contentType === ContentType.LOCATION) &&
+			messageObj.chunks
 		) {
 			messageObj.location = await this.decryptE2EELocationMessage(messageObj);
 		}

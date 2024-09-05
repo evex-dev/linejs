@@ -163,10 +163,14 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.emit("ready", await this.refreshProfile(true));
 
 		const polling = options.polling || ["talk", "square"];
-
+		const pollingIn: Promise<any>[] = [];
 		if (polling.includes("square")) {
-			await this.pollingSquareEvents();
+			pollingIn.push(this.pollingSquareEvents());
 		}
+		if (polling.includes("talk")) {
+			pollingIn.push(this.pollingTalkEvents());
+		}
+		await Promise.all(pollingIn);
 	}
 
 	protected IS_POLLING_SQUARE = false;
@@ -285,15 +289,23 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				return;
 			}
 
-			const myEvents = await this.sync({ revision })
-			myEvents.operationResponse.operations.forEach(async operation => {
-				if (operation.type === "RECEIVE_MESSAGE") {
+			const myEvents = await this.sync({ revision });
+			for (const operation of myEvents.operationResponse.operations) {
+				revision = operation.revision;
+				if (
+					operation.type === "RECEIVE_MESSAGE" ||
+					operation.type === "SEND_MESSAGE"
+				) {
 					const message = await this.decryptE2EEMessage(operation.message);
 					let sendIn = "";
 					if (message.toType === "USER") {
-						sendIn = message._from
+						if (message._from === this.user?.mid) {
+							sendIn = message.to;
+						} else {
+							sendIn = message._from;
+						}
 					} else {
-						sendIn = message.to
+						sendIn = message.to;
 					}
 					const send = async (options: SquareMessageSendOptions) => {
 						if (typeof options === "string") {
@@ -329,20 +341,24 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 					this.emit("talk:message", {
 						...operation,
-						content:
-							message.text,
+						content: message.text,
 						reply,
 						send,
 						author: {
 							mid: message._from,
 						},
-						chat: async () =>{
-							//wait...
-						}
+						chat: async () => {
+							if (message.toType === "USER") {
+								return await this.getContact({ mid: sendIn });
+							} else {
+								return (await this.getChats({ mids: [sendIn] })).chats[0];
+							}
+						},
 					});
 				}
-				this.emit("talk:event", operation)
-			})
+				this.emit("talk:event", operation);
+			}
+			await new Promise((resolve) => setTimeout(resolve));
 		}
 	}
 
@@ -379,9 +395,21 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public async decryptE2EEMessage(messageObj: LINETypes.Message): Promise<LINETypes.Message> {
+	public async decryptE2EEMessage(
+		messageObj: LINETypes.Message,
+	): Promise<LINETypes.Message> {
 		return (await Symbol("Unreachable")) as LooseType;
 	}
+
+	/**
+	 * @description Will override.
+	 */
+	public async getContact(_options: any): Promise<any> {}
+
+	/**
+	 * @description Will override.
+	 */
+	public async getChats(_options: any): Promise<any> {}
 
 	/**
 	 * @description Will override.
@@ -656,7 +684,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType { }
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
 
 	/**
 	 * @description Will override.
