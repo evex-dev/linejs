@@ -736,7 +736,6 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 		const body = await response.arrayBuffer();
 		const parsedBody = new Uint8Array(body);
-		this.log("request", { parsedBody });
 		const res = readThrift(parsedBody, Protocol);
 		if (parse === true) {
 			this.parser.rename_data(res);
