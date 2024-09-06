@@ -252,6 +252,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							opType: -1,
 							content:
 								event.payload.notificationMessage.squareMessage.message.text,
+							contentMetadata:
+								event.payload.notificationMessage.squareMessage.message
+									.contentMetadata,
+							contentType:
+								event.payload.notificationMessage.squareMessage.message
+									.contentType,
+							replyId:
+								event.payload.notificationMessage.squareMessage.message
+									.relatedMessageId,
 							reply,
 							send,
 							author: {
@@ -383,6 +392,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							type: (message.toType === "USER" ? "chat" : "group") as LooseType,
 							opType: operation.type,
 							content: message.text,
+							contentMetadata: message.contentMetadata,
+							contentType: message.contentType,
+							replyId: message.relatedMessageId,
 							reply,
 							send,
 							author: {

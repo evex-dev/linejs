@@ -8,6 +8,9 @@ export type SquareMessage = Omit<
 	type: "square";
 	opType: -1;
 	content: string;
+	contentMetadata: LooseType;
+	contentType: LINETypes.ContentType;
+	replyId?: string;
 	reply: (
 		options: MessageReplyOptions,
 	) => Promise<LINETypes.SendMessageResponse>;
@@ -27,6 +30,9 @@ export type SquareMessage = Omit<
 export type Message = Omit<LINETypes.Operation, "type"> & {
 	opType: LINETypes.OpType;
 	content: string;
+	contentMetadata: LooseType;
+	contentType: LINETypes.ContentType;
+	replyId?: string;
 	reply: (options: MessageReplyOptions) => Promise<LINETypes.Message>;
 	send: (options: SquareMessageSendOptions) => Promise<LINETypes.Message>;
 	author: {
