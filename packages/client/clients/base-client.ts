@@ -281,6 +281,11 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 												._from,
 									})
 								).squareMember,
+							getMyProfile: async () =>
+								await this.getSquareProfile({
+									squareMid:
+										event.payload.notificationMessage.squareMessage.message.to,
+								}),
 							square: async () =>
 								await this.getSquareChat({
 									squareChatMid:
@@ -403,6 +408,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 								iconImage: this.LINE_OBS.getProfileImage(message._from),
 							},
 							getContact,
+							getMyProfile: () => this.user!,
 							chat,
 							group: group as LooseType,
 							data: async () => await this.getMessageObsData(message.id),
@@ -498,6 +504,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	public async getSquareMember(_options: {
 		squareMemberMid: string;
 	}): Promise<LINETypes.GetSquareMemberResponse> {
+		return (await Symbol("Unreachable")) as LooseType;
+	}
+
+	/**
+	 * @description Will override.
+	 */
+	public async getSquareProfile(_options: {
+		squareMid: string;
+	}): Promise<LINETypes.SquareMember> {
 		return (await Symbol("Unreachable")) as LooseType;
 	}
 

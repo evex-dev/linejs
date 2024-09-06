@@ -23,6 +23,7 @@ export type SquareMessage = Omit<
 		iconImage: string;
 	};
 	getProfile: () => Promise<LINETypes.SquareMember>;
+	getMyProfile: () => Promise<LINETypes.SquareMember>;
 	square: () => Promise<LINETypes.GetSquareChatResponse>;
 	data: () => Promise<Blob>;
 };
@@ -40,6 +41,7 @@ export type Message = Omit<LINETypes.Operation, "type"> & {
 		iconImage: string;
 	};
 	getContact: () => Promise<LINETypes.Contact>;
+	getMyProfile: () => LINETypes.Profile;
 	data: () => Promise<Blob>;
 } & (
 		| {
