@@ -96,6 +96,9 @@ await client.login({
 - [ ] Add more function
 - [ ] Add more event
 - [ ] Add jsdoc for all
+- [ ] setName/setIconImage/setStatusMessage...
+- [ ] Reactions enum and more
+- [ ] Notification to chatEvents
 - [x] Create Utils for LINE
   - [x] Add [LINE Scheme](./packages/utils/line-scheme/index.ts)
   - [x] Create REGEX for LINE URI
