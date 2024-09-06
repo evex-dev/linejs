@@ -18,6 +18,7 @@ export type SquareMessage = Omit<
 		options: SquareMessageSendOptions,
 	) => Promise<LINETypes.SendMessageResponse>;
 	author: {
+		displayName: string;
 		mid: string;
 		iconImage: string;
 	};
