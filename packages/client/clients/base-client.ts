@@ -371,7 +371,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 								? async () => {
 										return (await this.getChats({ mids: [sendIn] })).chats[0];
 									}
-								: undefined;
+								: undefined as LooseType;
 
 						const getContact = async () => {
 							return await this.getContact({ mid: message._from });

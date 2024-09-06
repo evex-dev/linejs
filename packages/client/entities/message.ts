@@ -46,11 +46,11 @@ export type Message = Omit<LINETypes.Operation, "type"> & {
 } & (
 		| {
 				type: "chat";
-				chat: (() => Promise<LINETypes.Contact>) | undefined;
+				chat: (() => Promise<LINETypes.Contact>);
 		  }
 		| {
 				type: "group";
-				group: (() => Promise<LINETypes.Chat>) | undefined;
+				group: (() => Promise<LINETypes.Chat>);
 		  }
 	);
 
