@@ -87,11 +87,15 @@ await client.login({
 
 - [x] Migrate Client to [packages](./packages) from [archive](./archive)
 - [x] Migrate Method to [packages](./packages) from [archive](./archive)
-- [ ] Support E2EE (Group Chat)
+- [x] Support E2EE (Group Chat)
 - [x] Add JSDoc for All Method (Only @description)
 - [x] Support Object Arguments
 - [x] Update to latest thrift version
-- [ ] Receive message event
+- [x] Receive message event
+- [ ] Clean message object and author and method
+- [ ] Add more function
+- [ ] Add more event
+- [ ] Add jsdoc for all
 - [x] Create Utils for LINE
   - [x] Add [LINE Scheme](./packages/utils/line-scheme/index.ts)
   - [x] Create REGEX for LINE URI
