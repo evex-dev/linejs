@@ -251,7 +251,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							type: "square",
 							opType: -1,
 							content:
-								event.payload.notificationMessage.squareMessage.message.text || "",
+								event.payload.notificationMessage.squareMessage.message.text ||
+								"",
 							contentMetadata:
 								event.payload.notificationMessage.squareMessage.message
 									.contentMetadata,

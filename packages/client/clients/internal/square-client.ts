@@ -341,6 +341,15 @@ export class SquareClient extends LiffClient {
 	}
 
 	/**
+	 * @description Get my member ship (profile) of square.
+	 */
+	public async getSquareProfile(options: {
+		squareMid: string;
+	}): Promise<LINETypes.SquareMember> {
+		return (await this.getSquare(options)).myMembership;
+	}
+
+	/**
 	 * @description Get square chat info.
 	 */
 	public async getSquareChat(options: {
