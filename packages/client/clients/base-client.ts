@@ -294,10 +294,10 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 									squareChatMid:
 										event.payload.notificationMessage.squareChatMid,
 								}),
-							data: async () =>
+							data: this.hasData(event.payload.notificationMessage.squareMessage.message) && (async () =>
 								await this.getMessageObsData(
 									event.payload.notificationMessage.squareMessage.message.id,
-								),
+								)),
 						});
 					}
 				}
@@ -381,15 +381,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						const chat =
 							message.toType === "USER"
 								? async () => {
-										return await this.getContact({ mid: sendIn });
-									}
+									return await this.getContact({ mid: sendIn });
+								}
 								: undefined;
 
 						const group =
 							message.toType !== "USER"
 								? async () => {
-										return (await this.getChats({ mids: [sendIn] })).chats[0];
-									}
+									return (await this.getChats({ mids: [sendIn] })).chats[0];
+								}
 								: undefined;
 
 						const getContact = async () => {
@@ -413,8 +413,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							getContact,
 							getMyProfile: () => this.user!,
 							chat,
-							group: group as LooseType,
-							data: async () => await this.getMessageObsData(message.id),
+							group,
+							data: this.hasData(message) && (async () => await this.getMessageObsData(message.id)),
 						});
 					}
 					this.emit("event", operation);
@@ -430,6 +430,10 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			}
 			await new Promise((resolve) => setTimeout(resolve));
 		}
+	}
+
+	private hasData(message: LINETypes.Message) {
+		return (message.contentType in ["IMAGE", "VIDEO", "AUDIO", "FILE"]) ? true : undefined
 	}
 
 	/**
@@ -778,7 +782,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType { }
 
 	/**
 	 * @description Will override.
