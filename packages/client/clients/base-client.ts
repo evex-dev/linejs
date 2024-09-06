@@ -29,7 +29,6 @@ import {
 	PRIMARY_TOKEN_REGEX,
 } from "../entities/regex.ts";
 import type { System } from "../entities/system.ts";
-import type { User } from "../entities/user.ts";
 import { Buffer } from "node:buffer";
 import type {
 	MessageReplyOptions,
@@ -68,7 +67,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description THe information of user
 	 */
-	public user: User<"me"> | undefined;
+	public user: LINETypes.Profile | undefined;
 	/**
 	 * @description The information of system
 	 */
@@ -1215,15 +1214,14 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Refresh the profile of the current user.
 	 */
-	public async refreshProfile(noEmit: boolean = false): Promise<User<"me">> {
+	public async refreshProfile(
+		noEmit: boolean = false,
+	): Promise<LINETypes.Profile> {
 		const profile = await this.getProfile();
 
 		if (!noEmit) this.emit("update:profile", profile);
 
-		this.user = {
-			type: "me",
-			...profile,
-		};
+		this.user = profile;
 
 		return this.user;
 	}
