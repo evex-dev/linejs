@@ -19,7 +19,6 @@ export type SquareMessage = Omit<
 	) => Promise<LINETypes.SendMessageResponse>;
 	author: {
 		mid: string;
-		displayName: string;
 		iconImage: string;
 	};
 	getProfile: () => Promise<LINETypes.SquareMember>;

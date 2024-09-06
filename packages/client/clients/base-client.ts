@@ -267,8 +267,6 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							author: {
 								mid: event.payload.notificationMessage.squareMessage.message
 									._from,
-								displayName:
-									event.payload.notificationMessage.senderDisplayName,
 								iconImage: this.LINE_OBS.getSquareMemberImage(
 									event.payload.notificationMessage.squareMessage.message._from,
 								),
