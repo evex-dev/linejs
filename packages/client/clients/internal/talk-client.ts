@@ -232,7 +232,7 @@ export class TalkClient extends ChannelClient {
 
 	public async getContacts(options: {
 		mids: string[];
-	}): Promise<LINETypes.Contact> {
+	}): Promise<LINETypes.Contact[]> {
 		const { mids } = { ...options };
 		return (
 			await this.direct_request(
@@ -242,7 +242,7 @@ export class TalkClient extends ChannelClient {
 				false,
 				this.TalkService_API_PATH,
 			)
-		).map((e) => this.parser.rename_thrift("Contact", e));
+		).map((e: LooseType) => this.parser.rename_thrift("Contact", e));
 	}
 
 	public async getContactsV2(options: {
@@ -257,7 +257,7 @@ export class TalkClient extends ChannelClient {
 				false,
 				this.TalkService_API_PATH,
 			)
-		).map((e) => this.parser.rename_thrift("Contact", e));
+		).map((e: LooseType) => this.parser.rename_thrift("Contact", e));
 	}
 
 	public async getChats(options: {

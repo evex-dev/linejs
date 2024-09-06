@@ -163,7 +163,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.emit("ready", await this.refreshProfile(true));
 
 		const polling = options.polling || ["talk", "square"];
-		const pollingIn: Promise<any>[] = [];
+		const pollingIn: Promise<void>[] = [];
 		if (polling.includes("square")) {
 			pollingIn.push(this.pollingSquareEvents());
 		}
@@ -205,6 +205,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 			if (myEvents.syncToken !== myEventsSyncToken) {
 				for (const event of myEvents.events) {
+					this.emit("square:event", event);
+
 					if (event.type === "NOTIFICATION_MESSAGE") {
 						const send = async (options: SquareMessageSendOptions) => {
 							if (typeof options === "string") {
@@ -246,25 +248,37 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 						this.emit("square:message", {
 							...event.payload.notificationMessage,
+							type: "square",
+							opType: -1,
 							content:
 								event.payload.notificationMessage.squareMessage.message.text,
 							reply,
 							send,
 							author: {
-								pid: event.payload.notificationMessage.squareMessage.message
+								mid: event.payload.notificationMessage.squareMessage.message
 									._from,
 								displayName:
 									event.payload.notificationMessage.senderDisplayName,
 							},
+							getProfile: async () =>
+								(
+									await this.getSquareMember({
+										squareMemberMid:
+											event.payload.notificationMessage.squareMessage.message
+												._from,
+									})
+								).squareMember,
 							square: async () =>
 								await this.getSquareChat({
 									squareChatMid:
 										event.payload.notificationMessage.squareChatMid,
 								}),
-							data: async () => await this.getMessageObsData(event.payload.notificationMessage.squareMessage.message.id)
+							data: async () =>
+								await this.getMessageObsData(
+									event.payload.notificationMessage.squareMessage.message.id,
+								),
 						});
 					}
-					this.emit("square:event", event);
 				}
 				myEventsSyncToken = myEvents.syncToken;
 			}
@@ -289,7 +303,11 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				return;
 			}
 			try {
-				const myEvents = await this.sync({ revision, globalRev, individualRev });
+				const myEvents = await this.sync({
+					revision,
+					globalRev,
+					individualRev,
+				});
 				for (const operation of myEvents.operationResponse?.operations) {
 					revision = operation.revision;
 					if (
@@ -340,34 +358,40 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						};
 
 						const chat =
-							message.toType === "USER" &&
-							(async () => {
-								return await this.getContact({ mid: sendIn });
-							});
+							message.toType === "USER"
+								? async () => {
+										return await this.getContact({ mid: sendIn });
+									}
+								: undefined;
 
 						const group =
-							message.toType !== "USER" &&
-							(async () => {
-								return (await this.getChats({ mids: [sendIn] })).chats[0];
-							});
+							message.toType !== "USER"
+								? async () => {
+										return (await this.getChats({ mids: [sendIn] })).chats[0];
+									}
+								: undefined;
 
-						const author = async () => {
+						const getContact = async () => {
 							return await this.getContact({ mid: message._from });
 						};
 
-						this.emit("talk:message", {
+						this.emit("message", {
 							...operation,
+							type: (message.toType === "USER" ? "chat" : "group") as LooseType,
+							opType: operation.type,
 							content: message.text,
 							reply,
 							send,
-							author,
-							authorMid: message._from,
+							author: {
+								mid: message._from,
+							},
+							getContact,
 							chat,
-							group,
-							data: async () => await this.getMessageObsData(message.id)
+							group: group as LooseType,
+							data: async () => await this.getMessageObsData(message.id),
 						});
 					}
-					this.emit("talk:event", operation);
+					this.emit("event", operation);
 				}
 				globalRev =
 					myEvents.operationResponse?.globalEvents?.lastRevision || globalRev;
@@ -375,7 +399,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					myEvents.operationResponse?.individualEvents?.lastRevision ||
 					individualRev;
 				revision = myEvents.fullSyncResponse?.nextRevision || revision;
-			} catch { }
+			} catch {
+				/* Do Nothing */
+			}
 			await new Promise((resolve) => setTimeout(resolve));
 		}
 	}
@@ -414,7 +440,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @description Will override.
 	 */
 	public async decryptE2EEMessage(
-		messageObj: LINETypes.Message,
+		_messageObj: LINETypes.Message,
 	): Promise<LINETypes.Message> {
 		return (await Symbol("Unreachable")) as LooseType;
 	}
@@ -422,12 +448,18 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public async getContact(_options: any): Promise<any> { }
+	public async getContact(_options: LooseType): Promise<LINETypes.Contact> {
+		return (await Symbol("Unreachable")) as LooseType;
+	}
 
 	/**
 	 * @description Will override.
 	 */
-	public async getChats(_options: any): Promise<any> { }
+	public async getChats(
+		_options: LooseType,
+	): Promise<LINETypes.GetChatsResponse> {
+		return (await Symbol("Unreachable")) as LooseType;
+	}
 
 	/**
 	 * @description Will override.
@@ -440,6 +472,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			subscriptionId?: number;
 		} = {},
 	): Promise<LINETypes.FetchMyEventsResponse> {
+		return (await Symbol("Unreachable")) as LooseType;
+	}
+
+	/**
+	 * @description Will override.
+	 */
+	public async getSquareMember(_options: {
+		squareMemberMid: string;
+	}): Promise<LINETypes.GetSquareMemberResponse> {
 		return (await Symbol("Unreachable")) as LooseType;
 	}
 
@@ -702,7 +743,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType { }
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
 
 	/**
 	 * @description Will override.
@@ -1182,10 +1223,14 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		return this.user;
 	}
 
-	public async getMessageObsData(messageId: string, preview = false):Promise<Blob> {
-		const dataUrl = this.obsEndpoint + "/r/talk/m/" + messageId + (preview ? "/preview" : "")
+	public async getMessageObsData(
+		messageId: string,
+		preview = false,
+	): Promise<Blob> {
+		const dataUrl =
+			this.obsEndpoint + "/r/talk/m/" + messageId + (preview ? "/preview" : "");
 		return await fetch(dataUrl, {
-			headers: this.getHeader(this.metadata?.authToken)
-		}).then(r => r.blob())
+			headers: this.getHeader(this.metadata?.authToken),
+		}).then((r) => r.blob());
 	}
 }

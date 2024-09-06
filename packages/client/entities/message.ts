@@ -1,7 +1,12 @@
 import type * as LINETypes from "../libs/thrift/line_types.ts";
 import type { LooseType } from "./common.ts";
 
-export type SquareMessage = LINETypes.SquareEventNotificationMessage & {
+export type SquareMessage = Omit<
+	LINETypes.SquareEventNotificationMessage,
+	"type"
+> & {
+	type: "square";
+	opType: -1;
 	content: string;
 	reply: (
 		options: MessageReplyOptions,
@@ -10,24 +15,34 @@ export type SquareMessage = LINETypes.SquareEventNotificationMessage & {
 		options: SquareMessageSendOptions,
 	) => Promise<LINETypes.SendMessageResponse>;
 	author: {
-		pid: string;
+		mid: string;
 		displayName: string;
 	};
-	//author: () => Promise<LINETypes.SquareMember>;
+	getProfile: () => Promise<LINETypes.SquareMember>;
 	square: () => Promise<LINETypes.GetSquareChatResponse>;
 	data: () => Promise<Blob>;
 };
 
-export type Message = LINETypes.Operation & {
+export type Message = Omit<LINETypes.Operation, "type"> & {
+	opType: LINETypes.OpType;
 	content: string;
 	reply: (options: MessageReplyOptions) => Promise<LINETypes.Message>;
 	send: (options: SquareMessageSendOptions) => Promise<LINETypes.Message>;
-	author: () => Promise<LINETypes.Contact>;
-	authorMid: string;
-	chat: (() => Promise<LINETypes.Contact>) | false;
-	group: (() => Promise<LINETypes.Chat>) | false;
+	author: {
+		mid: string;
+	};
+	getContact: () => Promise<LINETypes.Contact>;
 	data: () => Promise<Blob>;
-};
+} & (
+		| {
+				type: "chat";
+				chat: () => Promise<LINETypes.Contact>;
+		  }
+		| {
+				type: "group";
+				group: () => Promise<LINETypes.Group>;
+		  }
+	);
 
 export type MessageReplyOptions =
 	| {
