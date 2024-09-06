@@ -283,8 +283,13 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 								).squareMember,
 							getMyProfile: async () =>
 								await this.getSquareProfile({
-									squareMid:
-										event.payload.notificationMessage.squareMessage.message.to,
+									squareMid: (
+										await this.getSquareChat({
+											squareChatMid:
+												event.payload.notificationMessage.squareMessage.message
+													.to,
+										})
+									).squareChat.squareMid,
 								}),
 							square: async () =>
 								await this.getSquareChat({
