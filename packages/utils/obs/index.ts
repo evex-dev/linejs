@@ -51,6 +51,16 @@ class LINE_OBS_BASE {
 	}
 
 	/**
+	 * Gets a message image URI by appending the given message ID to the prefixSticker
+	 * @param {string} [messageId] - The message ID to use in the URLSticker
+	 * @param {boolean} [isPreview=false] - Whether to append '/preview' to the URL.
+	 * @return {string} The getted message image URISticker
+	 */
+	public getDataUrl(messageId: string, isPreview: boolean = false) {
+		return `${this.prefix}r/talk/m/${messageId}/${isPreview ? "/preview" : ""}`;
+	}
+
+	/**
 	 * Gets an open chat member image URI by appending the given open chat member ID to the prefixSticker
 	 * @param {string} [squareMemberId] - The square member ID (pid) to use in the URLSticker
 	 * @param {boolean} [isPreview=false] - Whether to append '/preview' to the URL.

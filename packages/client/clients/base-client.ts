@@ -35,11 +35,12 @@ import type {
 	MessageReplyOptions,
 	SquareMessageSendOptions,
 } from "../entities/message.ts";
+import { LINE_OBS } from "../../utils/obs/index.ts";
 
 interface ClientOptions {
 	storage?: BaseStorage;
 	endpoint?: string;
-	obsEndpoint?: string;
+	LINE_OBS?: LINE_OBS;
 }
 
 export class BaseClient extends TypedEventEmitter<ClientEvents> {
@@ -49,7 +50,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @param {ClientOptions} [options] Options for the client
 	 * @param {BaseStorage} [options.storage] Storage for the client
 	 * @param {string} [options.endpoint] Endpoint for the client
-	 * @param {string} [options.obsEndpoint] Endpoint for the obs
+	 * @param {string} [options.LINE_OBS] Endpoint for the obs
 	 */
 	constructor(options: ClientOptions = {}) {
 		super();
@@ -57,12 +58,12 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		this.storage = options.storage || new MemoryStorage();
 		this.endpoint = options.endpoint || "gw.line.naver.jp";
-		this.obsEndpoint = options.obsEndpoint || "https://obs.line-apps.com";
+		this.LINE_OBS = options.LINE_OBS || new LINE_OBS();
 	}
 
 	public storage: BaseStorage;
 	public endpoint: string;
-	public obsEndpoint: string;
+	public LINE_OBS: LINE_OBS;
 
 	/**
 	 * @description THe information of user
@@ -259,7 +260,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 									._from,
 								displayName:
 									event.payload.notificationMessage.senderDisplayName,
-								iconImage: `${this.obsEndpoint}/member/g2/${event.payload.notificationMessage.squareMessage.message._from}`,
+								iconImage: this.LINE_OBS.getSquareMemberImage(
+									event.payload.notificationMessage.squareMessage.message._from,
+								),
 							},
 							getProfile: async () =>
 								(
@@ -385,7 +388,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							send,
 							author: {
 								mid: message._from,
-								iconImage: `${this.obsEndpoint}/os/p/${message._from}`,
+								iconImage: this.LINE_OBS.getProfileImage(message._from),
 							},
 							getContact,
 							chat,
@@ -1227,12 +1230,14 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 	public async getMessageObsData(
 		messageId: string,
-		preview = false,
+		isPreview = false,
 	): Promise<Blob> {
-		const dataUrl =
-			this.obsEndpoint + "/r/talk/m/" + messageId + (preview ? "/preview" : "");
-		return await fetch(dataUrl, {
-			headers: this.getHeader(this.metadata?.authToken),
+		if (!this.metadata) {
+			throw new InternalError("Not setup yet", "Please call 'login()' first");
+		}
+
+		return await fetch(this.LINE_OBS.getDataUrl(messageId, isPreview), {
+			headers: this.getHeader(this.metadata.authToken),
 		}).then((r) => r.blob());
 	}
 }
