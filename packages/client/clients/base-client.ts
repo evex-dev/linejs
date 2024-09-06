@@ -280,17 +280,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.IS_POLLING_TALK = true;
 
 		const noopEvents = await this.sync();
-
 		let revision = noopEvents.fullSyncResponse.nextRevision;
-
+		let globalRev: number | undefined, individualRev: number | undefined;
 		while (true) {
 			if (!this.metadata) {
 				this.IS_POLLING_TALK = false;
 				return;
 			}
-
-			const myEvents = await this.sync({ revision });
-			for (const operation of myEvents.operationResponse.operations) {
+			const myEvents = await this.sync({ revision, globalRev, individualRev });
+			for (const operation of myEvents.operationResponse?.operations) {
 				revision = operation.revision;
 				if (
 					operation.type === "RECEIVE_MESSAGE" ||
@@ -339,25 +337,41 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						}
 					};
 
+					const chat =
+						message.toType === "USER" &&
+						(async () => {
+							return await this.getContact({ mid: sendIn });
+						});
+
+					const group =
+						message.toType !== "USER" &&
+						(async () => {
+							return (await this.getChats({ mids: [sendIn] })).chats[0];
+						});
+
+					const author = async () => {
+						return await this.getContact({ mid: message._from });
+					};
+
 					this.emit("talk:message", {
 						...operation,
 						content: message.text,
 						reply,
 						send,
-						author: {
-							mid: message._from,
-						},
-						chat: async () => {
-							if (message.toType === "USER") {
-								return await this.getContact({ mid: sendIn });
-							} else {
-								return (await this.getChats({ mids: [sendIn] })).chats[0];
-							}
-						},
+						author,
+						authorMid: message._from,
+						chat,
+						group,
 					});
 				}
 				this.emit("talk:event", operation);
 			}
+			globalRev =
+				myEvents.operationResponse?.globalEvents?.lastRevision || globalRev;
+			individualRev =
+				myEvents.operationResponse?.individualEvents?.lastRevision ||
+				individualRev;
+			revision = myEvents.fullSyncResponse?.nextRevision || revision;
 			await new Promise((resolve) => setTimeout(resolve));
 		}
 	}

@@ -21,10 +21,10 @@ export type Message = LINETypes.Operation & {
 	content: string;
 	reply: (options: MessageReplyOptions) => Promise<LINETypes.Message>;
 	send: (options: SquareMessageSendOptions) => Promise<LINETypes.Message>;
-	author: {
-		mid: string;
-	};
-	chat: () => Promise<LINETypes.Contact> | Promise<LINETypes.Chat>;
+	author: () => Promise<LINETypes.Contact>;
+	authorMid: string;
+	chat: (() => Promise<LINETypes.Contact>) | false;
+	group: (() => Promise<LINETypes.Chat>) | false;
 };
 
 export type MessageReplyOptions =
