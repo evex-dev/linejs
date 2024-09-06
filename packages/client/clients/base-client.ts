@@ -259,6 +259,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 									._from,
 								displayName:
 									event.payload.notificationMessage.senderDisplayName,
+								iconImage: `${this.obsEndpoint}/member/g2/${event.payload.notificationMessage.squareMessage.message._from}`,
 							},
 							getProfile: async () =>
 								(
@@ -384,6 +385,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							send,
 							author: {
 								mid: message._from,
+								iconImage: `${this.obsEndpoint}/os/p/${message._from}`,
 							},
 							getContact,
 							chat,

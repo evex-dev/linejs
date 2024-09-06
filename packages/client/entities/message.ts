@@ -17,6 +17,7 @@ export type SquareMessage = Omit<
 	author: {
 		mid: string;
 		displayName: string;
+		iconImage: string;
 	};
 	getProfile: () => Promise<LINETypes.SquareMember>;
 	square: () => Promise<LINETypes.GetSquareChatResponse>;
@@ -30,6 +31,7 @@ export type Message = Omit<LINETypes.Operation, "type"> & {
 	send: (options: SquareMessageSendOptions) => Promise<LINETypes.Message>;
 	author: {
 		mid: string;
+		iconImage: string;
 	};
 	getContact: () => Promise<LINETypes.Contact>;
 	data: () => Promise<Blob>;
