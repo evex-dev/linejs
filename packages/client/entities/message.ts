@@ -15,6 +15,7 @@ export type SquareMessage = LINETypes.SquareEventNotificationMessage & {
 	};
 	//author: () => Promise<LINETypes.SquareMember>;
 	square: () => Promise<LINETypes.GetSquareChatResponse>;
+	data: () => Promise<Blob>;
 };
 
 export type Message = LINETypes.Operation & {
@@ -25,6 +26,7 @@ export type Message = LINETypes.Operation & {
 	authorMid: string;
 	chat: (() => Promise<LINETypes.Contact>) | false;
 	group: (() => Promise<LINETypes.Chat>) | false;
+	data: () => Promise<Blob>;
 };
 
 export type MessageReplyOptions =

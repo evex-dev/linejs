@@ -261,6 +261,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 									squareChatMid:
 										event.payload.notificationMessage.squareChatMid,
 								}),
+							data: async () => await this.getMessageObsData(event.payload.notificationMessage.squareMessage.message.id)
 						});
 					}
 					this.emit("square:event", event);
@@ -287,91 +288,94 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				this.IS_POLLING_TALK = false;
 				return;
 			}
-			const myEvents = await this.sync({ revision, globalRev, individualRev });
-			for (const operation of myEvents.operationResponse?.operations) {
-				revision = operation.revision;
-				if (
-					operation.type === "RECEIVE_MESSAGE" ||
-					operation.type === "SEND_MESSAGE"
-				) {
-					const message = await this.decryptE2EEMessage(operation.message);
-					let sendIn = "";
-					if (message.toType === "USER") {
-						if (message._from === this.user?.mid) {
+			try {
+				const myEvents = await this.sync({ revision, globalRev, individualRev });
+				for (const operation of myEvents.operationResponse?.operations) {
+					revision = operation.revision;
+					if (
+						operation.type === "RECEIVE_MESSAGE" ||
+						operation.type === "SEND_MESSAGE"
+					) {
+						const message = await this.decryptE2EEMessage(operation.message);
+						let sendIn = "";
+						if (message.toType === "USER") {
+							if (message._from === this.user?.mid) {
+								sendIn = message.to;
+							} else {
+								sendIn = message._from;
+							}
+						} else {
 							sendIn = message.to;
-						} else {
-							sendIn = message._from;
 						}
-					} else {
-						sendIn = message.to;
+						const send = async (options: SquareMessageSendOptions) => {
+							if (typeof options === "string") {
+								return await this.sendMessage({
+									to: sendIn,
+									text: options,
+									relatedMessageId: undefined,
+								});
+							} else {
+								return await this.sendMessage({
+									to: sendIn,
+									relatedMessageId: undefined,
+									...options,
+								});
+							}
+						};
+
+						const reply = async (options: MessageReplyOptions) => {
+							if (typeof options === "string") {
+								return await this.sendMessage({
+									to: sendIn,
+									text: options,
+									relatedMessageId: message.id,
+								});
+							} else {
+								return await this.sendMessage({
+									to: sendIn,
+									relatedMessageId: message.id,
+									...options,
+								});
+							}
+						};
+
+						const chat =
+							message.toType === "USER" &&
+							(async () => {
+								return await this.getContact({ mid: sendIn });
+							});
+
+						const group =
+							message.toType !== "USER" &&
+							(async () => {
+								return (await this.getChats({ mids: [sendIn] })).chats[0];
+							});
+
+						const author = async () => {
+							return await this.getContact({ mid: message._from });
+						};
+
+						this.emit("talk:message", {
+							...operation,
+							content: message.text,
+							reply,
+							send,
+							author,
+							authorMid: message._from,
+							chat,
+							group,
+							data: async () => await this.getMessageObsData(message.id)
+						});
 					}
-					const send = async (options: SquareMessageSendOptions) => {
-						if (typeof options === "string") {
-							return await this.sendMessage({
-								to: sendIn,
-								text: options,
-								relatedMessageId: undefined,
-							});
-						} else {
-							return await this.sendMessage({
-								to: sendIn,
-								relatedMessageId: undefined,
-								...options,
-							});
-						}
-					};
-
-					const reply = async (options: MessageReplyOptions) => {
-						if (typeof options === "string") {
-							return await this.sendMessage({
-								to: sendIn,
-								text: options,
-								relatedMessageId: message.id,
-							});
-						} else {
-							return await this.sendMessage({
-								to: sendIn,
-								relatedMessageId: message.id,
-								...options,
-							});
-						}
-					};
-
-					const chat =
-						message.toType === "USER" &&
-						(async () => {
-							return await this.getContact({ mid: sendIn });
-						});
-
-					const group =
-						message.toType !== "USER" &&
-						(async () => {
-							return (await this.getChats({ mids: [sendIn] })).chats[0];
-						});
-
-					const author = async () => {
-						return await this.getContact({ mid: message._from });
-					};
-
-					this.emit("talk:message", {
-						...operation,
-						content: message.text,
-						reply,
-						send,
-						author,
-						authorMid: message._from,
-						chat,
-						group,
-					});
+					this.emit("talk:event", operation);
 				}
-				this.emit("talk:event", operation);
-			}
-			globalRev =
-				myEvents.operationResponse?.globalEvents?.lastRevision || globalRev;
-			individualRev =
-				myEvents.operationResponse?.individualEvents?.lastRevision ||
-				individualRev;
-			revision = myEvents.fullSyncResponse?.nextRevision || revision;
+				globalRev =
+					myEvents.operationResponse?.globalEvents?.lastRevision || globalRev;
+				individualRev =
+					myEvents.operationResponse?.individualEvents?.lastRevision ||
+					individualRev;
+				revision = myEvents.fullSyncResponse?.nextRevision || revision;
+			} catch { }
 			await new Promise((resolve) => setTimeout(resolve));
 		}
 	}
@@ -418,12 +422,12 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public async getContact(_options: any): Promise<any> {}
+	public async getContact(_options: any): Promise<any> { }
 
 	/**
 	 * @description Will override.
 	 */
-	public async getChats(_options: any): Promise<any> {}
+	public async getChats(_options: any): Promise<any> { }
 
 	/**
 	 * @description Will override.
@@ -698,7 +702,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType { }
 
 	/**
 	 * @description Will override.
@@ -1176,5 +1180,12 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		};
 
 		return this.user;
+	}
+
+	public async getMessageObsData(messageId: string, preview = false):Promise<Blob> {
+		const dataUrl = this.obsEndpoint + "/r/talk/m/" + messageId + (preview ? "/preview" : "")
+		return await fetch(dataUrl, {
+			headers: this.getHeader(this.metadata?.authToken)
+		}).then(r => r.blob())
 	}
 }
