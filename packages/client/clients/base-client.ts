@@ -208,18 +208,18 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					this.emit("square:event", event);
 
 					if (event.type === "NOTIFICATION_MESSAGE") {
+						const message =
+							event.payload.notificationMessage.squareMessage.message;
 						const send = async (options: SquareMessageSendOptions) => {
 							if (typeof options === "string") {
 								return await this.sendSquareMessage({
-									squareChatMid:
-										event.payload.notificationMessage.squareChatMid,
+									squareChatMid: message.to,
 									text: options,
 									relatedMessageId: undefined,
 								});
 							} else {
 								return await this.sendSquareMessage({
-									squareChatMid:
-										event.payload.notificationMessage.squareChatMid,
+									squareChatMid: message.to,
 									relatedMessageId: undefined,
 									...options,
 								});
@@ -229,18 +229,14 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						const reply = async (options: MessageReplyOptions) => {
 							if (typeof options === "string") {
 								return await this.sendSquareMessage({
-									squareChatMid:
-										event.payload.notificationMessage.squareChatMid,
+									squareChatMid: message.to,
 									text: options,
-									relatedMessageId:
-										event.payload.notificationMessage.squareMessage.message.id,
+									relatedMessageId: message.id,
 								});
 							} else {
 								return await this.sendSquareMessage({
-									squareChatMid:
-										event.payload.notificationMessage.squareChatMid,
-									relatedMessageId:
-										event.payload.notificationMessage.squareMessage.message.id,
+									squareChatMid: message.to,
+									relatedMessageId: message.id,
 									...options,
 								});
 							}
@@ -250,42 +246,27 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							...event.payload.notificationMessage,
 							type: "square",
 							opType: -1,
-							content:
-								event.payload.notificationMessage.squareMessage.message.text ||
-								"",
-							contentMetadata:
-								event.payload.notificationMessage.squareMessage.message
-									.contentMetadata,
-							contentType:
-								event.payload.notificationMessage.squareMessage.message
-									.contentType,
-							replyId:
-								event.payload.notificationMessage.squareMessage.message
-									.relatedMessageId,
+							content: message.text || "",
+							contentMetadata: message.contentMetadata,
+							contentType: message.contentType,
+							replyId: message.relatedMessageId,
 							reply,
 							send,
 							author: {
-								mid: event.payload.notificationMessage.squareMessage.message
-									._from,
-								iconImage: this.LINE_OBS.getSquareMemberImage(
-									event.payload.notificationMessage.squareMessage.message._from,
-								),
+								mid: message._from,
+								iconImage: this.LINE_OBS.getSquareMemberImage(message._from),
 							},
 							getProfile: async () =>
 								(
 									await this.getSquareMember({
-										squareMemberMid:
-											event.payload.notificationMessage.squareMessage.message
-												._from,
+										squareMemberMid: message._from,
 									})
 								).squareMember,
 							getMyProfile: async () =>
 								await this.getSquareProfile({
 									squareMid: (
 										await this.getSquareChat({
-											squareChatMid:
-												event.payload.notificationMessage.squareMessage.message
-													.to,
+											squareChatMid: message.to,
 										})
 									).squareChat.squareMid,
 								}),
@@ -294,10 +275,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 									squareChatMid:
 										event.payload.notificationMessage.squareChatMid,
 								}),
-							data: this.hasData(event.payload.notificationMessage.squareMessage.message) && (async () =>
-								await this.getMessageObsData(
-									event.payload.notificationMessage.squareMessage.message.id,
-								)),
+							data:
+								this.hasData(message) &&
+								(async () => await this.getMessageObsData(message.id)),
 						});
 					}
 				}
@@ -381,15 +361,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						const chat =
 							message.toType === "USER"
 								? async () => {
-									return await this.getContact({ mid: sendIn });
-								}
+										return await this.getContact({ mid: sendIn });
+									}
 								: undefined;
 
 						const group =
 							message.toType !== "USER"
 								? async () => {
-									return (await this.getChats({ mids: [sendIn] })).chats[0];
-								}
+										return (await this.getChats({ mids: [sendIn] })).chats[0];
+									}
 								: undefined;
 
 						const getContact = async () => {
@@ -414,7 +394,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							getMyProfile: () => this.user!,
 							chat,
 							group,
-							data: this.hasData(message) && (async () => await this.getMessageObsData(message.id)),
+							data:
+								this.hasData(message) &&
+								(async () => await this.getMessageObsData(message.id)),
 						});
 					}
 					this.emit("event", operation);
@@ -433,7 +415,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	}
 
 	private hasData(message: LINETypes.Message) {
-		return (message.contentType in ["IMAGE", "VIDEO", "AUDIO", "FILE"]) ? true : undefined
+		return message.contentType in ["IMAGE", "VIDEO", "AUDIO", "FILE"]
+			? true
+			: undefined;
 	}
 
 	/**
@@ -782,7 +766,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType { }
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
 
 	/**
 	 * @description Will override.
