@@ -11,12 +11,14 @@ export type SquareMessage = Omit<
 	contentMetadata: LooseType;
 	contentType: LINETypes.ContentType;
 	replyId?: string;
-	reply: (
+	reply: <Safe extends boolean = true>(
 		options: MessageReplyOptions,
-	) => Promise<LINETypes.SendMessageResponse>;
-	send: (
+		safe?: Safe,
+	) => Promise<Safe extends true ? undefined : LINETypes.SendMessageResponse>;
+	send: <Safe extends boolean = true>(
 		options: SquareMessageSendOptions,
-	) => Promise<LINETypes.SendMessageResponse>;
+		safe?: Safe,
+	) => Promise<Safe extends true ? undefined : LINETypes.SendMessageResponse>;
 	author: {
 		mid: string;
 		displayName: string;

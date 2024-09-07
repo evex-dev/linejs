@@ -35,9 +35,11 @@ import type {
 	SquareMessageSendOptions,
 } from "../entities/message.ts";
 import { LINE_OBS } from "../../utils/obs/index.ts";
+import { RateLimitter } from "../libs/rate-limitter/index.ts";
 
 interface ClientOptions {
 	storage?: BaseStorage;
+	squareRateLimitter?: RateLimitter;
 	endpoint?: string;
 	LINE_OBS?: LINE_OBS;
 }
@@ -56,11 +58,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.parser.def = Thrift;
 
 		this.storage = options.storage || new MemoryStorage();
+		this.squareRateLimitter = options.squareRateLimitter || new RateLimitter();
 		this.endpoint = options.endpoint || "gw.line.naver.jp";
 		this.LINE_OBS = options.LINE_OBS || new LINE_OBS();
+
+		this.squareRateLimitter.callPolling();
 	}
 
 	public storage: BaseStorage;
+	public squareRateLimitter: RateLimitter;
 	public endpoint: string;
 	public LINE_OBS: LINE_OBS;
 
@@ -210,35 +216,53 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					if (event.type === "NOTIFICATION_MESSAGE") {
 						const message =
 							event.payload.notificationMessage.squareMessage.message;
-						const send = async (options: SquareMessageSendOptions) => {
+						const send = async (
+							options: SquareMessageSendOptions,
+							safe: boolean = true,
+						) => {
 							if (typeof options === "string") {
-								return await this.sendSquareMessage({
-									squareChatMid: message.to,
-									text: options,
-									relatedMessageId: undefined,
-								});
+								return await this.sendSquareMessage(
+									{
+										squareChatMid: message.to,
+										text: options,
+										relatedMessageId: undefined,
+									},
+									safe,
+								);
 							} else {
-								return await this.sendSquareMessage({
-									squareChatMid: message.to,
-									relatedMessageId: undefined,
-									...options,
-								});
+								return await this.sendSquareMessage(
+									{
+										squareChatMid: message.to,
+										relatedMessageId: undefined,
+										...options,
+									},
+									safe,
+								);
 							}
 						};
 
-						const reply = async (options: MessageReplyOptions) => {
+						const reply = async (
+							options: MessageReplyOptions,
+							safe: boolean = true,
+						) => {
 							if (typeof options === "string") {
-								return await this.sendSquareMessage({
-									squareChatMid: message.to,
-									text: options,
-									relatedMessageId: message.id,
-								});
+								return await this.sendSquareMessage(
+									{
+										squareChatMid: message.to,
+										text: options,
+										relatedMessageId: message.id,
+									},
+									safe,
+								);
 							} else {
-								return await this.sendSquareMessage({
-									squareChatMid: message.to,
-									relatedMessageId: message.id,
-									...options,
-								});
+								return await this.sendSquareMessage(
+									{
+										squareChatMid: message.to,
+										relatedMessageId: message.id,
+										...options,
+									},
+									safe,
+								);
 							}
 						};
 
@@ -250,8 +274,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							contentMetadata: message.contentMetadata,
 							contentType: message.contentType,
 							replyId: message.relatedMessageId,
-							reply,
-							send,
+							// TypeScript Limitations (narrowing)
+							reply: reply as LooseType,
+							send: send as LooseType,
 							author: {
 								mid: message._from,
 								iconImage: this.LINE_OBS.getSquareMemberImage(message._from),
@@ -524,13 +549,16 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public async sendSquareMessage(_options: {
-		squareChatMid: string;
-		text?: string;
-		contentType?: LINETypes.ContentType;
-		contentMetadata?: LooseType;
-		relatedMessageId?: string;
-	}): Promise<LINETypes.SendMessageResponse> {
+	public async sendSquareMessage<Safe extends boolean = true>(
+		_options: {
+			squareChatMid: string;
+			text?: string;
+			contentType?: LINETypes.ContentType;
+			contentMetadata?: LooseType;
+			relatedMessageId?: string;
+		},
+		_safe: Safe = true as Safe,
+	): Promise<Safe extends true ? undefined : LINETypes.SendMessageResponse> {
 		return (await Symbol("Unreachable")) as LooseType;
 	}
 
@@ -1207,6 +1235,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 
 		this.emit("end", this.user);
+		this.squareRateLimitter.clear();
 		this.metadata = undefined;
 		this.user = undefined;
 		this.system = undefined;
