@@ -1259,6 +1259,6 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				"x-line-application": this.system?.type as string,
 				"x-Line-access": this.metadata.authToken
 			},
-		}).then((r) => { console.log(r); return r.blob() });
+		}).then((r) => { return r.blob() });
 	}
 }
