@@ -57,7 +57,7 @@ export class RateLimitter {
 				processedCalls < this.limitCallCount
 			) {
 				const callStack = this.callStacks.shift();
-				console.log(callStack);
+
 				if (callStack) {
 					this.previousCallTime = Date.now();
 					callStack.call();
@@ -66,9 +66,8 @@ export class RateLimitter {
 
 				await this.sleep(this.betweenCallTime / this.limitCallCount);
 			}
-		} catch (e) {
-			console.log(e);
-			this.pollingBack();
+		} catch {
+			/* Do Nothing */
 		} finally {
 			this.pollingBack();
 		}
