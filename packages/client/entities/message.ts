@@ -11,15 +11,17 @@ export type SquareMessage = Omit<
 	contentMetadata: LooseType;
 	contentType: LINETypes.ContentType;
 	replyId?: string;
-	reply: (
+	reply: <Safe extends boolean = true>(
 		options: MessageReplyOptions,
-	) => Promise<LINETypes.SendMessageResponse>;
-	send: (
+		safe?: Safe,
+	) => Promise<Safe extends true ? undefined : LINETypes.SendMessageResponse>;
+	send: <Safe extends boolean = true>(
 		options: SquareMessageSendOptions,
-	) => Promise<LINETypes.SendMessageResponse>;
+		safe?: Safe,
+	) => Promise<Safe extends true ? undefined : LINETypes.SendMessageResponse>;
 	author: {
-		displayName: string;
 		mid: string;
+		displayName: string;
 		iconImage: string;
 	};
 	getProfile: () => Promise<LINETypes.SquareMember>;
@@ -38,6 +40,7 @@ export type Message = Omit<LINETypes.Operation, "type"> & {
 	send: (options: SquareMessageSendOptions) => Promise<LINETypes.Message>;
 	author: {
 		mid: string;
+		displayName: Promise<string>;
 		iconImage: string;
 	};
 	getContact: () => Promise<LINETypes.Contact>;
@@ -46,11 +49,11 @@ export type Message = Omit<LINETypes.Operation, "type"> & {
 } & (
 		| {
 				type: "chat";
-				chat: (() => Promise<LINETypes.Contact>);
+				chat: () => Promise<LINETypes.Contact>;
 		  }
 		| {
 				type: "group";
-				group: (() => Promise<LINETypes.Chat>);
+				group: () => Promise<LINETypes.Chat>;
 		  }
 	);
 
