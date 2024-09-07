@@ -549,7 +549,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public async sendSquareMessage<Safe extends boolean = true>(
+	public async sendSquareMessage(
 		_options: {
 			squareChatMid: string;
 			text?: string;
@@ -557,8 +557,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			contentMetadata?: LooseType;
 			relatedMessageId?: string;
 		},
-		_safe: Safe = true as Safe,
-	): Promise<Safe extends true ? undefined : LINETypes.SendMessageResponse> {
+		_safe = true,
+	): Promise<LINETypes.SendMessageResponse> {
 		return (await Symbol("Unreachable")) as LooseType;
 	}
 
