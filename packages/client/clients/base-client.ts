@@ -278,7 +278,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 								}),
 							data:
 								this.hasData(message) &&
-								(async () => await this.getMessageObsData(message.id)),
+								(async (preview) => await this.getMessageObsData(message.id, preview)),
 						});
 					}
 				}
@@ -362,15 +362,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						const chat =
 							message.toType === "USER"
 								? async () => {
-										return await this.getContact({ mid: sendIn });
-									}
+									return await this.getContact({ mid: sendIn });
+								}
 								: undefined;
 
 						const group =
 							message.toType !== "USER"
 								? async () => {
-										return (await this.getChats({ mids: [sendIn] })).chats[0];
-									}
+									return (await this.getChats({ mids: [sendIn] })).chats[0];
+								}
 								: undefined as LooseType;
 
 						const getContact = async () => {
@@ -397,7 +397,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							group,
 							data:
 								this.hasData(message) &&
-								(async () => await this.getMessageObsData(message.id)),
+								(async (preview) => await this.getMessageObsData(message.id, preview)),
 						});
 					}
 					this.emit("event", operation);
@@ -415,8 +415,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 	}
 
-	private hasData(message: LINETypes.Message) {
-		return message.contentType in ["IMAGE", "VIDEO", "AUDIO", "FILE"]
+	public hasData(message: LINETypes.Message) {
+		return ["IMAGE", "VIDEO", "AUDIO", "FILE"].find(e => (e === message.contentType))
 			? true
 			: undefined;
 	}
@@ -767,7 +767,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType { }
 
 	/**
 	 * @description Will override.
@@ -1253,9 +1253,12 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		if (!this.metadata) {
 			throw new InternalError("Not setup yet", "Please call 'login()' first");
 		}
-
 		return await fetch(this.LINE_OBS.getDataUrl(messageId, isPreview), {
-			headers: this.getHeader(this.metadata.authToken),
-		}).then((r) => r.blob());
+			headers: {
+				accept: "application/json, text/plain, */*",
+				"x-line-application": this.system?.type as string,
+				"x-Line-access": this.metadata.authToken
+			},
+		}).then((r) => { console.log(r); return r.blob() });
 	}
 }

@@ -25,7 +25,7 @@ export type SquareMessage = Omit<
 	getProfile: () => Promise<LINETypes.SquareMember>;
 	getMyProfile: () => Promise<LINETypes.SquareMember>;
 	square: () => Promise<LINETypes.GetSquareChatResponse>;
-	data: (() => Promise<Blob>) | undefined;
+	data: ((preview?:boolean) => Promise<Blob>) | undefined;
 };
 
 export type Message = Omit<LINETypes.Operation, "type"> & {
@@ -42,7 +42,7 @@ export type Message = Omit<LINETypes.Operation, "type"> & {
 	};
 	getContact: () => Promise<LINETypes.Contact>;
 	getMyProfile: () => LINETypes.Profile;
-	data: (() => Promise<Blob>) | undefined;
+	data: ((preview?:boolean) => Promise<Blob>) | undefined;
 } & (
 		| {
 				type: "chat";

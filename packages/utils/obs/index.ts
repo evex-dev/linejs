@@ -57,7 +57,7 @@ class LINE_OBS_BASE {
 	 * @return {string} The getted message image URISticker
 	 */
 	public getDataUrl(messageId: string, isPreview: boolean = false) {
-		return `${this.prefix}r/talk/m/${messageId}/${isPreview ? "/preview" : ""}`;
+		return `${this.prefix}r/talk/m/${messageId}${isPreview ? "/preview" : ""}`;
 	}
 
 	/**
