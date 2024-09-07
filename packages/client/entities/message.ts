@@ -18,8 +18,8 @@ export type SquareMessage = Omit<
 		options: SquareMessageSendOptions,
 	) => Promise<LINETypes.SendMessageResponse>;
 	author: {
-		displayName: string;
 		mid: string;
+		displayName: string;
 		iconImage: string;
 	};
 	getProfile: () => Promise<LINETypes.SquareMember>;
@@ -38,6 +38,7 @@ export type Message = Omit<LINETypes.Operation, "type"> & {
 	send: (options: SquareMessageSendOptions) => Promise<LINETypes.Message>;
 	author: {
 		mid: string;
+		displayName: Promise<string>;
 		iconImage: string;
 	};
 	getContact: () => Promise<LINETypes.Contact>;
@@ -46,11 +47,11 @@ export type Message = Omit<LINETypes.Operation, "type"> & {
 } & (
 		| {
 				type: "chat";
-				chat: (() => Promise<LINETypes.Contact>);
+				chat: () => Promise<LINETypes.Contact>;
 		  }
 		| {
 				type: "group";
-				group: (() => Promise<LINETypes.Chat>);
+				group: () => Promise<LINETypes.Chat>;
 		  }
 	);
 

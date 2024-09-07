@@ -255,7 +255,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							author: {
 								mid: message._from,
 								iconImage: this.LINE_OBS.getSquareMemberImage(message._from),
-								displayName: event.payload.notificationMessage.senderDisplayName,
+								displayName:
+									event.payload.notificationMessage.senderDisplayName,
 							},
 							getProfile: async () =>
 								(
@@ -371,7 +372,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 								? async () => {
 										return (await this.getChats({ mids: [sendIn] })).chats[0];
 									}
-								: undefined as LooseType;
+								: (undefined as LooseType);
 
 						const getContact = async () => {
 							return await this.getContact({ mid: message._from });
@@ -389,6 +390,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							send,
 							author: {
 								mid: message._from,
+								get displayName() {
+									return getContact().then((contact) => contact.displayName);
+								},
 								iconImage: this.LINE_OBS.getProfileImage(message._from),
 							},
 							getContact,
