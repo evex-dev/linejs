@@ -56,13 +56,8 @@ class LINE_OBS_BASE {
 	 * @param {boolean} [isPreview=false] - Whether to append '/preview' to the URL.
 	 * @return {string} The getted message image URISticker
 	 */
-<<<<<<< HEAD
 	public getDataUrl(messageId: string, isPreview: boolean = false) {
 		return `${this.prefix}r/talk/m/${messageId}${isPreview ? "/preview" : ""}`;
-=======
-	public getDataUrl(messageId: string, isPreview: boolean = false): string {
-		return `${this.prefix}r/talk/m/${messageId}/${isPreview ? "/preview" : ""}`;
->>>>>>> 8d3f91f9020f40595a94f11eed22e4dbfcab2050
 	}
 
 	/**
