@@ -34,6 +34,8 @@ Documentation is coming soon.\
 Don't see the feature you want? You can extend the client and create your own
 client! (explanation is coming soon)
 
+You must use `FileStorage` and have an email login before you can receive group events. (explanation is coming soon)
+
 ```ts
 import { Client } from "@evex/linejs";
 
@@ -52,6 +54,14 @@ client.on("message", (message) => {
 
 	if (message.content == "!ping") {
 		message.reply("pong!");
+	}
+});
+
+client.on("square:message", async (message) => {
+	if (await message.isMyMessage()) return;
+
+	if (message.content == "!ping") {
+		await message.reply("pong!");
 	}
 });
 
