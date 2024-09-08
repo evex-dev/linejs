@@ -11,9 +11,9 @@ import {
 } from "../libs/thrift/declares.ts";
 import type * as LINETypes from "../libs/thrift/line_types.ts";
 import ThriftRenameParser from "../libs/thrift/parser.ts";
-import { readThrift } from "../libs/thrift/read.js";
+import { readThrift } from "../libs/thrift/read.ts";
 import { Thrift } from "../libs/thrift/thrift.ts";
-import { writeThrift } from "../libs/thrift/write.js";
+import { writeThrift } from "../libs/thrift/write.ts";
 import { TypedEventEmitter } from "../libs/typed-event-emitter/index.ts";
 import type { LogType } from "../entities/log.ts";
 import type { LoginOptions } from "../entities/login.ts";
