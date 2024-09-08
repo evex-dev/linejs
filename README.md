@@ -9,6 +9,7 @@
 ---
 
 ##### <center>Develop now</center>
+##### <center>Question?: [https://discord.gg/evex](https://discord.gg/evex)</center>
 
 ---
 
