@@ -1,12 +1,13 @@
 import * as thrift from "npm:thrift@0.20.0";
 import { Buffer } from "node:buffer";
+import type { LooseType } from "../../entities/common.ts";
 
 /**
  * @returns {any}
  */
-function readStruct(input) {
+function readStruct(input: LooseType): LooseType {
 	const Thrift = thrift.Thrift;
-	const returnData = {};
+	const returnData: Record<PropertyKey, LooseType> = {};
 	input.readStructBegin();
 	let ret, ftype, fid;
 	while (true) {
@@ -23,7 +24,7 @@ function readStruct(input) {
 	return returnData;
 }
 
-function isBinary(bin) {
+function isBinary(bin: Buffer) {
 	const str = bin.toString();
 	if (JSON.stringify(str).includes("\\u")) {
 		return true;
@@ -32,7 +33,7 @@ function isBinary(bin) {
 	return bin.toString("base64") !== bin2.toString("base64");
 }
 
-function readValue(input, ftype) {
+function readValue(input: LooseType, ftype: LooseType): LooseType {
 	const Thrift = thrift.Thrift;
 	if (ftype == Thrift.Type.STRUCT) {
 		return readStruct(input);
@@ -59,7 +60,7 @@ function readValue(input, ftype) {
 		input.readListEnd();
 		return returnData;
 	} else if (ftype == Thrift.Type.MAP) {
-		const returnData = {};
+		const returnData: Record<PropertyKey, LooseType> = {};
 		const _rtmp3384 = input.readMapBegin();
 		const _size383 = _rtmp3384.size || 0;
 		for (let _i385 = 0; _i385 < _size383; ++_i385) {
@@ -81,7 +82,7 @@ function readValue(input, ftype) {
 	}
 }
 
-function _readThrift(data, Protocol = thrift.TCompactProtocol) {
+function _readThrift(data: Uint8Array, Protocol = thrift.TCompactProtocol) {
 	const bufTrans = new thrift.TFramedTransport(Buffer.from(data));
 	const proto = new Protocol(bufTrans);
 	const msg_info = proto.readMessageBegin();
@@ -90,17 +91,23 @@ function _readThrift(data, Protocol = thrift.TCompactProtocol) {
 	return { value: tdata[0], e: tdata[1], _info: msg_info };
 }
 
-export function readThrift(data, Protocol = thrift.TCompactProtocol) {
+export function readThrift(
+	data: Uint8Array,
+	Protocol = thrift.TCompactProtocol,
+) {
 	return _readThrift(data, Protocol);
 }
 
-export function rawReadStruct(data, Protocol = thrift.TCompactProtocol) {
+export function rawReadStruct(
+	data: Buffer,
+	Protocol = thrift.TCompactProtocol,
+) {
 	const bufTrans = new thrift.TFramedTransport(Buffer.from(data));
 	const proto = new Protocol(bufTrans);
 	return readStruct(proto);
 }
 
-function TreadValue(input, ftype) {
+function TreadValue(input: LooseType, ftype: LooseType): LooseType {
 	const Thrift = thrift.Thrift;
 	if (ftype == Thrift.Type.STRUCT) {
 		return TreadStruct(input);
@@ -122,7 +129,7 @@ function TreadValue(input, ftype) {
 		input.readListEnd();
 		return [_rtmp.etype, returnData];
 	} else if (ftype == Thrift.Type.MAP) {
-		const returnData = {};
+		const returnData: Record<PropertyKey, LooseType> = {};
 		const _rtmp3384 = input.readMapBegin();
 		const _size383 = _rtmp3384.size || 0;
 		for (let _i385 = 0; _i385 < _size383; ++_i385) {
@@ -144,7 +151,7 @@ function TreadValue(input, ftype) {
 	}
 }
 
-function TreadStruct(input) {
+function TreadStruct(input: LooseType) {
 	const Thrift = thrift.Thrift;
 	const returnData = [];
 	input.readStructBegin();
@@ -162,7 +169,7 @@ function TreadStruct(input) {
 	input.readStructEnd();
 	return returnData;
 }
-export function TreadThrift(data, Protocol = thrift.TCompactProtocol) {
+export function TreadThrift(data: Buffer, Protocol = thrift.TCompactProtocol) {
 	const bufTrans = new thrift.TFramedTransport(Buffer.from(data));
 	const proto = new Protocol(bufTrans);
 	const msg_info = proto.readMessageBegin();

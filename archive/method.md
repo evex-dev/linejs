@@ -61,15 +61,15 @@ public async getChats(options: {
 
 ```ts
 return await this.request(
-    [
-        [15, 1, [11, mids]],
-        [2, 2, withMembers],
-        [2, 3, withInvitees],
-    ], // ~の中身
-    "getChats",
-    this.TalkService_PROTOCOL_TYPE,
-    "GetChatsResponse", //上で見つけた型、見つからなかったら false(bool)
-    this.TalkService_API_PATH,
+	[
+		[15, 1, [11, mids]],
+		[2, 2, withMembers],
+		[2, 3, withInvitees],
+	], // ~の中身
+	"getChats",
+	this.TalkService_PROTOCOL_TYPE,
+	"GetChatsResponse", //上で見つけた型、見つからなかったら false(bool)
+	this.TalkService_API_PATH,
 );
 ```
 
@@ -77,17 +77,17 @@ else
 
 ```ts
 return await this.direct_request(
-    [
-        [12, 1, [[15, 1, [11, mids]], [2, 2, withMembers], [
-            2,
-            3,
-            withInvitees,
-        ]]],
-    ],
-    "getChats",
-    this.TalkService_PROTOCOL_TYPE,
-    "GetChatsResponse", //上で見つけた型、見つからなかったら false(bool)
-    this.TalkService_API_PATH,
+	[
+		[12, 1, [[15, 1, [11, mids]], [2, 2, withMembers], [
+			2,
+			3,
+			withInvitees,
+		]]],
+	],
+	"getChats",
+	this.TalkService_PROTOCOL_TYPE,
+	"GetChatsResponse", //上で見つけた型、見つからなかったら false(bool)
+	this.TalkService_API_PATH,
 );
 ```
 

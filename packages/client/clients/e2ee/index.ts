@@ -4,7 +4,7 @@ import * as crypto from "node:crypto";
 import { Buffer } from "node:buffer";
 import { TalkClient } from "../internal/talk-client.ts";
 import type { LooseType } from "../../entities/common.ts";
-import { rawReadStruct as readStruct } from "../../libs/thrift/read.js";
+import { rawReadStruct as readStruct } from "../../libs/thrift/read.ts";
 import {
 	ContentType,
 	type Location,

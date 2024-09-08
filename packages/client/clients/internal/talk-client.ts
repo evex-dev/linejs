@@ -249,15 +249,13 @@ export class TalkClient extends ChannelClient {
 		mids: string[];
 	}): Promise<LINETypes.GetContactsV2Response> {
 		const { mids } = { ...options };
-		return (
-			await this.request(
-				[[15, 1, [11, mids]]],
-				"getContactsV2",
-				this.TalkService_PROTOCOL_TYPE,
-				"GetContactsV2Response",
-				this.TalkService_API_PATH,
-			)
-		)
+		return await this.request(
+			[[15, 1, [11, mids]]],
+			"getContactsV2",
+			this.TalkService_PROTOCOL_TYPE,
+			"GetContactsV2Response",
+			this.TalkService_API_PATH,
+		);
 	}
 
 	public async getChats(options: {
