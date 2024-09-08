@@ -1,4 +1,6 @@
-# LINEJS (Develop now)
+# LINEJS
+[![JSR](https://jsr.io/badges/@evex/linejs)](https://jsr.io/@evex/linejs) [![JSR Score](https://jsr.io/badges/@evex/linejs/score)](https://jsr.io/@evex/linejs) [![JSR Scope](https://jsr.io/badges/@evex)](https://jsr.io/@evex) ![release workflow](https://github.com/evex-dev/linejs/actions/workflows/release.yml/badge.svg)   
+[![](https://dcbadge.limes.pink/api/server/evex)](https://discord.gg/evex)
 
 <img src="./.github/assets/icon.png" width="150" height="150" alt="LINEJS" />
 
@@ -7,6 +9,7 @@
 ---
 
 ##### <center>Develop now</center>
+##### <center>Question?: [https://discord.gg/evex](https://discord.gg/evex)</center>
 
 ---
 
@@ -32,6 +35,8 @@ Documentation is coming soon.\
 Don't see the feature you want? You can extend the client and create your own
 client! (explanation is coming soon)
 
+You must use `FileStorage` and have an email login before you can receive group events. (explanation is coming soon)
+
 ```ts
 import { Client } from "@evex/linejs";
 
@@ -51,6 +56,14 @@ client.on("message", (message) => {
 	if (message.content == "!ping") {
 		message.reply("pong!");
 	}
+});
+
+client.on("square:message", async (message) => {
+	if (await message.isMyMessage()) {
+    if (message.content == "!ping") {
+		  await message.reply("pong!");
+	  }
+  }
 });
 
 await client.login({
@@ -92,12 +105,12 @@ await client.login({
 - [x] Support Object Arguments
 - [x] Update to latest thrift version
 - [x] Receive message event
-- [ ] Clean message object and author and method
-- [ ] Add more function
-- [ ] Add more event
-- [ ] Add jsdoc for all
-- [ ] setName/setIconImage/setStatusMessage...
-- [ ] Reactions enum and more
+- [x] Clean message object and author and method
+- [x] Add more function
+- [x] Add more event
+- [x] Add jsdoc for all
+- [x] setName/setIconImage/setStatusMessage...
+- [x] Reactions enum and more
 - [ ] Notification to chatEvents
 - [x] Create Utils for LINE
   - [x] Add [LINE Scheme](./packages/utils/line-scheme/index.ts)

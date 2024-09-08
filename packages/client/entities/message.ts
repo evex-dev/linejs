@@ -19,11 +19,15 @@ export type SquareMessage = Omit<
 		options: SquareMessageSendOptions,
 		safe?: boolean,
 	) => Promise<LINETypes.SendMessageResponse>;
+	react: (
+		options: SquareMessageReactionOptions,
+	) => Promise<LINETypes.ReactToMessageResponse>;
 	author: {
 		mid: string;
 		displayName: string;
 		iconImage: string;
 	};
+	isMyMessage: () => Promise<boolean>;
 	getProfile: () => Promise<LINETypes.SquareMember>;
 	getMyProfile: () => Promise<LINETypes.SquareMember>;
 	square: () => Promise<LINETypes.GetSquareChatResponse>;
@@ -43,8 +47,9 @@ export type Message = Omit<LINETypes.Operation, "type"> & {
 		displayName: Promise<string>;
 		iconImage: string;
 	};
+	isMyMessage: () => Promise<boolean>;
 	getContact: () => Promise<LINETypes.Contact>;
-	getMyProfile: () => LINETypes.Profile;
+	getMyProfile: () => Promise<LINETypes.Profile>;
 	data: ((preview?: boolean) => Promise<Blob>) | undefined;
 } & (
 		| {
@@ -66,3 +71,9 @@ export type MessageReplyOptions =
 	| string;
 
 export type SquareMessageSendOptions = MessageReplyOptions;
+
+export type SquareMessageReactionOptions =
+	| {
+			reactionType: LINETypes.MessageReactionType;
+	  }
+	| LINETypes.MessageReactionType;

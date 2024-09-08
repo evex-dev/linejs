@@ -170,7 +170,7 @@ export class SquareClient extends LiffClient {
 	 * SAD     = 6,
 	 * OMG     = 7,
 	 */
-	public async reactToMessage(options: {
+	public async reactToSquareMessage(options: {
 		squareChatMid: string;
 		reactionType?: LINETypes.MessageReactionType;
 		squareMessageId: string;

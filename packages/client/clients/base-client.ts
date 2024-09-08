@@ -32,6 +32,7 @@ import type { System } from "../entities/system.ts";
 import { Buffer } from "node:buffer";
 import type {
 	MessageReplyOptions,
+	SquareMessageReactionOptions,
 	SquareMessageSendOptions,
 } from "../entities/message.ts";
 import { LINE_OBS } from "../../utils/obs/index.ts";
@@ -65,9 +66,21 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.squareRateLimitter.callPolling();
 	}
 
+	/**
+	 * @description the storage of client
+	 */
 	public storage: BaseStorage;
+	/**
+	 * @description the square rate limitter of client
+	 */
 	public squareRateLimitter: RateLimitter;
+	/**
+	 * @description the endpoint of LINE Gateway of client
+	 */
 	public endpoint: string;
+	/**
+	 * @description the LINE OBS of client
+	 */
 	public LINE_OBS: LINE_OBS;
 
 	/**
@@ -266,6 +279,38 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							}
 						};
 
+						const react = async (options: SquareMessageReactionOptions) => {
+							if (typeof options === "number") {
+								return await this.reactToSquareMessage({
+									squareChatMid:
+										event.payload.notificationMessage.squareChatMid,
+									reactionType: options as LINETypes.MessageReactionType,
+									squareMessageId: message.id,
+								});
+							} else {
+								return await this.reactToSquareMessage({
+									squareChatMid:
+										event.payload.notificationMessage.squareChatMid,
+									reactionType: (
+										options as Exclude<
+											SquareMessageReactionOptions,
+											LINETypes.MessageReactionType
+										>
+									).reactionType,
+									squareMessageId: message.id,
+								});
+							}
+						};
+
+						const getMyProfile = async () =>
+							await this.getSquareProfile({
+								squareMid: (
+									await this.getSquareChat({
+										squareChatMid: message.to,
+									})
+								).squareChat.squareMid,
+							});
+
 						this.emit("square:message", {
 							...event.payload.notificationMessage,
 							type: "square",
@@ -276,26 +321,22 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							replyId: message.relatedMessageId,
 							reply,
 							send,
+							react,
 							author: {
 								mid: message._from,
 								iconImage: this.LINE_OBS.getSquareMemberImage(message._from),
 								displayName:
 									event.payload.notificationMessage.senderDisplayName,
 							},
+							isMyMessage: async () =>
+								(await getMyProfile()).squareMemberMid === message._from,
 							getProfile: async () =>
 								(
 									await this.getSquareMember({
 										squareMemberMid: message._from,
 									})
 								).squareMember,
-							getMyProfile: async () =>
-								await this.getSquareProfile({
-									squareMid: (
-										await this.getSquareChat({
-											squareChatMid: message.to,
-										})
-									).squareChat.squareMid,
-								}),
+							getMyProfile,
 							square: async () =>
 								await this.getSquareChat({
 									squareChatMid:
@@ -403,6 +444,10 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							return await this.getContact({ mid: message._from });
 						};
 
+						const getMyProfile = async () => {
+							return await this.refreshProfile(true);
+						};
+
 						this.emit("message", {
 							...operation,
 							type: (message.toType === "USER" ? "chat" : "group") as LooseType,
@@ -420,8 +465,10 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 								},
 								iconImage: this.LINE_OBS.getProfileImage(message._from),
 							},
+							isMyMessage: async () =>
+								(await getMyProfile()).mid === message._from,
 							getContact,
-							getMyProfile: () => this.user!,
+							getMyProfile,
 							chat,
 							group,
 							data:
@@ -445,6 +492,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 	}
 
+	/**
+	 * @description Check the message have obs data
+	 */
 	public hasData(message: LINETypes.Message): true | undefined {
 		return ["IMAGE", "VIDEO", "AUDIO", "FILE"].find(
 			(e) => e === message.contentType,
@@ -562,6 +612,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		},
 		_safe = true,
 	): Promise<LINETypes.SendMessageResponse> {
+		return (await Symbol("Unreachable")) as LooseType;
+	}
+
+	public async reactToSquareMessage(_options: {
+		squareChatMid: string;
+		reactionType?: LINETypes.MessageReactionType;
+		squareMessageId: string;
+		squareThreadMid?: string;
+	}): Promise<LINETypes.ReactToMessageResponse> {
 		return (await Symbol("Unreachable")) as LooseType;
 	}
 
@@ -1265,6 +1324,92 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			"Profile",
 			this.LINEService_API_PATH,
 		);
+	}
+
+	/**
+	 * @description Updates the profile of the current user.
+	 */
+
+	public async updateProfile(options: {
+		all?: LooseType;
+		email?: string;
+		displayName?: string;
+		phoneticName?: string;
+		pictureUrl?: string;
+		statusMessage?: string;
+		allowSearchByUserid?: boolean;
+		allowSearchByEmail?: boolean;
+		buddyStatus?: LooseType;
+		musicProfile?: LooseType;
+		avatarProfile?: LooseType;
+	}): Promise<LooseType[]> {
+		const typeByLabel = {
+			all: 0,
+			email: 1,
+			displayName: 2,
+			phoneticName: 4,
+			pictureUrl: 8,
+			statusMessage: 16,
+			allowSearchByUserid: 32,
+			allowSearchByEmail: 64,
+			buddyStatus: 128,
+			musicProfile: 256,
+			avatarProfile: 512,
+		} satisfies Record<keyof typeof options, number>;
+
+		const updateLabels = Object.keys(options) as (keyof typeof typeByLabel)[];
+		const responseList = [];
+
+		for (const label of updateLabels) {
+			const params = [
+				[8, 1, 0],
+				[8, 2, typeByLabel[label]],
+				[
+					11,
+					3,
+					typeof options[label] === "boolean"
+						? options[label]
+							? "True"
+							: "False"
+						: options[label],
+				],
+			];
+
+			responseList.push(
+				await this.request(
+					params,
+					"updateProfileAttribute",
+					this.LINEService_PROTOCOL_TYPE,
+					false,
+					this.LINEService_API_PATH,
+				),
+			);
+		}
+
+		await this.refreshProfile();
+
+		return responseList;
+	}
+
+	/**
+	 * @description Updates the display name of the current user.
+	 */
+	public async updateDisplayName(displayName: string): Promise<LooseType> {
+		return (await this.updateProfile({ displayName }))[0];
+	}
+
+	/**
+	 * @description Updates the picture url of the current user.
+	 */
+	public async updatePictureUrl(pictureUrl: string): Promise<LooseType> {
+		return (await this.updateProfile({ pictureUrl }))[0];
+	}
+
+	/**
+	 * @description Updates the status message of the current user.
+	 */
+	public async updateStatusMessage(statusMessage: string): Promise<LooseType> {
+		return (await this.updateProfile({ statusMessage }))[0];
 	}
 
 	/**
