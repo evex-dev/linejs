@@ -1,4 +1,6 @@
-# LINEJS (Develop now)
+# LINEJS
+[![JSR](https://jsr.io/badges/@evex/linejs)](https://jsr.io/@evex/linejs) [![JSR Score](https://jsr.io/badges/@evex/linejs/score)](https://jsr.io/@evex/linejs) [![JSR Scope](https://jsr.io/badges/@evex)](https://jsr.io/@evex) ![release workflow](https://github.com/evex-dev/linejs/actions/workflows/release.yml/badge.svg)   
+[![](https://dcbadge.limes.pink/api/server/evex)](https://discord.gg/evex)
 
 <img src="./.github/assets/icon.png" width="150" height="150" alt="LINEJS" />
 
