@@ -117,3 +117,99 @@ public async getContactsV2(options: {
 		).map((e: LooseType) => this.parser.rename_thrift("Contact", e));   //thriftの型をここへ
 	}
 ```
+
+- そもそもparamではない場合😇
+
+```python
+def deleteOtherFromChat(self, to, mid):
+        METHOD_NAME = "deleteOtherFromChat"
+        if type(mid) == list:
+            _lastReq = None
+            for _mid in mid:
+                print(f"[deleteOtherFromChat] The parameter 'mid' should be str")
+                _lastReq = self.deleteOtherFromChat(to, _mid)
+            return _lastReq
+        sqrd = [
+            128,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            19,
+            100,
+            101,
+            108,
+            101,
+            116,
+            101,
+            79,
+            116,
+            104,
+            101,
+            114,
+            70,
+            114,
+            111,
+            109,
+            67,
+            104,
+            97,
+            116,
+            0,
+            0,
+            0,
+            0,
+        ]
+        sqrd += [12, 0, 1]
+        sqrd += [8, 0, 1, 0, 0, 0, 0]  # seq?
+        sqrd += [11, 0, 2, 0, 0, 0, len(to)]
+        for value in to:
+            sqrd.append(ord(value))
+        sqrd += [14, 0, 3, 11, 0, 0, 0, 1, 0, 0, 0, len(mid)]
+        for value in mid:
+            sqrd.append(ord(value))
+        sqrd += [0, 0]
+        return self.postPackDataAndGetUnpackRespData(
+            self.LINE_NORMAL_ENDPOINT, sqrd, readWith=f"TalkService.{METHOD_NAME}"
+        )
+```
+
+解説
+
+最初のsqrdはthriftのメッセージ`deleteOtherFromChat`を意味します
+
+`sqrd = [128, 1, 0, 1] + self.getStringBytes("METHODNAME") + [0, 0, 0, 0]`も上と同じ意味です
+
+`sqrd += [12, 0, 1]`は`[12,1,[]]`を意味します。続くバイト列はその中身です
+
+`sqrd += [8, 0, 1, 0, 0, 0, 0]`は`[8,1,0]`を意味します。
+
+```py
+sqrd += [11, 0, 2, 0, 0, 0, len(to)]
+for value in to:
+    sqrd.append(ord(value))
+```
+
+は`[11,2,to]`を意味します。
+
+```py
+sqrd += [14, 0, 3, 11, 0, 0, 0, 1, 0, 0, 0, len(mid)]
+for value in mid:
+    sqrd.append(ord(value))
+```
+
+は`[14,3,[11,[mid]]]`を意味します。
+
+`sqrd += [0, 0]`はメッセージの終了を意味します
+
+つまり、
+```py
+param = [12,1,[
+    [8,1,0],
+    [11,2,to],
+    [14,3,[11,[mid]]]
+]]
+```
+と変換できます
