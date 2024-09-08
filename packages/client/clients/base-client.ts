@@ -445,7 +445,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 	}
 
-	public hasData(message: LINETypes.Message) {
+	public hasData(message: LINETypes.Message): true | undefined {
 		return ["IMAGE", "VIDEO", "AUDIO", "FILE"].find(
 			(e) => e === message.contentType,
 		)
