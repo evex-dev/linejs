@@ -32,6 +32,7 @@ import type { System } from "../entities/system.ts";
 import { Buffer } from "node:buffer";
 import type {
 	MessageReplyOptions,
+	SquareMessageReactionOptions,
 	SquareMessageSendOptions,
 } from "../entities/message.ts";
 import { LINE_OBS } from "../../utils/obs/index.ts";
@@ -278,6 +279,29 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							}
 						};
 
+						const react = async (options: SquareMessageReactionOptions) => {
+							if (typeof options === "number") {
+								return await this.reactToSquareMessage({
+									squareChatMid:
+										event.payload.notificationMessage.squareChatMid,
+									reactionType: options as LINETypes.MessageReactionType,
+									squareMessageId: message.id,
+								});
+							} else {
+								return await this.reactToSquareMessage({
+									squareChatMid:
+										event.payload.notificationMessage.squareChatMid,
+									reactionType: (
+										options as Exclude<
+											SquareMessageReactionOptions,
+											LINETypes.MessageReactionType
+										>
+									).reactionType,
+									squareMessageId: message.id,
+								});
+							}
+						};
+
 						const getMyProfile = async () =>
 							await this.getSquareProfile({
 								squareMid: (
@@ -297,6 +321,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							replyId: message.relatedMessageId,
 							reply,
 							send,
+							react,
 							author: {
 								mid: message._from,
 								iconImage: this.LINE_OBS.getSquareMemberImage(message._from),
@@ -587,6 +612,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		},
 		_safe = true,
 	): Promise<LINETypes.SendMessageResponse> {
+		return (await Symbol("Unreachable")) as LooseType;
+	}
+
+	public async reactToSquareMessage(_options: {
+		squareChatMid: string;
+		reactionType?: LINETypes.MessageReactionType;
+		squareMessageId: string;
+		squareThreadMid?: string;
+	}): Promise<LINETypes.ReactToMessageResponse> {
 		return (await Symbol("Unreachable")) as LooseType;
 	}
 

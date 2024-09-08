@@ -92,12 +92,12 @@ await client.login({
 - [x] Support Object Arguments
 - [x] Update to latest thrift version
 - [x] Receive message event
-- [ ] Clean message object and author and method
-- [ ] Add more function
-- [ ] Add more event
-- [ ] Add jsdoc for all
-- [ ] setName/setIconImage/setStatusMessage...
-- [ ] Reactions enum and more
+- [x] Clean message object and author and method
+- [x] Add more function
+- [x] Add more event
+- [x] Add jsdoc for all
+- [x] setName/setIconImage/setStatusMessage...
+- [x] Reactions enum and more
 - [ ] Notification to chatEvents
 - [x] Create Utils for LINE
   - [x] Add [LINE Scheme](./packages/utils/line-scheme/index.ts)

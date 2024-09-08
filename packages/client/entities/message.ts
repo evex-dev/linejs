@@ -19,6 +19,9 @@ export type SquareMessage = Omit<
 		options: SquareMessageSendOptions,
 		safe?: boolean,
 	) => Promise<LINETypes.SendMessageResponse>;
+	react: (
+		options: SquareMessageReactionOptions,
+	) => Promise<LINETypes.ReactToMessageResponse>;
 	author: {
 		mid: string;
 		displayName: string;
@@ -68,3 +71,9 @@ export type MessageReplyOptions =
 	| string;
 
 export type SquareMessageSendOptions = MessageReplyOptions;
+
+export type SquareMessageReactionOptions =
+	| {
+			reactionType: LINETypes.MessageReactionType;
+	  }
+	| LINETypes.MessageReactionType;
