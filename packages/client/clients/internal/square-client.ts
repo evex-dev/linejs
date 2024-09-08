@@ -281,6 +281,9 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Send message for square chat.
 	 */
+	/**
+	 * @description Send message for square chat.
+	 */
 	public async sendSquareMessage(
 		options: {
 			squareChatMid: string;
@@ -298,19 +301,23 @@ export class SquareClient extends LiffClient {
 			contentMetadata,
 			relatedMessageId,
 		} = { contentType: 0, contentMetadata: {}, ...options };
-		const msg = [
+
+		const message = [
 			[11, 2, squareChatMid],
 			[11, 10, text],
 			[8, 15, contentType],
 			[13, 18, [11, 11, contentMetadata]],
 		];
 		if (relatedMessageId) {
-			msg.push([11, 21, relatedMessageId], [8, 22, 3], [8, 24, 2]);
+			message.push([11, 21, relatedMessageId], [8, 22, 3], [8, 24, 2]);
 		}
-		let request:any;
-		const promise = new Promise<LINETypes.SendMessageResponse>((resolve, reject) => {
-			request = async() =>
-				resolve(await this.request(
+
+		const { promise, resolve } =
+			Promise.withResolvers<LINETypes.SendMessageResponse>();
+
+		const request = async () => {
+			resolve(
+				await this.request(
 					[
 						[8, 1, 0],
 						[11, 2, squareChatMid],
@@ -318,7 +325,7 @@ export class SquareClient extends LiffClient {
 							12,
 							3,
 							[
-								[12, 1, msg],
+								[12, 1, message],
 								[8, 3, 4],
 							],
 						],
@@ -327,17 +334,17 @@ export class SquareClient extends LiffClient {
 					this.SquareService_PROTOCOL_TYPE,
 					true,
 					this.SquareService_API_PATH,
-				));
-		})
+				),
+			);
+		};
 
 		if (safe) {
 			this.squareRateLimitter.appendCall(request);
-			// TypeScript Limitations (narrowing)
-			return await promise;
 		} else {
-			request();
-			return await promise;
+			await request();
 		}
+
+		return promise;
 	}
 
 	/**

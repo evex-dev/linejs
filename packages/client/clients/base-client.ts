@@ -274,9 +274,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							contentMetadata: message.contentMetadata,
 							contentType: message.contentType,
 							replyId: message.relatedMessageId,
-							// TypeScript Limitations (narrowing)
-							reply: reply as LooseType,
-							send: send as LooseType,
+							reply,
+							send,
 							author: {
 								mid: message._from,
 								iconImage: this.LINE_OBS.getSquareMemberImage(message._from),
@@ -304,7 +303,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 								}),
 							data:
 								this.hasData(message) &&
-								(async (preview) => await this.getMessageObsData(message.id, preview)),
+								(async (preview) =>
+									await this.getMessageObsData(message.id, preview)),
 						});
 					}
 				}
@@ -388,8 +388,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						const chat =
 							message.toType === "USER"
 								? async () => {
-									return await this.getContact({ mid: sendIn });
-								}
+										return await this.getContact({ mid: sendIn });
+									}
 								: undefined;
 
 						const group =
@@ -426,7 +426,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							group,
 							data:
 								this.hasData(message) &&
-								(async (preview) => await this.getMessageObsData(message.id, preview)),
+								(async (preview) =>
+									await this.getMessageObsData(message.id, preview)),
 						});
 					}
 					this.emit("event", operation);
@@ -445,7 +446,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	}
 
 	public hasData(message: LINETypes.Message) {
-		return ["IMAGE", "VIDEO", "AUDIO", "FILE"].find(e => (e === message.contentType))
+		return ["IMAGE", "VIDEO", "AUDIO", "FILE"].find(
+			(e) => e === message.contentType,
+		)
 			? true
 			: undefined;
 	}
@@ -799,7 +802,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType { }
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
 
 	/**
 	 * @description Will override.
@@ -1290,8 +1293,10 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			headers: {
 				accept: "application/json, text/plain, */*",
 				"x-line-application": this.system?.type as string,
-				"x-Line-access": this.metadata.authToken
+				"x-Line-access": this.metadata.authToken,
 			},
-		}).then((r) => { return r.blob() });
+		}).then((r) => {
+			return r.blob();
+		});
 	}
 }
