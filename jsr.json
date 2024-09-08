@@ -6,6 +6,7 @@
 		".": "./packages/client/index.ts",
 		"./client": "./packages/client/index.ts",
 		"./utils": "./packages/utils/index.ts",
-		"./storage": "./packages/client/lib/storage/index.ts"
+		"./storage": "./packages/client/lib/storage/index.ts",
+		"./types": "./packages/libs/thrift/line_types.ts"
 	}
 }
