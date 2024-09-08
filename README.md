@@ -58,11 +58,11 @@ client.on("message", (message) => {
 });
 
 client.on("square:message", async (message) => {
-	if (await message.isMyMessage()) return;
-
-	if (message.content == "!ping") {
-		await message.reply("pong!");
-	}
+	if (await message.isMyMessage()) {
+    if (message.content == "!ping") {
+		  await message.reply("pong!");
+	  }
+  }
 });
 
 await client.login({
