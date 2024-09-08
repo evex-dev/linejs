@@ -24,6 +24,7 @@ export type SquareMessage = Omit<
 		displayName: string;
 		iconImage: string;
 	};
+	isMyMessage: () => Promise<boolean>;
 	getProfile: () => Promise<LINETypes.SquareMember>;
 	getMyProfile: () => Promise<LINETypes.SquareMember>;
 	square: () => Promise<LINETypes.GetSquareChatResponse>;
@@ -43,8 +44,9 @@ export type Message = Omit<LINETypes.Operation, "type"> & {
 		displayName: Promise<string>;
 		iconImage: string;
 	};
+	isMyMessage: () => Promise<boolean>;
 	getContact: () => Promise<LINETypes.Contact>;
-	getMyProfile: () => LINETypes.Profile;
+	getMyProfile: () => Promise<LINETypes.Profile>;
 	data: ((preview?: boolean) => Promise<Blob>) | undefined;
 } & (
 		| {
