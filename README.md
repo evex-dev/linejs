@@ -8,11 +8,11 @@
 
 <img src="./.github/assets/icon.png" width="150" height="150" alt="LINEJS" />
 
-**LINEJS** is a JavaScript library for LINE SelfBot.
+**LINEJS** is a JavaScript library for creating a LINE SelfBot.
 
 ---
 
-##### <center>Develop now</center>
+##### <center>Currently in development</center>
 
 ##### <center>Question?: [https://discord.gg/evex](https://discord.gg/evex)</center>
 
@@ -20,7 +20,7 @@
 
 ## Installation
 
-Support all runtimes (Node.js, Deno, and Bun) and typescript.
+Support all runtimes (Node.js, Deno, and Bun) and Typescript.
 
 ```llvm
 npx jsr add @evex/linejs
@@ -30,14 +30,14 @@ deno add @evex/linejs
 
 ### Sample
 
-Do not login with email/password more than once.\
+Do not log in with email/password more than once.\
 Please use 'authToken' instead.\
 You can get 'authToken' from
 `client.on("update:authtoken", (authToken) => console.log(authToken))`.
-(primaryToken is best)
+(The primary token is recommended)
 
 Documentation is coming soon.\
-Don't see the feature you want? You can extend the client and create your own
+Don’t see a feature you want? You can extend the client and create your own
 client! (explanation is coming soon)
 
 You must use `FileStorage` and have an email login before you can receive group
