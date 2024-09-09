@@ -310,4 +310,57 @@ export class TalkClient extends ChannelClient {
 			this.TalkService_API_PATH,
 		);
 	}
+
+	public async deleteOtherFromChat(
+		options: {
+			to: string;
+			mid: string;
+		}): Promise<LINETypes.DeleteOtherFromChatResponse> {
+			const { to, mid } = {
+				...options
+		};
+		return await this.direct_request(
+			[
+				[
+					12,
+					1,
+					[
+						[8,1,0],
+						[11,2,to],
+						[14,3,[11,[mid]]]
+					]
+				]
+			],
+			"deleteOtherFromChat",
+			this.TalkService_PROTOCOL_TYPE,
+			"DeleteOtherFromChatResponse",
+			this.TalkService_API_PATH,
+		);
+	}
+
+	public async deleteSelfFromChat(
+		options: {
+			to: string;
+			mid: string;
+		}): Promise<LINETypes.DeleteSelfFromChatResponse> {
+			const { to } = {
+				...options
+		};
+		return await this.direct_request(
+			[
+				[
+					12,
+					1,
+					[
+						[8,1,0],
+						[11,2,to]
+					]
+				]
+			],
+			"deleteOtherFromChat",
+			this.TalkService_PROTOCOL_TYPE,
+			"DeleteOtherFromChatResponse",
+			this.TalkService_API_PATH,
+		);
+	}
 }
