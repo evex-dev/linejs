@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'docs/**'
+      - '.github/workflows/docs_site_build.yml'
 
   workflow_dispatch:
 
@@ -35,10 +36,12 @@ jobs:
         uses: actions/configure-pages@v3
       - name: Install dependencies
         run: bun i # or pnpm install / yarn install / bun install
+        working-directory: docs
       - name: Build with VitePress
         run: |
           bun run docs:build # or pnpm docs:build / yarn docs:build / bun run docs:build
-          touch docs/.vitepress/dist/.nojekyll
+          touch .vitepress/dist/.nojekyll
+        working-directory: docs
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
