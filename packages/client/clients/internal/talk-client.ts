@@ -463,4 +463,53 @@ export class TalkClient extends ChannelClient {
 			this.TalkService_API_PATH,	
 		)
 	}
+
+	public async updateChat(
+		options: {
+			chatMid: string;
+			chatSet: LINETypes.Chat;
+			updatedAttribute: number;
+		}): Promise<LINETypes.UpdateChatResponse> {
+			const { chatMid, chatSet, updatedAttribute } = {
+				...options
+		};
+
+		return await this.direct_request(
+			[
+				[
+					12,
+					1,
+					[
+						[8, 1, 0],
+						[
+							12, 2, [
+								[8, 1, chatSet[1]],
+								[11, 2, chatMid],
+								chatSet[4] !== undefined ? [2, 4, chatSet[4]] : null,
+								chatSet[6] !== undefined ? [11, 6, chatSet[6]] : null,
+								chatSet[8] !== undefined
+									? [
+										12, 8, [
+											[
+												12, 1, [
+													(chatSet[8][2] !== undefined ? [2, 2, chatSet[8][2]] : null),
+													(chatSet[8][6] !== undefined ? [2, 6, chatSet[8][6]] : null),
+													(chatSet[8][7] !== undefined ? [2, 7, chatSet[8][7]] : null),
+												]
+											]
+										]
+									]
+									: null
+							]
+						],
+						[8, 3, updatedAttribute]
+					]
+				]
+			],
+			"updateChat",
+			this.TalkService_PROTOCOL_TYPE,
+			"UpdateChatResponse",
+			this.TalkService_API_PATH,
+		);
+	}
 }
