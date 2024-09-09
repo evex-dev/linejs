@@ -436,4 +436,31 @@ export class TalkClient extends ChannelClient {
 			this.TalkService_API_PATH,	
 		)
 	}
+
+	public async acceptChatInvitationByTicket(
+		options: {
+			to: string
+			ticket: string;
+		}): Promise<LINETypes.AcceptChatInvitationByTicketResponse> {
+			const { to, ticket } = {
+				...options
+		};
+		return await this.direct_request(
+			[
+				[
+					12,
+					1,
+					[
+						[8,1,0],
+						[11,2,to],
+						[11,3,ticket]
+					]
+				]
+			],
+			"acceptChatInvitationByTicket",
+			this.TalkService_PROTOCOL_TYPE,
+			"AcceptChatInvitationByTicketResponse",
+			this.TalkService_API_PATH,	
+		)
+	}
 }
