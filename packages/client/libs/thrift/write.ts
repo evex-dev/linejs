@@ -52,7 +52,7 @@ function writeValue(
 		| boolean
 		| number
 		| Buffer
-		| [number, Array<any>]
+		| [number, Array<LooseType>]
 		| [number, number, object],
 ): void {
 	if (val === undefined || val === null) {
@@ -138,10 +138,10 @@ function writeValue(
 			break;
 
 		case Thrift.Type.LIST:
-			if (!Array.isArray(val[1])) {
+			if (!Array.isArray((val as Array<LooseType>)[1])) {
 				throw new TypeError(`ftype=${ftype}: value is not list`);
 			}
-			val = val as [number, Array<any>];
+			val = val as [number, Array<LooseType>];
 			output.writeFieldBegin("", Thrift.Type.LIST, fid);
 			output.writeListBegin(
 				val[0],
