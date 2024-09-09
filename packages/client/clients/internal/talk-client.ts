@@ -5,6 +5,7 @@ import type * as LINETypes from "../../libs/thrift/line_types.ts";
 import type { LooseType } from "../../entities/common.ts";
 import { ChannelClient } from "./channel-client.ts";
 import type { Buffer } from "node:buffer";
+import { InternalError } from "../../entities/errors.ts";
 
 export class TalkClient extends ChannelClient {
 	protected TalkService_API_PATH = "/S4";
@@ -156,11 +157,9 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Unsend message.
 	 */
-	public async unsendMessage(
-		options: {
-			messageId: string;
-		},
-	): Promise<LINETypes.UnsendMessageResponse> {
+	public async unsendMessage(options: {
+		messageId: string;
+	}): Promise<LINETypes.UnsendMessageResponse> {
 		const { messageId } = {
 			...options,
 		};
@@ -185,12 +184,10 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description React to the message.
 	 */
-	public async reactToMessage(
-		options: {
-			messageId: string;
-			reactionType: number;
-		},
-	): Promise<LINETypes.ReactToMessageResponse> {
+	public async reactToMessage(options: {
+		messageId: string;
+		reactionType: number;
+	}): Promise<LINETypes.ReactToMessageResponse> {
 		const { messageId, reactionType } = {
 			...options,
 		};
@@ -203,9 +200,7 @@ export class TalkClient extends ChannelClient {
 						[
 							[8, 1, 0],
 							[10, 2, messageId],
-							[12, 3, [
-								[8, 1, reactionType],
-							]],
+							[12, 3, [[8, 1, reactionType]]],
 						],
 					],
 				],
@@ -393,12 +388,10 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Kick out members of the chat.
 	 */
-	public async deleteOtherFromChat(
-		options: {
-			to: string;
-			mid: string;
-		},
-	): Promise<LINETypes.DeleteOtherFromChatResponse> {
+	public async deleteOtherFromChat(options: {
+		to: string;
+		mid: string;
+	}): Promise<LINETypes.DeleteOtherFromChatResponse> {
 		const { to, mid } = {
 			...options,
 		};
@@ -424,11 +417,9 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Leave the chat.
 	 */
-	public async deleteSelfFromChat(
-		options: {
-			to: string;
-		},
-	): Promise<LINETypes.DeleteSelfFromChatResponse> {
+	public async deleteSelfFromChat(options: {
+		to: string;
+	}): Promise<LINETypes.DeleteSelfFromChatResponse> {
 		const { to } = {
 			...options,
 		};
@@ -453,11 +444,9 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Accept the chat invitation and join.
 	 */
-	public async acceptChatInvitation(
-		options: {
-			to: string;
-		},
-	): Promise<LINETypes.AcceptChatInvitationByTicketResponse> {
+	public async acceptChatInvitation(options: {
+		to: string;
+	}): Promise<LINETypes.AcceptChatInvitationByTicketResponse> {
 		const { to } = {
 			...options,
 		};
@@ -482,11 +471,9 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Issue a ticket to join the chat.
 	 */
-	public async reissueChatTicket(
-		options: {
-			groupMid: string;
-		},
-	): Promise<LINETypes.ReissueChatTicketResponse> {
+	public async reissueChatTicket(options: {
+		groupMid: string;
+	}): Promise<LINETypes.ReissueChatTicketResponse> {
 		const { groupMid } = {
 			...options,
 		};
@@ -511,24 +498,14 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Find the chat from the ticket.
 	 */
-	public async findChatByTicket(
-		options: {
-			ticketId: string;
-		},
-	): Promise<LINETypes.FindChatByTicketResponse> {
+	public async findChatByTicket(options: {
+		ticketId: string;
+	}): Promise<LINETypes.FindChatByTicketResponse> {
 		const { ticketId } = {
 			...options,
 		};
 		return await this.direct_request(
-			[
-				[
-					12,
-					1,
-					[
-						[11, 1, ticketId],
-					],
-				],
-			],
+			[[12, 1, [[11, 1, ticketId]]]],
 			"findChatByTicket",
 			this.TalkService_PROTOCOL_TYPE,
 			"FindChatByTicketResponse",
@@ -539,12 +516,10 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Join the chat using the ticket.
 	 */
-	public async acceptChatInvitationByTicket(
-		options: {
-			to: string;
-			ticket: string;
-		},
-	): Promise<LINETypes.AcceptChatInvitationByTicketResponse> {
+	public async acceptChatInvitationByTicket(options: {
+		to: string;
+		ticket: string;
+	}): Promise<LINETypes.AcceptChatInvitationByTicketResponse> {
 		const { to, ticket } = {
 			...options,
 		};
@@ -570,16 +545,18 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Update the information for the specified chat.
 	 */
-	public async updateChat(
-		options: {
-			chatMid: string;
-			chatSet: LINETypes.Chat;
-			updatedAttribute: number;
-		},
-	): Promise<LINETypes.UpdateChatResponse> {
+	public async updateChat(options: {
+		chatMid: string;
+		chatSet: LINETypes.Chat;
+		updatedAttribute: number;
+	}): Promise<LINETypes.UpdateChatResponse> {
 		const { chatMid, chatSet, updatedAttribute } = {
 			...options,
 		};
+
+		if (chatSet) {
+			throw new InternalError("Not Impl", "Please wait update");
+		}
 
 		return await this.direct_request(
 			[
@@ -592,32 +569,32 @@ export class TalkClient extends ChannelClient {
 							12,
 							2,
 							[
-								[8, 1, chatSet[1]],
+								[8, 1, "__NO__"],
 								[11, 2, chatMid],
-								chatSet[4] !== undefined ? [2, 4, chatSet[4]] : null,
-								chatSet[6] !== undefined ? [11, 6, chatSet[6]] : null,
-								chatSet[8] !== undefined
+								"__NO__" !== undefined ? [2, 4, "__NO__"] : null,
+								"__NO__" !== undefined ? [11, 6, "__NO__"] : null,
+								"__NO__" !== undefined
 									? [
-										12,
-										8,
-										[
+											12,
+											8,
 											[
-												12,
-												1,
 												[
-													chatSet[8][2] !== undefined
-														? [2, 2, chatSet[8][2]]
-														: null,
-													chatSet[8][6] !== undefined
-														? [2, 6, chatSet[8][6]]
-														: null,
-													chatSet[8][7] !== undefined
-														? [2, 7, chatSet[8][7]]
-														: null,
+													12,
+													1,
+													[
+														"__NO__"[2] !== undefined
+															? [2, 2, "__NO__"[2]]
+															: null,
+														"__NO__"[6] !== undefined
+															? [2, 6, "__NO__"[6]]
+															: null,
+														"__NO__"[7] !== undefined
+															? [2, 7, "__NO__"[7]]
+															: null,
+													],
 												],
 											],
-										],
-									]
+										]
 									: null,
 							],
 						],
