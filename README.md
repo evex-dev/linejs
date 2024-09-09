@@ -16,7 +16,8 @@
 
 ##### <center>Develop now</center>
 
-##### <center>Question?: [https://discord.gg/evex](https://discord.gg/evex)</center>
+##### <center>❓ Question: [https://discord.gg/evex](https://discord.gg/evex)</center>
+##### <center>📚 Documentation: [https://linejs.evex.land](https://linejs.evex.land/)</center>
 
 ---
 
@@ -30,58 +31,7 @@ bunx --bun jsr add @evex/linejs
 deno add @evex/linejs
 ```
 
-### Sample
-
-Do not login with email/password more than once.\
-Please use 'authToken' instead.\
-You can get 'authToken' from
-`client.on("update:authtoken", (authToken) => console.log(authToken))`.
-(primaryToken is best)
-
-Documentation is coming soon.\
-Don't see the feature you want? You can extend the client and create your own
-client! (explanation is coming soon)
-
-You must use `FileStorage` and have an email login before you can receive group
-events. (explanation is coming soon)
-
-```ts
-import { Client } from "@evex/linejs";
-
-const client = new Client();
-
-client.on("pincall", (pincode) => {
-	console.log(`pincode: ${pincode}`);
-});
-
-client.on("ready", (user) => {
-	console.log(`Logged in as ${user.displayName} (${user.mid})`);
-});
-
-client.on("message", (message) => {
-	if (message.author.mid !== client.user?.mid) return;
-
-	if (message.content == "!ping") {
-		message.reply("pong!");
-	}
-});
-
-client.on("square:message", async (message) => {
-	if (await message.isMyMessage()) {
-		if (message.content == "!ping") {
-			await message.reply("pong!");
-		}
-	}
-});
-
-await client.login({
-	email: "YOUR_EMAIL",
-	password: "YOUR_PASSWORD",
-	device: "IOSIPAD",
-	// OR
-	// authToken: "YOUR_AUTH_TOKEN",
-});
-```
+##### Documentation is [https://linejs.evex.land](https://linejs.evex.land/)
 
 ## Provided Packages
 
@@ -97,6 +47,8 @@ await client.login({
   - BaseStorage - LINE Client Base Storage
   - MemoryStorage - LINE Client Memory Storage
   - FileStorage - LINE Client File Storage
+- types - (@evex/linejs/types)
+  - All Types for LINE
 
 ## Authors
 
@@ -104,25 +56,3 @@ await client.login({
 - Developer [EdamAme-x](https://github.com/EdamAme-x)
 - Developer [MocA-Love](https://github.com/MocA-Love)
 - Developer [Hafusun](https://github.com/hafusun)
-
-## ToDo
-
-- [x] Migrate Client to [packages](./packages) from [archive](./archive)
-- [x] Migrate Method to [packages](./packages) from [archive](./archive)
-- [x] Support E2EE (Group Chat)
-- [x] Add JSDoc for All Method (Only @description)
-- [x] Support Object Arguments
-- [x] Update to latest thrift version
-- [x] Receive message event
-- [x] Clean message object and author and method
-- [x] Add more function
-- [x] Add more event
-- [x] Add jsdoc for all
-- [x] setName/setIconImage/setStatusMessage...
-- [x] Reactions enum and more
-- [ ] Notification to chatEvents
-- [x] Create Utils for LINE
-  - [x] Add [LINE Scheme](./packages/utils/line-scheme/index.ts)
-  - [x] Create REGEX for LINE URI
-  - [x] Create OpenChat Search Function and etc...
-- [x] Release to JSR
