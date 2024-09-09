@@ -40,7 +40,6 @@ jobs:
       - name: Build with VitePress
         run: |
           bun run build # or pnpm docs:build / yarn docs:build / bun run docs:build
-          touch .vitepress/dist/.nojekyll
         working-directory: docs
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
