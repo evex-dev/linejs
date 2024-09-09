@@ -101,6 +101,7 @@ await client.login({
 - Owner & Developer [Piloking](https://github.com/piloking)
 - Developer [EdamAme-x](https://github.com/EdamAme-x)
 - Developer [Hafusun](https://github.com/hafusun)
+- Developer [MocA-Love](https://github.com/MocA-Love)
 
 ## ToDo
 

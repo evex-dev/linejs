@@ -199,6 +199,9 @@ export class TalkClient extends ChannelClient {
 		);
 	}
 
+	/**
+	 * @description Mark as read.
+	 */
 	public async sendChatChecked(options: {
 		chatMid: string;
 		lastMessageId: string;
@@ -217,6 +220,9 @@ export class TalkClient extends ChannelClient {
 		);
 	}
 
+	/**
+	 * @description Get user information from mid.
+	 */
 	public async getContact(options: {
 		mid: string;
 	}): Promise<LINETypes.Contact> {
@@ -230,6 +236,9 @@ export class TalkClient extends ChannelClient {
 		);
 	}
 
+	/**
+	 * @description Get users information from mids.
+	 */
 	public async getContacts(options: {
 		mids: string[];
 	}): Promise<LINETypes.Contact[]> {
@@ -258,6 +267,9 @@ export class TalkClient extends ChannelClient {
 		);
 	}
 
+	/**
+	 * @description Get chats information from gids.
+	 */
 	public async getChats(options: {
 		mids: string[];
 		withMembers?: boolean;
@@ -281,6 +293,9 @@ export class TalkClient extends ChannelClient {
 		);
 	}
 
+	/**
+	 * @description Get information on all the chats joined.
+	 */
 	public async getAllChatMids(
 		options: {
 			withMembers?: boolean;
@@ -307,6 +322,229 @@ export class TalkClient extends ChannelClient {
 			"getAllChatMids",
 			this.TalkService_PROTOCOL_TYPE,
 			"GetAllChatMidsResponse",
+			this.TalkService_API_PATH,
+		);
+	}
+
+	/**
+	 * @description Kick out members of the chat.
+	 */
+	public async deleteOtherFromChat(
+		options: {
+			to: string;
+			mid: string;
+		}): Promise<LINETypes.DeleteOtherFromChatResponse> {
+			const { to, mid } = {
+				...options
+		};
+		return await this.direct_request(
+			[
+				[
+					12,
+					1,
+					[
+						[8,1,0],
+						[11,2,to],
+						[14,3,[11,[mid]]]
+					]
+				]
+			],
+			"deleteOtherFromChat",
+			this.TalkService_PROTOCOL_TYPE,
+			"DeleteOtherFromChatResponse",
+			this.TalkService_API_PATH,
+		);
+	}
+
+	/**
+	 * @description Leave the chat.
+	 */
+	public async deleteSelfFromChat(
+		options: {
+			to: string;
+		}): Promise<LINETypes.DeleteSelfFromChatResponse> {
+			const { to } = {
+				...options
+		};
+		return await this.direct_request(
+			[
+				[
+					12,
+					1,
+					[
+						[8,1,0],
+						[11,2,to]
+					]
+				]
+			],
+			"deleteSelfFromChat",
+			this.TalkService_PROTOCOL_TYPE,
+			"DeleteSelfFromChatResponse",
+			this.TalkService_API_PATH,
+		);
+	}
+
+	/**
+	 * @description Accept the chat invitation and join.
+	 */
+	public async acceptChatInvitation(
+		options: {
+			to: string;
+		}): Promise<LINETypes.AcceptChatInvitationByTicketResponse> {
+			const { to } = {
+				...options
+		};
+		return await this.direct_request(
+			[
+				[
+					12,
+					1,
+					[
+						[8, 1, 0], // [8, 1, self.getCurrReqId()]...?
+						[11,2,to]
+					]
+				]
+			],
+			"acceptChatInvitation",
+			this.TalkService_PROTOCOL_TYPE,
+			"AcceptChatInvitationByTicketResponse",
+			this.TalkService_API_PATH,	
+		)
+	}
+
+	/**
+	 * @description Issue a ticket to join the chat.
+	 */
+	public async reissueChatTicket(
+		options: {
+			groupMid: string;
+		}): Promise<LINETypes.ReissueChatTicketResponse> {
+			const { groupMid } = {
+				...options
+		};
+		return await this.direct_request(
+			[
+				[
+					12,
+					1,
+					[
+						[8,1,0], // reqSeq
+						[11,2,groupMid]
+					]
+				]
+			],
+			"reissueChatTicket",
+			this.TalkService_PROTOCOL_TYPE,
+			"ReissueChatTicketResponse",
+			this.TalkService_API_PATH,	
+		)
+	}
+
+	/**
+	 * @description Find the chat from the ticket.
+	 */
+	public async findChatByTicket(
+		options: {
+			ticketId: string;
+		}): Promise<LINETypes.FindChatByTicketResponse> {
+			const { ticketId } = {
+				...options
+		};
+		return await this.direct_request(
+			[
+				[
+					12,
+					1,
+					[
+						[11,1,ticketId]
+					]
+				]
+			],
+			"findChatByTicket",
+			this.TalkService_PROTOCOL_TYPE,
+			"FindChatByTicketResponse",
+			this.TalkService_API_PATH,	
+		)
+	}
+
+	/**
+	 * @description Join the chat using the ticket.
+	 */
+	public async acceptChatInvitationByTicket(
+		options: {
+			to: string
+			ticket: string;
+		}): Promise<LINETypes.AcceptChatInvitationByTicketResponse> {
+			const { to, ticket } = {
+				...options
+		};
+		return await this.direct_request(
+			[
+				[
+					12,
+					1,
+					[
+						[8,1,0],
+						[11,2,to],
+						[11,3,ticket]
+					]
+				]
+			],
+			"acceptChatInvitationByTicket",
+			this.TalkService_PROTOCOL_TYPE,
+			"AcceptChatInvitationByTicketResponse",
+			this.TalkService_API_PATH,	
+		)
+	}
+
+	/**
+	 * @description Update the information for the specified chat.
+	 */
+	public async updateChat(
+		options: {
+			chatMid: string;
+			chatSet: LINETypes.Chat;
+			updatedAttribute: number;
+		}): Promise<LINETypes.UpdateChatResponse> {
+			const { chatMid, chatSet, updatedAttribute } = {
+				...options
+		};
+
+		return await this.direct_request(
+			[
+				[
+					12,
+					1,
+					[
+						[8, 1, 0],
+						[
+							12, 2, [
+								[8, 1, chatSet[1]],
+								[11, 2, chatMid],
+								chatSet[4] !== undefined ? [2, 4, chatSet[4]] : null,
+								chatSet[6] !== undefined ? [11, 6, chatSet[6]] : null,
+								chatSet[8] !== undefined
+									? [
+										12, 8, [
+											[
+												12, 1, [
+													(chatSet[8][2] !== undefined ? [2, 2, chatSet[8][2]] : null),
+													(chatSet[8][6] !== undefined ? [2, 6, chatSet[8][6]] : null),
+													(chatSet[8][7] !== undefined ? [2, 7, chatSet[8][7]] : null),
+												]
+											]
+										]
+									]
+									: null
+							]
+						],
+						[8, 3, updatedAttribute]
+					]
+				]
+			],
+			"updateChat",
+			this.TalkService_PROTOCOL_TYPE,
+			"UpdateChatResponse",
 			this.TalkService_API_PATH,
 		);
 	}
