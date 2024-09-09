@@ -668,6 +668,26 @@ export class SquareClient extends LiffClient {
 	}
 
 	/**
+	 * @description Delete square chat.
+	 */
+	public async deleteSquareChat(options: {
+		squareChatMid: string;
+		revision?: number;
+	}): Promise<LINETypes.DeleteSquareChatResponse> {
+		const { squareChatMid, revision } = { revision: 0, ...options };
+		return await this.request(
+			[
+				[11, 2, squareChatMid],
+				[10, 3, revision],
+			],
+			"deleteSquareChat",
+			this.SquareService_PROTOCOL_TYPE,
+			true,
+			this.SquareService_API_PATH,
+		);
+	}
+
+	/**
 	 * @description Get square chat members.
 	 */
 	public async getSquareChatMembers(options: {

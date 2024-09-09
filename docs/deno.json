@@ -1,0 +1,8 @@
+{
+	"tasks": {
+		"vp": "deno run -A npm:vitepress"
+	},
+	"unstable": [
+		"byonm"
+	]
+}
