@@ -38,7 +38,9 @@ await client.login({
 First, log in using your _email_. We will explain each code later.\
 (LINEJS supports login by **AuthToken**, **QR** and **Pincode**.)
 
-:::warning Please enable email login in your settings. :::
+:::warning  
+Please enable email login in your settings. 
+:::  
 
 The method of execution depends on the runtime.
 
