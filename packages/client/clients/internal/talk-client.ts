@@ -310,7 +310,6 @@ export class TalkClient extends ChannelClient {
 	 */
 	public async getContact(options: {
 		mid: string;
-		time
 	}): Promise<LINETypes.Contact> {
 		const { mid } = { ...options };
 		return await this.direct_request(
