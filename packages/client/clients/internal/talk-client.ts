@@ -356,10 +356,35 @@ export class TalkClient extends ChannelClient {
 					]
 				]
 			],
-			"deleteOtherFromChat",
+			"deleteSelfFromChat",
 			this.TalkService_PROTOCOL_TYPE,
-			"DeleteOtherFromChatResponse",
+			"DeleteSelfFromChatResponse",
 			this.TalkService_API_PATH,
 		);
+	}
+
+	public async acceptChatInvitation(
+		options: {
+			to: string;
+		}): Promise<LINETypes.AcceptChatInvitationByTicketResponse> {
+			const { to } = {
+				...options
+		};
+		return await this.direct_request(
+			[
+				[
+					12,
+					1,
+					[
+						[8, 1, 0], // [8, 1, self.getCurrReqId()]...?
+						[11,2,to]
+					]
+				]
+			],
+			"acceptChatInvitation",
+			this.TalkService_PROTOCOL_TYPE,
+			"AcceptChatInvitationByTicketResponse",
+			this.TalkService_API_PATH,	
+		)
 	}
 }
