@@ -5,7 +5,6 @@ import type * as LINETypes from "../../libs/thrift/line_types.ts";
 import type { LooseType } from "../../entities/common.ts";
 import { ChannelClient } from "./channel-client.ts";
 import type { Buffer } from "node:buffer";
-import { InternalError } from "../../entities/errors.ts";
 
 export class TalkClient extends ChannelClient {
 	protected TalkService_API_PATH = "/S4";
