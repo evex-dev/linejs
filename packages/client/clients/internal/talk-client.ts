@@ -341,7 +341,6 @@ export class TalkClient extends ChannelClient {
 	public async deleteSelfFromChat(
 		options: {
 			to: string;
-			mid: string;
 		}): Promise<LINETypes.DeleteSelfFromChatResponse> {
 			const { to } = {
 				...options
