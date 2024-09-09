@@ -27,6 +27,7 @@ export default defineConfig({
         items: [
           { text: 'Start', link: '/docs/start' },
           { text: 'Start 2', link: '/docs/start-2' },
+          { text: 'Message Event', link: '/docs/message-event' },
         ]
       },
       {
