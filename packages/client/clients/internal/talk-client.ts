@@ -526,21 +526,35 @@ export class TalkClient extends ChannelClient {
 
 		return await this.request(
 			[
-				[8, 1, 0],// seq?
+				[8, 1, 0], // seq?
 				[
 					12,
 					2,
 					[
-						(chatSet.type ? [8, 1, chatSet.type] : [8, 1, 1]),
+						chatSet.type ? [8, 1, chatSet.type] : [8, 1, 1],
 						[11, 2, chatMid],
-						(chatSet.notificationDisabled ? [2, 4, chatSet.notificationDisabled] : null),
-						(chatSet.chatName ? [11, 6, chatSet.chatName] : null),
-						(chatSet.picturePath ? [11, 7, chatSet.picturePath] : null),
-						(chatSet.extra?.groupExtra ? [12, 8, [[12, 1, [
-							[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
-							[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
-							[2, 7, chatSet.extra.groupExtra.ticketDisabled],
-						]]]] : null),
+						chatSet.notificationDisabled
+							? [2, 4, chatSet.notificationDisabled]
+							: null,
+						chatSet.chatName ? [11, 6, chatSet.chatName] : null,
+						chatSet.picturePath ? [11, 7, chatSet.picturePath] : null,
+						chatSet.extra?.groupExtra
+							? [
+									12,
+									8,
+									[
+										[
+											12,
+											1,
+											[
+												[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
+												[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
+												[2, 7, chatSet.extra.groupExtra.ticketDisabled],
+											],
+										],
+									],
+								]
+							: null,
 					],
 				],
 				[8, 3, updatedAttribute],
