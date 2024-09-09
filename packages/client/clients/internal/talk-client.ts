@@ -387,4 +387,29 @@ export class TalkClient extends ChannelClient {
 			this.TalkService_API_PATH,	
 		)
 	}
+
+	public async reissueChatTicket(
+		options: {
+			groupMid: string;
+		}): Promise<LINETypes.ReissueChatTicketResponse> {
+			const { groupMid } = {
+				...options
+		};
+		return await this.direct_request(
+			[
+				[
+					12,
+					1,
+					[
+						[8,1,0], // reqSeq
+						[11,2,groupMid]
+					]
+				]
+			],
+			"reissueChatTicket",
+			this.TalkService_PROTOCOL_TYPE,
+			"ReissueChatTicketResponse",
+			this.TalkService_API_PATH,	
+		)
+	}
 }
