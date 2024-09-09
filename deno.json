@@ -9,7 +9,10 @@
 	"fmt": {
 		"indentWidth": 2,
 		"singleQuote": false,
-		"useTabs": true
+		"useTabs": true,
+		"exclude": [
+			"./docs/**/*"
+		]
 	},
 	"imports": {
 		"@std/assert": "jsr:@std/assert@^1.0.2"
