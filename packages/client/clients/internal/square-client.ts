@@ -312,9 +312,8 @@ export class SquareClient extends LiffClient {
 			message.push([11, 21, relatedMessageId], [8, 22, 3], [8, 24, 2]);
 		}
 
-		const { promise, resolve } = Promise.withResolvers<
-			LINETypes.SendMessageResponse
-		>();
+		const { promise, resolve } =
+			Promise.withResolvers<LINETypes.SendMessageResponse>();
 
 		const request = async () => {
 			resolve(
@@ -677,7 +676,10 @@ export class SquareClient extends LiffClient {
 	}): Promise<LINETypes.DeleteSquareChatResponse> {
 		const { squareChatMid, revision } = { revision: 0, ...options };
 		return await this.request(
-			[[11, 2, squareChatMid], [10, 3, revision]],
+			[
+				[11, 2, squareChatMid],
+				[10, 3, revision],
+			],
 			"deleteSquareChat",
 			this.SquareService_PROTOCOL_TYPE,
 			true,

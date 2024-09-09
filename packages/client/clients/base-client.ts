@@ -1306,7 +1306,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		if (__force) {
 			this.storage.clear();
-			
+
 			await this.request(
 				[],
 				"logoutZ",

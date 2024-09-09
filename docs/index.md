@@ -25,4 +25,3 @@ features:
     icon: 🔒
     details: Defaults to safety locked. (RateLimit and others)
 ---
-
