@@ -282,8 +282,35 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Get user information from mid.
 	 */
+	public async getPreviousMessagesV2(options: {
+		mid: string;
+		time: number;
+		id: number;
+		count? : number;
+	}): Promise<LINETypes.Message[]> {
+		const { mid, time, id, count } = { count: 3000, ...options };
+		return (await this.direct_request(
+			[
+				[11, 2, mid],
+				[12, 3, [
+					[10, 1, time],
+					[10, 2, id]
+				]],
+				[8, 4, count]
+			],
+			"getPreviousMessagesV2",
+			this.TalkService_PROTOCOL_TYPE,
+			false,
+			this.TalkService_API_PATH,
+		)).map((e: LooseType) => this.parser.rename_thrift("Message", e));
+	}
+
+	/**
+	 * @description Get user information from mid.
+	 */
 	public async getContact(options: {
 		mid: string;
+		time
 	}): Promise<LINETypes.Contact> {
 		const { mid } = { ...options };
 		return await this.direct_request(
