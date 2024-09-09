@@ -397,15 +397,9 @@ export class TalkClient extends ChannelClient {
 		};
 		return await this.direct_request(
 			[
-				[
-					12,
-					1,
-					[
-						[8, 1, 0],
-						[11, 2, to],
-						[14, 3, [11, [mid]]],
-					],
-				],
+				[8, 1, 0],
+				[11, 2, to],
+				[14, 3, [11, [mid]]],
 			],
 			"deleteOtherFromChat",
 			this.TalkService_PROTOCOL_TYPE,
@@ -423,16 +417,10 @@ export class TalkClient extends ChannelClient {
 		const { to } = {
 			...options,
 		};
-		return await this.direct_request(
+		return await this.request(
 			[
-				[
-					12,
-					1,
-					[
-						[8, 1, 0],
-						[11, 2, to],
-					],
-				],
+				[8, 1, 0],
+				[11, 2, to],
 			],
 			"deleteSelfFromChat",
 			this.TalkService_PROTOCOL_TYPE,
@@ -450,16 +438,10 @@ export class TalkClient extends ChannelClient {
 		const { to } = {
 			...options,
 		};
-		return await this.direct_request(
+		return await this.request(
 			[
-				[
-					12,
-					1,
-					[
-						[8, 1, 0], // [8, 1, self.getCurrReqId()]...?
-						[11, 2, to],
-					],
-				],
+				[8, 1, 0], // [8, 1, this.getCurrReqId()]...?
+				[11, 2, to],
 			],
 			"acceptChatInvitation",
 			this.TalkService_PROTOCOL_TYPE,
@@ -477,16 +459,10 @@ export class TalkClient extends ChannelClient {
 		const { groupMid } = {
 			...options,
 		};
-		return await this.direct_request(
+		return await this.request(
 			[
-				[
-					12,
-					1,
-					[
-						[8, 1, 0], // reqSeq
-						[11, 2, groupMid],
-					],
-				],
+				[8, 1, 0], // reqSeq
+				[11, 2, groupMid],
 			],
 			"reissueChatTicket",
 			this.TalkService_PROTOCOL_TYPE,
@@ -504,8 +480,8 @@ export class TalkClient extends ChannelClient {
 		const { ticketId } = {
 			...options,
 		};
-		return await this.direct_request(
-			[[12, 1, [[11, 1, ticketId]]]],
+		return await this.request(
+			[[11, 1, ticketId]],
 			"findChatByTicket",
 			this.TalkService_PROTOCOL_TYPE,
 			"FindChatByTicketResponse",
@@ -523,17 +499,11 @@ export class TalkClient extends ChannelClient {
 		const { to, ticket } = {
 			...options,
 		};
-		return await this.direct_request(
+		return await this.request(
 			[
-				[
-					12,
-					1,
-					[
-						[8, 1, 0],
-						[11, 2, to],
-						[11, 3, ticket],
-					],
-				],
+				[8, 1, 0],
+				[11, 2, to],
+				[11, 3, ticket],
 			],
 			"acceptChatInvitationByTicket",
 			this.TalkService_PROTOCOL_TYPE,
@@ -554,53 +524,40 @@ export class TalkClient extends ChannelClient {
 			...options,
 		};
 
-		if (chatSet) {
-			throw new InternalError("Not Impl", "Please wait update");
-		}
-
-		return await this.direct_request(
+		return await this.request(
 			[
+				[8, 1, 0], // seq?
 				[
 					12,
-					1,
+					2,
 					[
-						[8, 1, 0],
-						[
-							12,
-							2,
-							[
-								[8, 1, "__NO__"],
-								[11, 2, chatMid],
-								"__NO__" !== undefined ? [2, 4, "__NO__"] : null,
-								"__NO__" !== undefined ? [11, 6, "__NO__"] : null,
-								"__NO__" !== undefined
-									? [
+						chatSet.type ? [8, 1, chatSet.type] : [8, 1, 1],
+						[11, 2, chatMid],
+						chatSet.notificationDisabled
+							? [2, 4, chatSet.notificationDisabled]
+							: null,
+						chatSet.chatName ? [11, 6, chatSet.chatName] : null,
+						chatSet.picturePath ? [11, 7, chatSet.picturePath] : null,
+						chatSet.extra?.groupExtra
+							? [
+									12,
+									8,
+									[
+										[
 											12,
-											8,
+											1,
 											[
-												[
-													12,
-													1,
-													[
-														"__NO__"[2] !== undefined
-															? [2, 2, "__NO__"[2]]
-															: null,
-														"__NO__"[6] !== undefined
-															? [2, 6, "__NO__"[6]]
-															: null,
-														"__NO__"[7] !== undefined
-															? [2, 7, "__NO__"[7]]
-															: null,
-													],
-												],
+												[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
+												[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
+												[2, 7, chatSet.extra.groupExtra.ticketDisabled],
 											],
-										]
-									: null,
-							],
-						],
-						[8, 3, updatedAttribute],
+										],
+									],
+								]
+							: null,
 					],
 				],
+				[8, 3, updatedAttribute],
 			],
 			"updateChat",
 			this.TalkService_PROTOCOL_TYPE,
