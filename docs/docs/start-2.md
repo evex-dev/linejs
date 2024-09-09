@@ -111,10 +111,14 @@ This concludes our first trip.\
 But there is still a journey left to be made.\
 Enjoy.
 
-:::info If you want to create your own storage such as connecting to the cloud
+:::info  
+If you want to create your own storage such as connecting to the cloud
 api,\
 import `BaseStorage` and extend it to create your own storage. (Please ask for
-details.) :::
+details.) 
+:::  
 
-:::info If you want to use v1, please ask for details at
-[discord.gg/evex](https://discord.gg/evex). :::
+:::info  
+If you want to use v1, please ask for details at
+[discord.gg/evex](https://discord.gg/evex). 
+:::  
