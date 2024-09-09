@@ -362,9 +362,10 @@ export class TalkClient extends ChannelClient {
 		options: {
 			to: string;
 			mid: string;
-		}): Promise<LINETypes.DeleteOtherFromChatResponse> {
-			const { to, mid } = {
-				...options
+		},
+	): Promise<LINETypes.DeleteOtherFromChatResponse> {
+		const { to, mid } = {
+			...options,
 		};
 		return await this.direct_request(
 			[
@@ -372,11 +373,11 @@ export class TalkClient extends ChannelClient {
 					12,
 					1,
 					[
-						[8,1,0],
-						[11,2,to],
-						[14,3,[11,[mid]]]
-					]
-				]
+						[8, 1, 0],
+						[11, 2, to],
+						[14, 3, [11, [mid]]],
+					],
+				],
 			],
 			"deleteOtherFromChat",
 			this.TalkService_PROTOCOL_TYPE,
@@ -391,9 +392,10 @@ export class TalkClient extends ChannelClient {
 	public async deleteSelfFromChat(
 		options: {
 			to: string;
-		}): Promise<LINETypes.DeleteSelfFromChatResponse> {
-			const { to } = {
-				...options
+		},
+	): Promise<LINETypes.DeleteSelfFromChatResponse> {
+		const { to } = {
+			...options,
 		};
 		return await this.direct_request(
 			[
@@ -401,10 +403,10 @@ export class TalkClient extends ChannelClient {
 					12,
 					1,
 					[
-						[8,1,0],
-						[11,2,to]
-					]
-				]
+						[8, 1, 0],
+						[11, 2, to],
+					],
+				],
 			],
 			"deleteSelfFromChat",
 			this.TalkService_PROTOCOL_TYPE,
@@ -419,9 +421,10 @@ export class TalkClient extends ChannelClient {
 	public async acceptChatInvitation(
 		options: {
 			to: string;
-		}): Promise<LINETypes.AcceptChatInvitationByTicketResponse> {
-			const { to } = {
-				...options
+		},
+	): Promise<LINETypes.AcceptChatInvitationByTicketResponse> {
+		const { to } = {
+			...options,
 		};
 		return await this.direct_request(
 			[
@@ -430,15 +433,15 @@ export class TalkClient extends ChannelClient {
 					1,
 					[
 						[8, 1, 0], // [8, 1, self.getCurrReqId()]...?
-						[11,2,to]
-					]
-				]
+						[11, 2, to],
+					],
+				],
 			],
 			"acceptChatInvitation",
 			this.TalkService_PROTOCOL_TYPE,
 			"AcceptChatInvitationByTicketResponse",
-			this.TalkService_API_PATH,	
-		)
+			this.TalkService_API_PATH,
+		);
 	}
 
 	/**
@@ -447,9 +450,10 @@ export class TalkClient extends ChannelClient {
 	public async reissueChatTicket(
 		options: {
 			groupMid: string;
-		}): Promise<LINETypes.ReissueChatTicketResponse> {
-			const { groupMid } = {
-				...options
+		},
+	): Promise<LINETypes.ReissueChatTicketResponse> {
+		const { groupMid } = {
+			...options,
 		};
 		return await this.direct_request(
 			[
@@ -457,16 +461,16 @@ export class TalkClient extends ChannelClient {
 					12,
 					1,
 					[
-						[8,1,0], // reqSeq
-						[11,2,groupMid]
-					]
-				]
+						[8, 1, 0], // reqSeq
+						[11, 2, groupMid],
+					],
+				],
 			],
 			"reissueChatTicket",
 			this.TalkService_PROTOCOL_TYPE,
 			"ReissueChatTicketResponse",
-			this.TalkService_API_PATH,	
-		)
+			this.TalkService_API_PATH,
+		);
 	}
 
 	/**
@@ -475,9 +479,10 @@ export class TalkClient extends ChannelClient {
 	public async findChatByTicket(
 		options: {
 			ticketId: string;
-		}): Promise<LINETypes.FindChatByTicketResponse> {
-			const { ticketId } = {
-				...options
+		},
+	): Promise<LINETypes.FindChatByTicketResponse> {
+		const { ticketId } = {
+			...options,
 		};
 		return await this.direct_request(
 			[
@@ -485,15 +490,15 @@ export class TalkClient extends ChannelClient {
 					12,
 					1,
 					[
-						[11,1,ticketId]
-					]
-				]
+						[11, 1, ticketId],
+					],
+				],
 			],
 			"findChatByTicket",
 			this.TalkService_PROTOCOL_TYPE,
 			"FindChatByTicketResponse",
-			this.TalkService_API_PATH,	
-		)
+			this.TalkService_API_PATH,
+		);
 	}
 
 	/**
@@ -501,11 +506,12 @@ export class TalkClient extends ChannelClient {
 	 */
 	public async acceptChatInvitationByTicket(
 		options: {
-			to: string
+			to: string;
 			ticket: string;
-		}): Promise<LINETypes.AcceptChatInvitationByTicketResponse> {
-			const { to, ticket } = {
-				...options
+		},
+	): Promise<LINETypes.AcceptChatInvitationByTicketResponse> {
+		const { to, ticket } = {
+			...options,
 		};
 		return await this.direct_request(
 			[
@@ -513,17 +519,17 @@ export class TalkClient extends ChannelClient {
 					12,
 					1,
 					[
-						[8,1,0],
-						[11,2,to],
-						[11,3,ticket]
-					]
-				]
+						[8, 1, 0],
+						[11, 2, to],
+						[11, 3, ticket],
+					],
+				],
 			],
 			"acceptChatInvitationByTicket",
 			this.TalkService_PROTOCOL_TYPE,
 			"AcceptChatInvitationByTicketResponse",
-			this.TalkService_API_PATH,	
-		)
+			this.TalkService_API_PATH,
+		);
 	}
 
 	/**
@@ -534,9 +540,10 @@ export class TalkClient extends ChannelClient {
 			chatMid: string;
 			chatSet: LINETypes.Chat;
 			updatedAttribute: number;
-		}): Promise<LINETypes.UpdateChatResponse> {
-			const { chatMid, chatSet, updatedAttribute } = {
-				...options
+		},
+	): Promise<LINETypes.UpdateChatResponse> {
+		const { chatMid, chatSet, updatedAttribute } = {
+			...options,
 		};
 
 		return await this.direct_request(
@@ -547,29 +554,41 @@ export class TalkClient extends ChannelClient {
 					[
 						[8, 1, 0],
 						[
-							12, 2, [
+							12,
+							2,
+							[
 								[8, 1, chatSet[1]],
 								[11, 2, chatMid],
 								chatSet[4] !== undefined ? [2, 4, chatSet[4]] : null,
 								chatSet[6] !== undefined ? [11, 6, chatSet[6]] : null,
 								chatSet[8] !== undefined
 									? [
-										12, 8, [
+										12,
+										8,
+										[
 											[
-												12, 1, [
-													(chatSet[8][2] !== undefined ? [2, 2, chatSet[8][2]] : null),
-													(chatSet[8][6] !== undefined ? [2, 6, chatSet[8][6]] : null),
-													(chatSet[8][7] !== undefined ? [2, 7, chatSet[8][7]] : null),
-												]
-											]
-										]
+												12,
+												1,
+												[
+													chatSet[8][2] !== undefined
+														? [2, 2, chatSet[8][2]]
+														: null,
+													chatSet[8][6] !== undefined
+														? [2, 6, chatSet[8][6]]
+														: null,
+													chatSet[8][7] !== undefined
+														? [2, 7, chatSet[8][7]]
+														: null,
+												],
+											],
+										],
 									]
-									: null
-							]
+									: null,
+							],
 						],
-						[8, 3, updatedAttribute]
-					]
-				]
+						[8, 3, updatedAttribute],
+					],
+				],
 			],
 			"updateChat",
 			this.TalkService_PROTOCOL_TYPE,
