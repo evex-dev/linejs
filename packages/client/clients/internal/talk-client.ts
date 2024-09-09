@@ -271,18 +271,18 @@ export class TalkClient extends ChannelClient {
 	 * @description Get chats information from gids.
 	 */
 	public async getChats(options: {
-		mids: string[];
+		gids: string[];
 		withMembers?: boolean;
 		withInvitees?: boolean;
 	}): Promise<LINETypes.GetChatsResponse> {
-		const { mids, withInvitees, withMembers } = {
+		const { gids, withInvitees, withMembers } = {
 			withInvitees: true,
 			withMembers: true,
 			...options,
 		};
 		return await this.request(
 			[
-				[15, 1, [11, mids]],
+				[15, 1, [11, gids]],
 				[2, 2, withMembers],
 				[2, 3, withInvitees],
 			],
