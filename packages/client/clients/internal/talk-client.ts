@@ -153,6 +153,35 @@ export class TalkClient extends ChannelClient {
 		}
 	}
 
+	/**
+	 * @description Unsend message.
+	 */
+	public async unsendMessage(
+		options: {
+			messageId: string;
+		},
+	): Promise<LINETypes.UnsendMessageResponse> {
+		const { messageId } = {
+			...options,
+		};
+		return await this.direct_request(
+			[
+				[
+					12,
+					1,
+					[
+						[8, 1, 0],
+						[11, 2, messageId],
+					],
+				],
+			],
+			"unsendMessage",
+			this.TalkService_PROTOCOL_TYPE,
+			"UnsendMessageResponse",
+			this.TalkService_API_PATH,
+		);
+	}
+
 	public async encryptE2EEMessage(..._arg: LooseType): Promise<LooseType[]> {
 		return await [];
 	}
