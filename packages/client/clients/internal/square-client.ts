@@ -312,8 +312,9 @@ export class SquareClient extends LiffClient {
 			message.push([11, 21, relatedMessageId], [8, 22, 3], [8, 24, 2]);
 		}
 
-		const { promise, resolve } =
-			Promise.withResolvers<LINETypes.SendMessageResponse>();
+		const { promise, resolve } = Promise.withResolvers<
+			LINETypes.SendMessageResponse
+		>();
 
 		const request = async () => {
 			resolve(
@@ -672,7 +673,7 @@ export class SquareClient extends LiffClient {
 	 */
 	public async deleteSquareChat(options: {
 		squareChatMid: string;
-		revision: number
+		revision: number;
 	}): Promise<LINETypes.DeleteSquareChatResponse> {
 		const { squareChatMid, revision } = { ...options };
 		return await this.request(
@@ -683,7 +684,6 @@ export class SquareClient extends LiffClient {
 			this.SquareService_API_PATH,
 		);
 	}
-
 
 	/**
 	 * @description Get square chat members.
