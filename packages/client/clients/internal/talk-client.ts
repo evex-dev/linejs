@@ -199,6 +199,9 @@ export class TalkClient extends ChannelClient {
 		);
 	}
 
+	/**
+	 * @description Mark as read.
+	 */
 	public async sendChatChecked(options: {
 		chatMid: string;
 		lastMessageId: string;
@@ -217,6 +220,9 @@ export class TalkClient extends ChannelClient {
 		);
 	}
 
+	/**
+	 * @description Get user information from mid.
+	 */
 	public async getContact(options: {
 		mid: string;
 	}): Promise<LINETypes.Contact> {
@@ -230,6 +236,9 @@ export class TalkClient extends ChannelClient {
 		);
 	}
 
+	/**
+	 * @description Get users information from mids.
+	 */
 	public async getContacts(options: {
 		mids: string[];
 	}): Promise<LINETypes.Contact[]> {
@@ -258,6 +267,9 @@ export class TalkClient extends ChannelClient {
 		);
 	}
 
+	/**
+	 * @description Get chats information from gids.
+	 */
 	public async getChats(options: {
 		mids: string[];
 		withMembers?: boolean;
@@ -281,6 +293,9 @@ export class TalkClient extends ChannelClient {
 		);
 	}
 
+	/**
+	 * @description Get information on all the chats joined.
+	 */
 	public async getAllChatMids(
 		options: {
 			withMembers?: boolean;
@@ -311,6 +326,9 @@ export class TalkClient extends ChannelClient {
 		);
 	}
 
+	/**
+	 * @description Kick out members of the chat.
+	 */
 	public async deleteOtherFromChat(
 		options: {
 			to: string;
@@ -338,6 +356,9 @@ export class TalkClient extends ChannelClient {
 		);
 	}
 
+	/**
+	 * @description Leave the chat.
+	 */
 	public async deleteSelfFromChat(
 		options: {
 			to: string;
@@ -363,6 +384,9 @@ export class TalkClient extends ChannelClient {
 		);
 	}
 
+	/**
+	 * @description Accept the chat invitation and join.
+	 */
 	public async acceptChatInvitation(
 		options: {
 			to: string;
@@ -388,6 +412,9 @@ export class TalkClient extends ChannelClient {
 		)
 	}
 
+	/**
+	 * @description Issue a ticket to join the chat.
+	 */
 	public async reissueChatTicket(
 		options: {
 			groupMid: string;
@@ -413,6 +440,9 @@ export class TalkClient extends ChannelClient {
 		)
 	}
 
+	/**
+	 * @description Find the chat from the ticket.
+	 */
 	public async findChatByTicket(
 		options: {
 			ticketId: string;
@@ -437,6 +467,9 @@ export class TalkClient extends ChannelClient {
 		)
 	}
 
+	/**
+	 * @description Join the chat using the ticket.
+	 */
 	public async acceptChatInvitationByTicket(
 		options: {
 			to: string
@@ -464,6 +497,9 @@ export class TalkClient extends ChannelClient {
 		)
 	}
 
+	/**
+	 * @description Update the information for the specified chat.
+	 */
 	public async updateChat(
 		options: {
 			chatMid: string;
