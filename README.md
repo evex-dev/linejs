@@ -6,9 +6,11 @@
 ![release workflow](https://github.com/evex-dev/linejs/actions/workflows/release.yml/badge.svg)\
 [![](https://dcbadge.limes.pink/api/server/evex)](https://discord.gg/evex)
 
-<img src="./.github/assets/icon.png" width="150" height="150" alt="LINEJS" />
+<center>
+  <img src="./.github/assets/icon.png" width="150"   height="150" alt="LINEJS" />
+</center>
 
-**LINEJS** is a JavaScript library for LINE SelfBot.
+<center> <b>LINEJS</b> is a JavaScript library for LINE SelfBot. </center>
 
 ---
 
@@ -100,8 +102,8 @@ await client.login({
 
 - Owner & Developer [Piloking](https://github.com/piloking)
 - Developer [EdamAme-x](https://github.com/EdamAme-x)
-- Developer [Hafusun](https://github.com/hafusun)
 - Developer [MocA-Love](https://github.com/MocA-Love)
+- Developer [Hafusun](https://github.com/hafusun)
 
 ## ToDo
 
