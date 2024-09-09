@@ -673,9 +673,9 @@ export class SquareClient extends LiffClient {
 	 */
 	public async deleteSquareChat(options: {
 		squareChatMid: string;
-		revision: number;
+		revision?: number;
 	}): Promise<LINETypes.DeleteSquareChatResponse> {
-		const { squareChatMid, revision } = { ...options };
+		const { squareChatMid, revision } = { revision: 0, ...options };
 		return await this.request(
 			[[11, 2, squareChatMid], [10, 3, revision]],
 			"deleteSquareChat",
