@@ -182,6 +182,41 @@ export class TalkClient extends ChannelClient {
 		);
 	}
 
+	/**
+	 * @description React to the message.
+	 */
+	public async reactToMessage(
+		options: {
+			messageId: string;
+			reactionType: number;
+		},
+	): Promise<LINETypes.ReactToMessageResponse> {
+		const { messageId, reactionType } = {
+			...options,
+		};
+		return await this.direct_request(
+			[
+				[
+					[
+						12,
+						1,
+						[
+							[8, 1, 0],
+							[10, 2, messageId],
+							[12, 3, [
+								[8, 1, reactionType],
+							]],
+						],
+					],
+				],
+			],
+			"reactToMessage",
+			this.TalkService_PROTOCOL_TYPE,
+			"ReactToMessageResponse",
+			this.TalkService_API_PATH,
+		);
+	}
+
 	public async encryptE2EEMessage(..._arg: LooseType): Promise<LooseType[]> {
 		return await [];
 	}
