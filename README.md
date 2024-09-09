@@ -10,21 +10,18 @@
   <img src="./.github/assets/icon.png" width="150"   height="150" alt="LINEJS" />
 </center>
 
-<center> <b>LINEJS</b> is a JavaScript library for LINE SelfBot. </center>
+<center> <b>LINEJS</b> is a JavaScript library for creating a LINE SelfBot. </center>
 
 ---
 
-##### <center>Develop now</center>
-
-##### <center>❓ Question: [https://discord.gg/evex](https://discord.gg/evex)</center>
-
-##### <center>📚 Documentation: [https://linejs.evex.land](https://linejs.evex.land/)</center>
+##### <center>❓ Question:　Join our [Discord community](https://discord.gg/evex)</center>
+##### <center>📚 Documentation: [Check out the full documentation](https://linejs.evex.land)</center>
 
 ---
 
 ## Installation
 
-Support all runtimes (Node.js, Deno, and Bun) and typescript.
+Supports all runtimes (Node.js, Deno, and Bun) and Typescript.
 
 ```llvm
 npx jsr add @evex/linejs
@@ -53,7 +50,7 @@ deno add @evex/linejs
 
 ## Authors
 
-- Owner & Developer [Piloking](https://github.com/piloking)
-- Developer [EdamAme-x](https://github.com/EdamAme-x)
-- Developer [MocA-Love](https://github.com/MocA-Love)
-- Developer [Hafusun](https://github.com/hafusun)
+- Owner & Developer: [Piloking](https://github.com/piloking)
+- Developer: [EdamAme-x](https://github.com/EdamAme-x)
+- Developer: [MocA-Love](https://github.com/MocA-Love)
+- Developer: [Hafusun](https://github.com/hafusun)
