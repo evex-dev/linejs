@@ -412,4 +412,28 @@ export class TalkClient extends ChannelClient {
 			this.TalkService_API_PATH,	
 		)
 	}
+
+	public async findChatByTicket(
+		options: {
+			ticketId: string;
+		}): Promise<LINETypes.FindChatByTicketResponse> {
+			const { ticketId } = {
+				...options
+		};
+		return await this.direct_request(
+			[
+				[
+					12,
+					1,
+					[
+						[11,1,ticketId]
+					]
+				]
+			],
+			"findChatByTicket",
+			this.TalkService_PROTOCOL_TYPE,
+			"FindChatByTicketResponse",
+			this.TalkService_API_PATH,	
+		)
+	}
 }
