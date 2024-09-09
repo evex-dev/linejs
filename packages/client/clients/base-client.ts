@@ -643,7 +643,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @return {Promise<string | null>} The certificate, or null if it does not exist or an error occurred.
 	 */
 	public getCert(): string | null {
-		return this.cert || (this.storage.get("cert") as string);
+		return this.cert;
 	}
 
 	/**
@@ -661,7 +661,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @return {Promise<string | null>} The certificate, or null if it does not exist or an error occurred.
 	 */
 	public getQrCert(): string | null {
-		return this.qrCert || (this.storage.get("qrcert") as string);
+		return this.qrCert;
 	}
 
 	/**
@@ -808,7 +808,6 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 		if (response.certificate) {
 			this.emit("update:cert", response.certificate);
-			this.storage.set("cert", response.certificate);
 		}
 		return response.authToken;
 	}
@@ -831,7 +830,6 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			const { 1: pem, 2: authToken, 4: e2eeInfo, 5: _mid } = response;
 			if (pem) {
 				this.emit("update:qrcert", pem);
-				this.storage.set("qrcert", pem);
 			}
 			if (e2eeInfo) {
 				this.decodeE2EEKeyV1(e2eeInfo, Buffer.from(secret));
@@ -1307,6 +1305,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.system = undefined;
 
 		if (__force) {
+			this.storage.clear();
+			
 			await this.request(
 				[],
 				"logoutZ",
