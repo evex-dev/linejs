@@ -9,6 +9,8 @@ Note, however, that to receive the group's message must store the decrypt key in
 
 First, let's create a bot that only receives “!ping” and returns “pong!”.  
 
+## Chat
+
 To receive messages, do the following.
 
 ```ts
@@ -80,6 +82,7 @@ That's all!
 There are also `send`, `reaction`, etc.  
 Let me explain all the methods in other chapters.  
 
+## Square
 So what should we do with Square (OpenChat)?
 Basically the same thing.
 

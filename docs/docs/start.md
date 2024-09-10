@@ -14,6 +14,8 @@ deno add @evex/linejs
 
 After execution, you should have the library available.
 
+## Usage
+
 Next, let's create a script that just retrieves your profile!
 
 ```ts

@@ -25,7 +25,7 @@ const OBS_SQUARE_PROFILE_IAMGE_URI = OBS.getSquareMemberImage("p**********"); //
 
 All methods can be viewed [here](https://github.com/evex-dev/linejs/blob/main/packages/utils/obs/index.ts)
 
-### LINE_SCHEME
+## LINE_SCHEME
 
 Utils for constructing a scheme URI for LINE
 
@@ -44,7 +44,7 @@ const SCHEME_PROFILE_POPUP_URI = SCHEME.getProfilePopup("u**********");
 All methods can be viewed [here](https://github.com/evex-dev/linejs/blob/main/packages/utils/scheme/index.ts)
 
 
-### LINE_REGEX
+## LINE_REGEX
 
 Utils for extracting tickets and emids from URLs.
 
@@ -60,7 +60,7 @@ console.log(REGEX.getEmid(".../emid=*************")); // *************
 
 All methods can be viewed [here](https://github.com/evex-dev/linejs/blob/main/packages/utils/regex/index.ts)
 
-### LINE_FUNCTIONS
+## LINE_FUNCTIONS
 
 Utils for connecting to external APIs related to LINE
 

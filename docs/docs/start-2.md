@@ -80,6 +80,8 @@ await client.login({
 });
 ```
 
+## Important notice
+
 However, this login method has pitfalls. LINE uses _e2ee_ for encryption, but
 the key to decrypt it can only be obtained with an email login.
 
