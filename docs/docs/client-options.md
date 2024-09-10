@@ -54,7 +54,7 @@ Later.
 ## Endpoint
 The endpoints of communication.  
 There is basically no need to change this point.  
-If you want to try out a proxied mackerel, use it.
+If you want to try out a proxied server, use it.
 
 ```ts
 const client = new Client({
