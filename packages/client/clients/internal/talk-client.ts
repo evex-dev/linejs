@@ -1,4 +1,4 @@
-// For Talk (talk, group, etc)
+// For Talk (talk, group(chat), etc)
 
 import type { NestedArray, ProtocolKey } from "../../libs/thrift/declares.ts";
 import type * as LINETypes from "../../libs/thrift/line_types.ts";
@@ -306,7 +306,7 @@ export class TalkClient extends ChannelClient {
 	}
 
 	/**
-	 * @description Get the number of past messages specified by count from the specified group.
+	 * @description Get the number of past messages specified by count from the specified chat.
 	 */
 	public async getRecentMessagesV2(options: {
 		to: string;
@@ -478,7 +478,7 @@ export class TalkClient extends ChannelClient {
 	}
 
 	/**
-	 * @description Invite mids into the group.
+	 * @description Invite mids into the chat.
 	 */
 	public async inviteIntoChat(options: {
 		to: string;
