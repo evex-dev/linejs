@@ -337,9 +337,10 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							react,
 							author: {
 								mid: message._from,
+								get displayName() {
+									return event.payload.notificationMessage.senderDisplayName || (getMyProfile()).then(myProfile => myProfile.displayName);
+								},
 								iconImage: this.LINE_OBS.getSquareMemberImage(message._from),
-								displayName:
-									event.payload.notificationMessage.senderDisplayName,
 							},
 							isMyMessage: async () =>
 								(await getMyProfile()).squareMemberMid === message._from,

@@ -55,7 +55,7 @@ export type SquareMessage = Omit<
 	) => Promise<LINETypes.ReactToMessageResponse>;
 	author: {
 		mid: string;
-		displayName: string;
+		displayName: string | Promise<string>;
 		iconImage: string;
 	};
 	isMyMessage: () => Promise<boolean>;
