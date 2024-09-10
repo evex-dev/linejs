@@ -31,6 +31,7 @@ export default defineConfig({
 					{ text: "Message Event", link: "/docs/message-event" },
 					{ text: "Client Options", link: "/docs/client-options" },
 					{ text: "Utils", link: "/docs/utils" },
+					{ text: "Talk Methods", link: "/docs/talk-methods" },
 				],
 			},
 			{
