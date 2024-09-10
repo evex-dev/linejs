@@ -61,10 +61,10 @@ class LINE_OBS_BASE {
 	}
 
 	/**
-	 * Gets an open chat member image URI by appending the given open chat member ID to the prefixSticker
+	 * Gets an OpenChat member image URI by appending the given OpenChat member ID to the prefixSticker
 	 * @param {string} [squareMemberId] - The square member ID (pid) to use in the URLSticker
 	 * @param {boolean} [isPreview=false] - Whether to append '/preview' to the URL.
-	 * @return {string} The getted open chat member image URISticker
+	 * @return {string} The getted OpenChat member image URISticker
 	 */
 	public getSquareMemberImage(
 		squareMemberId: string,

@@ -4,14 +4,15 @@
 	"exports": {
 		".": "./packages/client/index.ts",
 		"./client": "./packages/client/index.ts",
-		"./utils": "./packages/utils/index.ts"
+		"./utils": "./packages/utils/index.ts",
+		"./rate-limit": "./packages/client/libs/rate-limitter/index.ts"
 	},
 	"fmt": {
 		"indentWidth": 2,
 		"singleQuote": false,
 		"useTabs": true,
 		"exclude": [
-			"./docs/**/*"
+			"./docs/"
 		]
 	},
 	"imports": {

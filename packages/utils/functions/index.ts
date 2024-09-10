@@ -46,7 +46,7 @@ type SearchSquareResult =
  */
 export async function searchSquare(
 	query: string,
-	limit: number,
+	limit: number = 200,
 ): Promise<SearchSquareResult> {
 	if (limit < 0 || limit > 200) {
 		return {

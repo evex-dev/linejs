@@ -19,16 +19,18 @@ export default defineConfig({
 		nav: [
 			{ text: "Home", link: "/" },
 			{ text: "Docs", link: "/docs/start" },
-			{ text: "Examples", link: "https://github.com/evex-dev/linejs" },
+			{ text: "Examples", link: "https://github.com/evex-dev/linejs/tree/main/examples" },
 		],
 
 		sidebar: [
 			{
 				text: "Docs",
 				items: [
-					{ text: "Start", link: "/docs/start" },
-					{ text: "Start 2", link: "/docs/start-2" },
+					{ text: "Getting Started", link: "/docs/start" },
+					{ text: "Next Steps", link: "/docs/start-2" },
 					{ text: "Message Event", link: "/docs/message-event" },
+					{ text: "Client Options", link: "/docs/client-options" },
+					{ text: "Utils", link: "/docs/utils" },
 				],
 			},
 			{
@@ -84,4 +86,6 @@ export default defineConfig({
 			content: "https://linejs.evex.land/favicon.png",
 		}],
 	],
+
+	cleanUrls: true
 });

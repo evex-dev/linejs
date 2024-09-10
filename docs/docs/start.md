@@ -26,7 +26,7 @@ client.on("pincall", (pincode) => {
 });
 
 client.on("ready", (user) => {
-	console.log(`Logged in as ${user.displayName} (${user.mid})`);
+	console.log(`Logged in as ${user.displayName} (${user.mid});`);
 });
 
 await client.login({

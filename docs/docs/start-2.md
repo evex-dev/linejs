@@ -16,7 +16,7 @@ client.on("pincall", (pincode) => {
 });
 
 client.on("ready", async (user) => {
-	console.log(`Logged in as ${user.displayName} (${user.mid})`);
+	console.log(`Logged in as ${user.displayName} (${user.mid});`);
 
 	console.log(await client.getProfile());
 });
@@ -85,7 +85,7 @@ the key to decrypt it can only be obtained with an email login.
 
 Therefore, if you login only with an authToken, you will not be able to retrieve
 group talk events.\
-(Square (open chat) is possible.)
+(Square (OpenChat) is possible.)
 
 So how can we do this?　　 It's easy, too.
 
@@ -111,7 +111,7 @@ This concludes our first trip.\
 But there is still a journey left to be made.\
 Enjoy.
 
-:::info  
+:::tip  
 If you want to create your own storage such as connecting to the cloud
 api,\
 import `BaseStorage` and extend it to create your own storage. (Please ask for

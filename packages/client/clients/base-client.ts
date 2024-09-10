@@ -53,7 +53,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 *
 	 * @param {ClientOptions} [options] Options for the client
 	 * @param {BaseStorage} [options.storage] Storage for the client
+	 * @param {RateLimitter} [options.squareRateLimitter] Square rate limitter for the client
 	 * @param {string} [options.endpoint] Endpoint for the client
+	 * @param {FetchLike} [options.customFetch] Custom fetch for the client
 	 * @param {string} [options.LINE_OBS] Endpoint for the obs
 	 */
 	constructor(options: ClientOptions = {}) {

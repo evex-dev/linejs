@@ -1,3 +1,7 @@
+/**
+ * @module
+ * RateLimitter for Safety of LINEJS Client
+ */
 import type { LooseType } from "../../entities/common.ts";
 import { RateLimitError } from "./error.ts";
 
@@ -6,6 +10,10 @@ interface CallStack {
 	time: number;
 }
 
+/**
+ * @classdesc RateLimitter for Safety of LINEJS Client
+ * @constructor
+ */
 export class RateLimitter {
 	private previousCallTime: number = 0;
 	private callStacks: CallStack[] = [];
