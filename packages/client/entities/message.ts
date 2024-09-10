@@ -22,6 +22,7 @@ export type Message = Omit<LINETypes.Operation, "type"> & {
 	getContact: () => Promise<LINETypes.Contact>;
 	getMyProfile: () => Promise<LINETypes.Profile>;
 	data: ((preview?: boolean) => Promise<Blob>) | undefined;
+	message: LINETypes.Message;
 } & (
 		| {
 				type: "chat";
@@ -65,6 +66,7 @@ export type SquareMessage = Omit<
 	getMyProfile: () => Promise<LINETypes.SquareMember>;
 	square: () => Promise<LINETypes.GetSquareChatResponse>;
 	data: ((preview?: boolean) => Promise<Blob>) | undefined;
+	message: LINETypes.Message;
 };
 
 export type MessageReplyOptions =

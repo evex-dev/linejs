@@ -243,9 +243,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					if (event.type === "NOTIFICATION_MESSAGE") {
 						const message =
 							event.payload.notificationMessage.squareMessage.message;
-						
+
 						if (previousMessageId === message.id) {
-							continue
+							continue;
 						}
 
 						previousMessageId = message.id;
@@ -372,6 +372,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 								this.hasData(message) &&
 								(async (preview) =>
 									await this.getMessageObsData(message.id, preview)),
+							message,
 						});
 					}
 				}
@@ -522,6 +523,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 								this.hasData(message) &&
 								(async (preview) =>
 									await this.getMessageObsData(message.id, preview)),
+							message,
 						});
 					}
 					this.emit("event", operation);
