@@ -3,6 +3,7 @@
   "packages": {
     "specifiers": {
       "jsr:@evex/linejs@^1.1.1": "jsr:@evex/linejs@1.1.1",
+      "npm:@types/node": "npm:@types/node@18.16.19",
       "npm:curve25519-js@0.0.4": "npm:curve25519-js@0.0.4",
       "npm:node-bignumber@1.2.2": "npm:node-bignumber@1.2.2",
       "npm:thrift@0.20.0": "npm:thrift@0.20.0_ws@5.2.4",
@@ -20,6 +21,10 @@
       }
     },
     "npm": {
+      "@types/node@18.16.19": {
+        "integrity": "sha512-IXl7o+R9iti9eBW4Wg2hx1xQDig183jj7YLn8F7udNceyfkbn1ZxmzZXuak20gR40D7pIkIY1kYGx5VIGbaHKA==",
+        "dependencies": {}
+      },
       "async-limiter@1.0.1": {
         "integrity": "sha512-csOlWGAcRFJaI6m+F2WKdnMKr4HhdhFVBk0H/QbJFMCr+uO2kwohwXQPxw/9OCxp05r5ghVBFSyioixx3gfkNQ==",
         "dependencies": {}
