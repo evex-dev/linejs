@@ -280,7 +280,7 @@ export class TalkClient extends ChannelClient {
 	}
 
 	/**
-	 * @description Get user information from mid.
+	 * @description Get the number of past messages specified by count.
 	 */
 	public async getPreviousMessagesV2(options: {
 		mid: string;
