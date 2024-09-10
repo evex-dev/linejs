@@ -5,6 +5,7 @@
 		".": "./packages/client/index.ts",
 		"./client": "./packages/client/index.ts",
 		"./utils": "./packages/utils/index.ts",
+		"./types": "./packages/client/libs/thrift/line_types.ts",
 		"./storage": "./packages/client/libs/storage/index.ts",
 		"./rate-limit": "./packages/client/libs/rate-limitter/index.ts"
 	},
