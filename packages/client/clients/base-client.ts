@@ -335,7 +335,6 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						this.emit("square:message", {
 							...event.payload.notificationMessage,
 							type: "square",
-							opType: -1,
 							content: typeof message.text === "string" ? message.text : "",
 							contentMetadata: message.contentMetadata,
 							contentType: message.contentType,

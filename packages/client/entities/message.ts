@@ -39,7 +39,6 @@ export type SquareMessage = Omit<
 	"type"
 > & {
 	type: "square";
-	opType: -1;
 	content: string;
 	contentMetadata: LooseType;
 	contentType: LINETypes.ContentType;
