@@ -13,7 +13,7 @@ For example, **storage for the data** we talked about before, **OBS Endpoint**, 
 
 Let me explain one by one.
 
-### Storage
+## Storage
 
 This is storage for internal needs such as decryption keys and caches. 　
 By default, `MemoryStorage` is used, and once you stop the program, you must log in from the beginning.
@@ -31,7 +31,7 @@ const client = new Client({
 If you want to store in your own cloud or storages with your own data storage api, you can extend `BaseStorage` to create something of your own liking.  
 More details on our server.
 
-### OBS Endpoint
+## OBS Endpoint
 
 OBS stands for `OBject Storage` and is the cdn where LINE stores images and videos.  
 There are several endpoints.  
@@ -51,7 +51,7 @@ It contains useful things like search functions for OpenChat, internal URL const
 Later.
 :::
 
-### Endpoint
+## Endpoint
 The endpoints of communication.  
 There is basically no need to change this point.  
 If you want to try out a proxied mackerel, use it.
@@ -63,7 +63,7 @@ const client = new Client({
 ```
 
 
-### Custom Fetch
+## Custom Fetch
 
 This is for cors avoidance or proxy. 
 You define a function that replaces fetch. 
@@ -81,7 +81,7 @@ const client = new Client({
 });
 ```
 
-### RateLimitter
+## RateLimitter
 
 It is a safeguard to ensure that you are not restricted by the Square (OpenChat) by a series of posts.  
 The default is 9 posts per 2 seconds.  
