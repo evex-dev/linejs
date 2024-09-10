@@ -185,7 +185,7 @@ export class TalkClient extends ChannelClient {
 	 */
 	public async reactToMessage(options: {
 		messageId: string;
-		reactionType: number;
+		reactionType: LINETypes.MessageReactionType;
 	}): Promise<LINETypes.ReactToMessageResponse> {
 		const { messageId, reactionType } = {
 			...options,
@@ -211,8 +211,11 @@ export class TalkClient extends ChannelClient {
 		);
 	}
 
+	/**
+	 * @description Will override.
+	 */
 	public async encryptE2EEMessage(..._arg: LooseType): Promise<LooseType[]> {
-		return await [];
+		return (await Symbol("Unreachable")) as LooseType;
 	}
 
 	public async getE2EEPublicKeys(): Promise<LINETypes.E2EEPublicKey[]> {

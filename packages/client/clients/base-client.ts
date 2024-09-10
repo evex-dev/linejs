@@ -439,6 +439,25 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							}
 						};
 
+						const react = async (options: SquareMessageReactionOptions) => {
+							if (typeof options === "number") {
+								return await this.reactToMessage({
+									reactionType: options as LINETypes.MessageReactionType,
+									messageId: message.id,
+								});
+							} else {
+								return await this.reactToMessage({
+									reactionType: (
+										options as Exclude<
+											SquareMessageReactionOptions,
+											LINETypes.MessageReactionType
+										>
+									).reactionType,
+									messageId: message.id,
+								});
+							}
+						};
+
 						const chat =
 							message.toType === "USER"
 								? async () => {
@@ -471,6 +490,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							replyId: message.relatedMessageId,
 							reply,
 							send,
+							react,
 							author: {
 								mid: message._from,
 								get displayName() {
@@ -552,6 +572,16 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	public async decryptE2EEMessage(
 		_messageObj: LINETypes.Message,
 	): Promise<LINETypes.Message> {
+		return (await Symbol("Unreachable")) as LooseType;
+	}
+
+	/**
+	 * @description Will override.
+	 */
+	public async reactToMessage(_options: {
+		messageId: string;
+		reactionType: LINETypes.MessageReactionType;
+	}): Promise<LINETypes.ReactToMessageResponse> {
 		return (await Symbol("Unreachable")) as LooseType;
 	}
 
