@@ -37,11 +37,13 @@ import type {
 } from "../entities/message.ts";
 import { LINE_OBS } from "../../utils/obs/index.ts";
 import { RateLimitter } from "../libs/rate-limitter/index.ts";
+import type { FetchLike } from "../entities/fetch.ts";
 
 interface ClientOptions {
 	storage?: BaseStorage;
 	squareRateLimitter?: RateLimitter;
 	endpoint?: string;
+	customFetch?: FetchLike;
 	LINE_OBS?: LINE_OBS;
 }
 
@@ -61,6 +63,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.storage = options.storage || new MemoryStorage();
 		this.squareRateLimitter = options.squareRateLimitter || new RateLimitter();
 		this.endpoint = options.endpoint || "gw.line.naver.jp";
+		this.customFetch = options.customFetch || fetch;
 		this.LINE_OBS = options.LINE_OBS || new LINE_OBS();
 
 		this.squareRateLimitter.callPolling();
@@ -70,14 +73,22 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @description the storage of client
 	 */
 	public storage: BaseStorage;
+
 	/**
 	 * @description the square rate limitter of client
 	 */
 	public squareRateLimitter: RateLimitter;
+
 	/**
 	 * @description the endpoint of LINE Gateway of client
 	 */
 	public endpoint: string;
+
+	/**
+	 * @description the custom fetch of client (for CORS, PROXY)
+	 */
+	public customFetch: FetchLike;
+
 	/**
 	 * @description the LINE OBS of client
 	 */
@@ -755,7 +766,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					"accept-encoding": "gzip",
 				};
 				const e2eeInfo = (
-					await fetch(`https://${this.endpoint}/LF1`, {
+					await this.customFetch(`https://${this.endpoint}/LF1`, {
 						headers: headers,
 					}).then((res) => res.json())
 				).result;
@@ -791,7 +802,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					"x-lhm": "GET",
 					"accept-encoding": "gzip",
 				};
-				const verifier = await fetch(`https://${this.endpoint}/Q`, {
+				const verifier = await this.customFetch(`https://${this.endpoint}/Q`, {
 					headers: headers,
 				}).then((res) => res.json());
 				this.log("response", verifier);
@@ -1175,7 +1186,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			headers,
 		});
 
-		const response = await fetch(`https://${this.endpoint}${path}`, {
+		const response = await this.customFetch(`https://${this.endpoint}${path}`, {
 			method: overrideMethod,
 			headers,
 			body: Trequest,
@@ -1438,13 +1449,16 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		if (!this.metadata) {
 			throw new InternalError("Not setup yet", "Please call 'login()' first");
 		}
-		return await fetch(this.LINE_OBS.getDataUrl(messageId, isPreview), {
-			headers: {
-				accept: "application/json, text/plain, */*",
-				"x-line-application": this.system?.type as string,
-				"x-Line-access": this.metadata.authToken,
+		return await this.customFetch(
+			this.LINE_OBS.getDataUrl(messageId, isPreview),
+			{
+				headers: {
+					accept: "application/json, text/plain, */*",
+					"x-line-application": this.system?.type as string,
+					"x-Line-access": this.metadata.authToken,
+				},
 			},
-		}).then((r) => {
+		).then((r) => {
 			return r.blob();
 		});
 	}
