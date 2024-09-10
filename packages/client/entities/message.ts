@@ -6,6 +6,7 @@ export type Message = Omit<LINETypes.Operation, "type"> & {
 	content: string;
 	contentMetadata: LooseType;
 	contentType: LINETypes.ContentType;
+	messageId: string;
 	replyId?: string;
 	reply: (options: MessageReplyOptions) => Promise<LINETypes.Message>;
 	send: (options: SquareMessageSendOptions) => Promise<LINETypes.Message>;
@@ -41,6 +42,7 @@ export type SquareMessage = Omit<
 	content: string;
 	contentMetadata: LooseType;
 	contentType: LINETypes.ContentType;
+	messageId: string;
 	replyId?: string;
 	reply: (
 		options: MessageReplyOptions,

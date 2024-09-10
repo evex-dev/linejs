@@ -331,6 +331,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							content: typeof message.text === "string" ? message.text : "",
 							contentMetadata: message.contentMetadata,
 							contentType: message.contentType,
+							messageId: event.payload.notificationMessage.squareMessage.message.id,
 							replyId: message.relatedMessageId,
 							reply,
 							send,
@@ -338,7 +339,10 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							author: {
 								mid: message._from,
 								get displayName() {
-									return event.payload.notificationMessage.senderDisplayName || (getMyProfile()).then(myProfile => myProfile.displayName);
+									return (
+										event.payload.notificationMessage.senderDisplayName ||
+										getMyProfile().then((myProfile) => myProfile.displayName)
+									);
 								},
 								iconImage: this.LINE_OBS.getSquareMemberImage(message._from),
 							},
@@ -488,6 +492,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							content: typeof message.text === "string" ? message.text : "",
 							contentMetadata: message.contentMetadata,
 							contentType: message.contentType,
+							messageId: message.id,
 							replyId: message.relatedMessageId,
 							reply,
 							send,

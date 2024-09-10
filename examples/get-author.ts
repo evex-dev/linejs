@@ -7,10 +7,10 @@ client.on("square:message", async (message) => {
 
 	if (text === "!me") {
 		await message.reply([
-            `Name: ${message.author.displayName}`,
-            `IconImage: ${message.author.iconImage}`,
-            `Mid: ${message.author.mid}`,
-        ].join("\n"));
+			`Name: ${message.author.displayName}`,
+			`IconImage: ${message.author.iconImage}`,
+			`Mid: ${message.author.mid}`,
+		].join("\n"));
 	}
 });
 
@@ -19,10 +19,10 @@ client.on("message", async (message) => {
 
 	if (text === "!me") {
 		await message.reply([
-            `Name: ${message.author.displayName}`,
-            `IconImage: ${message.author.iconImage}`,
-            `Mid: ${message.author.mid}`,
-        ].join("\n"));
+			`Name: ${message.author.displayName}`,
+			`IconImage: ${message.author.iconImage}`,
+			`Mid: ${message.author.mid}`,
+		].join("\n"));
 	}
 });
 
