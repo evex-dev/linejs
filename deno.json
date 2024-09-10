@@ -5,6 +5,7 @@
 		".": "./packages/client/index.ts",
 		"./client": "./packages/client/index.ts",
 		"./utils": "./packages/utils/index.ts",
+		"./storage": "./packages/client/libs/storage/index.ts",
 		"./rate-limit": "./packages/client/libs/rate-limitter/index.ts"
 	},
 	"fmt": {
