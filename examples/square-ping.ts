@@ -13,5 +13,5 @@ client.on("square:message", async (message) => {
 await client.login({
 	email: "YOUR_EMAIL",
 	password: "YOUR_PASSWORD",
-	polling: ["square"],	// polling square only
+	polling: ["square"], // polling square only
 });
