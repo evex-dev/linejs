@@ -286,7 +286,7 @@ export class TalkClient extends ChannelClient {
 		mid: string;
 		time: number;
 		id: number;
-		count? : number;
+		count?: number;
 	}): Promise<LINETypes.Message[]> {
 		const { mid, time, id, count } = { count: 3000, ...options };
 		return (await this.direct_request(
@@ -294,11 +294,33 @@ export class TalkClient extends ChannelClient {
 				[11, 2, mid],
 				[12, 3, [
 					[10, 1, time],
-					[10, 2, id]
+					[10, 2, id],
 				]],
-				[8, 4, count]
+				[8, 4, count],
 			],
 			"getPreviousMessagesV2",
+			this.TalkService_PROTOCOL_TYPE,
+			false,
+			this.TalkService_API_PATH,
+		)).map((e: LooseType) => this.parser.rename_thrift("Message", e));
+	}
+
+	/**
+	 * @description Get the number of past messages specified by count from the specified group.
+	 */
+	public async getRecentMessagesV2(options: {
+		to: string;
+		count?: number;
+	}): Promise<LINETypes.Message[]> {
+		const { to, count } = { count: 300, ...options };
+		return (await this.direct_request(
+			[
+				[
+					[11, 2, to],
+					[8, 3, count],
+				],
+			],
+			"getRecentMessagesV2",
 			this.TalkService_PROTOCOL_TYPE,
 			false,
 			this.TalkService_API_PATH,
@@ -566,20 +588,20 @@ export class TalkClient extends ChannelClient {
 						chatSet.picturePath ? [11, 7, chatSet.picturePath] : null,
 						chatSet.extra?.groupExtra
 							? [
-									12,
-									8,
+								12,
+								8,
+								[
 									[
+										12,
+										1,
 										[
-											12,
-											1,
-											[
-												[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
-												[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
-												[2, 7, chatSet.extra.groupExtra.ticketDisabled],
-											],
+											[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
+											[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
+											[2, 7, chatSet.extra.groupExtra.ticketDisabled],
 										],
 									],
-								]
+								],
+							]
 							: null,
 					],
 				],
