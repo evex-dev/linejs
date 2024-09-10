@@ -478,6 +478,33 @@ export class TalkClient extends ChannelClient {
 	}
 
 	/**
+	 * @description Invite mids into the group.
+	 */
+	public async inviteIntoChat(options: {
+		to: string;
+		mids: string[];
+	}): Promise<LINETypes.InviteIntoChatResponse> {
+		const { to, mids } = {
+			...options,
+		};
+		return await this.request(
+			[
+				[12, 1, [
+					[8, 1, 0],
+					[11, 2, to],
+					[14, 3, [
+						[11, mids],
+					]],
+				]],
+			],
+			"inviteIntoChat",
+			this.TalkService_PROTOCOL_TYPE,
+			"InviteIntoChatResponse",
+			this.TalkService_API_PATH,
+		);
+	}
+
+	/**
 	 * @description Accept the chat invitation and join.
 	 */
 	public async acceptChatInvitation(options: {
