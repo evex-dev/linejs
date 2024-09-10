@@ -216,7 +216,8 @@ export class SquareClient extends LiffClient {
 	 */
 	public async findSquareByEmid(options: {
 		emid: string;
-	}): Promise<LINETypes.SquareChat> { // ...???
+	}): Promise<LINETypes.SquareChat> {
+		// ...???
 		const { emid } = { ...options };
 		return await this.request(
 			[[11, 1, emid]],
@@ -328,9 +329,8 @@ export class SquareClient extends LiffClient {
 			message.push([11, 21, relatedMessageId], [8, 22, 3], [8, 24, 2]);
 		}
 
-		const { promise, resolve } = Promise.withResolvers<
-			LINETypes.SendMessageResponse
-		>();
+		const { promise, resolve } =
+			Promise.withResolvers<LINETypes.SendMessageResponse>();
 
 		const request = async () => {
 			resolve(

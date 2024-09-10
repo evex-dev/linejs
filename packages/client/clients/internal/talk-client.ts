@@ -288,20 +288,26 @@ export class TalkClient extends ChannelClient {
 		count?: number;
 	}): Promise<LINETypes.Message[]> {
 		const { mid, time, id, count } = { count: 3000, ...options };
-		return (await this.direct_request(
-			[
-				[11, 2, mid],
-				[12, 3, [
-					[10, 1, time],
-					[10, 2, id],
-				]],
-				[8, 4, count],
-			],
-			"getPreviousMessagesV2",
-			this.TalkService_PROTOCOL_TYPE,
-			false,
-			this.TalkService_API_PATH,
-		)).map((e: LooseType) => this.parser.rename_thrift("Message", e));
+		return (
+			await this.direct_request(
+				[
+					[11, 2, mid],
+					[
+						12,
+						3,
+						[
+							[10, 1, time],
+							[10, 2, id],
+						],
+					],
+					[8, 4, count],
+				],
+				"getPreviousMessagesV2",
+				this.TalkService_PROTOCOL_TYPE,
+				false,
+				this.TalkService_API_PATH,
+			)
+		).map((e: LooseType) => this.parser.rename_thrift("Message", e));
 	}
 
 	/**
@@ -312,18 +318,20 @@ export class TalkClient extends ChannelClient {
 		count?: number;
 	}): Promise<LINETypes.Message[]> {
 		const { to, count } = { count: 300, ...options };
-		return (await this.direct_request(
-			[
+		return (
+			await this.direct_request(
 				[
-					[11, 2, to],
-					[8, 3, count],
+					[
+						[11, 2, to],
+						[8, 3, count],
+					],
 				],
-			],
-			"getRecentMessagesV2",
-			this.TalkService_PROTOCOL_TYPE,
-			false,
-			this.TalkService_API_PATH,
-		)).map((e: LooseType) => this.parser.rename_thrift("Message", e));
+				"getRecentMessagesV2",
+				this.TalkService_PROTOCOL_TYPE,
+				false,
+				this.TalkService_API_PATH,
+			)
+		).map((e: LooseType) => this.parser.rename_thrift("Message", e));
 	}
 
 	/**
@@ -488,13 +496,15 @@ export class TalkClient extends ChannelClient {
 		};
 		return await this.request(
 			[
-				[12, 1, [
-					[8, 1, 0],
-					[11, 2, to],
-					[14, 3, [
-						[11, mids],
-					]],
-				]],
+				[
+					12,
+					1,
+					[
+						[8, 1, 0],
+						[11, 2, to],
+						[14, 3, [[11, mids]]],
+					],
+				],
 			],
 			"inviteIntoChat",
 			this.TalkService_PROTOCOL_TYPE,
@@ -614,20 +624,20 @@ export class TalkClient extends ChannelClient {
 						chatSet.picturePath ? [11, 7, chatSet.picturePath] : null,
 						chatSet.extra?.groupExtra
 							? [
-								12,
-								8,
-								[
+									12,
+									8,
 									[
-										12,
-										1,
 										[
-											[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
-											[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
-											[2, 7, chatSet.extra.groupExtra.ticketDisabled],
+											12,
+											1,
+											[
+												[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
+												[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
+												[2, 7, chatSet.extra.groupExtra.ticketDisabled],
+											],
 										],
 									],
-								],
-							]
+								]
 							: null,
 					],
 				],
