@@ -56,6 +56,6 @@ export class FileStorage extends BaseStorage {
 
 	public getAll(): Record<Storage["Key"], Storage["Value"]> {
 		const file = fs.readFileSync(this.path, "utf-8");
-		return JSON.parse(file);
+		return JSON.parse(file || "{}");
 	}
 }
