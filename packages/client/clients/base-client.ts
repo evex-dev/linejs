@@ -224,6 +224,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 
 		let myEventsSyncToken = noopMyEvents.syncToken;
+		let previousMessageId: string | undefined = undefined;
 
 		while (true) {
 			if (!this.metadata) {
@@ -242,6 +243,13 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					if (event.type === "NOTIFICATION_MESSAGE") {
 						const message =
 							event.payload.notificationMessage.squareMessage.message;
+						
+						if (previousMessageId === message.id) {
+							continue
+						}
+
+						previousMessageId = message.id;
+
 						const send = async (
 							options: SquareMessageSendOptions,
 							safe: boolean = true,
@@ -331,7 +339,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							content: typeof message.text === "string" ? message.text : "",
 							contentMetadata: message.contentMetadata,
 							contentType: message.contentType,
-							messageId: event.payload.notificationMessage.squareMessage.message.id,
+							messageId: message.id,
 							replyId: message.relatedMessageId,
 							reply,
 							send,
