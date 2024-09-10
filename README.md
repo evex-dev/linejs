@@ -14,7 +14,7 @@
 
 ---
 
-##### <center>❓ Question:　Join our [Discord community](https://discord.gg/evex)</center>
+##### <center>❓ Question: Join our [Discord community](https://discord.gg/evex)</center>
 ##### <center>📚 Documentation: [Check out the full documentation](https://linejs.evex.land)</center>
 
 ---
