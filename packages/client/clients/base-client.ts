@@ -1221,15 +1221,18 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		headers = { ...headers, ...appendHeaders };
 
+		this.log("request-write", {
+			thriftMethodName: methodName,
+			protocolType,
+			value,
+		});
+
 		const Trequest = writeThrift(value, methodName, Protocol);
 
-		this.log("request", {
+		this.log("request-send", {
 			method: "thrift",
 			thriftMethodName: methodName,
 			httpMethod: overrideMethod,
-			protocolType,
-			value,
-			requestPath: path,
 			data: Trequest,
 			headers,
 		});
@@ -1250,6 +1253,11 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 		const body = await response.arrayBuffer();
 		const parsedBody = new Uint8Array(body);
+		this.log("response-recv", {
+			method: "thrift",
+			response,
+			data: parsedBody,
+		});
 		const res = readThrift(parsedBody, Protocol);
 		if (parse === true) {
 			this.parser.rename_data(res);
@@ -1265,10 +1273,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			}
 		}
 
-		this.log("response", {
-			method: "thrift",
-			response,
-			data: parsedBody,
+		this.log("response-parse", {
 			parsedData: res,
 		});
 
