@@ -1432,7 +1432,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			const params =  [[8, 1, 0], [8, 2, attr], [11, 3, value]]
 
 			responseList.push(
-				await this.request(
+				await this.direct_request(
 					params,
 					"updateProfileAttribute",
 					this.LINEService_PROTOCOL_TYPE,
