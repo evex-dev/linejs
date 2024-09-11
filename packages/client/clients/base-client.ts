@@ -403,6 +403,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					globalRev,
 					individualRev,
 				});
+
 				for (const operation of myEvents.operationResponse?.operations) {
 					revision = operation.revision;
 					if (
@@ -1399,8 +1400,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		phoneticName?: string;
 		pictureUrl?: string;
 		statusMessage?: string;
-		allowSearchByUserid?: boolean;
-		allowSearchByEmail?: boolean;
+		allowSearchByUserid?: string;
+		allowSearchByEmail?: string;
 		buddyStatus?: LooseType;
 		musicProfile?: LooseType;
 		avatarProfile?: LooseType;
@@ -1423,19 +1424,10 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		const responseList = [];
 
 		for (const label of updateLabels) {
-			const params = [
-				[8, 1, 0],
-				[8, 2, typeByLabel[label]],
-				[
-					11,
-					3,
-					typeof options[label] === "boolean"
-						? options[label]
-							? "True"
-							: "False"
-						: options[label],
-				],
-			];
+			const attr = typeByLabel[label];
+			const value = options[label];
+
+			const params =  [[8, 1, 0], [8, 2, attr], [11, 3, value]]
 
 			responseList.push(
 				await this.request(
