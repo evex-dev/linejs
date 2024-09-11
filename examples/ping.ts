@@ -13,4 +13,5 @@ client.on("message", async (message) => {
 await client.login({
 	email: "YOUR_EMAIL",
 	password: "YOUR_PASSWORD",
+	polling: ["talk"], // polling talk only
 });

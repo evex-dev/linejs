@@ -1346,9 +1346,6 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	protected AuthService_API_PATH = "/RS4";
 	protected AuthService_PROTOCOL_TYPE: ProtocolKey = 4;
 
-	protected RelationService_API_PATH = "/RE4";
-	protected RelationService_PROTOCOL_TYPE: ProtocolKey = 4;
-
 	/**
 	 * @description Logouts from LINE server
 	 */
