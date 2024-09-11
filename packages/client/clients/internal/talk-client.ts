@@ -9,6 +9,10 @@ import type { Buffer } from "node:buffer";
 export class TalkClient extends ChannelClient {
 	protected TalkService_API_PATH = "/S4";
 	protected TalkService_PROTOCOL_TYPE: ProtocolKey = 4;
+
+	protected TalkService_API_PATH_TBINARY = "/S3";
+
+	protected TalkService_PROTOCOL_TYPE_TBINARY: ProtocolKey = 4;
 	protected SyncService_API_PATH = "/SYNC4";
 	protected SyncService_PROTOCOL_TYPE: ProtocolKey = 4;
 
@@ -430,12 +434,25 @@ export class TalkClient extends ChannelClient {
 					12,
 					1,
 					[
-						[2, 1, withMembers],
-						[2, 2, withInvitees],
-					],
+						[
+							2,
+							1,
+							withMembers
+						],
+						[
+							2,
+							2,
+							withInvitees
+						]
+					]
 				],
-				[8, 2, 7],
-			],
+				[
+					8,
+					2,
+					7
+				]
+			]
+			,
 			"getAllChatMids",
 			this.TalkService_PROTOCOL_TYPE,
 			"GetAllChatMidsResponse",
@@ -627,20 +644,20 @@ export class TalkClient extends ChannelClient {
 						chatSet.picturePath ? [11, 7, chatSet.picturePath] : null,
 						chatSet.extra?.groupExtra
 							? [
-									12,
-									8,
+								12,
+								8,
+								[
 									[
+										12,
+										1,
 										[
-											12,
-											1,
-											[
-												[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
-												[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
-												[2, 7, chatSet.extra.groupExtra.ticketDisabled],
-											],
+											[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
+											[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
+											[2, 7, chatSet.extra.groupExtra.ticketDisabled],
 										],
 									],
-								]
+								],
+							]
 							: null,
 					],
 				],

@@ -1428,8 +1428,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					3,
 					typeof options[label] === "boolean"
 						? options[label]
-							? "True"
-							: "False"
+							? "true"
+							: "false"
 						: options[label],
 				],
 			];

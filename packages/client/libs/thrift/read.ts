@@ -61,16 +61,27 @@ function readValue(input: LooseType, ftype: LooseType): LooseType {
 		return returnData;
 	} else if (ftype == Thrift.Type.MAP) {
 		const returnData: Record<PropertyKey, LooseType> = {};
-		const _rtmp3384 = input.readMapBegin();
-		const _size383 = _rtmp3384.size || 0;
-		for (let _i385 = 0; _i385 < _size383; ++_i385) {
-			let key386 = null;
-			let val387 = null;
-			key386 = readValue(input, _rtmp3384.ktype);
-			val387 = readValue(input, _rtmp3384.vtype);
-			returnData[key386] = val387;
+		const _rtmp = input.readMapBegin();
+		const _size = _rtmp.size || 0;
+		for (let _i = 0; _i < _size; ++_i) {
+			let key = null;
+			let val = null;
+			key = readValue(input, _rtmp.ktype);
+			val = readValue(input, _rtmp.vtype);
+			returnData[key] = val;
 		}
 		input.readMapEnd();
+		return returnData;
+	} else if (ftype == Thrift.Type.SET) {
+		const returnData = [];
+		const _rtmp = input.readSetBegin();
+		const _size = _rtmp.size || 0;
+		for (let _i = 0; _i < _size; ++_i) {
+			let elem = null;
+			elem = readValue(input, _rtmp.etype);
+			returnData.push(elem);
+		}
+		input.readSetEnd();
 		return returnData;
 	} else if (ftype == Thrift.Type.BOOL) {
 		return input.readBool();

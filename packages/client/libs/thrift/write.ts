@@ -126,11 +126,11 @@ function writeValue(
 			val = val as [number, number, object];
 			output.writeFieldBegin("", Thrift.Type.MAP, fid);
 			output.writeMapBegin(val[0], val[1], Thrift.objectLength(val[2]));
-			for (const kiter85 in val[2] as NestedArray) {
-				if (Object.prototype.hasOwnProperty.call(val[2], kiter85)) {
-					const viter86 = (val as LooseType)[2][kiter85];
-					writeValue_(output, val[0], kiter85);
-					writeValue_(output, val[1], viter86);
+			for (const kiter in val[2] as NestedArray) {
+				if (Object.prototype.hasOwnProperty.call(val[2], kiter)) {
+					const viter = (val as LooseType)[2][kiter];
+					writeValue_(output, val[0], kiter);
+					writeValue_(output, val[1], viter);
 				}
 			}
 			output.writeMapEnd();
@@ -147,12 +147,27 @@ function writeValue(
 				val[0],
 				(val[1] as NonNullable<NestedArray>).length,
 			);
-			for (const iter483 in val[1] as NestedArray) {
-				if (Object.prototype.hasOwnProperty.call(val[1], iter483)) {
-					writeValue_(output, val[0], (val as LooseType)[1][iter483]);
+			for (const iter in val[1] as NestedArray) {
+				if (Object.prototype.hasOwnProperty.call(val[1], iter)) {
+					writeValue_(output, val[0], (val as LooseType)[1][iter]);
 				}
 			}
 			output.writeListEnd();
+			output.writeFieldEnd();
+			break;
+		case Thrift.Type.SET:
+			if (!Array.isArray((val as Array<LooseType>)[1])) {
+				// throw new TypeError(`ftype=${ftype}: value is not list`);
+			}
+			val = val as [number, Array<LooseType>];
+			output.writeFieldBegin("", Thrift.Type.SET, fid);
+			output.writeSetBegin(val[0], (val[1] as NonNullable<NestedArray>).length,);
+			for (const iter in val[1] as NestedArray) {
+				if (Object.prototype.hasOwnProperty.call(val[1], iter)) {
+					writeValue_(output, val[0], (val as LooseType)[1][iter]);
+				}
+			}
+			output.writeSetEnd();
 			output.writeFieldEnd();
 			break;
 		default:
