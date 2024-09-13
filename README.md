@@ -33,7 +33,14 @@ deno add @evex/linejs
 ##### Documentation is [https://linejs.evex.land](https://linejs.evex.land/)
 
 ## Browser Support
+
 For now, please use "https://esm.sh/jsr/@evex/linejs".
+
+## LINEJS Types
+
+Please see [@evex/linejs-types](./packages/client/libs/thrift/README.md)\
+In short, TypeScript Types and Enum (ReactionType (0, 1, 2, 3), MessageType,
+etc...) are provided.
 
 ## Provided Packages
 

@@ -2,21 +2,21 @@
   "version": "3",
   "packages": {
     "specifiers": {
-      "jsr:@evex/linejs@^1.1.1": "jsr:@evex/linejs@1.1.1",
+      "jsr:@evex/linejs@^1.2.2": "jsr:@evex/linejs@1.2.2",
       "npm:@types/node": "npm:@types/node@18.16.19",
-      "npm:curve25519-js@0.0.4": "npm:curve25519-js@0.0.4",
-      "npm:node-bignumber@1.2.2": "npm:node-bignumber@1.2.2",
-      "npm:thrift@0.20.0": "npm:thrift@0.20.0_ws@5.2.4",
-      "npm:tweetnacl@1.0.3": "npm:tweetnacl@1.0.3"
+      "npm:curve25519-js@^0.0.4": "npm:curve25519-js@0.0.4",
+      "npm:node-bignumber@^1.2.2": "npm:node-bignumber@1.2.2",
+      "npm:thrift@^0.20.0": "npm:thrift@0.20.0_ws@5.2.4",
+      "npm:tweetnacl@^1.0.3": "npm:tweetnacl@1.0.3"
     },
     "jsr": {
-      "@evex/linejs@1.1.1": {
-        "integrity": "6635d175c2a6895a9018f31f55acb95754beee863ed321ee0cb646b7ad46e803",
+      "@evex/linejs@1.2.2": {
+        "integrity": "81eef129bafd7a46539b156462b16d702be425dc69b9bf4af30df465f89f796b",
         "dependencies": [
-          "npm:curve25519-js@0.0.4",
-          "npm:node-bignumber@1.2.2",
-          "npm:thrift@0.20.0",
-          "npm:tweetnacl@1.0.3"
+          "npm:curve25519-js@^0.0.4",
+          "npm:node-bignumber@^1.2.2",
+          "npm:thrift@^0.20.0",
+          "npm:tweetnacl@^1.0.3"
         ]
       }
     },
@@ -80,7 +80,7 @@
   "remote": {},
   "workspace": {
     "dependencies": [
-      "jsr:@evex/linejs@^1.1.1"
+      "jsr:@evex/linejs@^1.2.2"
     ]
   }
 }

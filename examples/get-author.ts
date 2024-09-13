@@ -7,7 +7,7 @@ client.on("square:message", async (message) => {
 
 	if (text === "!me") {
 		await message.reply([
-			`Name: ${message.author.displayName}`,
+			`Name: ${await message.author.displayName}`, // -> Promise
 			`IconImage: ${message.author.iconImage}`,
 			`Mid: ${message.author.mid}`,
 		].join("\n"));

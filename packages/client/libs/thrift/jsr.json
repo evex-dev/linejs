@@ -1,8 +1,8 @@
 {
-    "name": "@evex/linejs-types",
-    "version": "0.0.0",
-    "license": "MIT",
-    "exports": {
-        ".": "./line_types.ts"
-    }
+	"name": "@evex/linejs-types",
+	"version": "0.0.0",
+	"license": "MIT",
+	"exports": {
+		".": "./line_types.ts"
+	}
 }

@@ -54,7 +54,7 @@ export class SquareClient extends LiffClient {
 				this,
 				...options.method.args,
 			);
-			objectSum(responseSum, _response)
+			objectSum(responseSum, _response);
 			if (!_response.continuationToken) {
 				break;
 			}

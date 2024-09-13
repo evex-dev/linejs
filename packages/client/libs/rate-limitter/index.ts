@@ -1,7 +1,3 @@
-/**
- * @module
- * RateLimitter for Safety of LINEJS Client
- */
 import type { LooseType } from "../../entities/common.ts";
 import { RateLimitError } from "./error.ts";
 
