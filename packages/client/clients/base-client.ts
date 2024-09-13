@@ -1429,7 +1429,11 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			const attr = typeByLabel[label];
 			const value = options[label];
 
-			const params =  [[8, 1, 0], [8, 2, attr], [11, 3, value]]
+			const params = [
+				[8, 1, 0],
+				[8, 2, attr],
+				[11, 3, value],
+			];
 
 			responseList.push(
 				await this.direct_request(

@@ -161,7 +161,7 @@ function writeValue(
 			}
 			val = val as [number, Array<LooseType>];
 			output.writeFieldBegin("", Thrift.Type.SET, fid);
-			output.writeSetBegin(val[0], (val[1] as NonNullable<NestedArray>).length,);
+			output.writeSetBegin(val[0], (val[1] as NonNullable<NestedArray>).length);
 			for (const iter in val[1] as NestedArray) {
 				if (Object.prototype.hasOwnProperty.call(val[1], iter)) {
 					writeValue_(output, val[0], (val as LooseType)[1][iter]);
