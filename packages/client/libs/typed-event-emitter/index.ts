@@ -41,4 +41,20 @@ export class TypedEventEmitter<
 
 		return this;
 	}
+
+	/**
+	 * This creates a promise that you can use for a single event.
+	 * @param event A event name
+	 */
+	public waitFor<E2 extends E, P = Parameters<T[E2]>>(
+		event: E2,
+	): Promise<P> {
+		return new Promise<P>((resolve) => {
+			const listener = ((...args) => {
+				this.off(event, listener);
+				resolve(args as P);
+			}) as T[E2];
+			this.on(event, listener);
+		});
+	}
 }
