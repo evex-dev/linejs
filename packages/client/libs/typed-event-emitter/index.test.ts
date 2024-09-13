@@ -8,7 +8,7 @@ Deno.test("promise() should be vaild", async () => {
 	class Client extends TypedEventEmitter<Events> {}
 	const client = new Client();
 
-	const promise = client.promise("example");
+	const promise = client.waitFor("example");
 
 	client.emit("example", 123456);
 
