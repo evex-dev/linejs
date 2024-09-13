@@ -60,7 +60,7 @@ client.on("message", (message) => {
     const text = message.content;
 
     if (text === "!ping") {
-        client.reply("pong!");
+        message.reply("pong!");
     }
 });
 ```
