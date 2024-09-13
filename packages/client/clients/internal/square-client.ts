@@ -22,27 +22,43 @@ export class SquareClient extends LiffClient {
 			args: Parameters<T>;
 		};
 	}) {
-		const responseSum = { ...options.response };
-		while (true) {
-			options.continuationToken = options.response.continuationToken;
-			const _response = await options.method.handler(options.method.args);
-			for (const key in _response) {
-				if (Object.prototype.hasOwnProperty.call(_response, key)) {
-					const value = (_response as Record<string, LooseType>)[key];
+		function objectSum(base: LooseType, add: LooseType): LooseType {
+			for (const key in add) {
+				if (Object.prototype.hasOwnProperty.call(add, key)) {
+					const value = (add as Record<string, LooseType>)[key];
 					if (typeof value === "object") {
-						if (Array.isArray(value)) {
-							responseSum[key] = [...value, ...responseSum[key]];
+						if (!base[key]) {
+							base[key] = value;
 						} else {
-							responseSum[key] = { ...value, ...responseSum[key] };
+							if (Array.isArray(value)) {
+								base[key] = [...value, ...base[key]];
+							} else {
+								base[key] = objectSum(base[key], value);
+							}
 						}
 					} else {
-						responseSum[key] = value;
+						base[key] = value;
 					}
 				}
 			}
+			return base;
+		}
+		if (!options.response.continuationToken) {
+			return options.response;
+		}
+		const responseSum = { ...options.response };
+		let continuationToken: string = options.response.continuationToken;
+		while (true) {
+			options.method.args[0].continuationToken = continuationToken;
+			const _response = await options.method.handler.call(
+				this,
+				...options.method.args,
+			);
+			objectSum(responseSum, _response)
 			if (!_response.continuationToken) {
 				break;
 			}
+			continuationToken = _response.continuationToken;
 		}
 		return responseSum;
 	}

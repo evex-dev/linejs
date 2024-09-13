@@ -15,7 +15,7 @@ export class LiffClient extends BaseClient {
 	protected liff_token_cache: { [key: string]: string } = {};
 	protected LiffService_API_PATH = "/LIFF1";
 	protected LiffService_PROTOCOL_TYPE: ProtocolKey = 4;
-	protected liffId = "1556150347-zL2b31Eq";
+	protected liffId = "1562242036-RW04okm";
 
 	protected getToType(mid: string): number | null {
 		const typeMapping: { [key: string]: number } = {
@@ -69,6 +69,56 @@ export class LiffClient extends BaseClient {
 	}
 
 	/**
+	 * @description Gets the LiffToken by liffId and chatMid with consent.
+	 */
+	public async getLiffToken(options: {
+		chatMid?: string;
+		liffId: string;
+		lang?: string;
+		tryConsent?: boolean;
+	}): Promise<string> {
+		const { chatMid, liffId, lang, tryConsent } = {
+			lang: "ja_JP",
+			tryConsent: true,
+			...options,
+		};
+		try {
+			const liff = await this.issueLiffView({
+				liffId,
+				chatMid,
+				lang,
+			});
+			return liff[3];
+		} catch (e) {
+			this.log("liff-error", { ...e.data });
+			if (e.data.code === 3 && tryConsent) {
+				const data: LINETypes.LiffException = e.data;
+				const payload = data.payload;
+				const consentRequired = payload.consentRequired;
+				const channelId = consentRequired.channelId;
+				const consentUrl = consentRequired.consentUrl;
+				const toType = chatMid && this.getToType(chatMid);
+				let hasConsent = false;
+
+				if (channelId && consentUrl) {
+					if (toType === 4 || this.system?.device === "DESKTOPWIN") {
+						hasConsent = await this.tryConsentAuthorize(consentUrl);
+					} else {
+						hasConsent = await this.tryConsentLiff(channelId);
+					}
+					if (hasConsent) {
+						options.tryConsent = false;
+						return this.getLiffToken(options);
+					}
+				}
+			}
+			throw new Error(
+				`Failed to get LiffToken: ${liffId}${chatMid ? "@" + chatMid : ""}`,
+			);
+		}
+	}
+
+	/**
 	 * @description Send the LiffMessages.
 	 */
 	public async sendLiff(options: {
@@ -84,41 +134,7 @@ export class LiffClient extends BaseClient {
 			...options,
 		};
 		if (!this.liff_token_cache[to] || forceIssue) {
-			try {
-				const liff = await this.issueLiffView({
-					liffId: this.liffId,
-					chatMid: to,
-				});
-				token = liff.accessToken;
-			} catch (e) {
-				this.log("liff-error", { ...e.data });
-				if (e.data.code === 3 && tryConsent) {
-					const data: LINETypes.LiffException = e.data;
-					const payload = data.payload;
-					const consentRequired = payload.consentRequired;
-					const channelId = consentRequired.channelId;
-					const consentUrl = consentRequired.consentUrl;
-					const toType = this.getToType(to);
-					let hasConsent = false;
-
-					if (channelId && consentUrl) {
-						if (toType === 4 || this.system?.device === "DESKTOPWIN") {
-							hasConsent = await this.tryConsentAuthorize(consentUrl);
-						} else {
-							hasConsent = await this.tryConsentLiff(channelId);
-						}
-						if (hasConsent) {
-							return await this.sendLiff({
-								to,
-								messages,
-								tryConsent: false,
-								forceIssue,
-							});
-						}
-					}
-				}
-				throw new Error(`Failed to send Liff: ${to}`);
-			}
+			token = await this.getLiffToken({ chatMid: to, liffId: this.liffId });
 		} else {
 			token = this.liff_token_cache[to];
 		}
