@@ -41,4 +41,19 @@ export class TypedEventEmitter<
 
 		return this;
 	}
+
+	/**
+	 * Creating a promise, you can use it for once event.
+	 */
+	public promise<E2 extends E, P extends unknown[] = Parameters<T[E2]>>(
+		event: E2,
+	): Promise<P> {
+		return new Promise<P>((resolve) => {
+			const listener = ((...args) => {
+				this.off(event, listener);
+				resolve(args as P);
+			}) as T[E2];
+			this.on(event, listener);
+		});
+	}
 }
