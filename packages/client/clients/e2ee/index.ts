@@ -1,5 +1,5 @@
 //import CryptoJS from "npm:crypto-js@4.2.0";
-import * as curve25519 from "npm:curve25519-js@0.0.4";
+import * as curve25519 from "curve25519-js";
 import * as crypto from "node:crypto";
 import { Buffer } from "node:buffer";
 import { TalkClient } from "../internal/talk-client.ts";
@@ -11,7 +11,7 @@ import {
 	type Message,
 	MIDType,
 } from "../../libs/thrift/line_types.ts";
-import nacl from "npm:tweetnacl@1.0.3";
+import nacl from "tweetnacl";
 
 class E2EE extends TalkClient {
 	public async getE2EESelfKeyData(mid: string): Promise<LooseType> {
