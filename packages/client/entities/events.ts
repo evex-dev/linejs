@@ -4,7 +4,7 @@ import type { Message, SquareMessage } from "./message.ts";
 
 export type ClientEvents = {
 	pincall: (pincode: string) => void;
-	qrcall: (pincode: string) => void;
+	qrcall: (loginUrl: string) => void;
 	ready: (user: LINETypes.Profile) => void;
 	end: (user: LINETypes.Profile) => void;
 	"update:authtoken": (authtoken: string) => void;
