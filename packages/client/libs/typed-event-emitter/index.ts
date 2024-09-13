@@ -43,7 +43,8 @@ export class TypedEventEmitter<
 	}
 
 	/**
-	 * Creating a promise, you can use it for once event.
+	 * This creates a promise that you can use for a single event.
+	 * @param event A event name
 	 */
 	public promise<E2 extends E, P extends unknown[] = Parameters<T[E2]>>(
 		event: E2,
