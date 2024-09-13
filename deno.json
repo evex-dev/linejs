@@ -8,14 +8,6 @@
 		"./storage": "./packages/storage/index.ts",
 		"./rate-limit": "./packages/rate-limit/index.ts"
 	},
-	"fmt": {
-		"indentWidth": 2,
-		"singleQuote": false,
-		"useTabs": true,
-		"exclude": [
-			"./docs/"
-		]
-	},
 	"imports": {
 		"@std/assert": "jsr:@std/assert@^1.0.2",
 		"curve25519-js": "npm:curve25519-js@^0.0.4",
@@ -24,7 +16,7 @@
 		"tweetnacl": "npm:tweetnacl@^1.0.3"
 	},
 	"tasks": {
-		"format": "deno fmt & deno run -A npm:@biomejs/biome format --write ./packages/**/*.ts",
+		"format": "deno run -A npm:@biomejs/biome format --write ./packages/**/*.ts",
 		"lint": "deno run -A npm:@biomejs/biome lint ./packages/**/*.ts",
 		"check": "deno run -A npm:@biomejs/biome check ./packages/**/*.ts"
 	}
