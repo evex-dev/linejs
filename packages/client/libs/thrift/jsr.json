@@ -1,0 +1,7 @@
+{
+    "name": "@evex/linejs-types",
+    "version": "0.0.0",
+    "exports": {
+        ".": "./line-types.ts"
+    }
+}
