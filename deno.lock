@@ -14,6 +14,7 @@
       "npm:elliptic": "npm:elliptic@6.5.7",
       "npm:elliptic@6.5.7": "npm:elliptic@6.5.7",
       "npm:jsdom": "npm:jsdom@25.0.0",
+      "npm:jsdom@25.0.0": "npm:jsdom@25.0.0",
       "npm:node-bignumber": "npm:node-bignumber@1.2.2",
       "npm:node-bignumber@1.2.2": "npm:node-bignumber@1.2.2",
       "npm:node-bignumber@^1.2.2": "npm:node-bignumber@1.2.2",
