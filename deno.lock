@@ -10,15 +10,19 @@
       "npm:crypto-js": "npm:crypto-js@4.2.0",
       "npm:curve25519-js": "npm:curve25519-js@0.0.4",
       "npm:curve25519-js@0.0.4": "npm:curve25519-js@0.0.4",
+      "npm:curve25519-js@^0.0.4": "npm:curve25519-js@0.0.4",
       "npm:elliptic": "npm:elliptic@6.5.7",
       "npm:elliptic@6.5.7": "npm:elliptic@6.5.7",
       "npm:jsdom": "npm:jsdom@25.0.0",
       "npm:node-bignumber": "npm:node-bignumber@1.2.2",
       "npm:node-bignumber@1.2.2": "npm:node-bignumber@1.2.2",
+      "npm:node-bignumber@^1.2.2": "npm:node-bignumber@1.2.2",
       "npm:prettier": "npm:prettier@3.3.3",
       "npm:thrift@0.20.0": "npm:thrift@0.20.0_ws@5.2.4",
+      "npm:thrift@^0.20.0": "npm:thrift@0.20.0_ws@5.2.4",
       "npm:tweetnacl": "npm:tweetnacl@1.0.3",
-      "npm:tweetnacl@1.0.3": "npm:tweetnacl@1.0.3"
+      "npm:tweetnacl@1.0.3": "npm:tweetnacl@1.0.3",
+      "npm:tweetnacl@^1.0.3": "npm:tweetnacl@1.0.3"
     },
     "jsr": {
       "@std/assert@1.0.2": {
@@ -435,7 +439,11 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@std/assert@^1.0.2"
+      "jsr:@std/assert@^1.0.2",
+      "npm:curve25519-js@^0.0.4",
+      "npm:node-bignumber@^1.2.2",
+      "npm:thrift@^0.20.0",
+      "npm:tweetnacl@^1.0.3"
     ]
   }
 }

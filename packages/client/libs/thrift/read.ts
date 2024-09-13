@@ -1,4 +1,4 @@
-import * as thrift from "npm:thrift@0.20.0";
+import * as thrift from "thrift";
 import { Buffer } from "node:buffer";
 import type { LooseType } from "../../entities/common.ts";
 
