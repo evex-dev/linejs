@@ -32,6 +32,9 @@ deno add @evex/linejs
 
 ##### Documentation is [https://linejs.evex.land](https://linejs.evex.land/)
 
+## Browser Support
+For now, please use "https://esm.sh/jsr/@evex/linejs".
+
 ## Provided Packages
 
 - client - (@evex/linejs) or (@evex/linejs/client)
@@ -46,7 +49,9 @@ deno add @evex/linejs
   - BaseStorage - LINE Client Base Storage
   - MemoryStorage - LINE Client Memory Storage
   - FileStorage - LINE Client File Storage
-- types - (@evex/linejs/types)
+- rate-limit - (@evex/linejs/rate-limit)
+  - RateLimitter - RateLimit for Safety
+- types - (@evex/linejs-types)
   - All Types for LINE
 
 ## Authors
