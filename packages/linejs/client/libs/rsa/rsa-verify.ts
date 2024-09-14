@@ -1,5 +1,5 @@
 import { Key } from "node-bignumber";
-import type { RSAKey } from "../thrift/line_types.ts";
+import type { RSAKey } from "@evex/linejs-types";
 
 export function getRSACrypto(message: string, json: RSAKey) {
 	const rsa = new Key();

@@ -1,5 +1,5 @@
 import type { Log } from "./log.ts";
-import type * as LINETypes from "../libs/thrift/line_types.ts";
+import type * as LINETypes from "@evex/linejs-types";
 import type { Message, SquareMessage } from "./message.ts";
 
 export type ClientEvents = {

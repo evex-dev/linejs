@@ -1,7 +1,7 @@
 // For Channel (channel, etc)
 
 import type { ProtocolKey } from "../../libs/thrift/declares.ts";
-import type * as LINETypes from "../../libs/thrift/line_types.ts";
+import type * as LINETypes from "@evex/linejs-types";
 import { SquareClient } from "./square-client.ts";
 
 export class ChannelClient extends SquareClient {

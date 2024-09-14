@@ -10,7 +10,7 @@ import {
 	type Location,
 	type Message,
 	MIDType,
-} from "../../libs/thrift/line_types.ts";
+} from "@evex/linejs-types";
 import nacl from "tweetnacl";
 
 class E2EE extends TalkClient {

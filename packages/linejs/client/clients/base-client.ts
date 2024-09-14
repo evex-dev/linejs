@@ -9,10 +9,10 @@ import {
 	type ProtocolKey,
 	Protocols,
 } from "../libs/thrift/declares.ts";
-import type * as LINETypes from "../libs/thrift/line_types.ts";
+import type * as LINETypes from "@evex/linejs-types";
 import ThriftRenameParser from "../libs/thrift/parser.ts";
 import { readThrift } from "../libs/thrift/read.ts";
-import { Thrift } from "../libs/thrift/thrift.ts";
+import { Thrift } from "@evex/linejs-types/thrift";
 import { writeThrift } from "../libs/thrift/write.ts";
 import { TypedEventEmitter } from "../libs/typed-event-emitter/index.ts";
 import type { LogType } from "../entities/log.ts";

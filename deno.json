@@ -1,12 +1,12 @@
 {
-	"name": "@evex/linejs",
-	"version": "0.0.0",
-	"exports": {
-		".": "./packages/client/index.ts",
-		"./client": "./packages/client/index.ts",
-		"./utils": "./packages/utils/index.ts",
-		"./storage": "./packages/storage/index.ts",
-		"./rate-limit": "./packages/rate-limit/index.ts"
+	"workspace": ["./packages/linejs", "./packages/types"],
+	"fmt": {
+		"indentWidth": 2,
+		"singleQuote": false,
+		"useTabs": true,
+		"exclude": [
+			"./docs/"
+		]
 	},
 	"imports": {
 		"@std/assert": "jsr:@std/assert@^1.0.2",

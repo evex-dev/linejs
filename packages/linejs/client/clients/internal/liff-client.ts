@@ -3,7 +3,7 @@ import { JSDOM } from "npm:jsdom@25.0.0";
 import type { NestedArray, ProtocolKey } from "../../libs/thrift/declares.ts";
 import type { LooseType } from "../../entities/common.ts";
 import { BaseClient } from "../base-client.ts";
-import type * as LINETypes from "../../libs/thrift/line_types.ts";
+import type * as LINETypes from "@evex/linejs-types";
 
 export class LiffClient extends BaseClient {
 	protected static readonly LINE_LIFF_ENDPOINT =

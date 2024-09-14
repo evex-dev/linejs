@@ -1,9 +1,8 @@
 // For Friend
 
-import type { NestedArray, ProtocolKey } from "../../libs/thrift/declares.ts";
+import type { ProtocolKey } from "../../libs/thrift/declares.ts";
 import type { LooseType } from "../../entities/common.ts";
 import { E2EE } from "../e2ee/index.ts";
-import type * as LINETypes from "../../libs/thrift/line_types.ts";
 
 export class RelationClient extends E2EE {
 	protected RelationService_API_PATH = "/RE4";

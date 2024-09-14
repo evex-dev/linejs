@@ -1,4 +1,4 @@
-import type * as LINETypes from "../libs/thrift/line_types.ts";
+import type * as LINETypes from "@evex/linejs-types";
 import type { LooseType } from "./common.ts";
 
 export type Message = Omit<LINETypes.Operation, "type"> & {
