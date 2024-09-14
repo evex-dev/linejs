@@ -1,6 +1,6 @@
 # Client Options
 
-Next we will talk about Client.  
+Next, we will talk about the Client.  
 The Client has several options.
 
 ```ts
@@ -11,7 +11,7 @@ const client = new Client({
 
 For example, **storage for the data** we talked about before, **OBS Endpoint**, **Endpoint** for communication, **customFetch** for cors and proxies, **RateLimitter** for rate limiting, etc.  
 
-Let me explain one by one.
+Let me explain each one..
 
 ## Storage
 
