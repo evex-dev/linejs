@@ -1,4 +1,4 @@
-import type { AlwaysType, LooseType } from "@evex/linejs-types/entities";
+import type { AlwaysType, LooseType } from "./common.ts";
 
 export type LogType = "login" | "request" | "response" | (string & AlwaysType);
 

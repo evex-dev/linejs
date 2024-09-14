@@ -1,5 +1,5 @@
 import type * as LINETypes from "@evex/linejs-types";
-import type { LooseType } from "@evex/linejs-types/entities";
+import type { LooseType } from "./common.ts";
 
 export type Message = Omit<LINETypes.Operation, "type"> & {
 	opType: LINETypes.OpType;

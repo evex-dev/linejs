@@ -1,7 +1,7 @@
 import * as thrift from "thrift";
 import { Buffer } from "node:buffer";
 import type { NestedArray, ProtocolKey, Protocols } from "./declares.ts";
-import type { LooseType } from "./entities/common.ts";
+import type { LooseType } from "../../entities/common.ts";
 const Thrift = thrift.Thrift;
 
 export function writeThrift(

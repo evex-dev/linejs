@@ -1,6 +1,6 @@
 import * as thrift from "thrift";
 import { Buffer } from "node:buffer";
-import type { LooseType } from "./entities/common.ts";
+import type { LooseType } from "../../entities/common.ts";
 
 /**
  * @returns {any}

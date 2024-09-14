@@ -1,6 +1,6 @@
 // For Settings (settings, etc)
 
-import type { ProtocolKey } from "@evex/linejs-types/declares";
+import type { ProtocolKey } from "../../libs/thrift/declares.ts";
 import { RelationClient } from "./relation-client.ts";
 
 export class SettingsClient extends RelationClient {

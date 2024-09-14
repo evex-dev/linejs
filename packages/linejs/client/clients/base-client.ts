@@ -8,16 +8,16 @@ import {
 	type ParsedThrift,
 	type ProtocolKey,
 	Protocols,
-} from "@evex/linejs-types/declares";
+} from "../libs/thrift/declares.ts";
 import type * as LINETypes from "@evex/linejs-types";
-import ThriftRenameParser from "@evex/linejs-types/parser";
-import { readThrift } from "@evex/linejs-types/read";
+import ThriftRenameParser from "../libs/thrift/parser.ts";
+import { readThrift } from "../libs/thrift/read.ts";
 import { Thrift } from "@evex/linejs-types/thrift";
-import { writeThrift } from "@evex/linejs-types/write";
+import { writeThrift } from "../libs/thrift/write.ts";
 import { TypedEventEmitter } from "../libs/typed-event-emitter/index.ts";
 import type { LogType } from "../entities/log.ts";
 import type { LoginOptions } from "../entities/login.ts";
-import type { LooseType } from "@evex/linejs-types/entities";
+import type { LooseType } from "../entities/common.ts";
 import { type Device, getDeviceDetails } from "../entities/device.ts";
 import { InternalError } from "../entities/errors.ts";
 import type { ClientEvents } from "../entities/events.ts";

@@ -1,7 +1,7 @@
 // For Liff (liff, etc)
 import { JSDOM } from "npm:jsdom@25.0.0";
-import type { NestedArray, ProtocolKey } from "@evex/linejs-types/declares";
-import type { LooseType } from "@evex/linejs-types/entities";
+import type { NestedArray, ProtocolKey } from "../../libs/thrift/declares.ts";
+import type { LooseType } from "../../entities/common.ts";
 import { BaseClient } from "../base-client.ts";
 import type * as LINETypes from "@evex/linejs-types";
 

@@ -1,8 +1,8 @@
 // For Talk (talk, group(chat), etc)
 
-import type { NestedArray, ProtocolKey } from "@evex/linejs-types/declares";
+import type { NestedArray, ProtocolKey } from "../../libs/thrift/declares.ts";
 import type * as LINETypes from "@evex/linejs-types";
-import type { LooseType } from "@evex/linejs-types/entities";
+import type { LooseType } from "../../entities/common.ts";
 import { ChannelClient } from "./channel-client.ts";
 import type { Buffer } from "node:buffer";
 

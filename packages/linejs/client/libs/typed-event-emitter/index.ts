@@ -1,4 +1,4 @@
-import type { LooseType } from "@evex/linejs-types/entities";
+import type { LooseType } from "../../entities/common.ts";
 
 type RecordEvent = Record<string, (...args: LooseType[]) => LooseType>;
 

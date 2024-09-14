@@ -1,4 +1,4 @@
-import type { LooseType } from "./entities/common.ts";
+import type { LooseType } from "../../entities/common.ts";
 
 const TYPE = {
 	STOP: 0,

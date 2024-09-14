@@ -1,6 +1,6 @@
 import { Buffer } from "node:buffer";
 import { TBinaryProtocol, TCompactProtocol } from "thrift";
-import type { LooseType } from "./entities/common.ts";
+import type { LooseType } from "../../entities/common.ts";
 
 TBinaryProtocol.genHeader = (name: string) => {
 	return Buffer.from([

@@ -3,8 +3,8 @@ import * as curve25519 from "curve25519-js";
 import * as crypto from "node:crypto";
 import { Buffer } from "node:buffer";
 import { TalkClient } from "../internal/talk-client.ts";
-import type { LooseType } from "@evex/linejs-types/entities";
-import { rawReadStruct as readStruct } from "@evex/linejs-types/read";
+import type { LooseType } from "../../entities/common.ts";
+import { rawReadStruct as readStruct } from "../../libs/thrift/read.ts";
 import {
 	ContentType,
 	type Location,

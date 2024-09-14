@@ -1,7 +1,7 @@
 // For Friend
 
-import type { ProtocolKey } from "@evex/linejs-types/declares";
-import type { LooseType } from "@evex/linejs-types/entities";
+import type { ProtocolKey } from "../../libs/thrift/declares.ts";
+import type { LooseType } from "../../entities/common.ts";
 import { E2EE } from "../e2ee/index.ts";
 
 export class RelationClient extends E2EE {

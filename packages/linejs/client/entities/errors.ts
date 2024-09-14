@@ -1,4 +1,4 @@
-import type { LooseType } from "@evex/linejs-types/entities";
+import type { LooseType } from "./common.ts";
 
 export class InternalError extends Error {
 	constructor(
