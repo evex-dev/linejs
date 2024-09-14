@@ -7,7 +7,7 @@
 [![](https://dcbadge.limes.pink/api/server/evex)](https://discord.gg/evex)
 
 <center>
-  <img src="./.github/assets/icon.png" width="150"   height="150" alt="LINEJS" />
+  <img src="https://raw.githubusercontent.com/evex-dev/linejs/main/.github/assets/icon.png" width="150" height="150" alt="LINEJS" />
 </center>
 
 <center> <b>LINEJS</b> is a JavaScript library for creating a LINE SelfBot. </center>
