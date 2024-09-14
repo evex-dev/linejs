@@ -38,7 +38,7 @@ For now, please use "https://esm.sh/jsr/@evex/linejs".
 
 ## LINEJS Types
 
-Please see [@evex/linejs-types](./packages/client/libs/thrift/README.md)\
+Please see [@evex/linejs-types](https://jsr.io/@evex/linejs-types)\
 In short, TypeScript Types and Enum (ReactionType (0, 1, 2, 3), MessageType,
 etc...) are provided.
 
