@@ -17,6 +17,7 @@
 	},
 	"tasks": {
 		"format": "deno run -A npm:@biomejs/biome format --write ./packages/**/*.ts",
+		"format:check": "deno run -A npm:@biomejs/biome format ./packages/**/*.ts",
 		"lint": "deno run -A npm:@biomejs/biome lint ./packages/**/*.ts",
 		"check": "deno run -A npm:@biomejs/biome check ./packages/**/*.ts"
 	}
