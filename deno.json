@@ -16,7 +16,7 @@
 		"tweetnacl": "npm:tweetnacl@^1.0.3"
 	},
 	"tasks": {
-		"format": "deno fmt & deno run -A npm:@biomejs/biome format --write ./packages/**/*.ts",
+		"format": "deno run -A npm:@biomejs/biome format --write ./packages/**/*.ts",
 		"lint": "deno run -A npm:@biomejs/biome lint ./packages/**/*.ts",
 		"check": "deno run -A npm:@biomejs/biome check ./packages/**/*.ts"
 	}
