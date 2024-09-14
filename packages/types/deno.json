@@ -1,0 +1,14 @@
+{
+	"name": "@evex/linejs-types",
+	"version": "0.0.0",
+	"license": "MIT",
+	"exports": {
+		".": "./line_types.ts",
+		"./entities": "./entities/index.ts",
+		"./read": "./read.ts",
+		"./declares": "./declares.ts",
+		"./thrift": "./thrift.ts",
+		"./parser": "./parser.ts",
+		"./write": "./write.ts"
+	}
+}

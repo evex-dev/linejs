@@ -1,0 +1,12 @@
+{
+	"name": "@evex/linejs",
+	"version": "0.0.0",
+	"license": "MIT",
+	"exports": {
+		".": "./packages/client/index.ts",
+		"./client": "./packages/client/index.ts",
+		"./utils": "./packages/utils/index.ts",
+		"./storage": "./packages/storage/index.ts",
+		"./rate-limit": "./packages/rate-limit/index.ts"
+	}
+}
