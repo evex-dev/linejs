@@ -20,6 +20,8 @@ jobs:
           deno-version: v1.x
       - run: deno publish --dry-run
         working-directory: ./packages/linejs
+      - run: deno publish --dry-run
+        working-directory: ./packages/types
 
   deno:
     name: 'Deno'
