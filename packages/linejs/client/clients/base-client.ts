@@ -38,7 +38,6 @@ import type {
 import { LINE_OBS } from "../../utils/obs/index.ts";
 import { RateLimitter } from "../libs/rate-limitter/index.ts";
 import type { FetchLike } from "../entities/fetch.ts";
-import { SquareMessage, TalkMessage } from "../../utils/message/Message.ts";
 
 interface ClientOptions {
 	storage?: BaseStorage;
@@ -251,10 +250,129 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 						previousMessageId = message.id;
 
-						this.emit(
-							"square:message",
-							new SquareMessage({ message }, this as any),
-						);
+						const send = async (
+							options: SquareMessageSendOptions,
+							safe: boolean = true,
+						) => {
+							if (typeof options === "string") {
+								return await this.sendSquareMessage(
+									{
+										squareChatMid: message.to,
+										text: options,
+										relatedMessageId: undefined,
+									},
+									safe,
+								);
+							} else {
+								return await this.sendSquareMessage(
+									{
+										squareChatMid: message.to,
+										relatedMessageId: undefined,
+										...options,
+									},
+									safe,
+								);
+							}
+						};
+
+						const reply = async (
+							options: MessageReplyOptions,
+							safe: boolean = true,
+						) => {
+							if (typeof options === "string") {
+								return await this.sendSquareMessage(
+									{
+										squareChatMid: message.to,
+										text: options,
+										relatedMessageId: message.id,
+									},
+									safe,
+								);
+							} else {
+								return await this.sendSquareMessage(
+									{
+										squareChatMid: message.to,
+										relatedMessageId: message.id,
+										...options,
+									},
+									safe,
+								);
+							}
+						};
+
+						const react = async (options: SquareMessageReactionOptions) => {
+							if (typeof options === "number") {
+								return await this.reactToSquareMessage({
+									squareChatMid:
+										event.payload.notificationMessage.squareChatMid,
+									reactionType: options as LINETypes.MessageReactionType,
+									squareMessageId: message.id,
+								});
+							} else {
+								return await this.reactToSquareMessage({
+									squareChatMid:
+										event.payload.notificationMessage.squareChatMid,
+									reactionType: (
+										options as Exclude<
+											SquareMessageReactionOptions,
+											LINETypes.MessageReactionType
+										>
+									).reactionType,
+									squareMessageId: message.id,
+								});
+							}
+						};
+
+						const getMyProfile = async () =>
+							await this.getSquareProfile({
+								squareMid: (
+									await this.getSquareChat({
+										squareChatMid: message.to,
+									})
+								).squareChat.squareMid,
+							});
+
+						this.emit("square:message", {
+							...event.payload.notificationMessage,
+							type: "square",
+							content: typeof message.text === "string" ? message.text : "",
+							contentMetadata: message.contentMetadata,
+							contentType: message.contentType,
+							messageId: message.id,
+							replyId: message.relatedMessageId,
+							reply,
+							send,
+							react,
+							author: {
+								mid: message._from,
+								get displayName() {
+									return (
+										event.payload.notificationMessage.senderDisplayName ||
+										getMyProfile().then((myProfile) => myProfile.displayName)
+									);
+								},
+								iconImage: this.LINE_OBS.getSquareMemberImage(message._from),
+							},
+							isMyMessage: async () =>
+								(await getMyProfile()).squareMemberMid === message._from,
+							getProfile: async () =>
+								(
+									await this.getSquareMember({
+										squareMemberMid: message._from,
+									})
+								).squareMember,
+							getMyProfile,
+							square: async () =>
+								await this.getSquareChat({
+									squareChatMid:
+										event.payload.notificationMessage.squareChatMid,
+								}),
+							data:
+								this.hasData(message) &&
+								(async (preview) =>
+									await this.getMessageObsData(message.id, preview)),
+							message,
+						});
 					}
 				}
 				myEventsSyncToken = myEvents.syncToken;
@@ -293,7 +411,120 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						operation.type === "SEND_MESSAGE"
 					) {
 						const message = await this.decryptE2EEMessage(operation.message);
-						this.emit("message", new TalkMessage({ message }, this as any));
+						let sendIn = "";
+						if (message.toType === "USER") {
+							if (message._from === this.user?.mid) {
+								sendIn = message.to;
+							} else {
+								sendIn = message._from;
+							}
+						} else {
+							sendIn = message.to;
+						}
+						const send = async (options: SquareMessageSendOptions) => {
+							if (typeof options === "string") {
+								return await this.sendMessage({
+									to: sendIn,
+									text: options,
+									relatedMessageId: undefined,
+								});
+							} else {
+								return await this.sendMessage({
+									to: sendIn,
+									relatedMessageId: undefined,
+									...options,
+								});
+							}
+						};
+
+						const reply = async (options: MessageReplyOptions) => {
+							if (typeof options === "string") {
+								return await this.sendMessage({
+									to: sendIn,
+									text: options,
+									relatedMessageId: message.id,
+								});
+							} else {
+								return await this.sendMessage({
+									to: sendIn,
+									relatedMessageId: message.id,
+									...options,
+								});
+							}
+						};
+
+						const react = async (options: SquareMessageReactionOptions) => {
+							if (typeof options === "number") {
+								return await this.reactToMessage({
+									reactionType: options as LINETypes.MessageReactionType,
+									messageId: message.id,
+								});
+							} else {
+								return await this.reactToMessage({
+									reactionType: (
+										options as Exclude<
+											SquareMessageReactionOptions,
+											LINETypes.MessageReactionType
+										>
+									).reactionType,
+									messageId: message.id,
+								});
+							}
+						};
+
+						const chat =
+							message.toType === "USER"
+								? async () => {
+										return await this.getContact({ mid: sendIn });
+									}
+								: undefined;
+
+						const group =
+							message.toType !== "USER"
+								? async () => {
+										return (await this.getChats({ mids: [sendIn] })).chats[0];
+									}
+								: (undefined as LooseType);
+
+						const getContact = async () => {
+							return await this.getContact({ mid: message._from });
+						};
+
+						const getMyProfile = async () => {
+							return await this.refreshProfile(true);
+						};
+
+						this.emit("message", {
+							...operation,
+							type: (message.toType === "USER" ? "chat" : "group") as LooseType,
+							opType: operation.type,
+							content: typeof message.text === "string" ? message.text : "",
+							contentMetadata: message.contentMetadata,
+							contentType: message.contentType,
+							messageId: message.id,
+							replyId: message.relatedMessageId,
+							reply,
+							send,
+							react,
+							author: {
+								mid: message._from,
+								get displayName() {
+									return getContact().then((contact) => contact.displayName);
+								},
+								iconImage: this.LINE_OBS.getProfileImage(message._from),
+							},
+							isMyMessage: async () =>
+								(await getMyProfile()).mid === message._from,
+							getContact,
+							getMyProfile,
+							chat,
+							group,
+							data:
+								this.hasData(message) &&
+								(async (preview) =>
+									await this.getMessageObsData(message.id, preview)),
+							message,
+						});
 					}
 					this.emit("event", operation);
 				}

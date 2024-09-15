@@ -15430,18 +15430,26 @@ export const Thrift = {
 };
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 export function parseEnum(
 	enumName: string,
 	enumValue: number | any,
 ): string | null {
 	const _Thrift = Thrift as any;
+=======
+export function parseEnum(enumName: string, enumValue: number | string): string | null {
+>>>>>>> parent of 7d02a74 (update msg event)
 	try {
-		return _Thrift[enumName][enumValue];
+		return Thrift[enumName][enumValue]
 	} catch {
-		return null;
+		return null
 	}
+<<<<<<< HEAD
 }
 =======
 >>>>>>> parent of 4ad1203 (add message util)
 =======
 >>>>>>> parent of 4ad1203 (add message util)
+=======
+}
+>>>>>>> parent of 7d02a74 (update msg event)
