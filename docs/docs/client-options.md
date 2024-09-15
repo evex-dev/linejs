@@ -11,7 +11,7 @@ const client = new Client({
 
 For example, **storage for the data** we talked about before, **OBS Endpoint**, **Endpoint** for communication, **customFetch** for cors and proxies, **RateLimitter** for rate limiting, etc.  
 
-Let me explain each one..
+Let me explain one by one.
 
 ## Storage
 
