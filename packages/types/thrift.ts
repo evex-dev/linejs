@@ -15428,10 +15428,14 @@ export const Thrift = {
 		},
 	],
 };
-export function parseEnum(enumName: string, enumValue: number | string): string | null {
+export function parseEnum(
+	enumName: string,
+	enumValue: number | any,
+): string | null {
+	const _Thrift = Thrift as any;
 	try {
-		return Thrift[enumName][enumValue]
+		return _Thrift[enumName][enumValue];
 	} catch {
-		return null
+		return null;
 	}
 }
