@@ -38,7 +38,7 @@ import type {
 import { LINE_OBS } from "../../utils/obs/index.ts";
 import { RateLimitter } from "../libs/rate-limitter/index.ts";
 import type { FetchLike } from "../entities/fetch.ts";
-import { MimeType } from "../entities/mime.ts"
+import { MimeType } from "../entities/mime.ts";
 
 interface ClientOptions {
 	storage?: BaseStorage;
@@ -415,7 +415,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					) {
 						const message = await this.decryptE2EEMessage(operation.message);
 						if (this.hasData(message) && operation.type !== "SEND_CONTENT") {
-							continue
+							continue;
 						}
 						let sendIn = "";
 						if (message.toType === "USER") {
@@ -481,15 +481,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						const chat =
 							message.toType === "USER"
 								? async () => {
-									return await this.getContact({ mid: sendIn });
-								}
+										return await this.getContact({ mid: sendIn });
+									}
 								: undefined;
 
 						const group =
 							message.toType !== "USER"
 								? async () => {
-									return (await this.getChats({ mids: [sendIn] })).chats[0];
-								}
+										return (await this.getChats({ mids: [sendIn] })).chats[0];
+									}
 								: (undefined as LooseType);
 
 						const getContact = async () => {
@@ -927,7 +927,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType { }
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
 
 	/**
 	 * @description Will override.
@@ -1530,31 +1530,30 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		if (!this.hasData(message)) {
 			throw new TypeError("Not have content for type " + message.contentType);
 		}
-		const type = message.contentType.toString().toLowerCase()
-		const ext = (MimeType as any)[data.type]
+		const type = message.contentType.toString().toLowerCase();
+		const ext = (MimeType as any)[data.type];
 		const param: {
 			ver: string;
 			name: string;
 			type: string;
 			cat?: string;
 			duration?: string;
-		} = { "ver": "2.0", "name": filename || "linejs." + ext, type }
+		} = { ver: "2.0", name: filename || "linejs." + ext, type };
 		if (type === "image") {
-			param.cat = "original"
+			param.cat = "original";
 		} else if (type === "audio" || type === "video") {
-			param.duration = "1919"
+			param.duration = "1919";
 		}
-		return await this.customFetch(
-			this.LINE_OBS.getDataUrl(message.id),
-			{
-				headers: {
-					accept: "application/json, text/plain, */*",
-					"x-line-application": this.system?.type as string,
-					"x-Line-access": this.metadata.authToken,
-					"content-type": "application/x-www-form-urlencoded",
-					"x-obs-params:": btoa(JSON.stringify(param))
-				}
+		return await this.customFetch(this.LINE_OBS.getDataUrl(message.id), {
+			headers: {
+				accept: "application/json, text/plain, */*",
+				"x-line-application": this.system?.type as string,
+				"x-Line-access": this.metadata.authToken,
+				"content-type": "application/x-www-form-urlencoded",
+				"x-obs-params:": btoa(JSON.stringify(param)),
 			},
-		)
+			body: data,
+			method: "POST",
+		});
 	}
 }
