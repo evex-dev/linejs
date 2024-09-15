@@ -15429,6 +15429,7 @@ export const Thrift = {
 	],
 };
 <<<<<<< HEAD
+<<<<<<< HEAD
 export function parseEnum(
 	enumName: string,
 	enumValue: number | any,
@@ -15440,5 +15441,7 @@ export function parseEnum(
 		return null;
 	}
 }
+=======
+>>>>>>> parent of 4ad1203 (add message util)
 =======
 >>>>>>> parent of 4ad1203 (add message util)
