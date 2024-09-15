@@ -243,7 +243,7 @@ export class Message {
 		}
 		const emojiUrls: string[] = [];
 		const emojiData = this.contentMetadata as emojiMeta;
-		emojiData.REPLACE.sticon.resources.forEach((e) => {
+		(emojiData?.REPLACE?.sticon?.resources||[]).forEach((e) => {
 			emojiUrls.push(
 				`https://stickershop.line-scdn.net/sticonshop/v1/sticon/${e.productId}/android/${e.sticonId}.png`,
 			);
@@ -260,7 +260,7 @@ export class Message {
 		}
 		const mentionees: string[] = [];
 		const mentionData = this.contentMetadata as mentionMeta;
-		mentionData.MENTION.MENTIONEES.forEach((e) => {
+		(mentionData?.MENTION?.MENTIONEES||[]).forEach((e) => {
 			const mid = e.A ? "ALL" : e.M;
 			if (mid) mentionees.push(mid);
 		});
@@ -278,11 +278,11 @@ export class Message {
 		const splits: splitInfo[] = [];
 		const mentionData = this.contentMetadata as mentionMeta;
 		const emojiData = this.contentMetadata as emojiMeta;
-		mentionData.MENTION.MENTIONEES.forEach((e, i) => {
+		(mentionData?.MENTION?.MENTIONEES||[]).forEach((e, i) => {
 			splits.push({ start: parseInt(e.S), end: parseInt(e.E), mention: i });
 		});
-		emojiData.REPLACE.sticon.resources.forEach((e, i) => {
-			splits.push({ start: e.S, end: e.E, mention: i });
+		(emojiData?.REPLACE?.sticon?.resources||[]).forEach((e, i) => {
+			splits.push({ start: e.S, end: e.E, emoji: i });
 		});
 		let lastSplit = 0;
 		splits
@@ -310,6 +310,9 @@ export class Message {
 				}
 				texts.push(content);
 				lastSplit = e.end;
+			});
+			texts.push({
+				text: this.content?.substring(lastSplit) as string,
 			});
 		return texts;
 	}
@@ -402,6 +405,13 @@ export class ClientMessage extends Message {
 	public getData(preview?: boolean): Promise<Blob> {
 		if (!hasContents.includes(this.contentType as string)) {
 			throw new Error("message have no contents");
+		}
+		if (this.contentMetadata.DOWNLOAD_URL) {
+			if (preview) {
+				return this.client.customFetch(this.contentMetadata.PREVIEW_URL).then(r=>r.blob())
+			} else {
+				return this.client.customFetch(this.contentMetadata.DOWNLOAD_URL).then(r=>r.blob())
+			}
 		}
 		return this.client.getMessageObsData(this.id, preview);
 	}

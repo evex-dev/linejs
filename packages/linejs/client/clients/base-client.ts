@@ -406,11 +406,16 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 				for (const operation of myEvents.operationResponse?.operations) {
 					revision = operation.revision;
+					this.emit("event", operation);
 					if (
 						operation.type === "RECEIVE_MESSAGE" ||
-						operation.type === "SEND_MESSAGE"
+						operation.type === "SEND_MESSAGE" ||
+						operation.type === "SEND_CONTENT"
 					) {
 						const message = await this.decryptE2EEMessage(operation.message);
+						if (this.hasData(message)&&operation.type !== "SEND_CONTENT") {
+							continue
+						}
 						let sendIn = "";
 						if (message.toType === "USER") {
 							if (message._from === this.user?.mid) {
@@ -526,7 +531,6 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							message,
 						});
 					}
-					this.emit("event", operation);
 				}
 				globalRev =
 					myEvents.operationResponse?.globalEvents?.lastRevision || globalRev;
