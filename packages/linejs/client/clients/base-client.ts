@@ -157,7 +157,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					? "ANDROID"
 					: "IOSIPAD"
 				: "IOSIPAD");
-		const details = getDeviceDetails(device);
+		const details = await getDeviceDetails(device,options.useLatest);
 
 		if (!details) {
 			throw new InternalError("Unsupported device", `'${device}'`);
