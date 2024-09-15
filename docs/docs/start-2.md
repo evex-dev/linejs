@@ -7,7 +7,7 @@ It's easy. 　
 All you have to do is call the client's method as follows.
 
 ```ts
-import { Client } from "../packages/client/index.ts";
+import { Client } from "@evex/linejs";
 
 const client = new Client();
 

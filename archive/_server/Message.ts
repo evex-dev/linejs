@@ -124,6 +124,7 @@ export class Message {
     public id: string;
     public createdTime: Date;
     public text: string;
+    public content: string;
 
     constructor(options: {
         operation?: LINETypes.Operation
@@ -165,6 +166,7 @@ export class Message {
         this.createdTime = new Date(this.rawMessage.createdTime)
         this.id = this.rawMessage.id
         if (this.rawMessage.text) {
+            this.content = this.rawMessage.text
             this.text = this.rawMessage.text
         }
         this.contentMetadata = {}
@@ -244,8 +246,8 @@ export class Message {
         })
         let lastSplit = 0;
         splits.sort((a, b) => a.start - b.start).forEach(e => {
-            texts.push({ text: this.text.substring(lastSplit, e.start) })
-            const content: decorationText = { text: this.text.substring(e.start, e.end) }
+            texts.push({ text: this.content.substring(lastSplit, e.start) })
+            const content: decorationText = { text: this.content.substring(e.start, e.end) }
             if (typeof e.emoji === "number") {
                 const emoji = emojiData.REPLACE.sticon.resources[e.emoji]
                 const url = `https://stickershop.line-scdn.net/sticonshop/v1/sticon/${emoji.productId}/android/${emoji.sticonId}.png`
