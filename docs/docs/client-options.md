@@ -1,6 +1,6 @@
 # Client Options
 
-Next we will talk about Client.  
+Next, we will talk about the Client.  
 The Client has several options.
 
 ```ts

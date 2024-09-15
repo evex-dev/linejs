@@ -8,7 +8,7 @@ hero:
   tagline: LINEJS is a JavaScript library for LINE SelfBot.
   actions:
     - theme: brand
-      text: See docs
+      text: See Docs
       link: /docs/start
     - theme: alt
       text: Examples
@@ -20,8 +20,8 @@ features:
     details: Node.js, Deno, Bun, and more.
   - title: Highly Typed
     icon: 🧩
-    details: Enhanced Typescript support.
+    details: Enhanced TypeScript support.
   - title: Safety Locked
     icon: 🔒
-    details: Defaults to safety locked. (RateLimit and others)
+    details: Defaults to safety locked (RateLimit and others).
 ---
