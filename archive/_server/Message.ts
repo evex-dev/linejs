@@ -4,6 +4,28 @@ import { Client } from "../../packages/linejs/client/index.ts"
 
 const hasContents = ["IMAGE", "VIDEO", "AUDIO", "FILE"]
 
+type splitInfo = {
+    start: number;
+    end: number;
+    mention?: number;
+    emoji?: number
+}
+
+type decorationText = {
+    text: string;
+    emoji?: {
+        productId: string;
+        sticonId: string;
+        version: number;
+        resourceType: string;
+        url: string;
+    };
+    mention?: {
+        mid?: string;
+        all?: true;
+    }
+}
+
 type stkMeta = {
     STKPKGID: string;
     STKID: string;
@@ -101,6 +123,7 @@ export class Message {
     public _senderDisplayName: string;
     public id: string;
     public createdTime: Date;
+    public text: string;
 
     constructor(options: {
         operation?: LINETypes.Operation
@@ -141,6 +164,9 @@ export class Message {
         this.contentType = parseEnum("ContentType", this.rawMessage.contentType) as LINETypes.ContentType || this.rawMessage.contentType
         this.createdTime = new Date(this.rawMessage.createdTime)
         this.id = this.rawMessage.id
+        if (this.rawMessage.text) {
+            this.text = this.rawMessage.text
+        }
         this.contentMetadata = {}
         for (const key in this.rawMessage.contentMetadata) {
             if (Object.prototype.hasOwnProperty.call(this.rawMessage.contentMetadata, key)) {
@@ -206,6 +232,37 @@ export class Message {
         if (this.contentType !== "NONE") {
             throw new Error("Not Text Message")
         }
+        const texts: decorationText[] = []
+        const splits: splitInfo[] = []
+        const mentionData = this.contentMetadata as mentionMeta
+        const emojiData = this.contentMetadata as emojiMeta
+        mentionData.MENTION.MENTIONEES.forEach((e, i) => {
+            splits.push({ start: parseInt(e.S), end: parseInt(e.E), mention: i })
+        })
+        emojiData.REPLACE.sticon.resources.forEach((e, i) => {
+            splits.push({ start: e.S, end: e.E, mention: i })
+        })
+        let lastSplit = 0;
+        splits.sort((a, b) => a.start - b.start).forEach(e => {
+            texts.push({ text: this.text.substring(lastSplit, e.start) })
+            const content: decorationText = { text: this.text.substring(e.start, e.end) }
+            if (typeof e.emoji === "number") {
+                const emoji = emojiData.REPLACE.sticon.resources[e.emoji]
+                const url = `https://stickershop.line-scdn.net/sticonshop/v1/sticon/${emoji.productId}/android/${emoji.sticonId}.png`
+                content.emoji = {
+                    ...emoji, url
+                }
+            } else if (typeof e.mention === "number") {
+                const mention = mentionData.MENTION.MENTIONEES[e.mention]
+                content.mention = {
+                    mid: mention.M,
+                    all: mention.A ? true : undefined
+                }
+            }
+            texts.push(content)
+            lastSplit = e.end
+        })
+        return texts
     }
 
     /**
@@ -286,9 +343,9 @@ export class TalkMessage extends ClientMessage {
     }
 
     /**
-     * @return {Promise<LINETypes.Contact>} message sender
+     * @return {Promise<LINETypes.Contact>} message author
      */
-    public getSender() {
+    public getAuthor() {
         return this.client.getContact({ mid: this.from })
     }
 
@@ -313,9 +370,9 @@ export class TalkMessage extends ClientMessage {
     }
 
     /**
-     * @description Gets sender is me
+     * @description Gets author is me
      */
-    public getSenderIsMe() {
+    public getAuthorIsMe() {
         return this.from === this.client.user.mid
     }
 
@@ -323,7 +380,7 @@ export class TalkMessage extends ClientMessage {
      * @description Sends in this talk
      */
     public send(options: { to?: string; text?: string | undefined; contentType?: number | undefined; contentMetadata?: any; relatedMessageId?: string | undefined; location?: any; chunk?: string[] | Buffer[] | undefined; e2ee?: boolean | undefined; }) {
-        options.to = (this.toType === "GROUP" || this.toType === "ROOM") ? this.to : (this.getSenderIsMe() ? this.to : this.from)
+        options.to = (this.toType === "GROUP" || this.toType === "ROOM") ? this.to : (this.getAuthorIsMe() ? this.to : this.from)
         return this.client.sendMessage(options as any)
     }
 
@@ -331,9 +388,22 @@ export class TalkMessage extends ClientMessage {
      * @description Sends in this talk with replying this message
      */
     public reply(options: { to?: string; text?: string | undefined; contentType?: number | undefined; contentMetadata?: any; relatedMessageId?: string | undefined; location?: any; chunk?: string[] | Buffer[] | undefined; e2ee?: boolean | undefined; }) {
-        options.to = (this.toType === "GROUP" || this.toType === "ROOM") ? this.to : (this.getSenderIsMe() ? this.to : this.from)
+        options.to = (this.toType === "GROUP" || this.toType === "ROOM") ? this.to : (this.getAuthorIsMe() ? this.to : this.from)
         options.relatedMessageId = this.id
         return this.client.sendMessage(options as any)
+    }
+
+    /**
+     * @description React to this message
+     */
+    public react(type: LINETypes.MessageReactionType) {
+        if (typeof type === "string") {
+            type = LINETypes.MessageReactionType[type]
+        }
+        return this.client.reactToMessage({
+            reactionType: type as LINETypes.MessageReactionType,
+            messageId: this.id,
+        });
     }
 }
 
@@ -347,9 +417,9 @@ export class SquareMessage extends ClientMessage {
     }
 
     /**
-     * @return {Promise<LINETypes.GetSquareMemberResponse>} message sender
+     * @return {Promise<LINETypes.GetSquareMemberResponse>} message author
      */
-    public getSender() {
+    public getAuthor() {
         return this.client.getSquareMember({ squareMemberMid: this.from })
     }
 
@@ -368,9 +438,9 @@ export class SquareMessage extends ClientMessage {
     }
 
     /**
-     * @description Gets sender is me
+     * @description Gets author is me
      */
-    public async getSenderIsMe() {
+    public async getAuthorIsMe() {
         return this.from === (await this.getSquareChat()).SquareChatMember.squareMemberMid
     }
 
@@ -401,5 +471,19 @@ export class SquareMessage extends ClientMessage {
         options.squareChatMid = this.to
         options.relatedMessageId = this.id
         return this.client.sendSquareMessage(options as any)
+    }
+
+    /**
+     * @description React to this message
+     */
+    public react(type: LINETypes.MessageReactionType) {
+        if (typeof type === "string") {
+            type = LINETypes.MessageReactionType[type]
+        }
+        return this.client.reactToSquareMessage({
+            squareChatMid: this.to,
+            reactionType: type as LINETypes.MessageReactionType,
+            squareMessageId: this.id,
+        });
     }
 }
