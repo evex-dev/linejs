@@ -1,43 +1,211 @@
-import { InviteIntoChatRequest } from "../../../../types/line_types.ts";
-import { ClientEvents } from "../../entities/events.ts";
-import { Client } from "../../index.ts";
+import { SettingsClient } from "../internal/setting-client.ts";
 
-class Timeline extends Client {
-    protected timeLineToken: stringing | undefined;
+export class Timeline extends SettingsClient {
+	protected timelineToken: string | undefined;
 
-    protected async initTimeline() {
-        if (this.timeLineToken) {
-            return
-        }
-        this.timeLineToken = (await this.approveChannelAndIssueChannelToken({ channelId: "1341209850" })).channelAccessToken
-    }
+	public timelineHeaders: Record<string, string> = {};
 
-    public async createPost(options: {
-        homeId: string,
-        text?: string,
-        sharedPostId?: string,
-        textSizeMode?: string,
-        backgroundColor?: string,
-        textAnimation?: string,
-        readPermissionType?: string,
-        readPermissionGids?: any[],
-        holdingTime?: number,
-        stickerIds?: any[],
-        stickerPackageIds?: any[],
-        locationLatitudes?: any[],
-        locationLongitudes?: any[],
-        locationNames?: any[],
-        mediaObjectIds?: any[],
-        mediaObjectTypes?: any[],
-        sourceType?: string,
-    }) {
-        const {homeId,textAnimation,} = {
-            textSizeMode: "NORMAL",
-            backgroundColor: "#FFFFFF",
-            textAnimation: "NONE",
-            readPermissionType: "ALL",
-            sourceType: "TIMELINE",
-            ,...options
-    }
-}
+	protected async initTimeline() {
+		if (this.timelineToken) {
+			return;
+		}
+		this.timelineToken = (
+			await this.approveChannelAndIssueChannelToken({ channelId: "1341209850" })
+		).channelAccessToken;
+		this.timelineHeaders = {
+			Host: "gw.line.naver.jp",
+			"x-line-bdbtemplateversion": "v1",
+			"x-lsr": "JP",
+			"user-agent": this.system?.userAgent as string,
+			"x-line-channeltoken": this.timelineToken,
+			"accept-encoding": "gzip",
+			"x-line-global-config":
+				"discover.enable=true; follow.enable=true; reboot.phase=scenario",
+			"x-line-mid": this.user?.mid as string,
+			"x-line-access": this.metadata?.authToken as string,
+			"content-type": "application/json; charset=UTF-8",
+			"x-line-application": this.system?.type as string,
+			"x-lal": "ja_JP",
+			"x-lpv": "1",
+			"x-lap": "5",
+		};
+	}
+
+	public async createPost(options: {
+		homeId: string;
+		text?: string;
+		sharedPostId?: string;
+		textSizeMode?: "AUTO" | "NORMAL";
+		backgroundColor?: string;
+		textAnimation?: "NONE" | "SLIDE" | "ZOOM" | "BUZZ" | "BOUNCE" | "BLINK";
+		readPermissionType?: "ALL" | "FRIEND" | "GROUP" | "EVENT" | "NONE";
+		readPermissionGids?: string[];
+		holdingTime?: number;
+		stickerIds?: string[];
+		stickerPackageIds?: string[];
+		locationLatitudes?: number[];
+		locationLongitudes?: number[];
+		locationNames?: string[];
+		mediaObjectIds?: string[];
+		mediaObjectTypes?: string[];
+		sourceType?: string;
+	}) {
+		const {
+			homeId,
+			text,
+			sharedPostId,
+			textSizeMode,
+			backgroundColor,
+			textAnimation,
+			readPermissionType,
+			readPermissionGids,
+			holdingTime,
+			stickerIds,
+			stickerPackageIds,
+			locationLatitudes,
+			locationLongitudes,
+			locationNames,
+			mediaObjectIds,
+			mediaObjectTypes,
+			sourceType,
+		} = {
+			textSizeMode: "NORMAL",
+			backgroundColor: "#FFFFFF",
+			textAnimation: "NONE",
+			readPermissionType: "ALL",
+			sourceType: "TIMELINE",
+			readPermissionGids: [],
+			stickerIds: [],
+			stickerPackageIds: [],
+			locationLatitudes: [],
+			locationLongitudes: [],
+			locationNames: [],
+			mediaObjectIds: [],
+			mediaObjectTypes: [],
+			...options,
+		};
+		if (homeId[0] === "u") {
+			throw new Error("Not support oto");
+		}
+		const params = new URLSearchParams({
+			homeId: homeId,
+			sourceType: sourceType,
+		});
+		const postInfo: any = {
+			readPermission: { type: readPermissionType, gids: readPermissionGids },
+		};
+		const stickers: {
+			id: string;
+			packageId: string;
+			packageVersion: number;
+			hasAnimation: boolean;
+			hasSound: boolean;
+			stickerResourceType: string;
+		}[] = [];
+		const locations: { latitude: number; longitude: number; name: string }[] =
+			[];
+		const medias: { objectId: string; type: string; obsFace: string }[] = [];
+		stickerIds.forEach((stickerId, stickerIndex) => {
+			stickers.push({
+				id: stickerId,
+				packageId: stickerPackageIds[stickerIndex],
+				packageVersion: 1,
+				hasAnimation: true,
+				hasSound: true,
+				stickerResourceType: "ANIMATION",
+			});
+		});
+		locationLatitudes.forEach((locationLatitude, locatioIndex) => {
+			locations.push({
+				latitude: locationLatitude,
+				longitude: locationLongitudes[locatioIndex],
+				name: locationNames[locatioIndex],
+			});
+		});
+		mediaObjectIds.forEach((mediaObjectId, mediaIndex) => {
+			medias.push({
+				objectId: mediaObjectId,
+				type: mediaObjectTypes[mediaIndex],
+				obsFace: "[]",
+			});
+		});
+		const contents: any = {
+			contentsStyle: {
+				textStyle: {
+					textSizeMode: textSizeMode,
+					backgroundColor: backgroundColor,
+					textAnimation: textAnimation,
+				},
+				mediaStyle: { displayType: "GRID_1_A" },
+			},
+			stickers: stickers,
+			locations: locations,
+			media: medias,
+		};
+		if (typeof holdingTime !== "undefined") {
+			postInfo.holdingTime = holdingTime;
+		}
+		if (typeof text !== "undefined") {
+			contents.text = text;
+		}
+		if (typeof sharedPostId !== "undefined") {
+			contents.sharedPostId = sharedPostId;
+		}
+		const data = { postInfo: postInfo, contents: contents };
+		const headers = {
+			...this.timelineHeaders,
+			"x-lhm": "POST",
+			"Content-type": "application/json",
+		};
+		return await this.customFetch(
+			`https://${this.endpoint}/mh/api/v57/post/create.json?${params}`,
+			{ headers, body: JSON.stringify(data), method: "POST" },
+		).then((r) => r.json());
+	}
+
+	public async deletePost(options: { homeId: string; postId: string }) {
+		const { homeId, postId } = { ...options };
+		const headers = {
+			...this.timelineHeaders,
+			"x-lhm": "GET",
+			"Content-type": "application/json",
+		};
+		const params = new URLSearchParams({
+			homeId,
+			postId,
+		});
+		return await this.customFetch(
+			`https://${this.endpoint}/mh/api/v57/post/get.json?${params}`,
+			{ headers },
+		).then((r) => r.json());
+	}
+
+	public async listPost(options: {
+		homeId: string;
+		postId?: string;
+		updatedTime?: number;
+		sourceType?: string;
+	}) {
+		const { homeId, postId, updatedTime, sourceType } = {
+			sourceType: "TALKROOM",
+			...options,
+		};
+		const headers = {
+			...this.timelineHeaders,
+			"x-lhm": "GET",
+			"Content-type": "application/json",
+		};
+		const data: any = { homeId, sourceType };
+		if (postId) {
+			data.postId = postId;
+		}
+		if (updatedTime) {
+			data.updatedTime = updatedTime.toString();
+		}
+		const params = new URLSearchParams(data);
+		return await this.customFetch(
+			`https://${this.endpoint}/mh/api/v57/post/list.json?${params}`,
+			{ headers },
+		).then((r) => r.json());
+	}
 }

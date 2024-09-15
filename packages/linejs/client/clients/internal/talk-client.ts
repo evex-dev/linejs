@@ -656,4 +656,42 @@ export class TalkClient extends ChannelClient {
 			this.TalkService_API_PATH,
 		);
 	}
+
+	public async createChatRoomAnnouncement(options: {
+		chatRoomMid: string;
+		text: string;
+		link?: string;
+		thumbnail?: string;
+		type?: number;
+		displayFields?: number;
+	}): Promise<LINETypes.AcceptChatInvitationByTicketResponse> {
+		const { chatRoomMid, text, link, thumbnail, type, displayFields } = {
+			link: "",
+			thumbnail: "",
+			type: 0,
+			displayFields: 5,
+			...options,
+		};
+		return await this.direct_request(
+			[
+				[8, 1, 0],
+				[11, 2, chatRoomMid],
+				[8, 3, type],
+				[
+					12,
+					4,
+					[
+						[8, 1, displayFields],
+						[11, 2, text],
+						[11, 3, link],
+						[11, 4, thumbnail],
+					],
+				],
+			],
+			"createChatRoomAnnouncement",
+			this.TalkService_PROTOCOL_TYPE,
+			"ChatRoomAnnouncement",
+			this.TalkService_API_PATH,
+		);
+	}
 }

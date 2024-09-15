@@ -2,10 +2,10 @@
  * @module
  * LINE SelfBot Client
  */
-import { SettingsClient } from "./clients/internal/setting-client.ts";
+import { Timeline } from "./clients/timeline/index.ts";
 
 /**
  * @classdesc LINE SelfBot Client
  * @constructor
  */
-export class Client extends SettingsClient {}
+export class Client extends Timeline {}
