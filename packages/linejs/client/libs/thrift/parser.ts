@@ -82,24 +82,24 @@ export default class ThriftRenameParser {
 			if (typeof value === "undefined") {
 				continue;
 			}
-			if (finfo.struct) {
+			if (finfo.struct && typeof value === "object") {
 				if (isStruct(this.def[finfo.struct])) {
 					newObject[finfo.name] = this.rename_thrift(finfo.struct, value);
 				} else {
 					newObject[finfo.name] = this.def[finfo.struct][value] || value;
 				}
-			} else if (typeof finfo.list === "string") {
+			} else if (typeof finfo.list === "string" && typeof value === "object") {
 				newObject[finfo.name] = [];
 				value.forEach((e: LooseType, i: number) => {
 					newObject[finfo.name][i] = this.rename_thrift(finfo.list, e);
 				});
-			} else if (typeof finfo.map === "string") {
+			} else if (typeof finfo.map === "string" && typeof value === "object") {
 				newObject[finfo.name] = {};
 				for (const key in value) {
 					const e = value[key];
 					newObject[finfo.name][key] = this.rename_thrift(finfo.map, e);
 				}
-			} else if (typeof finfo.set === "string") {
+			} else if (typeof finfo.set === "string" && typeof value === "object") {
 				newObject[finfo.name] = [];
 				value.forEach((e: LooseType, i: number) => {
 					newObject[finfo.name][i] = this.rename_thrift(finfo.set, e);
