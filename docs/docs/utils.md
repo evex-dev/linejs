@@ -23,7 +23,7 @@ const OBS_SQUARE_PROFILE_IAMGE_URI = OBS.getSquareMemberImage("p**********"); //
 // and more
 ```
 
-All methods can be viewed [here](https://github.com/evex-dev/linejs/blob/main/packages/utils/obs/index.ts)
+All methods can be viewed [here](https://github.com/evex-dev/linejs/blob/main/packages/linejs/utils/obs/index.ts)
 
 ## LINE_SCHEME
 
@@ -41,7 +41,7 @@ const SCHEME_PROFILE_POPUP_URI = SCHEME.getProfilePopup("u**********");
 // and more
 ```
 
-All methods can be viewed [here](https://github.com/evex-dev/linejs/blob/main/packages/utils/scheme/index.ts)
+All methods can be viewed [here](https://github.com/evex-dev/linejs/blob/main/packages/linejs/utils/scheme/index.ts)
 
 
 ## LINE_REGEX
@@ -58,7 +58,7 @@ console.log(REGEX.getTicket("Square Invitation https://line.me/ti/g2/***********
 console.log(REGEX.getEmid(".../emid=*************")); // *************
 ```
 
-All methods can be viewed [here](https://github.com/evex-dev/linejs/blob/main/packages/utils/regex/index.ts)
+All methods can be viewed [here](https://github.com/evex-dev/linejs/blob/main/packages/linejs/utils/regex/index.ts)
 
 ## LINE_FUNCTIONS
 
@@ -78,6 +78,6 @@ if (squareList.error === null) {
 }
 ```
 
-All methods can be viewed [here](https://github.com/evex-dev/linejs/blob/main/packages/utils/functions/index.ts)
+All methods can be viewed [here](https://github.com/evex-dev/linejs/blob/main/packages/linejs/utils/functions/index.ts)
 
 The next sections will introduce the various methods.
