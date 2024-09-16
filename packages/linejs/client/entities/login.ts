@@ -1,4 +1,4 @@
-import type { Device } from "./device.ts";
+import type { Device, DeviceMap } from "./device.ts";
 
 export type EmailOptions = {
 	email?: string;
@@ -11,11 +11,11 @@ export type AuthTokenOptions = {
 
 export type LoginOptions = (EmailOptions & AuthTokenOptions) & {
 	device?: Device;
+	deviceMap?: DeviceMap;
 	e2ee?: boolean;
 	qr?: boolean;
 	pincode?: string;
 	polling?: Polling[];
-	useLatest?: boolean;
 };
 
 type Polling = "talk" | "square";
