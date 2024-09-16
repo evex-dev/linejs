@@ -157,9 +157,11 @@ export class Operation {
 			2: source.param2,
 			3: source.param3,
 		};
-		if (source.type === "RECEIVE_MESSAGE" ||
+		if (
+			source.type === "RECEIVE_MESSAGE" ||
 			source.type === "SEND_MESSAGE" ||
-			source.type === "SEND_CONTENT") {
+			source.type === "SEND_CONTENT"
+		) {
 			if (client) {
 				this.message = new TalkMessage({ message: source.message }, client);
 			} else {
@@ -182,6 +184,9 @@ export class Operation {
 			this.notifiedUpdateProfileContent = new NotifiedUpdateProfileContent(
 				this,
 			);
+		}
+		if (emit && client) {
+			client.emit("event", source);
 		}
 	}
 }
@@ -774,46 +779,62 @@ export class TalkMessage extends ClientMessage {
 	/**
 	 * @description Sends in this talk
 	 */
-	public send(options: {
-		to?: string;
-		text?: string | undefined;
-		contentType?: number | undefined;
-		contentMetadata?: LooseType;
-		relatedMessageId?: string | undefined;
-		location?: LooseType;
-		chunk?: string[] | undefined;
-		e2ee?: boolean | undefined;
-	}): Promise<LINETypes.Message> {
-		options.to =
-			this.toType === "GROUP" || this.toType === "ROOM"
-				? this.to
-				: this.getAuthorIsMe()
+	public send(
+		options:
+			| {
+					to?: string;
+					text?: string | undefined;
+					contentType?: number | undefined;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string | undefined;
+					location?: LooseType;
+					chunk?: string[] | undefined;
+					e2ee?: boolean | undefined;
+			  }
+			| string,
+	): Promise<LINETypes.Message> {
+		if (typeof options === "string") {
+			return this.send({ text: options });
+		} else {
+			options.to =
+				this.toType === "GROUP" || this.toType === "ROOM"
 					? this.to
-					: this.from;
-		return this.client.sendMessage(options as LooseType);
+					: this.getAuthorIsMe()
+						? this.to
+						: this.from;
+			return this.client.sendMessage(options as LooseType);
+		}
 	}
 
 	/**
 	 * @description Sends in this talk with replying this message
 	 */
-	public reply(options: {
-		to?: string;
-		text?: string | undefined;
-		contentType?: number | undefined;
-		contentMetadata?: LooseType;
-		relatedMessageId?: string | undefined;
-		location?: LooseType;
-		chunk?: string[] | undefined;
-		e2ee?: boolean | undefined;
-	}): Promise<LINETypes.Message> {
-		options.to =
-			this.toType === "GROUP" || this.toType === "ROOM"
-				? this.to
-				: this.getAuthorIsMe()
+	public reply(
+		options:
+			| {
+					to?: string;
+					text?: string | undefined;
+					contentType?: number | undefined;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string | undefined;
+					location?: LooseType;
+					chunk?: string[] | undefined;
+					e2ee?: boolean | undefined;
+			  }
+			| string,
+	): Promise<LINETypes.Message> {
+		if (typeof options === "string") {
+			return this.reply({ text: options });
+		} else {
+			options.to =
+				this.toType === "GROUP" || this.toType === "ROOM"
 					? this.to
-					: this.from;
-		options.relatedMessageId = this.id;
-		return this.client.sendMessage(options as LooseType);
+					: this.getAuthorIsMe()
+						? this.to
+						: this.from;
+			options.relatedMessageId = this.id;
+			return this.client.sendMessage(options as LooseType);
+		}
 	}
 
 	/**
@@ -918,35 +939,47 @@ export class SquareMessage extends ClientMessage {
 	 * @description Sends in this squareChat
 	 */
 	public send(
-		options: {
-			squareChatMid?: string;
-			text?: string | undefined;
-			contentType?: LooseType;
-			contentMetadata?: LooseType;
-			relatedMessageId?: string | undefined;
-		},
+		options:
+			| {
+					squareChatMid?: string;
+					text?: string | undefined;
+					contentType?: LooseType;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string | undefined;
+			  }
+			| string,
 		safe: boolean = true,
 	): Promise<LINETypes.SendMessageResponse> {
-		options.squareChatMid = this.to;
-		return this.client.sendSquareMessage(options as LooseType, safe);
+		if (typeof options === "string") {
+			return this.send({ text: options });
+		} else {
+			options.squareChatMid = this.to;
+			return this.client.sendSquareMessage(options as LooseType, safe);
+		}
 	}
 
 	/**
 	 * @description Sends in this squareChat with replying this message
 	 */
 	public reply(
-		options: {
-			squareChatMid?: string;
-			text?: string | undefined;
-			contentType?: LooseType;
-			contentMetadata?: LooseType;
-			relatedMessageId?: string | undefined;
-		},
+		options:
+			| {
+					squareChatMid?: string;
+					text?: string | undefined;
+					contentType?: LooseType;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string | undefined;
+			  }
+			| string,
 		safe: boolean = true,
 	): Promise<LINETypes.SendMessageResponse> {
-		options.squareChatMid = this.to;
-		options.relatedMessageId = this.id;
-		return this.client.sendSquareMessage(options as LooseType, safe);
+		if (typeof options === "string") {
+			return this.reply({ text: options });
+		} else {
+			options.squareChatMid = this.to;
+			options.relatedMessageId = this.id;
+			return this.client.sendSquareMessage(options as LooseType, safe);
+		}
 	}
 
 	/**
@@ -985,8 +1018,8 @@ export class SquareMessage extends ClientMessage {
 	/**
 	 * @description Unsend this message
 	 */
-	public unsend() {
-		if (!this.getAuthorIsMe()) {
+	public async unsend() {
+		if (!(await this.getAuthorIsMe())) {
 			throw new Error("not Unsendable");
 		}
 		return this.client.unsendSquareMessage({

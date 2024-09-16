@@ -16,7 +16,7 @@ export type LoginOptions = (EmailOptions & AuthTokenOptions) & {
 	qr?: boolean;
 	pincode?: string;
 	polling?: Polling[];
-	v3?:boolean;
+	v3?: boolean;
 };
 
 type Polling = "talk" | "square";

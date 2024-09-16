@@ -426,7 +426,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						operation.type === "SEND_CONTENT"
 					) {
 						const message = await this.decryptE2EEMessage(operation.message);
-						if (this.hasData(message) && (operation.type == "SEND_MESSAGE")) {
+						if (this.hasData(message) && operation.type == "SEND_MESSAGE") {
 							continue;
 						}
 						let sendIn = "";
@@ -493,15 +493,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						const chat =
 							message.toType === "USER"
 								? async () => {
-									return await this.getContact({ mid: sendIn });
-								}
+										return await this.getContact({ mid: sendIn });
+									}
 								: undefined;
 
 						const group =
 							message.toType !== "USER"
 								? async () => {
-									return (await this.getChats({ mids: [sendIn] })).chats[0];
-								}
+										return (await this.getChats({ mids: [sendIn] })).chats[0];
+									}
 								: (undefined as LooseType);
 
 						const getContact = async () => {
@@ -932,7 +932,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		const cert = this.getCert() || undefined;
 
-		let response = await this.loginV2(
+		let response = (await this.loginV2(
 			keynm,
 			encryptedMessage,
 			this.system?.device,
@@ -940,7 +940,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			e2eeData,
 			cert,
 			"loginV2",
-		) as LooseType;
+		)) as LooseType;
 
 		if (!response[9]) {
 			this.emit("pincall", constantPincode);
@@ -984,7 +984,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		if (response[2]) {
 			this.emit("update:cert", response[2]);
 		}
-		this.storage.set("refreshToken", response[9][2])
+		this.storage.set("refreshToken", response[9][2]);
 		return response[9][1];
 	}
 
@@ -1037,7 +1037,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			if (e2eeInfo) {
 				this.decodeE2EEKeyV1(e2eeInfo, Buffer.from(secret));
 			}
-			this.storage.set("refreshToken",tokenInfo[2])
+			this.storage.set("refreshToken", tokenInfo[2]);
 			return tokenInfo[1];
 		}
 		return "";
@@ -1067,7 +1067,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType { }
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
 
 	/**
 	 * @description Will override.
@@ -1183,8 +1183,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 	public async qrCodeLoginV2(
 		authSessionId: string,
-		modelName:string = "evex",
-		systemName:string = "linejs",
+		modelName: string = "evex",
+		systemName: string = "linejs",
 		autoLoginIsRequired: boolean = true,
 	): Promise<LooseType> {
 		return await this.request(
@@ -1656,10 +1656,10 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @description Try to refresh token.
 	 */
 	public async tryRefreshToken() {
-		const refreshToken = this.storage.get("refreshToken")
+		const refreshToken = this.storage.get("refreshToken");
 		if (refreshToken) {
-			const RATR = await this.refreshAccessToken(refreshToken as string)
-			this.metadata!.authToken = RATR.accessToken
+			const RATR = await this.refreshAccessToken(refreshToken as string);
+			this.metadata!.authToken = RATR.accessToken;
 		} else {
 			throw new InternalError("refreshError", "refreshToken not found");
 		}
@@ -1668,10 +1668,17 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Refresh token.
 	 */
-	public async refreshAccessToken(refreshToken: string): Promise<LINETypes.RefreshAccessTokenResponse> {
-		return await this.request([[11, 1, refreshToken]], "refresh", 3, "RefreshAccessTokenResponse", "/EXT/auth/tokenrefresh/v1")
+	public async refreshAccessToken(
+		refreshToken: string,
+	): Promise<LINETypes.RefreshAccessTokenResponse> {
+		return await this.request(
+			[[11, 1, refreshToken]],
+			"refresh",
+			3,
+			"RefreshAccessTokenResponse",
+			"/EXT/auth/tokenrefresh/v1",
+		);
 	}
-
 
 	/**
 	 * @description Gets the message's data from LINE Obs.
@@ -1727,27 +1734,30 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			tomid: to,
 			oid: "reqseq",
 			reqseq: (334).toString(),
-
 		};
 		if (type === "image") {
 			param.cat = "original";
 		} else if (type === "gif") {
 			param.cat = "original";
-			param.type = "image"
+			param.type = "image";
 		} else if (type === "audio" || type === "video") {
 			param.duration = "1919";
 		}
-		const toType: "talk" | "g2" = (to[0] === "m" || to[0] === "t") ? "g2" : "talk"
-		return await this.customFetch(this.LINE_OBS.prefix + "r/" + toType + "/m/reqseq", {
-			headers: {
-				accept: "application/json, text/plain, */*",
-				"x-line-application": this.system?.type as string,
-				"x-Line-access": this.metadata.authToken,
-				"content-type": "application/x-www-form-urlencoded",
-				"x-obs-params": btoa(JSON.stringify(param)),
+		const toType: "talk" | "g2" =
+			to[0] === "m" || to[0] === "t" ? "g2" : "talk";
+		return await this.customFetch(
+			this.LINE_OBS.prefix + "r/" + toType + "/m/reqseq",
+			{
+				headers: {
+					accept: "application/json, text/plain, */*",
+					"x-line-application": this.system?.type as string,
+					"x-Line-access": this.metadata.authToken,
+					"content-type": "application/x-www-form-urlencoded",
+					"x-obs-params": btoa(JSON.stringify(param)),
+				},
+				body: data,
+				method: "POST",
 			},
-			body: data,
-			method: "POST",
-		});
+		);
 	}
 }
