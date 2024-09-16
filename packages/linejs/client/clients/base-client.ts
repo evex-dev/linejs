@@ -985,6 +985,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			this.emit("update:cert", response[2]);
 		}
 		this.storage.set("refreshToken", response[9][2]);
+		this.storage.set("expire", response[9][3] + response[9][6]);
 		return response[9][1];
 	}
 
@@ -1038,6 +1039,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				this.decodeE2EEKeyV1(e2eeInfo, Buffer.from(secret));
 			}
 			this.storage.set("refreshToken", tokenInfo[2]);
+			this.storage.set("expire", tokenInfo[3] + tokenInfo[6]);
 			return tokenInfo[1];
 		}
 		return "";
