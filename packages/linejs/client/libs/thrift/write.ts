@@ -126,7 +126,7 @@ function writeValue(
 			val = val as [number, number, object];
 			output.writeFieldBegin("", Thrift.Type.MAP, fid);
 			output.writeMapBegin(val[0], val[1], Thrift.objectLength(val[2]));
-			for (const kiter in val[2] as NestedArray) {
+			for (const kiter in val[2]) {
 				if (Object.prototype.hasOwnProperty.call(val[2], kiter)) {
 					const viter = (val as LooseType)[2][kiter];
 					writeValue_(output, val[0], kiter);
@@ -190,7 +190,6 @@ function writeValue_(
 				}
 				output.writeString(val.toString());
 			}
-			output.writeString(val);
 			break;
 
 		case Thrift.Type.DOUBLE:
