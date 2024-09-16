@@ -1,6 +1,7 @@
 import * as LINETypes from "../../../types/line_types.ts";
 import { parseEnum } from "../../../types/thrift.ts";
 import type { Client } from "../../client/index.ts";
+import type { LooseType } from "./common.ts";
 
 const hasContents = ["IMAGE", "VIDEO", "AUDIO", "FILE"];
 
@@ -64,7 +65,7 @@ type contactMeta = {
 };
 type flexMeta = {
 	FLEX_VER: string;
-	FLEX_JSON: Record<string, any>;
+	FLEX_JSON: Record<string, LooseType>;
 	ALT_TEXT: string;
 	EFFECT_TAG?: string;
 };
@@ -423,7 +424,7 @@ export class Message {
 	public fromType: LINETypes.MIDType;
 	public from: string;
 	public contentType: LINETypes.ContentType;
-	public contentMetadata: Record<string, any>;
+	public contentMetadata: Record<string, LooseType>;
 	public _senderDisplayName: string | undefined;
 	public id: string;
 	public createdTime: Date;
@@ -506,7 +507,7 @@ export class Message {
 					key,
 				)
 			) {
-				let value: any = this.rawMessage.contentMetadata[key];
+				let value: LooseType = this.rawMessage.contentMetadata[key];
 				if (value.startsWith("{") || value.startsWith("[")) {
 					value = JSON.parse(value);
 				}
@@ -628,7 +629,7 @@ export class Message {
 	 * @return flex data
 	 */
 	public getFlex(): {
-		flexJson: Record<string, any>;
+		flexJson: Record<string, LooseType>;
 		altText: string;
 		ver: string;
 		tag: string | undefined;
@@ -775,9 +776,9 @@ export class TalkMessage extends ClientMessage {
 		to?: string;
 		text?: string | undefined;
 		contentType?: number | undefined;
-		contentMetadata?: any;
+		contentMetadata?: LooseType;
 		relatedMessageId?: string | undefined;
-		location?: any;
+		location?: LooseType;
 		chunk?: string[] | undefined;
 		e2ee?: boolean | undefined;
 	}): Promise<LINETypes.Message> {
@@ -787,7 +788,7 @@ export class TalkMessage extends ClientMessage {
 				: this.getAuthorIsMe()
 					? this.to
 					: this.from;
-		return this.client.sendMessage(options as any);
+		return this.client.sendMessage(options as LooseType);
 	}
 
 	/**
@@ -797,9 +798,9 @@ export class TalkMessage extends ClientMessage {
 		to?: string;
 		text?: string | undefined;
 		contentType?: number | undefined;
-		contentMetadata?: any;
+		contentMetadata?: LooseType;
 		relatedMessageId?: string | undefined;
-		location?: any;
+		location?: LooseType;
 		chunk?: string[] | undefined;
 		e2ee?: boolean | undefined;
 	}): Promise<LINETypes.Message> {
@@ -810,7 +811,7 @@ export class TalkMessage extends ClientMessage {
 					? this.to
 					: this.from;
 		options.relatedMessageId = this.id;
-		return this.client.sendMessage(options as any);
+		return this.client.sendMessage(options as LooseType);
 	}
 
 	/**
@@ -838,11 +839,12 @@ export class TalkMessage extends ClientMessage {
 		if (this.toType !== "ROOM" && this.toType !== "GROUP") {
 			throw new Error("not Group");
 		}
-		return this.client.createChatRoomAnnouncement({
-			chatRoomMid: this.to,
-			text: this.text,
-			link: `line://nv/chatMsg?chatId=${this.to}&messageId=${this.id}`,
-		});
+		// FIX ME
+		// return this.client.createChatRoomAnnouncement({
+		// 	chatRoomMid: this.to,
+		// 	text: this.text,
+		// 	link: `line://nv/chatMsg?chatId=${this.to}&messageId=${this.id}`,
+		// });
 	}
 
 	/**
@@ -917,14 +919,14 @@ export class SquareMessage extends ClientMessage {
 		options: {
 			squareChatMid?: string;
 			text?: string | undefined;
-			contentType?: any;
-			contentMetadata?: any;
+			contentType?: LooseType;
+			contentMetadata?: LooseType;
 			relatedMessageId?: string | undefined;
 		},
 		safe: boolean = true,
 	): Promise<LINETypes.SendMessageResponse> {
 		options.squareChatMid = this.to;
-		return this.client.sendSquareMessage(options as any, safe);
+		return this.client.sendSquareMessage(options as LooseType, safe);
 	}
 
 	/**
@@ -934,15 +936,15 @@ export class SquareMessage extends ClientMessage {
 		options: {
 			squareChatMid?: string;
 			text?: string | undefined;
-			contentType?: any;
-			contentMetadata?: any;
+			contentType?: LooseType;
+			contentMetadata?: LooseType;
 			relatedMessageId?: string | undefined;
 		},
 		safe: boolean = true,
 	): Promise<LINETypes.SendMessageResponse> {
 		options.squareChatMid = this.to;
 		options.relatedMessageId = this.id;
-		return this.client.sendSquareMessage(options as any, safe);
+		return this.client.sendSquareMessage(options as LooseType, safe);
 	}
 
 	/**

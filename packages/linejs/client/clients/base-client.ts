@@ -157,7 +157,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					? "ANDROID"
 					: "IOSIPAD"
 				: "IOSIPAD");
-		const details = await getDeviceDetails(device, options.useLatest);
+		const details = await getDeviceDetails(device, options.deviceMap || {});
 
 		if (!details) {
 			throw new InternalError("Unsupported device", `'${device}'`);
@@ -1531,7 +1531,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			throw new TypeError("Not have content for type " + message.contentType);
 		}
 		const type = message.contentType.toString().toLowerCase();
-		const ext = (MimeType as any)[data.type];
+		const ext = MimeType[data.type as keyof typeof MimeType];
 		const param: {
 			ver: string;
 			name: string;
