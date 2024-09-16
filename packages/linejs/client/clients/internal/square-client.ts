@@ -1205,6 +1205,29 @@ export class SquareClient extends LiffClient {
 	}
 
 	/**
+	 * @description Delete square message.
+	 */
+	public async destroySquareMessage(options: {
+		squareChatMid?: string;
+		messageId?: string;
+	}): Promise<LINETypes.DestroyMessageResponse> {
+		const {
+			squareChatMid,
+			messageId,
+		} = { ...options };
+		return await this.request(
+			[
+				[11, 2, squareChatMid],
+				[11, 4, messageId],
+			],
+			"destroyMessage",
+			this.SquareService_PROTOCOL_TYPE,
+			true,
+			this.SquareService_API_PATH,
+		);
+	}
+
+	/**
 	 * @description Send square thrift request.
 	 */
 	public async sendSquareRequest(

@@ -15431,11 +15431,16 @@ export const Thrift = {
 export function parseEnum(
 	enumName: string,
 	enumValue: number | any,
+	err:boolean = false
 ): string | null {
 	const _Thrift = Thrift as any;
 	try {
 		return _Thrift[enumName][enumValue];
 	} catch {
-		return null;
+		if (err) {
+			throw new Error("Wrong enum");
+		}else{
+			return null;
+		}
 	}
 }

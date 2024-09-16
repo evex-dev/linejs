@@ -113,6 +113,245 @@ function getMidType(mid: string): LINETypes.MIDType | null {
 	}
 }
 
+/**
+ * @description LINE talk event utils
+ */
+export class Operation {
+	public rawSource: LINETypes.Operation
+	protected client?: Client
+	public message?: Message | TalkMessage
+	public revision: number;
+	public createdTime: Date;
+	public type: LINETypes.OpType;
+	public reqSeq: number = 0;
+	public checksum?: string;
+	public status?: "ALERT_DISABLED" | LINETypes.OpStatus;
+	public param: { 1?: string, 2?: string, 3?: string } = {}
+	public sendChatRemoved?: SendChatRemoved
+	public sendChatChecked?: SendChatChecked;
+	public notifiedReadMessage?: NotifiedReadMessage;
+	public notifiedSendReaction?: NotifiedSendReaction;
+	public sendReaction?: SendReaction;
+	public notifiedUpdateProfile?: NotifiedUpdateProfile;
+	public notifiedUpdateProfileContent?: NotifiedUpdateProfileContent;
+
+	constructor(source: LINETypes.Operation, client?: Client, emit: boolean = false) {
+		this.rawSource = source
+		this.client = client
+		this.revision = source.revision
+		this.checksum = source.checksum
+		this.createdTime = new Date(source.createdTime)
+		this.type = parseEnum("OpType", source.type) as LINETypes.OpType || source.type
+		this.reqSeq = source.reqSeq
+		this.status = parseEnum("OpStatus", source.status) as LINETypes.OpStatus || source.status
+		this.param = {
+			1: source.param1,
+			2: source.param2,
+			3: source.param3,
+		}
+		if (source.message) {
+			if (client) {
+				this.message = new TalkMessage({ message: source.message }, client)
+			} else {
+				this.message = new Message({ message: source.message })
+			}
+		}
+		if (source.type == "SEND_CHAT_REMOVED") {
+			this.sendChatRemoved = new SendChatRemoved(this)
+		} else if (source.type == "SEND_CHAT_CHECKED") {
+			this.sendChatChecked = new SendChatChecked(this)
+		} else if (source.type == "NOTIFIED_READ_MESSAGE") {
+			this.notifiedReadMessage = new NotifiedReadMessage(this)
+		} else if (source.type == "NOTIFIED_SEND_REACTION") {
+			this.notifiedSendReaction = new NotifiedSendReaction(this)
+		} else if (source.type == "SEND_REACTION") {
+			this.sendReaction = new SendReaction(this)
+		} else if (source.type == "NOTIFIED_UPDATE_PROFILE") {
+			this.notifiedUpdateProfile = new NotifiedUpdateProfile(this)
+		} else if (source.type == "NOTIFIED_UPDATE_PROFILE_CONTENT") {
+			this.notifiedUpdateProfileContent = new NotifiedUpdateProfileContent(this)
+		}
+	}
+}
+
+/**
+ * @description the profile content was updated by user
+ */
+export class NotifiedUpdateProfileContent {
+	public userMid: string
+	public profileAttributes: (LINETypes.ProfileAttribute | null)[] = []
+
+	constructor(op: Operation) {
+		if (op.type !== "NOTIFIED_UPDATE_PROFILE_CONTENT") {
+			throw new TypeError("Wrong operation type");
+		}
+		if (typeof op.param[1] === "undefined" || typeof op.param[2] === "undefined") {
+			throw new TypeError("Wrong param");
+		}
+		this.userMid = op.param[1]
+		const attr = parseEnum("ProfileAttribute", op.param[2])
+		if (attr !== null) {
+			this.profileAttributes[0] = attr as any as LINETypes.ProfileAttribute
+		} else {
+			const arr: LINETypes.ProfileAttribute[] = []
+			parseInt(op.param[2]).toString(2).split("").reverse().forEach((e, i) => {
+				if (e === "1") {
+					arr.push(parseEnum("ProfileAttribute", 2 ** i) as any as LINETypes.ProfileAttribute)
+				}
+			})
+			this.profileAttributes = arr
+		}
+	}
+}
+
+/**
+ * @description the profile was updated by user
+ */
+export class NotifiedUpdateProfile {
+	public userMid: string
+	public profileAttributes: (LINETypes.ProfileAttribute | null)[] = []
+	public info: Record<string, any> = {}
+
+	constructor(op: Operation) {
+		if (op.type !== "NOTIFIED_UPDATE_PROFILE") {
+			throw new TypeError("Wrong operation type");
+		}
+		if (typeof op.param[1] === "undefined" || typeof op.param[2] === "undefined" || typeof op.param[3] === "undefined") {
+			throw new TypeError("Wrong param");
+		}
+		this.userMid = op.param[1]
+		const attr = parseEnum("ProfileAttribute", op.param[2])
+		if (attr !== null) {
+			this.profileAttributes[0] = attr as any as LINETypes.ProfileAttribute
+		} else {
+			const arr: LINETypes.ProfileAttribute[] = []
+			parseInt(op.param[2]).toString(2).split("").reverse().forEach((e, i) => {
+				if (e === "1") {
+					arr.push(parseEnum("ProfileAttribute", 2 ** i) as any as LINETypes.ProfileAttribute)
+				}
+			})
+			this.profileAttributes = arr
+		}
+		this.info = JSON.parse(op.param[3])
+	}
+}
+
+/**
+ * @description the message was reacted by ypu
+ */
+export class SendReaction {
+	public chatMid: string;
+	public chatType: LINETypes.MIDType
+	public messageId: string;
+	public reactionType: LINETypes.PredefinedReactionType
+	constructor(op: Operation) {
+		if (op.type !== "SEND_REACTION") {
+			throw new TypeError("Wrong operation type");
+		}
+		if (typeof op.param[1] === "undefined" || typeof op.param[2] === "undefined") {
+			throw new TypeError("Wrong param");
+		}
+		this.messageId = op.param[1]
+		const data = JSON.parse(op.param[2])
+		this.chatMid = data.chatMid
+		this.chatType = getMidType(this.chatMid) as any
+		this.reactionType = parseEnum("PredefinedReactionType", data.curr.predefinedReactionType) as LINETypes.PredefinedReactionType
+	}
+}
+
+/**
+ * @description the message was reacted by user
+ */
+export class NotifiedSendReaction {
+	public chatMid: string;
+	public chatType: LINETypes.MIDType
+	public messageId: string;
+	public userMid: string
+	public reactionType: LINETypes.PredefinedReactionType
+	constructor(op: Operation) {
+		if (op.type !== "NOTIFIED_SEND_REACTION") {
+			throw new TypeError("Wrong operation type");
+		}
+		if (typeof op.param[1] === "undefined" || typeof op.param[2] === "undefined" || typeof op.param[3] === "undefined") {
+			throw new TypeError("Wrong param");
+		}
+		this.messageId = op.param[1]
+		this.userMid = op.param[3]
+		const data = JSON.parse(op.param[2])
+		this.chatMid = data.chatMid
+		this.chatType = getMidType(this.chatMid) as any
+		this.reactionType = parseEnum("PredefinedReactionType", data.curr.predefinedReactionType) as LINETypes.PredefinedReactionType
+	}
+}
+
+/**
+ * @description the message was read by user
+ */
+export class NotifiedReadMessage {
+	public chatMid: string;
+	public chatType: LINETypes.MIDType;
+	public messageId: string;
+	public userMid: string;
+
+	constructor(op: Operation) {
+		if (op.type !== "NOTIFIED_READ_MESSAGE") {
+			throw new TypeError("Wrong operation type");
+		}
+		if (typeof op.param[1] === "undefined" || typeof op.param[2] === "undefined" || typeof op.param[3] === "undefined") {
+			throw new TypeError("Wrong param");
+		}
+		this.chatMid = op.param[1]
+		this.userMid = op.param[2]
+		this.messageId = op.param[3]
+		this.chatType = getMidType(op.param[1]) as any
+	}
+}
+
+/**
+ * @description the message was read by you
+ */
+export class SendChatChecked {
+	public chatMid: string;
+	public chatType: LINETypes.MIDType
+	public messageId: string;
+
+	constructor(op: Operation) {
+		if (op.type !== "SEND_CHAT_CHECKED") {
+			throw new TypeError("Wrong operation type");
+		}
+		if (typeof op.param[1] === "undefined" || typeof op.param[2] === "undefined") {
+			throw new TypeError("Wrong param");
+		}
+		this.chatMid = op.param[1]
+		this.messageId = op.param[2]
+		this.chatType = getMidType(op.param[1]) as any
+	}
+}
+
+/**
+ * @description the message was removed by you
+ */
+export class SendChatRemoved {
+	public chatMid: string;
+	public chatType: LINETypes.MIDType | null
+	public messageId: string;
+
+	constructor(op: Operation) {
+		if (op.type !== "SEND_CHAT_REMOVED") {
+			throw new TypeError("Wrong operation type");
+		}
+		if (typeof op.param[1] === "undefined" || typeof op.param[2] === "undefined") {
+			throw new TypeError("Wrong param");
+		}
+		this.chatMid = op.param[1]
+		this.messageId = op.param[2]
+		this.chatType = getMidType(op.param[1])
+	}
+}
+
+/**
+ * @description LINE message base utils
+ */
 export class Message {
 	public sourceType: 0 | 1 | 2 | 3 | 4; // op noti recv send msg
 	public rawSource:
@@ -421,6 +660,9 @@ export class ClientMessage extends Message {
 	}
 }
 
+/**
+ * @description LINE talk message utils
+ */
 export class TalkMessage extends ClientMessage {
 	constructor(
 		options: { message?: LINETypes.Message; operation?: LINETypes.Operation },
@@ -537,7 +779,7 @@ export class TalkMessage extends ClientMessage {
 			throw new Error("not Text message");
 		}
 		if (this.toType !== "ROOM" && this.toType !== "GROUP") {
-			throw new Error("not Text message");
+			throw new Error("not Group");
 		}
 		return this.client.createChatRoomAnnouncement({
 			chatRoomMid: this.to,
@@ -545,8 +787,24 @@ export class TalkMessage extends ClientMessage {
 			link: `line://nv/chatMsg?chatId=${this.to}&messageId=${this.id}`,
 		});
 	}
+
+	/**
+	 * @description Unsend this message
+	 */
+	public unsend() {
+		if (!this.getAuthorIsMe()) {
+			throw new Error("not Unsendable");
+		}
+		return this.client.unsendMessage({
+			messageId: this.id
+		});
+	}
+
 }
 
+/**
+ * @description LINE square message utils
+ */
 export class SquareMessage extends ClientMessage {
 	constructor(
 		options: {
@@ -661,6 +919,29 @@ export class SquareMessage extends ClientMessage {
 			text: this.text,
 			createdAt: this.rawMessage.createdTime,
 			announcementType: 0,
+		});
+	}
+
+	/**
+	 * @description Unsend this message
+	 */
+	public unsend() {
+		if (!this.getAuthorIsMe()) {
+			throw new Error("not Unsendable");
+		}
+		return this.client.unsendSquareMessage({
+			squareMessageId: this.id,
+			squareChatMid: this.to
+		});
+	}
+
+	/**
+	 * @description Delete this message
+	 */
+	public delete() {
+		return this.client.destroySquareMessage({
+			messageId: this.id,
+			squareChatMid: this.to
 		});
 	}
 }
