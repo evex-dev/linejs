@@ -48,7 +48,7 @@ export class LiffClient extends BaseClient {
 		let chat;
 		if (chatMid) {
 			chat = [11, 1, chatMid];
-			if (chatMid[0] in ["u", "c", "r"]) {
+			if (["u", "c", "r"].includes(chatMid[0])) {
 				chaLINETypes = 2;
 			} else {
 				chaLINETypes = 3;
@@ -146,10 +146,10 @@ export class LiffClient extends BaseClient {
 			"Accept-Encoding": "gzip, deflate",
 			"Accept-Language": "zh-TW,zh;q=0.9",
 			Authorization: `Bearer ${token}`,
+			"content-type":"application/json"
 		};
-
-		const payload = JSON.stringify(messages);
-		const response = await fetch(this.LiffService_API_PATH, {
+		const payload = JSON.stringify({messages});
+		const response = await fetch("https://api.line.me/message/v3/share", {
 			method: "POST",
 			body: payload,
 			headers: liffHeaders,
