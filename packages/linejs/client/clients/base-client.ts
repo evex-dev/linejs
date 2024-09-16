@@ -1517,34 +1517,47 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	}
 
 	/**
-	 * @description Posts the message's data to LINE Obs.
+	 * @description Upload obs message to talk.
 	 */
-	public async postMessageObsData(
-		message: LINETypes.Message,
+	public async uploadObjTalk(
+		to: string,
+		type: "image" | "gif" | "video" | "audio" | "file",
 		data: Blob,
 		filename?: string,
 	): Promise<Response> {
 		if (!this.metadata) {
 			throw new InternalError("Not setup yet", "Please call 'login()' first");
 		}
-		if (!this.hasData(message)) {
-			throw new TypeError(`type "${message.contentType}" have no content`);
-		}
-		const type = message.contentType.toString().toLowerCase();
+
 		const ext = MimeType[data.type as keyof typeof MimeType];
 		const param: {
+			oid: string;
+			reqseq: string;
+			tomid: string;
 			ver: string;
 			name: string;
 			type: string;
 			cat?: string;
 			duration?: string;
-		} = { ver: "2.0", name: filename || "linejs." + ext, type };
+		} = {
+			ver: "2.0",
+			name: filename || "linejs." + ext,
+			type,
+			tomid: to,
+			oid: "reqseq",
+			reqseq: (334).toString(),
+
+		};
 		if (type === "image") {
 			param.cat = "original";
+		} else if (type === "gif") {
+			param.cat = "original";
+			param.type = "image"
 		} else if (type === "audio" || type === "video") {
 			param.duration = "1919";
 		}
-		return await this.customFetch(this.LINE_OBS.getDataUrl(message.id), {
+		const toType: "talk" | "g2" = (to[0] === "m" || to[0] === "t") ? "g2" : "talk"
+		return await this.customFetch(this.LINE_OBS.prefix + "r/" + toType + "/m/reqseq", {
 			headers: {
 				accept: "application/json, text/plain, */*",
 				"x-line-application": this.system?.type as string,
