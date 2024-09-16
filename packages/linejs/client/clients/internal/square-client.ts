@@ -1211,10 +1211,7 @@ export class SquareClient extends LiffClient {
 		squareChatMid?: string;
 		messageId?: string;
 	}): Promise<LINETypes.DestroyMessageResponse> {
-		const {
-			squareChatMid,
-			messageId,
-		} = { ...options };
+		const { squareChatMid, messageId } = { ...options };
 		return await this.request(
 			[
 				[11, 2, squareChatMid],

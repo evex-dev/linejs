@@ -15431,7 +15431,7 @@ export const Thrift = {
 export function parseEnum(
 	enumName: string,
 	enumValue: number | any,
-	err:boolean = false
+	err: boolean = false,
 ): string | null {
 	const _Thrift = Thrift as any;
 	try {
@@ -15439,7 +15439,7 @@ export function parseEnum(
 	} catch {
 		if (err) {
 			throw new Error("Wrong enum");
-		}else{
+		} else {
 			return null;
 		}
 	}
