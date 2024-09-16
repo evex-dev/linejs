@@ -157,7 +157,9 @@ export class Operation {
 			2: source.param2,
 			3: source.param3,
 		};
-		if (source.message) {
+		if (source.type === "RECEIVE_MESSAGE" ||
+			source.type === "SEND_MESSAGE" ||
+			source.type === "SEND_CONTENT") {
 			if (client) {
 				this.message = new TalkMessage({ message: source.message }, client);
 			} else {

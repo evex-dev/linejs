@@ -414,7 +414,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						operation.type === "SEND_CONTENT"
 					) {
 						const message = await this.decryptE2EEMessage(operation.message);
-						if (this.hasData(message) && operation.type !== "SEND_CONTENT") {
+						if (this.hasData(message) && (operation.type == "SEND_MESSAGE")) {
 							continue;
 						}
 						let sendIn = "";
@@ -481,15 +481,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						const chat =
 							message.toType === "USER"
 								? async () => {
-										return await this.getContact({ mid: sendIn });
-									}
+									return await this.getContact({ mid: sendIn });
+								}
 								: undefined;
 
 						const group =
 							message.toType !== "USER"
 								? async () => {
-										return (await this.getChats({ mids: [sendIn] })).chats[0];
-									}
+									return (await this.getChats({ mids: [sendIn] })).chats[0];
+								}
 								: (undefined as LooseType);
 
 						const getContact = async () => {
@@ -927,7 +927,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType { }
 
 	/**
 	 * @description Will override.
@@ -1528,7 +1528,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			throw new InternalError("Not setup yet", "Please call 'login()' first");
 		}
 		if (!this.hasData(message)) {
-			throw new TypeError("Not have content for type " + message.contentType);
+			throw new TypeError(`type "${message.contentType}" have no content`);
 		}
 		const type = message.contentType.toString().toLowerCase();
 		const ext = MimeType[data.type as keyof typeof MimeType];
@@ -1550,7 +1550,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				"x-line-application": this.system?.type as string,
 				"x-Line-access": this.metadata.authToken,
 				"content-type": "application/x-www-form-urlencoded",
-				"x-obs-params:": btoa(JSON.stringify(param)),
+				"x-obs-params": btoa(JSON.stringify(param)),
 			},
 			body: data,
 			method: "POST",

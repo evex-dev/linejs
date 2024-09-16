@@ -314,9 +314,6 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Send message for square chat.
 	 */
-	/**
-	 * @description Send message for square chat.
-	 */
 	public async sendSquareMessage(
 		options: {
 			squareChatMid: string;
