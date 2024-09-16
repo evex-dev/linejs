@@ -176,14 +176,26 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		if (!authToken) {
 			if (!options.email || !options.password || options.qr) {
-				authToken = await this.requestSQR();
+				if (options.v3) {
+					authToken = await this.requestSQR2();
+				} else {
+					authToken = await this.requestSQR();
+				}
 			} else {
-				authToken = await this.requestEmailLogin(
-					options.email,
-					options.password,
-					options.e2ee || true,
-					options.pincode,
-				);
+				if (options.v3) {
+					authToken = await this.requestEmailLoginV2(
+						options.email,
+						options.password,
+						options.pincode,
+					);
+				} else {
+					authToken = await this.requestEmailLogin(
+						options.email,
+						options.password,
+						options.e2ee || true,
+						options.pincode,
+					);
+				}
 			}
 		}
 
@@ -876,6 +888,106 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		return response.authToken;
 	}
 
+	public async requestEmailLoginV2(
+		email: string,
+		password: string,
+		constantPincode: string = "114514",
+	): Promise<string> {
+		if (constantPincode.length !== 6) {
+			throw new InternalError(
+				"Invalid constant pincode",
+				"The constant pincode should be 6 digits",
+			);
+		}
+
+		this.log("login", {
+			method: "email",
+			email,
+			password,
+			constantPincode,
+		});
+
+		if (!this.system) {
+			throw new InternalError("Not setup yet", "Please call 'login()' first");
+		}
+
+		const rsaKey = await this.getRSAKeyInfo();
+		const { keynm, sessionKey } = rsaKey;
+
+		const message =
+			String.fromCharCode(sessionKey.length) +
+			sessionKey +
+			String.fromCharCode(email.length) +
+			email +
+			String.fromCharCode(password.length) +
+			password;
+
+		const [secret, secretPK] = this.createSqrSecret(true);
+		const e2eeData = this.encryptAESECB(
+			this.getSHA256Sum(constantPincode),
+			Buffer.from(secretPK, "base64"),
+		);
+
+		const encryptedMessage = getRSACrypto(message, rsaKey).credentials;
+
+		const cert = this.getCert() || undefined;
+
+		let response = await this.loginV2(
+			keynm,
+			encryptedMessage,
+			this.system?.device,
+			undefined,
+			e2eeData,
+			cert,
+			"loginV2",
+		) as LooseType;
+
+		if (!response[9]) {
+			this.emit("pincall", constantPincode);
+			const headers = {
+				Host: this.endpoint,
+				accept: "application/x-thrift",
+				"user-agent": this.system.userAgent,
+				"x-line-application": this.system.type,
+				"x-line-access": response[3],
+				"x-lal": "ja_JP",
+				"x-lpv": "1",
+				"x-lhm": "GET",
+				"accept-encoding": "gzip",
+			};
+			const e2eeInfo = (
+				await this.customFetch(`https://${this.endpoint}/LF1`, {
+					headers: headers,
+				}).then((res) => res.json())
+			).result;
+			this.log("response", e2eeInfo);
+			this.decodeE2EEKeyV1(e2eeInfo.metadata, Buffer.from(secret));
+			const deviceSecret = this.encryptDeviceSecret(
+				Buffer.from(e2eeInfo.metadata.publicKey, "base64"),
+				Buffer.from(secret),
+				Buffer.from(e2eeInfo.metadata.encryptedKeyChain, "base64"),
+			);
+			const e2eeLogin = await this.confirmE2EELogin(
+				response.verifier,
+				deviceSecret,
+			);
+			response = await this.loginV2(
+				keynm,
+				encryptedMessage,
+				this.system.device,
+				e2eeLogin,
+				e2eeData,
+				cert,
+				"loginV2",
+			);
+		}
+		if (response[2]) {
+			this.emit("update:cert", response[2]);
+		}
+		this.storage.set("refreshToken", response[9][2])
+		return response[9][1];
+	}
+
 	public async requestSQR(): Promise<string> {
 		const { 1: sqr } = await this.createSession();
 		let { 1: url } = await this.createQrCode(sqr);
@@ -899,6 +1011,34 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				this.decodeE2EEKeyV1(e2eeInfo, Buffer.from(secret));
 			}
 			return authToken;
+		}
+		return "";
+	}
+
+	public async requestSQR2(): Promise<string> {
+		const { 1: sqr } = await this.createSession();
+		let { 1: url } = await this.createQrCode(sqr);
+		const [secret, secretUrl] = this.createSqrSecret();
+		url = url + secretUrl;
+		this.emit("qrcall", url);
+		if (await this.checkQrCodeVerified(sqr)) {
+			try {
+				await this.verifyCertificate(sqr, this.getQrCert() as string);
+			} catch (_e) {
+				const { 1: pincode } = await this.createPinCode(sqr);
+				this.emit("pincall", pincode);
+				await this.checkPinCodeVerified(sqr);
+			}
+			const response = await this.qrCodeLogin(sqr);
+			const { 1: pem, 3: tokenInfo, 4: _mid, 10: e2eeInfo } = response;
+			if (pem) {
+				this.emit("update:qrcert", pem);
+			}
+			if (e2eeInfo) {
+				this.decodeE2EEKeyV1(e2eeInfo, Buffer.from(secret));
+			}
+			this.storage.set("refreshToken",tokenInfo[2])
+			return tokenInfo[1];
 		}
 		return "";
 	}
@@ -1041,6 +1181,26 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
+	public async qrCodeLoginV2(
+		authSessionId: string,
+		modelName:string = "evex",
+		systemName:string = "linejs",
+		autoLoginIsRequired: boolean = true,
+	): Promise<LooseType> {
+		return await this.request(
+			[
+				[11, 1, authSessionId],
+				[11, 2, systemName],
+				[11, 3, modelName],
+				[2, 4, autoLoginIsRequired],
+			],
+			"qrCodeLoginV2",
+			4,
+			false,
+			"/acct/lgn/sq/v1",
+		);
+	}
+
 	public async confirmE2EELogin(
 		verifier: string,
 		deviceSecret: Buffer,
@@ -1093,7 +1253,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			],
 			methodName,
 			3,
-			"LoginResult",
+			methodName === "loginZ" ? "LoginResult" : false,
 			"/api/v3p/rs",
 		);
 	}
@@ -1491,6 +1651,27 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		return this.user;
 	}
+
+	/**
+	 * @description Try to refresh token.
+	 */
+	public async tryRefreshToken() {
+		const refreshToken = this.storage.get("refreshToken")
+		if (refreshToken) {
+			const RATR = await this.refreshAccessToken(refreshToken as string)
+			this.metadata!.authToken = RATR.accessToken
+		} else {
+			throw new InternalError("refreshError", "refreshToken not found");
+		}
+	}
+
+	/**
+	 * @description Refresh token.
+	 */
+	public async refreshAccessToken(refreshToken: string): Promise<LINETypes.RefreshAccessTokenResponse> {
+		return await this.request([[11, 1, refreshToken]], "refresh", 3, "RefreshAccessTokenResponse", "/EXT/auth/tokenrefresh/v1")
+	}
+
 
 	/**
 	 * @description Gets the message's data from LINE Obs.
