@@ -5655,7 +5655,7 @@ export declare class GetSquareResponse {
 	myMembership: SquareMember;
 	squareAuthority: SquareAuthority;
 	squareStatus: SquareStatus;
-	squareFeatureSet: SquareFeatureSet;
+	squareFeatureSet?: SquareFeatureSet;
 	noteStatus: NoteStatus;
 
 	constructor(args?: {
@@ -10691,11 +10691,11 @@ export declare class GetSquareChatMembersRequest {
 }
 
 export declare class GetSquareChatMembersResponse {
-	squareChatMembers: SquareMember;
+	squareChatMembers: SquareMember[];
 	continuationToken: string;
 
 	constructor(args?: {
-		squareChatMembers: SquareMember;
+		squareChatMembers: SquareMember[];
 		continuationToken: string;
 	});
 }

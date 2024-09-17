@@ -80,7 +80,7 @@ export class SquareClient extends LiffClient {
 			continueRequest: !options.limit && !options.continuationToken,
 			...options,
 		};
-		const response = await this.request(
+		const response = (await this.request(
 			[
 				[11, 2, continuationToken],
 				[8, 3, limit],
@@ -89,11 +89,23 @@ export class SquareClient extends LiffClient {
 			this.SquareService_PROTOCOL_TYPE,
 			true,
 			this.SquareService_API_PATH,
-		);
+		)) as LINETypes.GetJoinedSquaresResponse;
+		response.squares.forEach((e) => {
+			this.setSquareCache(
+				{ squareMid: e.mid },
+				{
+					square: e,
+					squareAuthority: response.authorities[e.mid],
+					noteStatus: response.noteStatuses[e.mid],
+					myMembership: response.members[e.mid],
+					squareStatus: response.statuses[e.mid],
+				},
+			);
+		});
 
 		if (continueRequest && response.continuationToken) {
 			return await this.continueRequest({
-				response,
+				response: response as LooseType,
 				continuationToken: response.continuationToken,
 				method: {
 					handler: this.getJoinedSquares,
@@ -234,7 +246,7 @@ export class SquareClient extends LiffClient {
 	 */
 	public async findSquareByEmid(options: {
 		emid: string;
-	}): Promise<LINETypes.SquareChat> {
+	}): Promise<LooseType> {
 		// ...???
 		const { emid } = { ...options };
 		return await this.request(
@@ -316,9 +328,6 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Send message for square chat.
 	 */
-	/**
-	 * @description Send message for square chat.
-	 */
 	public async sendSquareMessage(
 		options: {
 			squareChatMid: string;
@@ -385,17 +394,40 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Get square info.
 	 */
-	public async getSquare(options: {
-		squareMid: string;
-	}): Promise<LINETypes.GetSquareResponse> {
+	public async getSquare(
+		options: {
+			squareMid: string;
+		},
+		useCache: boolean = false,
+	): Promise<LINETypes.GetSquareResponse> {
+		if (useCache && this.cache.getCache("getSquare", options)) {
+			return this.cache.getCache(
+				"getSquare",
+				options,
+			) as LINETypes.GetSquareResponse;
+		}
 		const { squareMid } = { ...options };
-		return await this.request(
+		const response = (await this.request(
 			[[11, 2, squareMid]],
 			"getSquare",
 			this.SquareService_PROTOCOL_TYPE,
 			true,
 			this.SquareService_API_PATH,
-		);
+		)) as LINETypes.GetSquareResponse;
+		this.setSquareCache(options, response);
+		return response;
+	}
+
+	/**
+	 * @description Set square info to cache.
+	 */
+	protected setSquareCache(
+		options: {
+			squareMid: string;
+		},
+		response: LINETypes.GetSquareResponse,
+	) {
+		this.cache.setCache("getSquare", options, response);
 	}
 
 	/**
@@ -410,17 +442,28 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Get square chat info.
 	 */
-	public async getSquareChat(options: {
-		squareChatMid: string;
-	}): Promise<LINETypes.GetSquareChatResponse> {
+	public async getSquareChat(
+		options: {
+			squareChatMid: string;
+		},
+		useCache: boolean = false,
+	): Promise<LINETypes.GetSquareChatResponse> {
+		if (useCache && this.cache.getCache("getSquareChat", options)) {
+			return this.cache.getCache(
+				"getSquareChat",
+				options,
+			) as LINETypes.GetSquareChatResponse;
+		}
 		const { squareChatMid } = { ...options };
-		return await this.request(
+		const response = (await this.request(
 			[[11, 1, squareChatMid]],
 			"getSquareChat",
 			this.SquareService_PROTOCOL_TYPE,
 			true,
 			this.SquareService_API_PATH,
-		);
+		)) as LINETypes.GetSquareChatResponse;
+		this.cache.setCache("getSquareChat", options, response);
+		return response;
 	}
 
 	/**
@@ -743,18 +786,33 @@ export class SquareClient extends LiffClient {
 		if (continuationToken) {
 			req.push([11, 2, continuationToken]);
 		}
-		const response = await this.request(
+		const response = (await this.request(
 			req,
 			"getSquareChatMembers",
 			this.SquareService_PROTOCOL_TYPE,
 			true,
 			this.SquareService_API_PATH,
-		);
+		)) as LINETypes.GetSquareChatMembersResponse;
+		response.squareChatMembers.forEach((e) => {
+			if (
+				!(
+					this.cache.getCache("getSquareMember", {
+						squareMemberMid: e.squareMemberMid,
+					}) as LINETypes.GetSquareMemberResponse
+				)?.oneOnOneChatMid
+			) {
+				this.cache.setCache(
+					"getSquareMember",
+					{ squareMemberMid: e.squareMemberMid },
+					{ squareMember: e },
+				);
+			}
+		});
 
 		if (continueRequest && response.continuationToken) {
 			return await this.continueRequest({
-				response,
-				continuationToken: response.continueationToken,
+				response: response as LooseType,
+				continuationToken: response.continuationToken,
 				method: {
 					handler: this.getSquareChatMembers,
 					args: [options],
@@ -1000,17 +1058,28 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Get square member.
 	 */
-	public async getSquareMember(options: {
-		squareMemberMid: string;
-	}): Promise<LINETypes.GetSquareMemberResponse> {
+	public async getSquareMember(
+		options: {
+			squareMemberMid: string;
+		},
+		useCache: boolean = false,
+	): Promise<LINETypes.GetSquareMemberResponse> {
+		if (useCache && this.cache.getCache("getSquareMember", options)) {
+			return this.cache.getCache(
+				"getSquareMember",
+				options,
+			) as LINETypes.GetSquareMemberResponse;
+		}
 		const { squareMemberMid } = { ...options };
-		return await this.request(
+		const response = (await this.request(
 			[[11, 2, squareMemberMid]],
 			"getSquareMember",
 			this.SquareService_PROTOCOL_TYPE,
 			true,
 			this.SquareService_API_PATH,
-		);
+		)) as LINETypes.GetSquareMemberResponse;
+		this.cache.setCache("getSquareMember", options, response);
+		return response;
 	}
 
 	/**
@@ -1067,7 +1136,7 @@ export class SquareClient extends LiffClient {
 			squareMemberMids: [],
 			...options,
 		};
-		return await this.request(
+		const response = (await this.request(
 			[
 				[11, 2, squareMid],
 				[14, 3, [11, squareMemberMids]],
@@ -1076,7 +1145,23 @@ export class SquareClient extends LiffClient {
 			this.SquareService_PROTOCOL_TYPE,
 			true,
 			this.SquareService_API_PATH,
-		);
+		)) as LINETypes.GetSquareMembersBySquareResponse;
+		response.members.forEach((e) => {
+			if (
+				!(
+					this.cache.getCache("getSquareMember", {
+						squareMemberMid: e.squareMemberMid,
+					}) as LINETypes.GetSquareMemberResponse
+				)?.oneOnOneChatMid
+			) {
+				this.cache.setCache(
+					"getSquareMember",
+					{ squareMemberMid: e.squareMemberMid },
+					{ squareMember: e },
+				);
+			}
+		});
+		return response;
 	}
 
 	/**
@@ -1200,6 +1285,26 @@ export class SquareClient extends LiffClient {
 				threadMid && [11, 6, threadMid],
 			],
 			"reportSquareMessage",
+			this.SquareService_PROTOCOL_TYPE,
+			true,
+			this.SquareService_API_PATH,
+		);
+	}
+
+	/**
+	 * @description Delete square message.
+	 */
+	public async destroySquareMessage(options: {
+		squareChatMid?: string;
+		messageId?: string;
+	}): Promise<LINETypes.DestroyMessageResponse> {
+		const { squareChatMid, messageId } = { ...options };
+		return await this.request(
+			[
+				[11, 2, squareChatMid],
+				[11, 4, messageId],
+			],
+			"destroyMessage",
 			this.SquareService_PROTOCOL_TYPE,
 			true,
 			this.SquareService_API_PATH,

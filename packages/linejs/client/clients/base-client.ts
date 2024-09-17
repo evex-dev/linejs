@@ -3,6 +3,7 @@
 import { getRSACrypto } from "../libs/rsa/rsa-verify.ts";
 import type { BaseStorage } from "../libs/storage/base-storage.ts";
 import { MemoryStorage } from "../libs/storage/memory-storage.ts";
+import { CacheManager } from "../libs/storage/cache-manager.ts";
 import {
 	type NestedArray,
 	type ParsedThrift,
@@ -46,6 +47,7 @@ interface ClientOptions {
 	endpoint?: string;
 	customFetch?: FetchLike;
 	LINE_OBS?: LINE_OBS;
+	cacheManager?: CacheManager;
 }
 
 export class BaseClient extends TypedEventEmitter<ClientEvents> {
@@ -58,6 +60,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @param {string} [options.endpoint] Endpoint for the client
 	 * @param {FetchLike} [options.customFetch] Custom fetch for the client
 	 * @param {string} [options.LINE_OBS] Endpoint for the obs
+	 * @param {CacheManager} [options.cacheManager] Cache manager for the client
 	 */
 	constructor(options: ClientOptions = {}) {
 		super();
@@ -68,7 +71,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.endpoint = options.endpoint || "gw.line.naver.jp";
 		this.customFetch = options.customFetch || fetch;
 		this.LINE_OBS = options.LINE_OBS || new LINE_OBS();
-
+		this.cache = options.cacheManager || new CacheManager(this.storage);
 		this.squareRateLimitter.callPolling();
 	}
 
@@ -96,6 +99,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @description the LINE OBS of client
 	 */
 	public LINE_OBS: LINE_OBS;
+
+	public cache: CacheManager;
 
 	/**
 	 * @description THe information of user
@@ -176,14 +181,26 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		if (!authToken) {
 			if (!options.email || !options.password || options.qr) {
-				authToken = await this.requestSQR();
+				if (options.v3) {
+					authToken = await this.requestSQR2();
+				} else {
+					authToken = await this.requestSQR();
+				}
 			} else {
-				authToken = await this.requestEmailLogin(
-					options.email,
-					options.password,
-					options.e2ee || true,
-					options.pincode,
-				);
+				if (options.v3) {
+					authToken = await this.requestEmailLoginV2(
+						options.email,
+						options.password,
+						options.pincode,
+					);
+				} else {
+					authToken = await this.requestEmailLogin(
+						options.email,
+						options.password,
+						options.e2ee || true,
+						options.pincode,
+					);
+				}
 			}
 		}
 
@@ -383,6 +400,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 	}
 
+	public revision: number = 0;
+
 	private async pollingTalkEvents() {
 		if (this.IS_POLLING_TALK) {
 			return;
@@ -391,7 +410,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.IS_POLLING_TALK = true;
 
 		const noopEvents = await this.sync();
-		let revision = noopEvents.fullSyncResponse.nextRevision;
+		let revision = this.revision || noopEvents.fullSyncResponse.nextRevision;
 		let globalRev: number | undefined, individualRev: number | undefined;
 		while (true) {
 			if (!this.metadata) {
@@ -407,15 +426,14 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 				for (const operation of myEvents.operationResponse?.operations) {
 					revision = operation.revision;
-					this.emit("event", operation);
 					if (
 						operation.type === "RECEIVE_MESSAGE" ||
 						operation.type === "SEND_MESSAGE" ||
 						operation.type === "SEND_CONTENT"
 					) {
 						const message = await this.decryptE2EEMessage(operation.message);
-						if (this.hasData(message) && operation.type !== "SEND_CONTENT") {
-							continue;
+						if (this.hasData(message) && operation.type == "SEND_MESSAGE") {
+							//continue;
 						}
 						let sendIn = "";
 						if (message.toType === "USER") {
@@ -532,6 +550,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							message,
 						});
 					}
+					this.emit("event", operation);
 				}
 				globalRev =
 					myEvents.operationResponse?.globalEvents?.lastRevision || globalRev;
@@ -876,6 +895,107 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		return response.authToken;
 	}
 
+	public async requestEmailLoginV2(
+		email: string,
+		password: string,
+		constantPincode: string = "114514",
+	): Promise<string> {
+		if (constantPincode.length !== 6) {
+			throw new InternalError(
+				"Invalid constant pincode",
+				"The constant pincode should be 6 digits",
+			);
+		}
+
+		this.log("login", {
+			method: "email",
+			email,
+			password,
+			constantPincode,
+		});
+
+		if (!this.system) {
+			throw new InternalError("Not setup yet", "Please call 'login()' first");
+		}
+
+		const rsaKey = await this.getRSAKeyInfo();
+		const { keynm, sessionKey } = rsaKey;
+
+		const message =
+			String.fromCharCode(sessionKey.length) +
+			sessionKey +
+			String.fromCharCode(email.length) +
+			email +
+			String.fromCharCode(password.length) +
+			password;
+
+		const [secret, secretPK] = this.createSqrSecret(true);
+		const e2eeData = this.encryptAESECB(
+			this.getSHA256Sum(constantPincode),
+			Buffer.from(secretPK, "base64"),
+		);
+
+		const encryptedMessage = getRSACrypto(message, rsaKey).credentials;
+
+		const cert = this.getCert() || undefined;
+
+		let response = (await this.loginV2(
+			keynm,
+			encryptedMessage,
+			this.system?.device,
+			undefined,
+			e2eeData,
+			cert,
+			"loginV2",
+		)) as LooseType;
+
+		if (!response[9]) {
+			this.emit("pincall", constantPincode);
+			const headers = {
+				Host: this.endpoint,
+				accept: "application/x-thrift",
+				"user-agent": this.system.userAgent,
+				"x-line-application": this.system.type,
+				"x-line-access": response[3],
+				"x-lal": "ja_JP",
+				"x-lpv": "1",
+				"x-lhm": "GET",
+				"accept-encoding": "gzip",
+			};
+			const e2eeInfo = (
+				await this.customFetch(`https://${this.endpoint}/LF1`, {
+					headers: headers,
+				}).then((res) => res.json())
+			).result;
+			this.log("response", e2eeInfo);
+			this.decodeE2EEKeyV1(e2eeInfo.metadata, Buffer.from(secret));
+			const deviceSecret = this.encryptDeviceSecret(
+				Buffer.from(e2eeInfo.metadata.publicKey, "base64"),
+				Buffer.from(secret),
+				Buffer.from(e2eeInfo.metadata.encryptedKeyChain, "base64"),
+			);
+			const e2eeLogin = await this.confirmE2EELogin(
+				response.verifier,
+				deviceSecret,
+			);
+			response = await this.loginV2(
+				keynm,
+				encryptedMessage,
+				this.system.device,
+				e2eeLogin,
+				e2eeData,
+				cert,
+				"loginV2",
+			);
+		}
+		if (response[2]) {
+			this.emit("update:cert", response[2]);
+		}
+		this.storage.set("refreshToken", response[9][2]);
+		this.storage.set("expire", response[9][3] + response[9][6]);
+		return response[9][1];
+	}
+
 	public async requestSQR(): Promise<string> {
 		const { 1: sqr } = await this.createSession();
 		let { 1: url } = await this.createQrCode(sqr);
@@ -899,6 +1019,35 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				this.decodeE2EEKeyV1(e2eeInfo, Buffer.from(secret));
 			}
 			return authToken;
+		}
+		return "";
+	}
+
+	public async requestSQR2(): Promise<string> {
+		const { 1: sqr } = await this.createSession();
+		let { 1: url } = await this.createQrCode(sqr);
+		const [secret, secretUrl] = this.createSqrSecret();
+		url = url + secretUrl;
+		this.emit("qrcall", url);
+		if (await this.checkQrCodeVerified(sqr)) {
+			try {
+				await this.verifyCertificate(sqr, this.getQrCert() as string);
+			} catch (_e) {
+				const { 1: pincode } = await this.createPinCode(sqr);
+				this.emit("pincall", pincode);
+				await this.checkPinCodeVerified(sqr);
+			}
+			const response = await this.qrCodeLogin(sqr);
+			const { 1: pem, 3: tokenInfo, 4: _mid, 10: e2eeInfo } = response;
+			if (pem) {
+				this.emit("update:qrcert", pem);
+			}
+			if (e2eeInfo) {
+				this.decodeE2EEKeyV1(e2eeInfo, Buffer.from(secret));
+			}
+			this.storage.set("refreshToken", tokenInfo[2]);
+			this.storage.set("expire", tokenInfo[3] + tokenInfo[6]);
+			return tokenInfo[1];
 		}
 		return "";
 	}
@@ -1041,6 +1190,26 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
+	public async qrCodeLoginV2(
+		authSessionId: string,
+		modelName: string = "evex",
+		systemName: string = "linejs",
+		autoLoginIsRequired: boolean = true,
+	): Promise<LooseType> {
+		return await this.request(
+			[
+				[11, 1, authSessionId],
+				[11, 2, systemName],
+				[11, 3, modelName],
+				[2, 4, autoLoginIsRequired],
+			],
+			"qrCodeLoginV2",
+			4,
+			false,
+			"/acct/lgn/sq/v1",
+		);
+	}
+
 	public async confirmE2EELogin(
 		verifier: string,
 		deviceSecret: Buffer,
@@ -1093,7 +1262,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			],
 			methodName,
 			3,
-			"LoginResult",
+			methodName === "loginZ" ? "LoginResult" : false,
 			"/api/v3p/rs",
 		);
 	}
@@ -1493,6 +1662,34 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	}
 
 	/**
+	 * @description Try to refresh token.
+	 */
+	public async tryRefreshToken() {
+		const refreshToken = this.storage.get("refreshToken");
+		if (refreshToken) {
+			const RATR = await this.refreshAccessToken(refreshToken as string);
+			this.metadata!.authToken = RATR.accessToken;
+		} else {
+			throw new InternalError("refreshError", "refreshToken not found");
+		}
+	}
+
+	/**
+	 * @description Refresh token.
+	 */
+	public async refreshAccessToken(
+		refreshToken: string,
+	): Promise<LINETypes.RefreshAccessTokenResponse> {
+		return await this.request(
+			[[11, 1, refreshToken]],
+			"refresh",
+			3,
+			"RefreshAccessTokenResponse",
+			"/EXT/auth/tokenrefresh/v1",
+		);
+	}
+
+	/**
 	 * @description Gets the message's data from LINE Obs.
 	 */
 	public async getMessageObsData(
@@ -1517,43 +1714,59 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	}
 
 	/**
-	 * @description Posts the message's data to LINE Obs.
+	 * @description Upload obs message to talk.
 	 */
-	public async postMessageObsData(
-		message: LINETypes.Message,
+	public async uploadObjTalk(
+		to: string,
+		type: "image" | "gif" | "video" | "audio" | "file",
 		data: Blob,
 		filename?: string,
 	): Promise<Response> {
 		if (!this.metadata) {
 			throw new InternalError("Not setup yet", "Please call 'login()' first");
 		}
-		if (!this.hasData(message)) {
-			throw new TypeError("Not have content for type " + message.contentType);
-		}
-		const type = message.contentType.toString().toLowerCase();
+
 		const ext = MimeType[data.type as keyof typeof MimeType];
 		const param: {
+			oid: string;
+			reqseq: string;
+			tomid: string;
 			ver: string;
 			name: string;
 			type: string;
 			cat?: string;
 			duration?: string;
-		} = { ver: "2.0", name: filename || "linejs." + ext, type };
+		} = {
+			ver: "2.0",
+			name: filename || "linejs." + ext,
+			type,
+			tomid: to,
+			oid: "reqseq",
+			reqseq: (334).toString(),
+		};
 		if (type === "image") {
 			param.cat = "original";
+		} else if (type === "gif") {
+			param.cat = "original";
+			param.type = "image";
 		} else if (type === "audio" || type === "video") {
 			param.duration = "1919";
 		}
-		return await this.customFetch(this.LINE_OBS.getDataUrl(message.id), {
-			headers: {
-				accept: "application/json, text/plain, */*",
-				"x-line-application": this.system?.type as string,
-				"x-Line-access": this.metadata.authToken,
-				"content-type": "application/x-www-form-urlencoded",
-				"x-obs-params:": btoa(JSON.stringify(param)),
+		const toType: "talk" | "g2" =
+			to[0] === "m" || to[0] === "t" ? "g2" : "talk";
+		return await this.customFetch(
+			this.LINE_OBS.prefix + "r/" + toType + "/m/reqseq",
+			{
+				headers: {
+					accept: "application/json, text/plain, */*",
+					"x-line-application": this.system?.type as string,
+					"x-Line-access": this.metadata.authToken,
+					"content-type": "application/x-www-form-urlencoded",
+					"x-obs-params": btoa(JSON.stringify(param)),
+				},
+				body: data,
+				method: "POST",
 			},
-			body: data,
-			method: "POST",
-		});
+		);
 	}
 }
