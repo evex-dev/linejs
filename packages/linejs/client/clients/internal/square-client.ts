@@ -15,13 +15,13 @@ export class SquareClient extends LiffClient {
 	private async continueRequest<
 		T extends (...args: LooseType) => LooseType,
 	>(options: {
-		response: ReturnType<T>;
+		response: Promise<ReturnType<T>> | ReturnType<T>;
 		continuationToken: string;
 		method: {
 			handler: T;
 			args: Parameters<T>;
 		};
-	}) {
+	}): Promise<ReturnType<T>> {
 		function objectSum(base: LooseType, add: LooseType): LooseType {
 			for (const key in add) {
 				if (Object.prototype.hasOwnProperty.call(add, key)) {
@@ -43,11 +43,13 @@ export class SquareClient extends LiffClient {
 			}
 			return base;
 		}
-		if (!options.response.continuationToken) {
-			return options.response;
+		const awaitedResponse = await options.response;
+
+		if (!awaitedResponse.continuationToken) {
+			return awaitedResponse;
 		}
-		const responseSum = { ...options.response };
-		let continuationToken: string = options.response.continuationToken;
+		const responseSum = { ...awaitedResponse };
+		let continuationToken: string = awaitedResponse.continuationToken;
 		while (true) {
 			options.method.args[0].continuationToken = continuationToken;
 			const _response = await options.method.handler.call(
