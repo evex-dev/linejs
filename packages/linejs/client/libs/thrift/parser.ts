@@ -82,7 +82,10 @@ export default class ThriftRenameParser {
 			if (typeof value === "undefined") {
 				continue;
 			}
-			if (finfo.struct && typeof value === "object") {
+			if (
+				finfo.struct &&
+				(typeof value === "object" || typeof value === "number")
+			) {
 				if (isStruct(this.def[finfo.struct])) {
 					newObject[finfo.name] = this.rename_thrift(finfo.struct, value);
 				} else {

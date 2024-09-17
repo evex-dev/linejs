@@ -3,6 +3,7 @@
 import { getRSACrypto } from "../libs/rsa/rsa-verify.ts";
 import type { BaseStorage } from "../libs/storage/base-storage.ts";
 import { MemoryStorage } from "../libs/storage/memory-storage.ts";
+import { CacheManager } from "../libs/storage/cache-manager.ts";
 import {
 	type NestedArray,
 	type ParsedThrift,
@@ -46,6 +47,7 @@ interface ClientOptions {
 	endpoint?: string;
 	customFetch?: FetchLike;
 	LINE_OBS?: LINE_OBS;
+	cacheManager?: CacheManager;
 }
 
 export class BaseClient extends TypedEventEmitter<ClientEvents> {
@@ -58,6 +60,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @param {string} [options.endpoint] Endpoint for the client
 	 * @param {FetchLike} [options.customFetch] Custom fetch for the client
 	 * @param {string} [options.LINE_OBS] Endpoint for the obs
+	 * @param {CacheManager} [options.cacheManager] Cache manager for the client
 	 */
 	constructor(options: ClientOptions = {}) {
 		super();
@@ -68,7 +71,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.endpoint = options.endpoint || "gw.line.naver.jp";
 		this.customFetch = options.customFetch || fetch;
 		this.LINE_OBS = options.LINE_OBS || new LINE_OBS();
-
+		this.cache = options.cacheManager || new CacheManager(this.storage);
 		this.squareRateLimitter.callPolling();
 	}
 
@@ -96,6 +99,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @description the LINE OBS of client
 	 */
 	public LINE_OBS: LINE_OBS;
+
+	public cache: CacheManager;
 
 	/**
 	 * @description THe information of user
@@ -395,6 +400,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 	}
 
+	public revision: number = 0;
+
 	private async pollingTalkEvents() {
 		if (this.IS_POLLING_TALK) {
 			return;
@@ -403,7 +410,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.IS_POLLING_TALK = true;
 
 		const noopEvents = await this.sync();
-		let revision = noopEvents.fullSyncResponse.nextRevision;
+		let revision = this.revision || noopEvents.fullSyncResponse.nextRevision;
 		let globalRev: number | undefined, individualRev: number | undefined;
 		while (true) {
 			if (!this.metadata) {
@@ -419,7 +426,6 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 				for (const operation of myEvents.operationResponse?.operations) {
 					revision = operation.revision;
-					this.emit("event", operation);
 					if (
 						operation.type === "RECEIVE_MESSAGE" ||
 						operation.type === "SEND_MESSAGE" ||
@@ -427,7 +433,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					) {
 						const message = await this.decryptE2EEMessage(operation.message);
 						if (this.hasData(message) && operation.type == "SEND_MESSAGE") {
-							continue;
+							//continue;
 						}
 						let sendIn = "";
 						if (message.toType === "USER") {
@@ -544,6 +550,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							message,
 						});
 					}
+					this.emit("event", operation);
 				}
 				globalRev =
 					myEvents.operationResponse?.globalEvents?.lastRevision || globalRev;
