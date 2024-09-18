@@ -40,4 +40,30 @@ export class RelationClient extends E2EE {
 			this.RelationService_API_PATH,
 		);
 	}
+
+	/**
+	 * @description Get contacts v3.
+	 */
+	public async getContactsV3(options: {
+		mids: string[];
+		syncReason?: number;
+		checkUserStatusStrictly?: boolean;
+	}): Promise<LooseType> {
+		const { mids, syncReason, checkUserStatusStrictly } = {
+			syncReason: 5,
+			checkUserStatusStrictly: false,
+			...options,
+		};
+		return await this.request(
+			[
+				[15, 1, [12, mids.map((mid) => [[11, 1, mid, "targetUserMid"]])]],
+				[8, 2, syncReason],
+				[2, 3, checkUserStatusStrictly],
+			],
+			"getContactsV3",
+			this.RelationService_PROTOCOL_TYPE,
+			false,
+			this.RelationService_API_PATH,
+		);
+	}
 }

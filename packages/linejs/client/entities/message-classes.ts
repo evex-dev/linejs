@@ -5,6 +5,8 @@ import type { LooseType } from "./common.ts";
 
 const hasContents = ["IMAGE", "VIDEO", "AUDIO", "FILE"];
 
+type booleanString = "true" | "false";
+
 type splitInfo = {
 	start: number;
 	end: number;
@@ -75,9 +77,39 @@ type fileMeta = {
 	FILE_EXPIRE_TIMESTAMP: string;
 	FILE_NAME: string;
 };
+
 type imgExtMeta = {
 	PREVIEW_URL: string;
 	DOWNLOAD_URL: string;
+};
+
+type chatEventMeta = {
+	LOC_KEY: string | "C_MI" | "C_MR"; // invite remove ?
+	LOC_ARGS: string; // mid * n
+	SKIP_BADGE_COUNT: booleanString;
+};
+
+type callMeta = {
+	GC_EVT_TYPE: "S" | "E"; // start end
+	GC_CHAT_MID: string;
+	CAUSE: string; // 16
+	GC_MEDIA_TYPE: "AUDIO" | "VIDEO";
+	VERSION: "X";
+	GC_PROTO: "C";
+	TYPE: "G";
+	GC_IGNORE_ON_FAILBACK: booleanString;
+	RESULT: "INFO";
+	DURATION: string;
+	SKIP_BADGE_COUNT: booleanString;
+};
+
+type postNotificationMetq = {
+	serviceType: "GB";
+	postEndUrl: string;
+	locKey: "BG";
+	text: string;
+	contentType: "P";
+	cafeId: "0";
 };
 
 /**
@@ -135,6 +167,14 @@ export class Operation {
 	public sendReaction?: SendReaction;
 	public notifiedUpdateProfile?: NotifiedUpdateProfile;
 	public notifiedUpdateProfileContent?: NotifiedUpdateProfileContent;
+	public destroyMessage?: DestroyMessage;
+	public notifiedDestroyMessage?: NotifiedDestroyMessage;
+	public notifiedJoinChat?: NotifiedJoinChat;
+	public notifiedAcceptChatInvitation?: NotifiedAcceptChatInvitation;
+	public inviteIntoChat?: InviteIntoChat;
+	public deleteSelfFromChat?: DeleteSelfFromChat;
+	public notifiedLeaveChat?: NotifiedLeaveChat;
+	public deleteOtherFromChat?: DeleteOtherFromChat;
 
 	constructor(
 		source: LINETypes.Operation,
@@ -184,10 +224,199 @@ export class Operation {
 			this.notifiedUpdateProfileContent = new NotifiedUpdateProfileContent(
 				this,
 			);
+		} else if (source.type == "DESTROY_MESSAGE") {
+			this.destroyMessage = new DestroyMessage(this);
+		} else if (source.type == "NOTIFIED_DESTROY_MESSAGE") {
+			this.notifiedDestroyMessage = new NotifiedDestroyMessage(this);
+		} else if (source.type == "NOTIFIED_JOIN_CHAT") {
+			this.notifiedJoinChat = new NotifiedJoinChat(this);
+		} else if (source.type == "NOTIFIED_ACCEPT_CHAT_INVITATION") {
+			this.notifiedAcceptChatInvitation = new NotifiedAcceptChatInvitation(
+				this,
+			);
+		} else if (source.type == "INVITE_INTO_CHAT") {
+			this.inviteIntoChat = new InviteIntoChat(this);
+		} else if (source.type == "DELETE_SELF_FROM_CHAT") {
+			this.deleteSelfFromChat = new DeleteSelfFromChat(this);
+		} else if (source.type == "NOTIFIED_LEAVE_CHAT") {
+			this.notifiedLeaveChat = new NotifiedLeaveChat(this);
+		} else if (source.type == "NOTIFIED_UPDATE_PROFILE") {
+			this.deleteOtherFromChat = new DeleteOtherFromChat(this);
 		}
 		if (emit && client) {
 			client.emit("event", source);
 		}
+	}
+}
+
+/**
+ * @description you unsend the message
+ */
+export class DestroyMessage {
+	public messageId: string;
+	public chatMid: string;
+
+	constructor(op: Operation) {
+		if (op.type !== "DESTROY_MESSAGE") {
+			throw new TypeError("Wrong operation type");
+		}
+		if (
+			typeof op.param[1] === "undefined" ||
+			typeof op.param[2] === "undefined"
+		) {
+			throw new TypeError("Wrong param");
+		}
+		this.messageId = op.param[2];
+		this.chatMid = op.param[1];
+	}
+}
+
+/**
+ * @description the user unsend the message
+ */
+export class NotifiedDestroyMessage {
+	public messageId: string;
+	public chatMid: string;
+
+	constructor(op: Operation) {
+		if (op.type !== "NOTIFIED_DESTROY_MESSAGE") {
+			throw new TypeError("Wrong operation type");
+		}
+		if (
+			typeof op.param[1] === "undefined" ||
+			typeof op.param[2] === "undefined"
+		) {
+			throw new TypeError("Wrong param");
+		}
+		this.messageId = op.param[2];
+		this.chatMid = op.param[1];
+	}
+}
+
+/**
+ * @description the user joined the chat
+ */
+export class NotifiedJoinChat {
+	public userMid: string;
+	public chatMid: string;
+
+	constructor(op: Operation) {
+		if (op.type !== "NOTIFIED_JOIN_CHAT") {
+			throw new TypeError("Wrong operation type");
+		}
+		if (
+			typeof op.param[1] === "undefined" ||
+			typeof op.param[2] === "undefined"
+		) {
+			throw new TypeError("Wrong param");
+		}
+		this.userMid = op.param[2];
+		this.chatMid = op.param[1];
+	}
+}
+
+/**
+ * @description the user accepted the chat invitation
+ */
+export class NotifiedAcceptChatInvitation {
+	public userMid: string;
+	public chatMid: string;
+
+	constructor(op: Operation) {
+		if (op.type !== "NOTIFIED_ACCEPT_CHAT_INVITATION") {
+			throw new TypeError("Wrong operation type");
+		}
+		if (
+			typeof op.param[1] === "undefined" ||
+			typeof op.param[2] === "undefined"
+		) {
+			throw new TypeError("Wrong param");
+		}
+		this.userMid = op.param[2];
+		this.chatMid = op.param[1];
+	}
+}
+
+/**
+ * @description the user was invited into chat by you
+ */
+export class InviteIntoChat {
+	public userMid: string;
+	public chatMid: string;
+
+	constructor(op: Operation) {
+		if (op.type !== "INVITE_INTO_CHAT") {
+			throw new TypeError("Wrong operation type");
+		}
+		if (
+			typeof op.param[1] === "undefined" ||
+			typeof op.param[2] === "undefined"
+		) {
+			throw new TypeError("Wrong param");
+		}
+		this.userMid = op.param[2];
+		this.chatMid = op.param[1];
+	}
+}
+
+/**
+ * @description you left the chat
+ */
+export class DeleteSelfFromChat {
+	public chatMid: string;
+
+	constructor(op: Operation) {
+		if (op.type !== "DELETE_SELF_FROM_CHAT") {
+			throw new TypeError("Wrong operation type");
+		}
+		if (typeof op.param[1] === "undefined") {
+			throw new TypeError("Wrong param");
+		}
+		this.chatMid = op.param[1];
+	}
+}
+
+/**
+ * @description the user left (kicked) the chat
+ */
+export class NotifiedLeaveChat {
+	public userMid: string;
+	public chatMid: string;
+
+	constructor(op: Operation) {
+		if (op.type !== "NOTIFIED_LEAVE_CHAT") {
+			throw new TypeError("Wrong operation type");
+		}
+		if (
+			typeof op.param[1] === "undefined" ||
+			typeof op.param[2] === "undefined"
+		) {
+			throw new TypeError("Wrong param");
+		}
+		this.userMid = op.param[2];
+		this.chatMid = op.param[1];
+	}
+}
+
+/**
+ * @description the other user was kicked from chat by you
+ */
+export class DeleteOtherFromChat {
+	public userMid: string;
+	public chatMid: string;
+
+	constructor(op: Operation) {
+		if (op.type !== "DELETE_OTHER_FROM_CHAT") {
+			throw new TypeError("Wrong operation type");
+		}
+		if (
+			typeof op.param[1] === "undefined" ||
+			typeof op.param[2] === "undefined"
+		) {
+			throw new TypeError("Wrong param");
+		}
+		this.userMid = op.param[2];
+		this.chatMid = op.param[1];
 	}
 }
 
@@ -391,7 +620,7 @@ export class SendChatChecked {
 }
 
 /**
- * @description the message was removed by you
+ * @description the chatroom history was removed by you
  */
 export class SendChatRemoved {
 	public chatMid: string;
@@ -514,7 +743,7 @@ export class Message {
 					key,
 				)
 			) {
-				let value: LooseType = this.rawMessage.contentMetadata[key];
+				let value: string = this.rawMessage.contentMetadata[key].toString();
 				if (value.startsWith("{") || value.startsWith("[")) {
 					value = JSON.parse(value);
 				}

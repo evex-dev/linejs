@@ -73,6 +73,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.LINE_OBS = options.LINE_OBS || new LINE_OBS();
 		this.cache = options.cacheManager || new CacheManager(this.storage);
 		this.squareRateLimitter.callPolling();
+		this.reqseqs =
+			JSON.parse((this.storage.get("reqseq") as string) || "{}") || {};
 	}
 
 	/**
@@ -1768,5 +1770,14 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				method: "POST",
 			},
 		);
+	}
+
+	private reqseqs: Record<string, number> = {};
+	protected getReqseq(name: string = "talk"): number {
+		if (!this.reqseqs[name]) this.reqseqs[name] = 0;
+		const seq = this.reqseqs[name];
+		this.reqseqs[name]++;
+		this.storage.set("reqseq", JSON.stringify(this.reqseqs));
+		return seq;
 	}
 }

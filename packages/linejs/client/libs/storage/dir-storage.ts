@@ -41,7 +41,7 @@ export class DirStorage extends BaseStorage {
 		let lastKeyId = 0;
 		let id = 0;
 		this.keyIdPair.forEach((e) => {
-			lastKeyId = e.id;
+			if (lastKeyId < e.id) lastKeyId = e.id;
 			if (e.key === key) {
 				id = e.id;
 			}
