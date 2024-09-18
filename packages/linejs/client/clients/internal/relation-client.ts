@@ -62,7 +62,7 @@ export class RelationClient extends E2EE {
 			],
 			"getContactsV3",
 			this.RelationService_PROTOCOL_TYPE,
-			false,
+			"GetContactsV3Response",
 			this.RelationService_API_PATH,
 		);
 	}
