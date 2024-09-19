@@ -73,7 +73,7 @@ export class TalkClient extends ChannelClient {
 		} = {
 			contentType: 0,
 			contentMetadata: {},
-			e2ee: false,
+			e2ee: true,
 			...options,
 		};
 		if (e2ee && !chunk) {
@@ -428,12 +428,12 @@ export class TalkClient extends ChannelClient {
 			withInvitees?: boolean;
 		},
 		useCache: boolean = false,
-	): Promise<LINETypes.GetChatsResponse> {
+	): Promise<LINETypes.Chat> {
 		if (useCache && this.cache.getCache("getChat", options)) {
 			return this.cache.getCache(
 				"getChat",
 				options,
-			) as LINETypes.GetChatsResponse;
+			) as LINETypes.Chat;
 		}
 		const { gid, withInvitees, withMembers } = {
 			withInvitees: true,
@@ -455,7 +455,7 @@ export class TalkClient extends ChannelClient {
 			response.chats.forEach((chat) => {
 				this.cache.setCache("getChat", options, chat);
 			});
-		return response;
+		return response.chats[0];
 	}
 
 	/**
@@ -690,8 +690,8 @@ export class TalkClient extends ChannelClient {
 	 */
 	public async updateChat(options: {
 		chatMid: string;
-		chatSet: LINETypes.Chat;
-		updatedAttribute: number;
+		chatSet: Partial<LINETypes.Chat>;
+		updatedAttribute: LINETypes.ChatAttribute;
 	}): Promise<LINETypes.UpdateChatResponse> {
 		const { chatMid, chatSet, updatedAttribute } = {
 			...options,
