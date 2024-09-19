@@ -151,7 +151,7 @@ function getMidType(mid: string): LINETypes.MIDType | null {
  * @description LINE user (contact) utils
  */
 export class User {
-	public rawSource: LINETypes.Contact
+	public rawSource: LINETypes.Contact;
 	public mid: string;
 	public createdTime: Date;
 	public type: LINETypes.ContactType;
@@ -184,107 +184,117 @@ export class User {
 	public groupStatus: Record<string, LooseType> & {
 		joinedAt?: Date;
 		invitedAt?: Date;
-	} = {}
+	} = {};
 	public birthday: LINETypes.ContactCalendarEvent;
 
 	/**
 	 * @description Generate from mid.
 	 */
 	static async from(mid: string, client: Client) {
-		return new this((await client.getContactsV2({ mids: [mid] })).contacts[mid], client)
+		return new this(
+			(await client.getContactsV2({ mids: [mid] })).contacts[mid],
+			client,
+		);
 	}
 
-	public constructor(contactEntry: LINETypes.ContactEntry, private client: Client) {
-		const { contact } = contactEntry
-		this.birthday = contactEntry.calendarEvents.events[0]
-		this.rawSource = contact
-		this.mid = contact.mid
-		this.createdTime = new Date(contact.createdTime * 1000)
-		this.type = contact.type
-		this.status = contact.status
-		this.relation = contact.relation
-		this.displayName = contact.displayName
-		this.phoneticName = contact.phoneticName
-		this.pictureStatus = contact.pictureStatus
-		this.thumbnailUrl = contact.thumbnailUrl
-		this.statusMessage = contact.statusMessage
-		this.displayNameOverridden = contact.displayNameOverridden
-		this.favoriteTime = new Date(contact.favoriteTime * 1000)
-		this.capableVoiceCall = contact.capableVoiceCall
-		this.capableVideoCall = contact.capableVideoCall
-		this.capableMyhome = contact.capableMyhome
-		this.capableBuddy = contact.capableBuddy
-		this.attributes = contact.attributes
-		this.settings = contact.settings
-		this.picturePath = contact.picturePath
-		this.recommendParams = contact.recommendParams
-		this.friendRequestStatus = contact.friendRequestStatus
-		this.musicProfile = contact.musicProfile
-		this.videoProfile = contact.videoProfile
-		this.statusMessageContentMetadata = contact.statusMessageContentMetadata
-		this.avatarProfile = contact.avatarProfile
-		this.friendRingtone = contact.friendRingtone
-		this.friendRingbackTone = contact.friendRingbackTone
-		this.nftProfile = contact.nftProfile
-		this.pictureSource = contact.pictureSource
+	public constructor(
+		contactEntry: LINETypes.ContactEntry,
+		private client: Client,
+	) {
+		const { contact } = contactEntry;
+		this.birthday = contactEntry.calendarEvents.events[0];
+		this.rawSource = contact;
+		this.mid = contact.mid;
+		this.createdTime = new Date(contact.createdTime * 1000);
+		this.type = contact.type;
+		this.status = contact.status;
+		this.relation = contact.relation;
+		this.displayName = contact.displayName;
+		this.phoneticName = contact.phoneticName;
+		this.pictureStatus = contact.pictureStatus;
+		this.thumbnailUrl = contact.thumbnailUrl;
+		this.statusMessage = contact.statusMessage;
+		this.displayNameOverridden = contact.displayNameOverridden;
+		this.favoriteTime = new Date(contact.favoriteTime * 1000);
+		this.capableVoiceCall = contact.capableVoiceCall;
+		this.capableVideoCall = contact.capableVideoCall;
+		this.capableMyhome = contact.capableMyhome;
+		this.capableBuddy = contact.capableBuddy;
+		this.attributes = contact.attributes;
+		this.settings = contact.settings;
+		this.picturePath = contact.picturePath;
+		this.recommendParams = contact.recommendParams;
+		this.friendRequestStatus = contact.friendRequestStatus;
+		this.musicProfile = contact.musicProfile;
+		this.videoProfile = contact.videoProfile;
+		this.statusMessageContentMetadata = contact.statusMessageContentMetadata;
+		this.avatarProfile = contact.avatarProfile;
+		this.friendRingtone = contact.friendRingtone;
+		this.friendRingbackTone = contact.friendRingbackTone;
+		this.nftProfile = contact.nftProfile;
+		this.pictureSource = contact.pictureSource;
 	}
 
 	/**
 	 * @description Update status.
 	 */
 	public updateStatusFrom(contactEntry: LINETypes.ContactEntry) {
-		const { contact } = contactEntry
-		this.birthday = contactEntry.calendarEvents.events[0]
-		this.rawSource = contact
-		this.mid = contact.mid
-		this.createdTime = new Date(contact.createdTime * 1000)
-		this.type = contact.type
-		this.status = contact.status
-		this.relation = contact.relation
-		this.displayName = contact.displayName
-		this.phoneticName = contact.phoneticName
-		this.pictureStatus = contact.pictureStatus
-		this.thumbnailUrl = contact.thumbnailUrl
-		this.statusMessage = contact.statusMessage
-		this.displayNameOverridden = contact.displayNameOverridden
-		this.favoriteTime = new Date(contact.favoriteTime * 1000)
-		this.capableVoiceCall = contact.capableVoiceCall
-		this.capableVideoCall = contact.capableVideoCall
-		this.capableMyhome = contact.capableMyhome
-		this.capableBuddy = contact.capableBuddy
-		this.attributes = contact.attributes
-		this.settings = contact.settings
-		this.picturePath = contact.picturePath
-		this.recommendParams = contact.recommendParams
-		this.friendRequestStatus = contact.friendRequestStatus
-		this.musicProfile = contact.musicProfile
-		this.videoProfile = contact.videoProfile
-		this.statusMessageContentMetadata = contact.statusMessageContentMetadata
-		this.avatarProfile = contact.avatarProfile
-		this.friendRingtone = contact.friendRingtone
-		this.friendRingbackTone = contact.friendRingbackTone
-		this.nftProfile = contact.nftProfile
-		this.pictureSource = contact.pictureSource
+		const { contact } = contactEntry;
+		this.birthday = contactEntry.calendarEvents.events[0];
+		this.rawSource = contact;
+		this.mid = contact.mid;
+		this.createdTime = new Date(contact.createdTime * 1000);
+		this.type = contact.type;
+		this.status = contact.status;
+		this.relation = contact.relation;
+		this.displayName = contact.displayName;
+		this.phoneticName = contact.phoneticName;
+		this.pictureStatus = contact.pictureStatus;
+		this.thumbnailUrl = contact.thumbnailUrl;
+		this.statusMessage = contact.statusMessage;
+		this.displayNameOverridden = contact.displayNameOverridden;
+		this.favoriteTime = new Date(contact.favoriteTime * 1000);
+		this.capableVoiceCall = contact.capableVoiceCall;
+		this.capableVideoCall = contact.capableVideoCall;
+		this.capableMyhome = contact.capableMyhome;
+		this.capableBuddy = contact.capableBuddy;
+		this.attributes = contact.attributes;
+		this.settings = contact.settings;
+		this.picturePath = contact.picturePath;
+		this.recommendParams = contact.recommendParams;
+		this.friendRequestStatus = contact.friendRequestStatus;
+		this.musicProfile = contact.musicProfile;
+		this.videoProfile = contact.videoProfile;
+		this.statusMessageContentMetadata = contact.statusMessageContentMetadata;
+		this.avatarProfile = contact.avatarProfile;
+		this.friendRingtone = contact.friendRingtone;
+		this.friendRingbackTone = contact.friendRingbackTone;
+		this.nftProfile = contact.nftProfile;
+		this.pictureSource = contact.pictureSource;
 	}
 
 	/**
 	 * @description Send msg to user.
 	 */
-	public send(options: string | {
-		text?: string;
-		contentType?: number;
-		contentMetadata?: LooseType;
-		relatedMessageId?: string;
-		location?: LINETypes.Location;
-		chunk?: string[] | Buffer[];
-		e2ee?: boolean;
-	}): Promise<LINETypes.Message> {
+	public send(
+		options:
+			| string
+			| {
+					text?: string;
+					contentType?: number;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string;
+					location?: LINETypes.Location;
+					chunk?: string[] | Buffer[];
+					e2ee?: boolean;
+			  },
+	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
-			return this.send({ text: options })
+			return this.send({ text: options });
 		} else {
-			const _options: LooseType = options
-			_options.to = this.mid
-			return this.client.sendMessage(_options)
+			const _options: LooseType = options;
+			_options.to = this.mid;
+			return this.client.sendMessage(_options);
 		}
 	}
 
@@ -292,28 +302,34 @@ export class User {
 	 * @description Update status (auto).
 	 */
 	public async updateStatus() {
-		this.updateStatusFrom((await this.client.getContactsV2({ mids: [this.mid] })).contacts[this.mid])
+		this.updateStatusFrom(
+			(await this.client.getContactsV2({ mids: [this.mid] })).contacts[
+				this.mid
+			],
+		);
 	}
 
 	/**
 	 * @description Kickout from group.
 	 */
-	public kick(chatMid: string = ""): Promise<LINETypes.DeleteOtherFromChatResponse> {
-		return this.client.deleteOtherFromChat({ to: chatMid, mid: this.mid })
+	public kick(
+		chatMid: string = "",
+	): Promise<LINETypes.DeleteOtherFromChatResponse> {
+		return this.client.deleteOtherFromChat({ to: chatMid, mid: this.mid });
 	}
 
 	/**
 	 * @description Invite to group.
 	 */
 	public invite(chatMid: string): Promise<LINETypes.InviteIntoChatResponse> {
-		return this.client.inviteIntoChat({ to: chatMid, mids: [this.mid] })
+		return this.client.inviteIntoChat({ to: chatMid, mids: [this.mid] });
 	}
 
 	/**
 	 * @description Add to friend.
 	 */
 	public addFriend() {
-		return this.client.addFriendByMid({ mid: this.mid })
+		return this.client.addFriendByMid({ mid: this.mid });
 	}
 }
 
@@ -321,71 +337,97 @@ export class User {
  * @description LINE group (chat) utils
  */
 export class Group {
-	public rawSource: LINETypes.Chat
+	public rawSource: LINETypes.Chat;
 	public mid: string;
 	public createdTime: Date;
 	public name: string;
 	public picturePath: string;
 	public preventedJoinByTicket: boolean;
-	public invitationTicket: string; public notificationDisabled: boolean;
+	public invitationTicket: string;
+	public notificationDisabled: boolean;
 	/**
 	 * @description Generate from groupMid or {Chat}.
 	 */
 	static async from(gidOrChat: string | LINETypes.Chat, client: Client) {
-		const chat: LINETypes.Chat = typeof gidOrChat === "string" ? await client.getChat({ gid: gidOrChat }) : gidOrChat
-		const creator = await User.from(chat.extra.groupExtra.creator, client)
-		const _members = (await client.getContactsV2({ mids: Object.keys(chat.extra.groupExtra.memberMids) })).contacts
-		const members: User[] = []
+		const chat: LINETypes.Chat =
+			typeof gidOrChat === "string"
+				? await client.getChat({ gid: gidOrChat })
+				: gidOrChat;
+		const creator = await User.from(chat.extra.groupExtra.creator, client);
+		const _members = (
+			await client.getContactsV2({
+				mids: Object.keys(chat.extra.groupExtra.memberMids),
+			})
+		).contacts;
+		const members: User[] = [];
 		for (const key in _members) {
 			if (Object.prototype.hasOwnProperty.call(_members, key)) {
-				const user = new User(_members[key], client)
-				user.groupStatus.joinedAt = new Date(chat.extra.groupExtra.memberMids[key] * 1000)
-				user.kick = user.kick.bind(user, chat.chatMid)
-				members.push()
+				const user = new User(_members[key], client);
+				user.groupStatus.joinedAt = new Date(
+					chat.extra.groupExtra.memberMids[key] * 1000,
+				);
+				user.kick = user.kick.bind(user, chat.chatMid);
+				members.push();
 			}
 		}
-		const _invitee = (await client.getContactsV2({ mids: Object.keys(chat.extra.groupExtra.inviteeMids) })).contacts
-		const invitee: User[] = []
+		const _invitee = (
+			await client.getContactsV2({
+				mids: Object.keys(chat.extra.groupExtra.inviteeMids),
+			})
+		).contacts;
+		const invitee: User[] = [];
 		for (const key in _invitee) {
 			if (Object.prototype.hasOwnProperty.call(_invitee, key)) {
-				const user = new User(_invitee[key], client)
-				user.groupStatus.invitedAt = new Date(chat.extra.groupExtra.inviteeMids[key] * 1000)
-				user.kick = user.kick.bind(user, chat.chatMid)
-				members.push()
+				const user = new User(_invitee[key], client);
+				user.groupStatus.invitedAt = new Date(
+					chat.extra.groupExtra.inviteeMids[key] * 1000,
+				);
+				user.kick = user.kick.bind(user, chat.chatMid);
+				members.push();
 			}
 		}
-		return new this(chat, client, creator, members, invitee)
+		return new this(chat, client, creator, members, invitee);
 	}
-	constructor(chat: LINETypes.Chat, private client: Client, public creator: User, public members: User[], public invitee: User[]) {
-		this.rawSource = chat
-		this.mid = chat.chatMid
-		this.createdTime = new Date(chat.createdTime * 1000)
-		this.name = chat.chatName
-		this.picturePath = chat.picturePath
-		this.notificationDisabled = chat.notificationDisabled
-		const { groupExtra } = chat.extra
-		this.preventedJoinByTicket = groupExtra.preventedJoinByTicket
-		this.invitationTicket = groupExtra.invitationTicket
+	constructor(
+		chat: LINETypes.Chat,
+		private client: Client,
+		public creator: User,
+		public members: User[],
+		public invitee: User[],
+	) {
+		this.rawSource = chat;
+		this.mid = chat.chatMid;
+		this.createdTime = new Date(chat.createdTime * 1000);
+		this.name = chat.chatName;
+		this.picturePath = chat.picturePath;
+		this.notificationDisabled = chat.notificationDisabled;
+		const { groupExtra } = chat.extra;
+		this.preventedJoinByTicket = groupExtra.preventedJoinByTicket;
+		this.invitationTicket = groupExtra.invitationTicket;
 	}
 
 	/**
 	 * @description Send msg to group.
 	 */
-	public send(options: string | {
-		text?: string;
-		contentType?: number;
-		contentMetadata?: LooseType;
-		relatedMessageId?: string;
-		location?: LINETypes.Location;
-		chunk?: string[] | Buffer[];
-		e2ee?: boolean;
-	}): Promise<LINETypes.Message> {
+	public send(
+		options:
+			| string
+			| {
+					text?: string;
+					contentType?: number;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string;
+					location?: LINETypes.Location;
+					chunk?: string[] | Buffer[];
+					e2ee?: boolean;
+			  },
+	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
-			return this.send({ text: options })
+			return this.send({ text: options });
 		} else {
-			const _options: LooseType = options
-			_options.to = this.mid
-			return this.client.sendMessage(_options)
+			const _options: LooseType = options;
+			_options.to = this.mid;
+			return this.client.sendMessage(_options);
 		}
 	}
 
@@ -396,33 +438,32 @@ export class Group {
 		chatSet: Partial<LINETypes.Chat>;
 		updatedAttribute: LINETypes.ChatAttribute;
 	}): Promise<LINETypes.UpdateChatResponse> {
-		const _options: LooseType = options
-		_options.chatMid = this.mid
-		return this.client.updateChat(_options)
+		const _options: LooseType = options;
+		_options.chatMid = this.mid;
+		return this.client.updateChat(_options);
 	}
 
 	/**
 	 * @description Update group name.
 	 */
 	public updateName(name: string): Promise<LINETypes.UpdateChatResponse> {
-		return this.update({ chatSet: { chatName: name }, updatedAttribute: 1 })
+		return this.update({ chatSet: { chatName: name }, updatedAttribute: 1 });
 	}
 
 	/**
 	 * @description Invite user.
 	 */
 	public invite(mids: string[]): Promise<LINETypes.InviteIntoChatResponse> {
-		return this.client.inviteIntoChat({ to: this.mid, mids })
+		return this.client.inviteIntoChat({ to: this.mid, mids });
 	}
 
 	/**
 	 * @description Kickout user.
 	 */
-	public kick(mid:string): Promise<LINETypes.DeleteOtherFromChatResponse> {
-		return this.client.deleteOtherFromChat({ to: this.mid, mid: mid })
+	public kick(mid: string): Promise<LINETypes.DeleteOtherFromChatResponse> {
+		return this.client.deleteOtherFromChat({ to: this.mid, mid: mid });
 	}
 }
-
 
 /**
  * @description LINE talk event utils
@@ -1289,20 +1330,20 @@ export class TalkMessage extends ClientMessage {
 	public send(
 		options:
 			| {
-				text?: string | undefined;
-				contentType?: number | undefined;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string | undefined;
-				location?: LooseType;
-				chunk?: string[] | undefined;
-				e2ee?: boolean | undefined;
-			}
+					text?: string | undefined;
+					contentType?: number | undefined;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string | undefined;
+					location?: LooseType;
+					chunk?: string[] | undefined;
+					e2ee?: boolean | undefined;
+			  }
 			| string,
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
 		} else {
-			const _options: LooseType = options
+			const _options: LooseType = options;
 			_options.to =
 				this.toType === "GROUP" || this.toType === "ROOM"
 					? this.to
@@ -1319,20 +1360,20 @@ export class TalkMessage extends ClientMessage {
 	public reply(
 		options:
 			| {
-				text?: string | undefined;
-				contentType?: number | undefined;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string | undefined;
-				location?: LooseType;
-				chunk?: string[] | undefined;
-				e2ee?: boolean | undefined;
-			}
+					text?: string | undefined;
+					contentType?: number | undefined;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string | undefined;
+					location?: LooseType;
+					chunk?: string[] | undefined;
+					e2ee?: boolean | undefined;
+			  }
 			| string,
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.reply({ text: options });
 		} else {
-			const _options: LooseType = options
+			const _options: LooseType = options;
 			_options.to =
 				this.toType === "GROUP" || this.toType === "ROOM"
 					? this.to
@@ -1447,18 +1488,18 @@ export class SquareMessage extends ClientMessage {
 	public send(
 		options:
 			| {
-				text?: string | undefined;
-				contentType?: LooseType;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string | undefined;
-			}
+					text?: string | undefined;
+					contentType?: LooseType;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string | undefined;
+			  }
 			| string,
 		safe: boolean = true,
 	): Promise<LINETypes.SendMessageResponse> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
 		} else {
-			const _options: LooseType = options
+			const _options: LooseType = options;
 			_options.squareChatMid = this.to;
 			return this.client.sendSquareMessage(_options, safe);
 		}
@@ -1470,18 +1511,18 @@ export class SquareMessage extends ClientMessage {
 	public reply(
 		options:
 			| {
-				text?: string | undefined;
-				contentType?: LooseType;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string | undefined;
-			}
+					text?: string | undefined;
+					contentType?: LooseType;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string | undefined;
+			  }
 			| string,
 		safe: boolean = true,
 	): Promise<LINETypes.SendMessageResponse> {
 		if (typeof options === "string") {
 			return this.reply({ text: options });
 		} else {
-			const _options: LooseType = options
+			const _options: LooseType = options;
 			_options.squareChatMid = this.to;
 			_options.relatedMessageId = this.id;
 			return this.client.sendSquareMessage(_options, safe);

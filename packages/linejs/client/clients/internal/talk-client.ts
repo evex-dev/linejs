@@ -430,10 +430,7 @@ export class TalkClient extends ChannelClient {
 		useCache: boolean = false,
 	): Promise<LINETypes.Chat> {
 		if (useCache && this.cache.getCache("getChat", options)) {
-			return this.cache.getCache(
-				"getChat",
-				options,
-			) as LINETypes.Chat;
+			return this.cache.getCache("getChat", options) as LINETypes.Chat;
 		}
 		const { gid, withInvitees, withMembers } = {
 			withInvitees: true,
