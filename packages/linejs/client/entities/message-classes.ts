@@ -240,7 +240,7 @@ export class Operation {
 			this.deleteSelfFromChat = new DeleteSelfFromChat(this);
 		} else if (source.type == "NOTIFIED_LEAVE_CHAT") {
 			this.notifiedLeaveChat = new NotifiedLeaveChat(this);
-		} else if (source.type == "NOTIFIED_UPDATE_PROFILE") {
+		} else if (source.type == "DELETE_OTHER_FROM_CHAT") {
 			this.deleteOtherFromChat = new DeleteOtherFromChat(this);
 		}
 		if (emit && client) {
@@ -1011,15 +1011,15 @@ export class TalkMessage extends ClientMessage {
 	public send(
 		options:
 			| {
-					to?: string;
-					text?: string | undefined;
-					contentType?: number | undefined;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string | undefined;
-					location?: LooseType;
-					chunk?: string[] | undefined;
-					e2ee?: boolean | undefined;
-			  }
+				to?: string;
+				text?: string | undefined;
+				contentType?: number | undefined;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string | undefined;
+				location?: LooseType;
+				chunk?: string[] | undefined;
+				e2ee?: boolean | undefined;
+			}
 			| string,
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
@@ -1041,15 +1041,15 @@ export class TalkMessage extends ClientMessage {
 	public reply(
 		options:
 			| {
-					to?: string;
-					text?: string | undefined;
-					contentType?: number | undefined;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string | undefined;
-					location?: LooseType;
-					chunk?: string[] | undefined;
-					e2ee?: boolean | undefined;
-			  }
+				to?: string;
+				text?: string | undefined;
+				contentType?: number | undefined;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string | undefined;
+				location?: LooseType;
+				chunk?: string[] | undefined;
+				e2ee?: boolean | undefined;
+			}
 			| string,
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
@@ -1091,12 +1091,11 @@ export class TalkMessage extends ClientMessage {
 		if (this.toType !== "ROOM" && this.toType !== "GROUP") {
 			throw new Error("not Group");
 		}
-		// FIX ME
-		// return this.client.createChatRoomAnnouncement({
-		// 	chatRoomMid: this.to,
-		// 	text: this.text,
-		// 	link: `line://nv/chatMsg?chatId=${this.to}&messageId=${this.id}`,
-		// });
+		return this.client.createChatRoomAnnouncement({
+			chatRoomMid: this.to,
+			text: this.text,
+			link: `line://nv/chatMsg?chatId=${this.to}&messageId=${this.id}`,
+		});
 	}
 
 	/**
@@ -1170,12 +1169,12 @@ export class SquareMessage extends ClientMessage {
 	public send(
 		options:
 			| {
-					squareChatMid?: string;
-					text?: string | undefined;
-					contentType?: LooseType;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string | undefined;
-			  }
+				squareChatMid?: string;
+				text?: string | undefined;
+				contentType?: LooseType;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string | undefined;
+			}
 			| string,
 		safe: boolean = true,
 	): Promise<LINETypes.SendMessageResponse> {
@@ -1193,12 +1192,12 @@ export class SquareMessage extends ClientMessage {
 	public reply(
 		options:
 			| {
-					squareChatMid?: string;
-					text?: string | undefined;
-					contentType?: LooseType;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string | undefined;
-			  }
+				squareChatMid?: string;
+				text?: string | undefined;
+				contentType?: LooseType;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string | undefined;
+			}
 			| string,
 		safe: boolean = true,
 	): Promise<LINETypes.SendMessageResponse> {

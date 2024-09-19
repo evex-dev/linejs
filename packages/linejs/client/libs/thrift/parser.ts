@@ -76,6 +76,7 @@ export default class ThriftRenameParser {
 
 	rename_thrift(structName: string, object: LooseType): LooseType {
 		const newObject: LooseType = {};
+		if (typeof object !== "object") return object
 		for (const fid in object) {
 			const value = object[fid];
 			const finfo = this.fid2name(structName, fid);
