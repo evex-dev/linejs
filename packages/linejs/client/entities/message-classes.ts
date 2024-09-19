@@ -2,7 +2,7 @@ import * as LINETypes from "../../../types/line_types.ts";
 import { parseEnum } from "../../../types/thrift.ts";
 import type { Client } from "../../client/index.ts";
 import type { LooseType } from "./common.ts";
-import { Buffer } from "node:buffer";
+import type { Buffer } from "node:buffer";
 
 const hasContents = ["IMAGE", "VIDEO", "AUDIO", "FILE"];
 
@@ -191,6 +191,12 @@ export class User {
 	 * @description Generate from mid.
 	 */
 	static async from(mid: string, client: Client) {
+		if (mid === client.user?.mid) {
+			return new this(
+				{ ...(await client.getContactsV2({ mids: [mid] })).contacts[mid], contact: await client.getContact({ mid }) },
+				client,
+			);
+		}
 		return new this(
 			(await client.getContactsV2({ mids: [mid] })).contacts[mid],
 			client,
@@ -202,8 +208,9 @@ export class User {
 		private client: Client,
 	) {
 		const { contact } = contactEntry;
-		this.birthday = contactEntry.calendarEvents.events[0];
+		this.birthday = contactEntry.calendarEvents?.events && contactEntry.calendarEvents.events[0];
 		this.rawSource = contact;
+		console.log(contactEntry)
 		this.mid = contact.mid;
 		this.createdTime = new Date(contact.createdTime * 1000);
 		this.type = contact.type;
@@ -280,14 +287,14 @@ export class User {
 		options:
 			| string
 			| {
-					text?: string;
-					contentType?: number;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string;
-					location?: LINETypes.Location;
-					chunk?: string[] | Buffer[];
-					e2ee?: boolean;
-			  },
+				text?: string;
+				contentType?: number;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string;
+				location?: LINETypes.Location;
+				chunk?: string[] | Buffer[];
+				e2ee?: boolean;
+			},
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
@@ -304,7 +311,7 @@ export class User {
 	public async updateStatus() {
 		this.updateStatusFrom(
 			(await this.client.getContactsV2({ mids: [this.mid] })).contacts[
-				this.mid
+			this.mid
 			],
 		);
 	}
@@ -359,10 +366,19 @@ export class Group {
 				mids: Object.keys(chat.extra.groupExtra.memberMids),
 			})
 		).contacts;
+		console.log(_members)
 		const members: User[] = [];
 		for (const key in _members) {
 			if (Object.prototype.hasOwnProperty.call(_members, key)) {
-				const user = new User(_members[key], client);
+				let user: User;
+				if (key === client.user?.mid) {
+					user = new User(
+						{ ..._members[key], contact: await client.getContact({ mid: key }) },
+						client,
+					);
+				} else {
+					user = new User(_members[key], client);
+				}
 				user.groupStatus.joinedAt = new Date(
 					chat.extra.groupExtra.memberMids[key] * 1000,
 				);
@@ -378,7 +394,15 @@ export class Group {
 		const invitee: User[] = [];
 		for (const key in _invitee) {
 			if (Object.prototype.hasOwnProperty.call(_invitee, key)) {
-				const user = new User(_invitee[key], client);
+				let user: User;
+				if (key === client.user?.mid) {
+					user = new User(
+						{ ..._invitee[key], contact: await client.getContact({ mid: key }) },
+						client,
+					);
+				} else {
+					user = new User(_invitee[key], client);
+				}
 				user.groupStatus.invitedAt = new Date(
 					chat.extra.groupExtra.inviteeMids[key] * 1000,
 				);
@@ -413,14 +437,14 @@ export class Group {
 		options:
 			| string
 			| {
-					text?: string;
-					contentType?: number;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string;
-					location?: LINETypes.Location;
-					chunk?: string[] | Buffer[];
-					e2ee?: boolean;
-			  },
+				text?: string;
+				contentType?: number;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string;
+				location?: LINETypes.Location;
+				chunk?: string[] | Buffer[];
+				e2ee?: boolean;
+			},
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
@@ -1330,14 +1354,14 @@ export class TalkMessage extends ClientMessage {
 	public send(
 		options:
 			| {
-					text?: string | undefined;
-					contentType?: number | undefined;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string | undefined;
-					location?: LooseType;
-					chunk?: string[] | undefined;
-					e2ee?: boolean | undefined;
-			  }
+				text?: string | undefined;
+				contentType?: number | undefined;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string | undefined;
+				location?: LooseType;
+				chunk?: string[] | undefined;
+				e2ee?: boolean | undefined;
+			}
 			| string,
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
@@ -1360,14 +1384,14 @@ export class TalkMessage extends ClientMessage {
 	public reply(
 		options:
 			| {
-					text?: string | undefined;
-					contentType?: number | undefined;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string | undefined;
-					location?: LooseType;
-					chunk?: string[] | undefined;
-					e2ee?: boolean | undefined;
-			  }
+				text?: string | undefined;
+				contentType?: number | undefined;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string | undefined;
+				location?: LooseType;
+				chunk?: string[] | undefined;
+				e2ee?: boolean | undefined;
+			}
 			| string,
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
@@ -1488,11 +1512,11 @@ export class SquareMessage extends ClientMessage {
 	public send(
 		options:
 			| {
-					text?: string | undefined;
-					contentType?: LooseType;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string | undefined;
-			  }
+				text?: string | undefined;
+				contentType?: LooseType;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string | undefined;
+			}
 			| string,
 		safe: boolean = true,
 	): Promise<LINETypes.SendMessageResponse> {
@@ -1511,11 +1535,11 @@ export class SquareMessage extends ClientMessage {
 	public reply(
 		options:
 			| {
-					text?: string | undefined;
-					contentType?: LooseType;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string | undefined;
-			  }
+				text?: string | undefined;
+				contentType?: LooseType;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string | undefined;
+			}
 			| string,
 		safe: boolean = true,
 	): Promise<LINETypes.SendMessageResponse> {

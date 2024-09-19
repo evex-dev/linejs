@@ -34,6 +34,9 @@ function writeStruct(output: LooseType, clValue: NestedArray = []): void {
 	output.writeStructBegin("");
 
 	clValue.forEach((e: LooseType) => {
+		if (e === null || e === undefined) {
+			return
+		}
 		writeValue(output, e[0], e[1], e[2]);
 	});
 
