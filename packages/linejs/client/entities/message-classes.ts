@@ -434,7 +434,7 @@ export class Group {
 	/**
 	 * @description Update group status.
 	 */
-	public update(options: {
+	public set(options: {
 		chatSet: Partial<LINETypes.Chat>;
 		updatedAttribute: LINETypes.ChatAttribute;
 	}): Promise<LINETypes.UpdateChatResponse> {
@@ -446,8 +446,8 @@ export class Group {
 	/**
 	 * @description Update group name.
 	 */
-	public updateName(name: string): Promise<LINETypes.UpdateChatResponse> {
-		return this.update({ chatSet: { chatName: name }, updatedAttribute: 1 });
+	public setName(name: string): Promise<LINETypes.UpdateChatResponse> {
+		return this.set({ chatSet: { chatName: name }, updatedAttribute: 1 });
 	}
 
 	/**
