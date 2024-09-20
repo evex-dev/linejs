@@ -594,7 +594,7 @@ export class TalkClient extends ChannelClient {
 	 */
 	public async acceptChatInvitation(options: {
 		to: string;
-	}): Promise<LINETypes.AcceptChatInvitationByTicketResponse> {
+	}): Promise<LINETypes.AcceptChatInvitationResponse> {
 		const { to } = {
 			...options,
 		};
@@ -605,7 +605,7 @@ export class TalkClient extends ChannelClient {
 			],
 			"acceptChatInvitation",
 			this.TalkService_PROTOCOL_TYPE,
-			"AcceptChatInvitationByTicketResponse",
+			"AcceptChatInvitationResponse",
 			this.TalkService_API_PATH,
 		);
 	}
