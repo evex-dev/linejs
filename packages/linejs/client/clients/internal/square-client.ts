@@ -6,11 +6,11 @@ import type { LooseType } from "../../entities/common.ts";
 import { LiffClient } from "./liff-client.ts";
 
 export class SquareClient extends LiffClient {
-	protected SquareService_API_PATH = "/SQ1";
-	protected SquareService_PROTOCOL_TYPE: ProtocolKey = 4;
+	public SquareService_API_PATH = "/SQ1";
+	public SquareService_PROTOCOL_TYPE: ProtocolKey = 4;
 
-	protected SquareLiveTalkService_API_PATH = "/SQLV1";
-	protected SquareLiveTalkService_PROTOCOL_TYPE: ProtocolKey = 4;
+	public SquareLiveTalkService_API_PATH = "/SQLV1";
+	public SquareLiveTalkService_PROTOCOL_TYPE: ProtocolKey = 4;
 
 	private async continueRequest<
 		T extends (...args: LooseType) => LooseType,

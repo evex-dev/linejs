@@ -13,8 +13,8 @@ export class LiffClient extends BaseClient {
 	protected static readonly AUTH_CONSENT_URL =
 		"https://access.line.me/oauth2/v2.1/authorize/consent";
 	protected liff_token_cache: { [key: string]: string } = {};
-	protected LiffService_API_PATH = "/LIFF1";
-	protected LiffService_PROTOCOL_TYPE: ProtocolKey = 4;
+	public LiffService_API_PATH = "/LIFF1";
+	public LiffService_PROTOCOL_TYPE: ProtocolKey = 4;
 	protected liffId = "1562242036-RW04okm";
 
 	protected getToType(mid: string): number | null {
@@ -128,7 +128,7 @@ export class LiffClient extends BaseClient {
 		forceIssue?: boolean;
 	}): Promise<LooseType> {
 		let token: string;
-		const { to, messages, tryConsent, forceIssue } = {
+		const { to, messages, tryConsent: _tryConsent, forceIssue } = {
 			tryConsent: true,
 			forceIssue: false,
 			...options,
