@@ -1555,6 +1555,22 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	}
 
 	/**
+	 * @description Gets the server time
+	 */
+	public async getServerTime(): Promise<number> {
+		return await this.request(
+			[
+				128, 1, 0, 1, 0, 0, 0, 13, 103, 101, 116, 83, 101, 114, 118, 101, 114,
+				84, 105, 109, 101, 0, 0, 0, 0, 0,
+			],
+			"getServerTime",
+			this.LINEService_PROTOCOL_TYPE,
+			false,
+			this.LINEService_API_PATH,
+		);
+	}
+
+	/**
 	 * @description Gets the profile of the current user.
 	 */
 	public async getProfile(): Promise<LINETypes.Profile> {

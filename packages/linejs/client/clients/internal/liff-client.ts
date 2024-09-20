@@ -128,7 +128,12 @@ export class LiffClient extends BaseClient {
 		forceIssue?: boolean;
 	}): Promise<LooseType> {
 		let token: string;
-		const { to, messages, tryConsent: _tryConsent, forceIssue } = {
+		const {
+			to,
+			messages,
+			tryConsent: _tryConsent,
+			forceIssue,
+		} = {
 			tryConsent: true,
 			forceIssue: false,
 			...options,

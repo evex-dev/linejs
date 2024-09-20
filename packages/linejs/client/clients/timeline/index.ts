@@ -164,7 +164,10 @@ export class Timeline extends SettingsClient {
 		).then((r) => r.json());
 	}
 
-	public async deletePost(options: { homeId: string; postId: string }): Promise<LooseType> {
+	public async deletePost(options: {
+		homeId: string;
+		postId: string;
+	}): Promise<LooseType> {
 		const { homeId, postId } = { ...options };
 		const headers = {
 			...this.timelineHeaders,
