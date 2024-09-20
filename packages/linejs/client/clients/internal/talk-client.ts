@@ -73,7 +73,7 @@ export class TalkClient extends ChannelClient {
 		} = {
 			contentType: 0,
 			contentMetadata: {},
-			e2ee: false,
+			e2ee: true,
 			...options,
 		};
 		if (e2ee && !chunk) {
@@ -139,7 +139,7 @@ export class TalkClient extends ChannelClient {
 		try {
 			return await this.direct_request(
 				[
-					[8, 1, 0],
+					[8, 1, this.getReqseq()],
 					[12, 2, message],
 				],
 				"sendMessage",
@@ -274,7 +274,7 @@ export class TalkClient extends ChannelClient {
 		const { lastMessageId, chatMid } = { ...options };
 		return await this.direct_request(
 			[
-				[8, 1, 0],
+				[8, 1, this.getReqseq()],
 				[11, 2, chatMid],
 				[11, 3, lastMessageId],
 			],
@@ -361,16 +361,19 @@ export class TalkClient extends ChannelClient {
 			"Contact",
 			this.TalkService_API_PATH,
 		);
-		this.cache.setCache("getContact", options, response);
+		if (useCache) this.cache.setCache("getContact", options, response);
 		return response;
 	}
 
 	/**
 	 * @description Get users information from mids.
 	 */
-	public async getContacts(options: {
-		mids: string[];
-	}): Promise<LINETypes.Contact[]> {
+	public async getContacts(
+		options: {
+			mids: string[];
+		},
+		useCache: boolean = false,
+	): Promise<LINETypes.Contact[]> {
 		const { mids } = { ...options };
 		const response = (
 			await this.direct_request(
@@ -383,15 +386,19 @@ export class TalkClient extends ChannelClient {
 		).map((e: LooseType) =>
 			this.parser.rename_thrift("Contact", e),
 		) as LINETypes.Contact[];
-		response.forEach((e) => {
-			this.cache.setCache("getContact", { mid: e.mid }, e);
-		});
+		if (useCache)
+			response.forEach((e) => {
+				this.cache.setCache("getContact", { mid: e.mid }, e);
+			});
 		return response;
 	}
 
-	public async getContactsV2(options: {
-		mids: string[];
-	}): Promise<LINETypes.GetContactsV2Response> {
+	public async getContactsV2(
+		options: {
+			mids: string[];
+		},
+		useCache: boolean = false,
+	): Promise<LINETypes.GetContactsV2Response> {
 		const { mids } = { ...options };
 		const response = (await this.request(
 			[[15, 1, [11, mids]]],
@@ -401,12 +408,13 @@ export class TalkClient extends ChannelClient {
 			this.TalkService_API_PATH,
 		)) as LINETypes.GetContactsV2Response;
 
-		for (const key in response.contacts) {
-			if (Object.prototype.hasOwnProperty.call(response.contacts, key)) {
-				const contact = response.contacts[key].contact;
-				this.cache.setCache("getContact", { mid: contact.mid }, contact);
+		if (useCache)
+			for (const key in response.contacts) {
+				if (Object.prototype.hasOwnProperty.call(response.contacts, key)) {
+					const contact = response.contacts[key].contact;
+					this.cache.setCache("getContact", { mid: contact.mid }, contact);
+				}
 			}
-		}
 		return response;
 	}
 
@@ -420,12 +428,9 @@ export class TalkClient extends ChannelClient {
 			withInvitees?: boolean;
 		},
 		useCache: boolean = false,
-	): Promise<LINETypes.GetChatsResponse> {
+	): Promise<LINETypes.Chat> {
 		if (useCache && this.cache.getCache("getChat", options)) {
-			return this.cache.getCache(
-				"getChat",
-				options,
-			) as LINETypes.GetChatsResponse;
+			return this.cache.getCache("getChat", options) as LINETypes.Chat;
 		}
 		const { gid, withInvitees, withMembers } = {
 			withInvitees: true,
@@ -443,20 +448,24 @@ export class TalkClient extends ChannelClient {
 			"GetChatsResponse",
 			this.TalkService_API_PATH,
 		)) as LINETypes.GetChatsResponse;
-		response.chats.forEach((chat) => {
-			this.cache.setCache("getChat", options, chat);
-		});
-		return response;
+		if (useCache)
+			response.chats.forEach((chat) => {
+				this.cache.setCache("getChat", options, chat);
+			});
+		return response.chats[0];
 	}
 
 	/**
 	 * @description Get chats information from gids.
 	 */
-	public async getChats(options: {
-		gids: string[];
-		withMembers?: boolean;
-		withInvitees?: boolean;
-	}): Promise<LINETypes.GetChatsResponse> {
+	public async getChats(
+		options: {
+			gids: string[];
+			withMembers?: boolean;
+			withInvitees?: boolean;
+		},
+		useCache: boolean = false,
+	): Promise<LINETypes.GetChatsResponse> {
 		const { gids, withInvitees, withMembers } = {
 			withInvitees: true,
 			withMembers: true,
@@ -473,13 +482,14 @@ export class TalkClient extends ChannelClient {
 			"GetChatsResponse",
 			this.TalkService_API_PATH,
 		)) as LINETypes.GetChatsResponse;
-		response.chats.forEach((chat) => {
-			this.cache.setCache(
-				"getChat",
-				{ gid: chat.chatMid, withMembers, withInvitees },
-				chat,
-			);
-		});
+		if (useCache)
+			response.chats.forEach((chat) => {
+				this.cache.setCache(
+					"getChat",
+					{ gid: chat.chatMid, withMembers, withInvitees },
+					chat,
+				);
+			});
 		return response;
 	}
 
@@ -528,7 +538,7 @@ export class TalkClient extends ChannelClient {
 		};
 		return await this.direct_request(
 			[
-				[8, 1, 0],
+				[8, 1, this.getReqseq()],
 				[11, 2, to],
 				[14, 3, [11, [mid]]],
 			],
@@ -550,7 +560,7 @@ export class TalkClient extends ChannelClient {
 		};
 		return await this.request(
 			[
-				[8, 1, 0],
+				[8, 1, this.getReqseq()],
 				[11, 2, to],
 			],
 			"deleteSelfFromChat",
@@ -576,7 +586,7 @@ export class TalkClient extends ChannelClient {
 					12,
 					1,
 					[
-						[8, 1, 0],
+						[8, 1, this.getReqseq()],
 						[11, 2, to],
 						[14, 3, [[11, mids]]],
 					],
@@ -600,7 +610,7 @@ export class TalkClient extends ChannelClient {
 		};
 		return await this.request(
 			[
-				[8, 1, 0], // [8, 1, this.getCurrReqId()]...?
+				[8, 1, this.getReqseq()],
 				[11, 2, to],
 			],
 			"acceptChatInvitation",
@@ -621,7 +631,7 @@ export class TalkClient extends ChannelClient {
 		};
 		return await this.request(
 			[
-				[8, 1, 0], // reqSeq
+				[8, 1, this.getReqseq()],
 				[11, 2, groupMid],
 			],
 			"reissueChatTicket",
@@ -661,7 +671,7 @@ export class TalkClient extends ChannelClient {
 		};
 		return await this.request(
 			[
-				[8, 1, 0],
+				[8, 1, this.getReqseq()],
 				[11, 2, to],
 				[11, 3, ticket],
 			],
@@ -677,8 +687,8 @@ export class TalkClient extends ChannelClient {
 	 */
 	public async updateChat(options: {
 		chatMid: string;
-		chatSet: LINETypes.Chat;
-		updatedAttribute: number;
+		chatSet: Partial<LINETypes.Chat>;
+		updatedAttribute: LINETypes.ChatAttribute;
 	}): Promise<LINETypes.UpdateChatResponse> {
 		const { chatMid, chatSet, updatedAttribute } = {
 			...options,
@@ -686,7 +696,7 @@ export class TalkClient extends ChannelClient {
 
 		return await this.request(
 			[
-				[8, 1, 0], // seq?
+				[8, 1, this.getReqseq()],
 				[
 					12,
 					2,
@@ -743,7 +753,7 @@ export class TalkClient extends ChannelClient {
 		};
 		return await this.direct_request(
 			[
-				[8, 1, 0],
+				[8, 1, this.getReqseq()],
 				[11, 2, chatRoomMid],
 				[8, 3, type],
 				[
