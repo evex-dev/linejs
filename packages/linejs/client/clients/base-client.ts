@@ -1521,11 +1521,11 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		return this.parser.get_cl(structName);
 	}
 
-	protected LINEService_API_PATH = "/S4";
-	protected LINEService_PROTOCOL_TYPE: ProtocolKey = 4;
+	public LINEService_API_PATH = "/S4";
+	public LINEService_PROTOCOL_TYPE: ProtocolKey = 4;
 
-	protected AuthService_API_PATH = "/RS4";
-	protected AuthService_PROTOCOL_TYPE: ProtocolKey = 4;
+	public AuthService_API_PATH = "/RS4";
+	public AuthService_PROTOCOL_TYPE: ProtocolKey = 4;
 
 	/**
 	 * @description Logouts from LINE server
@@ -1552,6 +1552,22 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				this.AuthService_API_PATH,
 			);
 		}
+	}
+
+	/**
+	 * @description Gets the server time
+	 */
+	public async getServerTime(): Promise<number> {
+		return await this.request(
+			[
+				128, 1, 0, 1, 0, 0, 0, 13, 103, 101, 116, 83, 101, 114, 118, 101, 114,
+				84, 105, 109, 101, 0, 0, 0, 0, 0,
+			],
+			"getServerTime",
+			this.LINEService_PROTOCOL_TYPE,
+			false,
+			this.LINEService_API_PATH,
+		);
 	}
 
 	/**
@@ -1780,7 +1796,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	}
 
 	private reqseqs: Record<string, number> = {};
-	protected getReqseq(name: string = "talk"): number {
+	public getReqseq(name: string = "talk"): number {
 		if (!this.reqseqs[name]) this.reqseqs[name] = 0;
 		const seq = this.reqseqs[name];
 		this.reqseqs[name]++;

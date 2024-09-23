@@ -7,14 +7,14 @@ import { ChannelClient } from "./channel-client.ts";
 import type { Buffer } from "node:buffer";
 
 export class TalkClient extends ChannelClient {
-	protected TalkService_API_PATH = "/S4";
-	protected TalkService_PROTOCOL_TYPE: ProtocolKey = 4;
+	public TalkService_API_PATH = "/S4";
+	public TalkService_PROTOCOL_TYPE: ProtocolKey = 4;
 
-	protected TalkService_API_PATH_TBINARY = "/S3";
+	public TalkService_API_PATH_TBINARY = "/S3";
 
-	protected TalkService_PROTOCOL_TYPE_TBINARY: ProtocolKey = 4;
-	protected SyncService_API_PATH = "/SYNC4";
-	protected SyncService_PROTOCOL_TYPE: ProtocolKey = 4;
+	public TalkService_PROTOCOL_TYPE_TBINARY: ProtocolKey = 4;
+	public SyncService_API_PATH = "/SYNC4";
+	public SyncService_PROTOCOL_TYPE: ProtocolKey = 4;
 
 	/**
 	 * @description Get line events.
@@ -651,7 +651,7 @@ export class TalkClient extends ChannelClient {
 	 */
 	public async acceptChatInvitation(options: {
 		to: string;
-	}): Promise<LINETypes.AcceptChatInvitationByTicketResponse> {
+	}): Promise<LINETypes.AcceptChatInvitationResponse> {
 		const { to } = {
 			...options,
 		};

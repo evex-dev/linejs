@@ -1,3 +1,4 @@
+import type { LooseType } from "../../entities/common.ts";
 import { SettingsClient } from "../internal/setting-client.ts";
 
 export class Timeline extends SettingsClient {
@@ -49,7 +50,7 @@ export class Timeline extends SettingsClient {
 		mediaObjectIds?: string[];
 		mediaObjectTypes?: string[];
 		sourceType?: string;
-	}) {
+	}): Promise<LooseType> {
 		const {
 			homeId,
 			text,
@@ -91,7 +92,7 @@ export class Timeline extends SettingsClient {
 			homeId: homeId,
 			sourceType: sourceType,
 		});
-		const postInfo: any = {
+		const postInfo: LooseType = {
 			readPermission: { type: readPermissionType, gids: readPermissionGids },
 		};
 		const stickers: {
@@ -129,7 +130,7 @@ export class Timeline extends SettingsClient {
 				obsFace: "[]",
 			});
 		});
-		const contents: any = {
+		const contents: LooseType = {
 			contentsStyle: {
 				textStyle: {
 					textSizeMode: textSizeMode,
@@ -163,7 +164,10 @@ export class Timeline extends SettingsClient {
 		).then((r) => r.json());
 	}
 
-	public async deletePost(options: { homeId: string; postId: string }) {
+	public async deletePost(options: {
+		homeId: string;
+		postId: string;
+	}): Promise<LooseType> {
 		const { homeId, postId } = { ...options };
 		const headers = {
 			...this.timelineHeaders,
@@ -185,7 +189,7 @@ export class Timeline extends SettingsClient {
 		postId?: string;
 		updatedTime?: number;
 		sourceType?: string;
-	}) {
+	}): Promise<LooseType> {
 		const { homeId, postId, updatedTime, sourceType } = {
 			sourceType: "TALKROOM",
 			...options,
@@ -195,7 +199,7 @@ export class Timeline extends SettingsClient {
 			"x-lhm": "GET",
 			"Content-type": "application/json",
 		};
-		const data: any = { homeId, sourceType };
+		const data: Record<string, string> = { homeId, sourceType };
 		if (postId) {
 			data.postId = postId;
 		}

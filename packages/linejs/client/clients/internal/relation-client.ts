@@ -5,8 +5,8 @@ import type { LooseType } from "../../entities/common.ts";
 import { E2EE } from "../e2ee/index.ts";
 
 export class RelationClient extends E2EE {
-	protected RelationService_API_PATH = "/RE4";
-	protected RelationService_PROTOCOL_TYPE: ProtocolKey = 4;
+	public RelationService_API_PATH = "/RE4";
+	public RelationService_PROTOCOL_TYPE: ProtocolKey = 4;
 
 	/**
 	 * @description Add friend by mid.

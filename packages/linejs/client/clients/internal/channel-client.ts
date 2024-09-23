@@ -5,8 +5,8 @@ import type * as LINETypes from "@evex/linejs-types";
 import { SquareClient } from "./square-client.ts";
 
 export class ChannelClient extends SquareClient {
-	protected ChannelService_API_PATH = "/CH3";
-	protected ChannelService_PROTOCOL_TYPE: ProtocolKey = 3;
+	public ChannelService_API_PATH = "/CH3";
+	public ChannelService_PROTOCOL_TYPE: ProtocolKey = 3;
 
 	/**
 	 * @description Gets the ChannelToken by channelId.\
