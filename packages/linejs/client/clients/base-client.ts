@@ -1671,6 +1671,13 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		if (refreshToken) {
 			const RATR = await this.refreshAccessToken(refreshToken as string);
 			this.metadata!.authToken = RATR.accessToken;
+			this.emit("update:authtoken", RATR.accessToken);
+			this.storage.set(
+				"expire",
+				(
+					RATR.tokenIssueTimeEpochSec + RATR.durationUntilRefreshInSec
+				).toString(),
+			);
 		} else {
 			throw new InternalError("refreshError", "refreshToken not found");
 		}

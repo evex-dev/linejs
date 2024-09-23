@@ -287,6 +287,7 @@ export class TalkClient extends ChannelClient {
 
 	/**
 	 * @description Get the number of past messages specified by count.
+	 * @deprecated Use 'getPreviousMessagesV2WithRequest' instead.
 	 */
 	public async getPreviousMessagesV2(options: {
 		mid: string;
@@ -294,7 +295,7 @@ export class TalkClient extends ChannelClient {
 		id: number;
 		count?: number;
 	}): Promise<LINETypes.Message[]> {
-		const { mid, time, id, count } = { count: 3000, ...options };
+		const { mid, time, id, count } = { count: 100, ...options };
 		return (
 			await this.direct_request(
 				[
@@ -318,6 +319,54 @@ export class TalkClient extends ChannelClient {
 	}
 
 	/**
+	 * @description Get the number of past messages specified by count.
+	 */
+	public async getPreviousMessagesV2WithRequest(options: {
+		mid: string;
+		time: number;
+		id: number;
+		count?: number;
+		withReadCount?: boolean;
+		receivedOnly?: boolean;
+	}): Promise<LINETypes.Message[]> {
+		const { mid, time, id, count, withReadCount, receivedOnly } = {
+			count: 100,
+			withReadCount: false,
+			receivedOnly: false,
+			...options,
+		};
+		return (
+			await this.direct_request(
+				[
+					[
+						12,
+						2,
+						[
+							[11, 1, mid],
+							[
+								12,
+								2,
+								[
+									[10, 1, time],
+									[10, 1, id],
+								],
+							],
+							[8, 3, count],
+							[2, 4, withReadCount],
+							[2, 5, receivedOnly],
+						],
+					],
+					[8, 3, 4],
+				],
+				"getPreviousMessagesV2WithRequest",
+				this.TalkService_PROTOCOL_TYPE,
+				false,
+				this.TalkService_API_PATH,
+			)
+		).map((e: LooseType) => this.parser.rename_thrift("Message", e));
+	}
+
+	/**
 	 * @description Get the number of past messages specified by count from the specified chat.
 	 */
 	public async getRecentMessagesV2(options: {
@@ -328,10 +377,8 @@ export class TalkClient extends ChannelClient {
 		return (
 			await this.direct_request(
 				[
-					[
-						[11, 2, to],
-						[8, 3, count],
-					],
+					[11, 2, to],
+					[8, 3, count],
 				],
 				"getRecentMessagesV2",
 				this.TalkService_PROTOCOL_TYPE,
@@ -615,7 +662,7 @@ export class TalkClient extends ChannelClient {
 			],
 			"acceptChatInvitation",
 			this.TalkService_PROTOCOL_TYPE,
-			"AcceptChatInvitationByTicketResponse",
+			"AcceptChatInvitationResponse",
 			this.TalkService_API_PATH,
 		);
 	}
