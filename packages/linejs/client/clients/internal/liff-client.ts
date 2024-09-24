@@ -89,10 +89,10 @@ export class LiffClient extends BaseClient {
 				lang,
 			});
 			return liff[3];
-		} catch (e) {
-			this.log("liff-error", { ...e.data });
-			if (e.data.code === 3 && tryConsent) {
-				const data: LINETypes.LiffException = e.data;
+		} catch (error) {
+			this.log("liff-error", { ...error.data });
+			if (error.data.code === 3 && tryConsent) {
+				const data: LINETypes.LiffException = error.data;
 				const payload = data.payload;
 				const consentRequired = payload.consentRequired;
 				const channelId = consentRequired.channelId;

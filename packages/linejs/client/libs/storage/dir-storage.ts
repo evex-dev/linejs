@@ -62,20 +62,20 @@ export class DirStorage extends BaseStorage {
 	public get(key: Storage["Key"]): Storage["Value"] | undefined {
 		try {
 			return this.getValue(fs.readFileSync(this.getPath(key), "utf-8"));
-		} catch (_error) {}
+		} catch (_e) {/* Do Nothing */}
 	}
 
 	public delete(key: Storage["Key"]): void {
 		try {
 			fs.rmSync(this.getPath(key));
-		} catch (_e) {}
+		} catch (_e) {/* Do Nothing */}
 	}
 
 	public clear(): void {
 		fs.readdirSync(this.path).forEach((e) => {
 			try {
 				fs.rmSync(e);
-			} catch (_e) {}
+			} catch (_e) {/* Do Nothing */}
 		});
 	}
 
@@ -90,16 +90,12 @@ export class DirStorage extends BaseStorage {
 		switch (typeof obj) {
 			case "string":
 				return "s" + obj.toString();
-				break;
 			case "number":
 				return "n" + obj.toString();
-				break;
 			case "boolean":
 				return "b" + obj.toString();
-				break;
 			default:
 				return "x";
-				break;
 		}
 	}
 
@@ -107,16 +103,14 @@ export class DirStorage extends BaseStorage {
 		switch (value[0]) {
 			case "s":
 				return value.substring(1);
-				break;
 			case "n":
 				return Number(value.substring(1));
-				break;
 			case "b":
 				return Boolean(value.substring(1));
-				break;
 			case "x":
 				return null;
-				break;
+			default:
+				return null;
 		}
 	}
 }

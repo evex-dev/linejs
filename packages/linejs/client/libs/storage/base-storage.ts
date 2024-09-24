@@ -1,6 +1,8 @@
+import type { LooseType } from "../../entities/common.ts";
+
 export interface Storage {
 	Key: string;
-	Value: string | number | boolean | null | undefined;
+	Value: string | number | boolean | null | Record<string | number, LooseType>;
 }
 
 /**

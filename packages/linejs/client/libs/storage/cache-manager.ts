@@ -1,8 +1,9 @@
 import type { BaseStorage } from "../../../storage/index.ts";
+import type { LooseType } from "../../entities/common.ts";
 
 interface Storage {
 	Key: string;
-	Value: string | number | boolean | null | Record<string | number, any>;
+	Value: string | number | boolean | null | Record<string | number, LooseType>;
 }
 
 type CacheInfo = Record<Storage["Key"], number>;
@@ -52,7 +53,7 @@ export class CacheManager {
 	 */
 	public setCache(
 		requestName: string,
-		request: Record<string, any>,
+		request: Record<string, LooseType>,
 		response: Storage["Value"],
 	): void {
 		this.set(requestName + JSON.stringify(request), response);
@@ -69,7 +70,7 @@ export class CacheManager {
 		try {
 			this.cacheInfo[key] = new Date().getTime();
 			return JSON.parse(this.storage.get("cache:" + key) as string);
-		} catch (error) {}
+		} catch (_e) {/* Do Nothing */}
 	}
 
 	/**
@@ -81,7 +82,7 @@ export class CacheManager {
 	 */
 	public getCache(
 		requestName: string,
-		request: Record<string, any>,
+		request: Record<string, LooseType>,
 	): Storage["Value"] | undefined {
 		return this.get(requestName + JSON.stringify(request));
 	}
