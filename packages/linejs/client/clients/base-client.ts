@@ -1708,7 +1708,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		return await this.request(
 			[[11, 1, refreshToken]],
 			"refresh",
-			3,
+			4,
 			"RefreshAccessTokenResponse",
 			"/EXT/auth/tokenrefresh/v1",
 		);
