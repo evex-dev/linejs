@@ -35,7 +35,7 @@ class E2EE extends TalkClient {
 		try {
 			return JSON.parse(this.storage.get("e2eeKeys:" + keyId) as string);
 		} catch (_e) {
-			/* DoNothing */
+			/* Do Nothing */
 		}
 	}
 	public saveE2EESelfKeyDataByKeyId(keyId: string | number, value: LooseType) {
