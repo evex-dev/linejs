@@ -12,6 +12,7 @@ import {
 	MIDType,
 } from "@evex/linejs-types";
 import nacl from "tweetnacl";
+import { InternalError } from "../../entities/errors.ts";
 
 class E2EE extends TalkClient {
 	public async getE2EESelfKeyData(mid: string): Promise<LooseType> {
@@ -27,7 +28,7 @@ class E2EE extends TalkClient {
 			const _keyData = this.getE2EESelfKeyDataByKeyId(keyId);
 			if (_keyData) return _keyData;
 		}
-		throw new Error(
+		throw new InternalError("No E2EEKey",
 			"E2EE Key has not been saved, try register `saveE2EESelfKeyDataByKeyId` or use E2EE Login",
 		);
 	}
@@ -90,7 +91,7 @@ class E2EE extends TalkClient {
 				receiverKeyData = await this.negotiateE2EEPublicKey({ mid });
 				const specVersion = receiverKeyData.specVersion;
 				if (specVersion === -1) {
-					throw new Error(`Not support E2EE on ${mid}`);
+					throw new InternalError("Not support E2EE",`${mid}`);
 				}
 				const publicKey = receiverKeyData.publicKey;
 				const receiverKeyId = publicKey.keyId;
@@ -99,7 +100,7 @@ class E2EE extends TalkClient {
 					key = Buffer.from(receiverKeyData).toString("base64");
 					this.storage.set(fd + fn, key);
 				} else {
-					throw new Error(
+					throw new InternalError("No E2EEKey",
 						`E2EE key id-${keyId} not found on ${mid}, key id should be ${receiverKeyId}`,
 					);
 				}
@@ -373,7 +374,7 @@ class E2EE extends TalkClient {
 		const selfKeyData = await this.getE2EESelfKeyData(_from);
 
 		if (to.length === 0 || ![0, 1, 2].includes(this.getToType(to) as number)) {
-			throw new Error("Invalid mid");
+			throw new InternalError("Invalid mid",to);
 		}
 
 		const senderKeyId = selfKeyData.keyId;
@@ -385,7 +386,7 @@ class E2EE extends TalkClient {
 			specVersion = receiverKeyData.specVersion;
 
 			if (specVersion === -1) {
-				throw new Error(`Not support E2EE on ${to}`);
+				throw new InternalError("Not support E2EE",`${to}`);
 			}
 
 			const publicKey = receiverKeyData.publicKey;

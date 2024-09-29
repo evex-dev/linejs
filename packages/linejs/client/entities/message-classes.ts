@@ -7,6 +7,7 @@ import { parseEnum } from "../../../types/thrift.ts";
 import type { Client } from "../../client/index.ts";
 import type { LooseType } from "./common.ts";
 import type { Buffer } from "node:buffer";
+import { InternalError } from "./errors.ts";
 
 const hasContents = ["IMAGE", "VIDEO", "AUDIO", "FILE"];
 
@@ -296,14 +297,14 @@ export class User {
 		options:
 			| string
 			| {
-					text?: string;
-					contentType?: number;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string;
-					location?: LINETypes.Location;
-					chunk?: string[] | Buffer[];
-					e2ee?: boolean;
-			  },
+				text?: string;
+				contentType?: number;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string;
+				location?: LINETypes.Location;
+				chunk?: string[] | Buffer[];
+				e2ee?: boolean;
+			},
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
@@ -320,7 +321,7 @@ export class User {
 	public async updateStatus() {
 		this.updateStatusFrom(
 			(await this.client.getContactsV2({ mids: [this.mid] })).contacts[
-				this.mid
+			this.mid
 			],
 		);
 	}
@@ -452,14 +453,14 @@ export class Group {
 		options:
 			| string
 			| {
-					text?: string;
-					contentType?: number;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string;
-					location?: LINETypes.Location;
-					chunk?: string[] | Buffer[];
-					e2ee?: boolean;
-			  },
+				text?: string;
+				contentType?: number;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string;
+				location?: LINETypes.Location;
+				chunk?: string[] | Buffer[];
+				e2ee?: boolean;
+			},
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
@@ -1111,11 +1112,22 @@ export class Message {
 	}
 
 	/**
+	 * @return {string[]} chat event mids
+	 */
+	public getChatEvent(): string[] {
+		if (this.contentType !== "CHATEVENT") {
+			throw new InternalError("MessageParserErr","Not ChatEvent Message");
+		}
+		const eventData = this.contentMetadata as chatEventMeta;
+		return eventData.LOC_ARGS.toString().split("\x1E")
+	}
+
+	/**
 	 * @return {string} sticker url
 	 */
 	public getSticker(): string {
 		if (this.contentType !== "STICKER") {
-			throw new Error("Not Sticker Message");
+			throw new InternalError("MessageParserErr","Not Sticker Message");
 		}
 		const stkData = this.contentMetadata as stkMeta;
 		if (stkData.STKOPT === "A") {
@@ -1130,7 +1142,7 @@ export class Message {
 	 */
 	public getEmojis(): string[] {
 		if (this.contentType !== "NONE") {
-			throw new Error("Not Text Message");
+			throw new InternalError("MessageParserErr","Not Text Message");
 		}
 		const emojiUrls: string[] = [];
 		const emojiData = this.contentMetadata as emojiMeta;
@@ -1147,7 +1159,7 @@ export class Message {
 	 */
 	public getMentions(): string[] {
 		if (this.contentType !== "NONE") {
-			throw new Error("Not Text Message");
+			throw new InternalError("MessageParserErr","Not Text Message");
 		}
 		const mentionees: string[] = [];
 		const mentionData = this.contentMetadata as mentionMeta;
@@ -1163,7 +1175,7 @@ export class Message {
 	 */
 	public getTextDecorations(): decorationText[] {
 		if (this.contentType !== "NONE") {
-			throw new Error("Not Text Message");
+			throw new InternalError("MessageParserErr","Not Text Message");
 		}
 		const texts: decorationText[] = [];
 		const splits: splitInfo[] = [];
@@ -1213,7 +1225,7 @@ export class Message {
 	 */
 	public getContact(): contactMeta {
 		if (this.contentType !== "CONTACT") {
-			throw new Error("Not Contact Message");
+			throw new InternalError("MessageParserErr","Not Contact Message");
 		}
 		const contactData = this.contentMetadata as contactMeta;
 		return { mid: contactData.mid, displayName: contactData.displayName };
@@ -1229,7 +1241,7 @@ export class Message {
 		tag: string | undefined;
 	} {
 		if (this.contentType !== "FLEX") {
-			throw new Error("Not Flex Message");
+			throw new InternalError("MessageParserErr","Not Flex Message");
 		}
 		const flexData = this.contentMetadata as flexMeta;
 		return {
@@ -1262,7 +1274,7 @@ export class Message {
 		name: string;
 	} {
 		if (this.contentType !== "FILE") {
-			throw new Error("Not File Message");
+			throw new InternalError("MessageParserErr","Not File Message");
 		}
 		const fileData = this.contentMetadata as fileMeta;
 		return {
@@ -1295,7 +1307,7 @@ export class ClientMessage extends Message {
 	 */
 	public getData(preview?: boolean): Promise<Blob> {
 		if (!hasContents.includes(this.contentType as string)) {
-			throw new Error("message have no contents");
+			throw new InternalError("MessageParserErr","message have no contents");
 		}
 		if (this.contentMetadata.DOWNLOAD_URL) {
 			if (preview) {
@@ -1369,14 +1381,14 @@ export class TalkMessage extends ClientMessage {
 	public send(
 		options:
 			| {
-					text?: string | undefined;
-					contentType?: number | undefined;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string | undefined;
-					location?: LooseType;
-					chunk?: string[] | undefined;
-					e2ee?: boolean | undefined;
-			  }
+				text?: string | undefined;
+				contentType?: number | undefined;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string | undefined;
+				location?: LooseType;
+				chunk?: string[] | undefined;
+				e2ee?: boolean | undefined;
+			}
 			| string,
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
@@ -1399,14 +1411,14 @@ export class TalkMessage extends ClientMessage {
 	public reply(
 		options:
 			| {
-					text?: string | undefined;
-					contentType?: number | undefined;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string | undefined;
-					location?: LooseType;
-					chunk?: string[] | undefined;
-					e2ee?: boolean | undefined;
-			  }
+				text?: string | undefined;
+				contentType?: number | undefined;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string | undefined;
+				location?: LooseType;
+				chunk?: string[] | undefined;
+				e2ee?: boolean | undefined;
+			}
 			| string,
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
@@ -1444,10 +1456,10 @@ export class TalkMessage extends ClientMessage {
 	 */
 	public announce() {
 		if (!this.text) {
-			throw new Error("not Text message");
+			throw new InternalError("MessageParserErr","Not Text message");
 		}
 		if (this.toType !== "ROOM" && this.toType !== "GROUP") {
-			throw new Error("not Group");
+			throw new InternalError("MessageParserErr","not Group");
 		}
 		return this.client.createChatRoomAnnouncement({
 			chatRoomMid: this.to,
@@ -1461,7 +1473,7 @@ export class TalkMessage extends ClientMessage {
 	 */
 	public unsend() {
 		if (!this.getAuthorIsMe()) {
-			throw new Error("not Unsendable");
+			throw new InternalError("MessageParserErr","Can't Unsend");
 		}
 		return this.client.unsendMessage({
 			messageId: this.id,
@@ -1527,11 +1539,11 @@ export class SquareMessage extends ClientMessage {
 	public send(
 		options:
 			| {
-					text?: string | undefined;
-					contentType?: LooseType;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string | undefined;
-			  }
+				text?: string | undefined;
+				contentType?: LooseType;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string | undefined;
+			}
 			| string,
 		safe: boolean = true,
 	): Promise<LINETypes.SendMessageResponse> {
@@ -1550,11 +1562,11 @@ export class SquareMessage extends ClientMessage {
 	public reply(
 		options:
 			| {
-					text?: string | undefined;
-					contentType?: LooseType;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string | undefined;
-			  }
+				text?: string | undefined;
+				contentType?: LooseType;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string | undefined;
+			}
 			| string,
 		safe: boolean = true,
 	): Promise<LINETypes.SendMessageResponse> {
@@ -1589,7 +1601,7 @@ export class SquareMessage extends ClientMessage {
 	 */
 	public announce() {
 		if (!this.text) {
-			throw new Error("not Text message");
+			throw new InternalError("MessageParserErr","Not Text message");
 		}
 		return this.client.createSquareChatAnnouncement({
 			squareChatMid: this.to,
@@ -1606,7 +1618,7 @@ export class SquareMessage extends ClientMessage {
 	 */
 	public async unsend() {
 		if (!(await this.getAuthorIsMe())) {
-			throw new Error("not Unsendable");
+			throw new InternalError("MessageParserErr","Can't Unsend");
 		}
 		return this.client.unsendSquareMessage({
 			squareMessageId: this.id,
