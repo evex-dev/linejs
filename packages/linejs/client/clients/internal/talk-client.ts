@@ -73,7 +73,7 @@ export class TalkClient extends ChannelClient {
 		} = {
 			contentType: 0,
 			contentMetadata: {},
-			e2ee: true,
+			//e2ee: true,
 			...options,
 		};
 		if (e2ee && !chunk) {
