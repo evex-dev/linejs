@@ -27,7 +27,7 @@ type decorationText = {
 		sticonId: string;
 		version: number;
 		resourceType: string;
-		url: string;
+		url?: string;
 	};
 	mention?: {
 		mid?: string;
@@ -149,6 +149,127 @@ function getMidType(mid: string): LINETypes.MIDType | null {
 			return parseEnum("MIDType", 6) as LINETypes.MIDType;
 		default:
 			return null;
+	}
+}
+
+export class Note {
+	constructor(public mid: string, private client: Client) {
+	}
+
+	public createPost(options: {
+		text?: string;
+		sharedPostId?: string;
+		textSizeMode?: "AUTO" | "NORMAL";
+		backgroundColor?: string;
+		textAnimation?: "NONE" | "SLIDE" | "ZOOM" | "BUZZ" | "BOUNCE" | "BLINK";
+		readPermissionType?: "ALL" | "FRIEND" | "GROUP" | "EVENT" | "NONE";
+		readPermissionGids?: string[];
+		holdingTime?: number;
+		stickerIds?: string[];
+		stickerPackageIds?: string[];
+		locationLatitudes?: number[];
+		locationLongitudes?: number[];
+		locationNames?: string[];
+		mediaObjectIds?: string[];
+		mediaObjectTypes?: string[];
+		sourceType?: string;
+	}): Promise<LooseType> {
+		(options as LooseType).homeId = this.mid
+		return this.client.createPost(options as LooseType)
+	}
+	public deletePost(options: {
+		postId: string;
+	}) {
+		(options as LooseType).homeId = this.mid
+		return this.client.deletePost(options as LooseType)
+	}
+
+	public listPost(options?: {
+		postId?: string;
+		updatedTime?: number;
+		sourceType?: string;
+	}): Promise<LooseType> {
+		(options as LooseType).homeId = this.mid
+		return this.client.listPost(options as LooseType)
+	}
+}
+
+/**
+ * @description LINE square (Openchat) utils
+ */
+export class Square {
+	public mid: string;
+	public name: string;
+	public profileImageObsHash: string;
+	public desc: string;
+	public searchable: boolean;
+	public type: LINETypes.SquareType;
+	public invitationURL: string;
+	public revision: number;
+	public state: LINETypes.SquareState;
+	public emblems: LINETypes.SquareEmblem[];
+	public joinMethod: LINETypes.SquareJoinMethod;
+	public createdAt: Date;
+	public me: SquareMember;
+	public authority: LINETypes.SquareAuthority;
+	public note: LINETypes.NoteStatus;
+	public status: LINETypes.SquareStatus;
+	public memberCount: number;
+	public joinRequestCount: number;
+	public lastJoinRequestAt: Date;
+	public openChatCount: number;
+
+	public feature: LINETypes.SquareFeatureSet
+
+	constructor(public rawSouce: LINETypes.GetSquareResponse, private client: Client) {
+		const { square, noteStatus, myMembership, squareAuthority, squareStatus, squareFeatureSet } = rawSouce;
+
+		this.mid = square.mid
+		this.name = square.name
+		this.profileImageObsHash = square.profileImageObsHash
+		this.desc = square.desc
+		this.searchable = square.searchable
+		this.type = square.type
+		this.invitationURL = square.invitationURL
+		this.revision = square.revision
+		this.state = square.state
+		this.emblems = square.emblems
+		this.joinMethod = square.joinMethod
+		this.createdAt = new Date(square.createdAt)
+
+		this.me = new SquareMember(myMembership, client)
+		this.authority = squareAuthority
+		this.note = noteStatus
+		this.feature = squareFeatureSet as LINETypes.SquareFeatureSet
+		this.status = squareStatus
+		this.memberCount = squareStatus.memberCount
+		this.joinRequestCount = squareStatus.joinRequestCount
+		this.lastJoinRequestAt = new Date(squareStatus.lastJoinRequestAt)
+		this.openChatCount = squareStatus.openChatCount
+	}
+
+	static async from(squareMid: string, client: Client) {
+		return new this(await client.getSquare({ squareMid }), client)
+	}
+
+	public getNote(): Note {
+		return new Note(this.mid, this.client)
+	}
+}
+
+/**
+ * @description LINE squareChat (Openchat) utils
+ */
+export class SquareChat {
+	constructor(public rawSouce: LINETypes.GetSquareChatResponse, private client: Client) {
+	}
+}
+
+/**
+ * @description LINE squareMember (Openchat user) utils
+ */
+export class SquareMember {
+	constructor(public rawMember: LINETypes.SquareMember, private client: Client) {
 	}
 }
 
@@ -348,6 +469,10 @@ export class User {
 	public addFriend() {
 		return this.client.addFriendByMid({ mid: this.mid });
 	}
+
+	public isMe() {
+		return this.client.user?.mid === this.mid
+	}
 }
 
 /**
@@ -376,7 +501,6 @@ export class Group {
 				mids: Object.keys(chat.extra.groupExtra.memberMids),
 			})
 		).contacts;
-		console.log(_members);
 		const members: User[] = [];
 		for (const key in _members) {
 			if (Object.prototype.hasOwnProperty.call(_members, key)) {
@@ -502,6 +626,10 @@ export class Group {
 	 */
 	public kick(mid: string): Promise<LINETypes.DeleteOtherFromChatResponse> {
 		return this.client.deleteOtherFromChat({ to: this.mid, mid: mid });
+	}
+
+	public getNote(): Note {
+		return new Note(this.mid, this.client)
 	}
 }
 
@@ -1116,7 +1244,7 @@ export class Message {
 	 */
 	public getChatEvent(): string[] {
 		if (this.contentType !== "CHATEVENT") {
-			throw new InternalError("MessageParserErr","Not ChatEvent Message");
+			throw new InternalError("MessageParserErr", "Not ChatEvent Message");
 		}
 		const eventData = this.contentMetadata as chatEventMeta;
 		return eventData.LOC_ARGS.toString().split("\x1E")
@@ -1127,7 +1255,7 @@ export class Message {
 	 */
 	public getSticker(): string {
 		if (this.contentType !== "STICKER") {
-			throw new InternalError("MessageParserErr","Not Sticker Message");
+			throw new InternalError("MessageParserErr", "Not Sticker Message");
 		}
 		const stkData = this.contentMetadata as stkMeta;
 		if (stkData.STKOPT === "A") {
@@ -1142,7 +1270,7 @@ export class Message {
 	 */
 	public getEmojis(): string[] {
 		if (this.contentType !== "NONE") {
-			throw new InternalError("MessageParserErr","Not Text Message");
+			throw new InternalError("MessageParserErr", "Not Text Message");
 		}
 		const emojiUrls: string[] = [];
 		const emojiData = this.contentMetadata as emojiMeta;
@@ -1159,7 +1287,7 @@ export class Message {
 	 */
 	public getMentions(): string[] {
 		if (this.contentType !== "NONE") {
-			throw new InternalError("MessageParserErr","Not Text Message");
+			throw new InternalError("MessageParserErr", "Not Text Message");
 		}
 		const mentionees: string[] = [];
 		const mentionData = this.contentMetadata as mentionMeta;
@@ -1175,7 +1303,7 @@ export class Message {
 	 */
 	public getTextDecorations(): decorationText[] {
 		if (this.contentType !== "NONE") {
-			throw new InternalError("MessageParserErr","Not Text Message");
+			throw new InternalError("MessageParserErr", "Not Text Message");
 		}
 		const texts: decorationText[] = [];
 		const splits: splitInfo[] = [];
@@ -1221,11 +1349,77 @@ export class Message {
 	}
 
 	/**
+	 * @description Build text decorations (emoji,mention)
+	 */
+	static buildTextDecorations(decorationText: decorationText[]): [string, Partial<emojiMeta & mentionMeta>] {
+		let text = "";
+		let hasMention = false;
+		let hasEmoji = false;
+		const contentMetadata: Partial<emojiMeta & mentionMeta> = {
+			REPLACE: {
+				sticon: {
+					resources: []
+				}
+			},
+			STICON_OWNERSHIP: [],
+			MENTION: {
+				MENTIONEES: []
+			}
+		};
+		decorationText.forEach((e, i) => {
+			if (e.emoji) {
+				if (!e.text) {
+					e.text = "(linejs)"
+				}
+				hasEmoji = true
+				contentMetadata.REPLACE!.sticon.resources.push({
+					S: text.length,
+					E: text.length + e.text.length,
+					productId: e.emoji.productId,
+					sticonId: e.emoji.sticonId,
+					version: e.emoji.version || 1,
+					resourceType: e.emoji.resourceType || "STATIC",
+				})
+				if (!contentMetadata.STICON_OWNERSHIP?.includes(e.emoji.productId)) {
+					contentMetadata.STICON_OWNERSHIP!.push(e.emoji.productId)
+				}
+			} else if (e.mention) {
+				if (!e.text) {
+					e.text = "@unkonau"
+				}
+				hasMention = true
+				if (e.mention.all) {
+					contentMetadata.MENTION!.MENTIONEES.push({
+						S: text.length.toString(),
+						E: (text.length + e.text.length).toString(),
+						A: "1"
+					})
+				} else {
+					contentMetadata.MENTION!.MENTIONEES.push({
+						S: text.length.toString(),
+						E: (text.length + e.text.length).toString(),
+						M: e.mention.mid
+					})
+				}
+			}
+			text += e.text || ""
+		})
+		if (!hasEmoji) {
+			delete contentMetadata.REPLACE
+			delete contentMetadata.STICON_OWNERSHIP
+		}
+		if (!hasMention) {
+			delete contentMetadata.MENTION
+		}
+		return [text, contentMetadata]
+	}
+
+	/**
 	 * @return {contactMeta} contactData
 	 */
 	public getContact(): contactMeta {
 		if (this.contentType !== "CONTACT") {
-			throw new InternalError("MessageParserErr","Not Contact Message");
+			throw new InternalError("MessageParserErr", "Not Contact Message");
 		}
 		const contactData = this.contentMetadata as contactMeta;
 		return { mid: contactData.mid, displayName: contactData.displayName };
@@ -1241,7 +1435,7 @@ export class Message {
 		tag: string | undefined;
 	} {
 		if (this.contentType !== "FLEX") {
-			throw new InternalError("MessageParserErr","Not Flex Message");
+			throw new InternalError("MessageParserErr", "Not Flex Message");
 		}
 		const flexData = this.contentMetadata as flexMeta;
 		return {
@@ -1274,7 +1468,7 @@ export class Message {
 		name: string;
 	} {
 		if (this.contentType !== "FILE") {
-			throw new InternalError("MessageParserErr","Not File Message");
+			throw new InternalError("MessageParserErr", "Not File Message");
 		}
 		const fileData = this.contentMetadata as fileMeta;
 		return {
@@ -1307,7 +1501,7 @@ export class ClientMessage extends Message {
 	 */
 	public getData(preview?: boolean): Promise<Blob> {
 		if (!hasContents.includes(this.contentType as string)) {
-			throw new InternalError("MessageParserErr","message have no contents");
+			throw new InternalError("MessageParserErr", "message have no contents");
 		}
 		if (this.contentMetadata.DOWNLOAD_URL) {
 			if (preview) {
@@ -1346,11 +1540,9 @@ export class TalkMessage extends ClientMessage {
 	 * @description groupTalk only
 	 * @return {Promise<LINETypes.Chat>} Chat(group)
 	 */
-	public getGroup(): Promise<LINETypes.Chat> | undefined {
+	public getGroup(): Promise<Group> | undefined {
 		if (this.toType === "GROUP" || this.toType === "ROOM") {
-			return this.client.getChats({ gids: [this.to] }).then((e) => {
-				return e.chats[0] as LINETypes.Chat;
-			});
+			return Group.from(this.to, this.client)
 		}
 	}
 
@@ -1358,12 +1550,12 @@ export class TalkMessage extends ClientMessage {
 	 * @description userTalk only
 	 * @return {Promise<LINETypes.Contact>} Contact
 	 */
-	public getUser(): Promise<LINETypes.Contact> | undefined {
+	public getUser(): Promise<User> | undefined {
 		if (this.toType === "USER") {
 			if (this.getAuthorIsMe()) {
-				return this.client.getContact({ mid: this.to });
+				return User.from(this.to, this.client)
 			} else {
-				return this.client.getContact({ mid: this.from });
+				return User.from(this.from, this.client)
 			}
 		}
 	}
@@ -1378,7 +1570,7 @@ export class TalkMessage extends ClientMessage {
 	/**
 	 * @description Sends in this talk
 	 */
-	public send(
+	public async send(
 		options:
 			| {
 				text?: string | undefined;
@@ -1390,7 +1582,7 @@ export class TalkMessage extends ClientMessage {
 				e2ee?: boolean | undefined;
 			}
 			| string,
-	): Promise<LINETypes.Message> {
+	): Promise<TalkMessage> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
 		} else {
@@ -1401,14 +1593,14 @@ export class TalkMessage extends ClientMessage {
 					: this.getAuthorIsMe()
 						? this.to
 						: this.from;
-			return this.client.sendMessage(_options);
+			return new TalkMessage({ message: await this.client.sendMessage(_options) }, this.client);
 		}
 	}
 
 	/**
 	 * @description Sends in this talk with replying this message
 	 */
-	public reply(
+	public async reply(
 		options:
 			| {
 				text?: string | undefined;
@@ -1420,7 +1612,7 @@ export class TalkMessage extends ClientMessage {
 				e2ee?: boolean | undefined;
 			}
 			| string,
-	): Promise<LINETypes.Message> {
+	): Promise<TalkMessage> {
 		if (typeof options === "string") {
 			return this.reply({ text: options });
 		} else {
@@ -1432,7 +1624,7 @@ export class TalkMessage extends ClientMessage {
 						? this.to
 						: this.from;
 			_options.relatedMessageId = this.id;
-			return this.client.sendMessage(_options as LooseType);
+			return new TalkMessage({ message: await this.client.sendMessage(_options) }, this.client);
 		}
 	}
 
@@ -1454,12 +1646,12 @@ export class TalkMessage extends ClientMessage {
 	/**
 	 * @description Announce this message
 	 */
-	public announce() {
+	public announce(): Promise<LINETypes.AcceptChatInvitationByTicketResponse> {
 		if (!this.text) {
-			throw new InternalError("MessageParserErr","Not Text message");
+			throw new InternalError("MessageParserErr", "Not Text message");
 		}
 		if (this.toType !== "ROOM" && this.toType !== "GROUP") {
-			throw new InternalError("MessageParserErr","not Group");
+			throw new InternalError("MessageParserErr", "not Group");
 		}
 		return this.client.createChatRoomAnnouncement({
 			chatRoomMid: this.to,
@@ -1471,9 +1663,9 @@ export class TalkMessage extends ClientMessage {
 	/**
 	 * @description Unsend this message
 	 */
-	public unsend() {
+	public unsend(): Promise<LINETypes.UnsendMessageResponse> {
 		if (!this.getAuthorIsMe()) {
-			throw new InternalError("MessageParserErr","Can't Unsend");
+			throw new InternalError("MessageParserErr", "Can't Unsend");
 		}
 		return this.client.unsendMessage({
 			messageId: this.id,
@@ -1601,7 +1793,7 @@ export class SquareMessage extends ClientMessage {
 	 */
 	public announce() {
 		if (!this.text) {
-			throw new InternalError("MessageParserErr","Not Text message");
+			throw new InternalError("MessageParserErr", "Not Text message");
 		}
 		return this.client.createSquareChatAnnouncement({
 			squareChatMid: this.to,
@@ -1618,7 +1810,7 @@ export class SquareMessage extends ClientMessage {
 	 */
 	public async unsend() {
 		if (!(await this.getAuthorIsMe())) {
-			throw new InternalError("MessageParserErr","Can't Unsend");
+			throw new InternalError("MessageParserErr", "Can't Unsend");
 		}
 		return this.client.unsendSquareMessage({
 			squareMessageId: this.id,
