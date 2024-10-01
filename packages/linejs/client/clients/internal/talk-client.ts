@@ -790,7 +790,7 @@ export class TalkClient extends ChannelClient {
 		thumbnail?: string;
 		type?: number;
 		displayFields?: number;
-	}): Promise<LINETypes.AcceptChatInvitationByTicketResponse> {
+	}): Promise<LINETypes.ChatRoomAnnouncement> {
 		const { chatRoomMid, text, link, thumbnail, type, displayFields } = {
 			link: "",
 			thumbnail: "",

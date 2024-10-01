@@ -70,7 +70,9 @@ export class CacheManager {
 		try {
 			this.cacheInfo[key] = new Date().getTime();
 			return JSON.parse(this.storage.get("cache:" + key) as string);
-		} catch (_e) {/* Do Nothing */}
+		} catch (_e) {
+			/* Do Nothing */
+		}
 	}
 
 	/**

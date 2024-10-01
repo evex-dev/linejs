@@ -62,20 +62,26 @@ export class DirStorage extends BaseStorage {
 	public get(key: Storage["Key"]): Storage["Value"] | undefined {
 		try {
 			return this.getValue(fs.readFileSync(this.getPath(key), "utf-8"));
-		} catch (_e) {/* Do Nothing */}
+		} catch (_e) {
+			/* Do Nothing */
+		}
 	}
 
 	public delete(key: Storage["Key"]): void {
 		try {
 			fs.rmSync(this.getPath(key));
-		} catch (_e) {/* Do Nothing */}
+		} catch (_e) {
+			/* Do Nothing */
+		}
 	}
 
 	public clear(): void {
 		fs.readdirSync(this.path).forEach((e) => {
 			try {
 				fs.rmSync(e);
-			} catch (_e) {/* Do Nothing */}
+			} catch (_e) {
+				/* Do Nothing */
+			}
 		});
 	}
 

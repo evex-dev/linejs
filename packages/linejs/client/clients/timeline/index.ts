@@ -51,7 +51,7 @@ export class Timeline extends SettingsClient {
 		mediaObjectTypes?: string[];
 		sourceType?: string;
 	}): Promise<LooseType> {
-		await this.initTimeline()
+		await this.initTimeline();
 		const {
 			homeId,
 			text,
@@ -169,7 +169,7 @@ export class Timeline extends SettingsClient {
 		homeId: string;
 		postId: string;
 	}): Promise<LooseType> {
-		await this.initTimeline()
+		await this.initTimeline();
 		const { homeId, postId } = { ...options };
 		const headers = {
 			...this.timelineHeaders,
@@ -192,7 +192,7 @@ export class Timeline extends SettingsClient {
 		updatedTime?: number;
 		sourceType?: string;
 	}): Promise<LooseType> {
-		await this.initTimeline()
+		await this.initTimeline();
 		const { homeId, postId, updatedTime, sourceType } = {
 			sourceType: "TALKROOM",
 			...options,

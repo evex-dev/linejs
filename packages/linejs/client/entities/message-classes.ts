@@ -153,8 +153,10 @@ function getMidType(mid: string): LINETypes.MIDType | null {
 }
 
 export class Note {
-	constructor(public mid: string, private client: Client) {
-	}
+	constructor(
+		public mid: string,
+		private client: Client,
+	) {}
 
 	public createPost(options: {
 		text?: string;
@@ -174,14 +176,14 @@ export class Note {
 		mediaObjectTypes?: string[];
 		sourceType?: string;
 	}): Promise<LooseType> {
-		(options as LooseType).homeId = this.mid
-		return this.client.createPost(options as LooseType)
+		(options as LooseType).homeId = this.mid;
+		return this.client.createPost(options as LooseType);
 	}
 	public deletePost(options: {
 		postId: string;
 	}) {
-		(options as LooseType).homeId = this.mid
-		return this.client.deletePost(options as LooseType)
+		(options as LooseType).homeId = this.mid;
+		return this.client.deletePost(options as LooseType);
 	}
 
 	public listPost(options?: {
@@ -189,8 +191,8 @@ export class Note {
 		updatedTime?: number;
 		sourceType?: string;
 	}): Promise<LooseType> {
-		(options as LooseType).homeId = this.mid
-		return this.client.listPost(options as LooseType)
+		(options as LooseType).homeId = this.mid;
+		return this.client.listPost(options as LooseType);
 	}
 }
 
@@ -219,41 +221,57 @@ export class Square {
 	public lastJoinRequestAt: Date;
 	public openChatCount: number;
 
-	public feature: LINETypes.SquareFeatureSet
+	public feature: LINETypes.SquareFeatureSet;
 
-	constructor(public rawSouce: LINETypes.GetSquareResponse, private client: Client) {
-		const { square, noteStatus, myMembership, squareAuthority, squareStatus, squareFeatureSet } = rawSouce;
+	public noteClient: Note;
 
-		this.mid = square.mid
-		this.name = square.name
-		this.profileImageObsHash = square.profileImageObsHash
-		this.desc = square.desc
-		this.searchable = square.searchable
-		this.type = square.type
-		this.invitationURL = square.invitationURL
-		this.revision = square.revision
-		this.state = square.state
-		this.emblems = square.emblems
-		this.joinMethod = square.joinMethod
-		this.createdAt = new Date(square.createdAt)
+	constructor(
+		public rawSouce: LINETypes.GetSquareResponse,
+		private client: Client,
+	) {
+		const {
+			square,
+			noteStatus,
+			myMembership,
+			squareAuthority,
+			squareStatus,
+			squareFeatureSet,
+		} = rawSouce;
 
-		this.me = new SquareMember(myMembership, client)
-		this.authority = squareAuthority
-		this.note = noteStatus
-		this.feature = squareFeatureSet as LINETypes.SquareFeatureSet
-		this.status = squareStatus
-		this.memberCount = squareStatus.memberCount
-		this.joinRequestCount = squareStatus.joinRequestCount
-		this.lastJoinRequestAt = new Date(squareStatus.lastJoinRequestAt)
-		this.openChatCount = squareStatus.openChatCount
+		this.mid = square.mid;
+		this.name = square.name;
+		this.profileImageObsHash = square.profileImageObsHash;
+		this.desc = square.desc;
+		this.searchable = square.searchable;
+		this.type = square.type;
+		this.invitationURL = square.invitationURL;
+		this.revision = square.revision;
+		this.state = square.state;
+		this.emblems = square.emblems;
+		this.joinMethod = square.joinMethod;
+		this.createdAt = new Date(square.createdAt);
+
+		this.me = new SquareMember(myMembership, client);
+		this.authority = squareAuthority;
+		this.note = noteStatus;
+		this.noteClient = new Note(this.mid, this.client);
+		this.feature = squareFeatureSet as LINETypes.SquareFeatureSet;
+		this.status = squareStatus;
+		this.memberCount = squareStatus.memberCount;
+		this.joinRequestCount = squareStatus.joinRequestCount;
+		this.lastJoinRequestAt = new Date(squareStatus.lastJoinRequestAt);
+		this.openChatCount = squareStatus.openChatCount;
 	}
 
+	/**
+	 * @description Generate from mid.
+	 */
 	static async from(squareMid: string, client: Client) {
-		return new this(await client.getSquare({ squareMid }), client)
+		return new this(await client.getSquare({ squareMid }), client);
 	}
 
 	public getNote(): Note {
-		return new Note(this.mid, this.client)
+		return this.noteClient;
 	}
 }
 
@@ -261,7 +279,46 @@ export class Square {
  * @description LINE squareChat (Openchat) utils
  */
 export class SquareChat {
-	constructor(public rawSouce: LINETypes.GetSquareChatResponse, private client: Client) {
+	public mymid: string;
+	public mid: string;
+	public squareMid: string;
+	public type: LINETypes.SquareChatType;
+	public name: string;
+	public chatImageObsHash: string;
+	public squareChatRevision: number;
+	public maxMemberCount: number;
+	public state: LINETypes.SquareChatState;
+	public invitationUrl: string;
+	public messageVisibility: LINETypes.MessageVisibility;
+	public ableToSearchMessage: boolean | null;
+	public memberCount: number;
+	constructor(
+		public rawSouce: LINETypes.GetSquareChatResponse,
+		private client: Client,
+	) {
+		const { squareChat, squareChatMember, squareChatStatus } = rawSouce;
+		this.mid = squareChat.squareChatMid;
+		this.squareMid = squareChat.squareChatMid;
+		this.type = squareChat.type;
+		this.name = squareChat.name;
+		this.chatImageObsHash = squareChat.chatImageObsHash;
+		this.squareChatRevision = squareChat.squareChatRevision;
+		this.maxMemberCount = squareChat.maxMemberCount;
+		this.state = squareChat.state;
+		this.invitationUrl = squareChat.invitationUrl;
+		this.messageVisibility = squareChat.messageVisibility;
+		this.ableToSearchMessage = [null, false, true][
+			LINETypes.BooleanState[squareChat.ableToSearchMessage] as number
+		];
+		this.mymid = squareChatMember.squareMemberMid;
+		this.memberCount = squareChatStatus.otherStatus.memberCount;
+	}
+
+	/**
+	 * @description Generate from mid.
+	 */
+	static async from(squareChatMid: string, client: Client) {
+		return new this(await client.getSquareChat({ squareChatMid }), client);
 	}
 }
 
@@ -269,7 +326,42 @@ export class SquareChat {
  * @description LINE squareMember (Openchat user) utils
  */
 export class SquareMember {
-	constructor(public rawMember: LINETypes.SquareMember, private client: Client) {
+	mid: string;
+	squareMid: string;
+	displayName: string;
+	profileImageObsHash: string;
+	ableToReceiveMessage: boolean;
+	membershipState: LINETypes.SquareMembershipState;
+	role: LINETypes.SquareMemberRole;
+	revision: number;
+	preference: LINETypes.SquarePreference;
+	joinMessage?: string;
+	constructor(
+		public rawMember: LINETypes.SquareMember,
+		private client: Client,
+	) {
+		this.mid = rawMember.squareMemberMid;
+		this.squareMid = rawMember.squareMid;
+		this.displayName = rawMember.displayName;
+		this.profileImageObsHash = rawMember.profileImageObsHash;
+		this.ableToReceiveMessage = rawMember.ableToReceiveMessage;
+		this.membershipState = rawMember.membershipState;
+		this.role = rawMember.role;
+		this.revision = rawMember.revision;
+		this.preference = rawMember.preference;
+		this.joinMessage = rawMember.joinMessage;
+	}
+
+	/**
+	 * @description Generate from mid.
+	 */
+	static async from(squareMemberMid: string, client: Client) {
+		return new this(
+			await client
+				.getSquareMember({ squareMemberMid })
+				.then((r) => r.squareMember),
+			client,
+		);
 	}
 }
 
@@ -332,7 +424,7 @@ export class User {
 		);
 	}
 
-	public constructor(
+	constructor(
 		contactEntry: LINETypes.ContactEntry,
 		private client: Client,
 	) {
@@ -418,14 +510,14 @@ export class User {
 		options:
 			| string
 			| {
-				text?: string;
-				contentType?: number;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string;
-				location?: LINETypes.Location;
-				chunk?: string[] | Buffer[];
-				e2ee?: boolean;
-			},
+					text?: string;
+					contentType?: number;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string;
+					location?: LINETypes.Location;
+					chunk?: string[] | Buffer[];
+					e2ee?: boolean;
+			  },
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
@@ -442,7 +534,7 @@ export class User {
 	public async updateStatus() {
 		this.updateStatusFrom(
 			(await this.client.getContactsV2({ mids: [this.mid] })).contacts[
-			this.mid
+				this.mid
 			],
 		);
 	}
@@ -471,7 +563,7 @@ export class User {
 	}
 
 	public isMe() {
-		return this.client.user?.mid === this.mid
+		return this.client.user?.mid === this.mid;
 	}
 }
 
@@ -487,6 +579,8 @@ export class Group {
 	public preventedJoinByTicket: boolean;
 	public invitationTicket: string;
 	public notificationDisabled: boolean;
+	public noteClient: Note;
+
 	/**
 	 * @description Generate from groupMid or {Chat}.
 	 */
@@ -568,6 +662,7 @@ export class Group {
 		const { groupExtra } = chat.extra;
 		this.preventedJoinByTicket = groupExtra.preventedJoinByTicket;
 		this.invitationTicket = groupExtra.invitationTicket;
+		this.noteClient = new Note(this.mid, client);
 	}
 
 	/**
@@ -577,14 +672,14 @@ export class Group {
 		options:
 			| string
 			| {
-				text?: string;
-				contentType?: number;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string;
-				location?: LINETypes.Location;
-				chunk?: string[] | Buffer[];
-				e2ee?: boolean;
-			},
+					text?: string;
+					contentType?: number;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string;
+					location?: LINETypes.Location;
+					chunk?: string[] | Buffer[];
+					e2ee?: boolean;
+			  },
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
@@ -629,7 +724,7 @@ export class Group {
 	}
 
 	public getNote(): Note {
-		return new Note(this.mid, this.client)
+		return this.noteClient;
 	}
 }
 
@@ -927,7 +1022,8 @@ export class NotifiedUpdateProfileContent {
 		this.userMid = op.param[1];
 		const attr = parseEnum("ProfileAttribute", op.param[2]);
 		if (attr !== null) {
-			this.profileAttributes[0] = attr as any as LINETypes.ProfileAttribute;
+			this.profileAttributes[0] =
+				attr as LooseType as LINETypes.ProfileAttribute;
 		} else {
 			const arr: LINETypes.ProfileAttribute[] = [];
 			parseInt(op.param[2])
@@ -940,7 +1036,7 @@ export class NotifiedUpdateProfileContent {
 							parseEnum(
 								"ProfileAttribute",
 								2 ** i,
-							) as any as LINETypes.ProfileAttribute,
+							) as LooseType as LINETypes.ProfileAttribute,
 						);
 					}
 				});
@@ -955,7 +1051,7 @@ export class NotifiedUpdateProfileContent {
 export class NotifiedUpdateProfile {
 	public userMid: string;
 	public profileAttributes: (LINETypes.ProfileAttribute | null)[] = [];
-	public info: Record<string, any> = {};
+	public info: Record<string, LooseType> = {};
 
 	constructor(op: Operation) {
 		if (op.type !== "NOTIFIED_UPDATE_PROFILE") {
@@ -971,7 +1067,8 @@ export class NotifiedUpdateProfile {
 		this.userMid = op.param[1];
 		const attr = parseEnum("ProfileAttribute", op.param[2]);
 		if (attr !== null) {
-			this.profileAttributes[0] = attr as any as LINETypes.ProfileAttribute;
+			this.profileAttributes[0] =
+				attr as LooseType as LINETypes.ProfileAttribute;
 		} else {
 			const arr: LINETypes.ProfileAttribute[] = [];
 			parseInt(op.param[2])
@@ -984,7 +1081,7 @@ export class NotifiedUpdateProfile {
 							parseEnum(
 								"ProfileAttribute",
 								2 ** i,
-							) as any as LINETypes.ProfileAttribute,
+							) as LooseType as LINETypes.ProfileAttribute,
 						);
 					}
 				});
@@ -1015,7 +1112,7 @@ export class SendReaction {
 		this.messageId = op.param[1];
 		const data = JSON.parse(op.param[2]);
 		this.chatMid = data.chatMid;
-		this.chatType = getMidType(this.chatMid) as any;
+		this.chatType = getMidType(this.chatMid) as LooseType;
 		this.reactionType = parseEnum(
 			"PredefinedReactionType",
 			data.curr.predefinedReactionType,
@@ -1047,7 +1144,7 @@ export class NotifiedSendReaction {
 		this.userMid = op.param[3];
 		const data = JSON.parse(op.param[2]);
 		this.chatMid = data.chatMid;
-		this.chatType = getMidType(this.chatMid) as any;
+		this.chatType = getMidType(this.chatMid) as LooseType;
 		this.reactionType = parseEnum(
 			"PredefinedReactionType",
 			data.curr.predefinedReactionType,
@@ -1078,7 +1175,7 @@ export class NotifiedReadMessage {
 		this.chatMid = op.param[1];
 		this.userMid = op.param[2];
 		this.messageId = op.param[3];
-		this.chatType = getMidType(op.param[1]) as any;
+		this.chatType = getMidType(op.param[1]) as LooseType;
 	}
 }
 
@@ -1102,7 +1199,7 @@ export class SendChatChecked {
 		}
 		this.chatMid = op.param[1];
 		this.messageId = op.param[2];
-		this.chatType = getMidType(op.param[1]) as any;
+		this.chatType = getMidType(op.param[1]) as LooseType;
 	}
 }
 
@@ -1247,7 +1344,7 @@ export class Message {
 			throw new InternalError("MessageParserErr", "Not ChatEvent Message");
 		}
 		const eventData = this.contentMetadata as chatEventMeta;
-		return eventData.LOC_ARGS.toString().split("\x1E")
+		return eventData.LOC_ARGS.toString().split("\x1E");
 	}
 
 	/**
@@ -1351,27 +1448,29 @@ export class Message {
 	/**
 	 * @description Build text decorations (emoji,mention)
 	 */
-	static buildTextDecorations(decorationText: decorationText[]): [string, Partial<emojiMeta & mentionMeta>] {
+	static buildTextDecorations(
+		decorationText: decorationText[],
+	): [string, Partial<emojiMeta & mentionMeta>] {
 		let text = "";
 		let hasMention = false;
 		let hasEmoji = false;
 		const contentMetadata: Partial<emojiMeta & mentionMeta> = {
 			REPLACE: {
 				sticon: {
-					resources: []
-				}
+					resources: [],
+				},
 			},
 			STICON_OWNERSHIP: [],
 			MENTION: {
-				MENTIONEES: []
-			}
+				MENTIONEES: [],
+			},
 		};
-		decorationText.forEach((e, i) => {
+		decorationText.forEach((e) => {
 			if (e.emoji) {
 				if (!e.text) {
-					e.text = "(linejs)"
+					e.text = "(linejs)";
 				}
-				hasEmoji = true
+				hasEmoji = true;
 				contentMetadata.REPLACE!.sticon.resources.push({
 					S: text.length,
 					E: text.length + e.text.length,
@@ -1379,39 +1478,39 @@ export class Message {
 					sticonId: e.emoji.sticonId,
 					version: e.emoji.version || 1,
 					resourceType: e.emoji.resourceType || "STATIC",
-				})
+				});
 				if (!contentMetadata.STICON_OWNERSHIP?.includes(e.emoji.productId)) {
-					contentMetadata.STICON_OWNERSHIP!.push(e.emoji.productId)
+					contentMetadata.STICON_OWNERSHIP!.push(e.emoji.productId);
 				}
 			} else if (e.mention) {
 				if (!e.text) {
-					e.text = "@unkonau"
+					e.text = "@unkonau";
 				}
-				hasMention = true
+				hasMention = true;
 				if (e.mention.all) {
 					contentMetadata.MENTION!.MENTIONEES.push({
 						S: text.length.toString(),
 						E: (text.length + e.text.length).toString(),
-						A: "1"
-					})
+						A: "1",
+					});
 				} else {
 					contentMetadata.MENTION!.MENTIONEES.push({
 						S: text.length.toString(),
 						E: (text.length + e.text.length).toString(),
-						M: e.mention.mid
-					})
+						M: e.mention.mid,
+					});
 				}
 			}
-			text += e.text || ""
-		})
+			text += e.text || "";
+		});
 		if (!hasEmoji) {
-			delete contentMetadata.REPLACE
-			delete contentMetadata.STICON_OWNERSHIP
+			delete contentMetadata.REPLACE;
+			delete contentMetadata.STICON_OWNERSHIP;
 		}
 		if (!hasMention) {
-			delete contentMetadata.MENTION
+			delete contentMetadata.MENTION;
 		}
-		return [text, contentMetadata]
+		return [text, contentMetadata];
 	}
 
 	/**
@@ -1532,8 +1631,8 @@ export class TalkMessage extends ClientMessage {
 	/**
 	 * @return {Promise<LINETypes.Contact>} message author
 	 */
-	public getAuthor(): Promise<LINETypes.Contact> {
-		return this.client.getContact({ mid: this.from });
+	public getAuthor(): Promise<User> {
+		return User.from(this.from, this.client);
 	}
 
 	/**
@@ -1542,7 +1641,7 @@ export class TalkMessage extends ClientMessage {
 	 */
 	public getGroup(): Promise<Group> | undefined {
 		if (this.toType === "GROUP" || this.toType === "ROOM") {
-			return Group.from(this.to, this.client)
+			return Group.from(this.to, this.client);
 		}
 	}
 
@@ -1553,9 +1652,9 @@ export class TalkMessage extends ClientMessage {
 	public getUser(): Promise<User> | undefined {
 		if (this.toType === "USER") {
 			if (this.getAuthorIsMe()) {
-				return User.from(this.to, this.client)
+				return User.from(this.to, this.client);
 			} else {
-				return User.from(this.from, this.client)
+				return User.from(this.from, this.client);
 			}
 		}
 	}
@@ -1573,14 +1672,14 @@ export class TalkMessage extends ClientMessage {
 	public async send(
 		options:
 			| {
-				text?: string | undefined;
-				contentType?: number | undefined;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string | undefined;
-				location?: LooseType;
-				chunk?: string[] | undefined;
-				e2ee?: boolean | undefined;
-			}
+					text?: string | undefined;
+					contentType?: number | undefined;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string | undefined;
+					location?: LooseType;
+					chunk?: string[] | undefined;
+					e2ee?: boolean | undefined;
+			  }
 			| string,
 	): Promise<TalkMessage> {
 		if (typeof options === "string") {
@@ -1593,7 +1692,10 @@ export class TalkMessage extends ClientMessage {
 					: this.getAuthorIsMe()
 						? this.to
 						: this.from;
-			return new TalkMessage({ message: await this.client.sendMessage(_options) }, this.client);
+			return new TalkMessage(
+				{ message: await this.client.sendMessage(_options) },
+				this.client,
+			);
 		}
 	}
 
@@ -1603,14 +1705,14 @@ export class TalkMessage extends ClientMessage {
 	public async reply(
 		options:
 			| {
-				text?: string | undefined;
-				contentType?: number | undefined;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string | undefined;
-				location?: LooseType;
-				chunk?: string[] | undefined;
-				e2ee?: boolean | undefined;
-			}
+					text?: string | undefined;
+					contentType?: number | undefined;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string | undefined;
+					location?: LooseType;
+					chunk?: string[] | undefined;
+					e2ee?: boolean | undefined;
+			  }
 			| string,
 	): Promise<TalkMessage> {
 		if (typeof options === "string") {
@@ -1624,7 +1726,10 @@ export class TalkMessage extends ClientMessage {
 						? this.to
 						: this.from;
 			_options.relatedMessageId = this.id;
-			return new TalkMessage({ message: await this.client.sendMessage(_options) }, this.client);
+			return new TalkMessage(
+				{ message: await this.client.sendMessage(_options) },
+				this.client,
+			);
 		}
 	}
 
@@ -1646,7 +1751,7 @@ export class TalkMessage extends ClientMessage {
 	/**
 	 * @description Announce this message
 	 */
-	public announce(): Promise<LINETypes.AcceptChatInvitationByTicketResponse> {
+	public announce(): Promise<LINETypes.ChatRoomAnnouncement> {
 		if (!this.text) {
 			throw new InternalError("MessageParserErr", "Not Text message");
 		}
@@ -1731,20 +1836,28 @@ export class SquareMessage extends ClientMessage {
 	public send(
 		options:
 			| {
-				text?: string | undefined;
-				contentType?: LooseType;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string | undefined;
-			}
+					text?: string | undefined;
+					contentType?: LooseType;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string | undefined;
+			  }
 			| string,
 		safe: boolean = true,
-	): Promise<LINETypes.SendMessageResponse> {
+	): Promise<SquareMessage> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
 		} else {
 			const _options: LooseType = options;
 			_options.squareChatMid = this.to;
-			return this.client.sendSquareMessage(_options, safe);
+			return this.client
+				.sendSquareMessage(_options, safe)
+				.then(
+					(r) =>
+						new SquareMessage(
+							{ message: r.createdSquareMessage.message },
+							this.client,
+						),
+				);
 		}
 	}
 
@@ -1754,21 +1867,29 @@ export class SquareMessage extends ClientMessage {
 	public reply(
 		options:
 			| {
-				text?: string | undefined;
-				contentType?: LooseType;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string | undefined;
-			}
+					text?: string | undefined;
+					contentType?: LooseType;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string | undefined;
+			  }
 			| string,
 		safe: boolean = true,
-	): Promise<LINETypes.SendMessageResponse> {
+	): Promise<SquareMessage> {
 		if (typeof options === "string") {
 			return this.reply({ text: options });
 		} else {
 			const _options: LooseType = options;
 			_options.squareChatMid = this.to;
 			_options.relatedMessageId = this.id;
-			return this.client.sendSquareMessage(_options, safe);
+			return this.client
+				.sendSquareMessage(_options, safe)
+				.then(
+					(r) =>
+						new SquareMessage(
+							{ message: r.createdSquareMessage.message },
+							this.client,
+						),
+				);
 		}
 	}
 
@@ -1791,7 +1912,7 @@ export class SquareMessage extends ClientMessage {
 	/**
 	 * @description Announce this message
 	 */
-	public announce() {
+	public announce(): Promise<LINETypes.CreateSquareChatAnnouncementResponse> {
 		if (!this.text) {
 			throw new InternalError("MessageParserErr", "Not Text message");
 		}
@@ -1808,7 +1929,7 @@ export class SquareMessage extends ClientMessage {
 	/**
 	 * @description Unsend this message
 	 */
-	public async unsend() {
+	public async unsend(): Promise<LINETypes.UnsendMessageResponse> {
 		if (!(await this.getAuthorIsMe())) {
 			throw new InternalError("MessageParserErr", "Can't Unsend");
 		}
@@ -1821,7 +1942,7 @@ export class SquareMessage extends ClientMessage {
 	/**
 	 * @description Delete this message
 	 */
-	public delete() {
+	public delete(): Promise<LINETypes.DestroyMessageResponse> {
 		return this.client.destroySquareMessage({
 			messageId: this.id,
 			squareChatMid: this.to,
