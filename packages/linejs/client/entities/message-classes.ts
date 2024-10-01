@@ -156,7 +156,7 @@ export class Note {
 	constructor(
 		public mid: string,
 		private client: Client,
-	) {}
+	) { }
 
 	public createPost(options: {
 		text?: string;
@@ -214,7 +214,7 @@ export class Square {
 	public createdAt: Date;
 	public me: SquareMember;
 	public authority: LINETypes.SquareAuthority;
-	public note: LINETypes.NoteStatus;
+	public noteStatus: LINETypes.NoteStatus;
 	public status: LINETypes.SquareStatus;
 	public memberCount: number;
 	public joinRequestCount: number;
@@ -223,7 +223,7 @@ export class Square {
 
 	public feature: LINETypes.SquareFeatureSet;
 
-	public noteClient: Note;
+	public note: Note;
 
 	constructor(
 		public rawSouce: LINETypes.GetSquareResponse,
@@ -253,8 +253,8 @@ export class Square {
 
 		this.me = new SquareMember(myMembership, client);
 		this.authority = squareAuthority;
-		this.note = noteStatus;
-		this.noteClient = new Note(this.mid, this.client);
+		this.noteStatus = noteStatus;
+		this.note = new Note(this.mid, this.client);
 		this.feature = squareFeatureSet as LINETypes.SquareFeatureSet;
 		this.status = squareStatus;
 		this.memberCount = squareStatus.memberCount;
@@ -268,10 +268,6 @@ export class Square {
 	 */
 	static async from(squareMid: string, client: Client) {
 		return new this(await client.getSquare({ squareMid }), client);
-	}
-
-	public getNote(): Note {
-		return this.noteClient;
 	}
 }
 
@@ -320,22 +316,51 @@ export class SquareChat {
 	static async from(squareChatMid: string, client: Client) {
 		return new this(await client.getSquareChat({ squareChatMid }), client);
 	}
+
+	public async getMembers(): Promise<SquareMember[]> {
+		const r = await this.client.getSquareChatMembers({ squareChatMid: this.mid, continueRequest: true });
+		return r.squareChatMembers.map(e => new SquareMember(e, this.client));
+	}
+
+	/**
+	 * @description Send msg to square.
+	 */
+	public send(
+		options:
+			| string
+			| {
+				text?: string;
+				contentType?: number;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string;
+				location?: LINETypes.Location;
+			},
+	): Promise<LINETypes.SendMessageResponse> {
+		if (typeof options === "string") {
+			return this.send({ text: options });
+		} else {
+			const _options: LooseType = options;
+			_options.squareChatMid = this.mid;
+			return this.client.sendSquareMessage(_options);
+		}
+	}
+
 }
 
 /**
  * @description LINE squareMember (Openchat user) utils
  */
 export class SquareMember {
-	mid: string;
-	squareMid: string;
-	displayName: string;
-	profileImageObsHash: string;
-	ableToReceiveMessage: boolean;
-	membershipState: LINETypes.SquareMembershipState;
-	role: LINETypes.SquareMemberRole;
-	revision: number;
-	preference: LINETypes.SquarePreference;
-	joinMessage?: string;
+	public mid: string;
+	public squareMid: string;
+	public displayName: string;
+	public profileImageObsHash: string;
+	public ableToReceiveMessage: boolean;
+	public membershipState: LINETypes.SquareMembershipState;
+	public role: LINETypes.SquareMemberRole;
+	public revision: number;
+	public preference: LINETypes.SquarePreference;
+	public joinMessage?: string;
 	constructor(
 		public rawMember: LINETypes.SquareMember,
 		private client: Client,
@@ -510,14 +535,14 @@ export class User {
 		options:
 			| string
 			| {
-					text?: string;
-					contentType?: number;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string;
-					location?: LINETypes.Location;
-					chunk?: string[] | Buffer[];
-					e2ee?: boolean;
-			  },
+				text?: string;
+				contentType?: number;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string;
+				location?: LINETypes.Location;
+				chunk?: string[] | Buffer[];
+				e2ee?: boolean;
+			},
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
@@ -534,7 +559,7 @@ export class User {
 	public async updateStatus() {
 		this.updateStatusFrom(
 			(await this.client.getContactsV2({ mids: [this.mid] })).contacts[
-				this.mid
+			this.mid
 			],
 		);
 	}
@@ -579,7 +604,7 @@ export class Group {
 	public preventedJoinByTicket: boolean;
 	public invitationTicket: string;
 	public notificationDisabled: boolean;
-	public noteClient: Note;
+	public note: Note;
 
 	/**
 	 * @description Generate from groupMid or {Chat}.
@@ -662,7 +687,7 @@ export class Group {
 		const { groupExtra } = chat.extra;
 		this.preventedJoinByTicket = groupExtra.preventedJoinByTicket;
 		this.invitationTicket = groupExtra.invitationTicket;
-		this.noteClient = new Note(this.mid, client);
+		this.note = new Note(this.mid, client);
 	}
 
 	/**
@@ -672,14 +697,14 @@ export class Group {
 		options:
 			| string
 			| {
-					text?: string;
-					contentType?: number;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string;
-					location?: LINETypes.Location;
-					chunk?: string[] | Buffer[];
-					e2ee?: boolean;
-			  },
+				text?: string;
+				contentType?: number;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string;
+				location?: LINETypes.Location;
+				chunk?: string[] | Buffer[];
+				e2ee?: boolean;
+			},
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
@@ -721,10 +746,6 @@ export class Group {
 	 */
 	public kick(mid: string): Promise<LINETypes.DeleteOtherFromChatResponse> {
 		return this.client.deleteOtherFromChat({ to: this.mid, mid: mid });
-	}
-
-	public getNote(): Note {
-		return this.noteClient;
 	}
 }
 
@@ -1686,14 +1707,14 @@ export class TalkMessage extends ClientMessage {
 	public async send(
 		options:
 			| {
-					text?: string | undefined;
-					contentType?: number | undefined;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string | undefined;
-					location?: LooseType;
-					chunk?: string[] | undefined;
-					e2ee?: boolean | undefined;
-			  }
+				text?: string | undefined;
+				contentType?: number | undefined;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string | undefined;
+				location?: LooseType;
+				chunk?: string[] | undefined;
+				e2ee?: boolean | undefined;
+			}
 			| string,
 	): Promise<TalkMessage> {
 		if (typeof options === "string") {
@@ -1719,14 +1740,14 @@ export class TalkMessage extends ClientMessage {
 	public async reply(
 		options:
 			| {
-					text?: string | undefined;
-					contentType?: number | undefined;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string | undefined;
-					location?: LooseType;
-					chunk?: string[] | undefined;
-					e2ee?: boolean | undefined;
-			  }
+				text?: string | undefined;
+				contentType?: number | undefined;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string | undefined;
+				location?: LooseType;
+				chunk?: string[] | undefined;
+				e2ee?: boolean | undefined;
+			}
 			| string,
 	): Promise<TalkMessage> {
 		if (typeof options === "string") {
@@ -1850,11 +1871,11 @@ export class SquareMessage extends ClientMessage {
 	public send(
 		options:
 			| {
-					text?: string | undefined;
-					contentType?: LooseType;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string | undefined;
-			  }
+				text?: string | undefined;
+				contentType?: LooseType;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string | undefined;
+			}
 			| string,
 		safe: boolean = true,
 	): Promise<SquareMessage> {
@@ -1881,11 +1902,11 @@ export class SquareMessage extends ClientMessage {
 	public reply(
 		options:
 			| {
-					text?: string | undefined;
-					contentType?: LooseType;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string | undefined;
-			  }
+				text?: string | undefined;
+				contentType?: LooseType;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string | undefined;
+			}
 			| string,
 		safe: boolean = true,
 	): Promise<SquareMessage> {
