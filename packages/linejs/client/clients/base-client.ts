@@ -228,7 +228,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	protected IS_POLLING_SQUARE = false;
 	protected IS_POLLING_TALK = false;
 
-	private async pollingSquareEvents() {
+	public async pollingSquareEvents() {
 		if (this.IS_POLLING_SQUARE) {
 			return;
 		}
@@ -404,7 +404,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 	public revision: number = 0;
 
-	private async pollingTalkEvents() {
+	public async pollingTalkEvents() {
 		if (this.IS_POLLING_TALK) {
 			return;
 		}
@@ -977,7 +977,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				Buffer.from(e2eeInfo.metadata.encryptedKeyChain, "base64"),
 			);
 			const e2eeLogin = await this.confirmE2EELogin(
-				response.verifier,
+				response[3],
 				deviceSecret,
 			);
 			response = await this.loginV2(

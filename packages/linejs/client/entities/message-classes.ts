@@ -8,8 +8,28 @@ import type { Client } from "../../client/index.ts";
 import type { LooseType } from "./common.ts";
 import type { Buffer } from "node:buffer";
 import { InternalError } from "./errors.ts";
+import { TypedEventEmitter } from "../libs/typed-event-emitter/index.ts";
 
 const hasContents = ["IMAGE", "VIDEO", "AUDIO", "FILE"];
+
+type GroupEvents = {
+	message: (message: Message) => void;
+	event: (event: Operation) => void;
+};
+
+type UserEvents = {
+	message: (message: Message) => void;
+	event: (event: Operation) => void;
+};
+
+type SquareEvents = {
+	event: (event: LINETypes.SquareEvent) => void;
+};
+
+type SquareChatEvents = {
+	message: (message: Message) => void;
+	event: (event: LINETypes.SquareEvent) => void;
+};
 
 type booleanString = "true" | "false";
 
@@ -156,7 +176,7 @@ export class Note {
 	constructor(
 		public mid: string,
 		private client: Client,
-	) { }
+	) {}
 
 	public createPost(options: {
 		text?: string;
@@ -318,8 +338,11 @@ export class SquareChat {
 	}
 
 	public async getMembers(): Promise<SquareMember[]> {
-		const r = await this.client.getSquareChatMembers({ squareChatMid: this.mid, continueRequest: true });
-		return r.squareChatMembers.map(e => new SquareMember(e, this.client));
+		const r = await this.client.getSquareChatMembers({
+			squareChatMid: this.mid,
+			continueRequest: true,
+		});
+		return r.squareChatMembers.map((e) => new SquareMember(e, this.client));
 	}
 
 	/**
@@ -329,12 +352,12 @@ export class SquareChat {
 		options:
 			| string
 			| {
-				text?: string;
-				contentType?: number;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string;
-				location?: LINETypes.Location;
-			},
+					text?: string;
+					contentType?: number;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string;
+					location?: LINETypes.Location;
+			  },
 	): Promise<LINETypes.SendMessageResponse> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
@@ -344,7 +367,6 @@ export class SquareChat {
 			return this.client.sendSquareMessage(_options);
 		}
 	}
-
 }
 
 /**
@@ -535,14 +557,14 @@ export class User {
 		options:
 			| string
 			| {
-				text?: string;
-				contentType?: number;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string;
-				location?: LINETypes.Location;
-				chunk?: string[] | Buffer[];
-				e2ee?: boolean;
-			},
+					text?: string;
+					contentType?: number;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string;
+					location?: LINETypes.Location;
+					chunk?: string[] | Buffer[];
+					e2ee?: boolean;
+			  },
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
@@ -559,7 +581,7 @@ export class User {
 	public async updateStatus() {
 		this.updateStatusFrom(
 			(await this.client.getContactsV2({ mids: [this.mid] })).contacts[
-			this.mid
+				this.mid
 			],
 		);
 	}
@@ -595,7 +617,7 @@ export class User {
 /**
  * @description LINE group (chat) utils
  */
-export class Group {
+export class Group extends TypedEventEmitter<GroupEvents> {
 	public rawSource: LINETypes.Chat;
 	public mid: string;
 	public createdTime: Date;
@@ -678,6 +700,8 @@ export class Group {
 		public members: User[],
 		public invitee: User[],
 	) {
+		super();
+
 		this.rawSource = chat;
 		this.mid = chat.chatMid;
 		this.createdTime = new Date(chat.createdTime * 1000);
@@ -688,6 +712,7 @@ export class Group {
 		this.preventedJoinByTicket = groupExtra.preventedJoinByTicket;
 		this.invitationTicket = groupExtra.invitationTicket;
 		this.note = new Note(this.mid, client);
+		//client.on("message",(msg)=>this.emit("message",msg))
 	}
 
 	/**
@@ -697,14 +722,14 @@ export class Group {
 		options:
 			| string
 			| {
-				text?: string;
-				contentType?: number;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string;
-				location?: LINETypes.Location;
-				chunk?: string[] | Buffer[];
-				e2ee?: boolean;
-			},
+					text?: string;
+					contentType?: number;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string;
+					location?: LINETypes.Location;
+					chunk?: string[] | Buffer[];
+					e2ee?: boolean;
+			  },
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
@@ -763,21 +788,22 @@ export class Operation {
 	public checksum?: string;
 	public status?: "ALERT_DISABLED" | LINETypes.OpStatus;
 	public param: { 1?: string; 2?: string; 3?: string } = {};
-	public sendChatRemoved?: SendChatRemoved;
-	public sendChatChecked?: SendChatChecked;
-	public notifiedReadMessage?: NotifiedReadMessage;
-	public notifiedSendReaction?: NotifiedSendReaction;
-	public sendReaction?: SendReaction;
-	public notifiedUpdateProfile?: NotifiedUpdateProfile;
-	public notifiedUpdateProfileContent?: NotifiedUpdateProfileContent;
-	public destroyMessage?: DestroyMessage;
-	public notifiedDestroyMessage?: NotifiedDestroyMessage;
-	public notifiedJoinChat?: NotifiedJoinChat;
-	public notifiedAcceptChatInvitation?: NotifiedAcceptChatInvitation;
-	public inviteIntoChat?: InviteIntoChat;
-	public deleteSelfFromChat?: DeleteSelfFromChat;
-	public notifiedLeaveChat?: NotifiedLeaveChat;
-	public deleteOtherFromChat?: DeleteOtherFromChat;
+	public event?:
+		| SendChatRemoved
+		| SendChatChecked
+		| NotifiedReadMessage
+		| NotifiedSendReaction
+		| SendReaction
+		| NotifiedUpdateProfile
+		| NotifiedUpdateProfileContent
+		| DestroyMessage
+		| NotifiedDestroyMessage
+		| NotifiedJoinChat
+		| NotifiedAcceptChatInvitation
+		| InviteIntoChat
+		| DeleteSelfFromChat
+		| NotifiedLeaveChat
+		| DeleteOtherFromChat;
 
 	constructor(
 		source: LINETypes.Operation,
@@ -812,39 +838,39 @@ export class Operation {
 			}
 		}
 		if (source.type == "SEND_CHAT_REMOVED") {
-			this.sendChatRemoved = new SendChatRemoved(this);
+			this.event = new SendChatRemoved(this);
 		} else if (source.type == "SEND_CHAT_CHECKED") {
-			this.sendChatChecked = new SendChatChecked(this);
+			this.event = new SendChatChecked(this);
 		} else if (source.type == "NOTIFIED_READ_MESSAGE") {
-			this.notifiedReadMessage = new NotifiedReadMessage(this);
+			this.event = new NotifiedReadMessage(this);
 		} else if (source.type == "NOTIFIED_SEND_REACTION") {
-			this.notifiedSendReaction = new NotifiedSendReaction(this);
+			this.event = new NotifiedSendReaction(this);
 		} else if (source.type == "SEND_REACTION") {
-			this.sendReaction = new SendReaction(this);
+			this.event = new SendReaction(this);
 		} else if (source.type == "NOTIFIED_UPDATE_PROFILE") {
-			this.notifiedUpdateProfile = new NotifiedUpdateProfile(this);
+			this.event = new NotifiedUpdateProfile(this);
 		} else if (source.type == "NOTIFIED_UPDATE_PROFILE_CONTENT") {
-			this.notifiedUpdateProfileContent = new NotifiedUpdateProfileContent(
+			this.event = new NotifiedUpdateProfileContent(
 				this,
 			);
 		} else if (source.type == "DESTROY_MESSAGE") {
-			this.destroyMessage = new DestroyMessage(this);
+			this.event = new DestroyMessage(this);
 		} else if (source.type == "NOTIFIED_DESTROY_MESSAGE") {
-			this.notifiedDestroyMessage = new NotifiedDestroyMessage(this);
+			this.event = new NotifiedDestroyMessage(this);
 		} else if (source.type == "NOTIFIED_JOIN_CHAT") {
-			this.notifiedJoinChat = new NotifiedJoinChat(this);
+			this.event = new NotifiedJoinChat(this);
 		} else if (source.type == "NOTIFIED_ACCEPT_CHAT_INVITATION") {
-			this.notifiedAcceptChatInvitation = new NotifiedAcceptChatInvitation(
+			this.event = new NotifiedAcceptChatInvitation(
 				this,
 			);
 		} else if (source.type == "INVITE_INTO_CHAT") {
-			this.inviteIntoChat = new InviteIntoChat(this);
+			this.event = new InviteIntoChat(this);
 		} else if (source.type == "DELETE_SELF_FROM_CHAT") {
-			this.deleteSelfFromChat = new DeleteSelfFromChat(this);
+			this.event = new DeleteSelfFromChat(this);
 		} else if (source.type == "NOTIFIED_LEAVE_CHAT") {
-			this.notifiedLeaveChat = new NotifiedLeaveChat(this);
+			this.event = new NotifiedLeaveChat(this);
 		} else if (source.type == "DELETE_OTHER_FROM_CHAT") {
-			this.deleteOtherFromChat = new DeleteOtherFromChat(this);
+			this.event = new DeleteOtherFromChat(this);
 		}
 		if (emit && client) {
 			client.emit("event", source);
@@ -856,6 +882,7 @@ export class Operation {
  * @description you unsend the message
  */
 export class DestroyMessage {
+	public readonly name: string = "DestroyMessage";
 	public messageId: string;
 	public chatMid: string;
 
@@ -878,6 +905,7 @@ export class DestroyMessage {
  * @description the user unsend the message
  */
 export class NotifiedDestroyMessage {
+	public readonly name: string = "NotifiedDestroyMessage";
 	public messageId: string;
 	public chatMid: string;
 
@@ -900,6 +928,7 @@ export class NotifiedDestroyMessage {
  * @description the user joined the chat
  */
 export class NotifiedJoinChat {
+	public readonly name: string = "NotifiedJoinChat";
 	public userMid: string;
 	public chatMid: string;
 
@@ -922,6 +951,7 @@ export class NotifiedJoinChat {
  * @description the user accepted the chat invitation
  */
 export class NotifiedAcceptChatInvitation {
+	public readonly name: string = "NotifiedAcceptChatInvitation";
 	public userMid: string;
 	public chatMid: string;
 
@@ -944,6 +974,7 @@ export class NotifiedAcceptChatInvitation {
  * @description the user was invited into chat by you
  */
 export class InviteIntoChat {
+	public readonly name: string = "InviteIntoChat";
 	public userMid: string;
 	public chatMid: string;
 
@@ -966,6 +997,7 @@ export class InviteIntoChat {
  * @description you left the chat
  */
 export class DeleteSelfFromChat {
+	public readonly name: string = "DeleteSelfFromChat";
 	public chatMid: string;
 
 	constructor(op: Operation) {
@@ -983,6 +1015,7 @@ export class DeleteSelfFromChat {
  * @description the user left (kicked) the chat
  */
 export class NotifiedLeaveChat {
+	public readonly name: string = "NotifiedLeaveChat";
 	public userMid: string;
 	public chatMid: string;
 
@@ -1005,6 +1038,7 @@ export class NotifiedLeaveChat {
  * @description the other user was kicked from chat by you
  */
 export class DeleteOtherFromChat {
+	public readonly name: string = "DeleteOtherFromChat";
 	public userMid: string;
 	public chatMid: string;
 
@@ -1027,6 +1061,7 @@ export class DeleteOtherFromChat {
  * @description the profile content was updated by user
  */
 export class NotifiedUpdateProfileContent {
+	public readonly name: string = "NotifiedUpdateProfileContent";
 	public userMid: string;
 	public profileAttributes: (LINETypes.ProfileAttribute | null)[] = [];
 
@@ -1070,6 +1105,7 @@ export class NotifiedUpdateProfileContent {
  * @description the profile was updated by user
  */
 export class NotifiedUpdateProfile {
+	public readonly name: string = "NotifiedUpdateProfile";
 	public userMid: string;
 	public profileAttributes: (LINETypes.ProfileAttribute | null)[] = [];
 	public info: Record<string, LooseType> = {};
@@ -1116,6 +1152,7 @@ export class NotifiedUpdateProfile {
  * @description the message was reacted by ypu
  */
 export class SendReaction {
+	public readonly name: string = "SendReaction";
 	public chatMid: string;
 	public chatType: LINETypes.MIDType;
 	public messageId: string;
@@ -1145,6 +1182,7 @@ export class SendReaction {
  * @description the message was reacted by user
  */
 export class NotifiedSendReaction {
+	public readonly name: string = "NotifiedSendReaction";
 	public chatMid: string;
 	public chatType: LINETypes.MIDType;
 	public messageId: string;
@@ -1177,6 +1215,7 @@ export class NotifiedSendReaction {
  * @description the message was read by user
  */
 export class NotifiedReadMessage {
+	public readonly name: string = "NotifiedReadMessage";
 	public chatMid: string;
 	public chatType: LINETypes.MIDType;
 	public messageId: string;
@@ -1204,6 +1243,7 @@ export class NotifiedReadMessage {
  * @description the message was read by you
  */
 export class SendChatChecked {
+	public readonly name: string = "SendChatChecked";
 	public chatMid: string;
 	public chatType: LINETypes.MIDType;
 	public messageId: string;
@@ -1228,6 +1268,7 @@ export class SendChatChecked {
  * @description the chatroom history was removed by you
  */
 export class SendChatRemoved {
+	public readonly name: string = "SendChatRemoved";
 	public chatMid: string;
 	public chatType: LINETypes.MIDType | null;
 	public messageId: string;
@@ -1707,14 +1748,14 @@ export class TalkMessage extends ClientMessage {
 	public async send(
 		options:
 			| {
-				text?: string | undefined;
-				contentType?: number | undefined;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string | undefined;
-				location?: LooseType;
-				chunk?: string[] | undefined;
-				e2ee?: boolean | undefined;
-			}
+					text?: string | undefined;
+					contentType?: number | undefined;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string | undefined;
+					location?: LooseType;
+					chunk?: string[] | undefined;
+					e2ee?: boolean | undefined;
+			  }
 			| string,
 	): Promise<TalkMessage> {
 		if (typeof options === "string") {
@@ -1740,14 +1781,14 @@ export class TalkMessage extends ClientMessage {
 	public async reply(
 		options:
 			| {
-				text?: string | undefined;
-				contentType?: number | undefined;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string | undefined;
-				location?: LooseType;
-				chunk?: string[] | undefined;
-				e2ee?: boolean | undefined;
-			}
+					text?: string | undefined;
+					contentType?: number | undefined;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string | undefined;
+					location?: LooseType;
+					chunk?: string[] | undefined;
+					e2ee?: boolean | undefined;
+			  }
 			| string,
 	): Promise<TalkMessage> {
 		if (typeof options === "string") {
@@ -1871,11 +1912,11 @@ export class SquareMessage extends ClientMessage {
 	public send(
 		options:
 			| {
-				text?: string | undefined;
-				contentType?: LooseType;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string | undefined;
-			}
+					text?: string | undefined;
+					contentType?: LooseType;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string | undefined;
+			  }
 			| string,
 		safe: boolean = true,
 	): Promise<SquareMessage> {
@@ -1902,11 +1943,11 @@ export class SquareMessage extends ClientMessage {
 	public reply(
 		options:
 			| {
-				text?: string | undefined;
-				contentType?: LooseType;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string | undefined;
-			}
+					text?: string | undefined;
+					contentType?: LooseType;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string | undefined;
+			  }
 			| string,
 		safe: boolean = true,
 	): Promise<SquareMessage> {
@@ -1984,3 +2025,4 @@ export class SquareMessage extends ClientMessage {
 		});
 	}
 }
+
