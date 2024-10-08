@@ -7,6 +7,7 @@ import { ChannelClient } from "./channel-client.ts";
 import type { Buffer } from "node:buffer";
 
 export class TalkClient extends ChannelClient {
+	public useTalkCache: boolean = false;
 	public TalkService_API_PATH = "/S4";
 	public TalkService_PROTOCOL_TYPE: ProtocolKey = 4;
 
@@ -395,7 +396,7 @@ export class TalkClient extends ChannelClient {
 		options: {
 			mid: string;
 		},
-		useCache: boolean = false,
+		useCache: boolean = this.useTalkCache,
 	): Promise<LINETypes.Contact> {
 		if (useCache && this.cache.getCache("getContact", options)) {
 			return this.cache.getCache("getContact", options) as LINETypes.Contact;
@@ -419,7 +420,7 @@ export class TalkClient extends ChannelClient {
 		options: {
 			mids: string[];
 		},
-		useCache: boolean = false,
+		useCache: boolean = this.useTalkCache,
 	): Promise<LINETypes.Contact[]> {
 		const { mids } = { ...options };
 		const response = (
@@ -444,9 +445,14 @@ export class TalkClient extends ChannelClient {
 		options: {
 			mids: string[];
 		},
-		useCache: boolean = false,
+		useCache: boolean = this.useTalkCache,
 	): Promise<LINETypes.GetContactsV2Response> {
 		const { mids } = { ...options };
+		if (useCache && mids.length === 1 && this.cache.getCache("getContactV2", { mid: mids[0] })) {
+			const res: { contacts: Record<string, LooseType> } = { contacts: {} }
+			res.contacts[mids[0]] = this.cache.getCache("getContactV2", { mid: mids[0] })
+			return res
+		}
 		const response = (await this.request(
 			[[15, 1, [11, mids]]],
 			"getContactsV2",
@@ -458,8 +464,9 @@ export class TalkClient extends ChannelClient {
 		if (useCache)
 			for (const key in response.contacts) {
 				if (Object.prototype.hasOwnProperty.call(response.contacts, key)) {
-					const contact = response.contacts[key].contact;
-					this.cache.setCache("getContact", { mid: contact.mid }, contact);
+					const contact = response.contacts[key];
+					this.cache.setCache("getContact", { mid: contact.contact.mid }, contact.contact);
+					this.cache.setCache("getContactV2", { mid: contact.contact.mid }, contact);
 				}
 			}
 		return response;
@@ -474,7 +481,7 @@ export class TalkClient extends ChannelClient {
 			withMembers?: boolean;
 			withInvitees?: boolean;
 		},
-		useCache: boolean = false,
+		useCache: boolean = this.useTalkCache,
 	): Promise<LINETypes.Chat> {
 		if (useCache && this.cache.getCache("getChat", options)) {
 			return this.cache.getCache("getChat", options) as LINETypes.Chat;
@@ -511,7 +518,7 @@ export class TalkClient extends ChannelClient {
 			withMembers?: boolean;
 			withInvitees?: boolean;
 		},
-		useCache: boolean = false,
+		useCache: boolean = this.useTalkCache,
 	): Promise<LINETypes.GetChatsResponse> {
 		const { gids, withInvitees, withMembers } = {
 			withInvitees: true,
@@ -757,20 +764,20 @@ export class TalkClient extends ChannelClient {
 						chatSet.picturePath ? [11, 7, chatSet.picturePath] : null,
 						chatSet.extra?.groupExtra
 							? [
-									12,
-									8,
+								12,
+								8,
+								[
 									[
+										12,
+										1,
 										[
-											12,
-											1,
-											[
-												[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
-												[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
-												[2, 7, chatSet.extra.groupExtra.ticketDisabled],
-											],
+											[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
+											[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
+											[2, 7, chatSet.extra.groupExtra.ticketDisabled],
 										],
 									],
-								]
+								],
+							]
 							: null,
 					],
 				],

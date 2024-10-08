@@ -2043,7 +2043,7 @@ export enum MessageReactionType {
 	OMG = 7,
 }
 
-export enum SquareChatAnnouncementType {}
+export enum SquareChatAnnouncementType { }
 
 export enum PictureSource {
 	_NFT = "NFT",
@@ -2282,7 +2282,7 @@ export enum SquareChatState {
 	SUSPENDED = 2,
 }
 
-export enum MessageStatusType {}
+export enum MessageStatusType { }
 
 export enum NotifiedMessageType {
 	_MENTION = "MENTION",
@@ -2815,458 +2815,358 @@ export enum PopupVisualType {
 	FULLSCREEN = 1,
 }
 
-export declare class TalkException extends Error {
+export type TalkException = {
 	code: ErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
 
-	constructor(args?: {
-		code: ErrorCode;
-		reason: string;
-		parameterMap: { [k: string]: string };
-	});
+
 }
 
-export declare class ChannelException extends Error {
+export type ChannelException = {
 	code: ChannelErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
 
-	constructor(args?: {
-		code: ChannelErrorCode;
-		reason: string;
-		parameterMap: { [k: string]: string };
-	});
+
 }
 
-export declare class SquareException extends Error {
+export type SquareException = {
 	errorCode: SquareErrorCode;
 	errorExtraInfo: ErrorExtraInfo;
 	reason: string;
 
-	constructor(args?: {
-		errorCode: SquareErrorCode;
-		errorExtraInfo: ErrorExtraInfo;
-		reason: string;
-	});
+
 }
 
-export declare class LiffException extends Error {
+export type LiffException = {
 	code: LiffErrorCode;
 	message: string;
 	payload: LiffErrorPayload;
 
-	constructor(args?: {
-		code: LiffErrorCode;
-		message: string;
-		payload: LiffErrorPayload;
-	});
+
 }
 
-export declare class HomeException extends Error {
+export type HomeException = {
 	exceptionCode: HomeExceptionCode;
 	message: string;
 	retryTimeMillis: Int64;
 
-	constructor(args?: {
-		exceptionCode: HomeExceptionCode;
-		message: string;
-		retryTimeMillis: Int64;
-	});
+
 }
 
-export declare class ChatappException extends Error {
+export type ChatappException = {
 	code: ChatappErrorCode;
 	reason: string;
 
-	constructor(args?: { code: ChatappErrorCode; reason: string });
+
 }
 
-export declare class MembershipException extends Error {
+export type MembershipException = {
 	code: MembershipErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
 
-	constructor(args?: {
-		code: MembershipErrorCode;
-		reason: string;
-		parameterMap: { [k: string]: string };
-	});
+
 }
 
-export declare class BotException extends Error {
+export type BotException = {
 	errorCode: BotErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
 
-	constructor(args?: {
-		errorCode: BotErrorCode;
-		reason: string;
-		parameterMap: { [k: string]: string };
-	});
+
 }
 
-export declare class BotExternalException extends Error {
+export type BotExternalException = {
 	errorCode: BotExternalErrorCode;
 	reason: string;
 
-	constructor(args?: { errorCode: BotExternalErrorCode; reason: string });
+
 }
 
-export declare class LiffChannelException extends Error {
+export type LiffChannelException = {
 	code: ChannelErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
 
-	constructor(args?: {
-		code: ChannelErrorCode;
-		reason: string;
-		parameterMap: { [k: string]: string };
-	});
+
 }
 
-export declare class AccessTokenRefreshException extends Error {
+export type AccessTokenRefreshException = {
 	errorCode: AccessTokenRefreshErrorCode;
 	reasonCode: Int64;
 
-	constructor(args?: {
-		errorCode: AccessTokenRefreshErrorCode;
-		reasonCode: Int64;
-	});
+
 }
 
-export declare class AccountEapConnectException extends Error {
+export type AccountEapConnectException = {
 	code: AccountEapConnectErrorCode;
 	alertMessage: string;
 	webAuthDetails: WebAuthDetails;
 
-	constructor(args?: {
-		code: AccountEapConnectErrorCode;
-		alertMessage: string;
-		webAuthDetails: WebAuthDetails;
-	});
+
 }
 
-export declare class PwlessCredentialException extends Error {
+export type PwlessCredentialException = {
 	code: PwlessCredentialErrorCode;
 	alertMessage: string;
 
-	constructor(args?: { code: PwlessCredentialErrorCode; alertMessage: string });
+
 }
 
-export declare class SecondAuthFactorPinCodeException extends Error {
+export type SecondAuthFactorPinCodeException = {
 	code: SecondAuthFactorPinCodeErrorCode;
 	alertMessage: string;
 
-	constructor(args?: {
-		code: SecondAuthFactorPinCodeErrorCode;
-		alertMessage: string;
-	});
+
 }
 
-export declare class AuthException extends Error {
+export type AuthException = {
 	code: AuthErrorCode;
 	alertMessage: string;
 	webAuthDetails: WebAuthDetails;
 
-	constructor(args?: {
-		code: AuthErrorCode;
-		alertMessage: string;
-		webAuthDetails: WebAuthDetails;
-	});
+
 }
 
-export declare class SecondaryPwlessLoginException extends Error {
+export type SecondaryPwlessLoginException = {
 	code: SecondaryPwlessLoginErrorCode;
 	alertMessage: string;
 
-	constructor(args?: {
-		code: SecondaryPwlessLoginErrorCode;
-		alertMessage: string;
-	});
+
 }
 
-export declare class SecondaryQrCodeException extends Error {
+export type SecondaryQrCodeException = {
 	code: SecondaryQrCodeErrorCode;
 	alertMessage: string;
 
-	constructor(args?: { code: SecondaryQrCodeErrorCode; alertMessage: string });
+
 }
 
-export declare class PaymentException extends Error {
+export type PaymentException = {
 	errorCode: PaymentErrorCode;
 	debugReason: string;
 	serverDefinedMessage: string;
 	errorDetailMap: { [k: string]: string };
 
-	constructor(args?: {
-		errorCode: PaymentErrorCode;
-		debugReason: string;
-		serverDefinedMessage: string;
-		errorDetailMap: { [k: string]: string };
-	});
+
 }
 
-export declare class SettingsException extends Error {
+export type SettingsException = {
 	code: SettingsErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
 
-	constructor(args?: {
-		code: SettingsErrorCode;
-		reason: string;
-		parameterMap: { [k: string]: string };
-	});
+
 }
 
-export declare class TicketException extends Error {
+export type TicketException = {
 	code: number;
 	reason: string;
 	parameterMap: { [k: string]: string };
 
-	constructor(args?: {
-		code: number;
-		reason: string;
-		parameterMap: { [k: string]: string };
-	});
+
 }
 
-export declare class ThingsException extends Error {
+export type ThingsException = {
 	code: ThingsErrorCode;
 	reason: string;
 
-	constructor(args?: { code: ThingsErrorCode; reason: string });
+
 }
 
-export declare class SuggestTrialException extends Error {
+export type SuggestTrialException = {
 	code: SuggestTrialErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
 
-	constructor(args?: {
-		code: SuggestTrialErrorCode;
-		reason: string;
-		parameterMap: { [k: string]: string };
-	});
+
 }
 
-export declare class LFLPremiumException extends Error {
+export type LFLPremiumException = {
 	code: LFLPremiumErrorCode;
 
-	constructor(args?: { code: LFLPremiumErrorCode });
+
 }
 
-export declare class WalletException extends Error {
+export type WalletException = {
 	code: WalletErrorCode;
 	reason: string;
 	attributes: { [k: string]: string };
 
-	constructor(args?: {
-		code: WalletErrorCode;
-		reason: string;
-		attributes: { [k: string]: string };
-	});
+
 }
 
-export declare class ShopException extends Error {
+export type ShopException = {
 	code: ShopErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
 
-	constructor(args?: {
-		code: ShopErrorCode;
-		reason: string;
-		parameterMap: { [k: string]: string };
-	});
+
 }
 
-export declare class PointException extends Error {
+export type PointException = {
 	code: PointErrorCode;
 	reason: string;
 	extra: { [k: string]: string };
 
-	constructor(args?: {
-		code: PointErrorCode;
-		reason: string;
-		extra: { [k: string]: string };
-	});
+
 }
 
-export declare class E2EEKeyBackupException extends Error {
+export type E2EEKeyBackupException = {
 	code: E2EEKeyBackupErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
 
-	constructor(args?: {
-		code: E2EEKeyBackupErrorCode;
-		reason: string;
-		parameterMap: { [k: string]: string };
-	});
+
 }
 
-export declare class RejectedException extends Error {
+export type RejectedException = {
 	rejectionReason: RejectionReason;
 	hint: string;
 
-	constructor(args?: { rejectionReason: RejectionReason; hint: string });
+
 }
 
-export declare class ServerFailureException extends Error {
+export type ServerFailureException = {
 	hint: string;
 
-	constructor(args?: { hint: string });
+
 }
 
-export declare class UpdateChatRequest {
+export type UpdateChatRequest = {
 	reqSeq: number;
 	chat: Chat;
 	updatedAttribute: number;
 
-	constructor(args?: { reqSeq: number; chat: Chat; updatedAttribute: number });
+
 }
 
-export declare class UpdateChatResponse {}
+export type UpdateChatResponse = {}
 
-export declare class AcceptChatInvitationByTicketRequest {
+export type AcceptChatInvitationByTicketRequest = {
 	reqSeq: number;
 	chatMid: string;
 	ticketId: string;
 
-	constructor(args?: { reqSeq: number; chatMid: string; ticketId: string });
+
 }
 
-export declare class AcceptChatInvitationByTicketResponse {}
+export type AcceptChatInvitationByTicketResponse = {}
 
-export declare class AcceptChatInvitationRequest {
+export type AcceptChatInvitationRequest = {
 	reqSeq: number;
 	chatMid: string;
 
-	constructor(args?: { reqSeq: number; chatMid: string });
+
 }
 
-export declare class ReissueChatTicketRequest {
+export type ReissueChatTicketRequest = {
 	reqSeq: number;
 	groupMid: string;
 
-	constructor(args?: { reqSeq: number; groupMid: string });
+
 }
 
-export declare class AcceptChatInvitationResponse {}
+export type AcceptChatInvitationResponse = {}
 
-export declare class ReissueChatTicketResponse {
+export type ReissueChatTicketResponse = {
 	ticketId: string;
 
-	constructor(args?: { ticketId: string });
+
 }
 
-export declare class RejectChatInvitationRequest {
+export type RejectChatInvitationRequest = {
 	reqSeq: number;
 	chatMid: string;
 
-	constructor(args?: { reqSeq: number; chatMid: string });
+
 }
 
-export declare class GetAllChatMidsRequest {
+export type GetAllChatMidsRequest = {
 	withMemberChats?: boolean;
 	withInvitedChats?: boolean;
 
-	constructor(args?: { withMemberChats?: boolean; withInvitedChats?: boolean });
+
 }
 
-export declare class RejectChatInvitationResponse {}
+export type RejectChatInvitationResponse = {}
 
-export declare class GetAllChatMidsResponse {
+export type GetAllChatMidsResponse = {
 	memberChatMids: string[];
 	invitedChatMids: string[];
 
-	constructor(args?: { memberChatMids: string[]; invitedChatMids: string[] });
+
 }
 
-export declare class CreateChatRequest {
+export type CreateChatRequest = {
 	reqSeq: number;
 	type: number;
 	name?: string;
 	targetUserMids: string[];
 	picturePath?: string;
 
-	constructor(args?: {
-		reqSeq: number;
-		type: number;
-		name?: string;
-		targetUserMids: string[];
-		picturePath?: string;
-	});
+
 }
 
-export declare class CreateChatResponse {
+export type CreateChatResponse = {
 	chat: Chat;
 
-	constructor(args?: { chat: Chat });
+
 }
 
-export declare class BeaconCondition {
+export type BeaconCondition = {
 	inFriends: string;
 	notInFriends: string;
 	termsAgreed: boolean;
 
-	constructor(args?: {
-		inFriends: string;
-		notInFriends: string;
-		termsAgreed: boolean;
-	});
+
 }
 
-export declare class BeaconBackgroundNotification {
+export type BeaconBackgroundNotification = {
 	actionInterval: Int64;
 	actionAndConditions: BeaconCondition[];
 	actionDelay: Int64;
 	actionConditions: BeaconCondition[];
 
-	constructor(args?: {
-		actionInterval: Int64;
-		actionAndConditions: BeaconCondition[];
-		actionDelay: Int64;
-		actionConditions: BeaconCondition[];
-	});
+
 }
 
-export declare class LiffErrorPayload {
+export type LiffErrorPayload = {
 	consentRequired: LiffErrorConsentRequired;
 
-	constructor(args?: { consentRequired: LiffErrorConsentRequired });
+
 }
 
-export declare class LiffErrorConsentRequired {
+export type LiffErrorConsentRequired = {
 	channelId: string;
 	consentUrl: string;
 
-	constructor(args?: { channelId: string; consentUrl: string });
+
 }
 
-export declare class ErrorExtraInfo {
+export type ErrorExtraInfo = {
 	preconditionFailedExtraInfo: PreconditionFailedExtraInfo;
 	userRestrictionInfo: UserRestrictionExtraInfo;
 
-	constructor(args?: {
-		preconditionFailedExtraInfo: PreconditionFailedExtraInfo;
-		userRestrictionInfo: UserRestrictionExtraInfo;
-	});
+
 }
 
-export declare class UserRestrictionExtraInfo {
+export type UserRestrictionExtraInfo = {
 	linkUrl: string;
 
-	constructor(args?: { linkUrl: string });
+
 }
 
-export declare class WebAuthDetails {
+export type WebAuthDetails = {
 	baseUrl: string;
 	token: string;
 
-	constructor(args?: { baseUrl: string; token: string });
+
 }
 
-export declare class Profile {
+export type Profile = {
 	mid: string;
 	userid: string;
 	phone: string;
@@ -3287,44 +3187,19 @@ export declare class Profile {
 	nftProfile: boolean;
 	pictureSource: PictureSource;
 
-	constructor(args?: {
-		mid: string;
-		userid: string;
-		phone: string;
-		email: string;
-		regionCode: string;
-		displayName: string;
-		phoneticName: string;
-		pictureStatus: string;
-		thumbnailUrl: string;
-		statusMessage: string;
-		allowSearchByUserid: boolean;
-		allowSearchByEmail: boolean;
-		picturePath: string;
-		musicProfile: string;
-		videoProfile: string;
-		statusMessageContentMetadata: { [k: string]: string };
-		avatarProfile: AvatarProfile;
-		nftProfile: boolean;
-		pictureSource: PictureSource;
-	});
+
 }
 
-export declare class AvatarProfile {
+export type AvatarProfile = {
 	version: string;
 	updatedMillis: Int64;
 	thumbnail: string;
 	usablePublicly: boolean;
 
-	constructor(args?: {
-		version: string;
-		updatedMillis: Int64;
-		thumbnail: string;
-		usablePublicly: boolean;
-	});
+
 }
 
-export declare class Operation {
+export type Operation = {
 	revision: Int64;
 	createdTime: Int64;
 	type: OpType;
@@ -3336,21 +3211,10 @@ export declare class Operation {
 	param3: string;
 	message: Message;
 
-	constructor(args?: {
-		revision: Int64;
-		createdTime: Int64;
-		type: OpType;
-		reqSeq: number;
-		checksum: string;
-		status: OpStatus;
-		param1: string;
-		param2: string;
-		param3: string;
-		message: Message;
-	});
+
 }
 
-export declare class Message {
+export type Message = {
 	_from: string;
 	to: string;
 	toType: MIDType;
@@ -3372,61 +3236,32 @@ export declare class Message {
 	appExtensionType: AppExtensionType;
 	reactions: Reaction[];
 
-	constructor(args?: {
-		_from: string;
-		to: string;
-		toType: MIDType;
-		id: string;
-		createdTime: Int64;
-		deliveredTime: Int64;
-		text: string;
-		location: Location;
-		hasContent: boolean;
-		contentType: ContentType;
-		contentPreview: Buffer | string;
-		contentMetadata: { [k: string]: string };
-		sessionId: any;
-		chunks: Buffer[] | string[];
-		relatedMessageId: string;
-		messageRelationType: MessageRelationType;
-		readCount: Int64;
-		relatedMessageServiceCode: ServiceCode;
-		appExtensionType: AppExtensionType;
-		reactions: Reaction[];
-	});
+
 }
 
-export declare class Reaction {
+export type Reaction = {
 	fromUserMid: string;
 	atMillis: Int64;
 	reactionType: ReactionType;
 
-	constructor(args?: {
-		fromUserMid: string;
-		atMillis: Int64;
-		reactionType: ReactionType;
-	});
+
 }
 
-export declare class ReactionType {
+export type ReactionType = {
 	predefinedReactionType: PredefinedReactionType;
 
-	constructor(args?: { predefinedReactionType: PredefinedReactionType });
+
 }
 
-export declare class ReactRequest {
+export type ReactRequest = {
 	reqSeq: number;
 	messageId: Int64;
 	reactionType: ReactionType;
 
-	constructor(args?: {
-		reqSeq: number;
-		messageId: Int64;
-		reactionType: ReactionType;
-	});
+
 }
 
-export declare class Location {
+export type Location = {
 	title: string;
 	address: string;
 	latitude: number;
@@ -3437,20 +3272,10 @@ export declare class Location {
 	accuracy: GeolocationAccuracy;
 	altitudeMeters: number;
 
-	constructor(args?: {
-		title: string;
-		address: string;
-		latitude: number;
-		longitude: number;
-		phone: string;
-		categoryId: string;
-		provider: PlaceSearchProvider;
-		accuracy: GeolocationAccuracy;
-		altitudeMeters: number;
-	});
+
 }
 
-export declare class GeolocationAccuracy {
+export type GeolocationAccuracy = {
 	radiusMeters: number;
 	radiusConfidence: number;
 	altitudeAccuracy: number;
@@ -3458,17 +3283,10 @@ export declare class GeolocationAccuracy {
 	bearingAccuracy: number;
 	accuracyMode: GeolocationAccuracyMode;
 
-	constructor(args?: {
-		radiusMeters: number;
-		radiusConfidence: number;
-		altitudeAccuracy: number;
-		velocityAccuracy: number;
-		bearingAccuracy: number;
-		accuracyMode: GeolocationAccuracyMode;
-	});
+
 }
 
-export declare class Contact {
+export type Contact = {
 	mid: string;
 	createdTime: Int64;
 	type: ContactType;
@@ -3499,133 +3317,74 @@ export declare class Contact {
 	nftProfile: boolean;
 	pictureSource: PictureSource;
 
-	constructor(args?: {
-		mid: string;
-		createdTime: Int64;
-		type: ContactType;
-		status: ContactStatus;
-		relation: ContactRelation;
-		displayName: string;
-		phoneticName: string;
-		pictureStatus: string;
-		thumbnailUrl: string;
-		statusMessage: string;
-		displayNameOverridden: string;
-		favoriteTime: Int64;
-		capableVoiceCall: boolean;
-		capableVideoCall: boolean;
-		capableMyhome: boolean;
-		capableBuddy: boolean;
-		attributes: number;
-		settings: Int64;
-		picturePath: string;
-		recommendParams: string;
-		friendRequestStatus: FriendRequestStatus;
-		musicProfile: string;
-		videoProfile: string;
-		statusMessageContentMetadata: { [k: string]: string };
-		avatarProfile: AvatarProfile;
-		friendRingtone: string;
-		friendRingbackTone: string;
-		nftProfile: boolean;
-		pictureSource: PictureSource;
-	});
+
 }
 
-export declare class GetContactsV2Request {
+export type GetContactsV2Request = {
 	targetUserMids: string[];
 	neededContactCalendarEvents: ContactCalendarEventType[];
 	withUserStatus: boolean;
 
-	constructor(args?: {
-		targetUserMids: string[];
-		neededContactCalendarEvents: ContactCalendarEventType[];
-		withUserStatus: boolean;
-	});
+
 }
 
-export declare class GetContactsV2Response {
+export type GetContactsV2Response = {
 	contacts: { [k: string]: ContactEntry };
 
-	constructor(args?: { contacts: { [k: string]: ContactEntry } });
+
 }
 
-export declare class ContactEntry {
+export type ContactEntry = {
 	userStatus: UserStatus;
 	snapshotTimeMillis: Int64;
 	contact: Contact;
 	calendarEvents: ContactCalendarEvents;
 
-	constructor(args?: {
-		userStatus: UserStatus;
-		snapshotTimeMillis: Int64;
-		contact: Contact;
-		calendarEvents: ContactCalendarEvents;
-	});
+
 }
 
-export declare class ContactCalendarEvents {
+export type ContactCalendarEvents = {
 	events: { [k: number /*ContactCalendarEventType*/]: ContactCalendarEvent };
 
-	constructor(args?: {
-		events: {
-			[k: number /*ContactCalendarEventType*/]: ContactCalendarEvent;
-		};
-	});
+
 }
 
-export declare class ContactCalendarEvent {
+export type ContactCalendarEvent = {
 	id: string;
 	state: ContactCalendarEventState;
 	year: number;
 	month: number;
 	day: number;
 
-	constructor(args?: {
-		id: string;
-		state: ContactCalendarEventState;
-		year: number;
-		month: number;
-		day: number;
-	});
+
 }
 
-export declare class Configurations {
+export type Configurations = {
 	revision: Int64;
 	configMap: { [k: string]: string };
 
-	constructor(args?: { revision: Int64; configMap: { [k: string]: string } });
+
 }
 
-export declare class E2EEPublicKey {
+export type E2EEPublicKey = {
 	version: number;
 	keyId: number;
 	keyData: Buffer | string;
 	createdTime: Int64;
 
-	constructor(args?: {
-		version: number;
-		keyId: number;
-		keyData: Buffer | string;
-		createdTime: Int64;
-	});
+
 }
 
-export declare class RSAKey {
+export type RSAKey = {
 	keynm: string;
 	nvalue: string;
 	evalue: string;
 	sessionKey: string;
 
-	constructor(args?: {
-		keynm: string;
-		nvalue: string;
-		evalue: string;
-		sessionKey: string;
-	});
+
 }
 
-export declare class Settings {
+export type Settings = {
 	notificationEnable: boolean;
 	notificationMuteExpiration: Int64;
 	notificationNewMessage: boolean;
@@ -3705,115 +3464,27 @@ export declare class Settings {
 	agreementLocationVersion: string;
 	zhdPageAllowedToShow: boolean;
 
-	constructor(args?: {
-		notificationEnable: boolean;
-		notificationMuteExpiration: Int64;
-		notificationNewMessage: boolean;
-		notificationGroupInvitation: boolean;
-		notificationShowMessage: boolean;
-		notificationIncomingCall: boolean;
-		notificationSoundMessage: string;
-		notificationSoundGroup: string;
-		notificationDisabledWithSub: boolean;
-		notificationPayment: boolean;
-		privacySyncContacts: boolean;
-		privacySearchByPhoneNumber: boolean;
-		privacySearchByUserid: boolean;
-		privacySearchByEmail: boolean;
-		privacyAllowSecondaryDeviceLogin: boolean;
-		privacyProfileImagePostToMyhome: boolean;
-		privacyReceiveMessagesFromNotFriend: boolean;
-		privacyAgreeUseLineCoinToPaidCall: boolean;
-		privacyAgreeUsePaidCall: boolean;
-		privacyAllowFriendRequest: boolean;
-		contactMyTicket: string;
-		identityProvider: IdentityProvider;
-		identityIdentifier: string;
-		snsAccounts: { [k: number /*SnsIdType*/]: string };
-		phoneRegistration: boolean;
-		emailConfirmationStatus: EmailConfirmationStatus;
-		accountMigrationPincodeType: AccountMigrationPincodeType;
-		enforcedInputAccountMigrationPincode: boolean;
-		securityCenterSettingsType: SecurityCenterSettingsType;
-		allowUnregistrationSecondaryDevice: boolean;
-		pwlessPrimaryCredentialRegistration: boolean;
-		preferenceLocale: string;
-		customModes: { [k: number /*CustomMode*/]: string };
-		e2eeEnable: boolean;
-		hitokotoBackupRequested: boolean;
-		privacyProfileMusicPostToMyhome: boolean;
-		privacyAllowNearby: boolean;
-		agreementNearbyTime: Int64;
-		agreementSquareTime: Int64;
-		notificationMention: boolean;
-		botUseAgreementAcceptedAt: Int64;
-		agreementShakeFunction: Int64;
-		agreementMobileContactName: Int64;
-		agreementSoundToText: Int64;
-		privacyPolicyVersion: string;
-		agreementAdByWebAccess: Int64;
-		agreementPhoneNumberMatching: Int64;
-		agreementCommunicationInfo: Int64;
-		privacySharePersonalInfoToFriends: UserSharePersonalInfoToFriendsType;
-		agreementThingsWirelessCommunication: Int64;
-		agreementGdpr: Int64;
-		privacyStatusMessageHistory: UserStatusMessageHistoryType;
-		agreementProvideLocation: Int64;
-		agreementBeacon: Int64;
-		privacyAllowProfileHistory: UserAllowProfileHistoryType;
-		agreementContentsSuggest: Int64;
-		agreementContentsSuggestDataCollection: Int64;
-		privacyAgeResult: UserAgeType;
-		privacyAgeResultReceived: boolean;
-		notificationThumbnail: boolean;
-		agreementOcrImageCollection: Int64;
-		privacyAllowFollow: boolean;
-		privacyShowFollowList: boolean;
-		notificationBadgeTalkOnly: boolean;
-		agreementIcna: Int64;
-		notificationReaction: boolean;
-		agreementMid: Int64;
-		homeNotificationNewFriend: boolean;
-		homeNotificationFavoriteFriendUpdate: boolean;
-		homeNotificationGroupMemberUpdate: boolean;
-		homeNotificationBirthday: boolean;
-		eapAllowedToConnect: { [k: number /*SnsIdType*/]: boolean };
-		agreementLineOutUse: Int64;
-		agreementLineOutProvideInfo: Int64;
-		notificationShowProfileImage: boolean;
-		agreementPdpa: Int64;
-		agreementLocationVersion: string;
-		zhdPageAllowedToShow: boolean;
-	});
+
 }
 
-export declare class E2EENegotiationResult {
+export type E2EENegotiationResult = {
 	allowedTypes: ContentType[];
 	publicKey: E2EEPublicKey;
 	specVersion: number;
 
-	constructor(args?: {
-		allowedTypes: ContentType[];
-		publicKey: E2EEPublicKey;
-		specVersion: number;
-	});
+
 }
 
-export declare class ContactRegistration {
+export type ContactRegistration = {
 	contact: Contact;
 	luid: string;
 	contactType: ContactType;
 	contactKey: string;
 
-	constructor(args?: {
-		contact: Contact;
-		luid: string;
-		contactType: ContactType;
-		contactKey: string;
-	});
+
 }
 
-export declare class E2EEGroupSharedKey {
+export type E2EEGroupSharedKey = {
 	keyVersion: number;
 	groupKeyId: number;
 	creator: string;
@@ -3824,20 +3495,10 @@ export declare class E2EEGroupSharedKey {
 	allowedTypes: ContentType[];
 	specVersion: number;
 
-	constructor(args?: {
-		keyVersion: number;
-		groupKeyId: number;
-		creator: string;
-		creatorKeyId: number;
-		receiver: string;
-		receiverKeyId: number;
-		encryptedSharedKey: Buffer | string;
-		allowedTypes: ContentType[];
-		specVersion: number;
-	});
+
 }
 
-export declare class VerificationSessionData {
+export type VerificationSessionData = {
 	sessionId: string;
 	method: VerificationMethod;
 	callback: string;
@@ -3847,68 +3508,51 @@ export declare class VerificationSessionData {
 	availableVerificationMethods: VerificationMethod[];
 	callerIdMask: string;
 
-	constructor(args?: {
-		sessionId: string;
-		method: VerificationMethod;
-		callback: string;
-		normalizedPhone: string;
-		countryCode: string;
-		nationalSignificantNumber: string;
-		availableVerificationMethods: VerificationMethod[];
-		callerIdMask: string;
-	});
+
 }
 
-export declare class FollowRequest {
+export type FollowRequest = {
 	followMid: FollowMid;
 
-	constructor(args?: { followMid: FollowMid });
+
 }
 
-export declare class FollowMid {
+export type FollowMid = {
 	mid: string;
 	eMid: string;
 
-	constructor(args?: { mid: string; eMid: string });
+
 }
 
-export declare class UnfollowRequest {
+export type UnfollowRequest = {
 	followMid: FollowMid;
 
-	constructor(args?: { followMid: FollowMid });
+
 }
 
-export declare class Ticket {
+export type Ticket = {
 	id: string;
 	expirationTime: Int64;
 	maxUseCount: number;
 
-	constructor(args?: {
-		id: string;
-		expirationTime: Int64;
-		maxUseCount: number;
-	});
+
 }
 
-export declare class GetChatsRequest {
+export type GetChatsRequest = {
 	chatMids: string[];
 	withMembers: boolean;
 	withInvitees: boolean;
 
-	constructor(args?: {
-		chatMids: string[];
-		withMembers: boolean;
-		withInvitees: boolean;
-	});
+
 }
 
-export declare class GetChatsResponse {
+export type GetChatsResponse = {
 	chats: Chat[];
 
-	constructor(args?: { chats: Chat[] });
+
 }
 
-export declare class Chat {
+export type Chat = {
 	type: CharType;
 	chatMid: string;
 	createdTime: Int64;
@@ -3918,26 +3562,17 @@ export declare class Chat {
 	picturePath: string;
 	extra: Extra;
 
-	constructor(args?: {
-		type: CharType;
-		chatMid: string;
-		createdTime: Int64;
-		notificationDisabled: boolean;
-		favoriteTimestamp: Int64;
-		chatName: string;
-		picturePath: string;
-		extra: Extra;
-	});
+
 }
 
-export declare class Extra {
+export type Extra = {
 	groupExtra: GroupExtra;
 	peerExtra: PeerExtra;
 
-	constructor(args?: { groupExtra: GroupExtra; peerExtra: PeerExtra });
+
 }
 
-export declare class GroupExtra {
+export type GroupExtra = {
 	creator: string;
 	preventedJoinByTicket: boolean;
 	invitationTicket: string;
@@ -3946,41 +3581,28 @@ export declare class GroupExtra {
 	addFriendDisabled: boolean;
 	ticketDisabled: boolean;
 
-	constructor(args?: {
-		creator: string;
-		preventedJoinByTicket: boolean;
-		invitationTicket: string;
-		memberMids: { [k: string]: Int64 };
-		inviteeMids: { [k: string]: Int64 };
-		addFriendDisabled: boolean;
-		ticketDisabled: boolean;
-	});
+
 }
 
-export declare class PeerExtra {}
+export type PeerExtra = {}
 
-export declare class GetFollowersRequest {
+export type GetFollowersRequest = {
 	followMid: FollowMid;
 	cursor: string;
 
-	constructor(args?: { followMid: FollowMid; cursor: string });
+
 }
 
-export declare class GetFollowersResponse {
+export type GetFollowersResponse = {
 	profiles: FollowProfile[];
 	cursor: string;
 	followingCount: Int64;
 	followerCount: Int64;
 
-	constructor(args?: {
-		profiles: FollowProfile[];
-		cursor: string;
-		followingCount: Int64;
-		followerCount: Int64;
-	});
+
 }
 
-export declare class FollowProfile {
+export type FollowProfile = {
 	followMid: FollowMid;
 	displayName: string;
 	picturePath: string;
@@ -3988,126 +3610,90 @@ export declare class FollowProfile {
 	allowFollow: boolean;
 	followBuddyDetail: FollowBuddyDetail;
 
-	constructor(args?: {
-		followMid: FollowMid;
-		displayName: string;
-		picturePath: string;
-		following: boolean;
-		allowFollow: boolean;
-		followBuddyDetail: FollowBuddyDetail;
-	});
+
 }
 
-export declare class FollowBuddyDetail {
+export type FollowBuddyDetail = {
 	iconType: number;
 
-	constructor(args?: { iconType: number });
+
 }
 
-export declare class GetFollowingsRequest {
+export type GetFollowingsRequest = {
 	followMid: FollowMid;
 	cursor: string;
 
-	constructor(args?: { followMid: FollowMid; cursor: string });
+
 }
 
-export declare class GetFollowingsResponse {
+export type GetFollowingsResponse = {
 	profiles: FollowProfile[];
 	cursor: string;
 	followingCount: Int64;
 	followerCount: Int64;
 
-	constructor(args?: {
-		profiles: FollowProfile[];
-		cursor: string;
-		followingCount: Int64;
-		followerCount: Int64;
-	});
+
 }
 
-export declare class Room {
+export type Room = {
 	mid: string;
 	createdTime: Int64;
 	contacts: Contact[];
 	notificationDisabled: boolean;
 	memberMids: string[];
 
-	constructor(args?: {
-		mid: string;
-		createdTime: Int64;
-		contacts: Contact[];
-		notificationDisabled: boolean;
-		memberMids: string[];
-	});
+
 }
 
-export declare class ContactModification {
+export type ContactModification = {
 	type: ModificationType;
 	luid: string;
 	phones: string[];
 	emails: string[];
 	userids: string[];
 
-	constructor(args?: {
-		type: ModificationType;
-		luid: string;
-		phones: string[];
-		emails: string[];
-		userids: string[];
-	});
+
 }
 
-export declare class GetE2EEKeyBackupCertificatesRequest {}
+export type GetE2EEKeyBackupCertificatesRequest = {}
 
-export declare class GetE2EEKeyBackupCertificatesResponse {
+export type GetE2EEKeyBackupCertificatesResponse = {
 	urlHashList: string[];
 
-	constructor(args?: { urlHashList: string[] });
+
 }
 
-export declare class DeleteOtherFromChatRequest {
+export type DeleteOtherFromChatRequest = {
 	reqSeq: number;
 	chatMid: string;
 	targetUserMids: string[];
 
-	constructor(args?: {
-		reqSeq: number;
-		chatMid: string;
-		targetUserMids: string[];
-	});
+
 }
 
-export declare class DeleteOtherFromChatResponse {}
+export type DeleteOtherFromChatResponse = {}
 
-export declare class InviteIntoChatRequest {
+export type InviteIntoChatRequest = {
 	reqSeq: number;
 	chatMid: string;
 	targetUserMids: string[];
 
-	constructor(args?: {
-		reqSeq: number;
-		chatMid: string;
-		targetUserMids: string[];
-	});
+
 }
 
-export declare class InviteIntoChatResponse {}
+export type InviteIntoChatResponse = {}
 
-export declare class CancelChatInvitationRequest {
+export type CancelChatInvitationRequest = {
 	reqSeq: number;
 	chatMid: string;
 	targetUserMids: string[];
 
-	constructor(args?: {
-		reqSeq: number;
-		chatMid: string;
-		targetUserMids: string[];
-	});
+
 }
 
-export declare class CancelChatInvitationResponse {}
+export type CancelChatInvitationResponse = {}
 
-export declare class DeleteSelfFromChatRequest {
+export type DeleteSelfFromChatRequest = {
 	reqSeq: number;
 	chatMid: string;
 	lastSeenMessageDeliveredTime: Int64;
@@ -4115,91 +3701,65 @@ export declare class DeleteSelfFromChatRequest {
 	lastMessageDeliveredTime: Int64;
 	lastMessageId: string;
 
-	constructor(args?: {
-		reqSeq: number;
-		chatMid: string;
-		lastSeenMessageDeliveredTime: Int64;
-		lastSeenMessageId: string;
-		lastMessageDeliveredTime: Int64;
-		lastMessageId: string;
-	});
+
 }
 
-export declare class DeleteSelfFromChatResponse {}
+export type DeleteSelfFromChatResponse = {}
 
-export declare class FindChatByTicketRequest {
+export type FindChatByTicketRequest = {
 	ticketId: string;
 
-	constructor(args?: { ticketId: string });
+
 }
 
-export declare class FindChatByTicketResponse {
+export type FindChatByTicketResponse = {
 	chat: Chat;
 
-	constructor(args?: { chat: Chat });
+
 }
 
-export declare class RefreshAccessTokenRequest {
+export type RefreshAccessTokenRequest = {
 	refreshToken: string;
 
-	constructor(args?: { refreshToken: string });
+
 }
 
-export declare class RefreshAccessTokenResponse {
+export type RefreshAccessTokenResponse = {
 	accessToken: string;
 	durationUntilRefreshInSec: Int64;
 	retryPolicy: RetryPolicy;
 	tokenIssueTimeEpochSec: Int64;
 	refreshToken: string;
 
-	constructor(args?: {
-		accessToken: string;
-		durationUntilRefreshInSec: Int64;
-		retryPolicy: RetryPolicy;
-		tokenIssueTimeEpochSec: Int64;
-		refreshToken: string;
-	});
+
 }
 
-export declare class RetryPolicy {
+export type RetryPolicy = {
 	initialDelayInMillis: Int64;
 	maxDelayInMillis: Int64;
 	multiplier: number;
 	jitterRate: number;
 
-	constructor(args?: {
-		initialDelayInMillis: Int64;
-		maxDelayInMillis: Int64;
-		multiplier: number;
-		jitterRate: number;
-	});
+
 }
 
-export declare class TMessageReadRange {
+export type TMessageReadRange = {
 	chatId: string;
 	ranges: { [k: string]: TMessageReadRangeEntry[] };
 
-	constructor(args?: {
-		chatId: string;
-		ranges: { [k: string]: TMessageReadRangeEntry[] };
-	});
+
 }
 
-export declare class TMessageReadRangeEntry {
+export type TMessageReadRangeEntry = {
 	startMessageId: Int64;
 	endMessageId: Int64;
 	startTime: Int64;
 	endTime: Int64;
 
-	constructor(args?: {
-		startMessageId: Int64;
-		endMessageId: Int64;
-		startTime: Int64;
-		endTime: Int64;
-	});
+
 }
 
-export declare class BuddyDetail {
+export type BuddyDetail = {
 	mid: string;
 	memberCount: Int64;
 	onAir: boolean;
@@ -4231,80 +3791,37 @@ export declare class BuddyDetail {
 	botActiveStatus: BuddyBotActiveStatus;
 	membershipEnabled: boolean;
 
-	constructor(args?: {
-		mid: string;
-		memberCount: Int64;
-		onAir: boolean;
-		businessAccount: boolean;
-		addable: boolean;
-		acceptableContentTypes: ContentType[];
-		capableMyhome: boolean;
-		freePhoneCallable: boolean;
-		phoneNumberToDial: string;
-		needPermissionApproval: boolean;
-		channelId: string;
-		channelProviderName: string;
-		iconType: number;
-		botType: BotType;
-		showRichMenu: boolean;
-		richMenuRevision: Int64;
-		onAirLabel: BuddyOnAirLabel;
-		useTheme: boolean;
-		themeId: string;
-		useBar: boolean;
-		barRevision: Int64;
-		useBackground: boolean;
-		backgroundId: string;
-		statusBarEnabled: boolean;
-		statusBarRevision: Int64;
-		searchId: string;
-		onAirVersion: number;
-		blockable: boolean;
-		botActiveStatus: BuddyBotActiveStatus;
-		membershipEnabled: boolean;
-	});
+
 }
 
-export declare class MessageBoxV2MessageId {
+export type MessageBoxV2MessageId = {
 	deliveredTime: Int64;
 	messageId: Int64;
 
-	constructor(args?: { deliveredTime: Int64; messageId: Int64 });
+
 }
 
-export declare class GetPreviousMessagesV2Request {
+export type GetPreviousMessagesV2Request = {
 	messageBoxId: string;
 	endMessageId: MessageBoxV2MessageId;
 	messagesCount: number;
 	withReadCount: boolean;
 	receivedOnly: boolean;
 
-	constructor(args?: {
-		messageBoxId: string;
-		endMessageId: MessageBoxV2MessageId;
-		messagesCount: number;
-		withReadCount: boolean;
-		receivedOnly: boolean;
-	});
+
 }
 
-export declare class ChannelToken {
+export type ChannelToken = {
 	token: string;
 	obsToken: string;
 	expiration: Int64;
 	refreshToken: string;
 	channelAccessToken: string;
 
-	constructor(args?: {
-		token: string;
-		obsToken: string;
-		expiration: Int64;
-		refreshToken: string;
-		channelAccessToken: string;
-	});
+
 }
 
-export declare class GroupCall {
+export type GroupCall = {
 	online: boolean;
 	chatMid: string;
 	hostMids: string;
@@ -4313,130 +3830,89 @@ export declare class GroupCall {
 	mediaType: GroupCallMediaType;
 	protocol: GroupCallProtocol;
 
-	constructor(args?: {
-		online: boolean;
-		chatMid: string;
-		hostMids: string;
-		memberMids: string[];
-		started: Int64;
-		mediaType: GroupCallMediaType;
-		protocol: GroupCallProtocol;
-	});
+
 }
 
-export declare class SyncResponse {
+export type SyncResponse = {
 	operationResponse: OperationResponse;
 	fullSyncResponse: FullSyncResponse;
 	partialFullSyncResponse: PartialFullSyncResponse;
 
-	constructor(args?: {
-		operationResponse: OperationResponse;
-		fullSyncResponse: FullSyncResponse;
-		partialFullSyncResponse: PartialFullSyncResponse;
-	});
+
 }
 
-export declare class OperationResponse {
+export type OperationResponse = {
 	operations: Operation[];
 	hasMoreOps: boolean;
 	globalEvents: TGlobalEvents;
 	individualEvents: TIndividualEvents;
 
-	constructor(args?: {
-		operations: Operation[];
-		hasMoreOps: boolean;
-		globalEvents: TGlobalEvents;
-		individualEvents: TIndividualEvents;
-	});
+
 }
 
-export declare class FullSyncResponse {
+export type FullSyncResponse = {
 	reasons: SyncTriggerReason[];
 	nextRevision: Int64;
 
-	constructor(args?: { reasons: SyncTriggerReason[]; nextRevision: Int64 });
+
 }
 
-export declare class PartialFullSyncResponse {
+export type PartialFullSyncResponse = {
 	targetCategories: { [k: number /*SyncCategories*/]: Int64 };
 
-	constructor(args?: {
-		targetCategories: { [k: number /*SyncCategories*/]: Int64 };
-	});
+
 }
 
-export declare class TGlobalEvents {
+export type TGlobalEvents = {
 	events: { [k: number /*GlobalEventType*/]: GlobalEvent };
 	lastRevision: Int64;
 
-	constructor(args?: {
-		events: { [k: number /*GlobalEventType*/]: GlobalEvent };
-		lastRevision: Int64;
-	});
+
 }
 
-export declare class TIndividualEvents {
+export type TIndividualEvents = {
 	events: NotificationStatus[];
 	lastRevision: Int64;
 
-	constructor(args?: { events: NotificationStatus[]; lastRevision: Int64 });
+
 }
 
-export declare class GlobalEvent {
+export type GlobalEvent = {
 	type: GlobalEventType;
 	minDelayInMinutes: number;
 	maxDelayInMinutes: number;
 	createTimeMillis: Int64;
 	maxDelayHardLimit: boolean;
 
-	constructor(args?: {
-		type: GlobalEventType;
-		minDelayInMinutes: number;
-		maxDelayInMinutes: number;
-		createTimeMillis: Int64;
-		maxDelayHardLimit: boolean;
-	});
+
 }
 
-export declare class DetermineMediaMessageFlowResponse {
+export type DetermineMediaMessageFlowResponse = {
 	flowMap: { [k: number /*ContentType*/]: MediaMessageFlow };
 	cacheTtlMillis: Int64;
 
-	constructor(args?: {
-		flowMap: { [k: number /*ContentType*/]: MediaMessageFlow };
-		cacheTtlMillis: Int64;
-	});
+
 }
 
-export declare class ChatRoomAnnouncementContentMetadata {
+export type ChatRoomAnnouncementContentMetadata = {
 	replace: string;
 	sticonOwnership: string;
 	postNotificationMetadata: string;
 
-	constructor(args?: {
-		replace: string;
-		sticonOwnership: string;
-		postNotificationMetadata: string;
-	});
+
 }
 
-export declare class ChatRoomAnnouncementContents {
+export type ChatRoomAnnouncementContents = {
 	displayFields: number;
 	text: string;
 	link: string;
 	thumbnail: string;
 	contentMetadata: ChatRoomAnnouncementContentMetadata;
 
-	constructor(args?: {
-		displayFields: number;
-		text: string;
-		link: string;
-		thumbnail: string;
-		contentMetadata: ChatRoomAnnouncementContentMetadata;
-	});
+
 }
 
-export declare class ChatRoomAnnouncement {
+export type ChatRoomAnnouncement = {
 	announcementSeq: Int64;
 	type: number;
 	contents: ChatRoomAnnouncementContents;
@@ -4444,17 +3920,10 @@ export declare class ChatRoomAnnouncement {
 	createdTime: Int64;
 	deletePermission: number;
 
-	constructor(args?: {
-		announcementSeq: Int64;
-		type: number;
-		contents: ChatRoomAnnouncementContents;
-		creatorMid: string;
-		createdTime: Int64;
-		deletePermission: number;
-	});
+
 }
 
-export declare class DisasterInfo {
+export type DisasterInfo = {
 	disasterId: string;
 	title: string;
 	region: string;
@@ -4462,55 +3931,36 @@ export declare class DisasterInfo {
 	seeMoreUrl: string;
 	status: number;
 
-	constructor(args?: {
-		disasterId: string;
-		title: string;
-		region: string;
-		disasterDescription: string;
-		seeMoreUrl: string;
-		status: number;
-	});
+
 }
 
-export declare class GetDisasterCasesRequest {}
+export type GetDisasterCasesRequest = {}
 
-export declare class GetDisasterCasesResponse {
+export type GetDisasterCasesResponse = {
 	disasters: DisasterInfo[];
 	messageTemplate: string[];
 	ttlInMillis: Int64;
 
-	constructor(args?: {
-		disasters: DisasterInfo[];
-		messageTemplate: string[];
-		ttlInMillis: Int64;
-	});
+
 }
 
-export declare class SquareMessage {
+export type SquareMessage = {
 	message: Message;
 	fromType: MIDType;
 	squareMessageRevision: Int64;
 	state: SquareMessageState;
 
-	constructor(args?: {
-		message: Message;
-		fromType: MIDType;
-		squareMessageRevision: Int64;
-		state: SquareMessageState;
-	});
+
 }
 
-export declare class SquarePreference {
+export type SquarePreference = {
 	favoriteTimestamp: Int64;
 	notiForNewJoinRequest: boolean;
 
-	constructor(args?: {
-		favoriteTimestamp: Int64;
-		notiForNewJoinRequest: boolean;
-	});
+
 }
 
-export declare class SquareMember {
+export type SquareMember = {
 	squareMemberMid: string;
 	squareMid: string;
 	displayName: string;
@@ -4522,47 +3972,27 @@ export declare class SquareMember {
 	preference: SquarePreference;
 	joinMessage: string;
 
-	constructor(args?: {
-		squareMemberMid: string;
-		squareMid: string;
-		displayName: string;
-		profileImageObsHash: string;
-		ableToReceiveMessage: boolean;
-		membershipState: SquareMembershipState;
-		role: SquareMemberRole;
-		revision: Int64;
-		preference: SquarePreference;
-		joinMessage: string;
-	});
+
 }
 
-export declare class SquareMessageReaction {
+export type SquareMessageReaction = {
 	type: MessageReactionType;
 	reactor: SquareMember;
 	createdAt: Int64;
 	updatedAt: Int64;
 
-	constructor(args?: {
-		type: MessageReactionType;
-		reactor: SquareMember;
-		createdAt: Int64;
-		updatedAt: Int64;
-	});
+
 }
 
-export declare class SquareMessageReactionStatus {
+export type SquareMessageReactionStatus = {
 	totalCount: number;
 	countByReactionType: { [k: number /*MessageReactionType*/]: number };
 	myReaction: SquareMessageReaction;
 
-	constructor(args?: {
-		totalCount: number;
-		countByReactionType: { [k: number /*MessageReactionType*/]: number };
-		myReaction: SquareMessageReaction;
-	});
+
 }
 
-export declare class SquareEventReceiveMessage {
+export type SquareEventReceiveMessage = {
 	squareChatMid: string;
 	squareMessage: SquareMessage;
 	senderDisplayName: string;
@@ -4570,156 +4000,117 @@ export declare class SquareEventReceiveMessage {
 	senderRevision: Int64;
 	squareMid: string;
 
-	constructor(args?: {
-		squareChatMid: string;
-		squareMessage: SquareMessage;
-		senderDisplayName: string;
-		messageReactionStatus: SquareMessageReactionStatus;
-		senderRevision: Int64;
-		squareMid: string;
-	});
+
 }
 
-export declare class SquareEventSendMessage {
+export type SquareEventSendMessage = {
 	squareChatMid: string;
 	squareMessage: SquareMessage;
 	reqSeq: number;
 	senderDisplayName: string;
 	messageReactionStatus: SquareMessageReactionStatus;
 
-	constructor(args?: {
-		squareChatMid: string;
-		squareMessage: SquareMessage;
-		reqSeq: number;
-		senderDisplayName: string;
-		messageReactionStatus: SquareMessageReactionStatus;
-	});
+
 }
 
-export declare class SquareEventMutateMessage {
+export type SquareEventMutateMessage = {
 	squareChatMid: string;
 	squareMessage: SquareMessage;
 	reqSeq: number;
 	senderDisplayName: string;
 
-	constructor(args?: {
-		squareChatMid: string;
-		squareMessage: SquareMessage;
-		reqSeq: number;
-		senderDisplayName: string;
-	});
+
 }
 
-export declare class SquareEventNotifiedJoinSquareChat {
+export type SquareEventNotifiedJoinSquareChat = {
 	squareChatMid: string;
 	joinedMember: SquareMember;
 
-	constructor(args?: { squareChatMid: string; joinedMember: SquareMember });
+
 }
 
-export declare class SquareMemberRelation {
+export type SquareMemberRelation = {
 	state: SquareMemberRelationState;
 	revision: Int64;
 
-	constructor(args?: { state: SquareMemberRelationState; revision: Int64 });
+
 }
 
-export declare class SquareEventNotifiedInviteIntoSquareChat {
+export type SquareEventNotifiedInviteIntoSquareChat = {
 	squareChatMid: string;
 	invitees: SquareMember[];
 	invitor: SquareMember;
 	invitorRelation: SquareMemberRelation;
 
-	constructor(args?: {
-		squareChatMid: string;
-		invitees: SquareMember[];
-		invitor: SquareMember;
-		invitorRelation: SquareMemberRelation;
-	});
+
 }
 
-export declare class SquareEventNotifiedLeaveSquareChat {
+export type SquareEventNotifiedLeaveSquareChat = {
 	squareChatMid: string;
 	squareMemberMid: string;
 	sayGoodbye: boolean;
 	squareMember: SquareMember;
 
-	constructor(args?: {
-		squareChatMid: string;
-		squareMemberMid: string;
-		sayGoodbye: boolean;
-		squareMember: SquareMember;
-	});
+
 }
 
-export declare class SquareEventNotifiedDestroyMessage {
+export type SquareEventNotifiedDestroyMessage = {
 	squareChatMid: string;
 	messageId: string;
 
-	constructor(args?: { squareChatMid: string; messageId: string });
+
 }
 
-export declare class SquareEventNotifiedMarkAsRead {
+export type SquareEventNotifiedMarkAsRead = {
 	squareChatMid: string;
 	sMemberMid: string;
 	messageId: string;
 
-	constructor(args?: {
-		squareChatMid: string;
-		sMemberMid: string;
-		messageId: string;
-	});
+
 }
 
-export declare class SquareEventNotifiedUpdateSquareMemberProfile {
+export type SquareEventNotifiedUpdateSquareMemberProfile = {
 	squareChatMid: string;
 	squareMember: SquareMember;
 
-	constructor(args?: { squareChatMid: string; squareMember: SquareMember });
+
 }
 
-export declare class SquareEventNotifiedKickoutFromSquare {
+export type SquareEventNotifiedKickoutFromSquare = {
 	squareChatMid: string;
 	kickees: SquareMember[];
 	kicker: SquareMember;
 
-	constructor(args?: {
-		squareChatMid: string;
-		kickees: SquareMember[];
-		kicker: SquareMember;
-	});
+
 }
 
-export declare class ApprovalValue {
+export type ApprovalValue = {
 	message: string;
 
-	constructor(args?: { message: string });
+
 }
 
-export declare class CodeValue {
+export type CodeValue = {
 	code: string;
 
-	constructor(args?: { code: string });
+
 }
 
-export declare class SquareJoinMethodValue {
+export type SquareJoinMethodValue = {
 	approvalValue: ApprovalValue;
 	codeValue: CodeValue;
 
-	constructor(args?: { approvalValue: ApprovalValue; codeValue: CodeValue });
+
 }
 
-export declare class SquareJoinMethod {
+export type SquareJoinMethod = {
 	type: SquareJoinMethodType;
 	value: SquareJoinMethodValue;
 
-	constructor(args?: {
-		type: SquareJoinMethodType;
-		value: SquareJoinMethodValue;
-	});
+
 }
 
-export declare class Square {
+export type Square = {
 	mid: string;
 	name: string;
 	welcomeMessage: string;
@@ -4738,47 +4129,25 @@ export declare class Square {
 	svcTags: string[];
 	createdAt: Int64;
 
-	constructor(args?: {
-		mid: string;
-		name: string;
-		welcomeMessage: string;
-		profileImageObsHash: string;
-		desc: string;
-		searchable: boolean;
-		type: SquareType;
-		categoryId: number;
-		invitationURL: string;
-		revision: Int64;
-		ableToUseInvitationTicket: boolean;
-		state: SquareState;
-		emblems: SquareEmblem[];
-		joinMethod: SquareJoinMethod;
-		adultOnly: BooleanState;
-		svcTags: string[];
-		createdAt: Int64;
-	});
+
 }
 
-export declare class SquareEventNotifiedShutdownSquare {
+export type SquareEventNotifiedShutdownSquare = {
 	squareChatMid: string;
 	square: Square;
 
-	constructor(args?: { squareChatMid: string; square: Square });
+
 }
 
-export declare class MessageVisibility {
+export type MessageVisibility = {
 	showJoinMessage: boolean;
 	showLeaveMessage: boolean;
 	showKickoutMessage: boolean;
 
-	constructor(args?: {
-		showJoinMessage: boolean;
-		showLeaveMessage: boolean;
-		showKickoutMessage: boolean;
-	});
+
 }
 
-export declare class SquareChat {
+export type SquareChat = {
 	squareChatMid: string;
 	squareMid: string;
 	type: SquareChatType;
@@ -4791,258 +4160,187 @@ export declare class SquareChat {
 	messageVisibility: MessageVisibility;
 	ableToSearchMessage: BooleanState;
 
-	constructor(args?: {
-		squareChatMid: string;
-		squareMid: string;
-		type: SquareChatType;
-		name: string;
-		chatImageObsHash: string;
-		squareChatRevision: Int64;
-		maxMemberCount: number;
-		state: SquareChatState;
-		invitationUrl: string;
-		messageVisibility: MessageVisibility;
-		ableToSearchMessage: BooleanState;
-	});
+
 }
 
-export declare class SquareEventNotifiedDeleteSquareChat {
+export type SquareEventNotifiedDeleteSquareChat = {
 	squareChat: SquareChat;
 
-	constructor(args?: { squareChat: SquareChat });
+
 }
 
-export declare class SquareEventNotifiedUpdateSquareChatProfileName {
+export type SquareEventNotifiedUpdateSquareChatProfileName = {
 	squareChatMid: string;
 	editor: SquareMember;
 	updatedChatName: string;
 
-	constructor(args?: {
-		squareChatMid: string;
-		editor: SquareMember;
-		updatedChatName: string;
-	});
+
 }
 
-export declare class SquareEventNotifiedUpdateSquareChatProfileImage {
+export type SquareEventNotifiedUpdateSquareChatProfileImage = {
 	squareChatMid: string;
 	editor: SquareMember;
 
-	constructor(args?: { squareChatMid: string; editor: SquareMember });
+
 }
 
-export declare class SquareEventNotifiedUpdateSquareChatMaxMemberCount {
+export type SquareEventNotifiedUpdateSquareChatMaxMemberCount = {
 	squareChatMid: string;
 	maxMemberCount: number;
 	editor: SquareMember;
 
-	constructor(args?: {
-		squareChatMid: string;
-		maxMemberCount: number;
-		editor: SquareMember;
-	});
+
 }
 
-export declare class SquareEventNotifiedAddBot {
+export type SquareEventNotifiedAddBot = {
 	squareChatMid: string;
 	squareMember: SquareMember;
 	botMid: string;
 	botDisplayName: string;
 
-	constructor(args?: {
-		squareChatMid: string;
-		squareMember: SquareMember;
-		botMid: string;
-		botDisplayName: string;
-	});
+
 }
 
-export declare class SquareEventNotifiedRemoveBot {
+export type SquareEventNotifiedRemoveBot = {
 	squareChatMid: string;
 	squareMember: SquareMember;
 	botMid: string;
 	botDisplayName: string;
 
-	constructor(args?: {
-		squareChatMid: string;
-		squareMember: SquareMember;
-		botMid: string;
-		botDisplayName: string;
-	});
+
 }
 
-export declare class SquareEventNotifiedUpdateReadonlyChat {
+export type SquareEventNotifiedUpdateReadonlyChat = {
 	squareChatMid: string;
 	readonly: boolean;
 
-	constructor(args?: { squareChatMid: string; readonly: boolean });
+
 }
 
-export declare class MessageStatusContents {
+export type MessageStatusContents = {
 	messageReactionStatus: SquareMessageReactionStatus;
 
-	constructor(args?: { messageReactionStatus: SquareMessageReactionStatus });
+
 }
 
-export declare class SquareMessageStatus {
+export type SquareMessageStatus = {
 	squareChatMid: string;
 	globalMessageId: string;
 	type: MessageStatusType;
 	contents: MessageStatusContents;
 	publishedAt: Int64;
 
-	constructor(args?: {
-		squareChatMid: string;
-		globalMessageId: string;
-		type: MessageStatusType;
-		contents: MessageStatusContents;
-		publishedAt: Int64;
-	});
+
 }
 
-export declare class SquareEventNotifiedUpdateMessageStatus {
+export type SquareEventNotifiedUpdateMessageStatus = {
 	squareChatMid: string;
 	messageId: string;
 	messageStatus: SquareMessageStatus;
 
-	constructor(args?: {
-		squareChatMid: string;
-		messageId: string;
-		messageStatus: SquareMessageStatus;
-	});
+
 }
 
-export declare class UrlButton {
+export type UrlButton = {
 	text: string;
 	url: string;
 
-	constructor(args?: { text: string; url: string });
+
 }
 
-export declare class TextButton {
+export type TextButton = {
 	text: string;
 
-	constructor(args?: { text: string });
+
 }
 
-export declare class OkButton {
+export type OkButton = {
 	text: string;
 
-	constructor(args?: { text: string });
+
 }
 
-export declare class ButtonContent {
+export type ButtonContent = {
 	urlButton: UrlButton;
 	textButton: TextButton;
 	okButton: OkButton;
 
-	constructor(args?: {
-		urlButton: UrlButton;
-		textButton: TextButton;
-		okButton: OkButton;
-	});
+
 }
 
-export declare class SquareEventChatPopup {
+export type SquareEventChatPopup = {
 	squareChatMid: string;
 	popupId: Int64;
 	flexJson: string;
 	button: ButtonContent;
 
-	constructor(args?: {
-		squareChatMid: string;
-		popupId: Int64;
-		flexJson: string;
-		button: ButtonContent;
-	});
+
 }
 
-export declare class SquareEventNotifiedSystemMessage {
+export type SquareEventNotifiedSystemMessage = {
 	squareChatMid: string;
 	text: string;
 
-	constructor(args?: { squareChatMid: string; text: string });
+
 }
 
-export declare class SquareEventNotifiedUpdateSquare {
+export type SquareEventNotifiedUpdateSquare = {
 	squareChatMid: string;
 	square: Square;
 
-	constructor(args?: { squareChatMid: string; square: Square });
+
 }
 
-export declare class SquareStatus {
+export type SquareStatus = {
 	memberCount: number;
 	joinRequestCount: number;
 	lastJoinRequestAt: Int64;
 	openChatCount: number;
 
-	constructor(args?: {
-		memberCount: number;
-		joinRequestCount: number;
-		lastJoinRequestAt: Int64;
-		openChatCount: number;
-	});
+
 }
 
-export declare class SquareEventNotifiedUpdateSquareStatus {
+export type SquareEventNotifiedUpdateSquareStatus = {
 	squareChatMid: string;
 	squareStatus: SquareStatus;
 
-	constructor(args?: { squareChatMid: string; squareStatus: SquareStatus });
+
 }
 
-export declare class SquareEventNotifiedUpdateSquareMember {
+export type SquareEventNotifiedUpdateSquareMember = {
 	squareChatMid: string;
 	squareMemberMid: string;
 	squareMember: SquareMember;
 
-	constructor(args?: {
-		squareChatMid: string;
-		squareMemberMid: string;
-		squareMember: SquareMember;
-	});
+
 }
 
-export declare class SquareEventNotifiedUpdateSquareChat {
+export type SquareEventNotifiedUpdateSquareChat = {
 	squareMid: string;
 	squareChatMid: string;
 	squareChat: SquareChat;
 
-	constructor(args?: {
-		squareMid: string;
-		squareChatMid: string;
-		squareChat: SquareChat;
-	});
+
 }
 
-export declare class SquareChatStatusWithoutMessage {
+export type SquareChatStatusWithoutMessage = {
 	memberCount: number;
 	unreadMessageCount: number;
 	markedAsReadMessageId: string;
 	mentionedMessageId: string;
 	notifiedMessageType: NotifiedMessageType;
 
-	constructor(args?: {
-		memberCount: number;
-		unreadMessageCount: number;
-		markedAsReadMessageId: string;
-		mentionedMessageId: string;
-		notifiedMessageType: NotifiedMessageType;
-	});
+
 }
 
-export declare class SquareEventNotifiedUpdateSquareChatStatus {
+export type SquareEventNotifiedUpdateSquareChatStatus = {
 	squareChatMid: string;
 	statusWithoutMessage: SquareChatStatusWithoutMessage;
 
-	constructor(args?: {
-		squareChatMid: string;
-		statusWithoutMessage: SquareChatStatusWithoutMessage;
-	});
+
 }
 
-export declare class SquareChatMember {
+export type SquareChatMember = {
 	squareMemberMid: string;
 	squareChatMid: string;
 	revision: Int64;
@@ -5050,27 +4348,17 @@ export declare class SquareChatMember {
 	notificationForMessage: boolean;
 	notificationForNewMember: boolean;
 
-	constructor(args?: {
-		squareMemberMid: string;
-		squareChatMid: string;
-		revision: Int64;
-		membershipState: SquareChatMembershipState;
-		notificationForMessage: boolean;
-		notificationForNewMember: boolean;
-	});
+
 }
 
-export declare class SquareEventNotifiedUpdateSquareChatMember {
+export type SquareEventNotifiedUpdateSquareChatMember = {
 	squareChatMid: string;
 	squareChatMember: SquareChatMember;
 
-	constructor(args?: {
-		squareChatMid: string;
-		squareChatMember: SquareChatMember;
-	});
+
 }
 
-export declare class SquareAuthority {
+export type SquareAuthority = {
 	squareMid: string;
 	updateSquareProfile: SquareMemberRole;
 	inviteNewMember: SquareMemberRole;
@@ -5086,42 +4374,24 @@ export declare class SquareAuthority {
 	updateMaxChatMemberCount: SquareMemberRole;
 	useReadonlyDefaultChat: SquareMemberRole;
 
-	constructor(args?: {
-		squareMid: string;
-		updateSquareProfile: SquareMemberRole;
-		inviteNewMember: SquareMemberRole;
-		approveJoinRequest: SquareMemberRole;
-		createPost: SquareMemberRole;
-		createOpenSquareChat: SquareMemberRole;
-		deleteSquareChatOrPost: SquareMemberRole;
-		removeSquareMember: SquareMemberRole;
-		grantRole: SquareMemberRole;
-		enableInvitationTicket: SquareMemberRole;
-		revision: Int64;
-		createSquareChatAnnouncement: SquareMemberRole;
-		updateMaxChatMemberCount: SquareMemberRole;
-		useReadonlyDefaultChat: SquareMemberRole;
-	});
+
 }
 
-export declare class SquareEventNotifiedUpdateSquareAuthority {
+export type SquareEventNotifiedUpdateSquareAuthority = {
 	squareMid: string;
 	squareAuthority: SquareAuthority;
 
-	constructor(args?: { squareMid: string; squareAuthority: SquareAuthority });
+
 }
 
-export declare class SquareFeature {
+export type SquareFeature = {
 	controlState: SquareFeatureControlState;
 	booleanValue: BooleanState;
 
-	constructor(args?: {
-		controlState: SquareFeatureControlState;
-		booleanValue: BooleanState;
-	});
+
 }
 
-export declare class SquareFeatureSet {
+export type SquareFeatureSet = {
 	squareMid: string;
 	revision: Int64;
 	creatingSecretSquareChat: SquareFeature;
@@ -5136,31 +4406,17 @@ export declare class SquareFeatureSet {
 	creatingLiveTalk: SquareFeature;
 	disableUpdateSearchable: SquareFeature;
 
-	constructor(args?: {
-		squareMid: string;
-		revision: Int64;
-		creatingSecretSquareChat: SquareFeature;
-		invitingIntoOpenSquareChat: SquareFeature;
-		creatingSquareChat: SquareFeature;
-		readonlyDefaultChat: SquareFeature;
-		showingAdvertisement: SquareFeature;
-		delegateJoinToPlug: SquareFeature;
-		delegateKickOutToPlug: SquareFeature;
-		disableUpdateJoinMethod: SquareFeature;
-		disableTransferAdmin: SquareFeature;
-		creatingLiveTalk: SquareFeature;
-		disableUpdateSearchable: SquareFeature;
-	});
+
 }
 
-export declare class NoteStatus {
+export type NoteStatus = {
 	noteCount: number;
 	latestCreatedAt: Int64;
 
-	constructor(args?: { noteCount: number; latestCreatedAt: Int64 });
+
 }
 
-export declare class SquareEventNotifiedCreateSquareMember {
+export type SquareEventNotifiedCreateSquareMember = {
 	square: Square;
 	squareAuthority: SquareAuthority;
 	squareStatus: SquareStatus;
@@ -5168,53 +4424,34 @@ export declare class SquareEventNotifiedCreateSquareMember {
 	squareFeatureSet: SquareFeatureSet;
 	noteStatus: NoteStatus;
 
-	constructor(args?: {
-		square: Square;
-		squareAuthority: SquareAuthority;
-		squareStatus: SquareStatus;
-		squareMember: SquareMember;
-		squareFeatureSet: SquareFeatureSet;
-		noteStatus: NoteStatus;
-	});
+
 }
 
-export declare class SquareChatStatus {
+export type SquareChatStatus = {
 	lastMessage: SquareMessage;
 	senderDisplayName: string;
 	otherStatus: SquareChatStatusWithoutMessage;
 
-	constructor(args?: {
-		lastMessage: SquareMessage;
-		senderDisplayName: string;
-		otherStatus: SquareChatStatusWithoutMessage;
-	});
+
 }
 
-export declare class SquareChatFeature {
+export type SquareChatFeature = {
 	controlState: SquareChatFeatureControlState;
 	booleanValue: BooleanState;
 
-	constructor(args?: {
-		controlState: SquareChatFeatureControlState;
-		booleanValue: BooleanState;
-	});
+
 }
 
-export declare class SquareChatFeatureSet {
+export type SquareChatFeatureSet = {
 	squareChatMid: string;
 	revision: Int64;
 	disableUpdateMaxChatMemberCount: SquareChatFeature;
 	disableMarkAsReadEvent: SquareChatFeature;
 
-	constructor(args?: {
-		squareChatMid: string;
-		revision: Int64;
-		disableUpdateMaxChatMemberCount: SquareChatFeature;
-		disableMarkAsReadEvent: SquareChatFeature;
-	});
+
 }
 
-export declare class SquareEventNotifiedCreateSquareChatMember {
+export type SquareEventNotifiedCreateSquareChatMember = {
 	chat: SquareChat;
 	chatStatus: SquareChatStatus;
 	chatMember: SquareChatMember;
@@ -5222,107 +4459,78 @@ export declare class SquareEventNotifiedCreateSquareChatMember {
 	peerSquareMember: SquareMember;
 	squareChatFeatureSet: SquareChatFeatureSet;
 
-	constructor(args?: {
-		chat: SquareChat;
-		chatStatus: SquareChatStatus;
-		chatMember: SquareChatMember;
-		joinedAt: Int64;
-		peerSquareMember: SquareMember;
-		squareChatFeatureSet: SquareChatFeatureSet;
-	});
+
 }
 
-export declare class SquareEventNotifiedUpdateSquareMemberRelation {
+export type SquareEventNotifiedUpdateSquareMemberRelation = {
 	squareMid: string;
 	myMemberMid: string;
 	targetSquareMemberMid: string;
 	squareMemberRelation: SquareMemberRelation;
 
-	constructor(args?: {
-		squareMid: string;
-		myMemberMid: string;
-		targetSquareMemberMid: string;
-		squareMemberRelation: SquareMemberRelation;
-	});
+
 }
 
-export declare class SquareEventNotifiedUpdateSquareFeatureSet {
+export type SquareEventNotifiedUpdateSquareFeatureSet = {
 	squareFeatureSet: SquareFeatureSet;
 
-	constructor(args?: { squareFeatureSet: SquareFeatureSet });
+
 }
 
-export declare class SquareEventNotifiedUpdateSquareChatFeatureSet {
+export type SquareEventNotifiedUpdateSquareChatFeatureSet = {
 	squareChatFeatureSet: SquareChatFeatureSet;
 
-	constructor(args?: { squareChatFeatureSet: SquareChatFeatureSet });
+
 }
 
-export declare class SquareEventNotifiedUpdateSquareNoteStatus {
+export type SquareEventNotifiedUpdateSquareNoteStatus = {
 	squareMid: string;
 	noteStatus: NoteStatus;
 
-	constructor(args?: { squareMid: string; noteStatus: NoteStatus });
+
 }
 
-export declare class SquareEventNotifiedUpdateSquareChatAnnouncement {
+export type SquareEventNotifiedUpdateSquareChatAnnouncement = {
 	squareChatMid: string;
 	announcementSeq: Int64;
 
-	constructor(args?: { squareChatMid: string; announcementSeq: Int64 });
+
 }
 
-export declare class SquareEventNotificationJoinRequest {
+export type SquareEventNotificationJoinRequest = {
 	squareMid: string;
 	squareName: string;
 	requestMemberName: string;
 	profileImageObsHash: string;
 
-	constructor(args?: {
-		squareMid: string;
-		squareName: string;
-		requestMemberName: string;
-		profileImageObsHash: string;
-	});
+
 }
 
-export declare class SquareEventNotificationMemberUpdate {
+export type SquareEventNotificationMemberUpdate = {
 	squareMid: string;
 	squareName: string;
 	profileImageObsHash: string;
 
-	constructor(args?: {
-		squareMid: string;
-		squareName: string;
-		profileImageObsHash: string;
-	});
+
 }
 
-export declare class SquareEventNotificationSquareDelete {
+export type SquareEventNotificationSquareDelete = {
 	squareMid: string;
 	squareName: string;
 	profileImageObsHash: string;
 
-	constructor(args?: {
-		squareMid: string;
-		squareName: string;
-		profileImageObsHash: string;
-	});
+
 }
 
-export declare class SquareEventNotificationSquareChatDelete {
+export type SquareEventNotificationSquareChatDelete = {
 	squareChatMid: string;
 	squareChatName: string;
 	profileImageObsHash: string;
 
-	constructor(args?: {
-		squareChatMid: string;
-		squareChatName: string;
-		profileImageObsHash: string;
-	});
+
 }
 
-export declare class SquareEventNotificationMessage {
+export type SquareEventNotificationMessage = {
 	squareChatMid: string;
 	squareMessage: SquareMessage;
 	senderDisplayName: string;
@@ -5332,56 +4540,36 @@ export declare class SquareEventNotificationMessage {
 	notifiedMessageType: NotifiedMessageType;
 	reqSeq: number;
 
-	constructor(args?: {
-		squareChatMid: string;
-		squareMessage: SquareMessage;
-		senderDisplayName: string;
-		unreadCount: number;
-		requiredToFetchChatEvents: boolean;
-		mentionedMessageId: string;
-		notifiedMessageType: NotifiedMessageType;
-		reqSeq: number;
-	});
+
 }
 
-export declare class SquareEventNotificationPostAnnouncement {
+export type SquareEventNotificationPostAnnouncement = {
 	squareMid: string;
 	squareName: string;
 	squareProfileImageObsHash: string;
 	actionUri: string;
 
-	constructor(args?: {
-		squareMid: string;
-		squareName: string;
-		squareProfileImageObsHash: string;
-		actionUri: string;
-	});
+
 }
 
-export declare class SquareEventNotificationPost {
+export type SquareEventNotificationPost = {
 	squareMid: string;
 	notificationPostType: NotificationPostType;
 	thumbnailObsHash: string;
 	text: string;
 	actionUri: string;
 
-	constructor(args?: {
-		squareMid: string;
-		notificationPostType: NotificationPostType;
-		thumbnailObsHash: string;
-		text: string;
-		actionUri: string;
-	});
+
 }
 
-export declare class SquareEventNotificationNewChatMember {
+export type SquareEventNotificationNewChatMember = {
 	squareChatMid: string;
 	squareChatName: string;
 
-	constructor(args?: { squareChatMid: string; squareChatName: string });
+
 }
 
-export declare class SquareEventNotificationMessageReaction {
+export type SquareEventNotificationMessageReaction = {
 	squareChatMid: string;
 	messageId: string;
 	squareChatName: string;
@@ -5390,194 +4578,122 @@ export declare class SquareEventNotificationMessageReaction {
 	messageText: string;
 	type: MessageReactionType;
 
-	constructor(args?: {
-		squareChatMid: string;
-		messageId: string;
-		squareChatName: string;
-		reactorName: string;
-		thumbnailObsHash: string;
-		messageText: string;
-		type: MessageReactionType;
-	});
+
 }
 
-export declare class SquareEventPayload {
-	receiveMessage: SquareEventReceiveMessage;
-	sendMessage: SquareEventSendMessage;
-	notifiedJoinSquareChat: SquareEventNotifiedJoinSquareChat;
-	notifiedInviteIntoSquareChat: SquareEventNotifiedInviteIntoSquareChat;
-	notifiedLeaveSquareChat: SquareEventNotifiedLeaveSquareChat;
-	notifiedDestroyMessage: SquareEventNotifiedDestroyMessage;
-	notifiedMarkAsRead: SquareEventNotifiedMarkAsRead;
-	notifiedUpdateSquareMemberProfile: SquareEventNotifiedUpdateSquareMemberProfile;
-	notifiedUpdateSquare: SquareEventNotifiedUpdateSquare;
-	notifiedUpdateSquareMember: SquareEventNotifiedUpdateSquareMember;
-	notifiedUpdateSquareChat: SquareEventNotifiedUpdateSquareChat;
-	notifiedUpdateSquareChatMember: SquareEventNotifiedUpdateSquareChatMember;
-	notifiedUpdateSquareAuthority: SquareEventNotifiedUpdateSquareAuthority;
-	notifiedUpdateSquareStatus: SquareEventNotifiedUpdateSquareStatus;
-	notifiedUpdateSquareChatStatus: SquareEventNotifiedUpdateSquareChatStatus;
-	notifiedCreateSquareMember: SquareEventNotifiedCreateSquareMember;
-	notifiedCreateSquareChatMember: SquareEventNotifiedCreateSquareChatMember;
-	notifiedUpdateSquareMemberRelation: SquareEventNotifiedUpdateSquareMemberRelation;
-	notifiedShutdownSquare: SquareEventNotifiedShutdownSquare;
-	notifiedKickoutFromSquare: SquareEventNotifiedKickoutFromSquare;
-	notifiedDeleteSquareChat: SquareEventNotifiedDeleteSquareChat;
-	notificationJoinRequest: SquareEventNotificationJoinRequest;
-	notificationJoined: SquareEventNotificationMemberUpdate;
-	notificationPromoteCoadmin: SquareEventNotificationMemberUpdate;
-	notificationPromoteAdmin: SquareEventNotificationMemberUpdate;
-	notificationDemoteMember: SquareEventNotificationMemberUpdate;
-	notificationKickedOut: SquareEventNotificationMemberUpdate;
-	notificationSquareDelete: SquareEventNotificationSquareDelete;
-	notificationSquareChatDelete: SquareEventNotificationSquareChatDelete;
-	notificationMessage: SquareEventNotificationMessage;
-	notifiedUpdateSquareChatProfileName: SquareEventNotifiedUpdateSquareChatProfileName;
-	notifiedUpdateSquareChatProfileImage: SquareEventNotifiedUpdateSquareChatProfileImage;
-	notifiedUpdateSquareFeatureSet: SquareEventNotifiedUpdateSquareFeatureSet;
-	notifiedAddBot: SquareEventNotifiedAddBot;
-	notifiedRemoveBot: SquareEventNotifiedRemoveBot;
-	notifiedUpdateSquareNoteStatus: SquareEventNotifiedUpdateSquareNoteStatus;
-	notifiedUpdateSquareChatAnnouncement: SquareEventNotifiedUpdateSquareChatAnnouncement;
-	notifiedUpdateSquareChatMaxMemberCount: SquareEventNotifiedUpdateSquareChatMaxMemberCount;
-	notificationPostAnnouncement: SquareEventNotificationPostAnnouncement;
-	notificationPost: SquareEventNotificationPost;
-	mutateMessage: SquareEventMutateMessage;
-	notificationNewChatMember: SquareEventNotificationNewChatMember;
-	notifiedUpdateReadonlyChat: SquareEventNotifiedUpdateReadonlyChat;
-	notifiedUpdateMessageStatus: SquareEventNotifiedUpdateMessageStatus;
-	notificationMessageReaction: SquareEventNotificationMessageReaction;
-	chatPopup: SquareEventChatPopup;
-	notifiedSystemMessage: SquareEventNotifiedSystemMessage;
-	notifiedUpdateSquareChatFeatureSet: SquareEventNotifiedUpdateSquareChatFeatureSet;
+export type SquareEventPayload = {
+	receiveMessage?: SquareEventReceiveMessage;
+	sendMessage?: SquareEventSendMessage;
+	notifiedJoinSquareChat?: SquareEventNotifiedJoinSquareChat;
+	notifiedInviteIntoSquareChat?: SquareEventNotifiedInviteIntoSquareChat;
+	notifiedLeaveSquareChat?: SquareEventNotifiedLeaveSquareChat;
+	notifiedDestroyMessage?: SquareEventNotifiedDestroyMessage;
+	notifiedMarkAsRead?: SquareEventNotifiedMarkAsRead;
+	notifiedUpdateSquareMemberProfile?: SquareEventNotifiedUpdateSquareMemberProfile;
+	notifiedUpdateSquare?: SquareEventNotifiedUpdateSquare;
+	notifiedUpdateSquareMember?: SquareEventNotifiedUpdateSquareMember;
+	notifiedUpdateSquareChat?: SquareEventNotifiedUpdateSquareChat;
+	notifiedUpdateSquareChatMember?: SquareEventNotifiedUpdateSquareChatMember;
+	notifiedUpdateSquareAuthority?: SquareEventNotifiedUpdateSquareAuthority;
+	notifiedUpdateSquareStatus?: SquareEventNotifiedUpdateSquareStatus;
+	notifiedUpdateSquareChatStatus?: SquareEventNotifiedUpdateSquareChatStatus;
+	notifiedCreateSquareMember?: SquareEventNotifiedCreateSquareMember;
+	notifiedCreateSquareChatMember?: SquareEventNotifiedCreateSquareChatMember;
+	notifiedUpdateSquareMemberRelation?: SquareEventNotifiedUpdateSquareMemberRelation;
+	notifiedShutdownSquare?: SquareEventNotifiedShutdownSquare;
+	notifiedKickoutFromSquare?: SquareEventNotifiedKickoutFromSquare;
+	notifiedDeleteSquareChat?: SquareEventNotifiedDeleteSquareChat;
+	notificationJoinRequest?: SquareEventNotificationJoinRequest;
+	notificationJoined?: SquareEventNotificationMemberUpdate;
+	notificationPromoteCoadmin?: SquareEventNotificationMemberUpdate;
+	notificationPromoteAdmin?: SquareEventNotificationMemberUpdate;
+	notificationDemoteMember?: SquareEventNotificationMemberUpdate;
+	notificationKickedOut?: SquareEventNotificationMemberUpdate;
+	notificationSquareDelete?: SquareEventNotificationSquareDelete;
+	notificationSquareChatDelete?: SquareEventNotificationSquareChatDelete;
+	notificationMessage?: SquareEventNotificationMessage;
+	notifiedUpdateSquareChatProfileName?: SquareEventNotifiedUpdateSquareChatProfileName;
+	notifiedUpdateSquareChatProfileImage?: SquareEventNotifiedUpdateSquareChatProfileImage;
+	notifiedUpdateSquareFeatureSet?: SquareEventNotifiedUpdateSquareFeatureSet;
+	notifiedAddBot?: SquareEventNotifiedAddBot;
+	notifiedRemoveBot?: SquareEventNotifiedRemoveBot;
+	notifiedUpdateSquareNoteStatus?: SquareEventNotifiedUpdateSquareNoteStatus;
+	notifiedUpdateSquareChatAnnouncement?: SquareEventNotifiedUpdateSquareChatAnnouncement;
+	notifiedUpdateSquareChatMaxMemberCount?: SquareEventNotifiedUpdateSquareChatMaxMemberCount;
+	notificationPostAnnouncement?: SquareEventNotificationPostAnnouncement;
+	notificationPost?: SquareEventNotificationPost;
+	mutateMessage?: SquareEventMutateMessage;
+	notificationNewChatMember?: SquareEventNotificationNewChatMember;
+	notifiedUpdateReadonlyChat?: SquareEventNotifiedUpdateReadonlyChat;
+	notifiedUpdateMessageStatus?: SquareEventNotifiedUpdateMessageStatus;
+	notificationMessageReaction?: SquareEventNotificationMessageReaction;
+	chatPopup?: SquareEventChatPopup;
+	notifiedSystemMessage?: SquareEventNotifiedSystemMessage;
+	notifiedUpdateSquareChatFeatureSet?: SquareEventNotifiedUpdateSquareChatFeatureSet;
 
-	constructor(args?: {
-		receiveMessage: SquareEventReceiveMessage;
-		sendMessage: SquareEventSendMessage;
-		notifiedJoinSquareChat: SquareEventNotifiedJoinSquareChat;
-		notifiedInviteIntoSquareChat: SquareEventNotifiedInviteIntoSquareChat;
-		notifiedLeaveSquareChat: SquareEventNotifiedLeaveSquareChat;
-		notifiedDestroyMessage: SquareEventNotifiedDestroyMessage;
-		notifiedMarkAsRead: SquareEventNotifiedMarkAsRead;
-		notifiedUpdateSquareMemberProfile: SquareEventNotifiedUpdateSquareMemberProfile;
-		notifiedUpdateSquare: SquareEventNotifiedUpdateSquare;
-		notifiedUpdateSquareMember: SquareEventNotifiedUpdateSquareMember;
-		notifiedUpdateSquareChat: SquareEventNotifiedUpdateSquareChat;
-		notifiedUpdateSquareChatMember: SquareEventNotifiedUpdateSquareChatMember;
-		notifiedUpdateSquareAuthority: SquareEventNotifiedUpdateSquareAuthority;
-		notifiedUpdateSquareStatus: SquareEventNotifiedUpdateSquareStatus;
-		notifiedUpdateSquareChatStatus: SquareEventNotifiedUpdateSquareChatStatus;
-		notifiedCreateSquareMember: SquareEventNotifiedCreateSquareMember;
-		notifiedCreateSquareChatMember: SquareEventNotifiedCreateSquareChatMember;
-		notifiedUpdateSquareMemberRelation: SquareEventNotifiedUpdateSquareMemberRelation;
-		notifiedShutdownSquare: SquareEventNotifiedShutdownSquare;
-		notifiedKickoutFromSquare: SquareEventNotifiedKickoutFromSquare;
-		notifiedDeleteSquareChat: SquareEventNotifiedDeleteSquareChat;
-		notificationJoinRequest: SquareEventNotificationJoinRequest;
-		notificationJoined: SquareEventNotificationMemberUpdate;
-		notificationPromoteCoadmin: SquareEventNotificationMemberUpdate;
-		notificationPromoteAdmin: SquareEventNotificationMemberUpdate;
-		notificationDemoteMember: SquareEventNotificationMemberUpdate;
-		notificationKickedOut: SquareEventNotificationMemberUpdate;
-		notificationSquareDelete: SquareEventNotificationSquareDelete;
-		notificationSquareChatDelete: SquareEventNotificationSquareChatDelete;
-		notificationMessage: SquareEventNotificationMessage;
-		notifiedUpdateSquareChatProfileName: SquareEventNotifiedUpdateSquareChatProfileName;
-		notifiedUpdateSquareChatProfileImage: SquareEventNotifiedUpdateSquareChatProfileImage;
-		notifiedUpdateSquareFeatureSet: SquareEventNotifiedUpdateSquareFeatureSet;
-		notifiedAddBot: SquareEventNotifiedAddBot;
-		notifiedRemoveBot: SquareEventNotifiedRemoveBot;
-		notifiedUpdateSquareNoteStatus: SquareEventNotifiedUpdateSquareNoteStatus;
-		notifiedUpdateSquareChatAnnouncement: SquareEventNotifiedUpdateSquareChatAnnouncement;
-		notifiedUpdateSquareChatMaxMemberCount: SquareEventNotifiedUpdateSquareChatMaxMemberCount;
-		notificationPostAnnouncement: SquareEventNotificationPostAnnouncement;
-		notificationPost: SquareEventNotificationPost;
-		mutateMessage: SquareEventMutateMessage;
-		notificationNewChatMember: SquareEventNotificationNewChatMember;
-		notifiedUpdateReadonlyChat: SquareEventNotifiedUpdateReadonlyChat;
-		notifiedUpdateMessageStatus: SquareEventNotifiedUpdateMessageStatus;
-		notificationMessageReaction: SquareEventNotificationMessageReaction;
-		chatPopup: SquareEventChatPopup;
-		notifiedSystemMessage: SquareEventNotifiedSystemMessage;
-		notifiedUpdateSquareChatFeatureSet: SquareEventNotifiedUpdateSquareChatFeatureSet;
-	});
+
 }
 
-export declare class SquareEvent {
+export type SquareEvent = {
 	createdTime: Int64;
 	type: SquareEventType;
 	payload: SquareEventPayload;
 	syncToken: string;
 	eventStatus: SquareEventStatus;
 
-	constructor(args?: {
-		createdTime: Int64;
-		type: SquareEventType;
-		payload: SquareEventPayload;
-		syncToken: string;
-		eventStatus: SquareEventStatus;
-	});
+
 }
 
-export declare class SendMessageResponse {
+export type SendMessageResponse = {
 	createdSquareMessage: SquareMessage;
 
-	constructor(args?: { createdSquareMessage: SquareMessage });
+
 }
 
-export declare class UnsendMessageResponse {
+export type UnsendMessageResponse = {
 	unsentMessage: SquareMessage;
 
-	constructor(args?: { unsentMessage: SquareMessage });
+
 }
 
-export declare class FetchMyEventsResponse {
+export type FetchMyEventsResponse = {
 	subscription: SubscriptionState;
 	events: SquareEvent[];
 	syncToken: string;
 	continuationToken: string;
 
-	constructor(args?: {
-		subscription: SubscriptionState;
-		events: SquareEvent[];
-		syncToken: string;
-		continuationToken: string;
-	});
+
 }
 
-export declare class GetSquareEmidResponse {
+export type GetSquareEmidResponse = {
 	squareEmid: string;
 
-	constructor(args?: { squareEmid: string });
+
 }
 
-export declare class GetSquareMembersBySquareResponse {
+export type GetSquareMembersBySquareResponse = {
 	members: SquareMember[];
 
-	constructor(args?: { members: SquareMember[] });
+
 }
 
-export declare class ManualRepairResponse {
+export type ManualRepairResponse = {
 	events: SquareEvent[];
 	syncToken: string;
 	continuationToken: string;
 
-	constructor(args?: {
-		events: SquareEvent[];
-		syncToken: string;
-		continuationToken: string;
-	});
+
 }
 
-export declare class InviteIntoSquareChatResponse {
+export type InviteIntoSquareChatResponse = {
 	inviteeMids: string[];
 
-	constructor(args?: { inviteeMids: string[] });
+
 }
 
-export declare class InviteToSquareResponse {}
+export type InviteToSquareResponse = {}
 
-export declare class GetJoinedSquaresResponse {
+export type GetJoinedSquaresResponse = {
 	squares: Square[];
 	members: { [k: string]: SquareMember };
 	authorities: { [k: string]: SquareAuthority };
@@ -5585,29 +4701,19 @@ export declare class GetJoinedSquaresResponse {
 	continuationToken: string;
 	noteStatuses: { [k: string]: NoteStatus };
 
-	constructor(args?: {
-		squares: Square[];
-		members: { [k: string]: SquareMember };
-		authorities: { [k: string]: SquareAuthority };
-		statuses: { [k: string]: SquareStatus };
-		continuationToken: string;
-		noteStatuses: { [k: string]: NoteStatus };
-	});
+
 }
 
-export declare class MarkAsReadResponse {}
+export type MarkAsReadResponse = {}
 
-export declare class ReactToMessageResponse {
+export type ReactToMessageResponse = {
 	reaction: SquareMessageReaction;
 	status: SquareMessageReactionStatus;
 
-	constructor(args?: {
-		reaction: SquareMessageReaction;
-		status: SquareMessageReactionStatus;
-	});
+
 }
 
-export declare class FindSquareByInvitationTicketResponse {
+export type FindSquareByInvitationTicketResponse = {
 	square: Square;
 	myMembership: SquareMember;
 	squareAuthority: SquareAuthority;
@@ -5617,40 +4723,26 @@ export declare class FindSquareByInvitationTicketResponse {
 	chat: SquareChat;
 	chatStatus: SquareChatStatus;
 
-	constructor(args?: {
-		square: Square;
-		myMembership: SquareMember;
-		squareAuthority: SquareAuthority;
-		squareStatus: SquareStatus;
-		squareFeatureSet: SquareFeatureSet;
-		noteStatus: NoteStatus;
-		chat: SquareChat;
-		chatStatus: SquareChatStatus;
-	});
+
 }
 
-export declare class SubscriptionState {
+export type SubscriptionState = {
 	subscriptionId: Int64;
 	ttlMillis: Int64;
 
-	constructor(args?: { subscriptionId: Int64; ttlMillis: Int64 });
+
 }
 
-export declare class FetchSquareChatEventsResponse {
+export type FetchSquareChatEventsResponse = {
 	subscription: SubscriptionState;
 	events: SquareEvent[];
 	syncToken: string;
 	continuationToken: string;
 
-	constructor(args?: {
-		subscription: SubscriptionState;
-		events: SquareEvent[];
-		syncToken: string;
-		continuationToken: string;
-	});
+
 }
 
-export declare class GetSquareResponse {
+export type GetSquareResponse = {
 	square: Square;
 	myMembership: SquareMember;
 	squareAuthority: SquareAuthority;
@@ -5658,31 +4750,19 @@ export declare class GetSquareResponse {
 	squareFeatureSet?: SquareFeatureSet;
 	noteStatus: NoteStatus;
 
-	constructor(args?: {
-		square: Square;
-		myMembership: SquareMember;
-		squareAuthority: SquareAuthority;
-		squareStatus: SquareStatus;
-		squareFeatureSet: SquareFeatureSet;
-		noteStatus: NoteStatus;
-	});
+
 }
 
-export declare class GetJoinableSquareChatsResponse {
+export type GetJoinableSquareChatsResponse = {
 	squareChats: SquareChat[];
 	continuationToken: string;
 	totalSquareChatCount: number;
 	squareChatStatuses: { [k: string]: SquareChatStatus };
 
-	constructor(args?: {
-		squareChats: SquareChat[];
-		continuationToken: string;
-		totalSquareChatCount: number;
-		squareChatStatuses: { [k: string]: SquareChatStatus };
-	});
+
 }
 
-export declare class CreateSquareResponse {
+export type CreateSquareResponse = {
 	square: Square;
 	creator: SquareMember;
 	authority: SquareAuthority;
@@ -5694,230 +4774,174 @@ export declare class CreateSquareResponse {
 	squareChatMember: SquareChatMember;
 	squareChatFeatureSet: SquareChatFeatureSet;
 
-	constructor(args?: {
-		square: Square;
-		creator: SquareMember;
-		authority: SquareAuthority;
-		status: SquareStatus;
-		featureSet: SquareFeatureSet;
-		noteStatus: NoteStatus;
-		squareChat: SquareChat;
-		squareChatStatus: SquareChatStatus;
-		squareChatMember: SquareChatMember;
-		squareChatFeatureSet: SquareChatFeatureSet;
-	});
+
 }
 
-export declare class TextMessageAnnouncementContents {
+export type TextMessageAnnouncementContents = {
 	messageId: string;
 	text: string;
 	senderSquareMemberMid: string;
 	createdAt: Int64;
 	senderMid: string;
 
-	constructor(args?: {
-		messageId: string;
-		text: string;
-		senderSquareMemberMid: string;
-		createdAt: Int64;
-		senderMid: string;
-	});
+
 }
 
-export declare class SquareChatAnnouncementContents {
+export type SquareChatAnnouncementContents = {
 	textMessageAnnouncementContents: TextMessageAnnouncementContents;
 
-	constructor(args?: {
-		textMessageAnnouncementContents: TextMessageAnnouncementContents;
-	});
+
 }
 
-export declare class SquareChatAnnouncement {
+export type SquareChatAnnouncement = {
 	announcementSeq: Int64;
 	type: SquareChatAnnouncementType;
 	contents: SquareChatAnnouncementContents;
 	createdAt: Int64;
 	creator: string;
 
-	constructor(args?: {
-		announcementSeq: Int64;
-		type: SquareChatAnnouncementType;
-		contents: SquareChatAnnouncementContents;
-		createdAt: Int64;
-		creator: string;
-	});
+
 }
 
-export declare class GetSquareChatAnnouncementsResponse {
+export type GetSquareChatAnnouncementsResponse = {
 	announcements: SquareChatAnnouncement[];
 
-	constructor(args?: { announcements: SquareChatAnnouncement[] });
+
 }
 
-export declare class GetSquareFeatureSetResponse {
+export type GetSquareFeatureSetResponse = {
 	squareFeatureSet: SquareFeatureSet;
 
-	constructor(args?: { squareFeatureSet: SquareFeatureSet });
+
 }
 
-export declare class GetSquareChatFeatureSetResponse {
+export type GetSquareChatFeatureSetResponse = {
 	squareChatFeatureSet: SquareChatFeatureSet;
 
-	constructor(args?: { squareChatFeatureSet: SquareChatFeatureSet });
+
 }
 
-export declare class SyncSquareMembersResponse {
+export type SyncSquareMembersResponse = {
 	updatedSquareMembers: SquareMember[];
 
-	constructor(args?: { updatedSquareMembers: SquareMember[] });
+
 }
 
-export declare class SquareChatThread {
+export type SquareChatThread = {
 	squareChatThreadMid: string;
 	squareChatMid: string;
 	squareMid: string;
 	messageId: string;
 	state: SquareChatThreadState;
 
-	constructor(args?: {
-		squareChatThreadMid: string;
-		squareChatMid: string;
-		squareMid: string;
-		messageId: string;
-		state: SquareChatThreadState;
-	});
+
 }
 
-export declare class GetJoinedSquareChatThreadsResponse {
+export type GetJoinedSquareChatThreadsResponse = {
 	squareChatThreads: SquareChatThread[];
 	continuationToken: string;
 
-	constructor(args?: {
-		squareChatThreads: SquareChatThread[];
-		continuationToken: string;
-	});
+
 }
 
-export declare class CreateSquareChatThreadResponse {
+export type CreateSquareChatThreadResponse = {
 	squareChatThread: SquareChatThread;
 
-	constructor(args?: { squareChatThread: SquareChatThread });
+
 }
 
-export declare class SquareChatThreadMember {
+export type SquareChatThreadMember = {
 	squareMemberMid: string;
 	squareChatThreadMid: string;
 	revision: Int64;
 	membershipState: SquareChatThreadeMembershipState;
 
-	constructor(args?: {
-		squareMemberMid: string;
-		squareChatThreadMid: string;
-		revision: Int64;
-		membershipState: SquareChatThreadeMembershipState;
-	});
+
 }
 
-export declare class GetSquareChatThreadResponse {
+export type GetSquareChatThreadResponse = {
 	squareChatThread: SquareChatThread;
 	mySquareChatThreadMember: SquareChatThreadMember;
 
-	constructor(args?: {
-		squareChatThread: SquareChatThread;
-		mySquareChatThreadMember: SquareChatThreadMember;
-	});
+
 }
 
-export declare class JoinSquareChatThreadResponse {
+export type JoinSquareChatThreadResponse = {
 	squareChatThread: SquareChatThread;
 
-	constructor(args?: { squareChatThread: SquareChatThread });
+
 }
 
-export declare class AcceptSpeakersResponse {}
+export type AcceptSpeakersResponse = {}
 
-export declare class AcceptToChangeRoleResponse {}
+export type AcceptToChangeRoleResponse = {}
 
-export declare class AcceptToListenResponse {}
+export type AcceptToListenResponse = {}
 
-export declare class AcceptToSpeakResponse {}
+export type AcceptToSpeakResponse = {}
 
-export declare class CancelToSpeakResponse {}
+export type CancelToSpeakResponse = {}
 
-export declare class EndLiveTalkResponse {}
+export type EndLiveTalkResponse = {}
 
-export declare class LiveTalkEventNotifiedUpdateLiveTalkTitle {
+export type LiveTalkEventNotifiedUpdateLiveTalkTitle = {
 	title: string;
 
-	constructor(args?: { title: string });
+
 }
 
-export declare class LiveTalkEventNotifiedUpdateLiveTalkSpeakerSetting {
+export type LiveTalkEventNotifiedUpdateLiveTalkSpeakerSetting = {
 	speakerSetting: LiveTalkSpeakerSetting;
 
-	constructor(args?: { speakerSetting: LiveTalkSpeakerSetting });
+
 }
 
-export declare class LiveTalkEventNotifiedUpdateLiveTalkAnnouncement {
+export type LiveTalkEventNotifiedUpdateLiveTalkAnnouncement = {
 	announcement: string;
 
-	constructor(args?: { announcement: string });
+
 }
 
-export declare class LiveTalkEventNotifiedUpdateSquareMemberRole {
+export type LiveTalkEventNotifiedUpdateSquareMemberRole = {
 	squareMemberMid: string;
 	role: SquareMemberRole;
 
-	constructor(args?: { squareMemberMid: string; role: SquareMemberRole });
+
 }
 
-export declare class LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak {
+export type LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak = {
 	allowRequestToSpeak: boolean;
 
-	constructor(args?: { allowRequestToSpeak: boolean });
+
 }
 
-export declare class LiveTalkEventPayload {
+export type LiveTalkEventPayload = {
 	notifiedUpdateLiveTalkTitle: LiveTalkEventNotifiedUpdateLiveTalkTitle;
 	notifiedUpdateLiveTalkSpeakerSetting: LiveTalkEventNotifiedUpdateLiveTalkSpeakerSetting;
 	notifiedUpdateLiveTalkAnnouncement: LiveTalkEventNotifiedUpdateLiveTalkAnnouncement;
 	notifiedUpdateSquareMemberRole: LiveTalkEventNotifiedUpdateSquareMemberRole;
 	notifiedUpdateLiveTalkAllowRequestToSpeak: LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak;
 
-	constructor(args?: {
-		notifiedUpdateLiveTalkTitle: LiveTalkEventNotifiedUpdateLiveTalkTitle;
-		notifiedUpdateLiveTalkSpeakerSetting: LiveTalkEventNotifiedUpdateLiveTalkSpeakerSetting;
-		notifiedUpdateLiveTalkAnnouncement: LiveTalkEventNotifiedUpdateLiveTalkAnnouncement;
-		notifiedUpdateSquareMemberRole: LiveTalkEventNotifiedUpdateSquareMemberRole;
-		notifiedUpdateLiveTalkAllowRequestToSpeak: LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak;
-	});
+
 }
 
-export declare class LiveTalkEvent {
+export type LiveTalkEvent = {
 	type: LiveTalkEventType;
 	payload: LiveTalkEventPayload;
 	syncToken: string;
 
-	constructor(args?: {
-		type: LiveTalkEventType;
-		payload: LiveTalkEventPayload;
-		syncToken: string;
-	});
+
 }
 
-export declare class FetchLiveTalkEventsResponse {
+export type FetchLiveTalkEventsResponse = {
 	events: LiveTalkEvent[];
 	syncToken: string;
 	hasMore: boolean;
 
-	constructor(args?: {
-		events: LiveTalkEvent[];
-		syncToken: string;
-		hasMore: boolean;
-	});
+
 }
 
-export declare class LiveTalk {
+export type LiveTalk = {
 	squareChatMid: string;
 	sessionId: string;
 	title: string;
@@ -5929,101 +4953,71 @@ export declare class LiveTalk {
 	revision: Int64;
 	startedAt: Int64;
 
-	constructor(args?: {
-		squareChatMid: string;
-		sessionId: string;
-		title: string;
-		type: LiveTalkType;
-		speakerSetting: LiveTalkSpeakerSetting;
-		allowRequestToSpeak: boolean;
-		announcement: string;
-		participantCount: number;
-		revision: Int64;
-		startedAt: Int64;
-	});
+
 }
 
-export declare class FindLiveTalkByInvitationTicketResponse {
+export type FindLiveTalkByInvitationTicketResponse = {
 	chatInvitationTicket: string;
 	liveTalk: LiveTalk;
 	chat: SquareChat;
 	squareMember: SquareMember;
 	chatMembershipState: SquareChatMembershipState;
 
-	constructor(args?: {
-		chatInvitationTicket: string;
-		liveTalk: LiveTalk;
-		chat: SquareChat;
-		squareMember: SquareMember;
-		chatMembershipState: SquareChatMembershipState;
-	});
+
 }
 
-export declare class ForceEndLiveTalkResponse {}
+export type ForceEndLiveTalkResponse = {}
 
-export declare class LiveTalkSpeaker {
+export type LiveTalkSpeaker = {
 	displayName: string;
 	profileImageObsHash: string;
 	role: SquareMemberRole;
 
-	constructor(args?: {
-		displayName: string;
-		profileImageObsHash: string;
-		role: SquareMemberRole;
-	});
+
 }
 
-export declare class GetLiveTalkInfoForNonMemberResponse {
+export type GetLiveTalkInfoForNonMemberResponse = {
 	chatName: string;
 	liveTalk: LiveTalk;
 	speakers: LiveTalkSpeaker[];
 	chatInvitationUrl: string;
 
-	constructor(args?: {
-		chatName: string;
-		liveTalk: LiveTalk;
-		speakers: LiveTalkSpeaker[];
-		chatInvitationUrl: string;
-	});
+
 }
 
-export declare class GetLiveTalkInvitationUrlResponse {
+export type GetLiveTalkInvitationUrlResponse = {
 	invitationUrl: string;
 
-	constructor(args?: { invitationUrl: string });
+
 }
 
-export declare class GetLiveTalkSpeakersForNonMemberResponse {
+export type GetLiveTalkSpeakersForNonMemberResponse = {
 	speakers: LiveTalkSpeaker[];
 
-	constructor(args?: { speakers: LiveTalkSpeaker[] });
+
 }
 
-export declare class GetSquareInfoByChatMidResponse {
+export type GetSquareInfoByChatMidResponse = {
 	defaultChatMid: string;
 	squareName: string;
 	squareDesc: string;
 
-	constructor(args?: {
-		defaultChatMid: string;
-		squareName: string;
-		squareDesc: string;
-	});
+
 }
 
-export declare class InviteToChangeRoleResponse {}
+export type InviteToChangeRoleResponse = {}
 
-export declare class InviteToListenResponse {}
+export type InviteToListenResponse = {}
 
-export declare class InviteToLiveTalkResponse {}
+export type InviteToLiveTalkResponse = {}
 
-export declare class InviteToSpeakResponse {
+export type InviteToSpeakResponse = {
 	inviteRequestId: string;
 
-	constructor(args?: { inviteRequestId: string });
+
 }
 
-export declare class JoinLiveTalkResponse {
+export type JoinLiveTalkResponse = {
 	hostMemberMid: string;
 	memberSessionId: string;
 	token: string;
@@ -6039,81 +5033,56 @@ export declare class JoinLiveTalkResponse {
 	polarisZone: string;
 	polarisUdpPort: number;
 
-	constructor(args?: {
-		hostMemberMid: string;
-		memberSessionId: string;
-		token: string;
-		proto: string;
-		voipAddress: string;
-		voipAddress6: string;
-		voipUdpPort: number;
-		voipTcpPort: number;
-		fromZone: string;
-		commParam: string;
-		orionAddress: string;
-		polarisAddress: string;
-		polarisZone: string;
-		polarisUdpPort: number;
-	});
+
 }
 
-export declare class KickOutLiveTalkParticipantsResponse {}
+export type KickOutLiveTalkParticipantsResponse = {}
 
-export declare class RejectSpeakersResponse {}
+export type RejectSpeakersResponse = {}
 
-export declare class RejectToSpeakResponse {}
+export type RejectToSpeakResponse = {}
 
-export declare class ReportLiveTalkResponse {}
+export type ReportLiveTalkResponse = {}
 
-export declare class ReportLiveTalkSpeakerResponse {}
+export type ReportLiveTalkSpeakerResponse = {}
 
-export declare class RequestToListenResponse {}
+export type RequestToListenResponse = {}
 
-export declare class RequestToSpeakResponse {}
+export type RequestToSpeakResponse = {}
 
-export declare class StartLiveTalkResponse {
+export type StartLiveTalkResponse = {
 	liveTalk: LiveTalk;
 
-	constructor(args?: { liveTalk: LiveTalk });
+
 }
 
-export declare class UpdateLiveTalkAttrsResponse {}
+export type UpdateLiveTalkAttrsResponse = {}
 
-export declare class AcquireLiveTalkResponse {
+export type AcquireLiveTalkResponse = {
 	liveTalk: LiveTalk;
 
-	constructor(args?: { liveTalk: LiveTalk });
+
 }
 
-export declare class CreateQrCodeForSecureResponse {
+export type CreateQrCodeForSecureResponse = {
 	callbackUrl: string;
 	longPollingMaxCount: number;
 	longPollingIntervalSec: number;
 	nonce: string;
 
-	constructor(args?: {
-		callbackUrl: string;
-		longPollingMaxCount: number;
-		longPollingIntervalSec: number;
-		nonce: string;
-	});
+
 }
 
-export declare class RefreshApiRetryPolicy {
+export type RefreshApiRetryPolicy = {
 	initialDelayInMillis: Int64;
 	maxDelayInMillis: Int64;
 	multiplier: number;
 	jitterRate: number;
 
-	constructor(args?: {
-		initialDelayInMillis: Int64;
-		maxDelayInMillis: Int64;
-		multiplier: number;
-		jitterRate: number;
-	});
+
 }
 
-export declare class TokenV3IssueResult {
+export type TokenV3IssueResult = {
 	accessToken: string;
 	refreshToken: string;
 	durationUntilRefreshInSec: Int64;
@@ -6121,17 +5090,10 @@ export declare class TokenV3IssueResult {
 	loginSessionId: string;
 	tokenIssueTimeEpochSec: Int64;
 
-	constructor(args?: {
-		accessToken: string;
-		refreshToken: string;
-		durationUntilRefreshInSec: Int64;
-		refreshApiRetryPolicy: RefreshApiRetryPolicy;
-		loginSessionId: string;
-		tokenIssueTimeEpochSec: Int64;
-	});
+
 }
 
-export declare class QrCodeLoginV2Response {
+export type QrCodeLoginV2Response = {
 	certificate: string;
 	accessTokenV2: string;
 	tokenV3IssueResult: TokenV3IssueResult;
@@ -6139,24 +5101,17 @@ export declare class QrCodeLoginV2Response {
 	lastBindTimestamp: Int64;
 	metaData: { [k: string]: string };
 
-	constructor(args?: {
-		certificate: string;
-		accessTokenV2: string;
-		tokenV3IssueResult: TokenV3IssueResult;
-		mid: string;
-		lastBindTimestamp: Int64;
-		metaData: { [k: string]: string };
-	});
+
 }
 
-export declare class RichString {
+export type RichString = {
 	content: string;
 	meta: { [k: string]: string };
 
-	constructor(args?: { content: string; meta: { [k: string]: string } });
+
 }
 
-export declare class TargetProfileDetail {
+export type TargetProfileDetail = {
 	snapshotTimeMillis: Int64;
 	profileName: string;
 	picturePath: string;
@@ -6167,20 +5122,10 @@ export declare class TargetProfileDetail {
 	pictureSource: PictureSource;
 	pictureStatus: string;
 
-	constructor(args?: {
-		snapshotTimeMillis: Int64;
-		profileName: string;
-		picturePath: string;
-		statusMessage: RichString;
-		musicProfile: string;
-		videoProfile: string;
-		avatarProfile: AvatarProfile;
-		pictureSource: PictureSource;
-		pictureStatus: string;
-	});
+
 }
 
-export declare class UserFriendDetail {
+export type UserFriendDetail = {
 	createdTime: Int64;
 	overriddenName: string;
 	favoriteTime: Int64;
@@ -6188,131 +5133,100 @@ export declare class UserFriendDetail {
 	ringtone: string;
 	ringbackTone: string;
 
-	constructor(args?: {
-		createdTime: Int64;
-		overriddenName: string;
-		favoriteTime: Int64;
-		hidden: boolean;
-		ringtone: string;
-		ringbackTone: string;
-	});
+
 }
 
-export declare class BotFriendDetail {
+export type BotFriendDetail = {
 	createdTime: Int64;
 	favoriteTime: Int64;
 	hidden: boolean;
 
-	constructor(args?: {
-		createdTime: Int64;
-		favoriteTime: Int64;
-		hidden: boolean;
-	});
+
 }
 
-export declare class NotFriend {}
+export type NotFriend = {}
 
-export declare class FriendDetail {
+export type FriendDetail = {
 	user: UserFriendDetail;
 	bot: BotFriendDetail;
 	notFriend: NotFriend;
 
-	constructor(args?: {
-		user: UserFriendDetail;
-		bot: BotFriendDetail;
-		notFriend: NotFriend;
-	});
+
 }
 
-export declare class UserBlockDetail {
+export type UserBlockDetail = {
 	deletedFromBlockList: boolean;
 
-	constructor(args?: { deletedFromBlockList: boolean });
+
 }
 
-export declare class BotBlockDetail {
+export type BotBlockDetail = {
 	deletedFromBlockList: boolean;
 
-	constructor(args?: { deletedFromBlockList: boolean });
+
 }
 
-export declare class NotBlocked {}
+export type NotBlocked = {}
 
-export declare class BlockDetail {
+export type BlockDetail = {
 	user: UserBlockDetail;
 	bot: BotBlockDetail;
 	notBlocked: NotBlocked;
 
-	constructor(args?: {
-		user: UserBlockDetail;
-		bot: BotBlockDetail;
-		notBlocked: NotBlocked;
-	});
+
 }
 
-export declare class RecommendationReasonSharedChat {
+export type RecommendationReasonSharedChat = {
 	chatMid: string;
 
-	constructor(args?: { chatMid: string });
+
 }
 
-export declare class RecommendationReasonReverseFriendByUserId {}
+export type RecommendationReasonReverseFriendByUserId = {}
 
-export declare class RecommendationReasonReverseFriendByQRCode {}
+export type RecommendationReasonReverseFriendByQRCode = {}
 
-export declare class RecommendationReasonReverseFriendByPhone {}
+export type RecommendationReasonReverseFriendByPhone = {}
 
-export declare class RecommendationReason {
+export type RecommendationReason = {
 	sharedChat: RecommendationReasonSharedChat;
 	reverseFriendByUserId: RecommendationReasonReverseFriendByUserId;
 	reverseFriendByQrCode: RecommendationReasonReverseFriendByQRCode;
 	reverseFriendByPhone: RecommendationReasonReverseFriendByPhone;
 
-	constructor(args?: {
-		sharedChat: RecommendationReasonSharedChat;
-		reverseFriendByUserId: RecommendationReasonReverseFriendByUserId;
-		reverseFriendByQrCode: RecommendationReasonReverseFriendByQRCode;
-		reverseFriendByPhone: RecommendationReasonReverseFriendByPhone;
-	});
+
 }
 
-export declare class Recommended {
+export type Recommended = {
 	createdTime: Int64;
 	reasons: RecommendationReason[];
 	hidden: boolean;
 
-	constructor(args?: {
-		createdTime: Int64;
-		reasons: RecommendationReason[];
-		hidden: boolean;
-	});
+
 }
 
-export declare class NotRecommended {}
+export type NotRecommended = {}
 
-export declare class RecommendationDetail {
+export type RecommendationDetail = {
 	recommendationDetail: Recommended;
 	notRecommended: NotRecommended;
 
-	constructor(args?: {
-		recommendationDetail: Recommended;
-		notRecommended: NotRecommended;
-	});
+
 }
 
-export declare class NotificationSetting {
+export type NotificationSetting = {
 	mute: boolean;
 
-	constructor(args?: { mute: boolean });
+
 }
 
-export declare class NotificationSettingEntry {
+export type NotificationSettingEntry = {
 	notificationSetting: NotificationSetting;
 
-	constructor(args?: { notificationSetting: NotificationSetting });
+
 }
 
-export declare class GetContactV3Response {
+export type GetContactV3Response = {
 	targetUserMid: string;
 	userType: UserType;
 	targetProfileDetail: TargetProfileDetail;
@@ -6321,73 +5235,55 @@ export declare class GetContactV3Response {
 	recommendationDetail: RecommendationDetail;
 	notificationSettingEntry: NotificationSettingEntry;
 
-	constructor(args?: {
-		targetUserMid: string;
-		userType: UserType;
-		targetProfileDetail: TargetProfileDetail;
-		friendDetail: FriendDetail;
-		blockDetail: BlockDetail;
-		recommendationDetail: RecommendationDetail;
-		notificationSettingEntry: NotificationSettingEntry;
-	});
+
 }
 
-export declare class GetContactsV3Response {
+export type GetContactsV3Response = {
 	responses: GetContactV3Response[];
 
-	constructor(args?: { responses: GetContactV3Response[] });
+
 }
 
-export declare class AddFriendByMidResponse {}
+export type AddFriendByMidResponse = {}
 
-export declare class GetContactCalendarEventResponse {
+export type GetContactCalendarEventResponse = {
 	targetUserMid: string;
 	userType: UserType;
 	contactCalendarEvents: ContactCalendarEvents;
 	snapshotTimeMillis: Int64;
 
-	constructor(args?: {
-		targetUserMid: string;
-		userType: UserType;
-		contactCalendarEvents: ContactCalendarEvents;
-		snapshotTimeMillis: Int64;
-	});
+
 }
 
-export declare class GetContactCalendarEventsResponse {
+export type GetContactCalendarEventsResponse = {
 	responses: GetContactCalendarEventResponse[];
 
-	constructor(args?: { responses: GetContactCalendarEventResponse[] });
+
 }
 
-export declare class Locale {
+export type Locale = {
 	language: string;
 	country: string;
 
-	constructor(args?: { language: string; country: string });
+
 }
 
-export declare class GetProductRequest {
+export type GetProductRequest = {
 	productType: ProductType;
 	productId: string;
 	carrierCode: string;
 	saveBrowsingHistory: boolean;
 
-	constructor(args?: {
-		productType: ProductType;
-		productId: string;
-		carrierCode: string;
-		saveBrowsingHistory: boolean;
-	});
+
 }
 
-export declare class GetProductResponse {
+export type GetProductResponse = {
 	productDetail: ProductDetail;
 
-	constructor(args?: { productDetail: ProductDetail });
+
 }
 
-export declare class ProductDetail {
+export type ProductDetail = {
 	id: string;
 	billingItemId: string;
 	type: string;
@@ -6432,68 +5328,19 @@ export declare class ProductDetail {
 	madeWithStickerMaker: boolean;
 	customDownloadButtonLabel: string;
 
-	constructor(args?: {
-		id: string;
-		billingItemId: string;
-		type: string;
-		subtype: SubType;
-		billingCpId: string;
-		name: string;
-		author: string;
-		details: string;
-		copyright: string;
-		notice: string;
-		promotionInfo: PromotionInfo;
-		latestVersion: Int64;
-		latestVersionString: string;
-		version: Int64;
-		versionString: string;
-		applicationVersionRange: ApplicationVersionRange;
-		owned: boolean;
-		grantedByDefault: boolean;
-		validFor: number;
-		validUntil: Int64;
-		onSale: boolean;
-		salesFlag: string[];
-		availableForPresent: boolean;
-		availableForMyself: boolean;
-		priceTier: number;
-		price: Price;
-		priceInLineCoin: string;
-		localizedPrice: Price;
-		images: { [k: string]: string[] };
-		attributes: { [k: string]: string };
-		authorId: string;
-		stickerResourceType: StickerResourceType;
-		productProperty: ProductProperty;
-		productSalesState: ProductSalesState;
-		installedTime: Int64;
-		wishProperty: ProductWishProperty;
-		subscriptionProperty: ProductSubscriptionProperty;
-		productPromotionProperty: ProductPromotionProperty;
-		availableInCountry: boolean;
-		editorsPickBanners: EditorsPickBannerForClient[];
-		ableToBeGivenAsPresent: boolean;
-		madeWithStickerMaker: boolean;
-		customDownloadButtonLabel: string;
-	});
+
 }
 
-export declare class ApplicationVersionRange {
+export type ApplicationVersionRange = {
 	lowerBound: string;
 	lowerBoundInclusive: boolean;
 	upperBound: string;
 	upperBoundInclusive: boolean;
 
-	constructor(args?: {
-		lowerBound: string;
-		lowerBoundInclusive: boolean;
-		upperBound: string;
-		upperBoundInclusive: boolean;
-	});
+
 }
 
-export declare class EditorsPickBannerForClient {
+export type EditorsPickBannerForClient = {
 	id: Int64;
 	endPageBannerImageUrl: string;
 	defaulteditorsPickShowcaseType: EditorsPickShowcaseType;
@@ -6501,37 +5348,26 @@ export declare class EditorsPickBannerForClient {
 	name: string;
 	description: string;
 
-	constructor(args?: {
-		id: Int64;
-		endPageBannerImageUrl: string;
-		defaulteditorsPickShowcaseType: EditorsPickShowcaseType;
-		showNewBadge: boolean;
-		name: string;
-		description: string;
-	});
+
 }
 
-export declare class Price {
+export type Price = {
 	currency: string;
 	amount: string;
 	priceString: string;
 
-	constructor(args?: { currency: string; amount: string; priceString: string });
+
 }
 
-export declare class ProductProperty {
+export type ProductProperty = {
 	stickerProperty: StickerProperty;
 	themeProperty: ThemeProperty;
 	sticonProperty: SticonProperty;
 
-	constructor(args?: {
-		stickerProperty: StickerProperty;
-		themeProperty: ThemeProperty;
-		sticonProperty: SticonProperty;
-	});
+
 }
 
-export declare class StickerProperty {
+export type StickerProperty = {
 	hasAnimation: boolean;
 	hasSound: boolean;
 	hasPopup: boolean;
@@ -6548,157 +5384,103 @@ export declare class StickerProperty {
 	cpdProduct: boolean;
 	availableForCombinationSticker: boolean;
 
-	constructor(args?: {
-		hasAnimation: boolean;
-		hasSound: boolean;
-		hasPopup: boolean;
-		stickerResourceType: StickerResourceType;
-		stickerOptions: string;
-		compactStickerOptions: number;
-		stickerHash: string;
-		stickerIds: string[];
-		nameTextProperty: ImageTextProperty;
-		availableForPhotoEdit: boolean;
-		stickerDefaultTexts: { [k: string]: string };
-		stickerSize: StickerSize;
-		popupLayer: PopupLayer;
-		cpdProduct: boolean;
-		availableForCombinationSticker: boolean;
-	});
+
 }
 
-export declare class ThemeProperty {
+export type ThemeProperty = {
 	thumbnail: string;
 	themeResourceType: ThemeResourceType;
 
-	constructor(args?: {
-		thumbnail: string;
-		themeResourceType: ThemeResourceType;
-	});
+
 }
 
-export declare class SticonProperty {
+export type SticonProperty = {
 	sticonIds: string[];
 	availableForPhotoEdit: boolean;
 	sticonResourceType: SticonResourceType;
 	endPageMainImages: string[][];
 
-	constructor(args?: {
-		sticonIds: string[];
-		availableForPhotoEdit: boolean;
-		sticonResourceType: SticonResourceType;
-		endPageMainImages: string[][];
-	});
+
 }
 
-export declare class ImageTextProperty {
+export type ImageTextProperty = {
 	status: ImageTextStatus;
 	plaintext: string;
 	nameTextMaxCharacterCount: number;
 	encryptedText: string;
 
-	constructor(args?: {
-		status: ImageTextStatus;
-		plaintext: string;
-		nameTextMaxCharacterCount: number;
-		encryptedText: string;
-	});
+
 }
 
-export declare class LpPromotionProperty {
+export type LpPromotionProperty = {
 	landingPageUrl: string;
 	label: string;
 	buttonLabel: string;
 
-	constructor(args?: {
-		landingPageUrl: string;
-		label: string;
-		buttonLabel: string;
-	});
+
 }
 
-export declare class ProductWishProperty {
+export type ProductWishProperty = {
 	totalCount: Int64;
 
-	constructor(args?: { totalCount: Int64 });
+
 }
 
-export declare class ProductSubscriptionProperty {
+export type ProductSubscriptionProperty = {
 	availableForSubscribe: boolean;
 	subscriptionAvailability: number;
 
-	constructor(args?: {
-		availableForSubscribe: boolean;
-		subscriptionAvailability: number;
-	});
+
 }
 
-export declare class ProductPromotionProperty {
+export type ProductPromotionProperty = {
 	lpPromotionProperty: LpPromotionProperty;
 
-	constructor(args?: { lpPromotionProperty: LpPromotionProperty });
+
 }
 
-export declare class PromotionDetail {
+export type PromotionDetail = {
 	promotionBuddyInfo: PromotionBuddyInfo;
 	promotionInstallInfo: PromotionInstallInfo;
 	promotionMissionInfo: PromotionMissionInfo;
 
-	constructor(args?: {
-		promotionBuddyInfo: PromotionBuddyInfo;
-		promotionInstallInfo: PromotionInstallInfo;
-		promotionMissionInfo: PromotionMissionInfo;
-	});
+
 }
 
-export declare class PromotionInfo {
+export type PromotionInfo = {
 	promotionType: PromotionType;
 	promotionDetail: PromotionDetail;
 	buddyInfo: PromotionBuddyInfo;
 
-	constructor(args?: {
-		promotionType: PromotionType;
-		promotionDetail: PromotionDetail;
-		buddyInfo: PromotionBuddyInfo;
-	});
+
 }
 
-export declare class PromotionBuddyInfo {
+export type PromotionBuddyInfo = {
 	buddyMid: string;
 	promotionBuddyDetail: PromotionBuddyDetail;
 	showBanner: boolean;
 
-	constructor(args?: {
-		buddyMid: string;
-		promotionBuddyDetail: PromotionBuddyDetail;
-		showBanner: boolean;
-	});
+
 }
 
-export declare class PromotionInstallInfo {
+export type PromotionInstallInfo = {
 	downloadUrl: string;
 	customUrlSchema: string;
 
-	constructor(args?: { downloadUrl: string; customUrlSchema: string });
+
 }
 
-export declare class PromotionMissionInfo {
+export type PromotionMissionInfo = {
 	promotionMissionType: PromotionMissionType;
 	missionCompleted: boolean;
 	downloadUrl: string;
 	customUrlSchema: string;
 	oaMid: string;
 
-	constructor(args?: {
-		promotionMissionType: PromotionMissionType;
-		missionCompleted: boolean;
-		downloadUrl: string;
-		customUrlSchema: string;
-		oaMid: string;
-	});
+
 }
 
-export declare class PromotionBuddyDetail {
+export type PromotionBuddyDetail = {
 	searchId: string;
 	contactStatus: ContactStatus;
 	name: string;
@@ -6706,17 +5488,10 @@ export declare class PromotionBuddyDetail {
 	statusMessage: string;
 	brandType: BrandType;
 
-	constructor(args?: {
-		searchId: string;
-		contactStatus: ContactStatus;
-		name: string;
-		pictureUrl: string;
-		statusMessage: string;
-		brandType: BrandType;
-	});
+
 }
 
-export declare class PurchaseOrder {
+export type PurchaseOrder = {
 	shopId: string;
 	productId: string;
 	recipientMid: string;
@@ -6725,76 +5500,50 @@ export declare class PurchaseOrder {
 	locale: Locale;
 	presentAttributes: { [k: string]: string };
 
-	constructor(args?: {
-		shopId: string;
-		productId: string;
-		recipientMid: string;
-		price: Price;
-		enableLinePointAutoExchange: boolean;
-		locale: Locale;
-		presentAttributes: { [k: string]: string };
-	});
+
 }
 
-export declare class PurchaseOrderResponse {
+export type PurchaseOrderResponse = {
 	orderId: string;
 	attributes: { [k: string]: string };
 	billingConfirmUrl: string;
 
-	constructor(args?: {
-		orderId: string;
-		attributes: { [k: string]: string };
-		billingConfirmUrl: string;
-	});
+
 }
 
-export declare class PurchaseRecordList {
+export type PurchaseRecordList = {
 	purchaseRecords: PurchaseRecord[];
 	offset: number;
 	totalSize: number;
 
-	constructor(args?: {
-		purchaseRecords: PurchaseRecord[];
-		offset: number;
-		totalSize: number;
-	});
+
 }
 
-export declare class PurchaseRecord {
+export type PurchaseRecord = {
 	productDetail: ProductDetail;
 	purchasedTime: Int64;
 	giver: string;
 	recipient: string;
 	purchasedPrice: Price;
 
-	constructor(args?: {
-		productDetail: ProductDetail;
-		purchasedTime: Int64;
-		giver: string;
-		recipient: string;
-		purchasedPrice: Price;
-	});
+
 }
 
-export declare class DetailedProductList {
+export type DetailedProductList = {
 	productList: ProductDetail[];
 	offset: number;
 	totalSize: number;
 
-	constructor(args?: {
-		productList: ProductDetail[];
-		offset: number;
-		totalSize: number;
-	});
+
 }
 
-export declare class CreateCombinationStickerResponse {
+export type CreateCombinationStickerResponse = {
 	id: string;
 
-	constructor(args?: { id: string });
+
 }
 
-export declare class ProductSearchSummary {
+export type ProductSearchSummary = {
 	id: string;
 	type: ProductType;
 	name: string;
@@ -6817,44 +5566,18 @@ export declare class ProductSearchSummary {
 	interactionEventParameter: string;
 	editorsPickIds: Int64[];
 
-	constructor(args?: {
-		id: string;
-		type: ProductType;
-		name: string;
-		author: string;
-		promotionInfo: PromotionInfo;
-		version: Int64;
-		newFlag: boolean;
-		priceTier: number;
-		priceInLineCoin: string;
-		property: ProductProperty;
-		subType: SubType;
-		onSale: boolean;
-		availableForPresent: boolean;
-		availableForPurchase: boolean;
-		validDays: number;
-		authorId: string;
-		bargainFlag: boolean;
-		copyright: string;
-		availability: ProductAvailability;
-		interactionEventParameter: string;
-		editorsPickIds: Int64[];
-	});
+
 }
 
-export declare class DemographicType {
+export type DemographicType = {
 	demographicGenderType: DemographicGenderType;
 	demographicAgeType: DemographicAgeType;
 	defaultOrder: boolean;
 
-	constructor(args?: {
-		demographicGenderType: DemographicGenderType;
-		demographicAgeType: DemographicAgeType;
-		defaultOrder: boolean;
-	});
+
 }
 
-export declare class ShowcaseV3 {
+export type ShowcaseV3 = {
 	productList: ProductSearchSummary[];
 	continuationToken: string;
 	totalSize: Int64;
@@ -6863,25 +5586,17 @@ export declare class ShowcaseV3 {
 	subType: SubType;
 	demographicType: DemographicType;
 
-	constructor(args?: {
-		productList: ProductSearchSummary[];
-		continuationToken: string;
-		totalSize: Int64;
-		showcaseType: ShowcaseType;
-		productType: ProductType;
-		subType: SubType;
-		demographicType: DemographicType;
-	});
+
 }
 
-export declare class StickerIdRange {
+export type StickerIdRange = {
 	start: Int64;
 	size: number;
 
-	constructor(args?: { start: Int64; size: number });
+
 }
 
-export declare class StickerSummary {
+export type StickerSummary = {
 	stickerIdRanges: StickerIdRange[];
 	suggestVersion: Int64;
 	stickerHash: string;
@@ -6893,57 +5608,34 @@ export declare class StickerSummary {
 	stickerSize: StickerSize;
 	availableForCombinationSticker: boolean;
 
-	constructor(args?: {
-		stickerIdRanges: StickerIdRange[];
-		suggestVersion: Int64;
-		stickerHash: string;
-		defaultDisplayOnKeyboard: boolean;
-		stickerResourceType: StickerResourceType;
-		nameTextProperty: ImageTextProperty;
-		availableForPhotoEdit: boolean;
-		popupLayer: PopupLayer;
-		stickerSize: StickerSize;
-		availableForCombinationSticker: boolean;
-	});
+
 }
 
-export declare class ThemeSummary {
+export type ThemeSummary = {
 	imagePath: string;
 	version: Int64;
 	versionString: string;
 
-	constructor(args?: {
-		imagePath: string;
-		version: Int64;
-		versionString: string;
-	});
+
 }
 
-export declare class SticonSummary {
+export type SticonSummary = {
 	suggestVersion: Int64;
 	availableForPhotoEdit: boolean;
 	sticonResourceType: SticonResourceType;
 
-	constructor(args?: {
-		suggestVersion: Int64;
-		availableForPhotoEdit: boolean;
-		sticonResourceType: SticonResourceType;
-	});
+
 }
 
-export declare class ProductTypeSummary {
+export type ProductTypeSummary = {
 	stickerSummary: StickerSummary;
 	themeSummary: ThemeSummary;
 	sticonSummary: SticonSummary;
 
-	constructor(args?: {
-		stickerSummary: StickerSummary;
-		themeSummary: ThemeSummary;
-		sticonSummary: SticonSummary;
-	});
+
 }
 
-export declare class ProductSummary {
+export type ProductSummary = {
 	id: string;
 	name: string;
 	latestVersion: Int64;
@@ -6959,70 +5651,47 @@ export declare class ProductSummary {
 	canAutoDownload: boolean;
 	promotionInfo: PromotionInfo;
 
-	constructor(args?: {
-		id: string;
-		name: string;
-		latestVersion: Int64;
-		applicationVersionRange: ApplicationVersionRange;
-		grantedByDefault: boolean;
-		attributes: { [k: string]: string };
-		productTypeSummary: ProductTypeSummary;
-		validUntil: Int64;
-		validFor: number;
-		installedTime: Int64;
-		availability: ProductAvailability;
-		authorId: string;
-		canAutoDownload: boolean;
-		promotionInfo: PromotionInfo;
-	});
+
 }
 
-export declare class ProductSummaryList {
+export type ProductSummaryList = {
 	productList: ProductSummary[];
 	offset: number;
 	totalSize: number;
 
-	constructor(args?: {
-		productList: ProductSummary[];
-		offset: number;
-		totalSize: number;
-	});
+
 }
 
-export declare class ProductValidationScheme {
+export type ProductValidationScheme = {
 	key: string;
 	offset: Int64;
 	size: Int64;
 
-	constructor(args?: { key: string; offset: Int64; size: Int64 });
+
 }
 
-export declare class ProductValidationResult {
+export type ProductValidationResult = {
 	validated: boolean;
 
-	constructor(args?: { validated: boolean });
+
 }
 
-export declare class ShopUpdates {
+export type ShopUpdates = {
 	shopId: string;
 	latestUpdateTime: Int64;
 
-	constructor(args?: { shopId: string; latestUpdateTime: Int64 });
+
 }
 
-export declare class SearchProductsV2Response {
+export type SearchProductsV2Response = {
 	results: ProductSearchSummary[];
 	continuationToken: string;
 	totalSize: Int64;
 
-	constructor(args?: {
-		results: ProductSearchSummary[];
-		continuationToken: string;
-		totalSize: Int64;
-	});
+
 }
 
-export declare class EditorsPickBanner {
+export type EditorsPickBanner = {
 	id: Int64;
 	imageUrl: string;
 	homeBannerImageUrl: string;
@@ -7036,91 +5705,63 @@ export declare class EditorsPickBanner {
 	description: string;
 	showNewBadge: boolean;
 
-	constructor(args?: {
-		id: Int64;
-		imageUrl: string;
-		homeBannerImageUrl: string;
-		showcaseBannerImageUrl: string;
-		enableEditorsPickShowcaseTypes: EditorsPickShowcaseType[];
-		defaulteditorsPickShowcaseType: EditorsPickShowcaseType;
-		homeBannerV2ImageUrl: string;
-		name: string;
-		containsProducts: boolean;
-		displayPeriodBegin: Int64;
-		description: string;
-		showNewBadge: boolean;
-	});
+
 }
 
-export declare class AuthorForShowcase {
+export type AuthorForShowcase = {
 	authorId: Int64;
 	productList: ProductSearchSummary[];
 	productTotalSize: Int64;
 
-	constructor(args?: {
-		authorId: Int64;
-		productList: ProductSearchSummary[];
-		productTotalSize: Int64;
-	});
+
 }
 
-export declare class ImageSearchSummary {
+export type ImageSearchSummary = {
 	imageId: string;
 	product: ProductSearchSummary;
 
-	constructor(args?: { imageId: string; product: ProductSearchSummary });
+
 }
 
-export declare class KeywordImageList {
+export type KeywordImageList = {
 	tagId: string;
 	keyword: string;
 	imageList: ImageSearchSummary[];
 
-	constructor(args?: {
-		tagId: string;
-		keyword: string;
-		imageList: ImageSearchSummary[];
-	});
+
 }
 
-export declare class URLItem {
+export type URLItem = {
 	title: string;
 	imageUrl: string;
 	url: string;
 
-	constructor(args?: { title: string; imageUrl: string; url: string });
+
 }
 
-export declare class EditorsPickContent {
+export type EditorsPickContent = {
 	urlItem: URLItem;
 	productDetail: ProductDetail;
 
-	constructor(args?: { urlItem: URLItem; productDetail: ProductDetail });
+
 }
 
-export declare class EditorsPick {
+export type EditorsPick = {
 	contentType: EditorsPickContentType;
 	editorsPickContent: EditorsPickContent;
 
-	constructor(args?: {
-		contentType: EditorsPickContentType;
-		editorsPickContent: EditorsPickContent;
-	});
+
 }
 
-export declare class EditorsPickTab {
+export type EditorsPickTab = {
 	editorsPickId: Int64;
 	name: string;
 	showcaseType: ShowcaseType;
 
-	constructor(args?: {
-		editorsPickId: Int64;
-		name: string;
-		showcaseType: ShowcaseType;
-	});
+
 }
 
-export declare class EditorsPickShowcase {
+export type EditorsPickShowcase = {
 	id: Int64;
 	name: string;
 	banner: EditorsPickBanner;
@@ -7131,73 +5772,46 @@ export declare class EditorsPickShowcase {
 	type: EditorsPickShowcaseType;
 	tabs: EditorsPickTab[];
 
-	constructor(args?: {
-		id: Int64;
-		name: string;
-		banner: EditorsPickBanner;
-		editorsPicks: EditorsPick[];
-		continuationToken: string;
-		totalSize: number;
-		description: string;
-		type: EditorsPickShowcaseType;
-		tabs: EditorsPickTab[];
-	});
+
 }
 
-export declare class Category {
+export type Category = {
 	id: Int64;
 	name: string;
 	newFlag: boolean;
 	productCount: number;
 	thumbnailUrl: string;
 
-	constructor(args?: {
-		id: Int64;
-		name: string;
-		newFlag: boolean;
-		productCount: number;
-		thumbnailUrl: string;
-	});
+
 }
 
-export declare class Tag {
+export type Tag = {
 	id: Int64;
 	name: string;
 	tagType: TagType;
 	productCount: number;
 	thumbnailUrl: string;
 
-	constructor(args?: {
-		id: Int64;
-		name: string;
-		tagType: TagType;
-		productCount: number;
-		thumbnailUrl: string;
-	});
+
 }
 
-export declare class ProductList {
+export type ProductList = {
 	productList: ProductDetail[];
 	offset: number;
 	totalSize: number;
 	title: string;
 
-	constructor(args?: {
-		productList: ProductDetail[];
-		offset: number;
-		totalSize: number;
-		title: string;
-	});
+
 }
 
-export declare class CategoryProductList {
+export type CategoryProductList = {
 	category: Category;
 	productList: ProductList;
 
-	constructor(args?: { category: Category; productList: ProductList });
+
 }
 
-export declare class AggregatedHomeV2Response {
+export type AggregatedHomeV2Response = {
 	showcases: ShowcaseV3[];
 	editorsPickBanners: EditorsPickBanner[];
 	authorList: AuthorForShowcase[];
@@ -7207,85 +5821,57 @@ export declare class AggregatedHomeV2Response {
 	categoryList: Category[];
 	tagList: Tag[];
 
-	constructor(args?: {
-		showcases: ShowcaseV3[];
-		editorsPickBanners: EditorsPickBanner[];
-		authorList: AuthorForShowcase[];
-		keywordStickerList: KeywordImageList[];
-		detailedEditorsPick: EditorsPickShowcase;
-		detailedCategoryList: CategoryProductList[];
-		categoryList: Category[];
-		tagList: Tag[];
-	});
+
 }
 
-export declare class AggregatedCategory {
+export type AggregatedCategory = {
 	id: Int64;
 	categoryType: CategoryType;
 	name: string;
 	productCount: number;
 	thumbnailUrl: string;
 
-	constructor(args?: {
-		id: Int64;
-		categoryType: CategoryType;
-		name: string;
-		productCount: number;
-		thumbnailUrl: string;
-	});
+
 }
 
-export declare class ListContentData {
+export type ListContentData = {
 	showcase: ShowcaseV3;
 	editorsPickBanners: EditorsPickBanner[];
 	categories: AggregatedCategory[];
 
-	constructor(args?: {
-		showcase: ShowcaseV3;
-		editorsPickBanners: EditorsPickBanner[];
-		categories: AggregatedCategory[];
-	});
+
 }
 
-export declare class ListContent {
+export type ListContent = {
 	contentData: ListContentData;
 	localizedTitle: string;
 	tsKey: string;
 	moreLinkFragment: string;
 
-	constructor(args?: {
-		contentData: ListContentData;
-		localizedTitle: string;
-		tsKey: string;
-		moreLinkFragment: string;
-	});
+
 }
 
-export declare class AggregatedHomeNativeResponse {
+export type AggregatedHomeNativeResponse = {
 	listContents: ListContent[];
 
-	constructor(args?: { listContents: ListContent[] });
+
 }
 
-export declare class DynamicHomeNativeResponse {
+export type DynamicHomeNativeResponse = {
 	listContents: ListContent[];
 
-	constructor(args?: { listContents: ListContent[] });
+
 }
 
-export declare class TagsProductList {
+export type TagsProductList = {
 	tasteTag: Tag;
 	characterTag: Tag;
 	products: ProductSearchSummary[];
 
-	constructor(args?: {
-		tasteTag: Tag;
-		characterTag: Tag;
-		products: ProductSearchSummary[];
-	});
+
 }
 
-export declare class AggregatedPremiumHomeResponse {
+export type AggregatedPremiumHomeResponse = {
 	showcases: ShowcaseV3[];
 	editorsPickBanners: EditorsPickBanner[];
 	popularCreator: AuthorForShowcase;
@@ -7294,60 +5880,40 @@ export declare class AggregatedPremiumHomeResponse {
 	browsingHistory: ShowcaseV3;
 	subscriptionSlotHistory: ShowcaseV3;
 
-	constructor(args?: {
-		showcases: ShowcaseV3[];
-		editorsPickBanners: EditorsPickBanner[];
-		popularCreator: AuthorForShowcase;
-		featuredCategory: TagsProductList;
-		categoryList: TagsProductList[];
-		browsingHistory: ShowcaseV3;
-		subscriptionSlotHistory: ShowcaseV3;
-	});
+
 }
 
-export declare class AggregatedShowcaseV4 {
+export type AggregatedShowcaseV4 = {
 	showcases: ShowcaseV3[];
 
-	constructor(args?: { showcases: ShowcaseV3[] });
+
 }
 
-export declare class GetRecommendationResponse {
+export type GetRecommendationResponse = {
 	results: ProductSearchSummary[];
 	continuationToken: string;
 	totalSize: Int64;
 
-	constructor(args?: {
-		results: ProductSearchSummary[];
-		continuationToken: string;
-		totalSize: Int64;
-	});
+
 }
 
-export declare class AuthorListResponse {
+export type AuthorListResponse = {
 	authorList: AuthorForShowcase[];
 	totalSize: Int64;
 	continuationToken: string;
 
-	constructor(args?: {
-		authorList: AuthorForShowcase[];
-		totalSize: Int64;
-		continuationToken: string;
-	});
+
 }
 
-export declare class ProductResourceType {
+export type ProductResourceType = {
 	stickerResourceType: StickerResourceType;
 	themeResourceType: ThemeResourceType;
 	sticonResourceType: SticonResourceType;
 
-	constructor(args?: {
-		stickerResourceType: StickerResourceType;
-		themeResourceType: ThemeResourceType;
-		sticonResourceType: SticonResourceType;
-	});
+
 }
 
-export declare class LatestProductByAuthorItem {
+export type LatestProductByAuthorItem = {
 	productId: string;
 	displayName: string;
 	version: Int64;
@@ -7355,35 +5921,24 @@ export declare class LatestProductByAuthorItem {
 	productResourceType: ProductResourceType;
 	popupLayer: PopupLayer;
 
-	constructor(args?: {
-		productId: string;
-		displayName: string;
-		version: Int64;
-		newFlag: boolean;
-		productResourceType: ProductResourceType;
-		popupLayer: PopupLayer;
-	});
+
 }
 
-export declare class LatestProductsByAuthorResponse {
+export type LatestProductsByAuthorResponse = {
 	authorId: Int64;
 	author: string;
 	items: LatestProductByAuthorItem[];
 
-	constructor(args?: {
-		authorId: Int64;
-		author: string;
-		items: LatestProductByAuthorItem[];
-	});
+
 }
 
-export declare class GetExperimentsResponse {
+export type GetExperimentsResponse = {
 	variables: { [k: string]: string };
 
-	constructor(args?: { variables: { [k: string]: string } });
+
 }
 
-export declare class ProductSummaryForAutoSuggest {
+export type ProductSummaryForAutoSuggest = {
 	id: string;
 	version: Int64;
 	name: string;
@@ -7394,38 +5949,25 @@ export declare class ProductSummaryForAutoSuggest {
 	resourceType: ProductResourceType;
 	stickerSize: StickerSize;
 
-	constructor(args?: {
-		id: string;
-		version: Int64;
-		name: string;
-		stickerResourceType: StickerResourceType;
-		suggestVersion: Int64;
-		popupLayer: PopupLayer;
-		type: ProductType;
-		resourceType: ProductResourceType;
-		stickerSize: StickerSize;
-	});
+
 }
 
-export declare class AutoSuggestionShowcaseResponse {
+export type AutoSuggestionShowcaseResponse = {
 	productList: ProductSummaryForAutoSuggest[];
 	totalSize: Int64;
 
-	constructor(args?: {
-		productList: ProductSummaryForAutoSuggest[];
-		totalSize: Int64;
-	});
+
 }
 
-export declare class SuggestResource {
+export type SuggestResource = {
 	dataUrl: string;
 	version: Int64;
 	updatedTime: Int64;
 
-	constructor(args?: { dataUrl: string; version: Int64; updatedTime: Int64 });
+
 }
 
-export declare class SuggestDictionarySetting {
+export type SuggestDictionarySetting = {
 	language: string;
 	name: string;
 	preload: boolean;
@@ -7435,80 +5977,64 @@ export declare class SuggestDictionarySetting {
 	tagPatch: any;
 	corpusResource: SuggestResource;
 
-	constructor(args?: {
-		language: string;
-		name: string;
-		preload: boolean;
-		suggestResource: SuggestResource;
-		patch: any;
-		suggestTagResource: SuggestResource;
-		tagPatch: any;
-		corpusResource: SuggestResource;
-	});
+
 }
 
-export declare class GetSuggestDictionarySettingResponse {
+export type GetSuggestDictionarySettingResponse = {
 	results: SuggestDictionarySetting[];
 
-	constructor(args?: { results: SuggestDictionarySetting[] });
+
 }
 
-export declare class GetRecommendOaResponse {
+export type GetRecommendOaResponse = {
 	buddyMids: string[];
 
-	constructor(args?: { buddyMids: string[] });
+
 }
 
-export declare class GetSuggestResourcesResponse {
+export type GetSuggestResourcesResponse = {
 	suggestResources: any;
 
-	constructor(args?: { suggestResources: any });
+
 }
 
-export declare class GetSuggestResourcesV2Response {
+export type GetSuggestResourcesV2Response = {
 	suggestResources: { [k: string]: SuggestResource };
 
-	constructor(args?: { suggestResources: { [k: string]: SuggestResource } });
+
 }
 
-export declare class GetTagClusterFileResponse {
+export type GetTagClusterFileResponse = {
 	path: string;
 	updatedTimeMillis: Int64;
 
-	constructor(args?: { path: string; updatedTimeMillis: Int64 });
+
 }
 
-export declare class GetResourceFileReponse {
+export type GetResourceFileReponse = {
 	tagClusterFileResponse: GetTagClusterFileResponse;
 
-	constructor(args?: { tagClusterFileResponse: GetTagClusterFileResponse });
+
 }
 
-export declare class BrowsingHistory {
+export type BrowsingHistory = {
 	productSearchSummary: ProductSearchSummary;
 	browsingTime: Int64;
 
-	constructor(args?: {
-		productSearchSummary: ProductSearchSummary;
-		browsingTime: Int64;
-	});
+
 }
 
-export declare class GetBrowsingHistoryResponse {
+export type GetBrowsingHistoryResponse = {
 	browsingHistory: BrowsingHistory[];
 	continuationToken: string;
 	totalSize: number;
 
-	constructor(args?: {
-		browsingHistory: BrowsingHistory[];
-		continuationToken: string;
-		totalSize: number;
-	});
+
 }
 
-export declare class DeleteAllBrowsingHistoryResponse {}
+export type DeleteAllBrowsingHistoryResponse = {}
 
-export declare class SticonProductMapping {
+export type SticonProductMapping = {
 	productId: string;
 	oldProductId: string;
 	newToOldSticonIdMapping: { [k: string]: string };
@@ -7518,49 +6044,32 @@ export declare class SticonProductMapping {
 	stickerPackageVersion: number;
 	stickerIds: { [k: string]: string };
 
-	constructor(args?: {
-		productId: string;
-		oldProductId: string;
-		newToOldSticonIdMapping: { [k: string]: string };
-		oldPackageVersion: number;
-		oldMetaVersion: number;
-		stickerPackageId: Int64;
-		stickerPackageVersion: number;
-		stickerIds: { [k: string]: string };
-	});
+
 }
 
-export declare class GetOldSticonMappingResponse {
+export type GetOldSticonMappingResponse = {
 	sticonProductMappings: SticonProductMapping[];
 	updatedTimeMillis: Int64;
 	updated: boolean;
 
-	constructor(args?: {
-		sticonProductMappings: SticonProductMapping[];
-		updatedTimeMillis: Int64;
-		updated: boolean;
-	});
+
 }
 
-export declare class SimilarImageShowcase {
+export type SimilarImageShowcase = {
 	chosenImage: ImageSearchSummary;
 	similarImageList: ImageSearchSummary[];
 	continuationToken: string;
 
-	constructor(args?: {
-		chosenImage: ImageSearchSummary;
-		similarImageList: ImageSearchSummary[];
-		continuationToken: string;
-	});
+
 }
 
-export declare class CustomizeImageTextResponse {
+export type CustomizeImageTextResponse = {
 	nameTextProperty: ImageTextProperty;
 
-	constructor(args?: { nameTextProperty: ImageTextProperty });
+
 }
 
-export declare class SubscriptionPlan {
+export type SubscriptionPlan = {
 	billingItemId: string;
 	subscriptionService: SubscriptionServiceType;
 	target: SubscriptionPlanTarget;
@@ -7574,29 +6083,16 @@ export declare class SubscriptionPlan {
 	nameKey: string;
 	tier: SubscriptionPlanTier;
 
-	constructor(args?: {
-		billingItemId: string;
-		subscriptionService: SubscriptionServiceType;
-		target: SubscriptionPlanTarget;
-		type: SubscriptionPlanType;
-		period: string;
-		freeTrial: string;
-		localizedName: string;
-		price: Price;
-		availability: SubscriptionPlanAvailability;
-		cpId: string;
-		nameKey: string;
-		tier: SubscriptionPlanTier;
-	});
+
 }
 
-export declare class GetSubscriptionPlansResponse {
+export type GetSubscriptionPlansResponse = {
 	plans: SubscriptionPlan[];
 
-	constructor(args?: { plans: SubscriptionPlan[] });
+
 }
 
-export declare class SubscriptionStatus {
+export type SubscriptionStatus = {
 	billingItemId: string;
 	subscriptionService: SubscriptionServiceType;
 	period: string;
@@ -7614,138 +6110,93 @@ export declare class SubscriptionStatus {
 	maxSlotCountsByProductType: { [k: number /*ProductType*/]: number };
 	agreementAccepted: boolean;
 
-	constructor(args?: {
-		billingItemId: string;
-		subscriptionService: SubscriptionServiceType;
-		period: string;
-		localizedName: string;
-		freeTrial: boolean;
-		expired: boolean;
-		validUntil: Int64;
-		maxSlotCount: number;
-		target: SubscriptionPlanTarget;
-		type: SubscriptionPlanType;
-		storeCode: StoreCode;
-		nameKey: string;
-		tier: SubscriptionPlanTier;
-		accountHold: boolean;
-		maxSlotCountsByProductType: { [k: number /*ProductType*/]: number };
-		agreementAccepted: boolean;
-	});
+
 }
 
-export declare class GetSubscriptionStatusResponse {
+export type GetSubscriptionStatusResponse = {
 	subscriptions: { [k: number]: SubscriptionStatus };
 	hasValidStudentInformation: boolean;
 	otherOwnedSubscriptions: { [k: number]: SubscriptionStatus[] };
 
-	constructor(args?: {
-		subscriptions: { [k: number]: SubscriptionStatus };
-		hasValidStudentInformation: boolean;
-		otherOwnedSubscriptions: { [k: number]: SubscriptionStatus[] };
-	});
+
 }
 
-export declare class GetProductSummariesInSubscriptionSlotsResponse {
+export type GetProductSummariesInSubscriptionSlotsResponse = {
 	products: ProductSummary[];
 	continuationToken: string;
 	totalSize: Int64;
 	maxSlotCount: number;
 
-	constructor(args?: {
-		products: ProductSummary[];
-		continuationToken: string;
-		totalSize: Int64;
-		maxSlotCount: number;
-	});
+
 }
 
-export declare class AddProductToSubscriptionSlotResponse {
+export type AddProductToSubscriptionSlotResponse = {
 	result: SubscriptionSlotModificationResult;
 
-	constructor(args?: { result: SubscriptionSlotModificationResult });
+
 }
 
-export declare class AddThemeToSubscriptionSlotResponse {
+export type AddThemeToSubscriptionSlotResponse = {
 	result: SubscriptionSlotModificationResult;
 
-	constructor(args?: { result: SubscriptionSlotModificationResult });
+
 }
 
-export declare class RemoveProductFromSubscriptionSlotResponse {
+export type RemoveProductFromSubscriptionSlotResponse = {
 	result: SubscriptionSlotModificationResult;
 
-	constructor(args?: { result: SubscriptionSlotModificationResult });
+
 }
 
-export declare class PurchaseSubscriptionResponse {
+export type PurchaseSubscriptionResponse = {
 	result: SubscriptionBillingResult;
 	orderId: string;
 	confirmUrl: string;
 
-	constructor(args?: {
-		result: SubscriptionBillingResult;
-		orderId: string;
-		confirmUrl: string;
-	});
+
 }
 
-export declare class ChangeSubscriptionResponse {
+export type ChangeSubscriptionResponse = {
 	result: SubscriptionBillingResult;
 	orderId: string;
 	confirmUrl: string;
 
-	constructor(args?: {
-		result: SubscriptionBillingResult;
-		orderId: string;
-		confirmUrl: string;
-	});
+
 }
 
-export declare class RestoreSubscriptionResponse {
+export type RestoreSubscriptionResponse = {
 	result: SubscriptionBillingResult;
 	orderId: string;
 	confirmUrl: string;
 
-	constructor(args?: {
-		result: SubscriptionBillingResult;
-		orderId: string;
-		confirmUrl: string;
-	});
+
 }
 
-export declare class GetProductsByTagsV2Response {
+export type GetProductsByTagsV2Response = {
 	results: ProductSearchSummary[];
 	continuationToken: string;
 	totalSize: Int64;
 
-	constructor(args?: {
-		results: ProductSearchSummary[];
-		continuationToken: string;
-		totalSize: Int64;
-	});
+
 }
 
-export declare class StudentInformation {
+export type StudentInformation = {
 	schoolName: string;
 	graduationDate: string;
 
-	constructor(args?: { schoolName: string; graduationDate: string });
+
 }
 
-export declare class GetStudentInformationResponse {
+export type GetStudentInformationResponse = {
 	studentInformation: StudentInformation;
 	isValid: boolean;
 
-	constructor(args?: {
-		studentInformation: StudentInformation;
-		isValid: boolean;
-	});
+
 }
 
-export declare class SaveStudentInformationResponse {}
+export type SaveStudentInformationResponse = {}
 
-export declare class PurchasedSubscription {
+export type PurchasedSubscription = {
 	orderId: string;
 	subscriptionService: SubscriptionServiceType;
 	billingItemId: string;
@@ -7757,33 +6208,18 @@ export declare class PurchasedSubscription {
 	nameKey: string;
 	tier: SubscriptionPlanTier;
 
-	constructor(args?: {
-		orderId: string;
-		subscriptionService: SubscriptionServiceType;
-		billingItemId: string;
-		type: SubscriptionPlanType;
-		localizedName: string;
-		purchasedTime: Int64;
-		validUntil: Int64;
-		price: Price;
-		nameKey: string;
-		tier: SubscriptionPlanTier;
-	});
+
 }
 
-export declare class GetPurchasedSubscriptionsResponse {
+export type GetPurchasedSubscriptionsResponse = {
 	subscriptions: PurchasedSubscription[];
 	continuationToken: string;
 	totalSize: Int64;
 
-	constructor(args?: {
-		subscriptions: PurchasedSubscription[];
-		continuationToken: string;
-		totalSize: Int64;
-	});
+
 }
 
-export declare class FindRestorablePlanResponse {
+export type FindRestorablePlanResponse = {
 	result: SubscriptionBillingResult;
 	billingItemId: string;
 	storeOrderId: string;
@@ -7791,164 +6227,127 @@ export declare class FindRestorablePlanResponse {
 	orderId: string;
 	mid: string;
 
-	constructor(args?: {
-		result: SubscriptionBillingResult;
-		billingItemId: string;
-		storeOrderId: string;
-		originalStoreOrderId: string;
-		orderId: string;
-		mid: string;
-	});
+
 }
 
-export declare class SubscriptionMissionCampaign {
+export type SubscriptionMissionCampaign = {
 	productType: ProductType;
 	productId: string;
 
-	constructor(args?: { productType: ProductType; productId: string });
+
 }
 
-export declare class SubscriptionCampaignPayload {
+export type SubscriptionCampaignPayload = {
 	mission: SubscriptionMissionCampaign;
 
-	constructor(args?: { mission: SubscriptionMissionCampaign });
+
 }
 
-export declare class SubscriptionCampaign {
+export type SubscriptionCampaign = {
 	campaignId: string;
 	fromInclusive: Int64;
 	toExclusive: Int64;
 	type: SubscriptionCampaignType;
 	payload: SubscriptionCampaignPayload;
 
-	constructor(args?: {
-		campaignId: string;
-		fromInclusive: Int64;
-		toExclusive: Int64;
-		type: SubscriptionCampaignType;
-		payload: SubscriptionCampaignPayload;
-	});
+
 }
 
-export declare class GetSubscriptionCampaignsResponse {
+export type GetSubscriptionCampaignsResponse = {
 	campaigns: SubscriptionCampaign[];
 
-	constructor(args?: { campaigns: SubscriptionCampaign[] });
+
 }
 
-export declare class GetSubscriptionRecommendationsResponse {
+export type GetSubscriptionRecommendationsResponse = {
 	products: ProductSearchSummary[];
 
-	constructor(args?: { products: ProductSearchSummary[] });
+
 }
 
-export declare class InteractionEventResponse {
+export type InteractionEventResponse = {
 	responseStatus: number;
 
-	constructor(args?: { responseStatus: number });
+
 }
 
-export declare class LibraExperiment {
+export type LibraExperiment = {
 	experimentId: string;
 	groupId: string;
 
-	constructor(args?: { experimentId: string; groupId: string });
+
 }
 
-export declare class GetExperimentsV2Response {
+export type GetExperimentsV2Response = {
 	experiments: { [k: string]: LibraExperiment };
 
-	constructor(args?: { experiments: { [k: string]: LibraExperiment } });
+
 }
 
-export declare class BirthdayGiftAssociationVerifyResponse {
+export type BirthdayGiftAssociationVerifyResponse = {
 	tokenStatus: BirthdayGiftAssociationVerifyTokenStatus;
 	recipientUserMid: string;
 
-	constructor(args?: {
-		tokenStatus: BirthdayGiftAssociationVerifyTokenStatus;
-		recipientUserMid: string;
-	});
+
 }
 
-export declare class SubscriptionSlotHistory {
+export type SubscriptionSlotHistory = {
 	product: ProductSearchSummary;
 	addedTime: Int64;
 	removedTime: Int64;
 
-	constructor(args?: {
-		product: ProductSearchSummary;
-		addedTime: Int64;
-		removedTime: Int64;
-	});
+
 }
 
-export declare class GetSubscriptionSlotHistoryResponse {
+export type GetSubscriptionSlotHistoryResponse = {
 	history: SubscriptionSlotHistory[];
 	continuationToken: string;
 	totalSize: Int64;
 
-	constructor(args?: {
-		history: SubscriptionSlotHistory[];
-		continuationToken: string;
-		totalSize: Int64;
-	});
+
 }
 
-export declare class PopupDisplaySettings {
+export type PopupDisplaySettings = {
 	pages: number[];
 	editorsPickIds: string[];
 
-	constructor(args?: { pages: number[]; editorsPickIds: string[] });
+
 }
 
-export declare class PopupPage {
+export type PopupPage = {
 	imageUrl: string;
 	title: string;
 	body: string;
 
-	constructor(args?: { imageUrl: string; title: string; body: string });
+
 }
 
-export declare class PopupActionButton {
+export type PopupActionButton = {
 	label: string;
 	actionUrl: string;
 	textColorCode: string;
 	backgroundColorCode: string;
 
-	constructor(args?: {
-		label: string;
-		actionUrl: string;
-		textColorCode: string;
-		backgroundColorCode: string;
-	});
+
 }
 
-export declare class PopupDismissButton {
+export type PopupDismissButton = {
 	label: string;
 	textColorCode: string;
 	backgroundColorCode: string;
 
-	constructor(args?: {
-		label: string;
-		textColorCode: string;
-		backgroundColorCode: string;
-	});
+
 }
 
-export declare class PopupContent {
+export type PopupContent = {
 	pages: PopupPage[];
 	actionButton: PopupActionButton;
 	dismissButton: PopupDismissButton;
 
-	constructor(args?: {
-		pages: PopupPage[];
-		actionButton: PopupActionButton;
-		dismissButton: PopupDismissButton;
-	});
+
 }
 
-export declare class ShopPopup {
+export type ShopPopup = {
 	popupId: string;
 	displaySettings: PopupDisplaySettings;
 	displayCount: PopupDisplayCount;
@@ -7957,136 +6356,110 @@ export declare class ShopPopup {
 	visualType: PopupVisualType;
 	displayIntervalInDays: number;
 
-	constructor(args?: {
-		popupId: string;
-		displaySettings: PopupDisplaySettings;
-		displayCount: PopupDisplayCount;
-		content: PopupContent;
-		displayPriority: number;
-		visualType: PopupVisualType;
-		displayIntervalInDays: number;
-	});
+
 }
 
-export declare class GetPopupsResponse {
+export type GetPopupsResponse = {
 	popups: ShopPopup[];
 
-	constructor(args?: { popups: ShopPopup[] });
+
 }
 
-export declare class GetSubscriptionSlotStatusResponse {
+export type GetSubscriptionSlotStatusResponse = {
 	productIdsInSlots: string[];
 	usedSlotCount: number;
 	maxSlotCount: number;
 
-	constructor(args?: {
-		productIdsInSlots: string[];
-		usedSlotCount: number;
-		maxSlotCount: number;
-	});
+
 }
 
-export declare class GetProductKeyboardListResponse {
+export type GetProductKeyboardListResponse = {
 	productType: ProductType;
 	keyboardProductIds: string[];
 
-	constructor(args?: {
-		productType: ProductType;
-		keyboardProductIds: string[];
-	});
+
 }
 
-export declare class GetMusicSubscriptionStatusResponse {
+export type GetMusicSubscriptionStatusResponse = {
 	validUntil: Int64;
 	expired: boolean;
 	isStickersPremiumEnabled: boolean;
 
-	constructor(args?: {
-		validUntil: Int64;
-		expired: boolean;
-		isStickersPremiumEnabled: boolean;
-	});
+
 }
 
-export declare class StartBundleSubscriptionResponse {
+export type StartBundleSubscriptionResponse = {
 	result: StartBundleSubscriptionResult;
 
-	constructor(args?: { result: StartBundleSubscriptionResult });
+
 }
 
-export declare class StopBundleSubscriptionResponse {
+export type StopBundleSubscriptionResponse = {
 	result: StopBundleSubscriptionResult;
 
-	constructor(args?: { result: StopBundleSubscriptionResult });
+
 }
 
-export declare class GetSubscriptionCouponCodeResponse {
+export type GetSubscriptionCouponCodeResponse = {
 	result: GetSubscriptionCouponCodeResult;
 	couponCode: string;
 
-	constructor(args?: {
-		result: GetSubscriptionCouponCodeResult;
-		couponCode: string;
-	});
+
 }
 
-export declare class GetSubscriptionCouponCampaignResponse {
+export type GetSubscriptionCouponCampaignResponse = {
 	status: SubscriptionCouponCampaignStatus;
 
-	constructor(args?: { status: SubscriptionCouponCampaignStatus });
+
 }
 
-export declare class PopupModel {
+export type PopupModel = {
 	popupId: string;
 	active: boolean;
 
-	constructor(args?: { popupId: string; active: boolean });
+
 }
 
-export declare class GetPopupDisplayStatusResponse {
+export type GetPopupDisplayStatusResponse = {
 	popups: { [k: string]: PopupModel };
 
-	constructor(args?: { popups: { [k: string]: PopupModel } });
+
 }
 
-export declare class GetFilteredProductsResponse {
+export type GetFilteredProductsResponse = {
 	results: ProductSearchSummary[];
 	continuationToken: string;
 	totalSize: Int64;
 
-	constructor(args?: {
-		results: ProductSearchSummary[];
-		continuationToken: string;
-		totalSize: Int64;
-	});
+
 }
 
-export declare class GetProductLatestVersionForUserResponse {
+export type GetProductLatestVersionForUserResponse = {
 	latestVersion: Int64;
 	latestVersionString: string;
 
-	constructor(args?: { latestVersion: Int64; latestVersionString: string });
+
 }
 
-export declare class GetSubscriptionAgreementStatusResponse {
+export type GetSubscriptionAgreementStatusResponse = {
 	accepted: boolean;
 
-	constructor(args?: { accepted: boolean });
+
 }
 
-export declare class AcceptSubscriptionAgreementResponse {
+export type AcceptSubscriptionAgreementResponse = {
 	result: AcceptSubscriptionAgreementResult;
 
-	constructor(args?: { result: AcceptSubscriptionAgreementResult });
+
 }
 
-export declare class ShouldShowWelcomeStickerBannerResponse {
+export type ShouldShowWelcomeStickerBannerResponse = {
 	shouldShowBanner: boolean;
 
-	constructor(args?: { shouldShowBanner: boolean });
+
 }
 
-export declare class StickerDisplayData {
+export type StickerDisplayData = {
 	stickerHash: string;
 	stickerResourceType: StickerResourceType;
 	nameTextProperty: ImageTextProperty;
@@ -8098,80 +6471,58 @@ export declare class StickerDisplayData {
 	version: Int64;
 	availableForCombinationSticker: boolean;
 
-	constructor(args?: {
-		stickerHash: string;
-		stickerResourceType: StickerResourceType;
-		nameTextProperty: ImageTextProperty;
-		popupLayer: PopupLayer;
-		stickerSize: StickerSize;
-		productAvailability: ProductAvailability;
-		height: number;
-		width: number;
-		version: Int64;
-		availableForCombinationSticker: boolean;
-	});
+
 }
 
-export declare class DisplayData {
+export type DisplayData = {
 	stickerSummary: StickerDisplayData;
 
-	constructor(args?: { stickerSummary: StickerDisplayData });
+
 }
 
-export declare class CollectionItem {
+export type CollectionItem = {
 	itemId: string;
 	productId: string;
 	displayData: DisplayData;
 	sortId: number;
 
-	constructor(args?: {
-		itemId: string;
-		productId: string;
-		displayData: DisplayData;
-		sortId: number;
-	});
+
 }
 
-export declare class Collection {
+export type Collection = {
 	collectionId: string;
 	items: CollectionItem[];
 	productType: ProductType;
 	createdTimeMillis: Int64;
 	updatedTimeMillis: Int64;
 
-	constructor(args?: {
-		collectionId: string;
-		items: CollectionItem[];
-		productType: ProductType;
-		createdTimeMillis: Int64;
-		updatedTimeMillis: Int64;
-	});
+
 }
 
-export declare class GetUserCollectionsResponse {
+export type GetUserCollectionsResponse = {
 	collections: Collection[];
 	updated: boolean;
 
-	constructor(args?: { collections: Collection[]; updated: boolean });
+
 }
 
-export declare class CreateCollectionForUserResponse {
+export type CreateCollectionForUserResponse = {
 	collection: Collection;
 
-	constructor(args?: { collection: Collection });
+
 }
 
-export declare class AddItemToCollectionResponse {}
+export type AddItemToCollectionResponse = {}
 
-export declare class RemoveItemFromCollectionResponse {}
+export type RemoveItemFromCollectionResponse = {}
 
-export declare class IsProductForCollectionsResponse {
+export type IsProductForCollectionsResponse = {
 	isAvailable: boolean;
 
-	constructor(args?: { isAvailable: boolean });
+
 }
 
-export enum ExtendedProfileAttribute {}
+export enum ExtendedProfileAttribute { }
 
 export enum PrivacyLevelType {
 	PUBLIC = 0,
@@ -8715,7 +7066,7 @@ export enum SuggestDictionaryIncrementStatus {
 	TOO_OLD_DATA = 6,
 }
 
-export declare class MessageCommitResult {
+export type MessageCommitResult = {
 	requestId: string;
 	state: BuddyResultState;
 	messageStoreRequestId: string;
@@ -8728,44 +7079,32 @@ export declare class MessageCommitResult {
 	unrelatedCount: Int64;
 	errorDescription: string;
 
-	constructor(args?: {
-		requestId: string;
-		state: BuddyResultState;
-		messageStoreRequestId: string;
-		messageIds: string[];
-		receiverCount: Int64;
-		successCount: Int64;
-		failCount: Int64;
-		blockCount: Int64;
-		unregisteredCount: Int64;
-		unrelatedCount: Int64;
-		errorDescription: string;
-	});
+
 }
 
-export declare class CallHost {
+export type CallHost = {
 	host: string;
 	port: number;
 	zone: string;
 
-	constructor(args?: { host: string; port: number; zone: string });
+
 }
 
-export declare class AgeCheckDocomoResult {
+export type AgeCheckDocomoResult = {
 	authUrl: string;
 	userAgeType: UserAgeType;
 
-	constructor(args?: { authUrl: string; userAgeType: UserAgeType });
+
 }
 
-export declare class AgeCheckRequestResult {
+export type AgeCheckRequestResult = {
 	authUrl: string;
 	sessionId: string;
 
-	constructor(args?: { authUrl: string; sessionId: string });
+
 }
 
-export declare class Announcement {
+export type Announcement = {
 	index: number;
 	forceUpdate: boolean;
 	title: string;
@@ -8774,77 +7113,60 @@ export declare class Announcement {
 	pictureUrl: string;
 	thumbnailUrl: string;
 
-	constructor(args?: {
-		index: number;
-		forceUpdate: boolean;
-		title: string;
-		text: string;
-		createdTime: Int64;
-		pictureUrl: string;
-		thumbnailUrl: string;
-	});
+
 }
 
-export declare class ChannelProvider {
+export type ChannelProvider = {
 	name: string;
 
-	constructor(args?: { name: string });
+
 }
 
-export declare class ChannelDomain {
+export type ChannelDomain = {
 	host: string;
 	removed: boolean;
 
-	constructor(args?: { host: string; removed: boolean });
+
 }
 
-export declare class OTPResult {
+export type OTPResult = {
 	otpId: string;
 	otp: string;
 
-	constructor(args?: { otpId: string; otp: string });
+
 }
 
-export declare class SquareInfo {
+export type SquareInfo = {
 	square: Square;
 	squareStatus: SquareStatus;
 	squareNoteStatus: NoteStatus;
 
-	constructor(args?: {
-		square: Square;
-		squareStatus: SquareStatus;
-		squareNoteStatus: NoteStatus;
-	});
+
 }
 
-export declare class BotUseInfo {
+export type BotUseInfo = {
 	botUseAgreementAccepted: boolean;
 	botInFriends: boolean;
 	primaryApplication: string;
 	locale: string;
 
-	constructor(args?: {
-		botUseAgreementAccepted: boolean;
-		botInFriends: boolean;
-		primaryApplication: string;
-		locale: string;
-	});
+
 }
 
-export declare class PaidCallAdCountry {
+export type PaidCallAdCountry = {
 	countryCode: string;
 	rateDivision: string;
 
-	constructor(args?: { countryCode: string; rateDivision: string });
+
 }
 
-export declare class PaidCallAdResult {
+export type PaidCallAdResult = {
 	adRemains: number;
 
-	constructor(args?: { adRemains: number });
+
 }
 
-export declare class PaidCallBalance {
+export type PaidCallBalance = {
 	productType: PaidCallProductType;
 	productName: string;
 	unit: string;
@@ -8856,21 +7178,10 @@ export declare class PaidCallBalance {
 	endTime: Int64;
 	autopayEnabled: boolean;
 
-	constructor(args?: {
-		productType: PaidCallProductType;
-		productName: string;
-		unit: string;
-		limitedPaidBalance: number;
-		limitedFreeBalance: number;
-		unlimitedPaidBalance: number;
-		unlimitedFreeBalance: number;
-		startTime: Int64;
-		endTime: Int64;
-		autopayEnabled: boolean;
-	});
+
 }
 
-export declare class PaidCallCurrencyExchangeRate {
+export type PaidCallCurrencyExchangeRate = {
 	currencyCode: string;
 	currencyName: string;
 	currencySign: string;
@@ -8878,17 +7189,10 @@ export declare class PaidCallCurrencyExchangeRate {
 	coinRate: string;
 	creditRate: string;
 
-	constructor(args?: {
-		currencyCode: string;
-		currencyName: string;
-		currencySign: string;
-		preferred: boolean;
-		coinRate: string;
-		creditRate: string;
-	});
+
 }
 
-export declare class ExtendedProfileBirthday {
+export type ExtendedProfileBirthday = {
 	year: string;
 	yearPrivacyLevelType: PrivacyLevelType;
 	yearEnabled: boolean;
@@ -8896,23 +7200,16 @@ export declare class ExtendedProfileBirthday {
 	dayPrivacyLevelType: PrivacyLevelType;
 	dayEnabled: boolean;
 
-	constructor(args?: {
-		year: string;
-		yearPrivacyLevelType: PrivacyLevelType;
-		yearEnabled: boolean;
-		day: string;
-		dayPrivacyLevelType: PrivacyLevelType;
-		dayEnabled: boolean;
-	});
+
 }
 
-export declare class ExtendedProfile {
+export type ExtendedProfile = {
 	birthday: ExtendedProfileBirthday;
 
-	constructor(args?: { birthday: ExtendedProfileBirthday });
+
 }
 
-export declare class PaidCallDialing {
+export type PaidCallDialing = {
 	type: PaidCallType;
 	dialedNumber: string;
 	serviceDomain: string;
@@ -8932,29 +7229,10 @@ export declare class PaidCallDialing {
 	adRemains: number;
 	adSessionId: string;
 
-	constructor(args?: {
-		type: PaidCallType;
-		dialedNumber: string;
-		serviceDomain: string;
-		productType: PaidCallProductType;
-		productName: string;
-		multipleProduct: boolean;
-		callerIdStatus: PaidCallerIdStatus;
-		balance: number;
-		unit: string;
-		rate: number;
-		displayCode: string;
-		calledNumber: string;
-		calleeNationalNumber: string;
-		calleeCallingCode: string;
-		rateDivision: string;
-		adMaxMin: number;
-		adRemains: number;
-		adSessionId: string;
-	});
+
 }
 
-export declare class SpotItem {
+export type SpotItem = {
 	name: string;
 	phone: string;
 	category: SpotCategory;
@@ -8962,36 +7240,29 @@ export declare class SpotItem {
 	countryAreaCode: string;
 	freePhoneCallable: boolean;
 
-	constructor(args?: {
-		name: string;
-		phone: string;
-		category: SpotCategory;
-		mid: string;
-		countryAreaCode: string;
-		freePhoneCallable: boolean;
-	});
+
 }
 
-export declare class SpotNearbyItem {
+export type SpotNearbyItem = {
 	spotItem: SpotItem;
 	location: Location;
 
-	constructor(args?: { spotItem: SpotItem; location: Location });
+
 }
 
-export declare class SpotNearbyResponse {
+export type SpotNearbyResponse = {
 	spotNearbyItems: SpotNearbyItem[];
 
-	constructor(args?: { spotNearbyItems: SpotNearbyItem[] });
+
 }
 
-export declare class SpotPhoneNumberResponse {
+export type SpotPhoneNumberResponse = {
 	spotItems: SpotItem[];
 
-	constructor(args?: { spotItems: SpotItem[] });
+
 }
 
-export declare class PaidCallHistory {
+export type PaidCallHistory = {
 	seq: Int64;
 	type: PaidCallType;
 	dialedNumber: string;
@@ -9008,80 +7279,50 @@ export declare class PaidCallHistory {
 	unit: string;
 	result: string;
 
-	constructor(args?: {
-		seq: Int64;
-		type: PaidCallType;
-		dialedNumber: string;
-		calledNumber: string;
-		toMid: string;
-		toName: string;
-		setupTime: Int64;
-		startTime: Int64;
-		endTime: Int64;
-		duration: Int64;
-		terminate: number;
-		productType: PaidCallProductType;
-		charge: number;
-		unit: string;
-		result: string;
-	});
+
 }
 
-export declare class PaidCallHistoryResult {
+export type PaidCallHistoryResult = {
 	historys: PaidCallHistory[];
 	hasNext: boolean;
 
-	constructor(args?: { historys: PaidCallHistory[]; hasNext: boolean });
+
 }
 
-export declare class PaidCallMetadataResult {
+export type PaidCallMetadataResult = {
 	currencyExchangeRates: PaidCallCurrencyExchangeRate[];
 	recommendedCountryCodes: string[];
 	adCountries: PaidCallAdCountry[];
 
-	constructor(args?: {
-		currencyExchangeRates: PaidCallCurrencyExchangeRate[];
-		recommendedCountryCodes: string[];
-		adCountries: PaidCallAdCountry[];
-	});
+
 }
 
-export declare class PaidCallRedeemResult {
+export type PaidCallRedeemResult = {
 	eventName: string;
 	eventAmount: number;
 
-	constructor(args?: { eventName: string; eventAmount: number });
+
 }
 
-export declare class PaidCallResponse {
+export type PaidCallResponse = {
 	host: CallHost;
 	dialing: PaidCallDialing;
 	token: string;
 	spotItems: SpotItem[];
 
-	constructor(args?: {
-		host: CallHost;
-		dialing: PaidCallDialing;
-		token: string;
-		spotItems: SpotItem[];
-	});
+
 }
 
-export declare class PaidCallUserRate {
+export type PaidCallUserRate = {
 	countryCode: string;
 	rate: number;
 	rateDivision: string;
 	rateName: string;
 
-	constructor(args?: {
-		countryCode: string;
-		rate: number;
-		rateDivision: string;
-		rateName: string;
-	});
+
 }
 
-export declare class ChannelInfo {
+export type ChannelInfo = {
 	channelId: string;
 	name: string;
 	entryPageUrl: string;
@@ -9097,142 +7338,97 @@ export declare class ChannelInfo {
 	channelDomains: ChannelDomain[];
 	updatedTimestamp: Int64;
 
-	constructor(args?: {
-		channelId: string;
-		name: string;
-		entryPageUrl: string;
-		descriptionText: string;
-		provider: ChannelProvider;
-		publicType: PublicType;
-		iconImage: string;
-		permissions: string[];
-		iconThumbnailImage: string;
-		channelConfigurations: ChannelConfiguration[];
-		lcsAllApiUsable: boolean;
-		allowedPermissions: ChannelPermission[];
-		channelDomains: ChannelDomain[];
-		updatedTimestamp: Int64;
-	});
+
 }
 
-export declare class ApprovedChannelInfo {
+export type ApprovedChannelInfo = {
 	channelInfo: ChannelInfo;
 	approvedAt: Int64;
 
-	constructor(args?: { channelInfo: ChannelInfo; approvedAt: Int64 });
+
 }
 
-export declare class ApprovedChannelInfos {
+export type ApprovedChannelInfos = {
 	approvedChannelInfos: ApprovedChannelInfo[];
 	revision: Int64;
 
-	constructor(args?: {
-		approvedChannelInfos: ApprovedChannelInfo[];
-		revision: Int64;
-	});
+
 }
 
-export declare class AuthQrcode {
+export type AuthQrcode = {
 	qrcode: string;
 	verifier: string;
 	callbackUrl: string;
 
-	constructor(args?: { qrcode: string; verifier: string; callbackUrl: string });
+
 }
 
-export declare class AnalyticsInfo {
+export type AnalyticsInfo = {
 	gaSamplingRate: number;
 	tmid: string;
 
-	constructor(args?: { gaSamplingRate: number; tmid: string });
+
 }
 
-export declare class ContactTransition {
+export type ContactTransition = {
 	ownerMid: string;
 	targetMid: string;
 	previousStatus: ContactStatus;
 	resultStatus: ContactStatus;
 
-	constructor(args?: {
-		ownerMid: string;
-		targetMid: string;
-		previousStatus: ContactStatus;
-		resultStatus: ContactStatus;
-	});
+
 }
 
-export declare class UserTicketResponse {
+export type UserTicketResponse = {
 	mid: string;
 	userTicket: string;
 
-	constructor(args?: { mid: string; userTicket: string });
+
 }
 
-export declare class BuddyBanner {
+export type BuddyBanner = {
 	buddyBannerLinkType: BuddyBannerLinkType;
 	buddyBannerLink: string;
 	buddyBannerImageUrl: string;
 
-	constructor(args?: {
-		buddyBannerLinkType: BuddyBannerLinkType;
-		buddyBannerLink: string;
-		buddyBannerImageUrl: string;
-	});
+
 }
 
-export declare class BuddyList {
+export type BuddyList = {
 	classification: string;
 	displayName: string;
 	totalBuddyCount: number;
 	popularContacts: Contact[];
 
-	constructor(args?: {
-		classification: string;
-		displayName: string;
-		totalBuddyCount: number;
-		popularContacts: Contact[];
-	});
+
 }
 
-export declare class RegisterWithPhoneNumberResult {
+export type RegisterWithPhoneNumberResult = {
 	authToken: string;
 	recommendEmailRegistration: boolean;
 	certificate: string;
 
-	constructor(args?: {
-		authToken: string;
-		recommendEmailRegistration: boolean;
-		certificate: string;
-	});
+
 }
 
-export declare class BuddyMessageRequest {
+export type BuddyMessageRequest = {
 	contentType: ContentType;
 	text: string;
 	location: Location;
 	content: Buffer;
 	contentMetadata: { [k: string]: string };
 
-	constructor(args?: {
-		contentType: ContentType;
-		text: string;
-		location: Location;
-		content: Buffer;
-		contentMetadata: { [k: string]: string };
-	});
+
 }
 
-export declare class BuddyOnAirUrls {
+export type BuddyOnAirUrls = {
 	hls: { [k: string]: string };
 	smoothStreaming: { [k: string]: string };
 
-	constructor(args?: {
-		hls: { [k: string]: string };
-		smoothStreaming: { [k: string]: string };
-	});
+
 }
 
-export declare class BuddyOnAir {
+export type BuddyOnAir = {
 	mid: string;
 	freshnessLifetime: Int64;
 	onAirId: string;
@@ -9243,20 +7439,10 @@ export declare class BuddyOnAir {
 	onAirType: BuddyOnAirType;
 	onAirUrls: BuddyOnAirUrls;
 
-	constructor(args?: {
-		mid: string;
-		freshnessLifetime: Int64;
-		onAirId: string;
-		onAir: boolean;
-		text: string;
-		viewerCount: Int64;
-		targetCount: Int64;
-		onAirType: BuddyOnAirType;
-		onAirUrls: BuddyOnAirUrls;
-	});
+
 }
 
-export declare class BuddyProfile {
+export type BuddyProfile = {
 	buddyId: string;
 	mid: string;
 	searchId: string;
@@ -9264,17 +7450,10 @@ export declare class BuddyProfile {
 	statusMessage: string;
 	contactCount: Int64;
 
-	constructor(args?: {
-		buddyId: string;
-		mid: string;
-		searchId: string;
-		displayName: string;
-		statusMessage: string;
-		contactCount: Int64;
-	});
+
 }
 
-export declare class CommitMessageResult {
+export type CommitMessageResult = {
 	message: Message;
 	code: CommitMessageResultCode;
 	reason: string;
@@ -9283,18 +7462,10 @@ export declare class CommitMessageResult {
 	unregisterCount: Int64;
 	blockCount: Int64;
 
-	constructor(args?: {
-		message: Message;
-		code: CommitMessageResultCode;
-		reason: string;
-		successCount: Int64;
-		failCount: Int64;
-		unregisterCount: Int64;
-		blockCount: Int64;
-	});
+
 }
 
-export declare class BuddySearchResult {
+export type BuddySearchResult = {
 	mid: string;
 	displayName: string;
 	pictureStatus: string;
@@ -9302,100 +7473,74 @@ export declare class BuddySearchResult {
 	statusMessage: string;
 	businessAccount: boolean;
 
-	constructor(args?: {
-		mid: string;
-		displayName: string;
-		pictureStatus: string;
-		picturePath: string;
-		statusMessage: string;
-		businessAccount: boolean;
-	});
+
 }
 
-export declare class SyncParamMid {
+export type SyncParamMid = {
 	mid: string;
 	diff: Diff;
 	revision: Int64;
 
-	constructor(args?: { mid: string; diff: Diff; revision: Int64 });
+
 }
 
-export declare class SIMInfo {
+export type SIMInfo = {
 	phoneNumber: string;
 	countryCode: string;
 
-	constructor(args?: { phoneNumber: string; countryCode: string });
+
 }
 
-export declare class SyncParamContact {
+export type SyncParamContact = {
 	syncParamMid: SyncParamMid;
 	contactStatus: ContactStatus;
 
-	constructor(args?: {
-		syncParamMid: SyncParamMid;
-		contactStatus: ContactStatus;
-	});
+
 }
 
-export declare class ChannelDomains {
+export type ChannelDomains = {
 	channelDomains: ChannelDomain[];
 	revision: Int64;
 
-	constructor(args?: { channelDomains: ChannelDomain[]; revision: Int64 });
+
 }
 
-export declare class ProductCategory {
+export type ProductCategory = {
 	productCategoryId: Int64;
 	title: string;
 	productCount: number;
 	newFlag: boolean;
 
-	constructor(args?: {
-		productCategoryId: Int64;
-		title: string;
-		productCount: number;
-		newFlag: boolean;
-	});
+
 }
 
-export declare class ChannelInfos {
+export type ChannelInfos = {
 	channelInfos: ChannelInfo[];
 	revision: Int64;
 
-	constructor(args?: { channelInfos: ChannelInfo[]; revision: Int64 });
+
 }
 
-export declare class ChannelNotificationSetting {
+export type ChannelNotificationSetting = {
 	channelId: string;
 	name: string;
 	notificationReceivable: boolean;
 	messageReceivable: boolean;
 	showDefault: boolean;
 
-	constructor(args?: {
-		channelId: string;
-		name: string;
-		notificationReceivable: boolean;
-		messageReceivable: boolean;
-		showDefault: boolean;
-	});
+
 }
 
-export declare class ChannelSyncDatas {
+export type ChannelSyncDatas = {
 	channelInfos: ChannelInfo[];
 	channelDomains: ChannelDomain[];
 	revision: Int64;
 	expires: Int64;
 
-	constructor(args?: {
-		channelInfos: ChannelInfo[];
-		channelDomains: ChannelDomain[];
-		revision: Int64;
-		expires: Int64;
-	});
+
 }
 
-export declare class NotiCenterEventData {
+export type NotiCenterEventData = {
 	id: string;
 	to: string;
 	from_: string;
@@ -9407,62 +7552,41 @@ export declare class NotiCenterEventData {
 	content: { [k: string]: string };
 	push: { [k: string]: string };
 
-	constructor(args?: {
-		id: string;
-		to: string;
-		from_: string;
-		toChannel: string;
-		fromChannel: string;
-		eventType: string;
-		createdTime: Int64;
-		operationRevision: Int64;
-		content: { [k: string]: string };
-		push: { [k: string]: string };
-	});
+
 }
 
-export declare class ChannelSettings {
+export type ChannelSettings = {
 	unapprovedMessageReceivable: boolean;
 
-	constructor(args?: { unapprovedMessageReceivable: boolean });
+
 }
 
-export declare class ChannelIdWithLastUpdated {
+export type ChannelIdWithLastUpdated = {
 	channelId: string;
 	lastUpdated: Int64;
 
-	constructor(args?: { channelId: string; lastUpdated: Int64 });
+
 }
 
-export declare class Coin {
+export type Coin = {
 	freeCoinBalance: number;
 	payedCoinBalance: number;
 	totalCoinBalance: number;
 	rewardCoinBalance: number;
 
-	constructor(args?: {
-		freeCoinBalance: number;
-		payedCoinBalance: number;
-		totalCoinBalance: number;
-		rewardCoinBalance: number;
-	});
+
 }
 
-export declare class CoinPayLoad {
+export type CoinPayLoad = {
 	payCoin: number;
 	freeCoin: number;
 	type: PayloadType;
 	rewardCoin: number;
 
-	constructor(args?: {
-		payCoin: number;
-		freeCoin: number;
-		type: PayloadType;
-		rewardCoin: number;
-	});
+
 }
 
-export declare class CoinHistory {
+export type CoinHistory = {
 	payDate: Int64;
 	coinBalance: number;
 	coin: number;
@@ -9476,51 +7600,28 @@ export declare class CoinHistory {
 	payload: CoinPayLoad;
 	channelId: string;
 
-	constructor(args?: {
-		payDate: Int64;
-		coinBalance: number;
-		coin: number;
-		price: string;
-		title: string;
-		refund: boolean;
-		paySeq: string;
-		currency: string;
-		currencySign: string;
-		displayPrice: string;
-		payload: CoinPayLoad;
-		channelId: string;
-	});
+
 }
 
-export declare class CoinHistoryCondition {
+export type CoinHistoryCondition = {
 	start: Int64;
 	size: number;
 	language: string;
 	eddt: string;
 	appStoreCode: PaymentType;
 
-	constructor(args?: {
-		start: Int64;
-		size: number;
-		language: string;
-		eddt: string;
-		appStoreCode: PaymentType;
-	});
+
 }
 
-export declare class CoinHistoryResult {
+export type CoinHistoryResult = {
 	historys: CoinHistory[];
 	balance: Coin;
 	hasNext: boolean;
 
-	constructor(args?: {
-		historys: CoinHistory[];
-		balance: Coin;
-		hasNext: boolean;
-	});
+
 }
 
-export declare class CoinProductItem {
+export type CoinProductItem = {
 	itemId: string;
 	coin: number;
 	freeCoin: number;
@@ -9530,19 +7631,10 @@ export declare class CoinProductItem {
 	name: string;
 	desc: string;
 
-	constructor(args?: {
-		itemId: string;
-		coin: number;
-		freeCoin: number;
-		currency: string;
-		price: string;
-		displayPrice: string;
-		name: string;
-		desc: string;
-	});
+
 }
 
-export declare class CoinPurchaseConfirm {
+export type CoinPurchaseConfirm = {
 	orderId: string;
 	appStoreCode: PaymentType;
 	receipt: string;
@@ -9551,18 +7643,10 @@ export declare class CoinPurchaseConfirm {
 	requestType: string;
 	ignoreReceipt: boolean;
 
-	constructor(args?: {
-		orderId: string;
-		appStoreCode: PaymentType;
-		receipt: string;
-		signature: string;
-		seller: string;
-		requestType: string;
-		ignoreReceipt: boolean;
-	});
+
 }
 
-export declare class CoinPurchaseReservation {
+export type CoinPurchaseReservation = {
 	productId: string;
 	country: string;
 	currency: string;
@@ -9572,43 +7656,28 @@ export declare class CoinPurchaseReservation {
 	pgCode: PaymentPgType;
 	redirectUrl: string;
 
-	constructor(args?: {
-		productId: string;
-		country: string;
-		currency: string;
-		price: string;
-		appStoreCode: PaymentType;
-		language: string;
-		pgCode: PaymentPgType;
-		redirectUrl: string;
-	});
+
 }
 
-export declare class CoinUseReservationItem {
+export type CoinUseReservationItem = {
 	itemId: string;
 	itemName: string;
 	amount: number;
 
-	constructor(args?: { itemId: string; itemName: string; amount: number });
+
 }
 
-export declare class CoinUseReservation {
+export type CoinUseReservation = {
 	channelId: string;
 	shopOrderId: string;
 	appStoreCode: PaymentType;
 	items: CoinUseReservationItem[];
 	country: string;
 
-	constructor(args?: {
-		channelId: string;
-		shopOrderId: string;
-		appStoreCode: PaymentType;
-		items: CoinUseReservationItem[];
-		country: string;
-	});
+
 }
 
-export declare class CompactContact {
+export type CompactContact = {
 	mid: string;
 	createdTime: Int64;
 	modifiedTime: Int64;
@@ -9616,32 +7685,25 @@ export declare class CompactContact {
 	settings: Int64;
 	displayNameOverridden: string;
 
-	constructor(args?: {
-		mid: string;
-		createdTime: Int64;
-		modifiedTime: Int64;
-		status: ContactStatus;
-		settings: Int64;
-		displayNameOverridden: string;
-	});
+
 }
 
-export declare class ContactReport {
+export type ContactReport = {
 	mid: string;
 	exists: boolean;
 	contact: Contact;
 
-	constructor(args?: { mid: string; exists: boolean; contact: Contact });
+
 }
 
-export declare class ContactReportResult {
+export type ContactReportResult = {
 	mid: string;
 	exists: boolean;
 
-	constructor(args?: { mid: string; exists: boolean });
+
 }
 
-export declare class DeviceInfo {
+export type DeviceInfo = {
 	deviceName: string;
 	systemName: string;
 	systemVersion: string;
@@ -9650,65 +7712,43 @@ export declare class DeviceInfo {
 	carrierName: string;
 	applicationType: ApplicationType;
 
-	constructor(args?: {
-		deviceName: string;
-		systemName: string;
-		systemVersion: string;
-		model: string;
-		carrierCode: CarrierCode;
-		carrierName: string;
-		applicationType: ApplicationType;
-	});
+
 }
 
-export declare class EmailConfirmation {
+export type EmailConfirmation = {
 	usePasswordSet: boolean;
 	email: string;
 	password: string;
 	ignoreDuplication: boolean;
 
-	constructor(args?: {
-		usePasswordSet: boolean;
-		email: string;
-		password: string;
-		ignoreDuplication: boolean;
-	});
+
 }
 
-export declare class EmailConfirmationSession {
+export type EmailConfirmationSession = {
 	emailConfirmationType: EmailConfirmationType;
 	verifier: string;
 	targetEmail: string;
 
-	constructor(args?: {
-		emailConfirmationType: EmailConfirmationType;
-		verifier: string;
-		targetEmail: string;
-	});
+
 }
 
-export declare class FriendChannelMatrix {
+export type FriendChannelMatrix = {
 	channelId: string;
 	representMid: string;
 	count: number;
 	point: number;
 
-	constructor(args?: {
-		channelId: string;
-		representMid: string;
-		count: number;
-		point: number;
-	});
+
 }
 
-export declare class FriendChannelMatricesResponse {
+export type FriendChannelMatricesResponse = {
 	expires: Int64;
 	matrices: FriendChannelMatrix[];
 
-	constructor(args?: { expires: Int64; matrices: FriendChannelMatrix[] });
+
 }
 
-export declare class FriendRequest {
+export type FriendRequest = {
 	eMid: string;
 	mid: string;
 	direction: FriendRequestDirection;
@@ -9720,21 +7760,10 @@ export declare class FriendRequest {
 	picturePath: string;
 	pictureStatus: string;
 
-	constructor(args?: {
-		eMid: string;
-		mid: string;
-		direction: FriendRequestDirection;
-		method: FriendRequestMethod;
-		param: string;
-		timestamp: Int64;
-		seqId: Int64;
-		displayName: string;
-		picturePath: string;
-		pictureStatus: string;
-	});
+
 }
 
-export declare class FriendRequestsInfo {
+export type FriendRequestsInfo = {
 	totalIncomingCount: number;
 	totalOutgoingCount: number;
 	recentIncomings: FriendRequest[];
@@ -9742,43 +7771,32 @@ export declare class FriendRequestsInfo {
 	totalIncomingLimit: number;
 	totalOutgoingLimit: number;
 
-	constructor(args?: {
-		totalIncomingCount: number;
-		totalOutgoingCount: number;
-		recentIncomings: FriendRequest[];
-		recentOutgoings: FriendRequest[];
-		totalIncomingLimit: number;
-		totalOutgoingLimit: number;
-	});
+
 }
 
-export declare class Geolocation {
+export type Geolocation = {
 	longitude: number;
 	latitude: number;
 
-	constructor(args?: { longitude: number; latitude: number });
+
 }
 
-export declare class NotificationTarget {
+export type NotificationTarget = {
 	applicationType: string;
 	applicationVersion: string;
 	region: string;
 
-	constructor(args?: {
-		applicationType: string;
-		applicationVersion: string;
-		region: string;
-	});
+
 }
 
-export declare class GroupPreference {
+export type GroupPreference = {
 	invitationTicket: string;
 	favoriteTimestamp: Int64;
 
-	constructor(args?: { invitationTicket: string; favoriteTimestamp: Int64 });
+
 }
 
-export declare class Group {
+export type Group = {
 	id: string;
 	createdTime: Int64;
 	name: string;
@@ -9790,50 +7808,32 @@ export declare class Group {
 	invitee: Contact[];
 	notificationDisabled: boolean;
 
-	constructor(args?: {
-		id: string;
-		createdTime: Int64;
-		name: string;
-		pictureStatus: string;
-		preventedJoinByTicket: boolean;
-		groupPreference: GroupPreference;
-		members: Contact[];
-		creator: Contact;
-		invitee: Contact[];
-		notificationDisabled: boolean;
-	});
+
 }
 
-export declare class IdentityCredential {
+export type IdentityCredential = {
 	provider: IdentityProvider;
 	identifier: string;
 	password: string;
 
-	constructor(args?: {
-		provider: IdentityProvider;
-		identifier: string;
-		password: string;
-	});
+
 }
 
-export declare class LastReadMessageId {
+export type LastReadMessageId = {
 	mid: string;
 	lastReadMessageId: string;
 
-	constructor(args?: { mid: string; lastReadMessageId: string });
+
 }
 
-export declare class LastReadMessageIds {
+export type LastReadMessageIds = {
 	chatId: string;
 	lastReadMessageIds: LastReadMessageId[];
 
-	constructor(args?: {
-		chatId: string;
-		lastReadMessageIds: LastReadMessageId[];
-	});
+
 }
 
-export declare class LoginResult {
+export type LoginResult = {
 	authToken: string;
 	certificate: string;
 	verifier: string;
@@ -9843,19 +7843,10 @@ export declare class LoginResult {
 	displayMessage: string;
 	sessionForSMSConfirm: VerificationSessionData;
 
-	constructor(args?: {
-		authToken: string;
-		certificate: string;
-		verifier: string;
-		pinCode: string;
-		type: LoginResultType;
-		lastPrimaryBindTime: Int64;
-		displayMessage: string;
-		sessionForSMSConfirm: VerificationSessionData;
-	});
+
 }
 
-export declare class LoginRequest {
+export type LoginRequest = {
 	type: number;
 	identityProvider: number;
 	identifier: string;
@@ -9868,38 +7859,20 @@ export declare class LoginRequest {
 	secret: string;
 	e2eeVersion: number;
 
-	constructor(args?: {
-		type: number;
-		identityProvider: number;
-		identifier: string;
-		password: string;
-		keepLoggedIn: boolean;
-		accessLocation: string;
-		systemName: string;
-		certificate: string;
-		verifier: string;
-		secret: string;
-		e2eeVersion: number;
-	});
+
 }
 
-export declare class LoginSession {
+export type LoginSession = {
 	tokenKey: string;
 	expirationTime: Int64;
 	applicationType: ApplicationType;
 	systemName: string;
 	accessLocation: string;
 
-	constructor(args?: {
-		tokenKey: string;
-		expirationTime: Int64;
-		applicationType: ApplicationType;
-		systemName: string;
-		accessLocation: string;
-	});
+
 }
 
-export declare class MessageOperation {
+export type MessageOperation = {
 	revision: Int64;
 	createdTime: Int64;
 	type: MessageOperationType;
@@ -9910,46 +7883,32 @@ export declare class MessageOperation {
 	param3: string;
 	message: Message;
 
-	constructor(args?: {
-		revision: Int64;
-		createdTime: Int64;
-		type: MessageOperationType;
-		reqSeq: number;
-		status: OpStatus;
-		param1: string;
-		param2: string;
-		param3: string;
-		message: Message;
-	});
+
 }
 
-export declare class MessageOperations {
+export type MessageOperations = {
 	operations: MessageOperation[];
 	endFlag: boolean;
 
-	constructor(args?: { operations: MessageOperation[]; endFlag: boolean });
+
 }
 
-export declare class MessageStoreResult {
+export type MessageStoreResult = {
 	requestId: string;
 	messageIds: string[];
 
-	constructor(args?: { requestId: string; messageIds: string[] });
+
 }
 
-export declare class MetaProfile {
+export type MetaProfile = {
 	createTime: Int64;
 	regionCode: string;
 	identities: { [k: number /*RegistrationType*/]: string };
 
-	constructor(args?: {
-		createTime: Int64;
-		regionCode: string;
-		identities: { [k: number /*RegistrationType*/]: string };
-	});
+
 }
 
-export declare class NotificationItem {
+export type NotificationItem = {
 	id: string;
 	_from: string;
 	to: string;
@@ -9959,29 +7918,17 @@ export declare class NotificationItem {
 	createdTime: Int64;
 	content: { [k: string]: string };
 
-	constructor(args?: {
-		id: string;
-		_from: string;
-		to: string;
-		fromChannel: string;
-		toChannel: string;
-		revision: Int64;
-		createdTime: Int64;
-		content: { [k: string]: string };
-	});
+
 }
 
-export declare class NotificationFetchResult {
+export type NotificationFetchResult = {
 	fetchMode: NotificationItemFetchMode;
 	itemList: NotificationItem[];
 
-	constructor(args?: {
-		fetchMode: NotificationItemFetchMode;
-		itemList: NotificationItem[];
-	});
+
 }
 
-export declare class PaymentReservation {
+export type PaymentReservation = {
 	receiverMid: string;
 	productId: string;
 	language: string;
@@ -9993,33 +7940,18 @@ export declare class PaymentReservation {
 	messageTemplate: number;
 	packageId: Int64;
 
-	constructor(args?: {
-		receiverMid: string;
-		productId: string;
-		language: string;
-		location: string;
-		currency: string;
-		price: string;
-		appStoreCode: PaymentType;
-		messageText: string;
-		messageTemplate: number;
-		packageId: Int64;
-	});
+
 }
 
-export declare class PaymentReservationResult {
+export type PaymentReservationResult = {
 	orderId: string;
 	confirmUrl: string;
 	extras: { [k: string]: string };
 
-	constructor(args?: {
-		orderId: string;
-		confirmUrl: string;
-		extras: { [k: string]: string };
-	});
+
 }
 
-export declare class Product {
+export type Product = {
 	productId: string;
 	packageId: Int64;
 	version: number;
@@ -10061,51 +7993,10 @@ export declare class Product {
 	recommendationsEnabled: boolean;
 	stickerResourceType: StickerResourceType;
 
-	constructor(args?: {
-		productId: string;
-		packageId: Int64;
-		version: number;
-		authorName: string;
-		onSale: boolean;
-		validDays: number;
-		saleType: number;
-		copyright: string;
-		title: string;
-		descriptionText: string;
-		shopOrderId: Int64;
-		fromMid: string;
-		toMid: string;
-		validUntil: Int64;
-		priceTier: number;
-		price: string;
-		currency: string;
-		currencySymbol: string;
-		paymentType: PaymentType;
-		createDate: Int64;
-		ownFlag: boolean;
-		eventType: ProductEventType;
-		urlSchema: string;
-		downloadUrl: string;
-		buddyMid: string;
-		publishSince: Int64;
-		newFlag: boolean;
-		missionFlag: boolean;
-		categories: ProductCategory[];
-		missionButtonText: string;
-		missionShortDescription: string;
-		authorId: string;
-		grantedByDefault: boolean;
-		displayOrder: number;
-		availableForPresent: boolean;
-		availableForMyself: boolean;
-		hasAnimation: boolean;
-		hasSound: boolean;
-		recommendationsEnabled: boolean;
-		stickerResourceType: StickerResourceType;
-	});
+
 }
 
-export declare class ProductSimple {
+export type ProductSimple = {
 	productId: string;
 	packageId: Int64;
 	version: number;
@@ -10115,19 +8006,10 @@ export declare class ProductSimple {
 	grantedByDefault: boolean;
 	displayOrder: number;
 
-	constructor(args?: {
-		productId: string;
-		packageId: Int64;
-		version: number;
-		onSale: boolean;
-		validUntil: Int64;
-		stickerIdRanges: StickerIdRange[];
-		grantedByDefault: boolean;
-		displayOrder: number;
-	});
+
 }
 
-export declare class ProductSimpleList {
+export type ProductSimpleList = {
 	hasNext: boolean;
 	reinvokeHour: number;
 	lastVersionSeq: Int64;
@@ -10135,180 +8017,131 @@ export declare class ProductSimpleList {
 	recentNewReleaseDate: Int64;
 	recentEventReleaseDate: Int64;
 
-	constructor(args?: {
-		hasNext: boolean;
-		reinvokeHour: number;
-		lastVersionSeq: Int64;
-		productList: ProductSimple[];
-		recentNewReleaseDate: Int64;
-		recentEventReleaseDate: Int64;
-	});
+
 }
 
-export declare class ProximityMatchCandidateResult {
+export type ProximityMatchCandidateResult = {
 	users: Contact[];
 	buddies: Contact[];
 
-	constructor(args?: { users: Contact[]; buddies: Contact[] });
+
 }
 
-export declare class RegisterWithSnsIdResult {
+export type RegisterWithSnsIdResult = {
 	authToken: string;
 	userCreated: boolean;
 
-	constructor(args?: { authToken: string; userCreated: boolean });
+
 }
 
-export declare class RequestTokenResponse {
+export type RequestTokenResponse = {
 	requestToken: string;
 	returnUrl: string;
 
-	constructor(args?: { requestToken: string; returnUrl: string });
+
 }
 
-export declare class SuggestDictionary {
+export type SuggestDictionary = {
 	language: string;
 	name: string;
 
-	constructor(args?: { language: string; name: string });
+
 }
 
-export declare class SuggestItemDictionaryIncrement {
+export type SuggestItemDictionaryIncrement = {
 	status: SuggestDictionaryIncrementStatus;
 	revision: Int64;
 	scheme: string;
 	data: Buffer;
 
-	constructor(args?: {
-		status: SuggestDictionaryIncrementStatus;
-		revision: Int64;
-		scheme: string;
-		data: Buffer;
-	});
+
 }
 
-export declare class SuggestTagDictionaryIncrement {
+export type SuggestTagDictionaryIncrement = {
 	status: SuggestDictionaryIncrementStatus;
 	language: string;
 	revision: Int64;
 	scheme: string;
 	data: Buffer;
 
-	constructor(args?: {
-		status: SuggestDictionaryIncrementStatus;
-		language: string;
-		revision: Int64;
-		scheme: string;
-		data: Buffer;
-	});
+
 }
 
-export declare class SuggestDictionaryIncrements {
+export type SuggestDictionaryIncrements = {
 	itemIncrement: SuggestItemDictionaryIncrement;
 	tagIncrements: SuggestTagDictionaryIncrement[];
 
-	constructor(args?: {
-		itemIncrement: SuggestItemDictionaryIncrement;
-		tagIncrements: SuggestTagDictionaryIncrement[];
-	});
+
 }
 
-export declare class SuggestItemDictionaryRevision {
+export type SuggestItemDictionaryRevision = {
 	revision: Int64;
 	scheme: string;
 
-	constructor(args?: { revision: Int64; scheme: string });
+
 }
 
-export declare class SuggestTagDictionaryRevision {
+export type SuggestTagDictionaryRevision = {
 	language: string;
 	revision: Int64;
 	scheme: string;
 
-	constructor(args?: { language: string; revision: Int64; scheme: string });
+
 }
 
-export declare class SuggestDictionaryRevisions {
+export type SuggestDictionaryRevisions = {
 	itemRevision: SuggestItemDictionaryRevision;
 	tagRevisions: SuggestTagDictionaryRevision[];
 
-	constructor(args?: {
-		itemRevision: SuggestItemDictionaryRevision;
-		tagRevisions: SuggestTagDictionaryRevision[];
-	});
+
 }
 
-export declare class SuggestDictionarySettings {
+export type SuggestDictionarySettings = {
 	revision: Int64;
 	newRevision: Int64;
 	dictionaries: SuggestDictionary[];
 	preloadedDictionaries: string[];
 
-	constructor(args?: {
-		revision: Int64;
-		newRevision: Int64;
-		dictionaries: SuggestDictionary[];
-		preloadedDictionaries: string[];
-	});
+
 }
 
-export declare class PhoneInfoForChannel {
+export type PhoneInfoForChannel = {
 	mid: string;
 	normalizedPhoneNumber: string;
 	allowedToSearchByPhoneNumber: boolean;
 	allowedToReceiveMessageFromNonFriend: boolean;
 	region: string;
 
-	constructor(args?: {
-		mid: string;
-		normalizedPhoneNumber: string;
-		allowedToSearchByPhoneNumber: boolean;
-		allowedToReceiveMessageFromNonFriend: boolean;
-		region: string;
-	});
+
 }
 
-export declare class PhoneVerificationResult {
+export type PhoneVerificationResult = {
 	verificationResult: VerificationResult;
 	accountMigrationCheckType: AccountMigrationCheckType;
 	recommendAddFriends: boolean;
 
-	constructor(args?: {
-		verificationResult: VerificationResult;
-		accountMigrationCheckType: AccountMigrationCheckType;
-		recommendAddFriends: boolean;
-	});
+
 }
 
-export declare class PlaceSearchInfo {
+export type PlaceSearchInfo = {
 	name: string;
 	address: string;
 	latitude: number;
 	longitude: number;
 
-	constructor(args?: {
-		name: string;
-		address: string;
-		latitude: number;
-		longitude: number;
-	});
+
 }
 
-export declare class SecurityCenterResult {
+export type SecurityCenterResult = {
 	uri: string;
 	token: string;
 	cookiePath: string;
 	skip: boolean;
 
-	constructor(args?: {
-		uri: string;
-		token: string;
-		cookiePath: string;
-		skip: boolean;
-	});
+
 }
 
-export declare class SendBuddyMessageResult {
+export type SendBuddyMessageResult = {
 	requestId: string;
 	state: BuddyResultState;
 	messageId: string;
@@ -10322,23 +8155,10 @@ export declare class SendBuddyMessageResult {
 	timestamp: Int64;
 	message: string;
 
-	constructor(args?: {
-		requestId: string;
-		state: BuddyResultState;
-		messageId: string;
-		eventNo: number;
-		receiverCount: Int64;
-		successCount: Int64;
-		failCount: Int64;
-		cancelCount: Int64;
-		blockCount: Int64;
-		unregisterCount: Int64;
-		timestamp: Int64;
-		message: string;
-	});
+
 }
 
-export declare class SetBuddyOnAirResult {
+export type SetBuddyOnAirResult = {
 	requestId: string;
 	state: BuddyResultState;
 	eventNo: number;
@@ -10350,129 +8170,85 @@ export declare class SetBuddyOnAirResult {
 	timestamp: Int64;
 	message: string;
 
-	constructor(args?: {
-		requestId: string;
-		state: BuddyResultState;
-		eventNo: number;
-		receiverCount: Int64;
-		successCount: Int64;
-		failCount: Int64;
-		cancelCount: Int64;
-		unregisterCount: Int64;
-		timestamp: Int64;
-		message: string;
-	});
+
 }
 
-export declare class SimpleChannelClient {
+export type SimpleChannelClient = {
 	applicationType: string;
 	applicationVersion: string;
 	locale: string;
 
-	constructor(args?: {
-		applicationType: string;
-		applicationVersion: string;
-		locale: string;
-	});
+
 }
 
-export declare class SimpleChannelContact {
+export type SimpleChannelContact = {
 	mid: string;
 	displayName: string;
 	pictureStatus: string;
 	picturePath: string;
 	statusMessage: string;
 
-	constructor(args?: {
-		mid: string;
-		displayName: string;
-		pictureStatus: string;
-		picturePath: string;
-		statusMessage: string;
-	});
+
 }
 
-export declare class SnsFriend {
+export type SnsFriend = {
 	snsUserId: string;
 	snsUserName: string;
 	snsIdType: SnsIdType;
 
-	constructor(args?: {
-		snsUserId: string;
-		snsUserName: string;
-		snsIdType: SnsIdType;
-	});
+
 }
 
-export declare class SnsFriendContactRegistration {
+export type SnsFriendContactRegistration = {
 	contact: Contact;
 	snsIdType: SnsIdType;
 	snsUserId: string;
 
-	constructor(args?: {
-		contact: Contact;
-		snsIdType: SnsIdType;
-		snsUserId: string;
-	});
+
 }
 
-export declare class SnsFriendModification {
+export type SnsFriendModification = {
 	type: ModificationType;
 	snsFriend: SnsFriend;
 
-	constructor(args?: { type: ModificationType; snsFriend: SnsFriend });
+
 }
 
-export declare class SnsFriends {
+export type SnsFriends = {
 	snsFriends: SnsFriend[];
 	hasMore: boolean;
 
-	constructor(args?: { snsFriends: SnsFriend[]; hasMore: boolean });
+
 }
 
-export declare class SnsIdUserStatus {
+export type SnsIdUserStatus = {
 	userExisting: boolean;
 	phoneNumberRegistered: boolean;
 	sameDevice: boolean;
 
-	constructor(args?: {
-		userExisting: boolean;
-		phoneNumberRegistered: boolean;
-		sameDevice: boolean;
-	});
+
 }
 
-export declare class SnsProfile {
+export type SnsProfile = {
 	snsUserId: string;
 	snsUserName: string;
 	email: string;
 	thumbnailUrl: string;
 
-	constructor(args?: {
-		snsUserId: string;
-		snsUserName: string;
-		email: string;
-		thumbnailUrl: string;
-	});
+
 }
 
-export declare class SystemConfiguration {
+export type SystemConfiguration = {
 	endpoint: string;
 	endpointSsl: string;
 	updateUrl: string;
 	c2dmAccount: string;
 	nniServer: string;
 
-	constructor(args?: {
-		endpoint: string;
-		endpointSsl: string;
-		updateUrl: string;
-		c2dmAccount: string;
-		nniServer: string;
-	});
+
 }
 
-export declare class TMessageBox {
+export type TMessageBox = {
 	id: string;
 	channelId: string;
 	lastSeq: Int64;
@@ -10482,55 +8258,34 @@ export declare class TMessageBox {
 	midType: MIDType;
 	lastMessages: Message[];
 
-	constructor(args?: {
-		id: string;
-		channelId: string;
-		lastSeq: Int64;
-		unreadCount: Int64;
-		lastModifiedTime: Int64;
-		status: number;
-		midType: MIDType;
-		lastMessages: Message[];
-	});
+
 }
 
-export declare class TMessageBoxWrapUp {
+export type TMessageBoxWrapUp = {
 	messageBox: TMessageBox;
 	name: string;
 	contacts: Contact[];
 	pictureRevision: string;
 
-	constructor(args?: {
-		messageBox: TMessageBox;
-		name: string;
-		contacts: Contact[];
-		pictureRevision: string;
-	});
+
 }
 
-export declare class TMessageBoxWrapUpResponse {
+export type TMessageBoxWrapUpResponse = {
 	messageBoxWrapUpList: TMessageBoxWrapUp[];
 	totalSize: number;
 
-	constructor(args?: {
-		messageBoxWrapUpList: TMessageBoxWrapUp[];
-		totalSize: number;
-	});
+
 }
 
-export declare class SyncRelations {
+export type SyncRelations = {
 	syncAll: boolean;
 	syncParamContact: SyncParamContact[];
 	syncParamMid: SyncParamMid[];
 
-	constructor(args?: {
-		syncAll: boolean;
-		syncParamContact: SyncParamContact[];
-		syncParamMid: SyncParamMid[];
-	});
+
 }
 
-export declare class SyncScope {
+export type SyncScope = {
 	syncProfile: boolean;
 	syncSettings: boolean;
 	syncSticker: boolean;
@@ -10540,19 +8295,10 @@ export declare class SyncScope {
 	room: SyncRelations;
 	chat: SyncRelations;
 
-	constructor(args?: {
-		syncProfile: boolean;
-		syncSettings: boolean;
-		syncSticker: boolean;
-		syncThemeShop: boolean;
-		contact: SyncRelations;
-		group: SyncRelations;
-		room: SyncRelations;
-		chat: SyncRelations;
-	});
+
 }
 
-export declare class JoinSquareResponse {
+export type JoinSquareResponse = {
 	square: Square;
 	squareAuthority: SquareAuthority;
 	squareStatus: SquareStatus;
@@ -10560,242 +8306,200 @@ export declare class JoinSquareResponse {
 	squareFeatureSet: SquareFeatureSet;
 	noteStatus: NoteStatus;
 
-	constructor(args?: {
-		square: Square;
-		squareAuthority: SquareAuthority;
-		squareStatus: SquareStatus;
-		squareMember: SquareMember;
-		squareFeatureSet: SquareFeatureSet;
-		noteStatus: NoteStatus;
-	});
+
 }
 
-export declare class JoinSquareRequest {
+export type JoinSquareRequest = {
 	squareMid: string;
 	member: SquareMember;
 
-	constructor(args?: { squareMid: string; member: SquareMember });
+
 }
 
-export declare class JoinSquareChatResponse {
+export type JoinSquareChatResponse = {
 	squareChat: SquareChat;
 	squareChatStatus: SquareChatStatus;
 	squareChatMember: SquareChatMember;
 
-	constructor(args?: {
-		squareChat: SquareChat;
-		squareChatStatus: SquareChatStatus;
-		squareChatMember: SquareChatMember;
-	});
+
 }
 
-export declare class JoinSquareChatRequest {
+export type JoinSquareChatRequest = {
 	squareChatMid: string;
 
-	constructor(args?: { squareChatMid: string });
+
 }
 
-export declare class SendMessageRequest {
+export type SendMessageRequest = {
 	reqSeq: number;
 	squareChatMid: string;
 	squareMessage: SquareMessage;
 
-	constructor(args?: {
-		reqSeq: number;
-		squareChatMid: string;
-		squareMessage: SquareMessage;
-	});
+
 }
 
-export declare class MarkAsReadRequest {
+export type MarkAsReadRequest = {
 	squareChatMid: string;
 	messageId: string;
 
-	constructor(args?: { squareChatMid: string; messageId: string });
+
 }
 
-export declare class ApproveSquareMembersResponse {
+export type ApproveSquareMembersResponse = {
 	approvedMembers: SquareMember[];
 	status: SquareStatus;
 
-	constructor(args?: { approvedMembers: SquareMember[]; status: SquareStatus });
+
 }
 
-export declare class ApproveSquareMembersRequest {
+export type ApproveSquareMembersRequest = {
 	squareMid: string;
 	requestedMemberMids: string[];
 
-	constructor(args?: { squareMid: string; requestedMemberMids: string[] });
+
 }
 
-export declare class CreateSquareChatResponse {
+export type CreateSquareChatResponse = {
 	squareChat: SquareChat;
 	squareChatStatus: SquareChatStatus;
 	squareChatMember: SquareChatMember;
 
-	constructor(args?: {
-		squareChat: SquareChat;
-		squareChatStatus: SquareChatStatus;
-		squareChatMember: SquareChatMember;
-	});
+
 }
 
-export declare class CreateSquareChatRequest {
+export type CreateSquareChatRequest = {
 	reqSeq: number;
 	squareChat: SquareChat;
 	squareMemberMids: string[];
 
-	constructor(args?: {
-		reqSeq: number;
-		squareChat: SquareChat;
-		squareMemberMids: string[];
-	});
+
 }
 
-export declare class CreateSquareRequest {
+export type CreateSquareRequest = {
 	reqSeq: number;
 	square: Square;
 	creator: SquareMember;
 
-	constructor(args?: { reqSeq: number; square: Square; creator: SquareMember });
+
 }
 
-export declare class DeleteSquareResponse {}
+export type DeleteSquareResponse = {}
 
-export declare class DeleteSquareRequest {
+export type DeleteSquareRequest = {
 	mid: string;
 	revision: Int64;
 
-	constructor(args?: { mid: string; revision: Int64 });
+
 }
 
-export declare class DestroyMessageResponse {}
+export type DestroyMessageResponse = {}
 
-export declare class DestroyMessageRequest {
+export type DestroyMessageRequest = {
 	squareChatMid: string;
 	messageId: string;
 
-	constructor(args?: { squareChatMid: string; messageId: string });
+
 }
 
-export declare class GetSquareChatMembersRequest {
+export type GetSquareChatMembersRequest = {
 	squareChatMid: string;
 	continuationToken: string;
 	limit: number;
 
-	constructor(args?: {
-		squareChatMid: string;
-		continuationToken: string;
-		limit: number;
-	});
+
 }
 
-export declare class GetSquareChatMembersResponse {
+export type GetSquareChatMembersResponse = {
 	squareChatMembers: SquareMember[];
 	continuationToken: string;
 
-	constructor(args?: {
-		squareChatMembers: SquareMember[];
-		continuationToken: string;
-	});
+
 }
 
-export declare class GetSquareChatStatusRequest {
+export type GetSquareChatStatusRequest = {
 	squareChatMid: string;
 
-	constructor(args?: { squareChatMid: string });
+
 }
 
-export declare class GetSquareChatStatusResponse {
+export type GetSquareChatStatusResponse = {
 	chatStatus: SquareChatStatus;
 
-	constructor(args?: { chatStatus: SquareChatStatus });
+
 }
 
-export declare class GetSquareChatRequest {
+export type GetSquareChatRequest = {
 	squareChatMid: string;
 
-	constructor(args?: { squareChatMid: string });
+
 }
 
-export declare class GetSquareChatResponse {
+export type GetSquareChatResponse = {
 	squareChat: SquareChat;
 	squareChatMember: SquareChatMember;
 	squareChatStatus: SquareChatStatus;
 
-	constructor(args?: {
-		squareChat: SquareChat;
-		squareChatMember: SquareChatMember;
-		squareChatStatus: SquareChatStatus;
-	});
+
 }
 
-export declare class GetSquareAuthorityRequest {
+export type GetSquareAuthorityRequest = {
 	squareMid: string;
 
-	constructor(args?: { squareMid: string });
+
 }
 
-export declare class GetSquareAuthorityResponse {
+export type GetSquareAuthorityResponse = {
 	authority: SquareAuthority;
 
-	constructor(args?: { authority: SquareAuthority });
+
 }
 
-export declare class GetJoinedSquaresRequest {
+export type GetJoinedSquaresRequest = {
 	continuationToken: string;
 	limit: number;
 
-	constructor(args?: { continuationToken: string; limit: number });
+
 }
 
-export declare class GetJoinableSquareChatsRequest {
+export type GetJoinableSquareChatsRequest = {
 	squareMid: string;
 	continuationToken: string;
 	limit: number;
 
-	constructor(args?: {
-		squareMid: string;
-		continuationToken: string;
-		limit: number;
-	});
+
 }
 
-export declare class GetInvitationTicketUrlRequest {
+export type GetInvitationTicketUrlRequest = {
 	mid: string;
 
-	constructor(args?: { mid: string });
+
 }
 
-export declare class GetInvitationTicketUrlResponse {
+export type GetInvitationTicketUrlResponse = {
 	invitationURL: string;
 
-	constructor(args?: { invitationURL: string });
+
 }
 
-export declare class LeaveSquareRequest {
+export type LeaveSquareRequest = {
 	squareMid: string;
 
-	constructor(args?: { squareMid: string });
+
 }
 
-export declare class LeaveSquareResponse {}
+export type LeaveSquareResponse = {}
 
-export declare class LeaveSquareChatRequest {
+export type LeaveSquareChatRequest = {
 	squareChatMid: string;
 	sayGoodbye: boolean;
 	squareChatMemberRevision: Int64;
 
-	constructor(args?: {
-		squareChatMid: string;
-		sayGoodbye: boolean;
-		squareChatMemberRevision: Int64;
-	});
+
 }
 
-export declare class LeaveSquareChatResponse {}
+export type LeaveSquareChatResponse = {}
 
-export declare class SquareMemberSearchOption {
+export type SquareMemberSearchOption = {
 	membershipState: SquareMembershipState;
 	memberRoles: SquareMemberRole[];
 	displayName: string;
@@ -10804,606 +8508,464 @@ export declare class SquareMemberSearchOption {
 	chatMidToExcludeMembers: string;
 	includingMe: boolean;
 
-	constructor(args?: {
-		membershipState: SquareMembershipState;
-		memberRoles: SquareMemberRole[];
-		displayName: string;
-		ableToReceiveMessage: BooleanState;
-		ableToReceiveFriendRequest: BooleanState;
-		chatMidToExcludeMembers: string;
-		includingMe: boolean;
-	});
+
 }
 
-export declare class SearchSquareMembersRequest {
+export type SearchSquareMembersRequest = {
 	squareMid: string;
 	searchOption: SquareMemberSearchOption;
 	continuationToken: string;
 	limit: number;
 
-	constructor(args?: {
-		squareMid: string;
-		searchOption: SquareMemberSearchOption;
-		continuationToken: string;
-		limit: number;
-	});
+
 }
 
-export declare class SearchSquareMembersResponse {
+export type SearchSquareMembersResponse = {
 	members: SquareMember[];
 	revision: Int64;
 	continuationToken: string;
 	totalCount: number;
 
-	constructor(args?: {
-		members: SquareMember[];
-		revision: Int64;
-		continuationToken: string;
-		totalCount: number;
-	});
+
 }
 
-export declare class FindSquareByInvitationTicketRequest {
+export type FindSquareByInvitationTicketRequest = {
 	invitationTicket: string;
 
-	constructor(args?: { invitationTicket: string });
+
 }
 
-export declare class FetchMyEventsRequest {
+export type FetchMyEventsRequest = {
 	subscriptionId: Int64;
 	syncToken: string;
 	limit: number;
 	continuationToken: string;
 
-	constructor(args?: {
-		subscriptionId: Int64;
-		syncToken: string;
-		limit: number;
-		continuationToken: string;
-	});
+
 }
 
-export declare class FetchSquareChatEventsRequest {
+export type FetchSquareChatEventsRequest = {
 	subscriptionId: Int64;
 	squareChatMid: string;
 	syncToken: string;
 	limit: number;
 	direction: FetchDirection;
 
-	constructor(args?: {
-		subscriptionId: Int64;
-		squareChatMid: string;
-		syncToken: string;
-		limit: number;
-		direction: FetchDirection;
-	});
+
 }
 
-export declare class InviteToSquareRequest {
+export type InviteToSquareRequest = {
 	squareMid: string;
 	invitees: string[];
 	squareChatMid: string;
 
-	constructor(args?: {
-		squareMid: string;
-		invitees: string[];
-		squareChatMid: string;
-	});
+
 }
 
-export declare class InviteToSquareChatRequest {
+export type InviteToSquareChatRequest = {
 	inviteeMids: string[];
 	squareChatMid: string;
 
-	constructor(args?: { inviteeMids: string[]; squareChatMid: string });
+
 }
 
-export declare class InviteToSquareChatResponse {
+export type InviteToSquareChatResponse = {
 	inviteeMids: string[];
 
-	constructor(args?: { inviteeMids: string[] });
+
 }
 
-export declare class GetSquareMemberRequest {
+export type GetSquareMemberRequest = {
 	squareMemberMid: string;
 
-	constructor(args?: { squareMemberMid: string });
+
 }
 
-export declare class GetSquareMemberResponse {
+export type GetSquareMemberResponse = {
 	squareMember: SquareMember;
 	relation: SquareMemberRelation;
 	oneOnOneChatMid: string;
 
-	constructor(args?: {
-		squareMember: SquareMember;
-		relation: SquareMemberRelation;
-		oneOnOneChatMid: string;
-	});
+
 }
 
-export declare class GetSquareMembersRequest {
+export type GetSquareMembersRequest = {
 	mids: string[];
 
-	constructor(args?: { mids: string[] });
+
 }
 
-export declare class GetSquareMembersResponse {
+export type GetSquareMembersResponse = {
 	members: SquareMember;
 
-	constructor(args?: { members: SquareMember });
+
 }
 
-export declare class GetSquareMemberRelationsRequest {
+export type GetSquareMemberRelationsRequest = {
 	state: SquareMemberRelationState;
 	continuationToken: string;
 	limit: number;
 
-	constructor(args?: {
-		state: SquareMemberRelationState;
-		continuationToken: string;
-		limit: number;
-	});
+
 }
 
-export declare class GetSquareMemberRelationsResponse {
+export type GetSquareMemberRelationsResponse = {
 	squareMembers: SquareMember[];
 	relations: { [k: string]: SquareMemberRelation };
 	continuationToken: string;
 
-	constructor(args?: {
-		squareMembers: SquareMember[];
-		relations: { [k: string]: SquareMemberRelation };
-		continuationToken: string;
-	});
+
 }
 
-export declare class GetSquareMemberRelationRequest {
+export type GetSquareMemberRelationRequest = {
 	squareMid: string;
 	targetSquareMemberMid: string;
 
-	constructor(args?: { squareMid: string; targetSquareMemberMid: string });
+
 }
 
-export declare class GetSquareMemberRelationResponse {
+export type GetSquareMemberRelationResponse = {
 	squareMid: string;
 	targetSquareMemberMid: string;
 	relation: SquareMemberRelation;
 
-	constructor(args?: {
-		squareMid: string;
-		targetSquareMemberMid: string;
-		relation: SquareMemberRelation;
-	});
+
 }
 
-export declare class GetSquareCategoriesRequest {}
+export type GetSquareCategoriesRequest = {}
 
-export declare class GetSquareCategoriesResponse {
+export type GetSquareCategoriesResponse = {
 	categoryList: Category[];
 
-	constructor(args?: { categoryList: Category[] });
+
 }
 
-export declare class UpdateSquareRequest {
+export type UpdateSquareRequest = {
 	updatedAttrs: SquareAttribute[];
 	square: Square;
 
-	constructor(args?: { updatedAttrs: SquareAttribute[]; square: Square });
+
 }
 
-export declare class UpdateSquareResponse {
+export type UpdateSquareResponse = {
 	updatedAttrs: SquareAttribute[];
 	square: Square;
 
-	constructor(args?: { updatedAttrs: SquareAttribute[]; square: Square });
+
 }
 
-export declare class SearchSquaresRequest {
+export type SearchSquaresRequest = {
 	query: string;
 	continuationToken: string;
 	limit: number;
 
-	constructor(args?: {
-		query: string;
-		continuationToken: string;
-		limit: number;
-	});
+
 }
 
-export declare class SearchSquaresResponse {
+export type SearchSquaresResponse = {
 	squares: Square[];
 	squareStatuses: { [k: string]: SquareStatus };
 	myMemberships: { [k: string]: SquareMember };
 	continuationToken: string;
 	noteStatuses: { [k: string]: NoteStatus };
 
-	constructor(args?: {
-		squares: Square[];
-		squareStatuses: { [k: string]: SquareStatus };
-		myMemberships: { [k: string]: SquareMember };
-		continuationToken: string;
-		noteStatuses: { [k: string]: NoteStatus };
-	});
+
 }
 
-export declare class GetSquareFeatureSetRequest {
+export type GetSquareFeatureSetRequest = {
 	squareMid: string;
 
-	constructor(args?: { squareMid: string });
+
 }
 
-export declare class UpdateSquareFeatureSetRequest {
+export type UpdateSquareFeatureSetRequest = {
 	updateAttributes: SquareFeatureSetAttribute[];
 	squareFeatureSet: SquareFeatureSet;
 
-	constructor(args?: {
-		updateAttributes: SquareFeatureSetAttribute[];
-		squareFeatureSet: SquareFeatureSet;
-	});
+
 }
 
-export declare class UpdateSquareFeatureSetResponse {
+export type UpdateSquareFeatureSetResponse = {
 	updateAttributes: SquareFeatureSetAttribute[];
 	squareFeatureSet: SquareFeatureSet;
 
-	constructor(args?: {
-		updateAttributes: SquareFeatureSetAttribute[];
-		squareFeatureSet: SquareFeatureSet;
-	});
+
 }
 
-export declare class UpdateSquareMemberRequest {
+export type UpdateSquareMemberRequest = {
 	updatedAttrs: SquareMemberAttribute[];
 	updatedPreferenceAttrs: SquarePreferenceAttribute[];
 	squareMember: SquareMember;
 
-	constructor(args?: {
-		updatedAttrs: SquareMemberAttribute[];
-		updatedPreferenceAttrs: SquarePreferenceAttribute[];
-		squareMember: SquareMember;
-	});
+
 }
 
-export declare class UpdateSquareMemberResponse {
+export type UpdateSquareMemberResponse = {
 	updatedAttrs: SquareMemberAttribute[];
 	squareMember: SquareMember;
 	updatedPreferenceAttrs: SquarePreferenceAttribute[];
 
-	constructor(args?: {
-		updatedAttrs: SquareMemberAttribute[];
-		squareMember: SquareMember;
-		updatedPreferenceAttrs: SquarePreferenceAttribute[];
-	});
+
 }
 
-export declare class UpdateSquareMembersRequest {
+export type UpdateSquareMembersRequest = {
 	updatedAttrs: SquareMemberAttribute[];
 	members: SquareMember[];
 
-	constructor(args?: {
-		updatedAttrs: SquareMemberAttribute[];
-		members: SquareMember[];
-	});
+
 }
 
-export declare class UpdateSquareMembersResponse {
+export type UpdateSquareMembersResponse = {
 	updatedAttrs: SquareMemberAttribute[];
 	editor: SquareMember;
 	members: { [k: string]: SquareMember };
 
-	constructor(args?: {
-		updatedAttrs: SquareMemberAttribute[];
-		editor: SquareMember;
-		members: { [k: string]: SquareMember };
-	});
+
 }
 
-export declare class RejectSquareMembersRequest {
+export type RejectSquareMembersRequest = {
 	squareMid: string;
 	requestedMemberMids: string[];
 
-	constructor(args?: { squareMid: string; requestedMemberMids: string[] });
+
 }
 
-export declare class RejectSquareMembersResponse {
+export type RejectSquareMembersResponse = {
 	rejectedMembers: SquareMember[];
 	status: SquareStatus;
 
-	constructor(args?: { rejectedMembers: SquareMember[]; status: SquareStatus });
+
 }
 
-export declare class RemoveSubscriptionsRequest {
+export type RemoveSubscriptionsRequest = {
 	unsubscriptions: Int64[];
 
-	constructor(args?: { unsubscriptions: Int64[] });
+
 }
 
-export declare class RemoveSubscriptionsResponse {}
+export type RemoveSubscriptionsResponse = {}
 
-export declare class RefreshSubscriptionsRequest {
+export type RefreshSubscriptionsRequest = {
 	subscriptions: Int64[];
 
-	constructor(args?: { subscriptions: Int64[] });
+
 }
 
-export declare class RefreshSubscriptionsResponse {
+export type RefreshSubscriptionsResponse = {
 	ttlMillis: Int64;
 	subscriptionStates: any;
 
-	constructor(args?: { ttlMillis: Int64; subscriptionStates: any });
+
 }
 
-export declare class UpdateSquareChatRequest {
+export type UpdateSquareChatRequest = {
 	updatedAttrs: SquareChatAttribute[];
 	squareChat: SquareChat;
 
-	constructor(args?: {
-		updatedAttrs: SquareChatAttribute[];
-		squareChat: SquareChat;
-	});
+
 }
 
-export declare class UpdateSquareChatResponse {
+export type UpdateSquareChatResponse = {
 	updatedAttrs: SquareChatAttribute[];
 	squareChat: SquareChat;
 
-	constructor(args?: {
-		updatedAttrs: SquareChatAttribute[];
-		squareChat: SquareChat;
-	});
+
 }
 
-export declare class DeleteSquareChatRequest {
+export type DeleteSquareChatRequest = {
 	squareChatMid: string;
 	revision: Int64;
 
-	constructor(args?: { squareChatMid: string; revision: Int64 });
+
 }
 
-export declare class DeleteSquareChatResponse {}
+export type DeleteSquareChatResponse = {}
 
-export declare class UpdateSquareChatMemberRequest {
+export type UpdateSquareChatMemberRequest = {
 	updatedAttrs: SquareChatMemberAttribute[];
 	chatMember: SquareChatMember;
 
-	constructor(args?: {
-		updatedAttrs: SquareChatMemberAttribute[];
-		chatMember: SquareChatMember;
-	});
+
 }
 
-export declare class UpdateSquareChatMemberResponse {
+export type UpdateSquareChatMemberResponse = {
 	updatedChatMember: SquareChatMember;
 
-	constructor(args?: { updatedChatMember: SquareChatMember });
+
 }
 
-export declare class UpdateSquareAuthorityRequest {
+export type UpdateSquareAuthorityRequest = {
 	updateAttributes: SquareAuthorityAttribute[];
 	authority: SquareAuthority;
 
-	constructor(args?: {
-		updateAttributes: SquareAuthorityAttribute[];
-		authority: SquareAuthority;
-	});
+
 }
 
-export declare class UpdateSquareAuthorityResponse {
+export type UpdateSquareAuthorityResponse = {
 	updatdAttributes: SquareAuthorityAttribute[];
 	authority: SquareAuthority;
 
-	constructor(args?: {
-		updatdAttributes: SquareAuthorityAttribute[];
-		authority: SquareAuthority;
-	});
+
 }
 
-export declare class UpdateSquareMemberRelationRequest {
+export type UpdateSquareMemberRelationRequest = {
 	squareMid: string;
 	targetSquareMemberMid: string;
 	updatedAttrs: SquareMemberRelationAttribute[];
 	relation: SquareMemberRelation;
 
-	constructor(args?: {
-		squareMid: string;
-		targetSquareMemberMid: string;
-		updatedAttrs: SquareMemberRelationAttribute[];
-		relation: SquareMemberRelation;
-	});
+
 }
 
-export declare class UpdateSquareMemberRelationResponse {
+export type UpdateSquareMemberRelationResponse = {
 	squareMid: string;
 	targetSquareMemberMid: string;
 	updatedAttrs: SquareMemberRelationAttribute[];
 	relation: SquareMemberRelation;
 
-	constructor(args?: {
-		squareMid: string;
-		targetSquareMemberMid: string;
-		updatedAttrs: SquareMemberRelationAttribute[];
-		relation: SquareMemberRelation;
-	});
+
 }
 
-export declare class ReportSquareRequest {
+export type ReportSquareRequest = {
 	squareMid: string;
 	reportType: ReportType;
 	otherReason: string;
 
-	constructor(args?: {
-		squareMid: string;
-		reportType: ReportType;
-		otherReason: string;
-	});
+
 }
 
-export declare class ReportSquareResponse {}
+export type ReportSquareResponse = {}
 
-export declare class ReportSquareChatRequest {
+export type ReportSquareChatRequest = {
 	squareMid: string;
 	squareChatMid: string;
 	reportType: ReportType;
 	otherReason: string;
 
-	constructor(args?: {
-		squareMid: string;
-		squareChatMid: string;
-		reportType: ReportType;
-		otherReason: string;
-	});
+
 }
 
-export declare class ReportSquareChatResponse {}
+export type ReportSquareChatResponse = {}
 
-export declare class ReportSquareMessageRequest {
+export type ReportSquareMessageRequest = {
 	squareMid: string;
 	squareChatMid: string;
 	squareMessageId: string;
 	reportType: ReportType;
 	otherReason: string;
 
-	constructor(args?: {
-		squareMid: string;
-		squareChatMid: string;
-		squareMessageId: string;
-		reportType: ReportType;
-		otherReason: string;
-	});
+
 }
 
-export declare class ReportSquareMessageResponse {}
+export type ReportSquareMessageResponse = {}
 
-export declare class ReportSquareMemberRequest {
+export type ReportSquareMemberRequest = {
 	squareMemberMid: string;
 	reportType: ReportType;
 	otherReason: string;
 	squareChatMid: string;
 
-	constructor(args?: {
-		squareMemberMid: string;
-		reportType: ReportType;
-		otherReason: string;
-		squareChatMid: string;
-	});
+
 }
 
-export declare class ReportSquareMemberResponse {}
+export type ReportSquareMemberResponse = {}
 
-export declare class GetSquareRequest {
+export type GetSquareRequest = {
 	mid: string;
 
-	constructor(args?: { mid: string });
+
 }
 
-export declare class GetSquareStatusRequest {
+export type GetSquareStatusRequest = {
 	squareMid: string;
 
-	constructor(args?: { squareMid: string });
+
 }
 
-export declare class GetSquareStatusResponse {
+export type GetSquareStatusResponse = {
 	squareStatus: SquareStatus;
 
-	constructor(args?: { squareStatus: SquareStatus });
+
 }
 
-export declare class GetNoteStatusRequest {
+export type GetNoteStatusRequest = {
 	squareMid: string;
 
-	constructor(args?: { squareMid: string });
+
 }
 
-export declare class GetNoteStatusResponse {
+export type GetNoteStatusResponse = {
 	squareMid: string;
 	status: NoteStatus;
 
-	constructor(args?: { squareMid: string; status: NoteStatus });
+
 }
 
-export declare class CreateSquareChatAnnouncementRequest {
+export type CreateSquareChatAnnouncementRequest = {
 	reqSeq: number;
 	squareChatMid: string;
 	squareChatAnnouncement: SquareChatAnnouncement;
 
-	constructor(args?: {
-		reqSeq: number;
-		squareChatMid: string;
-		squareChatAnnouncement: SquareChatAnnouncement;
-	});
+
 }
 
-export declare class CreateSquareChatAnnouncementResponse {
+export type CreateSquareChatAnnouncementResponse = {
 	announcement: SquareChatAnnouncement;
 
-	constructor(args?: { announcement: SquareChatAnnouncement });
+
 }
 
-export declare class DeleteSquareChatAnnouncementRequest {
+export type DeleteSquareChatAnnouncementRequest = {
 	squareChatMid: string;
 	announcementSeq: Int64;
 
-	constructor(args?: { squareChatMid: string; announcementSeq: Int64 });
+
 }
 
-export declare class DeleteSquareChatAnnouncementResponse {}
+export type DeleteSquareChatAnnouncementResponse = {}
 
-export declare class GetSquareChatAnnouncementsRequest {
+export type GetSquareChatAnnouncementsRequest = {
 	squareChatMid: string;
 
-	constructor(args?: { squareChatMid: string });
+
 }
 
-export declare class GetJoinedSquareChatsRequest {
+export type GetJoinedSquareChatsRequest = {
 	continuationToken: string;
 	limit: number;
 
-	constructor(args?: { continuationToken: string; limit: number });
+
 }
 
-export declare class GetJoinedSquareChatsResponse {
+export type GetJoinedSquareChatsResponse = {
 	chats: SquareChat[];
 	chatMembers: { [k: string]: SquareChatMember };
 	statuses: { [k: string]: SquareChatStatus };
 	continuationToken: string;
 
-	constructor(args?: {
-		chats: SquareChat[];
-		chatMembers: { [k: string]: SquareChatMember };
-		statuses: { [k: string]: SquareChatStatus };
-		continuationToken: string;
-	});
+
 }
 
-export declare class UserAuthStatus {
+export type UserAuthStatus = {
 	phoneNumberRegistered: boolean;
 	registeredSnsIdTypes: SnsIdType[];
 
-	constructor(args?: {
-		phoneNumberRegistered: boolean;
-		registeredSnsIdTypes: SnsIdType[];
-	});
+
 }
 
-export declare class WapInvitation {
+export type WapInvitation = {
 	type: WapInvitationType;
 	inviteeEmail: string;
 	inviterMid: string;
 	roomMid: string;
 
-	constructor(args?: {
-		type: WapInvitationType;
-		inviteeEmail: string;
-		inviterMid: string;
-		roomMid: string;
-	});
+
 }
 
-export declare class GroupCallRoute {
+export type GroupCallRoute = {
 	token: string;
 	cscf: CallHost;
 	mix: CallHost;
 
-	constructor(args?: { token: string; cscf: CallHost; mix: CallHost });
+
 }
