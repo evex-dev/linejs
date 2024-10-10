@@ -261,8 +261,13 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					this.emit("square:event", event);
 
 					if (event.type === "NOTIFICATION_MESSAGE") {
-						const message =
-							event.payload.notificationMessage.squareMessage.message;
+						const notificationMessage = event.payload.notificationMessage;
+
+						if (!notificationMessage) {
+							continue;
+						}
+
+						const message = notificationMessage.squareMessage.message;
 
 						if (previousMessageId === message.id) {
 							continue;
@@ -323,15 +328,13 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						const react = async (options: SquareMessageReactionOptions) => {
 							if (typeof options === "number") {
 								return await this.reactToSquareMessage({
-									squareChatMid:
-										event.payload.notificationMessage.squareChatMid,
+									squareChatMid: notificationMessage.squareChatMid,
 									reactionType: options as LINETypes.MessageReactionType,
 									squareMessageId: message.id,
 								});
 							} else {
 								return await this.reactToSquareMessage({
-									squareChatMid:
-										event.payload.notificationMessage.squareChatMid,
+									squareChatMid: notificationMessage.squareChatMid,
 									reactionType: (
 										options as Exclude<
 											SquareMessageReactionOptions,
@@ -353,7 +356,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							});
 
 						this.emit("square:message", {
-							...event.payload.notificationMessage,
+							...notificationMessage,
 							type: "square",
 							content: typeof message.text === "string" ? message.text : "",
 							contentMetadata: message.contentMetadata,
@@ -367,7 +370,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 								mid: message._from,
 								get displayName() {
 									return (
-										event.payload.notificationMessage.senderDisplayName ||
+										notificationMessage.senderDisplayName ||
 										getMyProfile().then((myProfile) => myProfile.displayName)
 									);
 								},
@@ -384,8 +387,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							getMyProfile,
 							square: async () =>
 								await this.getSquareChat({
-									squareChatMid:
-										event.payload.notificationMessage.squareChatMid,
+									squareChatMid: notificationMessage.squareChatMid,
 								}),
 							data:
 								this.hasData(message) &&
@@ -976,10 +978,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				Buffer.from(secret),
 				Buffer.from(e2eeInfo.metadata.encryptedKeyChain, "base64"),
 			);
-			const e2eeLogin = await this.confirmE2EELogin(
-				response[3],
-				deviceSecret,
-			);
+			const e2eeLogin = await this.confirmE2EELogin(response[3], deviceSecret);
 			response = await this.loginV2(
 				keynm,
 				encryptedMessage,

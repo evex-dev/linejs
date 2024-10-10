@@ -448,10 +448,16 @@ export class TalkClient extends ChannelClient {
 		useCache: boolean = this.useTalkCache,
 	): Promise<LINETypes.GetContactsV2Response> {
 		const { mids } = { ...options };
-		if (useCache && mids.length === 1 && this.cache.getCache("getContactV2", { mid: mids[0] })) {
-			const res: { contacts: Record<string, LooseType> } = { contacts: {} }
-			res.contacts[mids[0]] = this.cache.getCache("getContactV2", { mid: mids[0] })
-			return res
+		if (
+			useCache &&
+			mids.length === 1 &&
+			this.cache.getCache("getContactV2", { mid: mids[0] })
+		) {
+			const res: { contacts: Record<string, LooseType> } = { contacts: {} };
+			res.contacts[mids[0]] = this.cache.getCache("getContactV2", {
+				mid: mids[0],
+			});
+			return res;
 		}
 		const response = (await this.request(
 			[[15, 1, [11, mids]]],
@@ -465,8 +471,16 @@ export class TalkClient extends ChannelClient {
 			for (const key in response.contacts) {
 				if (Object.prototype.hasOwnProperty.call(response.contacts, key)) {
 					const contact = response.contacts[key];
-					this.cache.setCache("getContact", { mid: contact.contact.mid }, contact.contact);
-					this.cache.setCache("getContactV2", { mid: contact.contact.mid }, contact);
+					this.cache.setCache(
+						"getContact",
+						{ mid: contact.contact.mid },
+						contact.contact,
+					);
+					this.cache.setCache(
+						"getContactV2",
+						{ mid: contact.contact.mid },
+						contact,
+					);
 				}
 			}
 		return response;
@@ -764,20 +778,20 @@ export class TalkClient extends ChannelClient {
 						chatSet.picturePath ? [11, 7, chatSet.picturePath] : null,
 						chatSet.extra?.groupExtra
 							? [
-								12,
-								8,
-								[
+									12,
+									8,
 									[
-										12,
-										1,
 										[
-											[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
-											[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
-											[2, 7, chatSet.extra.groupExtra.ticketDisabled],
+											12,
+											1,
+											[
+												[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
+												[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
+												[2, 7, chatSet.extra.groupExtra.ticketDisabled],
+											],
 										],
 									],
-								],
-							]
+								]
 							: null,
 					],
 				],
