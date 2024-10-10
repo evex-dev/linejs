@@ -202,7 +202,7 @@ export class SquareClient extends LiffClient {
 	 * SAD     = 6,
 	 * OMG     = 7,
 	 */
-	public async reactToSquareMessage(options: {
+	override async reactToSquareMessage(options: {
 		squareChatMid: string;
 		reactionType?: LINETypes.MessageReactionType;
 		squareMessageId: string;
@@ -346,7 +346,7 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Send message for square chat.
 	 */
-	public async sendSquareMessage(
+	override async sendSquareMessage(
 		options: {
 			squareChatMid: string;
 			text?: string;
@@ -451,7 +451,7 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Get my member ship (profile) of square.
 	 */
-	public async getSquareProfile(options: {
+	override async getSquareProfile(options: {
 		squareMid: string;
 	}): Promise<LINETypes.SquareMember> {
 		return (await this.getSquare(options)).myMembership;
@@ -460,7 +460,7 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Get square chat info.
 	 */
-	public async getSquareChat(
+	override async getSquareChat(
 		options: {
 			squareChatMid: string;
 		},
@@ -1080,7 +1080,7 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Get square member.
 	 */
-	public async getSquareMember(
+	override async getSquareMember(
 		options: {
 			squareMemberMid: string;
 		},

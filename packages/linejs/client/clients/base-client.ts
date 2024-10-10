@@ -261,13 +261,13 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					this.emit("square:event", event);
 
 					if (event.type === LINETypes.SquareEventType.NOTIFICATION_MESSAGE) {
-						const notificationMessage = event.payload.notificationMessage;
+						const payload = event.payload.notificationMessage;
 
-						if (!notificationMessage) {
+						if (!payload) {
 							continue;
 						}
 
-						const message = notificationMessage.squareMessage.message;
+						const message = payload.squareMessage.message;
 
 						if (previousMessageId === message.id) {
 							continue;
@@ -328,13 +328,13 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						const react = async (options: SquareMessageReactionOptions) => {
 							if (typeof options === "number") {
 								return await this.reactToSquareMessage({
-									squareChatMid: notificationMessage.squareChatMid,
+									squareChatMid: payload.squareChatMid,
 									reactionType: options as LINETypes.MessageReactionType,
 									squareMessageId: message.id,
 								});
 							} else {
 								return await this.reactToSquareMessage({
-									squareChatMid: notificationMessage.squareChatMid,
+									squareChatMid: payload.squareChatMid,
 									reactionType: (
 										options as Exclude<
 											SquareMessageReactionOptions,
@@ -356,7 +356,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							});
 
 						this.emit("square:message", {
-							...notificationMessage,
+							...payload,
 							type: "square",
 							content: typeof message.text === "string" ? message.text : "",
 							contentMetadata: message.contentMetadata,
@@ -370,7 +370,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 								mid: message._from,
 								get displayName() {
 									return (
-										notificationMessage.senderDisplayName ||
+										payload.senderDisplayName ||
 										getMyProfile().then((myProfile) => myProfile.displayName)
 									);
 								},
@@ -387,7 +387,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							getMyProfile,
 							square: async () =>
 								await this.getSquareChat({
-									squareChatMid: notificationMessage.squareChatMid,
+									squareChatMid: payload.squareChatMid,
 								}),
 							data:
 								this.hasData(message) &&
@@ -395,14 +395,6 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 									await this.getMessageObsData(message.id, preview)),
 							message,
 						});
-					}else if (event.type === LINETypes.SquareEventType.NOTIFICATION_DEMOTED_MEMBER) {
-						const notificationDemoteMember = event.payload.notificationDemoteMember;
-						
-						if (!notificationDemoteMember) {
-							continue;
-						}
-						
-						this.emit("square:update:demote", notificationDemoteMember);
 					}
 				}
 				myEventsSyncToken = myEvents.syncToken;
@@ -444,7 +436,10 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						operation.type === LINETypes.OpType._SEND_CONTENT
 					) {
 						const message = await this.decryptE2EEMessage(operation.message);
-						if (this.hasData(message) && operation.type == LINETypes.OpType._SEND_MESSAGE) {
+						if (
+							this.hasData(message) &&
+							operation.type == LINETypes.OpType._SEND_MESSAGE
+						) {
 							//continue;
 						}
 						let sendIn = "";
@@ -532,7 +527,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 						this.emit("message", {
 							...operation,
-							type: (message.toType === LINETypes.MIDType._USER ? "chat" : "group") as LooseType,
+							type: (message.toType === LINETypes.MIDType._USER
+								? "chat"
+								: "group") as LooseType,
 							opType: operation.type,
 							content: typeof message.text === "string" ? message.text : "",
 							contentMetadata: message.contentMetadata,
@@ -1461,7 +1458,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		});
 
 		const isRefresh =
-			res.e && res.e["code"] === LINETypes.ErrorCode._NOT_AUTHORIZED_DEVICE && nextToken;
+			res.e &&
+			res.e["code"] === LINETypes.ErrorCode._NOT_AUTHORIZED_DEVICE &&
+			nextToken;
 
 		if (res.e && !isRefresh) {
 			throw new InternalError(

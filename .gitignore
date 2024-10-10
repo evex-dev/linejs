@@ -1,3 +1,4 @@
 .DS_Store
 sandbox
 .env
+node_modules

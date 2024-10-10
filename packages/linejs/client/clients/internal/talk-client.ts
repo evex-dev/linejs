@@ -20,7 +20,7 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Get line events.
 	 */
-	public async sync(
+	override async sync(
 		options: {
 			limit?: number;
 			revision?: number;
@@ -52,7 +52,7 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Send message to talk.
 	 */
-	public async sendMessage(options: {
+	override async sendMessage(options: {
 		to: string;
 		text?: string;
 		contentType?: number;
@@ -188,7 +188,7 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description React to the message.
 	 */
-	public async reactToMessage(options: {
+	override async reactToMessage(options: {
 		messageId: string;
 		reactionType: LINETypes.MessageReactionType;
 	}): Promise<LINETypes.ReactToMessageResponse> {
@@ -392,7 +392,7 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Get user information from mid.
 	 */
-	public async getContact(
+	override async getContact(
 		options: {
 			mid: string;
 		},
@@ -526,7 +526,7 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Get chats information from gids.
 	 */
-	public async getChats(
+	override async getChats(
 		options: {
 			gids: string[];
 			withMembers?: boolean;
