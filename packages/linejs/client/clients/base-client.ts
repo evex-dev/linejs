@@ -260,7 +260,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				for (const event of myEvents.events) {
 					this.emit("square:event", event);
 
-					if (event.type === LINETypes.SquareEventType.NOTIFICATION_MESSAGE) {
+					if (event.type === LINETypes.SquareEventType._NOTIFICATION_MESSAGE) {
 						const payload = event.payload.notificationMessage;
 
 						if (!payload) {
@@ -394,6 +394,17 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 								(async (preview) =>
 									await this.getMessageObsData(message.id, preview)),
 							message,
+						});
+					}else if (event.type === LINETypes.SquareEventType._NOTIFIED_UPDATE_SQUARE_CHAT_STATUS) {
+						const payload = event.payload.notifiedUpdateSquareChatStatus;
+
+						if (!payload) {
+							continue;
+						}
+
+						this.emit("square:status", {
+							...payload,
+							...payload["statusWithoutMessage"],
 						});
 					}
 				}

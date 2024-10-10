@@ -5,6 +5,7 @@ import type * as LINETypes from "@evex/linejs-types";
 import type { LooseType } from "../../entities/common.ts";
 import { ChannelClient } from "./channel-client.ts";
 import type { Buffer } from "node:buffer";
+import { InternalError } from "../../entities/errors.ts";
 
 export class TalkClient extends ChannelClient {
 	public useTalkCache: boolean = false;
@@ -149,7 +150,7 @@ export class TalkClient extends ChannelClient {
 				this.TalkService_API_PATH,
 			);
 		} catch (error) {
-			if ((error.data?.code as string).includes("E2EE") && !e2ee) {
+			if (error instanceof InternalError && (error.data?.code as string).includes("E2EE") && !e2ee) {
 				options.e2ee = true;
 				return await this.sendMessage(options);
 			} else {
