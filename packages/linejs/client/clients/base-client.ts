@@ -10,7 +10,7 @@ import {
 	type ProtocolKey,
 	Protocols,
 } from "../libs/thrift/declares.ts";
-import type * as LINETypes from "@evex/linejs-types";
+import * as LINETypes from "@evex/linejs-types";
 import ThriftRenameParser from "../libs/thrift/parser.ts";
 import { readThrift } from "../libs/thrift/read.ts";
 import { Thrift } from "@evex/linejs-types/thrift";
@@ -260,7 +260,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				for (const event of myEvents.events) {
 					this.emit("square:event", event);
 
-					if (event.type === "NOTIFICATION_MESSAGE") {
+					if (event.type === LINETypes.SquareEventType.NOTIFICATION_MESSAGE) {
 						const notificationMessage = event.payload.notificationMessage;
 
 						if (!notificationMessage) {
@@ -395,6 +395,14 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 									await this.getMessageObsData(message.id, preview)),
 							message,
 						});
+					}else if (event.type === LINETypes.SquareEventType.NOTIFICATION_DEMOTED_MEMBER) {
+						const notificationDemoteMember = event.payload.notificationDemoteMember;
+						
+						if (!notificationDemoteMember) {
+							continue;
+						}
+						
+						this.emit("square:update:demote", notificationDemoteMember);
 					}
 				}
 				myEventsSyncToken = myEvents.syncToken;
@@ -431,16 +439,16 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				for (const operation of myEvents.operationResponse?.operations) {
 					revision = operation.revision;
 					if (
-						operation.type === "RECEIVE_MESSAGE" ||
-						operation.type === "SEND_MESSAGE" ||
-						operation.type === "SEND_CONTENT"
+						operation.type === LINETypes.OpType._RECEIVE_MESSAGE ||
+						operation.type === LINETypes.OpType._SEND_MESSAGE ||
+						operation.type === LINETypes.OpType._SEND_CONTENT
 					) {
 						const message = await this.decryptE2EEMessage(operation.message);
-						if (this.hasData(message) && operation.type == "SEND_MESSAGE") {
+						if (this.hasData(message) && operation.type == LINETypes.OpType._SEND_MESSAGE) {
 							//continue;
 						}
 						let sendIn = "";
-						if (message.toType === "USER") {
+						if (message.toType === LINETypes.MIDType._USER) {
 							if (message._from === this.user?.mid) {
 								sendIn = message.to;
 							} else {
@@ -501,14 +509,14 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						};
 
 						const chat =
-							message.toType === "USER"
+							message.toType === LINETypes.MIDType._USER
 								? async () => {
 										return await this.getContact({ mid: sendIn });
 									}
 								: undefined;
 
 						const group =
-							message.toType !== "USER"
+							message.toType !== LINETypes.MIDType._USER
 								? async () => {
 										return (await this.getChats({ mids: [sendIn] })).chats[0];
 									}
@@ -524,7 +532,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 						this.emit("message", {
 							...operation,
-							type: (message.toType === "USER" ? "chat" : "group") as LooseType,
+							type: (message.toType === LINETypes.MIDType._USER ? "chat" : "group") as LooseType,
 							opType: operation.type,
 							content: typeof message.text === "string" ? message.text : "",
 							contentMetadata: message.contentMetadata,
@@ -1453,7 +1461,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		});
 
 		const isRefresh =
-			res.e && res.e["code"] === "NOT_AUTHORIZED_DEVICE" && nextToken;
+			res.e && res.e["code"] === LINETypes.ErrorCode._NOT_AUTHORIZED_DEVICE && nextToken;
 
 		if (res.e && !isRefresh) {
 			throw new InternalError(
@@ -1464,6 +1472,11 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 
 		if (isRefresh && !isReRequest) {
+			this.metadata = {
+				authToken: nextToken,
+			};
+			this.emit("update:authtoken", this.metadata.authToken);
+
 			return await this.rawRequest(
 				path,
 				value,

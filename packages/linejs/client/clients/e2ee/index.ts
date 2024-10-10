@@ -13,6 +13,7 @@ import {
 } from "@evex/linejs-types";
 import nacl from "tweetnacl";
 import { InternalError } from "../../entities/errors.ts";
+import * as LINETypes from "@evex/linejs-types";
 
 class E2EE extends TalkClient {
 	public async getE2EESelfKeyData(mid: string): Promise<LooseType> {
@@ -81,7 +82,7 @@ class E2EE extends TalkClient {
 		let key: LooseType = undefined;
 		let fd: LooseType, fn: LooseType;
 
-		if (toType === 0) {
+		if (toType === LINETypes.MIDType.USER) {
 			fd = "e2eePublicKeys";
 			fn = `:${keyId}`;
 			if (keyId !== undefined) {
@@ -382,7 +383,7 @@ class E2EE extends TalkClient {
 		const senderKeyId = selfKeyData.keyId;
 		let receiverKeyId, keyData;
 
-		if (this.getToType(to) === 0) {
+		if (this.getToType(to) === LINETypes.MIDType.USER) {
 			const privateKey = Buffer.from(selfKeyData.privKey, "base64");
 			const receiverKeyData = await this.negotiateE2EEPublicKey({ mid: to });
 			specVersion = receiverKeyData.specVersion;
@@ -404,7 +405,7 @@ class E2EE extends TalkClient {
 		}
 
 		let chunks;
-		if (contentType === 15) {
+		if (contentType === LINETypes.ContentType.LOCATION) {
 			chunks = this.encryptE2EELocationMessage(
 				senderKeyId,
 				receiverKeyId,
@@ -521,13 +522,13 @@ class E2EE extends TalkClient {
 
 	public async decryptE2EEMessage(messageObj: Message): Promise<Message> {
 		if (
-			(messageObj.contentType === "NONE" ||
+			(messageObj.contentType === LINETypes.ContentType._NONE ||
 				messageObj.contentType === ContentType.NONE) &&
 			messageObj.chunks
 		) {
 			messageObj.text = await this.decryptE2EETextMessage(messageObj);
 		} else if (
-			(messageObj.contentType === "LOCATION" ||
+			(messageObj.contentType === LINETypes.ContentType._LOCATION ||
 				messageObj.contentType === ContentType.LOCATION) &&
 			messageObj.chunks
 		) {
