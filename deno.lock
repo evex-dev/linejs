@@ -1,6 +1,8 @@
 {
   "version": "4",
   "specifiers": {
+    "jsr:@std/assert@^1.0.2": "1.0.6",
+    "jsr:@std/internal@^1.0.4": "1.0.4",
     "npm:@biomejs/biome@*": "1.9.3",
     "npm:@types/node@*": "22.5.4",
     "npm:@types/node@latest": "22.7.5",
@@ -9,6 +11,17 @@
     "npm:node-bignumber@^1.2.2": "1.2.2",
     "npm:thrift@0.20": "0.20.0_ws@5.2.4",
     "npm:tweetnacl@^1.0.3": "1.0.3"
+  },
+  "jsr": {
+    "@std/assert@1.0.6": {
+      "integrity": "1904c05806a25d94fe791d6d883b685c9e2dcd60e4f9fc30f4fc5cf010c72207",
+      "dependencies": [
+        "jsr:@std/internal"
+      ]
+    },
+    "@std/internal@1.0.4": {
+      "integrity": "62e8e4911527e5e4f307741a795c0b0a9e6958d0b3790716ae71ce085f755422"
+    }
   },
   "npm": {
     "@biomejs/biome@1.9.3": {
