@@ -590,7 +590,7 @@ export class TalkClient extends ChannelClient {
 		const { to, mid } = {
 			...options,
 		};
-		return await this.direct_request(
+		return await this.request(
 			[
 				[8, 1, this.getReqseq()],
 				[11, 2, to],
