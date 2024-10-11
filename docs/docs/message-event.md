@@ -4,7 +4,7 @@ The next step is to finally receive the message.
 The atmosphere is becoming more and more like a bot!  
 
 :::warning
-Note, however, that to receive the group's message must store the decrypt key in `FileStorage` or so on, as described in [Start 2](/docs/start-2).
+Note, however, that to receive the group's message, the decrypt key in `FileStorage` or so on, as described in [Start 2](/docs/start-2).
 :::
 
 First, let's create a bot that only receives “!ping” and returns “pong!”.  
@@ -73,7 +73,7 @@ client.on("message", async (message) => {
     const text = message.content;
 
     if (text === "!ping") {
-        await client.reply("pong!");
+        await message.reply("pong!");
     }
 });
 ```
