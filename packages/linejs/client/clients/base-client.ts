@@ -387,8 +387,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							getMyProfile,
 							square: async () =>
 								await this.getSquareChat({
-									squareChatMid:
-										event.payload.notificationMessage.squareChatMid,
+									squareChatMid: payload.squareChatMid,
 								}),
 							data:
 								this.hasData(message) &&
@@ -396,7 +395,10 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 									await this.getMessageObsData(message.id, preview)),
 							message,
 						});
-					}else if (event.type === LINETypes.SquareEventType._NOTIFIED_UPDATE_SQUARE_CHAT_STATUS) {
+					} else if (
+						event.type ===
+						LINETypes.SquareEventType._NOTIFIED_UPDATE_SQUARE_CHAT_STATUS
+					) {
 						const payload = event.payload.notifiedUpdateSquareChatStatus;
 
 						if (!payload) {
@@ -412,7 +414,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				myEventsSyncToken = myEvents.syncToken;
 			}
 
-			await new Promise((resolve) => setTimeout(resolve,1000));
+			await new Promise((resolve) => setTimeout(resolve, 1000));
 		}
 	}
 
