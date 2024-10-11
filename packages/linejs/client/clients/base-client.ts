@@ -262,7 +262,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 					if (event.type === "NOTIFICATION_MESSAGE") {
 						const message =
-							event.payload.notificationMessage.squareMessage.message;
+							event.payload.notificationMessage!.squareMessage.message;
 
 						if (previousMessageId === message.id) {
 							continue;
@@ -324,14 +324,14 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							if (typeof options === "number") {
 								return await this.reactToSquareMessage({
 									squareChatMid:
-										event.payload.notificationMessage.squareChatMid,
+										event.payload.notificationMessage!.squareChatMid,
 									reactionType: options as LINETypes.MessageReactionType,
 									squareMessageId: message.id,
 								});
 							} else {
 								return await this.reactToSquareMessage({
 									squareChatMid:
-										event.payload.notificationMessage.squareChatMid,
+										event.payload.notificationMessage!.squareChatMid,
 									reactionType: (
 										options as Exclude<
 											SquareMessageReactionOptions,
@@ -353,7 +353,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							});
 
 						this.emit("square:message", {
-							...event.payload.notificationMessage,
+							...event.payload.notificationMessage!,
 							type: "square",
 							content: typeof message.text === "string" ? message.text : "",
 							contentMetadata: message.contentMetadata,
@@ -367,7 +367,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 								mid: message._from,
 								get displayName() {
 									return (
-										event.payload.notificationMessage.senderDisplayName ||
+										event.payload.notificationMessage!.senderDisplayName ||
 										getMyProfile().then((myProfile) => myProfile.displayName)
 									);
 								},
@@ -385,7 +385,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							square: async () =>
 								await this.getSquareChat({
 									squareChatMid:
-										event.payload.notificationMessage.squareChatMid,
+										event.payload.notificationMessage!.squareChatMid,
 								}),
 							data:
 								this.hasData(message) &&
@@ -398,7 +398,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				myEventsSyncToken = myEvents.syncToken;
 			}
 
-			await new Promise((resolve) => setTimeout(resolve));
+			await new Promise((resolve) => setTimeout(resolve,1000));
 		}
 	}
 
