@@ -9,9 +9,9 @@ const client = new Client({
 });
 ```
 
-For example, **storage for the data** we talked about before, **OBS Endpoint**, **Endpoint** for communication, **customFetch** for cors and proxies, **RateLimitter** for rate limiting, etc.  
+For example, **storage for the data** we discussed before, **OBS Endpoint**, **Endpoint** for communication, **customFetch** for cors and proxies, **RateLimitter** for rate limiting, etc.  
 
-Let me explain one by one.
+I'll explain it to you one by one.
 
 ## Storage
 
@@ -28,12 +28,12 @@ const client = new Client({
 });
 ```
 
-If you want to store in your own cloud or storages with your own data storage api, you can extend `BaseStorage` to create something of your own liking.  
-More details on our server.
+If you want to store in your cloud or storages with your data storage API, you can extend `BaseStorage` to create something of your liking.  
+I'd like to give you more details on our server.
 
 ## OBS Endpoint
 
-OBS stands for `OBject Storage` and is the cdn where LINE stores images and videos.  
+OBS stands for `OBject Storage` and is the CDN where LINE stores images and videos.  
 There are several endpoints.  
 If you want to change the endpoints you can do so as follows  
 
@@ -53,7 +53,7 @@ Later.
 
 ## Endpoint
 The endpoints of communication.  
-There is basically no need to change this point.  
+There is no need to change this point.  
 If you want to try out a proxied server, use it.
 
 ```ts

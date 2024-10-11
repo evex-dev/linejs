@@ -10,7 +10,7 @@ import {
 	type ProtocolKey,
 	Protocols,
 } from "../libs/thrift/declares.ts";
-import type * as LINETypes from "@evex/linejs-types";
+import * as LINETypes from "@evex/linejs-types";
 import ThriftRenameParser from "../libs/thrift/parser.ts";
 import { readThrift } from "../libs/thrift/read.ts";
 import { Thrift } from "@evex/linejs-types/thrift";
@@ -260,9 +260,14 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				for (const event of myEvents.events) {
 					this.emit("square:event", event);
 
-					if (event.type === "NOTIFICATION_MESSAGE") {
-						const message =
-							event.payload.notificationMessage!.squareMessage.message;
+					if (event.type === LINETypes.SquareEventType._NOTIFICATION_MESSAGE) {
+						const payload = event.payload.notificationMessage;
+
+						if (!payload) {
+							continue;
+						}
+
+						const message = payload.squareMessage.message;
 
 						if (previousMessageId === message.id) {
 							continue;
@@ -323,15 +328,13 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						const react = async (options: SquareMessageReactionOptions) => {
 							if (typeof options === "number") {
 								return await this.reactToSquareMessage({
-									squareChatMid:
-										event.payload.notificationMessage!.squareChatMid,
+									squareChatMid: payload.squareChatMid,
 									reactionType: options as LINETypes.MessageReactionType,
 									squareMessageId: message.id,
 								});
 							} else {
 								return await this.reactToSquareMessage({
-									squareChatMid:
-										event.payload.notificationMessage!.squareChatMid,
+									squareChatMid: payload.squareChatMid,
 									reactionType: (
 										options as Exclude<
 											SquareMessageReactionOptions,
@@ -353,7 +356,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							});
 
 						this.emit("square:message", {
-							...event.payload.notificationMessage!,
+							...payload,
 							type: "square",
 							content: typeof message.text === "string" ? message.text : "",
 							contentMetadata: message.contentMetadata,
@@ -367,7 +370,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 								mid: message._from,
 								get displayName() {
 									return (
-										event.payload.notificationMessage!.senderDisplayName ||
+										payload.senderDisplayName ||
 										getMyProfile().then((myProfile) => myProfile.displayName)
 									);
 								},
@@ -385,13 +388,24 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							square: async () =>
 								await this.getSquareChat({
 									squareChatMid:
-										event.payload.notificationMessage!.squareChatMid,
+										event.payload.notificationMessage.squareChatMid,
 								}),
 							data:
 								this.hasData(message) &&
 								(async (preview) =>
 									await this.getMessageObsData(message.id, preview)),
 							message,
+						});
+					}else if (event.type === LINETypes.SquareEventType._NOTIFIED_UPDATE_SQUARE_CHAT_STATUS) {
+						const payload = event.payload.notifiedUpdateSquareChatStatus;
+
+						if (!payload) {
+							continue;
+						}
+
+						this.emit("square:status", {
+							...payload,
+							...payload["statusWithoutMessage"],
 						});
 					}
 				}
@@ -429,16 +443,19 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				for (const operation of myEvents.operationResponse?.operations) {
 					revision = operation.revision;
 					if (
-						operation.type === "RECEIVE_MESSAGE" ||
-						operation.type === "SEND_MESSAGE" ||
-						operation.type === "SEND_CONTENT"
+						operation.type === LINETypes.OpType._RECEIVE_MESSAGE ||
+						operation.type === LINETypes.OpType._SEND_MESSAGE ||
+						operation.type === LINETypes.OpType._SEND_CONTENT
 					) {
 						const message = await this.decryptE2EEMessage(operation.message);
-						if (this.hasData(message) && operation.type == "SEND_MESSAGE") {
+						if (
+							this.hasData(message) &&
+							operation.type == LINETypes.OpType._SEND_MESSAGE
+						) {
 							//continue;
 						}
 						let sendIn = "";
-						if (message.toType === "USER") {
+						if (message.toType === LINETypes.MIDType._USER) {
 							if (message._from === this.user?.mid) {
 								sendIn = message.to;
 							} else {
@@ -499,14 +516,14 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						};
 
 						const chat =
-							message.toType === "USER"
+							message.toType === LINETypes.MIDType._USER
 								? async () => {
 										return await this.getContact({ mid: sendIn });
 									}
 								: undefined;
 
 						const group =
-							message.toType !== "USER"
+							message.toType !== LINETypes.MIDType._USER
 								? async () => {
 										return (await this.getChats({ mids: [sendIn] })).chats[0];
 									}
@@ -522,7 +539,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 						this.emit("message", {
 							...operation,
-							type: (message.toType === "USER" ? "chat" : "group") as LooseType,
+							type: (message.toType === LINETypes.MIDType._USER
+								? "chat"
+								: "group") as LooseType,
 							opType: operation.type,
 							content: typeof message.text === "string" ? message.text : "",
 							contentMetadata: message.contentMetadata,
@@ -976,10 +995,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				Buffer.from(secret),
 				Buffer.from(e2eeInfo.metadata.encryptedKeyChain, "base64"),
 			);
-			const e2eeLogin = await this.confirmE2EELogin(
-				response[3],
-				deviceSecret,
-			);
+			const e2eeLogin = await this.confirmE2EELogin(response[3], deviceSecret);
 			response = await this.loginV2(
 				keynm,
 				encryptedMessage,
@@ -1454,7 +1470,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		});
 
 		const isRefresh =
-			res.e && res.e["code"] === "NOT_AUTHORIZED_DEVICE" && nextToken;
+			res.e &&
+			res.e["code"] === LINETypes.ErrorCode._NOT_AUTHORIZED_DEVICE &&
+			nextToken;
 
 		if (res.e && !isRefresh) {
 			throw new InternalError(
@@ -1465,6 +1483,11 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 
 		if (isRefresh && !isReRequest) {
+			this.metadata = {
+				authToken: nextToken,
+			};
+			this.emit("update:authtoken", this.metadata.authToken);
+
 			return await this.rawRequest(
 				path,
 				value,

@@ -5,6 +5,7 @@ import type * as LINETypes from "@evex/linejs-types";
 import type { LooseType } from "../../entities/common.ts";
 import { ChannelClient } from "./channel-client.ts";
 import type { Buffer } from "node:buffer";
+import { InternalError } from "../../entities/errors.ts";
 
 export class TalkClient extends ChannelClient {
 	public useTalkCache: boolean = false;
@@ -20,7 +21,7 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Get line events.
 	 */
-	public async sync(
+	override async sync(
 		options: {
 			limit?: number;
 			revision?: number;
@@ -52,7 +53,7 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Send message to talk.
 	 */
-	public async sendMessage(options: {
+	override async sendMessage(options: {
 		to: string;
 		text?: string;
 		contentType?: number;
@@ -149,7 +150,7 @@ export class TalkClient extends ChannelClient {
 				this.TalkService_API_PATH,
 			);
 		} catch (error) {
-			if ((error.data?.code as string).includes("E2EE") && !e2ee) {
+			if (error instanceof InternalError && (error.data?.code as string).includes("E2EE") && !e2ee) {
 				options.e2ee = true;
 				return await this.sendMessage(options);
 			} else {
@@ -188,7 +189,7 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description React to the message.
 	 */
-	public async reactToMessage(options: {
+	override async reactToMessage(options: {
 		messageId: string;
 		reactionType: LINETypes.MessageReactionType;
 	}): Promise<LINETypes.ReactToMessageResponse> {
@@ -392,7 +393,7 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Get user information from mid.
 	 */
-	public async getContact(
+	override async getContact(
 		options: {
 			mid: string;
 		},
@@ -448,10 +449,16 @@ export class TalkClient extends ChannelClient {
 		useCache: boolean = this.useTalkCache,
 	): Promise<LINETypes.GetContactsV2Response> {
 		const { mids } = { ...options };
-		if (useCache && mids.length === 1 && this.cache.getCache("getContactV2", { mid: mids[0] })) {
-			const res: { contacts: Record<string, LooseType> } = { contacts: {} }
-			res.contacts[mids[0]] = this.cache.getCache("getContactV2", { mid: mids[0] })
-			return res
+		if (
+			useCache &&
+			mids.length === 1 &&
+			this.cache.getCache("getContactV2", { mid: mids[0] })
+		) {
+			const res: { contacts: Record<string, LooseType> } = { contacts: {} };
+			res.contacts[mids[0]] = this.cache.getCache("getContactV2", {
+				mid: mids[0],
+			});
+			return res;
 		}
 		const response = (await this.request(
 			[[15, 1, [11, mids]]],
@@ -465,8 +472,16 @@ export class TalkClient extends ChannelClient {
 			for (const key in response.contacts) {
 				if (Object.prototype.hasOwnProperty.call(response.contacts, key)) {
 					const contact = response.contacts[key];
-					this.cache.setCache("getContact", { mid: contact.contact.mid }, contact.contact);
-					this.cache.setCache("getContactV2", { mid: contact.contact.mid }, contact);
+					this.cache.setCache(
+						"getContact",
+						{ mid: contact.contact.mid },
+						contact.contact,
+					);
+					this.cache.setCache(
+						"getContactV2",
+						{ mid: contact.contact.mid },
+						contact,
+					);
 				}
 			}
 		return response;
@@ -512,7 +527,7 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Get chats information from gids.
 	 */
-	public async getChats(
+	override async getChats(
 		options: {
 			gids: string[];
 			withMembers?: boolean;
@@ -590,7 +605,7 @@ export class TalkClient extends ChannelClient {
 		const { to, mid } = {
 			...options,
 		};
-		return await this.direct_request(
+		return await this.request(
 			[
 				[8, 1, this.getReqseq()],
 				[11, 2, to],
@@ -634,18 +649,10 @@ export class TalkClient extends ChannelClient {
 		const { to, mids } = {
 			...options,
 		};
-		return await this.request(
-			[
-				[
-					12,
-					1,
-					[
-						[8, 1, this.getReqseq()],
-						[11, 2, to],
-						[14, 3, [[11, mids]]],
-					],
-				],
-			],
+		return await this.request([
+			[8, 1, this.getReqseq()],
+			[11, 2, to],
+			[14, 3, [11, mids]],
 			"inviteIntoChat",
 			this.TalkService_PROTOCOL_TYPE,
 			"InviteIntoChatResponse",
@@ -764,20 +771,20 @@ export class TalkClient extends ChannelClient {
 						chatSet.picturePath ? [11, 7, chatSet.picturePath] : null,
 						chatSet.extra?.groupExtra
 							? [
-								12,
-								8,
-								[
+									12,
+									8,
 									[
-										12,
-										1,
 										[
-											[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
-											[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
-											[2, 7, chatSet.extra.groupExtra.ticketDisabled],
+											12,
+											1,
+											[
+												[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
+												[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
+												[2, 7, chatSet.extra.groupExtra.ticketDisabled],
+											],
 										],
 									],
-								],
-							]
+								]
 							: null,
 					],
 				],
