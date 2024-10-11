@@ -518,7 +518,7 @@ export class TalkClient extends ChannelClient {
 			this.TalkService_API_PATH,
 		)) as LINETypes.GetChatsResponse;
 		if (useCache)
-			response.chats.forEach((chat) => {
+			response.chats.forEach((chat:LINETypes.Chat) => {
 				this.cache.setCache("getChat", options, chat);
 			});
 		return response.chats[0];
@@ -552,7 +552,7 @@ export class TalkClient extends ChannelClient {
 			this.TalkService_API_PATH,
 		)) as LINETypes.GetChatsResponse;
 		if (useCache)
-			response.chats.forEach((chat) => {
+			response.chats.forEach((chat:LINETypes.Chat) => {
 				this.cache.setCache(
 					"getChat",
 					{ gid: chat.chatMid, withMembers, withInvitees },
@@ -652,7 +652,8 @@ export class TalkClient extends ChannelClient {
 		return await this.request([
 			[8, 1, this.getReqseq()],
 			[11, 2, to],
-			[14, 3, [11, mids]],
+			[14, 3, [11, mids]]
+		],
 			"inviteIntoChat",
 			this.TalkService_PROTOCOL_TYPE,
 			"InviteIntoChatResponse",
@@ -771,20 +772,20 @@ export class TalkClient extends ChannelClient {
 						chatSet.picturePath ? [11, 7, chatSet.picturePath] : null,
 						chatSet.extra?.groupExtra
 							? [
-									12,
-									8,
+								12,
+								8,
+								[
 									[
+										12,
+										1,
 										[
-											12,
-											1,
-											[
-												[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
-												[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
-												[2, 7, chatSet.extra.groupExtra.ticketDisabled],
-											],
+											[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
+											[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
+											[2, 7, chatSet.extra.groupExtra.ticketDisabled],
 										],
 									],
-								]
+								],
+							]
 							: null,
 					],
 				],
