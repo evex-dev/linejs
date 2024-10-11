@@ -91,7 +91,7 @@ client.on("square:message", async (message) => {
     const text = message.content;
 
     if (text === "!ping") {
-        await client.reply("pong!");
+        await message.reply("pong!");
     }
 });
 ```
