@@ -4,7 +4,7 @@
  */
 import * as LINETypes from "../../../types/line_types.ts";
 import { parseEnum } from "../../../types/thrift.ts";
-import type { Client } from "../../client/index.ts";
+import type { Client } from "../index.ts";
 import type { LooseType } from "./common.ts";
 import type { Buffer } from "node:buffer";
 import { InternalError } from "./errors.ts";
@@ -34,6 +34,7 @@ type UserEvents = {
 	) => void;
 };
 
+// deno-lint-ignore ban-types
 type SquareEvents = {
 	// update: (event: LINETypes.SquareEvent & { payload: {} }) => void;
 };
