@@ -649,18 +649,10 @@ export class TalkClient extends ChannelClient {
 		const { to, mids } = {
 			...options,
 		};
-		return await this.request(
-			[
-				[
-					12,
-					1,
-					[
-						[8, 1, this.getReqseq()],
-						[11, 2, to],
-						[14, 3, [[11, mids]]],
-					],
-				],
-			],
+		return await this.request([
+			[8, 1, this.getReqseq()],
+			[11, 2, to],
+			[14, 3, [11, mids]],
 			"inviteIntoChat",
 			this.TalkService_PROTOCOL_TYPE,
 			"InviteIntoChatResponse",
