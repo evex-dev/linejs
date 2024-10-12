@@ -414,7 +414,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				myEventsSyncToken = myEvents.syncToken;
 			}
 
-			await new Promise((resolve) => setTimeout(resolve, 1000));
+			await new Promise((resolve) => setTimeout(resolve,1000));
 		}
 	}
 
@@ -584,7 +584,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			} catch {
 				/* Do Nothing */
 			}
-			await new Promise((resolve) => setTimeout(resolve));
+			await new Promise((resolve) => setTimeout(resolve,100));
 		}
 	}
 
