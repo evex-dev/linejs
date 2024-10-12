@@ -672,11 +672,19 @@ class E2EE extends TalkClient {
 			message,
 		});
 		const decipher = crypto.createDecipheriv("aes-256-cbc", aes_key, aes_iv);
-		decipher.setAutoPadding(false);
-		const decrypted = Buffer.concat([
-			decipher.update(message),
-			decipher.final(),
-		]);
+		let decrypted:Buffer|undefined;
+		try {
+			decrypted = Buffer.concat([
+				decipher.update(message),
+				decipher.final(),
+			]);
+		} catch {
+			decipher.setAutoPadding(false);
+			decrypted = Buffer.concat([
+				decipher.update(message),
+				decipher.final(),
+			]);
+		}
 		this.e2eeLog(
 			"decryptE2EEMessageV1DecryptedMessage",
 			decrypted.toString("utf-8"),

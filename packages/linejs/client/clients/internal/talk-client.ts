@@ -21,33 +21,38 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Get line events.
 	 */
-	override async sync(
+	override sync(
 		options: {
 			limit?: number;
 			revision?: number;
 			globalRev?: number;
 			individualRev?: number;
+			timeout?: number;
 		} = {},
 	): Promise<LINETypes.SyncResponse> {
-		const { limit, revision, individualRev, globalRev } = {
+		const { limit, revision, individualRev, globalRev, timeout } = {
 			limit: 100,
 			revision: 0,
 			globalRev: 0,
 			individualRev: 0,
+			timeout: 60000,
 			...options,
 		};
-		return await this.request(
-			[
-				[10, 1, revision],
-				[8, 2, limit],
-				[10, 3, globalRev],
-				[10, 4, individualRev],
-			],
-			"sync",
-			this.SyncService_PROTOCOL_TYPE,
-			"SyncResponse",
-			this.SyncService_API_PATH,
-		);
+		return new Promise<LINETypes.SyncResponse>((resolve, reject) => {
+			
+			this.request(
+				[
+					[10, 1, revision],
+					[8, 2, limit],
+					[10, 3, globalRev],
+					[10, 4, individualRev],
+				],
+				"sync",
+				this.SyncService_PROTOCOL_TYPE,
+				"SyncResponse",
+				this.SyncService_API_PATH,
+			).then(res => resolve(res))
+		})
 	}
 
 	/**
@@ -777,20 +782,20 @@ export class TalkClient extends ChannelClient {
 						chatSet.picturePath ? [11, 7, chatSet.picturePath] : null,
 						chatSet.extra?.groupExtra
 							? [
-									12,
-									8,
+								12,
+								8,
+								[
 									[
+										12,
+										1,
 										[
-											12,
-											1,
-											[
-												[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
-												[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
-												[2, 7, chatSet.extra.groupExtra.ticketDisabled],
-											],
+											[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
+											[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
+											[2, 7, chatSet.extra.groupExtra.ticketDisabled],
 										],
 									],
-								]
+								],
+							]
 							: null,
 					],
 				],
