@@ -609,6 +609,19 @@ export class TalkClient extends ChannelClient {
 	}
 
 	/**
+	 * @description Get information on all friend.
+	 */
+	public async getAllContactIds(): Promise<string[]> {
+		return await this.direct_request(
+			[],
+			"getAllContactIds",
+			this.TalkService_PROTOCOL_TYPE,
+			false,
+			this.TalkService_API_PATH,
+		);
+	}
+
+	/**
 	 * @description Kick out members of the chat.
 	 */
 	public async deleteOtherFromChat(options: {

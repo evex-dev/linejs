@@ -155,7 +155,7 @@ class E2EE extends TalkClient {
 					aes_key,
 					aes_iv,
 				);
-				decipher.setAutoPadding(false);
+				//decipher.setAutoPadding(false);
 				const plainText = Buffer.concat([
 					decipher.update(encryptedSharedKey),
 					decipher.final(),
@@ -559,7 +559,7 @@ class E2EE extends TalkClient {
 		this.e2eeLog("decryptE2EETextMessageSenderKeyId", senderKeyId);
 		this.e2eeLog("decryptE2EETextMessageReceiverKeyId", receiverKeyId);
 
-		const selfKey = await this.getE2EESelfKeyData(this.user?.mid as string);
+		const selfKey = await this.getE2EESelfKeyData(this.user!.mid);
 		let privK = Buffer.from(selfKey.privKey, "base64");
 		let pubK;
 
