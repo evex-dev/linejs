@@ -1,5 +1,5 @@
 // For Talk (talk, group(chat), etc)
-
+import { default as Int64 } from "node-int64"
 import type { NestedArray, ProtocolKey } from "../../libs/thrift/declares.ts";
 import type * as LINETypes from "@evex/linejs-types";
 import type { LooseType } from "../../entities/common.ts";
@@ -335,7 +335,7 @@ export class TalkClient extends ChannelClient {
 	public async getPreviousMessagesV2WithRequest(options: {
 		mid: string;
 		time: number;
-		id: number;
+		id: number|bigint;
 		count?: number;
 		withReadCount?: boolean;
 		receivedOnly?: boolean;
@@ -346,6 +346,7 @@ export class TalkClient extends ChannelClient {
 			receivedOnly: false,
 			...options,
 		};
+		const id64 = new Int64(id.toString(16))
 		return (
 			await this.direct_request(
 				[
@@ -359,7 +360,7 @@ export class TalkClient extends ChannelClient {
 								2,
 								[
 									[10, 1, time],
-									[10, 1, id],
+									[10, 2, id64],
 								],
 							],
 							[8, 3, count],
@@ -367,7 +368,7 @@ export class TalkClient extends ChannelClient {
 							[2, 5, receivedOnly],
 						],
 					],
-					[8, 3, 4],
+					[8, 3, 1],
 				],
 				"getPreviousMessagesV2WithRequest",
 				this.TalkService_PROTOCOL_TYPE,
