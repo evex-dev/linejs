@@ -33,6 +33,15 @@ function isBinary(bin: Buffer) {
 	return bin.toString("base64") !== bin2.toString("base64");
 }
 
+function bigInt(bin: Buffer):number|bigint {
+	const str = bin.toString("hex");
+	const num = parseInt(str,16)
+	if (str!==num.toString(16)) {
+		return BigInt("0x"+str);
+	}
+	return num
+}
+
 function readValue(input: LooseType, ftype: LooseType): LooseType {
 	const Thrift = thrift.Thrift;
 	if (ftype == Thrift.Type.STRUCT) {
@@ -125,7 +134,7 @@ function TreadValue(input: LooseType, ftype: LooseType): LooseType {
 	} else if (ftype == Thrift.Type.I32) {
 		return input.readI32();
 	} else if (ftype == Thrift.Type.I64) {
-		return parseInt(input.readI64().buffer.toString("hex"), 16);
+		return bigInt(input.readI64().buffer);
 	} else if (ftype == Thrift.Type.STRING) {
 		return input.readString();
 	} else if (ftype == Thrift.Type.LIST) {
