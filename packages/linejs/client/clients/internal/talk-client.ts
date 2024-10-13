@@ -334,7 +334,7 @@ export class TalkClient extends ChannelClient {
 	public async getPreviousMessagesV2WithRequest(options: {
 		mid: string;
 		time: number;
-		id: number | bigint;
+		id: number | bigint | string;
 		count?: number;
 		withReadCount?: boolean;
 		receivedOnly?: boolean;
@@ -345,7 +345,7 @@ export class TalkClient extends ChannelClient {
 			receivedOnly: false,
 			...options,
 		};
-		const id64 = new Int64(id.toString(16));
+		const id64 = new Int64((typeof id==="string"?BigInt(id):id).toString(16));
 		return (
 			await this.direct_request(
 				[
