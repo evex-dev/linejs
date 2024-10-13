@@ -414,7 +414,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				myEventsSyncToken = myEvents.syncToken;
 			}
 
-			await new Promise((resolve) => setTimeout(resolve,1000));
+			await new Promise((resolve) => setTimeout(resolve, 1000));
 		}
 	}
 
@@ -437,7 +437,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			}
 			try {
 				const myEvents = await this.sync({
-					revision,
+					revision: (revision as number),
 					globalRev,
 					individualRev,
 				});
@@ -520,15 +520,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						const chat =
 							message.toType === LINETypes.MIDType._USER
 								? async () => {
-										return await this.getContact({ mid: sendIn });
-									}
+									return await this.getContact({ mid: sendIn });
+								}
 								: undefined;
 
 						const group =
 							message.toType !== LINETypes.MIDType._USER
 								? async () => {
-										return (await this.getChats({ mids: [sendIn] })).chats[0];
-									}
+									return (await this.getChats({ mids: [sendIn] })).chats[0];
+								}
 								: (undefined as LooseType);
 
 						const getContact = async () => {
@@ -576,15 +576,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					this.emit("event", operation);
 				}
 				globalRev =
-					myEvents.operationResponse?.globalEvents?.lastRevision || globalRev;
+					myEvents.operationResponse?.globalEvents?.lastRevision as number || globalRev;
 				individualRev =
-					myEvents.operationResponse?.individualEvents?.lastRevision ||
+					myEvents.operationResponse?.individualEvents?.lastRevision as number ||
 					individualRev;
 				revision = myEvents.fullSyncResponse?.nextRevision || revision;
 			} catch {
 				/* Do Nothing */
 			}
-			await new Promise((resolve) => setTimeout(resolve,100));
+			await new Promise((resolve) => setTimeout(resolve, 100));
 		}
 	}
 
@@ -1096,7 +1096,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType { }
 
 	/**
 	 * @description Will override.
@@ -1716,7 +1716,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			this.storage.set(
 				"expire",
 				(
-					RATR.tokenIssueTimeEpochSec + RATR.durationUntilRefreshInSec
+					(RATR.tokenIssueTimeEpochSec as number) + (RATR.durationUntilRefreshInSec as number)
 				).toString(),
 			);
 		} else {
@@ -1792,7 +1792,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			type,
 			tomid: to,
 			oid: "reqseq",
-			reqseq: (334).toString(),
+			reqseq: this.getReqseq("talk").toString(),
 		};
 		if (type === "image") {
 			param.cat = "original";

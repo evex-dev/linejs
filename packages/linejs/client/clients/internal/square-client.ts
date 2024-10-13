@@ -999,7 +999,7 @@ export class SquareClient extends LiffClient {
 			membershipState: MEMBERSHIP_STATE,
 			updatedAttrs: UPDATE_ATTRS,
 			updatedPreferenceAttrs: UPDATE_PREF_ATTRS,
-			revision: squareMemberRevision,
+			revision: squareMemberRevision as number,
 		});
 	}
 
