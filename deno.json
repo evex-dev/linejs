@@ -16,7 +16,7 @@
 		"tweetnacl": "npm:tweetnacl@^1.0.3",
 		"jsdom": "npm:jsdom@25.0.0",
 		"node-types": "npm:@types/node@latest",
-		"node-int64":"npm:node-int64"
+		"node-int64": "npm:node-int64"
 	},
 	"tasks": {
 		"format": "deno run -A npm:@biomejs/biome format --write ./packages/**/*.ts",

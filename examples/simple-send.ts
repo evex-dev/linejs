@@ -9,6 +9,6 @@ await client.login({
 });
 
 await client.sendMessage({
-	to: "MID",   // mid (group c~ ,user u~)
-	text: "Hello, world!"
-})
+	to: "MID", // mid (group c~ ,user u~)
+	text: "Hello, world!",
+});

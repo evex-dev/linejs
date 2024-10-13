@@ -9,6 +9,6 @@ await client.login({
 });
 
 await client.sendSquareMessage({
-	to: "MID",   // mid (squareChat m~)
-	text: "Hello, world!"
-})
+	to: "MID", // mid (squareChat m~)
+	text: "Hello, world!",
+});

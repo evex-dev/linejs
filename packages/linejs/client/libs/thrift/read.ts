@@ -33,13 +33,13 @@ function isBinary(bin: Buffer) {
 	return bin.toString("base64") !== bin2.toString("base64");
 }
 
-function bigInt(bin: Buffer):number|bigint {
+function bigInt(bin: Buffer): number | bigint {
 	const str = bin.toString("hex");
-	const num = parseInt(str,16)
-	if (str!==num.toString(16)) {
-		return BigInt("0x"+str);
+	const num = parseInt(str, 16);
+	if (str !== num.toString(16)) {
+		return BigInt("0x" + str);
 	}
-	return num
+	return num;
 }
 
 function readValue(input: LooseType, ftype: LooseType): LooseType {

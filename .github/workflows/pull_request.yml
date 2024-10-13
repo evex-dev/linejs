@@ -1,13 +1,13 @@
 name: pull_request
 on:
   pull_request:
-    branches: ['*']
+    branches: ["*"]
     paths-ignore:
-      - 'docs/**'
-      - '.vscode/**'
-      - 'README.md'
-      - '.gitignore'
-      - 'LICENSE'
+      - "docs/**"
+      - ".vscode/**"
+      - "README.md"
+      - ".gitignore"
+      - "LICENSE"
 
 jobs:
   jsr-dry-run:
@@ -24,7 +24,7 @@ jobs:
         working-directory: ./packages/types
 
   deno:
-    name: 'Testing'
+    name: "Testing"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -34,7 +34,7 @@ jobs:
       - run: deno test
 
   format:
-    name: 'Format Check'
+    name: "Format Check"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

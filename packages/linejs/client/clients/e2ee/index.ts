@@ -6,9 +6,9 @@ import type { LooseType } from "../../entities/common.ts";
 import { rawReadStruct as readStruct } from "../../libs/thrift/read.ts";
 import {
 	ContentType,
-	MIDType,
 	type Location,
 	type Message,
+	MIDType,
 } from "@evex/linejs-types";
 import nacl from "tweetnacl";
 import { InternalError } from "../../entities/errors.ts";
@@ -672,18 +672,12 @@ class E2EE extends TalkClient {
 			message,
 		});
 		const decipher = crypto.createDecipheriv("aes-256-cbc", aes_key, aes_iv);
-		let decrypted:Buffer|undefined;
+		let decrypted: Buffer | undefined;
 		try {
-			decrypted = Buffer.concat([
-				decipher.update(message),
-				decipher.final(),
-			]);
+			decrypted = Buffer.concat([decipher.update(message), decipher.final()]);
 		} catch {
 			decipher.setAutoPadding(false);
-			decrypted = Buffer.concat([
-				decipher.update(message),
-				decipher.final(),
-			]);
+			decrypted = Buffer.concat([decipher.update(message), decipher.final()]);
 		}
 		this.e2eeLog(
 			"decryptE2EEMessageV1DecryptedMessage",

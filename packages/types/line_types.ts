@@ -5,7 +5,7 @@
  *
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  */
-type Int64 = number|bigint;
+type Int64 = number | bigint;
 import type { Buffer } from "node:buffer";
 
 export enum ApplicationType {

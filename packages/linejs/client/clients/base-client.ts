@@ -437,7 +437,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			}
 			try {
 				const myEvents = await this.sync({
-					revision: (revision as number),
+					revision: revision as number,
 					globalRev,
 					individualRev,
 				});
@@ -520,15 +520,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						const chat =
 							message.toType === LINETypes.MIDType._USER
 								? async () => {
-									return await this.getContact({ mid: sendIn });
-								}
+										return await this.getContact({ mid: sendIn });
+									}
 								: undefined;
 
 						const group =
 							message.toType !== LINETypes.MIDType._USER
 								? async () => {
-									return (await this.getChats({ mids: [sendIn] })).chats[0];
-								}
+										return (await this.getChats({ mids: [sendIn] })).chats[0];
+									}
 								: (undefined as LooseType);
 
 						const getContact = async () => {
@@ -576,10 +576,11 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					this.emit("event", operation);
 				}
 				globalRev =
-					myEvents.operationResponse?.globalEvents?.lastRevision as number || globalRev;
+					(myEvents.operationResponse?.globalEvents?.lastRevision as number) ||
+					globalRev;
 				individualRev =
-					myEvents.operationResponse?.individualEvents?.lastRevision as number ||
-					individualRev;
+					(myEvents.operationResponse?.individualEvents
+						?.lastRevision as number) || individualRev;
 				revision = myEvents.fullSyncResponse?.nextRevision || revision;
 			} catch {
 				/* Do Nothing */
@@ -1096,7 +1097,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType { }
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
 
 	/**
 	 * @description Will override.
@@ -1716,7 +1717,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			this.storage.set(
 				"expire",
 				(
-					(RATR.tokenIssueTimeEpochSec as number) + (RATR.durationUntilRefreshInSec as number)
+					(RATR.tokenIssueTimeEpochSec as number) +
+					(RATR.durationUntilRefreshInSec as number)
 				).toString(),
 			);
 		} else {

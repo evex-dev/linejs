@@ -814,7 +814,7 @@ export class SquareClient extends LiffClient {
 			true,
 			this.SquareService_API_PATH,
 		)) as LINETypes.GetSquareChatMembersResponse;
-		if (useCache)
+		if (useCache) {
 			response.squareChatMembers.forEach((e) => {
 				if (
 					!(
@@ -830,6 +830,7 @@ export class SquareClient extends LiffClient {
 					);
 				}
 			});
+		}
 
 		if (continueRequest && response.continuationToken) {
 			return await this.continueRequest({
@@ -1171,7 +1172,7 @@ export class SquareClient extends LiffClient {
 			true,
 			this.SquareService_API_PATH,
 		)) as LINETypes.GetSquareMembersBySquareResponse;
-		if (useCache)
+		if (useCache) {
 			response.members.forEach((e) => {
 				if (
 					!(
@@ -1187,6 +1188,7 @@ export class SquareClient extends LiffClient {
 					);
 				}
 			});
+		}
 		return response;
 	}
 

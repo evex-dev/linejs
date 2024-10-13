@@ -1,5 +1,5 @@
 // For Talk (talk, group(chat), etc)
-import { default as Int64 } from "node-int64"
+import { default as Int64 } from "node-int64";
 import type { NestedArray, ProtocolKey } from "../../libs/thrift/declares.ts";
 import type * as LINETypes from "@evex/linejs-types";
 import type { LooseType } from "../../entities/common.ts";
@@ -39,7 +39,6 @@ export class TalkClient extends ChannelClient {
 			...options,
 		};
 		return new Promise<LINETypes.SyncResponse>((resolve, reject) => {
-			
 			this.request(
 				[
 					[10, 1, revision],
@@ -51,8 +50,8 @@ export class TalkClient extends ChannelClient {
 				this.SyncService_PROTOCOL_TYPE,
 				"SyncResponse",
 				this.SyncService_API_PATH,
-			).then(res => resolve(res))
-		})
+			).then((res) => resolve(res));
+		});
 	}
 
 	/**
@@ -335,7 +334,7 @@ export class TalkClient extends ChannelClient {
 	public async getPreviousMessagesV2WithRequest(options: {
 		mid: string;
 		time: number;
-		id: number|bigint;
+		id: number | bigint;
 		count?: number;
 		withReadCount?: boolean;
 		receivedOnly?: boolean;
@@ -346,7 +345,7 @@ export class TalkClient extends ChannelClient {
 			receivedOnly: false,
 			...options,
 		};
-		const id64 = new Int64(id.toString(16))
+		const id64 = new Int64(id.toString(16));
 		return (
 			await this.direct_request(
 				[
@@ -445,10 +444,11 @@ export class TalkClient extends ChannelClient {
 		).map((e: LooseType) =>
 			this.parser.rename_thrift("Contact", e),
 		) as LINETypes.Contact[];
-		if (useCache)
+		if (useCache) {
 			response.forEach((e) => {
 				this.cache.setCache("getContact", { mid: e.mid }, e);
 			});
+		}
 		return response;
 	}
 
@@ -478,7 +478,7 @@ export class TalkClient extends ChannelClient {
 			this.TalkService_API_PATH,
 		)) as LINETypes.GetContactsV2Response;
 
-		if (useCache)
+		if (useCache) {
 			for (const key in response.contacts) {
 				if (Object.prototype.hasOwnProperty.call(response.contacts, key)) {
 					const contact = response.contacts[key];
@@ -494,6 +494,7 @@ export class TalkClient extends ChannelClient {
 					);
 				}
 			}
+		}
 		return response;
 	}
 
@@ -527,10 +528,11 @@ export class TalkClient extends ChannelClient {
 			"GetChatsResponse",
 			this.TalkService_API_PATH,
 		)) as LINETypes.GetChatsResponse;
-		if (useCache)
+		if (useCache) {
 			response.chats.forEach((chat: LINETypes.Chat) => {
 				this.cache.setCache("getChat", options, chat);
 			});
+		}
 		return response.chats[0];
 	}
 
@@ -561,7 +563,7 @@ export class TalkClient extends ChannelClient {
 			"GetChatsResponse",
 			this.TalkService_API_PATH,
 		)) as LINETypes.GetChatsResponse;
-		if (useCache)
+		if (useCache) {
 			response.chats.forEach((chat: LINETypes.Chat) => {
 				this.cache.setCache(
 					"getChat",
@@ -569,6 +571,7 @@ export class TalkClient extends ChannelClient {
 					chat,
 				);
 			});
+		}
 		return response;
 	}
 
@@ -783,20 +786,20 @@ export class TalkClient extends ChannelClient {
 						chatSet.picturePath ? [11, 7, chatSet.picturePath] : null,
 						chatSet.extra?.groupExtra
 							? [
-								12,
-								8,
-								[
+									12,
+									8,
 									[
-										12,
-										1,
 										[
-											[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
-											[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
-											[2, 7, chatSet.extra.groupExtra.ticketDisabled],
+											12,
+											1,
+											[
+												[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
+												[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
+												[2, 7, chatSet.extra.groupExtra.ticketDisabled],
+											],
 										],
 									],
-								],
-							]
+								]
 							: null,
 					],
 				],
