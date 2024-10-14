@@ -1,5 +1,4 @@
 // For Liff (liff, etc)
-import { JSDOM } from "jsdom";
 import type { NestedArray, ProtocolKey } from "../../libs/thrift/declares.ts";
 import type { LooseType } from "../../entities/common.ts";
 import { BaseClient } from "../base-client.ts";
@@ -94,8 +93,8 @@ export class LiffClient extends BaseClient {
 			if (error instanceof InternalError) {
 				this.log("liff-error", { ...error.data });
 				if (error.data.code === 3 && tryConsent) {
-					const data: LINETypes.LiffException =
-						error.data as LINETypes.LiffException;
+					const data: LINETypes.LiffException = error
+						.data as LINETypes.LiffException;
 					const payload = data.payload;
 					const consentRequired = payload.consentRequired;
 					const channelId = consentRequired.channelId;
@@ -104,8 +103,12 @@ export class LiffClient extends BaseClient {
 					let hasConsent = false;
 
 					if (channelId && consentUrl) {
-						if (toType === 4 || this.system?.device === "DESKTOPWIN") {
-							hasConsent = await this.tryConsentAuthorize(consentUrl);
+						if (
+							toType === 4 || this.system?.device === "DESKTOPWIN"
+						) {
+							hasConsent = await this.tryConsentAuthorize(
+								consentUrl,
+							);
 						} else {
 							hasConsent = await this.tryConsentLiff(channelId);
 						}
@@ -117,7 +120,9 @@ export class LiffClient extends BaseClient {
 				}
 			}
 			throw new Error(
-				`Failed to get LiffToken: ${liffId}${chatMid ? "@" + chatMid : ""}`,
+				`Failed to get LiffToken: ${liffId}${
+					chatMid ? "@" + chatMid : ""
+				}`,
 			);
 		}
 	}
@@ -143,7 +148,10 @@ export class LiffClient extends BaseClient {
 			...options,
 		};
 		if (!this.liff_token_cache[to] || forceIssue) {
-			token = await this.getLiffToken({ chatMid: to, liffId: this.liffId });
+			token = await this.getLiffToken({
+				chatMid: to,
+				liffId: this.liffId,
+			});
 		} else {
 			token = this.liff_token_cache[to];
 		}
@@ -165,7 +173,9 @@ export class LiffClient extends BaseClient {
 		});
 
 		if (!response.ok) {
-			throw new Error(`Failed to send Liff message: ${response.statusText}`);
+			throw new Error(
+				`Failed to send Liff message: ${response.statusText}`,
+			);
 		}
 
 		const responseBody = await response.json();
@@ -203,25 +213,27 @@ export class LiffClient extends BaseClient {
 	): Promise<boolean> {
 		const headers: Record<string, string> = {
 			"X-Line-Access": this.metadata?.authToken as string,
-			"User-Agent":
-				this.system?.device === "IOS"
-					? `Mozilla/5.0 (iPhone; CPU iPhone OS ${this.system.systemVersion} like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Safari Line/${this.system.appVersion}`
-					: "Mozilla/5.0 (Linux; Android 8.0.1; SAMSUNG Realise/LineJS; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/56.0.2924.87 Mobile Safari/537.36",
+			"User-Agent": this.system?.device === "IOS"
+				? `Mozilla/5.0 (iPhone; CPU iPhone OS ${this.system.systemVersion} like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Safari Line/${this.system.appVersion}`
+				: "Mozilla/5.0 (Linux; Android 8.0.1; SAMSUNG Realise/LineJS; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/56.0.2924.87 Mobile Safari/537.36",
 			"X-Line-Application": this.system?.type as string,
 		};
 
 		const response = await fetch(consentUrl, { method: "GET", headers });
 		if (response.ok) {
 			const text = await response.text();
-			const consentResponse = new JSDOM(text).dom.window.document;
-			const channelId =
-				consentResponse
-					.querySelector('meta[name="channelId"]')
-					?.getAttribute("content") ?? null;
-			const csrfToken =
-				consentResponse
-					.querySelector('meta[name="csrfToken"]')
-					?.getAttribute("content") ?? null;
+			const consentResponse = "DOMParser" in window
+				? new ((window as LooseType).DOMParser)().parseFromString(
+					text,
+					"text/html",
+				)
+				: new (await import("jsdom"))(text).dom.window.document;
+			const channelId = consentResponse
+				.querySelector('meta[name="channelId"]')
+				?.getAttribute("content") ?? null;
+			const csrfToken = consentResponse
+				.querySelector('meta[name="csrfToken"]')
+				?.getAttribute("content") ?? null;
 
 			if (channelId && csrfToken) {
 				const payload = new URLSearchParams({
