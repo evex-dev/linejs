@@ -292,11 +292,11 @@ export class Square extends TypedEventEmitter<SquareEvents> {
 		this.searchable = square.searchable;
 		this.type = square.type;
 		this.invitationURL = square.invitationURL;
-		this.revision = square.revision;
+		this.revision = square.revision as number;
 		this.state = square.state;
 		this.emblems = square.emblems;
 		this.joinMethod = square.joinMethod;
-		this.createdAt = new Date(square.createdAt);
+		this.createdAt = new Date(square.createdAt as number);
 
 		this.me = new SquareMember(myMembership, client);
 		this.authority = squareAuthority;
@@ -306,7 +306,7 @@ export class Square extends TypedEventEmitter<SquareEvents> {
 		this.status = squareStatus;
 		this.memberCount = squareStatus.memberCount;
 		this.joinRequestCount = squareStatus.joinRequestCount;
-		this.lastJoinRequestAt = new Date(squareStatus.lastJoinRequestAt);
+		this.lastJoinRequestAt = new Date(squareStatus.lastJoinRequestAt as number);
 		this.openChatCount = squareStatus.openChatCount;
 	}
 
@@ -347,7 +347,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 		this.type = squareChat.type;
 		this.name = squareChat.name;
 		this.chatImageObsHash = squareChat.chatImageObsHash;
-		this.squareChatRevision = squareChat.squareChatRevision;
+		this.squareChatRevision = squareChat.squareChatRevision as number;
 		this.maxMemberCount = squareChat.maxMemberCount;
 		this.state = squareChat.state;
 		this.invitationUrl = squareChat.invitationUrl;
@@ -425,7 +425,7 @@ export class SquareMember extends TypedEventEmitter<SquareMemberEvents> {
 		this.ableToReceiveMessage = rawMember.ableToReceiveMessage;
 		this.membershipState = rawMember.membershipState;
 		this.role = rawMember.role;
-		this.revision = rawMember.revision;
+		this.revision = rawMember.revision as number;
 		this.preference = rawMember.preference;
 		this.joinMessage = rawMember.joinMessage;
 	}
@@ -465,7 +465,6 @@ export class User extends TypedEventEmitter<UserEvents> {
 	public capableMyhome: boolean;
 	public capableBuddy: boolean;
 	public attributes: number;
-	public settings: number;
 	public picturePath: string;
 	public recommendParams: string;
 	public friendRequestStatus: LINETypes.FriendRequestStatus;
@@ -515,7 +514,7 @@ export class User extends TypedEventEmitter<UserEvents> {
 		this.rawSource = contact;
 		console.log(contactEntry);
 		this.mid = contact.mid;
-		this.createdTime = new Date(contact.createdTime * 1000);
+		this.createdTime = new Date(contact.createdTime as number * 1000);
 		this.type = contact.type;
 		this.status = contact.status;
 		this.relation = contact.relation;
@@ -525,13 +524,12 @@ export class User extends TypedEventEmitter<UserEvents> {
 		this.thumbnailUrl = contact.thumbnailUrl;
 		this.statusMessage = contact.statusMessage;
 		this.displayNameOverridden = contact.displayNameOverridden;
-		this.favoriteTime = new Date(contact.favoriteTime * 1000);
+		this.favoriteTime = new Date(contact.favoriteTime as number * 1000);
 		this.capableVoiceCall = contact.capableVoiceCall;
 		this.capableVideoCall = contact.capableVideoCall;
 		this.capableMyhome = contact.capableMyhome;
 		this.capableBuddy = contact.capableBuddy;
 		this.attributes = contact.attributes;
-		this.settings = contact.settings;
 		this.picturePath = contact.picturePath;
 		this.recommendParams = contact.recommendParams;
 		this.friendRequestStatus = contact.friendRequestStatus;
@@ -553,7 +551,7 @@ export class User extends TypedEventEmitter<UserEvents> {
 		this.birthday = contactEntry.calendarEvents.events[0];
 		this.rawSource = contact;
 		this.mid = contact.mid;
-		this.createdTime = new Date(contact.createdTime * 1000);
+		this.createdTime = new Date(contact.createdTime as number * 1000);
 		this.type = contact.type;
 		this.status = contact.status;
 		this.relation = contact.relation;
@@ -563,13 +561,12 @@ export class User extends TypedEventEmitter<UserEvents> {
 		this.thumbnailUrl = contact.thumbnailUrl;
 		this.statusMessage = contact.statusMessage;
 		this.displayNameOverridden = contact.displayNameOverridden;
-		this.favoriteTime = new Date(contact.favoriteTime * 1000);
+		this.favoriteTime = new Date(contact.favoriteTime as number * 1000);
 		this.capableVoiceCall = contact.capableVoiceCall;
 		this.capableVideoCall = contact.capableVideoCall;
 		this.capableMyhome = contact.capableMyhome;
 		this.capableBuddy = contact.capableBuddy;
 		this.attributes = contact.attributes;
-		this.settings = contact.settings;
 		this.picturePath = contact.picturePath;
 		this.recommendParams = contact.recommendParams;
 		this.friendRequestStatus = contact.friendRequestStatus;
@@ -691,7 +688,7 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 					user = new User(_members[key], client);
 				}
 				user.groupStatus.joinedAt = new Date(
-					chat.extra.groupExtra.memberMids[key] * 1000,
+					chat.extra.groupExtra.memberMids[key] as number * 1000,
 				);
 				user.kick = user.kick.bind(user, chat.chatMid);
 				members.push();
@@ -718,7 +715,7 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 					user = new User(_invitee[key], client);
 				}
 				user.groupStatus.invitedAt = new Date(
-					chat.extra.groupExtra.inviteeMids[key] * 1000,
+					chat.extra.groupExtra.inviteeMids[key] as number * 1000,
 				);
 				user.kick = user.kick.bind(user, chat.chatMid);
 				members.push();
@@ -737,7 +734,7 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 
 		this.rawSource = chat;
 		this.mid = chat.chatMid;
-		this.createdTime = new Date(chat.createdTime * 1000);
+		this.createdTime = new Date(chat.createdTime as number * 1000);
 		this.name = chat.chatName;
 		this.picturePath = chat.picturePath;
 		this.notificationDisabled = chat.notificationDisabled;
@@ -845,9 +842,9 @@ export class Operation {
 	) {
 		this.rawSource = source;
 		this.client = client;
-		this.revision = source.revision;
+		this.revision = source.revision as number;
 		this.checksum = source.checksum;
-		this.createdTime = new Date(source.createdTime * 1000);
+		this.createdTime = new Date(source.createdTime as number * 1000);
 		this.type =
 			(parseEnum("OpType", source.type) as LINETypes.OpType) || source.type;
 		this.reqSeq = source.reqSeq;
@@ -1406,7 +1403,7 @@ export class Message {
 				"ContentType",
 				this.rawMessage.contentType,
 			) as LINETypes.ContentType) || this.rawMessage.contentType;
-		this.createdTime = new Date(this.rawMessage.createdTime * 1000);
+		this.createdTime = new Date(this.rawMessage.createdTime as number * 1000);
 		this.id = this.rawMessage.id;
 		if (this.rawMessage.text) {
 			this.content = this.rawMessage.text;
@@ -2028,7 +2025,7 @@ export class SquareMessage extends ClientMessage {
 			senderSquareMemberMid: this.from,
 			squareMessageId: this.id,
 			text: this.text,
-			createdAt: this.rawMessage.createdTime,
+			createdAt: this.rawMessage.createdTime as number,
 			announcementType: 0,
 		});
 	}

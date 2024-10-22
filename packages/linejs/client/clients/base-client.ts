@@ -243,7 +243,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			return;
 		}
 
-		let myEventsSyncToken = noopMyEvents.syncToken;
+		const myEventsArg = { subscriptionId: noopMyEvents.subscription?.subscriptionId as number, syncToken: noopMyEvents.syncToken, continuationToken: noopMyEvents.continuationToken }
 		let previousMessageId: string | undefined = undefined;
 
 		while (true) {
@@ -252,11 +252,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				return;
 			}
 
-			const myEvents = await this.fetchMyEvents({
-				syncToken: myEventsSyncToken,
-			});
+			const myEvents = await this.fetchMyEvents(myEventsArg);
 
-			if (myEvents.syncToken !== myEventsSyncToken) {
+			if (myEvents.syncToken !== myEventsArg.syncToken) {
 				for (const event of myEvents.events) {
 					this.emit("square:event", event);
 
@@ -411,7 +409,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						});
 					}
 				}
-				myEventsSyncToken = myEvents.syncToken;
+				myEventsArg.syncToken = myEvents.syncToken;
+				myEventsArg.continuationToken = myEvents.continuationToken;
+				myEventsArg.subscriptionId = myEvents.subscription?.subscriptionId as number
 			}
 
 			await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -520,15 +520,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						const chat =
 							message.toType === LINETypes.MIDType._USER
 								? async () => {
-										return await this.getContact({ mid: sendIn });
-									}
+									return await this.getContact({ mid: sendIn });
+								}
 								: undefined;
 
 						const group =
 							message.toType !== LINETypes.MIDType._USER
 								? async () => {
-										return (await this.getChats({ mids: [sendIn] })).chats[0];
-									}
+									return (await this.getChats({ mids: [sendIn] })).chats[0];
+								}
 								: (undefined as LooseType);
 
 						const getContact = async () => {
@@ -1097,7 +1097,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType { }
 
 	/**
 	 * @description Will override.
@@ -1324,17 +1324,24 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		path: string = "/S3",
 		headers: Record<string, string | undefined> = {},
 	): Promise<LooseType> {
-		return (
-			await this.rawRequest(
-				path,
-				[[12, 1, value]],
-				methodName,
-				protocolType,
-				headers,
-				undefined,
-				parse,
-			)
-		).value;
+		try {
+			return (
+				await this.rawRequest(
+					path,
+					[[12, 1, value]],
+					methodName,
+					protocolType,
+					headers,
+					undefined,
+					parse,
+				)
+			).value;
+		} catch (error) {
+			if ((error as Error).message === "InputBufferUnderrunError") {
+				throw new InternalError("ServerError","Incorrect buffer received")
+			}
+			throw error
+		}
 	}
 
 	/**
@@ -1356,17 +1363,25 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		path: string = "/S3",
 		headers: Record<string, string | undefined> = {},
 	): Promise<LooseType> {
-		return (
-			await this.rawRequest(
-				path,
-				value,
-				methodName,
-				protocolType,
-				headers,
-				undefined,
-				parse,
-			)
-		).value;
+		try {
+			return (
+				await this.rawRequest(
+					path,
+					value,
+					methodName,
+					protocolType,
+					headers,
+					undefined,
+					parse,
+					true
+				)
+			).value;
+		} catch (error) {
+			if ((error as Error).message === "InputBufferUnderrunError") {
+				throw new InternalError("ServerError","Incorrect buffer received")
+			}
+			throw error
+		}
 	}
 
 	public EXCEPTION_TYPES = {
@@ -1474,8 +1489,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		const isRefresh =
 			res.e &&
-			res.e["code"] === LINETypes.ErrorCode._NOT_AUTHORIZED_DEVICE &&
-			nextToken;
+			res.e["code"] === "MUST_REFRESH_V3_TOKEN" && this.storage.get("refreshToken")
 
 		if (res.e && !isRefresh) {
 			throw new InternalError(
@@ -1486,11 +1500,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 
 		if (isRefresh && !isReRequest) {
-			this.metadata = {
-				authToken: nextToken,
-			};
-			this.emit("update:authtoken", this.metadata.authToken);
-
+			this.log("V3_Refresh", res.e)
+			await this.tryRefreshToken()
 			return await this.rawRequest(
 				path,
 				value,
@@ -1584,11 +1595,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @description Gets the server time
 	 */
 	public async getServerTime(): Promise<number> {
-		return await this.request(
-			[
-				128, 1, 0, 1, 0, 0, 0, 13, 103, 101, 116, 83, 101, 114, 118, 101, 114,
-				84, 105, 109, 101, 0, 0, 0, 0, 0,
-			],
+		return await this.direct_request(
+			[],
 			"getServerTime",
 			this.LINEService_PROTOCOL_TYPE,
 			false,
