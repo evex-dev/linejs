@@ -35,10 +35,10 @@ export class TalkClient extends ChannelClient {
 			revision: 0,
 			globalRev: 0,
 			individualRev: 0,
-			timeout: 60000,
+			timeout: this.longTimeOutMs,
 			...options,
 		};
-		return new Promise<LINETypes.SyncResponse>((resolve, reject) => {
+		return new Promise<LINETypes.SyncResponse>((resolve) => {
 			this.request(
 				[
 					[10, 1, revision],
@@ -50,6 +50,8 @@ export class TalkClient extends ChannelClient {
 				this.SyncService_PROTOCOL_TYPE,
 				"SyncResponse",
 				this.SyncService_API_PATH,
+				{},
+				timeout
 			).then((res) => resolve(res));
 		});
 	}
@@ -170,7 +172,7 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Unsend message.
 	 */
-	public async unsendMessage(options: {
+	public unsendMessage(options: {
 		messageId: string;
 	}): Promise<LINETypes.UnsendMessageResponse> {
 		const { messageId } = {
@@ -197,7 +199,7 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description React to the message.
 	 */
-	override async reactToMessage(options: {
+	override reactToMessage(options: {
 		messageId: string;
 		reactionType: LINETypes.MessageReactionType & number;
 	}): Promise<LINETypes.ReactToMessageResponse> {
@@ -244,7 +246,7 @@ export class TalkClient extends ChannelClient {
 		).map((e: LooseType) => this.parser.rename_thrift("E2EEPublicKey", e));
 	}
 
-	public async negotiateE2EEPublicKey(options: {
+	public negotiateE2EEPublicKey(options: {
 		mid: string;
 	}): Promise<LINETypes.E2EENegotiationResult> {
 		const { mid } = { ...options };
@@ -257,7 +259,7 @@ export class TalkClient extends ChannelClient {
 		);
 	}
 
-	public async getLastE2EEGroupSharedKey(options: {
+	public getLastE2EEGroupSharedKey(options: {
 		keyVersion: number;
 		chatMid: string;
 	}): Promise<LINETypes.E2EEGroupSharedKey> {
@@ -277,7 +279,7 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Mark as read.
 	 */
-	public async sendChatChecked(options: {
+	public sendChatChecked(options: {
 		chatMid: string;
 		lastMessageId: string;
 	}): Promise<void> {
@@ -580,7 +582,7 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Get information on all the chats joined.
 	 */
-	public async getAllChatMids(
+	public getAllChatMids(
 		options: {
 			withMembers?: boolean;
 			withInvitees?: boolean;
@@ -613,7 +615,7 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Get information on all friend.
 	 */
-	public async getAllContactIds(): Promise<string[]> {
+	public getAllContactIds(): Promise<string[]> {
 		return this.direct_request(
 			[],
 			"getAllContactIds",
@@ -626,7 +628,7 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Kick out members of the chat.
 	 */
-	public async deleteOtherFromChat(options: {
+	public deleteOtherFromChat(options: {
 		to: string;
 		mid: string;
 	}): Promise<LINETypes.DeleteOtherFromChatResponse> {
@@ -649,7 +651,7 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Leave the chat.
 	 */
-	public async deleteSelfFromChat(options: {
+	public deleteSelfFromChat(options: {
 		to: string;
 	}): Promise<LINETypes.DeleteSelfFromChatResponse> {
 		const { to } = {
@@ -670,7 +672,7 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Invite mids into the chat.
 	 */
-	public async inviteIntoChat(options: {
+	public inviteIntoChat(options: {
 		to: string;
 		mids: string[];
 	}): Promise<LINETypes.InviteIntoChatResponse> {
@@ -693,7 +695,7 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Accept the chat invitation and join.
 	 */
-	public async acceptChatInvitation(options: {
+	public acceptChatInvitation(options: {
 		to: string;
 	}): Promise<LINETypes.AcceptChatInvitationResponse> {
 		const { to } = {
@@ -714,7 +716,7 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Issue a ticket to join the chat.
 	 */
-	public async reissueChatTicket(options: {
+	public reissueChatTicket(options: {
 		groupMid: string;
 	}): Promise<LINETypes.ReissueChatTicketResponse> {
 		const { groupMid } = {
@@ -735,7 +737,7 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Find the chat from the ticket.
 	 */
-	public async findChatByTicket(options: {
+	public findChatByTicket(options: {
 		ticketId: string;
 	}): Promise<LINETypes.FindChatByTicketResponse> {
 		const { ticketId } = {
@@ -753,7 +755,7 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Join the chat using the ticket.
 	 */
-	public async acceptChatInvitationByTicket(options: {
+	public acceptChatInvitationByTicket(options: {
 		to: string;
 		ticket: string;
 	}): Promise<LINETypes.AcceptChatInvitationByTicketResponse> {
@@ -776,7 +778,7 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Update the information for the specified chat.
 	 */
-	public async updateChat(options: {
+	public updateChat(options: {
 		chatMid: string;
 		chatSet: Partial<LINETypes.Chat>;
 		updatedAttribute: LINETypes.ChatAttribute & number;
@@ -827,7 +829,7 @@ export class TalkClient extends ChannelClient {
 		);
 	}
 
-	public async createChatRoomAnnouncement(options: {
+	public createChatRoomAnnouncement(options: {
 		chatRoomMid: string;
 		text: string;
 		link?: string;
@@ -886,7 +888,7 @@ export class TalkClient extends ChannelClient {
 		return res;
 	}
 
-	public async registerE2EEGroupKey(options: {
+	public registerE2EEGroupKey(options: {
 		keyVersion: number;
 		chatMid: string;
 		members: string[];

@@ -102,10 +102,13 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 */
 	public LINE_OBS: LINE_OBS;
 
+	/**
+	 * @description the cache manager of client
+	 */
 	public cache: CacheManager;
 
 	/**
-	 * @description THe information of user
+	 * @description The information of user
 	 */
 	public user: LINETypes.Profile | undefined;
 	/**
@@ -116,6 +119,16 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @description The information of metadata
 	 */
 	public metadata: Metadata | undefined;
+
+	/**
+	 * @description The timeout of fetch
+	 */
+	public timeOutMs: number = 20000;
+
+	/**
+	 * @description The timeout of long poling fetch
+	 */
+	public longTimeOutMs: number = 180000;	// 3分間待ってやる
 
 	/**
 	 * @description Emit log event
@@ -277,7 +290,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 						previousMessageId = message.id;
 
-						const send = async (
+						const send = (
 							options: SquareMessageSendOptions,
 							safe: boolean = true,
 						) => {
@@ -302,7 +315,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							}
 						};
 
-						const reply = async (
+						const reply = (
 							options: MessageReplyOptions,
 							safe: boolean = true,
 						) => {
@@ -327,7 +340,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							}
 						};
 
-						const react = async (options: SquareMessageReactionOptions) => {
+						const react = (options: SquareMessageReactionOptions) => {
 							if (typeof options === "number") {
 								return this.reactToSquareMessage({
 									squareChatMid: payload.squareChatMid,
@@ -424,6 +437,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	}
 
 	public revision: number = 0;
+	public ignoreSyncError: boolean = true;
 
 	public async pollingTalkEvents() {
 		if (this.IS_POLLING_TALK) {
@@ -471,7 +485,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						} else {
 							sendIn = message.to;
 						}
-						const send = async (options: SquareMessageSendOptions) => {
+						const send = (options: SquareMessageSendOptions) => {
 							if (typeof options === "string") {
 								return this.sendMessage({
 									to: sendIn,
@@ -487,7 +501,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							}
 						};
 
-						const reply = async (options: MessageReplyOptions) => {
+						const reply = (options: MessageReplyOptions) => {
 							if (typeof options === "string") {
 								return this.sendMessage({
 									to: sendIn,
@@ -503,7 +517,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							}
 						};
 
-						const react = async (options: SquareMessageReactionOptions) => {
+						const react = (options: SquareMessageReactionOptions) => {
 							if (typeof options === "number") {
 								return this.reactToMessage({
 									reactionType: options as LINETypes.MessageReactionType,
@@ -524,23 +538,23 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 						const chat =
 							message.toType === LINETypes.MIDType._USER
-								? async () => {
-										return this.getContact({ mid: sendIn });
-									}
+								? () => {
+									return this.getContact({ mid: sendIn });
+								}
 								: undefined;
 
 						const group =
 							message.toType !== LINETypes.MIDType._USER
 								? async () => {
-										return (await this.getChats({ mids: [sendIn] })).chats[0];
-									}
+									return (await this.getChats({ mids: [sendIn] })).chats[0];
+								}
 								: (undefined as LooseType);
 
-						const getContact = async () => {
+						const getContact = () => {
 							return this.getContact({ mid: message._from });
 						};
 
-						const getMyProfile = async () => {
+						const getMyProfile = () => {
 							return this.refreshProfile(true);
 						};
 
@@ -587,8 +601,10 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					(myEvents.operationResponse?.individualEvents
 						?.lastRevision as number) || individualRev;
 				revision = myEvents.fullSyncResponse?.nextRevision || revision;
-			} catch {
-				/* Do Nothing */
+			} catch (e) {
+				if (!this.ignoreSyncError) {
+					throw e
+				}
 			}
 			await new Promise((resolve) => setTimeout(resolve, 100));
 		}
@@ -1102,7 +1118,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType { }
 
 	/**
 	 * @description Will override.
@@ -1115,7 +1131,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		return Buffer.from([]);
 	}
 
-	public async createSession(): Promise<string> {
+	public createSession(): Promise<string> {
 		return this.direct_request(
 			[],
 			"createSession",
@@ -1125,7 +1141,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async createQrCode(qrcode: string): Promise<LooseType> {
+	public createQrCode(qrcode: string): Promise<LooseType> {
 		return this.request(
 			[[11, 1, qrcode]],
 			"createQrCode",
@@ -1147,6 +1163,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					"x-lst": "150000",
 					"x-line-access": qrcode,
 				},
+				this.longTimeOutMs
 			);
 			return true;
 		} catch (error) {
@@ -1154,7 +1171,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 	}
 
-	public async verifyCertificate(
+	public verifyCertificate(
 		qrcode: string,
 		cert?: string | undefined,
 	): Promise<LooseType> {
@@ -1170,7 +1187,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async createPinCode(qrcode: string): Promise<LooseType> {
+	public createPinCode(qrcode: string): Promise<LooseType> {
 		return this.request(
 			[[11, 1, qrcode]],
 			"createPinCode",
@@ -1192,6 +1209,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					"x-lst": "150000",
 					"x-line-access": qrcode,
 				},
+				this.longTimeOutMs
 			);
 			return true;
 		} catch (error) {
@@ -1199,7 +1217,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 	}
 
-	public async qrCodeLogin(
+	public qrCodeLogin(
 		authSessionId: string,
 		autoLoginIsRequired: boolean = true,
 	): Promise<LooseType> {
@@ -1216,7 +1234,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async qrCodeLoginV2(
+	public qrCodeLoginV2(
 		authSessionId: string,
 		modelName: string = "evex",
 		systemName: string = "linejs",
@@ -1236,7 +1254,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	public async confirmE2EELogin(
+	public confirmE2EELogin(
 		verifier: string,
 		deviceSecret: Buffer,
 	): Promise<LooseType> {
@@ -1251,7 +1269,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			"/api/v3p/rs",
 		);
 	}
-	private async loginV2(
+	private loginV2(
 		keynm: string,
 		encryptedMessage: string,
 		deviceName: Device,
@@ -1300,7 +1318,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @returns {Promise<LINETypes.RSAKey>} RSA key info.
 	 * @throws {FetchError} If failed to fetch RSA key info.
 	 */
-	public async getRSAKeyInfo(provider: number = 0): Promise<LINETypes.RSAKey> {
+	public getRSAKeyInfo(provider: number = 0): Promise<LINETypes.RSAKey> {
 		return this.request(
 			[[8, 2, provider]],
 			"getRSAKeyInfo",
@@ -1319,6 +1337,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @param {boolean | string} [parse=true] - Whether to parse the response.
 	 * @param {string} [path="/S3"] - The path of the request.
 	 * @param {object} [headers={}] - The headers of the request.
+	 * @param {number} [timeOutMs=this.timeOutMs] - The timeout milliseconds of the request.
 	 * @returns {Promise<LooseType>} The response.
 	 */
 	public async request(
@@ -1328,6 +1347,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		parse: boolean | string = true,
 		path: string = "/S3",
 		headers: Record<string, string | undefined> = {},
+		timeOutMs: number = this.timeOutMs
 	): Promise<LooseType> {
 		try {
 			return (
@@ -1339,6 +1359,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					headers,
 					undefined,
 					parse,
+					undefined,
+					timeOutMs,
 				)
 			).value;
 		} catch (error) {
@@ -1358,6 +1380,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @param {boolean | string} [parse=true] - Whether to parse the response.
 	 * @param {string} [path="/S3"] - The path of the request.
 	 * @param {object} [headers={}] - The headers of the request.
+	 * @param {number} [timeOutMs=this.timeOutMs] - The timeout milliseconds of the request.
 	 * @returns {Promise<LooseType>} The response.
 	 */
 	public async direct_request(
@@ -1367,6 +1390,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		parse: boolean | string = true,
 		path: string = "/S3",
 		headers: Record<string, string | undefined> = {},
+		timeOutMs: number = this.timeOutMs
 	): Promise<LooseType> {
 		try {
 			return (
@@ -1379,6 +1403,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					undefined,
 					parse,
 					true,
+					timeOutMs,
 				)
 			).value;
 		} catch (error) {
@@ -1389,7 +1414,10 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 	}
 
-	public EXCEPTION_TYPES = {
+	/**
+	 * @description The Types of Error
+	 */
+	public EXCEPTION_TYPES: Record<string, string | undefined> = {
 		"/S3": "TalkException",
 		"/S4": "TalkException",
 		"/SYNC4": "TalkException",
@@ -1400,7 +1428,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		"/LIFF1": "LiffException",
 		"/api/v3p/rs": "TalkException",
 		"/api/v3/TalkService.do": "TalkException",
-	} as Record<string, string | undefined>;
+	}
 
 	/**
 	 * @description Request to LINE API by raw.
@@ -1413,19 +1441,20 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @param {string} [overrideMethod="POST"] - The method of the request.
 	 * @param {boolean | string} [parse=true] - Whether to parse the response.
 	 * @param {boolean} [isReRequest=false] - Is Re-Request.
+	 * @param {number} [timeOutMs=this.timeOutMs] - The timeout milliseconds of the request.
 	 * @returns {Promise<ParsedThrift>} The response.
-	 *
-	 * @throws {InternalError} If the request fails.
+	 * @throws {InternalError} If the request fails or timeout.
 	 */
 	public async rawRequest(
 		path: string,
 		value: NestedArray,
 		methodName: string,
 		protocolType: ProtocolKey,
-		appendHeaders = {},
-		overrideMethod = "POST",
+		appendHeaders: object = {},
+		overrideMethod: string = "POST",
 		parse: boolean | string = true,
 		isReRequest: boolean = false,
+		timeOutMs: number = this.timeOutMs,
 	): Promise<ParsedThrift> {
 		if (!this.system) {
 			throw new InternalError("Not setup yet", "Please call 'login()' first");
@@ -1436,27 +1465,29 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		headers = { ...headers, ...appendHeaders };
 
-		this.log("request-write", {
+		this.log("writeThrift", {
 			thriftMethodName: methodName,
 			protocolType,
 			value,
 		});
 
 		const Trequest = writeThrift(value, methodName, Protocol);
-
-		this.log("request-send", {
+		const fetchArg: [string, RequestInit] = [`https://${this.endpoint}${path}`, {
+			method: overrideMethod,
+			headers,
+			signal: AbortSignal.timeout(timeOutMs),
+			body: Trequest,
+		}]
+		this.log("fetch-send", {
 			method: "thrift",
 			thriftMethodName: methodName,
 			httpMethod: overrideMethod,
 			data: Trequest,
 			headers,
+			fetchArg,
 		});
 
-		const response = await this.customFetch(`https://${this.endpoint}${path}`, {
-			method: overrideMethod,
-			headers,
-			body: Trequest,
-		});
+		const response = await this.customFetch(...fetchArg);
 		const nextToken = response.headers.get("x-line-next-access");
 
 		if (nextToken) {
@@ -1468,7 +1499,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 		const body = await response.arrayBuffer();
 		const parsedBody = new Uint8Array(body);
-		this.log("response-recv", {
+		this.log("fetch-recv", {
 			method: "thrift",
 			response,
 			data: parsedBody,
@@ -1488,7 +1519,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			}
 		}
 
-		this.log("response-parse", {
+		this.log("readThrift", {
 			parsedData: res,
 		});
 
@@ -1531,7 +1562,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 */
 	public getHeader(
 		lineAccessToken: string | undefined,
-		overrideMethod = "POST",
+		overrideMethod: string = "POST",
 	): Record<string, string> {
 		if (!this.system) {
 			throw new InternalError("Not setup yet", "Please call 'login()' first");
@@ -1600,7 +1631,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Gets the server time
 	 */
-	public async getServerTime(): Promise<number> {
+	public getServerTime(): Promise<number> {
 		return this.direct_request(
 			[],
 			"getServerTime",
@@ -1613,7 +1644,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Gets the profile of the current user.
 	 */
-	public async getProfile(): Promise<LINETypes.Profile> {
+	public getProfile(): Promise<LINETypes.Profile> {
 		return this.request(
 			[],
 			"getProfile",
@@ -1743,7 +1774,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Refresh token.
 	 */
-	public async refreshAccessToken(
+	public refreshAccessToken(
 		refreshToken: string,
 	): Promise<LINETypes.RefreshAccessTokenResponse> {
 		return this.request(
@@ -1765,21 +1796,20 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		if (!this.metadata) {
 			throw new InternalError("Not setup yet", "Please call 'login()' first");
 		}
-		return this.customFetch(this.LINE_OBS.getDataUrl(messageId, isPreview), {
+		const r = await this.customFetch(this.LINE_OBS.getDataUrl(messageId, isPreview), {
 			headers: {
 				accept: "application/json, text/plain, */*",
 				"x-line-application": this.system?.type as string,
 				"x-Line-access": this.metadata.authToken,
 			},
-		}).then((r) => {
-			return r.blob();
 		});
+		return r.blob();
 	}
 
 	/**
 	 * @description Upload obs message to talk.
 	 */
-	public async uploadObjTalk(
+	public uploadObjTalk(
 		to: string,
 		type: "image" | "gif" | "video" | "audio" | "file",
 		data: Blob,
