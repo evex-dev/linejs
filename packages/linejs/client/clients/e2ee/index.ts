@@ -26,10 +26,13 @@ class E2EE extends TalkClient {
 			const key = keys[i];
 			const { keyId } = key;
 			const _keyData = this.getE2EESelfKeyDataByKeyId(keyId);
-			if (_keyData) return _keyData;
+			if (_keyData) {
+				this.saveE2EESelfKeyData(_keyData);
+				return _keyData;
+			}
 		}
 		throw new InternalError(
-			"No E2EEKey",
+			"NoE2EEKey",
 			"E2EE Key has not been saved, try register `saveE2EESelfKeyDataByKeyId` or use E2EE Login",
 		);
 	}
@@ -43,6 +46,9 @@ class E2EE extends TalkClient {
 	public saveE2EESelfKeyDataByKeyId(keyId: string | number, value: LooseType) {
 		this.storage.set("e2eeKeys:" + keyId, JSON.stringify(value));
 	}
+	public saveE2EESelfKeyData(value: LooseType) {
+		this.storage.set("e2eeKeys:" + this.user?.mid, JSON.stringify(value));
+	}
 	override getToType(mid: string): number | null {
 		/**
 		 * USER(0),
@@ -51,7 +57,8 @@ class E2EE extends TalkClient {
 		 * SQUARE(3),
 		 * SQUARE_CHAT(4),
 		 * SQUARE_MEMBER(5),
-		 * BOT(6);
+		 * SQUARE_BOT(6),
+		 * SQUARE_THREAD(7):;
 		 */
 		const _u = mid.charAt(0);
 		switch (_u) {
@@ -69,6 +76,8 @@ class E2EE extends TalkClient {
 				return 5;
 			case "v":
 				return 6;
+			case "t":
+				return 7;
 			default:
 				return null;
 		}
@@ -121,17 +130,26 @@ class E2EE extends TalkClient {
 				key = undefined;
 			}
 			if (!key) {
-				const E2EEGroupSharedKey = await this.getLastE2EEGroupSharedKey({
-					keyVersion: 2,
-					chatMid: mid,
-				});
-				const groupKeyId = E2EEGroupSharedKey.groupKeyId;
-				const creator = E2EEGroupSharedKey.creator;
-				const creatorKeyId = E2EEGroupSharedKey.creatorKeyId;
-				const _receiver = E2EEGroupSharedKey.receiver;
-				const receiverKeyId = E2EEGroupSharedKey.receiverKeyId;
+				let e2eeGroupSharedKey: LINETypes.E2EEGroupSharedKey | undefined;
+				try {
+					e2eeGroupSharedKey = await this.getLastE2EEGroupSharedKey({
+						keyVersion: 2,
+						chatMid: mid,
+					});
+				} catch (error) {
+					if ((error as InternalError).data.code == "NOT_FOUND") {
+						e2eeGroupSharedKey = await this.tryRegisterE2EEGroupKey(mid);
+					} else {
+						throw error;
+					}
+				}
+				const groupKeyId = e2eeGroupSharedKey.groupKeyId;
+				const creator = e2eeGroupSharedKey.creator;
+				const creatorKeyId = e2eeGroupSharedKey.creatorKeyId;
+				const _receiver = e2eeGroupSharedKey.receiver;
+				const receiverKeyId = e2eeGroupSharedKey.receiverKeyId;
 				const encryptedSharedKey =
-					E2EEGroupSharedKey.encryptedSharedKey as Buffer;
+					e2eeGroupSharedKey.encryptedSharedKey as Buffer;
 				const selfKey = Buffer.from(
 					this.getE2EESelfKeyDataByKeyId(receiverKeyId)["privKey"],
 					"base64",
@@ -155,27 +173,12 @@ class E2EE extends TalkClient {
 					aes_key,
 					aes_iv,
 				);
-				//decipher.setAutoPadding(false);
 				const plainText = Buffer.concat([
 					decipher.update(encryptedSharedKey),
 					decipher.final(),
 				]);
-				/*
-				const cipherParams = CryptoJS.lib.CipherParams.create({
-					ciphertext: encryptedSharedKey.toString(),
-					iv: aes_iv.toString(),
-					mode: CryptoJS.mode.CBC,
-					padding: CryptoJS.pad.Pkcs7,
-				});
-
-				const plainText = CryptoJS.AES.decrypt(
-					cipherParams,
-					aes_key.toString(),
-					{ mode: CryptoJS.mode.CBC },
-				);
-				*/
 				this.e2eeLog("getE2EELocalPublicKeyDecryptedLength", plainText.length);
-				const decrypted = plainText.toString("base64"); //.toString(CryptoJS.enc.Base64);
+				const decrypted = plainText.toString("base64");
 				this.e2eeLog("getE2EELocalPublicKeyDecrypted", decrypted);
 				const data = {
 					privKey: decrypted,
@@ -189,7 +192,49 @@ class E2EE extends TalkClient {
 		}
 		return Buffer.from(key, "base64");
 	}
+	public async tryRegisterE2EEGroupKey(
+		chatMid: string,
+	): Promise<LINETypes.E2EEGroupSharedKey> {
+		const e2eePublicKeys = await this.getLastE2EEPublicKeys({ chatMid });
+		const members: string[] = [];
+		const keyIds: number[] = [];
+		const encryptedSharedKeys: Buffer[] = [];
+		const selfKeyId = e2eePublicKeys[this.user!.mid].keyId;
+		const selfKeyData = this.getE2EESelfKeyDataByKeyId(selfKeyId);
+		if (!selfKeyData) {
+			throw new InternalError(
+				"NoE2EEKey",
+				"E2EE Key has not been saved, try register `saveE2EESelfKeyDataByKeyId` or use E2EE Login",
+			);
+		}
+		const selfKey = Buffer.from(selfKeyData.privKey, "base64");
+		const private_key = crypto.randomBytes(32);
+		for (const mid in e2eePublicKeys) {
+			if (Object.prototype.hasOwnProperty.call(e2eePublicKeys, mid)) {
+				const key = e2eePublicKeys[mid];
+				members.push(mid);
+				const { keyId, keyData } = key;
+				keyIds.push(keyId);
 
+				const aesKey = this.generateSharedSecret(selfKey, keyData);
+				const aes_key = this.getSHA256Sum(Buffer.from(aesKey), "Key");
+				const aes_iv = this.xor(this.getSHA256Sum(Buffer.from(aesKey), "IV"));
+				const cipher = crypto.createCipheriv("aes-256-cbc", aes_key, aes_iv);
+				const encryptedSharedKey = Buffer.concat([
+					cipher.update(private_key),
+					cipher.final(),
+				]);
+				encryptedSharedKeys.push(encryptedSharedKey);
+			}
+		}
+		return this.registerE2EEGroupKey({
+			keyVersion: 1,
+			chatMid,
+			keyIds,
+			members,
+			encryptedSharedKeys,
+		});
+	}
 	public generateSharedSecret(
 		privateKey: Buffer,
 		publicKey: Buffer,

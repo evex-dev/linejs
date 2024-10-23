@@ -159,7 +159,7 @@ export class Timeline extends SettingsClient {
 			"x-lhm": "POST",
 			"Content-type": "application/json",
 		};
-		return await this.customFetch(
+		return this.customFetch(
 			`https://${this.endpoint}/mh/api/v57/post/create.json?${params}`,
 			{ headers, body: JSON.stringify(data), method: "POST" },
 		).then((r) => r.json());
@@ -180,7 +180,7 @@ export class Timeline extends SettingsClient {
 			homeId,
 			postId,
 		});
-		return await this.customFetch(
+		return this.customFetch(
 			`https://${this.endpoint}/mh/api/v57/post/get.json?${params}`,
 			{ headers },
 		).then((r) => r.json());
@@ -210,7 +210,7 @@ export class Timeline extends SettingsClient {
 			data.updatedTime = updatedTime.toString();
 		}
 		const params = new URLSearchParams(data);
-		return await this.customFetch(
+		return this.customFetch(
 			`https://${this.endpoint}/mh/api/v57/post/list.json?${params}`,
 			{ headers },
 		).then((r) => r.json());

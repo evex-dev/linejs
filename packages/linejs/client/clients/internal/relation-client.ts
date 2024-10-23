@@ -21,7 +21,7 @@ export class RelationClient extends E2EE {
 			trackingMetaType: 5,
 			...options,
 		};
-		return await this.request(
+		return this.request(
 			[
 				[8, 1, 0], // seq
 				[11, 2, mid],
@@ -54,7 +54,7 @@ export class RelationClient extends E2EE {
 			checkUserStatusStrictly: false,
 			...options,
 		};
-		return await this.request(
+		return this.request(
 			[
 				[15, 1, [12, mids.map((mid) => [[11, 1, mid, "targetUserMid"]])]],
 				[8, 2, syncReason],

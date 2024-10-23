@@ -99,7 +99,7 @@ export class DirStorage extends BaseStorage {
 			case "number":
 				return "n" + obj.toString();
 			case "boolean":
-				return "b" + obj?"T":"";
+				return "b" + obj ? "T" : "";
 			default:
 				return "x";
 		}

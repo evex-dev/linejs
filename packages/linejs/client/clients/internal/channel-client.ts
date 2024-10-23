@@ -13,13 +13,13 @@ export class ChannelClient extends SquareClient {
 	 * channelIds:
 	 * - linevoom: 1341209850
 	 */
-	public async approveChannelAndIssueChannelToken(options: {
+	public approveChannelAndIssueChannelToken(options: {
 		channelId: string;
 	}): Promise<LINETypes.ChannelToken> {
 		const { channelId } = {
 			...options,
 		};
-		return await this.direct_request(
+		return this.direct_request(
 			[[11, 1, channelId]],
 			"approveChannelAndIssueChannelToken",
 			this.ChannelService_PROTOCOL_TYPE,

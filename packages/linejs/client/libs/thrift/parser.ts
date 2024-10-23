@@ -1,4 +1,5 @@
 import type { LooseType } from "../../entities/common.ts";
+import type * as LINEType from "../../../../types/line_types.ts";
 
 const TYPE = {
 	STOP: 0,

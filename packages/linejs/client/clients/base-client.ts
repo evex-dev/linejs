@@ -243,7 +243,11 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			return;
 		}
 
-		const myEventsArg = { subscriptionId: noopMyEvents.subscription?.subscriptionId as number, syncToken: noopMyEvents.syncToken, continuationToken: noopMyEvents.continuationToken }
+		const myEventsArg = {
+			subscriptionId: noopMyEvents.subscription?.subscriptionId as number,
+			syncToken: noopMyEvents.syncToken,
+			continuationToken: noopMyEvents.continuationToken,
+		};
 		let previousMessageId: string | undefined = undefined;
 
 		while (true) {
@@ -278,7 +282,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							safe: boolean = true,
 						) => {
 							if (typeof options === "string") {
-								return await this.sendSquareMessage(
+								return this.sendSquareMessage(
 									{
 										squareChatMid: message.to,
 										text: options,
@@ -287,7 +291,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 									safe,
 								);
 							} else {
-								return await this.sendSquareMessage(
+								return this.sendSquareMessage(
 									{
 										squareChatMid: message.to,
 										relatedMessageId: undefined,
@@ -303,7 +307,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							safe: boolean = true,
 						) => {
 							if (typeof options === "string") {
-								return await this.sendSquareMessage(
+								return this.sendSquareMessage(
 									{
 										squareChatMid: message.to,
 										text: options,
@@ -312,7 +316,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 									safe,
 								);
 							} else {
-								return await this.sendSquareMessage(
+								return this.sendSquareMessage(
 									{
 										squareChatMid: message.to,
 										relatedMessageId: message.id,
@@ -325,13 +329,13 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 						const react = async (options: SquareMessageReactionOptions) => {
 							if (typeof options === "number") {
-								return await this.reactToSquareMessage({
+								return this.reactToSquareMessage({
 									squareChatMid: payload.squareChatMid,
 									reactionType: options as LINETypes.MessageReactionType,
 									squareMessageId: message.id,
 								});
 							} else {
-								return await this.reactToSquareMessage({
+								return this.reactToSquareMessage({
 									squareChatMid: payload.squareChatMid,
 									reactionType: (
 										options as Exclude<
@@ -411,7 +415,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				}
 				myEventsArg.syncToken = myEvents.syncToken;
 				myEventsArg.continuationToken = myEvents.continuationToken;
-				myEventsArg.subscriptionId = myEvents.subscription?.subscriptionId as number
+				myEventsArg.subscriptionId = myEvents.subscription
+					?.subscriptionId as number;
 			}
 
 			await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -468,13 +473,13 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						}
 						const send = async (options: SquareMessageSendOptions) => {
 							if (typeof options === "string") {
-								return await this.sendMessage({
+								return this.sendMessage({
 									to: sendIn,
 									text: options,
 									relatedMessageId: undefined,
 								});
 							} else {
-								return await this.sendMessage({
+								return this.sendMessage({
 									to: sendIn,
 									relatedMessageId: undefined,
 									...options,
@@ -484,13 +489,13 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 						const reply = async (options: MessageReplyOptions) => {
 							if (typeof options === "string") {
-								return await this.sendMessage({
+								return this.sendMessage({
 									to: sendIn,
 									text: options,
 									relatedMessageId: message.id,
 								});
 							} else {
-								return await this.sendMessage({
+								return this.sendMessage({
 									to: sendIn,
 									relatedMessageId: message.id,
 									...options,
@@ -500,12 +505,12 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 						const react = async (options: SquareMessageReactionOptions) => {
 							if (typeof options === "number") {
-								return await this.reactToMessage({
+								return this.reactToMessage({
 									reactionType: options as LINETypes.MessageReactionType,
 									messageId: message.id,
 								});
 							} else {
-								return await this.reactToMessage({
+								return this.reactToMessage({
 									reactionType: (
 										options as Exclude<
 											SquareMessageReactionOptions,
@@ -520,23 +525,23 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						const chat =
 							message.toType === LINETypes.MIDType._USER
 								? async () => {
-									return await this.getContact({ mid: sendIn });
-								}
+										return this.getContact({ mid: sendIn });
+									}
 								: undefined;
 
 						const group =
 							message.toType !== LINETypes.MIDType._USER
 								? async () => {
-									return (await this.getChats({ mids: [sendIn] })).chats[0];
-								}
+										return (await this.getChats({ mids: [sendIn] })).chats[0];
+									}
 								: (undefined as LooseType);
 
 						const getContact = async () => {
-							return await this.getContact({ mid: message._from });
+							return this.getContact({ mid: message._from });
 						};
 
 						const getMyProfile = async () => {
-							return await this.refreshProfile(true);
+							return this.refreshProfile(true);
 						};
 
 						this.emit("message", {
@@ -1097,7 +1102,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType { }
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
 
 	/**
 	 * @description Will override.
@@ -1111,7 +1116,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	}
 
 	public async createSession(): Promise<string> {
-		return await this.direct_request(
+		return this.direct_request(
 			[],
 			"createSession",
 			4,
@@ -1121,7 +1126,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	}
 
 	public async createQrCode(qrcode: string): Promise<LooseType> {
-		return await this.request(
+		return this.request(
 			[[11, 1, qrcode]],
 			"createQrCode",
 			4,
@@ -1153,7 +1158,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		qrcode: string,
 		cert?: string | undefined,
 	): Promise<LooseType> {
-		return await this.request(
+		return this.request(
 			[
 				[11, 1, qrcode],
 				[11, 2, cert],
@@ -1166,7 +1171,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	}
 
 	public async createPinCode(qrcode: string): Promise<LooseType> {
-		return await this.request(
+		return this.request(
 			[[11, 1, qrcode]],
 			"createPinCode",
 			4,
@@ -1198,7 +1203,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		authSessionId: string,
 		autoLoginIsRequired: boolean = true,
 	): Promise<LooseType> {
-		return await this.request(
+		return this.request(
 			[
 				[11, 1, authSessionId],
 				[11, 2, this.system?.device],
@@ -1217,7 +1222,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		systemName: string = "linejs",
 		autoLoginIsRequired: boolean = true,
 	): Promise<LooseType> {
-		return await this.request(
+		return this.request(
 			[
 				[11, 1, authSessionId],
 				[11, 2, systemName],
@@ -1235,7 +1240,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		verifier: string,
 		deviceSecret: Buffer,
 	): Promise<LooseType> {
-		return await this.direct_request(
+		return this.direct_request(
 			[
 				[11, 1, verifier],
 				[11, 2, deviceSecret],
@@ -1260,7 +1265,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		if (verifier) {
 			loginType = 1;
 		}
-		return await this.direct_request(
+		return this.direct_request(
 			[
 				[
 					12,
@@ -1296,7 +1301,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @throws {FetchError} If failed to fetch RSA key info.
 	 */
 	public async getRSAKeyInfo(provider: number = 0): Promise<LINETypes.RSAKey> {
-		return await this.request(
+		return this.request(
 			[[8, 2, provider]],
 			"getRSAKeyInfo",
 			3,
@@ -1338,9 +1343,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			).value;
 		} catch (error) {
 			if ((error as Error).message === "InputBufferUnderrunError") {
-				throw new InternalError("ServerError","Incorrect buffer received")
+				throw new InternalError("ServerError", "Incorrect buffer received");
 			}
-			throw error
+			throw error;
 		}
 	}
 
@@ -1373,14 +1378,14 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					headers,
 					undefined,
 					parse,
-					true
+					true,
 				)
 			).value;
 		} catch (error) {
 			if ((error as Error).message === "InputBufferUnderrunError") {
-				throw new InternalError("ServerError","Incorrect buffer received")
+				throw new InternalError("ServerError", "Incorrect buffer received");
 			}
-			throw error
+			throw error;
 		}
 	}
 
@@ -1489,7 +1494,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		const isRefresh =
 			res.e &&
-			res.e["code"] === "MUST_REFRESH_V3_TOKEN" && this.storage.get("refreshToken")
+			res.e["code"] === "MUST_REFRESH_V3_TOKEN" &&
+			this.storage.get("refreshToken");
 
 		if (res.e && !isRefresh) {
 			throw new InternalError(
@@ -1500,9 +1506,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 
 		if (isRefresh && !isReRequest) {
-			this.log("V3_Refresh", res.e)
-			await this.tryRefreshToken()
-			return await this.rawRequest(
+			this.log("V3_Refresh", res.e);
+			await this.tryRefreshToken();
+			return this.rawRequest(
 				path,
 				value,
 				methodName,
@@ -1595,7 +1601,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @description Gets the server time
 	 */
 	public async getServerTime(): Promise<number> {
-		return await this.direct_request(
+		return this.direct_request(
 			[],
 			"getServerTime",
 			this.LINEService_PROTOCOL_TYPE,
@@ -1608,7 +1614,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @description Gets the profile of the current user.
 	 */
 	public async getProfile(): Promise<LINETypes.Profile> {
-		return await this.request(
+		return this.request(
 			[],
 			"getProfile",
 			this.LINEService_PROTOCOL_TYPE,
@@ -1740,7 +1746,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	public async refreshAccessToken(
 		refreshToken: string,
 	): Promise<LINETypes.RefreshAccessTokenResponse> {
-		return await this.request(
+		return this.request(
 			[[11, 1, refreshToken]],
 			"refresh",
 			4,
@@ -1759,16 +1765,13 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		if (!this.metadata) {
 			throw new InternalError("Not setup yet", "Please call 'login()' first");
 		}
-		return await this.customFetch(
-			this.LINE_OBS.getDataUrl(messageId, isPreview),
-			{
-				headers: {
-					accept: "application/json, text/plain, */*",
-					"x-line-application": this.system?.type as string,
-					"x-Line-access": this.metadata.authToken,
-				},
+		return this.customFetch(this.LINE_OBS.getDataUrl(messageId, isPreview), {
+			headers: {
+				accept: "application/json, text/plain, */*",
+				"x-line-application": this.system?.type as string,
+				"x-Line-access": this.metadata.authToken,
 			},
-		).then((r) => {
+		}).then((r) => {
 			return r.blob();
 		});
 	}
@@ -1814,7 +1817,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 		const toType: "talk" | "g2" =
 			to[0] === "m" || to[0] === "t" ? "g2" : "talk";
-		return await this.customFetch(
+		return this.customFetch(
 			this.LINE_OBS.prefix + "r/" + toType + "/m/reqseq",
 			{
 				headers: {

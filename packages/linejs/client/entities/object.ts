@@ -514,7 +514,7 @@ export class User extends TypedEventEmitter<UserEvents> {
 		this.rawSource = contact;
 		console.log(contactEntry);
 		this.mid = contact.mid;
-		this.createdTime = new Date(contact.createdTime as number * 1000);
+		this.createdTime = new Date((contact.createdTime as number) * 1000);
 		this.type = contact.type;
 		this.status = contact.status;
 		this.relation = contact.relation;
@@ -524,7 +524,7 @@ export class User extends TypedEventEmitter<UserEvents> {
 		this.thumbnailUrl = contact.thumbnailUrl;
 		this.statusMessage = contact.statusMessage;
 		this.displayNameOverridden = contact.displayNameOverridden;
-		this.favoriteTime = new Date(contact.favoriteTime as number * 1000);
+		this.favoriteTime = new Date((contact.favoriteTime as number) * 1000);
 		this.capableVoiceCall = contact.capableVoiceCall;
 		this.capableVideoCall = contact.capableVideoCall;
 		this.capableMyhome = contact.capableMyhome;
@@ -551,7 +551,7 @@ export class User extends TypedEventEmitter<UserEvents> {
 		this.birthday = contactEntry.calendarEvents.events[0];
 		this.rawSource = contact;
 		this.mid = contact.mid;
-		this.createdTime = new Date(contact.createdTime as number * 1000);
+		this.createdTime = new Date((contact.createdTime as number) * 1000);
 		this.type = contact.type;
 		this.status = contact.status;
 		this.relation = contact.relation;
@@ -561,7 +561,7 @@ export class User extends TypedEventEmitter<UserEvents> {
 		this.thumbnailUrl = contact.thumbnailUrl;
 		this.statusMessage = contact.statusMessage;
 		this.displayNameOverridden = contact.displayNameOverridden;
-		this.favoriteTime = new Date(contact.favoriteTime as number * 1000);
+		this.favoriteTime = new Date((contact.favoriteTime as number) * 1000);
 		this.capableVoiceCall = contact.capableVoiceCall;
 		this.capableVideoCall = contact.capableVideoCall;
 		this.capableMyhome = contact.capableMyhome;
@@ -688,7 +688,7 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 					user = new User(_members[key], client);
 				}
 				user.groupStatus.joinedAt = new Date(
-					chat.extra.groupExtra.memberMids[key] as number * 1000,
+					(chat.extra.groupExtra.memberMids[key] as number) * 1000,
 				);
 				user.kick = user.kick.bind(user, chat.chatMid);
 				members.push();
@@ -715,7 +715,7 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 					user = new User(_invitee[key], client);
 				}
 				user.groupStatus.invitedAt = new Date(
-					chat.extra.groupExtra.inviteeMids[key] as number * 1000,
+					(chat.extra.groupExtra.inviteeMids[key] as number) * 1000,
 				);
 				user.kick = user.kick.bind(user, chat.chatMid);
 				members.push();
@@ -734,7 +734,7 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 
 		this.rawSource = chat;
 		this.mid = chat.chatMid;
-		this.createdTime = new Date(chat.createdTime as number * 1000);
+		this.createdTime = new Date((chat.createdTime as number) * 1000);
 		this.name = chat.chatName;
 		this.picturePath = chat.picturePath;
 		this.notificationDisabled = chat.notificationDisabled;
@@ -844,7 +844,7 @@ export class Operation {
 		this.client = client;
 		this.revision = source.revision as number;
 		this.checksum = source.checksum;
-		this.createdTime = new Date(source.createdTime as number * 1000);
+		this.createdTime = new Date((source.createdTime as number) * 1000);
 		this.type =
 			(parseEnum("OpType", source.type) as LINETypes.OpType) || source.type;
 		this.reqSeq = source.reqSeq;
@@ -1403,7 +1403,7 @@ export class Message {
 				"ContentType",
 				this.rawMessage.contentType,
 			) as LINETypes.ContentType) || this.rawMessage.contentType;
-		this.createdTime = new Date(this.rawMessage.createdTime as number * 1000);
+		this.createdTime = new Date((this.rawMessage.createdTime as number) * 1000);
 		this.id = this.rawMessage.id;
 		if (this.rawMessage.text) {
 			this.content = this.rawMessage.text;

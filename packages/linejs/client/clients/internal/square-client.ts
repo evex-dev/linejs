@@ -106,7 +106,7 @@ export class SquareClient extends LiffClient {
 			});
 		}
 		if (continueRequest && response.continuationToken) {
-			return await this.continueRequest({
+			return this.continueRequest({
 				response: response as LooseType,
 				continuationToken: response.continuationToken,
 				method: {
@@ -122,14 +122,14 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Invite to square chat.
 	 */
-	public async inviteIntoSquareChat(options: {
+	public inviteIntoSquareChat(options: {
 		squareChatMid: string;
 		targetMids: string[];
 	}): Promise<LINETypes.InviteIntoSquareChatResponse> {
 		const { squareChatMid, targetMids } = {
 			...options,
 		};
-		return await this.request(
+		return this.request(
 			[
 				[15, 1, [11, targetMids]],
 				[11, 2, squareChatMid],
@@ -144,7 +144,7 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Invite to square.
 	 */
-	public async inviteToSquare(options: {
+	public inviteToSquare(options: {
 		squareMid: string;
 		squareChatMid: string;
 		targetMids: string[];
@@ -152,7 +152,7 @@ export class SquareClient extends LiffClient {
 		const { squareMid, squareChatMid, targetMids } = {
 			...options,
 		};
-		return await this.request(
+		return this.request(
 			[
 				[11, 2, squareMid],
 				[15, 3, [11, targetMids]],
@@ -168,7 +168,7 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Mark as read for square chat.
 	 */
-	public async markAsReadInSquare(options: {
+	public markAsReadInSquare(options: {
 		squareChatMid: string;
 		squareMessageId: string;
 		squareThreadMid?: string;
@@ -176,7 +176,7 @@ export class SquareClient extends LiffClient {
 		const { squareChatMid, squareMessageId, squareThreadMid } = {
 			...options,
 		};
-		return await this.request(
+		return this.request(
 			[
 				[11, 2, squareChatMid],
 				[11, 4, squareMessageId],
@@ -202,9 +202,9 @@ export class SquareClient extends LiffClient {
 	 * SAD     = 6,
 	 * OMG     = 7,
 	 */
-	override async reactToSquareMessage(options: {
+	override reactToSquareMessage(options: {
 		squareChatMid: string;
-		reactionType?: LINETypes.MessageReactionType;
+		reactionType?: LINETypes.MessageReactionType & number;
 		squareMessageId: string;
 		squareThreadMid?: string;
 	}): Promise<LINETypes.ReactToMessageResponse> {
@@ -212,7 +212,7 @@ export class SquareClient extends LiffClient {
 			reactionType: 2,
 			...options,
 		};
-		return await this.request(
+		return this.request(
 			[
 				[8, 1, this.getReqseq("sq")],
 				[11, 2, squareChatMid],
@@ -230,11 +230,11 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Find square by invitation ticket.
 	 */
-	public async findSquareByInvitationTicket(options: {
+	public findSquareByInvitationTicket(options: {
 		invitationTicket: string;
 	}): Promise<LINETypes.FindSquareByInvitationTicketResponse> {
 		const { invitationTicket } = { ...options };
-		return await this.request(
+		return this.request(
 			[[11, 2, invitationTicket]],
 			"findSquareByInvitationTicket",
 			this.SquareService_PROTOCOL_TYPE,
@@ -246,11 +246,11 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Find square by invitation ticket v2.
 	 */
-	public async findSquareByInvitationTicketV2(options: {
+	public findSquareByInvitationTicketV2(options: {
 		invitationTicket: string;
 	}): Promise<LINETypes.FindSquareByInvitationTicketResponse> {
 		const { invitationTicket } = { ...options };
-		return await this.request(
+		return this.request(
 			[[11, 1, invitationTicket]],
 			"findSquareByInvitationTicketV2",
 			this.SquareService_PROTOCOL_TYPE,
@@ -262,12 +262,12 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Find square by Emid.
 	 */
-	public async findSquareByEmid(options: {
+	public findSquareByEmid(options: {
 		emid: string;
 	}): Promise<LooseType> {
 		// ...???
 		const { emid } = { ...options };
-		return await this.request(
+		return this.request(
 			[[11, 1, emid]],
 			"findSquareByEmid",
 			this.SquareService_PROTOCOL_TYPE,
@@ -279,7 +279,7 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Fetch square events.
 	 */
-	public override async fetchMyEvents(
+	public override fetchMyEvents(
 		options: {
 			limit?: number;
 			syncToken?: string;
@@ -291,7 +291,7 @@ export class SquareClient extends LiffClient {
 			limit: 100,
 			...options,
 		};
-		return await this.request(
+		return this.request(
 			[
 				[10, 1, subscriptionId],
 				[11, 2, syncToken],
@@ -308,7 +308,7 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Fetch square chat events.
 	 */
-	public async fetchSquareChatEvents(options: {
+	public fetchSquareChatEvents(options: {
 		squareChatMid: string;
 		limit?: number;
 		syncToken?: string;
@@ -324,7 +324,7 @@ export class SquareClient extends LiffClient {
 			subscriptionId,
 			squareThreadMid,
 		} = { limit: 100, ...options };
-		return await this.request(
+		return this.request(
 			[
 				[10, 1, subscriptionId],
 				[11, 2, squareChatMid],
@@ -350,8 +350,8 @@ export class SquareClient extends LiffClient {
 		options: {
 			squareChatMid: string;
 			text?: string;
-			contentType?: LINETypes.ContentType;
-			contentMetadata?: LooseType;
+			contentType?: LINETypes.ContentType & number;
+			contentMetadata?: Record<string, string>;
 			relatedMessageId?: string;
 		},
 		safe: boolean = true,
@@ -487,13 +487,13 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Get joinable square chats.
 	 */
-	public async getJoinableSquareChats(options: {
+	public getJoinableSquareChats(options: {
 		squareMid: string;
 		limit?: number;
 		continuationToken?: string;
 	}): Promise<LINETypes.GetJoinableSquareChatsResponse> {
 		const { squareMid, limit, continuationToken } = { limit: 100, ...options };
-		return await this.request(
+		return this.request(
 			[
 				[11, 1, squareMid],
 				[11, 10, continuationToken],
@@ -516,13 +516,13 @@ export class SquareClient extends LiffClient {
 	 * APPROVAL(1),
 	 * CODE(2);
 	 */
-	public async createSquare(options: {
+	public createSquare(options: {
 		squareName: string;
 		displayName: string;
 		profileImageObsHash?: string;
 		description?: string;
 		searchable?: boolean;
-		SquareJoinMethodType?: LINETypes.SquareJoinMethodType;
+		SquareJoinMethodType?: LINETypes.SquareJoinMethodType & number;
 	}): Promise<LINETypes.CreateSquareResponse> {
 		const {
 			squareName,
@@ -538,7 +538,7 @@ export class SquareClient extends LiffClient {
 			SquareJoinMethodType: 0,
 			...options,
 		};
-		return await this.request(
+		return this.request(
 			[
 				[8, 2, this.getReqseq("sq")],
 				[
@@ -579,11 +579,11 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Get square chat announcements.
 	 */
-	public async getSquareChatAnnouncements(options: {
+	public getSquareChatAnnouncements(options: {
 		squareChatMid: string;
 	}): Promise<LINETypes.GetSquareChatAnnouncementsResponse> {
 		const { squareChatMid } = { ...options };
-		return await this.request(
+		return this.request(
 			[[11, 2, squareChatMid]],
 			"getSquareChatAnnouncements",
 			this.SquareService_PROTOCOL_TYPE,
@@ -606,11 +606,11 @@ export class SquareClient extends LiffClient {
 	 * DISABLE_TRANSFER_ADMIN(9),
 	 * CREATING_LIVE_TALK(10);
 	 */
-	public async updateSquareFeatureSet(options: {
+	public updateSquareFeatureSet(options: {
 		squareMid: string;
-		updateAttributes: LINETypes.SquareFeatureSetAttribute[];
+		updateAttributes: (LINETypes.SquareFeatureSetAttribute & number)[];
 		revision?: number;
-		creatingSecretSquareChat?: LINETypes.BooleanState;
+		creatingSecretSquareChat?: LINETypes.BooleanState & number;
 	}): Promise<LINETypes.UpdateSquareFeatureSetResponse> {
 		const { squareMid, updateAttributes, revision, creatingSecretSquareChat } =
 			{ revision: 0, creatingSecretSquareChat: 0, ...options };
@@ -628,7 +628,7 @@ export class SquareClient extends LiffClient {
 				],
 			]);
 		}
-		return await this.request(
+		return this.request(
 			[
 				[14, 2, [8, updateAttributes]],
 				[12, 3, SquareFeatureSet],
@@ -643,7 +643,7 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Join square.
 	 */
-	public async joinSquare(options: {
+	public joinSquare(options: {
 		squareMid: string;
 		displayName: string;
 		ableToReceiveMessage?: boolean;
@@ -653,7 +653,7 @@ export class SquareClient extends LiffClient {
 			ableToReceiveMessage: false,
 			...options,
 		};
-		return await this.request(
+		return this.request(
 			[
 				[11, 2, squareMid],
 				[
@@ -678,11 +678,11 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Remove square subscriptions.
 	 */
-	public async removeSubscriptions(options: {
+	public removeSubscriptions(options: {
 		subscriptionIds: number[];
 	}): Promise<LINETypes.RemoveSubscriptionsResponse> {
 		const { subscriptionIds } = { ...options };
-		return await this.request(
+		return this.request(
 			[[15, 2, [10, subscriptionIds]]],
 			"removeSubscriptions",
 			this.SquareService_PROTOCOL_TYPE,
@@ -694,12 +694,12 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Unsend square chat message.
 	 */
-	public async unsendSquareMessage(options: {
+	public unsendSquareMessage(options: {
 		squareChatMid: string;
 		squareMessageId: string;
 	}): Promise<LINETypes.UnsendMessageResponse> {
 		const { squareChatMid, squareMessageId } = { ...options };
-		return await this.request(
+		return this.request(
 			[
 				[11, 2, squareChatMid],
 				[11, 3, squareMessageId],
@@ -714,13 +714,13 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Create square chat.
 	 */
-	public async createSquareChat(options: {
+	public createSquareChat(options: {
 		squareChatMid: string;
 		squareName: string;
 		chatImageObsHash?: string;
-		squareChatType?: LINETypes.SquareChatType;
+		squareChatType?: LINETypes.SquareChatType & number;
 		maxMemberCount?: number;
-		ableToSearchMessage?: LINETypes.BooleanState;
+		ableToSearchMessage?: LINETypes.BooleanState & number;
 		squareMemberMids?: string[];
 	}): Promise<LINETypes.CreateSquareChatResponse> {
 		const {
@@ -739,7 +739,7 @@ export class SquareClient extends LiffClient {
 			squareMemberMids: [],
 			...options,
 		};
-		return await this.request(
+		return this.request(
 			[
 				[8, 1, this.getReqseq("sq")],
 				[
@@ -766,12 +766,12 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Delete square chat.
 	 */
-	public async deleteSquareChat(options: {
+	public deleteSquareChat(options: {
 		squareChatMid: string;
 		revision?: number;
 	}): Promise<LINETypes.DeleteSquareChatResponse> {
 		const { squareChatMid, revision } = { revision: 0, ...options };
-		return await this.request(
+		return this.request(
 			[
 				[11, 2, squareChatMid],
 				[10, 3, revision],
@@ -833,7 +833,7 @@ export class SquareClient extends LiffClient {
 		}
 
 		if (continueRequest && response.continuationToken) {
-			return await this.continueRequest({
+			return this.continueRequest({
 				response: response as LooseType,
 				continuationToken: response.continuationToken,
 				method: {
@@ -849,11 +849,11 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Get square feature set.
 	 */
-	public async getSquareFeatureSet(options: {
+	public getSquareFeatureSet(options: {
 		squareMid: string;
 	}): Promise<LINETypes.GetSquareFeatureSetResponse> {
 		const { squareMid } = { ...options };
-		return await this.request(
+		return this.request(
 			[[11, 2, squareMid]],
 			"getSquareFeatureSet",
 			this.SquareService_PROTOCOL_TYPE,
@@ -865,11 +865,11 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Get square invitation ticket Url.
 	 */
-	public async getSquareInvitationTicketUrl(options: {
+	public getSquareInvitationTicketUrl(options: {
 		mid: string;
 	}): Promise<LINETypes.GetInvitationTicketUrlResponse> {
 		const { mid } = { ...options };
-		return await this.request(
+		return this.request(
 			[[11, 2, mid]],
 			"getInvitationTicketUrl",
 			this.SquareService_PROTOCOL_TYPE,
@@ -881,10 +881,10 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Update square chat member.
 	 */
-	public async updateSquareChatMember(options: {
+	public updateSquareChatMember(options: {
 		squareMemberMid: string;
 		squareChatMid: string;
-		updatedAttrs?: LINETypes.SquareChatMemberAttribute[];
+		updatedAttrs?: (LINETypes.SquareChatMemberAttribute & number)[];
 		notificationForMessage?: boolean;
 		notificationForNewMember?: boolean;
 	}): Promise<LINETypes.UpdateSquareChatMemberResponse> {
@@ -900,7 +900,7 @@ export class SquareClient extends LiffClient {
 			notificationForNewMember: true,
 			...options,
 		};
-		return await this.request(
+		return this.request(
 			[
 				[14, 2, [8, updatedAttrs]],
 				[
@@ -924,13 +924,13 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Update square member.
 	 */
-	public async updateSquareMember(options: {
+	public updateSquareMember(options: {
 		squareMemberMid: string;
 		squareMid: string;
 		displayName?: string;
-		membershipState?: LINETypes.SquareMembershipState;
-		role?: LINETypes.SquareMemberRole;
-		updatedAttrs?: LINETypes.SquareMemberAttribute[];
+		membershipState?: LINETypes.SquareMembershipState & number;
+		role?: LINETypes.SquareMemberRole & number;
+		updatedAttrs?: (LINETypes.SquareMemberAttribute & number)[];
 		updatedPreferenceAttrs?: number[];
 		revision?: number;
 	}): Promise<LINETypes.UpdateSquareMemberResponse> {
@@ -963,7 +963,7 @@ export class SquareClient extends LiffClient {
 			squareMember.push([8, 8, role]);
 		}
 		squareMember.push([10, 9, revision]);
-		return await this.request(
+		return this.request(
 			[
 				[14, 2, [8, updatedAttrs]],
 				[14, 3, [8, updatedPreferenceAttrs]],
@@ -994,7 +994,7 @@ export class SquareClient extends LiffClient {
 		const getSquareMemberResp = await this.getSquareMember({ squareMemberMid });
 		const squareMember = getSquareMemberResp.squareMember;
 		const squareMemberRevision = squareMember.revision;
-		return await this.updateSquareMember({
+		return this.updateSquareMember({
 			squareMemberMid,
 			squareMid,
 			membershipState: MEMBERSHIP_STATE,
@@ -1007,12 +1007,12 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Check square join code.
 	 */
-	public async checkSquareJoinCode(options: {
+	public checkSquareJoinCode(options: {
 		squareMid: string;
 		code: string;
 	}): Promise<LooseType> {
 		const { squareMid, code } = { ...options };
-		return await this.request(
+		return this.request(
 			[
 				[11, 2, squareMid],
 				[11, 3, code],
@@ -1027,13 +1027,13 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Create square chat announcement.
 	 */
-	public async createSquareChatAnnouncement(options: {
+	public createSquareChatAnnouncement(options: {
 		squareChatMid: string;
 		squareMessageId: string;
 		text: string;
 		senderSquareMemberMid: string;
 		createdAt: number;
-		announcementType?: LINETypes.SquareChatAnnouncementType;
+		announcementType?: LINETypes.SquareChatAnnouncementType & number;
 	}): Promise<LINETypes.CreateSquareChatAnnouncementResponse> {
 		const {
 			squareChatMid,
@@ -1043,7 +1043,7 @@ export class SquareClient extends LiffClient {
 			createdAt,
 			announcementType,
 		} = { announcementType: 0, ...options };
-		return await this.request(
+		return this.request(
 			[
 				[8, 1, 0],
 				[11, 2, squareChatMid],
@@ -1108,7 +1108,7 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Search square chat members.
 	 */
-	public async searchSquareChatMembers(options: {
+	public searchSquareChatMembers(options: {
 		squareChatMid: string;
 		displayName: string;
 		continuationToken?: string;
@@ -1118,7 +1118,7 @@ export class SquareClient extends LiffClient {
 			limit: 200,
 			...options,
 		};
-		return await this.request(
+		return this.request(
 			[
 				[11, 1, squareChatMid],
 				[12, 2, [[11, 1, displayName]]],
@@ -1135,11 +1135,11 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Get square emid.
 	 */
-	public async getSquareEmid(options: {
+	public getSquareEmid(options: {
 		squareMid: string;
 	}): Promise<LINETypes.GetSquareEmidResponse> {
 		const { squareMid } = { ...options };
-		return await this.request(
+		return this.request(
 			[[11, 1, squareMid]],
 			"getSquareEmid",
 			this.SquareService_PROTOCOL_TYPE,
@@ -1195,13 +1195,13 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Manual square repair.
 	 */
-	public async manualRepair(options: {
+	public manualRepair(options: {
 		limit?: number;
 		syncToken?: string;
 		continuationToken?: string;
 	}): Promise<LINETypes.ManualRepairResponse> {
 		const { limit, syncToken, continuationToken } = { limit: 100, ...options };
-		return await this.request(
+		return this.request(
 			[
 				[11, 1, syncToken],
 				[8, 2, limit],
@@ -1217,11 +1217,11 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Leave square.
 	 */
-	public async leaveSquare(options: {
+	public leaveSquare(options: {
 		squareMid: string;
 	}): Promise<LINETypes.LeaveSquareResponse> {
 		const { squareMid } = { ...options };
-		return await this.request(
+		return this.request(
 			[[11, 2, squareMid]],
 			"leaveSquare",
 			this.SquareService_PROTOCOL_TYPE,
@@ -1233,13 +1233,13 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Report square.
 	 */
-	public async reportSquare(options: {
+	public reportSquare(options: {
 		squareMid: string;
-		reportType: LINETypes.ReportType;
+		reportType: LINETypes.ReportType & number;
 		otherReason?: string;
 	}): Promise<LINETypes.ReportSquareResponse> {
 		const { squareMid, reportType, otherReason } = { ...options };
-		return await this.request(
+		return this.request(
 			[
 				[11, 2, squareMid],
 				[10, 3, reportType],
@@ -1255,11 +1255,11 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Report square message.
 	 */
-	public async reportSquareMessage(options: {
+	public reportSquareMessage(options: {
 		squareMid: string;
 		squareChatMid: string;
 		squareMessageId: string;
-		reportType: LINETypes.ReportType;
+		reportType: LINETypes.ReportType & number;
 		otherReason?: string;
 		threadMid?: string;
 	}): Promise<LINETypes.ReportSquareMessageResponse> {
@@ -1271,7 +1271,7 @@ export class SquareClient extends LiffClient {
 			otherReason,
 			threadMid,
 		} = { ...options };
-		return await this.request(
+		return this.request(
 			[
 				[11, 2, squareMid],
 				[11, 3, squareChatMid],
@@ -1290,9 +1290,9 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Report square member.
 	 */
-	public async reportSquareMember(options: {
+	public reportSquareMember(options: {
 		squareMemberMid: string;
-		reportType: LINETypes.ReportType;
+		reportType: LINETypes.ReportType & number;
 		otherReason?: string;
 		squareChatMid?: string;
 		threadMid?: string;
@@ -1304,7 +1304,7 @@ export class SquareClient extends LiffClient {
 			squareChatMid,
 			threadMid,
 		} = { ...options };
-		return await this.request(
+		return this.request(
 			[
 				[11, 2, squareMemberMid],
 				[8, 3, reportType],
@@ -1322,12 +1322,12 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Delete square message.
 	 */
-	public async destroySquareMessage(options: {
+	public destroySquareMessage(options: {
 		squareChatMid?: string;
 		messageId?: string;
 	}): Promise<LINETypes.DestroyMessageResponse> {
 		const { squareChatMid, messageId } = { ...options };
-		return await this.request(
+		return this.request(
 			[
 				[11, 2, squareChatMid],
 				[11, 4, messageId],
@@ -1342,11 +1342,11 @@ export class SquareClient extends LiffClient {
 	/**
 	 * @description Send square thrift request.
 	 */
-	public async sendSquareRequest(
+	public sendSquareRequest(
 		methodName: string,
 		params: NestedArray,
 	): Promise<LooseType> {
-		return await this.request(
+		return this.request(
 			params,
 			methodName,
 			this.SquareService_PROTOCOL_TYPE,
@@ -1366,7 +1366,7 @@ export class SquareClient extends LiffClient {
 	 * @experimental
 	 * @description Fetch square thread events.
 	 */
-	public async fetchSquareThreadEvents(options: {
+	public fetchSquareThreadEvents(options: {
 		squareChatMid: string;
 		squareThreadMid: string;
 		limit?: number;
@@ -1374,18 +1374,18 @@ export class SquareClient extends LiffClient {
 		continuationToken?: string;
 		subscriptionId?: number;
 	}): Promise<LINETypes.FetchSquareChatEventsResponse> {
-		return await this.fetchSquareChatEvents(options);
+		return this.fetchSquareChatEvents(options);
 	}
 
 	/**
 	 * @experimental
 	 * @description Send message to square thread.
 	 */
-	public async sendSquareThreadMessage(options: {
+	public sendSquareThreadMessage(options: {
 		squareThreadMid: string;
 		squareChatMid: string;
 		text?: string;
-		contentType?: LINETypes.ContentType;
+		contentType?: LINETypes.ContentType & number;
 		contentMetadata?: LooseType;
 		relatedMessageId?: string;
 	}): Promise<LINETypes.SendMessageResponse> {
@@ -1407,7 +1407,7 @@ export class SquareClient extends LiffClient {
 			msg.push([11, 21, relatedMessageId], [8, 22, 3], [8, 24, 2]);
 		}
 
-		return await this.request(
+		return this.request(
 			[
 				[8, 1, this.getReqseq("sq")],
 				[11, 2, squareChatMid],
