@@ -216,7 +216,7 @@ class E2EE extends TalkClient {
 				const { keyId, keyData } = key;
 				keyIds.push(keyId);
 
-				const aesKey = this.generateSharedSecret(selfKey, keyData);
+				const aesKey = this.generateSharedSecret(selfKey, Buffer.from(keyData));
 				const aes_key = this.getSHA256Sum(Buffer.from(aesKey), "Key");
 				const aes_iv = this.xor(this.getSHA256Sum(Buffer.from(aesKey), "IV"));
 				const cipher = crypto.createCipheriv("aes-256-cbc", aes_key, aes_iv);
