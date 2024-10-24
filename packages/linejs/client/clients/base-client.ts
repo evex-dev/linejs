@@ -40,6 +40,7 @@ import { LINE_OBS } from "../../utils/obs/index.ts";
 import { RateLimitter } from "../libs/rate-limitter/index.ts";
 import type { FetchLike } from "../entities/fetch.ts";
 import { MimeType } from "../entities/mime.ts";
+import * as LINEClass from "../entities/class.ts"
 
 interface ClientOptions {
 	storage?: BaseStorage;
@@ -126,7 +127,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	public timeOutMs: number = 20000;
 
 	/**
-	 * @description The timeout of long poling fetch
+	 * @description The timeout of long polling fetch
 	 */
 	public longTimeOutMs: number = 180000;	// 3分間待ってやる
 
@@ -436,7 +437,54 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 	}
 
-	public revision: number = 0;
+	public async pollingSquareEventsV2() {
+		if (this.IS_POLLING_SQUARE) {
+			return;
+		}
+
+		this.IS_POLLING_SQUARE = true;
+
+		let noopMyEvents: LINETypes.FetchMyEventsResponse | undefined;
+		try {
+			noopMyEvents = await this.fetchMyEvents();
+		} catch (_e) {
+			this.IS_POLLING_SQUARE = false;
+			return;
+		}
+
+		const myEventsArg = {
+			subscriptionId: noopMyEvents.subscription?.subscriptionId as number,
+			syncToken: noopMyEvents.syncToken,
+			continuationToken: noopMyEvents.continuationToken,
+		};
+
+		while (true) {
+			if (!this.metadata) {
+				this.IS_POLLING_SQUARE = false;
+				return;
+			}
+			if (!this.IS_POLLING_SQUARE) {
+				return;
+			}
+			const myEvents = await this.fetchMyEvents(myEventsArg);
+			if (myEvents.syncToken !== myEventsArg.syncToken) {
+				for (const event of myEvents.events) {
+					this.emit("v2_square_event", event);
+
+					if (event.type === LINETypes.SquareEventType._NOTIFICATION_MESSAGE && event.payload.notificationMessage) {
+						const squareEventNotificationMessage = event.payload.notificationMessage;
+						this.emit("v2_square_message", new LINEClass.SquareMessage({ squareEventNotificationMessage }, this as LooseType));
+					}
+				}
+				myEventsArg.syncToken = myEvents.syncToken;
+				myEventsArg.continuationToken = myEvents.continuationToken;
+				myEventsArg.subscriptionId = myEvents.subscription
+					?.subscriptionId as number;
+			}
+
+			await new Promise((resolve) => setTimeout(resolve, 1000));
+		}
+	}
 	public ignoreSyncError: boolean = true;
 
 	public async pollingTalkEvents() {
@@ -447,7 +495,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.IS_POLLING_TALK = true;
 
 		const noopEvents = await this.sync();
-		let revision = this.revision || noopEvents.fullSyncResponse.nextRevision;
+		let revision = noopEvents.fullSyncResponse.nextRevision || 0;
 		let globalRev: number | undefined, individualRev: number | undefined;
 		while (true) {
 			if (!this.metadata) {
@@ -593,6 +641,65 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						});
 					}
 					this.emit("event", operation);
+				}
+				globalRev =
+					(myEvents.operationResponse?.globalEvents?.lastRevision as number) ||
+					globalRev;
+				individualRev =
+					(myEvents.operationResponse?.individualEvents
+						?.lastRevision as number) || individualRev;
+				revision = myEvents.fullSyncResponse?.nextRevision || revision;
+			} catch (e) {
+				if (!this.ignoreSyncError) {
+					throw e
+				}
+			}
+			await new Promise((resolve) => setTimeout(resolve, 100));
+		}
+	}
+
+	public async pollingTalkEventsV2() {
+		if (this.IS_POLLING_TALK) {
+			return;
+		}
+
+		this.IS_POLLING_TALK = true;
+
+		const noopEvents = await this.sync();
+		let revision = noopEvents.fullSyncResponse.nextRevision || 0;
+		let globalRev: number | undefined, individualRev: number | undefined;
+		while (true) {
+			if (!this.metadata) {
+				this.IS_POLLING_TALK = false;
+				return;
+			}
+			if (!this.IS_POLLING_TALK) {
+				return;
+			}
+			try {
+				const myEvents = await this.sync({
+					revision: revision as number,
+					globalRev,
+					individualRev,
+				});
+
+				for (const operation of myEvents.operationResponse?.operations) {
+					revision = operation.revision;
+					this.emit("v2_event", new LINEClass.Operation(operation, this as LooseType));
+					if (
+						operation.type === LINETypes.OpType._RECEIVE_MESSAGE ||
+						operation.type === LINETypes.OpType._SEND_MESSAGE ||
+						operation.type === LINETypes.OpType._SEND_CONTENT
+					) {
+						const message = await this.decryptE2EEMessage(operation.message);
+						if (
+							this.hasData(message) &&
+							operation.type == LINETypes.OpType._SEND_MESSAGE
+						) {
+							continue;
+						}
+						this.emit("v2_message", new LINEClass.TalkMessage({ operation }, this as LooseType));
+					}
 				}
 				globalRev =
 					(myEvents.operationResponse?.globalEvents?.lastRevision as number) ||
@@ -1791,12 +1898,13 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 */
 	public async getMessageObsData(
 		messageId: string,
-		isPreview = false,
+		isPreview: boolean = false,
+		isSquare: boolean = false
 	): Promise<Blob> {
 		if (!this.metadata) {
 			throw new InternalError("Not setup yet", "Please call 'login()' first");
 		}
-		const r = await this.customFetch(this.LINE_OBS.getDataUrl(messageId, isPreview), {
+		const r = await this.customFetch(this.LINE_OBS.getDataUrl(messageId, isPreview, isSquare), {
 			headers: {
 				accept: "application/json, text/plain, */*",
 				"x-line-application": this.system?.type as string,

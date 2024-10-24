@@ -58,14 +58,14 @@ type SquareMemberEvents = {
 
 type booleanString = "true" | "false";
 
-type splitInfo = {
+interface splitInfo {
 	start: number;
 	end: number;
 	mention?: number;
 	emoji?: number;
 };
 
-type decorationText = {
+interface decorationText {
 	text: string;
 	emoji?: {
 		productId: string;
@@ -80,14 +80,14 @@ type decorationText = {
 	};
 };
 
-type stkMeta = {
+interface stkMeta {
 	STKPKGID: string;
 	STKID: string;
 	STKTXT: string;
 	STKVER: string;
 	STKOPT?: string;
 };
-type mentionMeta = {
+interface mentionMeta {
 	MENTION: {
 		MENTIONEES: {
 			M?: string;
@@ -97,7 +97,7 @@ type mentionMeta = {
 		}[];
 	};
 };
-type emojiMeta = {
+interface emojiMeta {
 	REPLACE: {
 		sticon: {
 			resources: {
@@ -112,35 +112,35 @@ type emojiMeta = {
 	};
 	STICON_OWNERSHIP: string[];
 };
-type contactMeta = {
+interface contactMeta {
 	mid: string;
 	displayName: string;
 };
-type flexMeta = {
+interface flexMeta {
 	FLEX_VER: string;
 	FLEX_JSON: Record<string, LooseType>;
 	ALT_TEXT: string;
 	EFFECT_TAG?: string;
 };
 
-type fileMeta = {
+interface fileMeta {
 	FILE_SIZE: string;
 	FILE_EXPIRE_TIMESTAMP: string;
 	FILE_NAME: string;
 };
 
-type imgExtMeta = {
+interface imgExtMeta {
 	PREVIEW_URL: string;
 	DOWNLOAD_URL: string;
 };
 
-type chatEventMeta = {
-	LOC_KEY: string | "C_MI" | "C_MR"; // invite remove ?
-	LOC_ARGS: string; // mid * n
+interface chatEventMeta {
+	LOC_KEY: string | "C_MI" | "C_MR" | "C_ML" | "C_GI"; // chat_invite chat_remove chat_leave chat_invite?? ?
+	LOC_ARGS: string; // mid\x1E * n
 	SKIP_BADGE_COUNT: booleanString;
 };
 
-type callMeta = {
+interface callMeta {
 	GC_EVT_TYPE: "S" | "E"; // start end
 	GC_CHAT_MID: string;
 	CAUSE: string; // 16
@@ -154,7 +154,7 @@ type callMeta = {
 	SKIP_BADGE_COUNT: booleanString;
 };
 
-type postNotificationMetq = {
+interface postNotificationMetq {
 	serviceType: "GB";
 	postEndUrl: string;
 	locKey: "BG";
@@ -201,7 +201,7 @@ export class Note {
 	constructor(
 		public mid: string,
 		private client: Client,
-	) {}
+	) { }
 
 	public createPost(options: {
 		text?: string;
@@ -335,12 +335,13 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 	public messageVisibility: LINETypes.MessageVisibility;
 	public ableToSearchMessage: boolean | null;
 	public memberCount: number;
+	public syncToken?: string;
 	constructor(
 		public rawSouce: LINETypes.GetSquareChatResponse,
 		private client: Client,
+		polling: boolean = false
 	) {
 		super();
-
 		const { squareChat, squareChatMember, squareChatStatus } = rawSouce;
 		this.mid = squareChat.squareChatMid;
 		this.squareMid = squareChat.squareChatMid;
@@ -357,13 +358,16 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 		];
 		this.mymid = squareChatMember.squareMemberMid;
 		this.memberCount = squareChatStatus.otherStatus.memberCount;
+		if (polling) {
+			this.startListen()
+		}
 	}
 
 	/**
 	 * @description Generate from mid.
 	 */
-	static async from(squareChatMid: string, client: Client) {
-		return new this(await client.getSquareChat({ squareChatMid }), client);
+	static async from(squareChatMid: string, client: Client, polling: boolean = true) {
+		return new this(await client.getSquareChat({ squareChatMid }), client, polling);
 	}
 
 	public async getMembers(): Promise<SquareMember[]> {
@@ -381,12 +385,12 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 		options:
 			| string
 			| {
-					text?: string;
-					contentType?: number;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string;
-					location?: LINETypes.Location;
-			  },
+				text?: string;
+				contentType?: number;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string;
+				location?: LINETypes.Location;
+			},
 	): Promise<LINETypes.SendMessageResponse> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
@@ -394,6 +398,35 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 			const _options: LooseType = options;
 			_options.squareChatMid = this.mid;
 			return this.client.sendSquareMessage(_options);
+		}
+	}
+	public IS_POLLING: boolean = false;
+	public async startListen(): Promise<void> {
+		while (true) {
+			const noneEvent = await this.client.fetchSquareChatEvents({ squareChatMid: this.mid, syncToken: this.syncToken })
+			this.syncToken = noneEvent.syncToken
+			if (noneEvent.events.length === 0) {
+				break
+			}
+		}
+		this.IS_POLLING = true
+		while (this.IS_POLLING && this.client.metadata?.authToken) {
+			try {
+				const response = await this.client.fetchSquareChatEvents({ squareChatMid: this.mid, syncToken: this.syncToken })
+				this.syncToken = response.syncToken
+				for (const event of response.events) {
+					this.emit("event", event)
+					if (event.type === "SEND_MESSAGE" && event.payload.sendMessage) {
+						this.emit("message", new SquareMessage({ squareEventSendMessage: event.payload.sendMessage }, this.client))
+					} else if (event.type === "RECEIVE_MESSAGE" && event.payload.receiveMessage) {
+						this.emit("message", new SquareMessage({ squareEventReceiveMessage: event.payload.receiveMessage }, this.client))
+					}
+				}
+				await new Promise<void>((resolve) => setTimeout(resolve, 500))
+			} catch (e) {
+				this.client.log("SquareChatPollingError", e)
+				await new Promise<void>((resolve) => setTimeout(resolve, 2000))
+			}
 		}
 	}
 }
@@ -587,14 +620,14 @@ export class User extends TypedEventEmitter<UserEvents> {
 		options:
 			| string
 			| {
-					text?: string;
-					contentType?: number;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string;
-					location?: LINETypes.Location;
-					chunk?: string[] | Buffer[];
-					e2ee?: boolean;
-			  },
+				text?: string;
+				contentType?: number;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string;
+				location?: LINETypes.Location;
+				chunk?: string[] | Buffer[];
+				e2ee?: boolean;
+			},
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
@@ -611,7 +644,7 @@ export class User extends TypedEventEmitter<UserEvents> {
 	public async updateStatus() {
 		this.updateStatusFrom(
 			(await this.client.getContactsV2({ mids: [this.mid] })).contacts[
-				this.mid
+			this.mid
 			],
 		);
 	}
@@ -752,14 +785,14 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 		options:
 			| string
 			| {
-					text?: string;
-					contentType?: number;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string;
-					location?: LINETypes.Location;
-					chunk?: string[] | Buffer[];
-					e2ee?: boolean;
-			  },
+				text?: string;
+				contentType?: number;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string;
+				location?: LINETypes.Location;
+				chunk?: string[] | Buffer[];
+				e2ee?: boolean;
+			},
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
@@ -1717,7 +1750,7 @@ export class ClientMessage extends Message {
 					.then((r) => r.blob());
 			}
 		}
-		return this.client.getMessageObsData(this.id, preview);
+		return this.client.getMessageObsData(this.id, preview, this.toType === "SQUARE_CHAT");
 	}
 }
 
@@ -1776,14 +1809,14 @@ export class TalkMessage extends ClientMessage {
 	public async send(
 		options:
 			| {
-					text?: string | undefined;
-					contentType?: number | undefined;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string | undefined;
-					location?: LooseType;
-					chunk?: string[] | undefined;
-					e2ee?: boolean | undefined;
-			  }
+				text?: string | undefined;
+				contentType?: number | undefined;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string | undefined;
+				location?: LooseType;
+				chunk?: string[] | undefined;
+				e2ee?: boolean | undefined;
+			}
 			| string,
 	): Promise<TalkMessage> {
 		if (typeof options === "string") {
@@ -1809,14 +1842,14 @@ export class TalkMessage extends ClientMessage {
 	public async reply(
 		options:
 			| {
-					text?: string | undefined;
-					contentType?: number | undefined;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string | undefined;
-					location?: LooseType;
-					chunk?: string[] | undefined;
-					e2ee?: boolean | undefined;
-			  }
+				text?: string | undefined;
+				contentType?: number | undefined;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string | undefined;
+				location?: LooseType;
+				chunk?: string[] | undefined;
+				e2ee?: boolean | undefined;
+			}
 			| string,
 	): Promise<TalkMessage> {
 		if (typeof options === "string") {
@@ -1847,7 +1880,7 @@ export class TalkMessage extends ClientMessage {
 			type = LINETypes.MessageReactionType[type];
 		}
 		return this.client.reactToMessage({
-			reactionType: type as LINETypes.MessageReactionType,
+			reactionType: type as LINETypes.MessageReactionType & number,
 			messageId: this.id,
 		});
 	}
@@ -1940,11 +1973,11 @@ export class SquareMessage extends ClientMessage {
 	public send(
 		options:
 			| {
-					text?: string | undefined;
-					contentType?: LooseType;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string | undefined;
-			  }
+				text?: string | undefined;
+				contentType?: LooseType;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string | undefined;
+			}
 			| string,
 		safe: boolean = true,
 	): Promise<SquareMessage> {
@@ -1971,11 +2004,11 @@ export class SquareMessage extends ClientMessage {
 	public reply(
 		options:
 			| {
-					text?: string | undefined;
-					contentType?: LooseType;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string | undefined;
-			  }
+				text?: string | undefined;
+				contentType?: LooseType;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string | undefined;
+			}
 			| string,
 		safe: boolean = true,
 	): Promise<SquareMessage> {
@@ -2008,7 +2041,7 @@ export class SquareMessage extends ClientMessage {
 		}
 		return this.client.reactToSquareMessage({
 			squareChatMid: this.to,
-			reactionType: type as LINETypes.MessageReactionType,
+			reactionType: type as LINETypes.MessageReactionType & number,
 			squareMessageId: this.id,
 		});
 	}

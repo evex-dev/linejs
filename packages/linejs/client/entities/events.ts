@@ -2,6 +2,7 @@ import type { Log } from "./log.ts";
 import type * as LINETypes from "@evex/linejs-types";
 import type { Message, SquareMessage } from "./message.ts";
 import type { SquaerStatus } from "./square-events.ts";
+import type * as LINEClass from "./class.ts"
 
 export type ClientEvents = {
 	pincall: (pincode: string) => void;
@@ -19,4 +20,9 @@ export type ClientEvents = {
 	message: (message: Message) => void;
 	// TODO: Add more as square
 	event: (talkEvent: LINETypes.Operation) => void;
+
+	v2_event: (talkEvent: LINEClass.Operation) => void;
+	v2_message: (message: LINEClass.TalkMessage) => void;
+	v2_square_message: (message: LINEClass.SquareMessage) => void;
+	v2_square_event: (talkEvent: LINETypes.SquareEvent) => void;
 };
