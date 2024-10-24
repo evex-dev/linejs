@@ -2,7 +2,7 @@ import type { Log } from "./log.ts";
 import type * as LINETypes from "@evex/linejs-types";
 import type { Message, SquareMessage } from "./message.ts";
 import type { SquaerStatus } from "./square-events.ts";
-import type * as LINEClass from "./class.ts"
+import type * as LINEClass from "./class.ts";
 
 export type ClientEvents = {
 	pincall: (pincode: string) => void;

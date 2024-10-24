@@ -63,7 +63,7 @@ interface splitInfo {
 	end: number;
 	mention?: number;
 	emoji?: number;
-};
+}
 
 interface decorationText {
 	text: string;
@@ -78,7 +78,7 @@ interface decorationText {
 		mid?: string;
 		all?: true;
 	};
-};
+}
 
 interface stkMeta {
 	STKPKGID: string;
@@ -86,7 +86,7 @@ interface stkMeta {
 	STKTXT: string;
 	STKVER: string;
 	STKOPT?: string;
-};
+}
 interface mentionMeta {
 	MENTION: {
 		MENTIONEES: {
@@ -96,7 +96,7 @@ interface mentionMeta {
 			A?: string;
 		}[];
 	};
-};
+}
 interface emojiMeta {
 	REPLACE: {
 		sticon: {
@@ -111,34 +111,34 @@ interface emojiMeta {
 		};
 	};
 	STICON_OWNERSHIP: string[];
-};
+}
 interface contactMeta {
 	mid: string;
 	displayName: string;
-};
+}
 interface flexMeta {
 	FLEX_VER: string;
 	FLEX_JSON: Record<string, LooseType>;
 	ALT_TEXT: string;
 	EFFECT_TAG?: string;
-};
+}
 
 interface fileMeta {
 	FILE_SIZE: string;
 	FILE_EXPIRE_TIMESTAMP: string;
 	FILE_NAME: string;
-};
+}
 
 interface imgExtMeta {
 	PREVIEW_URL: string;
 	DOWNLOAD_URL: string;
-};
+}
 
 interface chatEventMeta {
 	LOC_KEY: string | "C_MI" | "C_MR" | "C_ML" | "C_GI"; // chat_invite chat_remove chat_leave chat_invite?? ?
 	LOC_ARGS: string; // mid\x1E * n
 	SKIP_BADGE_COUNT: booleanString;
-};
+}
 
 interface callMeta {
 	GC_EVT_TYPE: "S" | "E"; // start end
@@ -152,7 +152,7 @@ interface callMeta {
 	RESULT: "INFO";
 	DURATION: string;
 	SKIP_BADGE_COUNT: booleanString;
-};
+}
 
 interface postNotificationMetq {
 	serviceType: "GB";
@@ -161,7 +161,7 @@ interface postNotificationMetq {
 	text: string;
 	contentType: "P";
 	cafeId: "0";
-};
+}
 
 /**
  * @description Gets mid's type
@@ -201,7 +201,7 @@ export class Note {
 	constructor(
 		public mid: string,
 		private client: Client,
-	) { }
+	) {}
 
 	public createPost(options: {
 		text?: string;
@@ -339,7 +339,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 	constructor(
 		public rawSouce: LINETypes.GetSquareChatResponse,
 		private client: Client,
-		polling: boolean = false
+		polling: boolean = false,
 	) {
 		super();
 		const { squareChat, squareChatMember, squareChatStatus } = rawSouce;
@@ -359,15 +359,23 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 		this.mymid = squareChatMember.squareMemberMid;
 		this.memberCount = squareChatStatus.otherStatus.memberCount;
 		if (polling) {
-			this.startListen()
+			this.startListen();
 		}
 	}
 
 	/**
 	 * @description Generate from mid.
 	 */
-	static async from(squareChatMid: string, client: Client, polling: boolean = true) {
-		return new this(await client.getSquareChat({ squareChatMid }), client, polling);
+	static async from(
+		squareChatMid: string,
+		client: Client,
+		polling: boolean = true,
+	) {
+		return new this(
+			await client.getSquareChat({ squareChatMid }),
+			client,
+			polling,
+		);
 	}
 
 	public async getMembers(): Promise<SquareMember[]> {
@@ -385,12 +393,12 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 		options:
 			| string
 			| {
-				text?: string;
-				contentType?: number;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string;
-				location?: LINETypes.Location;
-			},
+					text?: string;
+					contentType?: number;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string;
+					location?: LINETypes.Location;
+			  },
 	): Promise<LINETypes.SendMessageResponse> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
@@ -403,29 +411,50 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 	public IS_POLLING: boolean = false;
 	public async startListen(): Promise<void> {
 		while (true) {
-			const noneEvent = await this.client.fetchSquareChatEvents({ squareChatMid: this.mid, syncToken: this.syncToken })
-			this.syncToken = noneEvent.syncToken
+			const noneEvent = await this.client.fetchSquareChatEvents({
+				squareChatMid: this.mid,
+				syncToken: this.syncToken,
+			});
+			this.syncToken = noneEvent.syncToken;
 			if (noneEvent.events.length === 0) {
-				break
+				break;
 			}
 		}
-		this.IS_POLLING = true
+		this.IS_POLLING = true;
 		while (this.IS_POLLING && this.client.metadata?.authToken) {
 			try {
-				const response = await this.client.fetchSquareChatEvents({ squareChatMid: this.mid, syncToken: this.syncToken })
-				this.syncToken = response.syncToken
+				const response = await this.client.fetchSquareChatEvents({
+					squareChatMid: this.mid,
+					syncToken: this.syncToken,
+				});
+				this.syncToken = response.syncToken;
 				for (const event of response.events) {
-					this.emit("event", event)
+					this.emit("event", event);
 					if (event.type === "SEND_MESSAGE" && event.payload.sendMessage) {
-						this.emit("message", new SquareMessage({ squareEventSendMessage: event.payload.sendMessage }, this.client))
-					} else if (event.type === "RECEIVE_MESSAGE" && event.payload.receiveMessage) {
-						this.emit("message", new SquareMessage({ squareEventReceiveMessage: event.payload.receiveMessage }, this.client))
+						this.emit(
+							"message",
+							new SquareMessage(
+								{ squareEventSendMessage: event.payload.sendMessage },
+								this.client,
+							),
+						);
+					} else if (
+						event.type === "RECEIVE_MESSAGE" &&
+						event.payload.receiveMessage
+					) {
+						this.emit(
+							"message",
+							new SquareMessage(
+								{ squareEventReceiveMessage: event.payload.receiveMessage },
+								this.client,
+							),
+						);
 					}
 				}
-				await new Promise<void>((resolve) => setTimeout(resolve, 500))
+				await new Promise<void>((resolve) => setTimeout(resolve, 500));
 			} catch (e) {
-				this.client.log("SquareChatPollingError", e)
-				await new Promise<void>((resolve) => setTimeout(resolve, 2000))
+				this.client.log("SquareChatPollingError", e);
+				await new Promise<void>((resolve) => setTimeout(resolve, 2000));
 			}
 		}
 	}
@@ -620,14 +649,14 @@ export class User extends TypedEventEmitter<UserEvents> {
 		options:
 			| string
 			| {
-				text?: string;
-				contentType?: number;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string;
-				location?: LINETypes.Location;
-				chunk?: string[] | Buffer[];
-				e2ee?: boolean;
-			},
+					text?: string;
+					contentType?: number;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string;
+					location?: LINETypes.Location;
+					chunk?: string[] | Buffer[];
+					e2ee?: boolean;
+			  },
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
@@ -644,7 +673,7 @@ export class User extends TypedEventEmitter<UserEvents> {
 	public async updateStatus() {
 		this.updateStatusFrom(
 			(await this.client.getContactsV2({ mids: [this.mid] })).contacts[
-			this.mid
+				this.mid
 			],
 		);
 	}
@@ -785,14 +814,14 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 		options:
 			| string
 			| {
-				text?: string;
-				contentType?: number;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string;
-				location?: LINETypes.Location;
-				chunk?: string[] | Buffer[];
-				e2ee?: boolean;
-			},
+					text?: string;
+					contentType?: number;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string;
+					location?: LINETypes.Location;
+					chunk?: string[] | Buffer[];
+					e2ee?: boolean;
+			  },
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
@@ -1750,7 +1779,11 @@ export class ClientMessage extends Message {
 					.then((r) => r.blob());
 			}
 		}
-		return this.client.getMessageObsData(this.id, preview, this.toType === "SQUARE_CHAT");
+		return this.client.getMessageObsData(
+			this.id,
+			preview,
+			this.toType === "SQUARE_CHAT",
+		);
 	}
 }
 
@@ -1809,14 +1842,14 @@ export class TalkMessage extends ClientMessage {
 	public async send(
 		options:
 			| {
-				text?: string | undefined;
-				contentType?: number | undefined;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string | undefined;
-				location?: LooseType;
-				chunk?: string[] | undefined;
-				e2ee?: boolean | undefined;
-			}
+					text?: string | undefined;
+					contentType?: number | undefined;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string | undefined;
+					location?: LooseType;
+					chunk?: string[] | undefined;
+					e2ee?: boolean | undefined;
+			  }
 			| string,
 	): Promise<TalkMessage> {
 		if (typeof options === "string") {
@@ -1842,14 +1875,14 @@ export class TalkMessage extends ClientMessage {
 	public async reply(
 		options:
 			| {
-				text?: string | undefined;
-				contentType?: number | undefined;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string | undefined;
-				location?: LooseType;
-				chunk?: string[] | undefined;
-				e2ee?: boolean | undefined;
-			}
+					text?: string | undefined;
+					contentType?: number | undefined;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string | undefined;
+					location?: LooseType;
+					chunk?: string[] | undefined;
+					e2ee?: boolean | undefined;
+			  }
 			| string,
 	): Promise<TalkMessage> {
 		if (typeof options === "string") {
@@ -1973,11 +2006,11 @@ export class SquareMessage extends ClientMessage {
 	public send(
 		options:
 			| {
-				text?: string | undefined;
-				contentType?: LooseType;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string | undefined;
-			}
+					text?: string | undefined;
+					contentType?: LooseType;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string | undefined;
+			  }
 			| string,
 		safe: boolean = true,
 	): Promise<SquareMessage> {
@@ -2004,11 +2037,11 @@ export class SquareMessage extends ClientMessage {
 	public reply(
 		options:
 			| {
-				text?: string | undefined;
-				contentType?: LooseType;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string | undefined;
-			}
+					text?: string | undefined;
+					contentType?: LooseType;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string | undefined;
+			  }
 			| string,
 		safe: boolean = true,
 	): Promise<SquareMessage> {

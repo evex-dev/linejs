@@ -2818,212 +2818,212 @@ export interface TalkException {
 	code: ErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
-};
+}
 
 export interface ChannelException {
 	code: ChannelErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
-};
+}
 
 export interface SquareException {
 	errorCode: SquareErrorCode;
 	errorExtraInfo: ErrorExtraInfo;
 	reason: string;
-};
+}
 
 export interface LiffException {
 	code: LiffErrorCode;
 	message: string;
 	payload: LiffErrorPayload;
-};
+}
 
 export interface HomeException {
 	exceptionCode: HomeExceptionCode;
 	message: string;
 	retryTimeMillis: Int64;
-};
+}
 
 export interface ChatappException {
 	code: ChatappErrorCode;
 	reason: string;
-};
+}
 
 export interface MembershipException {
 	code: MembershipErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
-};
+}
 
 export interface BotException {
 	errorCode: BotErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
-};
+}
 
 export interface BotExternalException {
 	errorCode: BotExternalErrorCode;
 	reason: string;
-};
+}
 
 export interface LiffChannelException {
 	code: ChannelErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
-};
+}
 
 export interface AccessTokenRefreshException {
 	errorCode: AccessTokenRefreshErrorCode;
 	reasonCode: Int64;
-};
+}
 
 export interface AccountEapConnectException {
 	code: AccountEapConnectErrorCode;
 	alertMessage: string;
 	webAuthDetails: WebAuthDetails;
-};
+}
 
 export interface PwlessCredentialException {
 	code: PwlessCredentialErrorCode;
 	alertMessage: string;
-};
+}
 
 export interface SecondAuthFactorPinCodeException {
 	code: SecondAuthFactorPinCodeErrorCode;
 	alertMessage: string;
-};
+}
 
 export interface AuthException {
 	code: AuthErrorCode;
 	alertMessage: string;
 	webAuthDetails: WebAuthDetails;
-};
+}
 
 export interface SecondaryPwlessLoginException {
 	code: SecondaryPwlessLoginErrorCode;
 	alertMessage: string;
-};
+}
 
 export interface SecondaryQrCodeException {
 	code: SecondaryQrCodeErrorCode;
 	alertMessage: string;
-};
+}
 
 export interface PaymentException {
 	errorCode: PaymentErrorCode;
 	debugReason: string;
 	serverDefinedMessage: string;
 	errorDetailMap: { [k: string]: string };
-};
+}
 
 export interface SettingsException {
 	code: SettingsErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
-};
+}
 
 export interface TicketException {
 	code: number;
 	reason: string;
 	parameterMap: { [k: string]: string };
-};
+}
 
 export interface ThingsException {
 	code: ThingsErrorCode;
 	reason: string;
-};
+}
 
 export interface SuggestTrialException {
 	code: SuggestTrialErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
-};
+}
 
 export interface LFLPremiumException {
 	code: LFLPremiumErrorCode;
-};
+}
 
 export interface WalletException {
 	code: WalletErrorCode;
 	reason: string;
 	attributes: { [k: string]: string };
-};
+}
 
 export interface ShopException {
 	code: ShopErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
-};
+}
 
 export interface PointException {
 	code: PointErrorCode;
 	reason: string;
 	extra: { [k: string]: string };
-};
+}
 
 export interface E2EEKeyBackupException {
 	code: E2EEKeyBackupErrorCode;
 	reason: string;
 	parameterMap: { [k: string]: string };
-};
+}
 
 export interface RejectedException {
 	rejectionReason: RejectionReason;
 	hint: string;
-};
+}
 
 export interface ServerFailureException {
 	hint: string;
-};
+}
 
 export interface UpdateChatRequest {
 	reqSeq: number;
 	chat: Chat;
 	updatedAttribute: number;
-};
+}
 
-export interface UpdateChatResponse {};
+export interface UpdateChatResponse {}
 
 export interface AcceptChatInvitationByTicketRequest {
 	reqSeq: number;
 	chatMid: string;
 	ticketId: string;
-};
+}
 
-export interface AcceptChatInvitationByTicketResponse {};
+export interface AcceptChatInvitationByTicketResponse {}
 
 export interface AcceptChatInvitationRequest {
 	reqSeq: number;
 	chatMid: string;
-};
+}
 
 export interface ReissueChatTicketRequest {
 	reqSeq: number;
 	groupMid: string;
-};
+}
 
-export interface AcceptChatInvitationResponse {};
+export interface AcceptChatInvitationResponse {}
 
 export interface ReissueChatTicketResponse {
 	ticketId: string;
-};
+}
 
 export interface RejectChatInvitationRequest {
 	reqSeq: number;
 	chatMid: string;
-};
+}
 
 export interface GetAllChatMidsRequest {
 	withMemberChats?: boolean;
 	withInvitedChats?: boolean;
-};
+}
 
-export interface RejectChatInvitationResponse {};
+export interface RejectChatInvitationResponse {}
 
 export interface GetAllChatMidsResponse {
 	memberChatMids: string[];
 	invitedChatMids: string[];
-};
+}
 
 export interface CreateChatRequest {
 	reqSeq: number;
@@ -3031,47 +3031,47 @@ export interface CreateChatRequest {
 	name?: string;
 	targetUserMids: string[];
 	picturePath?: string;
-};
+}
 
 export interface CreateChatResponse {
 	chat: Chat;
-};
+}
 
 export interface BeaconCondition {
 	inFriends: string;
 	notInFriends: string;
 	termsAgreed: boolean;
-};
+}
 
 export interface BeaconBackgroundNotification {
 	actionInterval: Int64;
 	actionAndConditions: BeaconCondition[];
 	actionDelay: Int64;
 	actionConditions: BeaconCondition[];
-};
+}
 
 export interface LiffErrorPayload {
 	consentRequired: LiffErrorConsentRequired;
-};
+}
 
 export interface LiffErrorConsentRequired {
 	channelId: string;
 	consentUrl: string;
-};
+}
 
 export interface ErrorExtraInfo {
 	preconditionFailedExtraInfo: PreconditionFailedExtraInfo;
 	userRestrictionInfo: UserRestrictionExtraInfo;
-};
+}
 
 export interface UserRestrictionExtraInfo {
 	linkUrl: string;
-};
+}
 
 export interface WebAuthDetails {
 	baseUrl: string;
 	token: string;
-};
+}
 
 export interface Profile {
 	mid: string;
@@ -3093,14 +3093,14 @@ export interface Profile {
 	avatarProfile: AvatarProfile;
 	nftProfile: boolean;
 	pictureSource: PictureSource;
-};
+}
 
 export interface AvatarProfile {
 	version: string;
 	updatedMillis: Int64;
 	thumbnail: string;
 	usablePublicly: boolean;
-};
+}
 
 export interface Operation {
 	revision: Int64;
@@ -3113,7 +3113,7 @@ export interface Operation {
 	param2: string;
 	param3: string;
 	message: Message;
-};
+}
 
 export interface Message {
 	_from: string;
@@ -3136,23 +3136,23 @@ export interface Message {
 	relatedMessageServiceCode: ServiceCode;
 	appExtensionType: AppExtensionType;
 	reactions: Reaction[];
-};
+}
 
 export interface Reaction {
 	fromUserMid: string;
 	atMillis: Int64;
 	reactionType: ReactionType;
-};
+}
 
 export interface ReactionType {
 	predefinedReactionType: PredefinedReactionType;
-};
+}
 
 export interface ReactRequest {
 	reqSeq: number;
 	messageId: Int64;
 	reactionType: ReactionType;
-};
+}
 
 export interface Location {
 	title: string;
@@ -3164,7 +3164,7 @@ export interface Location {
 	provider: PlaceSearchProvider;
 	accuracy: GeolocationAccuracy;
 	altitudeMeters: number;
-};
+}
 
 export interface GeolocationAccuracy {
 	radiusMeters: number;
@@ -3173,7 +3173,7 @@ export interface GeolocationAccuracy {
 	velocityAccuracy: number;
 	bearingAccuracy: number;
 	accuracyMode: GeolocationAccuracyMode;
-};
+}
 
 export interface Contact {
 	mid: string;
@@ -3205,28 +3205,28 @@ export interface Contact {
 	friendRingbackTone: string;
 	nftProfile: boolean;
 	pictureSource: PictureSource;
-};
+}
 
 export interface GetContactsV2Request {
 	targetUserMids: string[];
 	neededContactCalendarEvents: ContactCalendarEventType[];
 	withUserStatus: boolean;
-};
+}
 
 export interface GetContactsV2Response {
 	contacts: { [k: string]: ContactEntry };
-};
+}
 
 export interface ContactEntry {
 	userStatus: UserStatus;
 	snapshotTimeMillis: Int64;
 	contact: Contact;
 	calendarEvents: ContactCalendarEvents;
-};
+}
 
 export interface ContactCalendarEvents {
 	events: { [k: number /*ContactCalendarEventType*/]: ContactCalendarEvent };
-};
+}
 
 export interface ContactCalendarEvent {
 	id: string;
@@ -3234,26 +3234,26 @@ export interface ContactCalendarEvent {
 	year: number;
 	month: number;
 	day: number;
-};
+}
 
 export interface Configurations {
 	revision: Int64;
 	configMap: { [k: string]: string };
-};
+}
 
 export interface E2EEPublicKey {
 	version: number;
 	keyId: number;
 	keyData: Buffer | string;
 	createdTime: Int64;
-};
+}
 
 export interface RSAKey {
 	keynm: string;
 	nvalue: string;
 	evalue: string;
 	sessionKey: string;
-};
+}
 
 export interface Settings {
 	notificationEnable: boolean;
@@ -3334,20 +3334,20 @@ export interface Settings {
 	agreementPdpa: Int64;
 	agreementLocationVersion: string;
 	zhdPageAllowedToShow: boolean;
-};
+}
 
 export interface E2EENegotiationResult {
 	allowedTypes: ContentType[];
 	publicKey: E2EEPublicKey;
 	specVersion: number;
-};
+}
 
 export interface ContactRegistration {
 	contact: Contact;
 	luid: string;
 	contactType: ContactType;
 	contactKey: string;
-};
+}
 
 export interface E2EEGroupSharedKey {
 	keyVersion: number;
@@ -3359,7 +3359,7 @@ export interface E2EEGroupSharedKey {
 	encryptedSharedKey: Buffer | string;
 	allowedTypes: ContentType[];
 	specVersion: number;
-};
+}
 
 export interface VerificationSessionData {
 	sessionId: string;
@@ -3370,36 +3370,36 @@ export interface VerificationSessionData {
 	nationalSignificantNumber: string;
 	availableVerificationMethods: VerificationMethod[];
 	callerIdMask: string;
-};
+}
 
 export interface FollowRequest {
 	followMid: FollowMid;
-};
+}
 
 export interface FollowMid {
 	mid: string;
 	eMid: string;
-};
+}
 
 export interface UnfollowRequest {
 	followMid: FollowMid;
-};
+}
 
 export interface Ticket {
 	id: string;
 	expirationTime: Int64;
 	maxUseCount: number;
-};
+}
 
 export interface GetChatsRequest {
 	chatMids: string[];
 	withMembers: boolean;
 	withInvitees: boolean;
-};
+}
 
 export interface GetChatsResponse {
 	chats: Chat[];
-};
+}
 
 export interface Chat {
 	type: CharType;
@@ -3410,12 +3410,12 @@ export interface Chat {
 	chatName: string;
 	picturePath: string;
 	extra: Extra;
-};
+}
 
 export interface Extra {
 	groupExtra: GroupExtra;
 	peerExtra: PeerExtra;
-};
+}
 
 export interface GroupExtra {
 	creator: string;
@@ -3425,21 +3425,21 @@ export interface GroupExtra {
 	inviteeMids: { [k: string]: Int64 };
 	addFriendDisabled: boolean;
 	ticketDisabled: boolean;
-};
+}
 
-export interface PeerExtra {};
+export interface PeerExtra {}
 
 export interface GetFollowersRequest {
 	followMid: FollowMid;
 	cursor: string;
-};
+}
 
 export interface GetFollowersResponse {
 	profiles: FollowProfile[];
 	cursor: string;
 	followingCount: Int64;
 	followerCount: Int64;
-};
+}
 
 export interface FollowProfile {
 	followMid: FollowMid;
@@ -3448,23 +3448,23 @@ export interface FollowProfile {
 	following: boolean;
 	allowFollow: boolean;
 	followBuddyDetail: FollowBuddyDetail;
-};
+}
 
 export interface FollowBuddyDetail {
 	iconType: number;
-};
+}
 
 export interface GetFollowingsRequest {
 	followMid: FollowMid;
 	cursor: string;
-};
+}
 
 export interface GetFollowingsResponse {
 	profiles: FollowProfile[];
 	cursor: string;
 	followingCount: Int64;
 	followerCount: Int64;
-};
+}
 
 export interface Room {
 	mid: string;
@@ -3472,7 +3472,7 @@ export interface Room {
 	contacts: Contact[];
 	notificationDisabled: boolean;
 	memberMids: string[];
-};
+}
 
 export interface ContactModification {
 	type: ModificationType;
@@ -3480,37 +3480,37 @@ export interface ContactModification {
 	phones: string[];
 	emails: string[];
 	userids: string[];
-};
+}
 
-export interface GetE2EEKeyBackupCertificatesRequest {};
+export interface GetE2EEKeyBackupCertificatesRequest {}
 
 export interface GetE2EEKeyBackupCertificatesResponse {
 	urlHashList: string[];
-};
+}
 
 export interface DeleteOtherFromChatRequest {
 	reqSeq: number;
 	chatMid: string;
 	targetUserMids: string[];
-};
+}
 
-export interface DeleteOtherFromChatResponse {};
+export interface DeleteOtherFromChatResponse {}
 
 export interface InviteIntoChatRequest {
 	reqSeq: number;
 	chatMid: string;
 	targetUserMids: string[];
-};
+}
 
-export interface InviteIntoChatResponse {};
+export interface InviteIntoChatResponse {}
 
 export interface CancelChatInvitationRequest {
 	reqSeq: number;
 	chatMid: string;
 	targetUserMids: string[];
-};
+}
 
-export interface CancelChatInvitationResponse {};
+export interface CancelChatInvitationResponse {}
 
 export interface DeleteSelfFromChatRequest {
 	reqSeq: number;
@@ -3519,21 +3519,21 @@ export interface DeleteSelfFromChatRequest {
 	lastSeenMessageId: string;
 	lastMessageDeliveredTime: Int64;
 	lastMessageId: string;
-};
+}
 
-export interface DeleteSelfFromChatResponse {};
+export interface DeleteSelfFromChatResponse {}
 
 export interface FindChatByTicketRequest {
 	ticketId: string;
-};
+}
 
 export interface FindChatByTicketResponse {
 	chat: Chat;
-};
+}
 
 export interface RefreshAccessTokenRequest {
 	refreshToken: string;
-};
+}
 
 export interface RefreshAccessTokenResponse {
 	accessToken: string;
@@ -3541,26 +3541,26 @@ export interface RefreshAccessTokenResponse {
 	retryPolicy: RetryPolicy;
 	tokenIssueTimeEpochSec: Int64;
 	refreshToken: string;
-};
+}
 
 export interface RetryPolicy {
 	initialDelayInMillis: Int64;
 	maxDelayInMillis: Int64;
 	multiplier: number;
 	jitterRate: number;
-};
+}
 
 export interface TMessageReadRange {
 	chatId: string;
 	ranges: { [k: string]: TMessageReadRangeEntry[] };
-};
+}
 
 export interface TMessageReadRangeEntry {
 	startMessageId: Int64;
 	endMessageId: Int64;
 	startTime: Int64;
 	endTime: Int64;
-};
+}
 
 export interface BuddyDetail {
 	mid: string;
@@ -3593,12 +3593,12 @@ export interface BuddyDetail {
 	blockable: boolean;
 	botActiveStatus: BuddyBotActiveStatus;
 	membershipEnabled: boolean;
-};
+}
 
 export interface MessageBoxV2MessageId {
 	deliveredTime: Int64;
 	messageId: Int64;
-};
+}
 
 export interface GetPreviousMessagesV2Request {
 	messageBoxId: string;
@@ -3606,7 +3606,7 @@ export interface GetPreviousMessagesV2Request {
 	messagesCount: number;
 	withReadCount: boolean;
 	receivedOnly: boolean;
-};
+}
 
 export interface ChannelToken {
 	token: string;
@@ -3614,7 +3614,7 @@ export interface ChannelToken {
 	expiration: Int64;
 	refreshToken: string;
 	channelAccessToken: string;
-};
+}
 
 export interface GroupCall {
 	online: boolean;
@@ -3624,39 +3624,39 @@ export interface GroupCall {
 	started: Int64;
 	mediaType: GroupCallMediaType;
 	protocol: GroupCallProtocol;
-};
+}
 
 export interface SyncResponse {
 	operationResponse: OperationResponse;
 	fullSyncResponse: FullSyncResponse;
 	partialFullSyncResponse: PartialFullSyncResponse;
-};
+}
 
 export interface OperationResponse {
 	operations: Operation[];
 	hasMoreOps: boolean;
 	globalEvents: TGlobalEvents;
 	individualEvents: TIndividualEvents;
-};
+}
 
 export interface FullSyncResponse {
 	reasons: SyncTriggerReason[];
 	nextRevision: Int64;
-};
+}
 
 export interface PartialFullSyncResponse {
 	targetCategories: { [k: number /*SyncCategories*/]: Int64 };
-};
+}
 
 export interface TGlobalEvents {
 	events: { [k: number /*GlobalEventType*/]: GlobalEvent };
 	lastRevision: Int64;
-};
+}
 
 export interface TIndividualEvents {
 	events: NotificationStatus[];
 	lastRevision: Int64;
-};
+}
 
 export interface GlobalEvent {
 	type: GlobalEventType;
@@ -3664,18 +3664,18 @@ export interface GlobalEvent {
 	maxDelayInMinutes: number;
 	createTimeMillis: Int64;
 	maxDelayHardLimit: boolean;
-};
+}
 
 export interface DetermineMediaMessageFlowResponse {
 	flowMap: { [k: number /*ContentType*/]: MediaMessageFlow };
 	cacheTtlMillis: Int64;
-};
+}
 
 export interface ChatRoomAnnouncementContentMetadata {
 	replace: string;
 	sticonOwnership: string;
 	postNotificationMetadata: string;
-};
+}
 
 export interface ChatRoomAnnouncementContents {
 	displayFields: number;
@@ -3683,7 +3683,7 @@ export interface ChatRoomAnnouncementContents {
 	link: string;
 	thumbnail: string;
 	contentMetadata: ChatRoomAnnouncementContentMetadata;
-};
+}
 
 export interface ChatRoomAnnouncement {
 	announcementSeq: Int64;
@@ -3692,7 +3692,7 @@ export interface ChatRoomAnnouncement {
 	creatorMid: string;
 	createdTime: Int64;
 	deletePermission: number;
-};
+}
 
 export interface DisasterInfo {
 	disasterId: string;
@@ -3701,27 +3701,27 @@ export interface DisasterInfo {
 	disasterDescription: string;
 	seeMoreUrl: string;
 	status: number;
-};
+}
 
-export interface GetDisasterCasesRequest {};
+export interface GetDisasterCasesRequest {}
 
 export interface GetDisasterCasesResponse {
 	disasters: DisasterInfo[];
 	messageTemplate: string[];
 	ttlInMillis: Int64;
-};
+}
 
 export interface SquareMessage {
 	message: Message;
 	fromType: MIDType;
 	squareMessageRevision: Int64;
 	state: SquareMessageState;
-};
+}
 
 export interface SquarePreference {
 	favoriteTimestamp: Int64;
 	notiForNewJoinRequest: boolean;
-};
+}
 
 export interface SquareMember {
 	squareMemberMid: string;
@@ -3734,20 +3734,20 @@ export interface SquareMember {
 	revision: Int64;
 	preference: SquarePreference;
 	joinMessage: string;
-};
+}
 
 export interface SquareMessageReaction {
 	type: MessageReactionType;
 	reactor: SquareMember;
 	createdAt: Int64;
 	updatedAt: Int64;
-};
+}
 
 export interface SquareMessageReactionStatus {
 	totalCount: number;
 	countByReactionType: { [k: number /*MessageReactionType*/]: number };
 	myReaction: SquareMessageReaction;
-};
+}
 
 export interface SquareEventReceiveMessage {
 	squareChatMid: string;
@@ -3756,7 +3756,7 @@ export interface SquareEventReceiveMessage {
 	messageReactionStatus: SquareMessageReactionStatus;
 	senderRevision: Int64;
 	squareMid: string;
-};
+}
 
 export interface SquareEventSendMessage {
 	squareChatMid: string;
@@ -3764,78 +3764,78 @@ export interface SquareEventSendMessage {
 	reqSeq: number;
 	senderDisplayName: string;
 	messageReactionStatus: SquareMessageReactionStatus;
-};
+}
 
 export interface SquareEventMutateMessage {
 	squareChatMid: string;
 	squareMessage: SquareMessage;
 	reqSeq: number;
 	senderDisplayName: string;
-};
+}
 
 export interface SquareEventNotifiedJoinSquareChat {
 	squareChatMid: string;
 	joinedMember: SquareMember;
-};
+}
 
 export interface SquareMemberRelation {
 	state: SquareMemberRelationState;
 	revision: Int64;
-};
+}
 
 export interface SquareEventNotifiedInviteIntoSquareChat {
 	squareChatMid: string;
 	invitees: SquareMember[];
 	invitor: SquareMember;
 	invitorRelation: SquareMemberRelation;
-};
+}
 
 export interface SquareEventNotifiedLeaveSquareChat {
 	squareChatMid: string;
 	squareMemberMid: string;
 	sayGoodbye: boolean;
 	squareMember: SquareMember;
-};
+}
 
 export interface SquareEventNotifiedDestroyMessage {
 	squareChatMid: string;
 	messageId: string;
-};
+}
 
 export interface SquareEventNotifiedMarkAsRead {
 	squareChatMid: string;
 	sMemberMid: string;
 	messageId: string;
-};
+}
 
 export interface SquareEventNotifiedUpdateSquareMemberProfile {
 	squareChatMid: string;
 	squareMember: SquareMember;
-};
+}
 
 export interface SquareEventNotifiedKickoutFromSquare {
 	squareChatMid: string;
 	kickees: SquareMember[];
 	kicker: SquareMember;
-};
+}
 
 export interface ApprovalValue {
 	message: string;
-};
+}
 
 export interface CodeValue {
 	code: string;
-};
+}
 
 export interface SquareJoinMethodValue {
 	approvalValue: ApprovalValue;
 	codeValue: CodeValue;
-};
+}
 
 export interface SquareJoinMethod {
 	type: SquareJoinMethodType;
 	value: SquareJoinMethodValue;
-};
+}
 
 export interface Square {
 	mid: string;
@@ -3855,18 +3855,18 @@ export interface Square {
 	adultOnly: BooleanState;
 	svcTags: string[];
 	createdAt: Int64;
-};
+}
 
 export interface SquareEventNotifiedShutdownSquare {
 	squareChatMid: string;
 	square: Square;
-};
+}
 
 export interface MessageVisibility {
 	showJoinMessage: boolean;
 	showLeaveMessage: boolean;
 	showKickoutMessage: boolean;
-};
+}
 
 export interface SquareChat {
 	squareChatMid: string;
@@ -3880,51 +3880,51 @@ export interface SquareChat {
 	invitationUrl: string;
 	messageVisibility: MessageVisibility;
 	ableToSearchMessage: BooleanState;
-};
+}
 
 export interface SquareEventNotifiedDeleteSquareChat {
 	squareChat: SquareChat;
-};
+}
 
 export interface SquareEventNotifiedUpdateSquareChatProfileName {
 	squareChatMid: string;
 	editor: SquareMember;
 	updatedChatName: string;
-};
+}
 
 export interface SquareEventNotifiedUpdateSquareChatProfileImage {
 	squareChatMid: string;
 	editor: SquareMember;
-};
+}
 
 export interface SquareEventNotifiedUpdateSquareChatMaxMemberCount {
 	squareChatMid: string;
 	maxMemberCount: number;
 	editor: SquareMember;
-};
+}
 
 export interface SquareEventNotifiedAddBot {
 	squareChatMid: string;
 	squareMember: SquareMember;
 	botMid: string;
 	botDisplayName: string;
-};
+}
 
 export interface SquareEventNotifiedRemoveBot {
 	squareChatMid: string;
 	squareMember: SquareMember;
 	botMid: string;
 	botDisplayName: string;
-};
+}
 
 export interface SquareEventNotifiedUpdateReadonlyChat {
 	squareChatMid: string;
 	readonly: boolean;
-};
+}
 
 export interface MessageStatusContents {
 	messageReactionStatus: SquareMessageReactionStatus;
-};
+}
 
 export interface SquareMessageStatus {
 	squareChatMid: string;
@@ -3932,73 +3932,73 @@ export interface SquareMessageStatus {
 	type: MessageStatusType;
 	contents: MessageStatusContents;
 	publishedAt: Int64;
-};
+}
 
 export interface SquareEventNotifiedUpdateMessageStatus {
 	squareChatMid: string;
 	messageId: string;
 	messageStatus: SquareMessageStatus;
-};
+}
 
 export interface UrlButton {
 	text: string;
 	url: string;
-};
+}
 
 export interface TextButton {
 	text: string;
-};
+}
 
 export interface OkButton {
 	text: string;
-};
+}
 
 export interface ButtonContent {
 	urlButton: UrlButton;
 	textButton: TextButton;
 	okButton: OkButton;
-};
+}
 
 export interface SquareEventChatPopup {
 	squareChatMid: string;
 	popupId: Int64;
 	flexJson: string;
 	button: ButtonContent;
-};
+}
 
 export interface SquareEventNotifiedSystemMessage {
 	squareChatMid: string;
 	text: string;
-};
+}
 
 export interface SquareEventNotifiedUpdateSquare {
 	squareChatMid: string;
 	square: Square;
-};
+}
 
 export interface SquareStatus {
 	memberCount: number;
 	joinRequestCount: number;
 	lastJoinRequestAt: Int64;
 	openChatCount: number;
-};
+}
 
 export interface SquareEventNotifiedUpdateSquareStatus {
 	squareChatMid: string;
 	squareStatus: SquareStatus;
-};
+}
 
 export interface SquareEventNotifiedUpdateSquareMember {
 	squareChatMid: string;
 	squareMemberMid: string;
 	squareMember: SquareMember;
-};
+}
 
 export interface SquareEventNotifiedUpdateSquareChat {
 	squareMid: string;
 	squareChatMid: string;
 	squareChat: SquareChat;
-};
+}
 
 export interface SquareChatStatusWithoutMessage {
 	memberCount: number;
@@ -4006,12 +4006,12 @@ export interface SquareChatStatusWithoutMessage {
 	markedAsReadMessageId: string;
 	mentionedMessageId: string;
 	notifiedMessageType: NotifiedMessageType;
-};
+}
 
 export interface SquareEventNotifiedUpdateSquareChatStatus {
 	squareChatMid: string;
 	statusWithoutMessage: SquareChatStatusWithoutMessage;
-};
+}
 
 export interface SquareChatMember {
 	squareMemberMid: string;
@@ -4020,12 +4020,12 @@ export interface SquareChatMember {
 	membershipState: SquareChatMembershipState;
 	notificationForMessage: boolean;
 	notificationForNewMember: boolean;
-};
+}
 
 export interface SquareEventNotifiedUpdateSquareChatMember {
 	squareChatMid: string;
 	squareChatMember: SquareChatMember;
-};
+}
 
 export interface SquareAuthority {
 	squareMid: string;
@@ -4042,17 +4042,17 @@ export interface SquareAuthority {
 	createSquareChatAnnouncement: SquareMemberRole;
 	updateMaxChatMemberCount: SquareMemberRole;
 	useReadonlyDefaultChat: SquareMemberRole;
-};
+}
 
 export interface SquareEventNotifiedUpdateSquareAuthority {
 	squareMid: string;
 	squareAuthority: SquareAuthority;
-};
+}
 
 export interface SquareFeature {
 	controlState: SquareFeatureControlState;
 	booleanValue: BooleanState;
-};
+}
 
 export interface SquareFeatureSet {
 	squareMid: string;
@@ -4068,12 +4068,12 @@ export interface SquareFeatureSet {
 	disableTransferAdmin: SquareFeature;
 	creatingLiveTalk: SquareFeature;
 	disableUpdateSearchable: SquareFeature;
-};
+}
 
 export interface NoteStatus {
 	noteCount: number;
 	latestCreatedAt: Int64;
-};
+}
 
 export interface SquareEventNotifiedCreateSquareMember {
 	square: Square;
@@ -4082,25 +4082,25 @@ export interface SquareEventNotifiedCreateSquareMember {
 	squareMember: SquareMember;
 	squareFeatureSet: SquareFeatureSet;
 	noteStatus: NoteStatus;
-};
+}
 
 export interface SquareChatStatus {
 	lastMessage: SquareMessage;
 	senderDisplayName: string;
 	otherStatus: SquareChatStatusWithoutMessage;
-};
+}
 
 export interface SquareChatFeature {
 	controlState: SquareChatFeatureControlState;
 	booleanValue: BooleanState;
-};
+}
 
 export interface SquareChatFeatureSet {
 	squareChatMid: string;
 	revision: Int64;
 	disableUpdateMaxChatMemberCount: SquareChatFeature;
 	disableMarkAsReadEvent: SquareChatFeature;
-};
+}
 
 export interface SquareEventNotifiedCreateSquareChatMember {
 	chat: SquareChat;
@@ -4109,57 +4109,57 @@ export interface SquareEventNotifiedCreateSquareChatMember {
 	joinedAt: Int64;
 	peerSquareMember: SquareMember;
 	squareChatFeatureSet: SquareChatFeatureSet;
-};
+}
 
 export interface SquareEventNotifiedUpdateSquareMemberRelation {
 	squareMid: string;
 	myMemberMid: string;
 	targetSquareMemberMid: string;
 	squareMemberRelation: SquareMemberRelation;
-};
+}
 
 export interface SquareEventNotifiedUpdateSquareFeatureSet {
 	squareFeatureSet: SquareFeatureSet;
-};
+}
 
 export interface SquareEventNotifiedUpdateSquareChatFeatureSet {
 	squareChatFeatureSet: SquareChatFeatureSet;
-};
+}
 
 export interface SquareEventNotifiedUpdateSquareNoteStatus {
 	squareMid: string;
 	noteStatus: NoteStatus;
-};
+}
 
 export interface SquareEventNotifiedUpdateSquareChatAnnouncement {
 	squareChatMid: string;
 	announcementSeq: Int64;
-};
+}
 
 export interface SquareEventNotificationJoinRequest {
 	squareMid: string;
 	squareName: string;
 	requestMemberName: string;
 	profileImageObsHash: string;
-};
+}
 
 export interface SquareEventNotificationMemberUpdate {
 	squareMid: string;
 	squareName: string;
 	profileImageObsHash: string;
-};
+}
 
 export interface SquareEventNotificationSquareDelete {
 	squareMid: string;
 	squareName: string;
 	profileImageObsHash: string;
-};
+}
 
 export interface SquareEventNotificationSquareChatDelete {
 	squareChatMid: string;
 	squareChatName: string;
 	profileImageObsHash: string;
-};
+}
 
 export interface SquareEventNotificationMessage {
 	squareChatMid: string;
@@ -4170,14 +4170,14 @@ export interface SquareEventNotificationMessage {
 	mentionedMessageId: string;
 	notifiedMessageType: NotifiedMessageType;
 	reqSeq: number;
-};
+}
 
 export interface SquareEventNotificationPostAnnouncement {
 	squareMid: string;
 	squareName: string;
 	squareProfileImageObsHash: string;
 	actionUri: string;
-};
+}
 
 export interface SquareEventNotificationPost {
 	squareMid: string;
@@ -4185,12 +4185,12 @@ export interface SquareEventNotificationPost {
 	thumbnailObsHash: string;
 	text: string;
 	actionUri: string;
-};
+}
 
 export interface SquareEventNotificationNewChatMember {
 	squareChatMid: string;
 	squareChatName: string;
-};
+}
 
 export interface SquareEventNotificationMessageReaction {
 	squareChatMid: string;
@@ -4200,7 +4200,7 @@ export interface SquareEventNotificationMessageReaction {
 	thumbnailObsHash: string;
 	messageText: string;
 	type: MessageReactionType;
-};
+}
 
 export interface SquareEventPayload {
 	receiveMessage?: SquareEventReceiveMessage;
@@ -4251,7 +4251,7 @@ export interface SquareEventPayload {
 	chatPopup?: SquareEventChatPopup;
 	notifiedSystemMessage?: SquareEventNotifiedSystemMessage;
 	notifiedUpdateSquareChatFeatureSet?: SquareEventNotifiedUpdateSquareChatFeatureSet;
-};
+}
 
 export interface SquareEvent {
 	createdTime: Int64;
@@ -4259,42 +4259,42 @@ export interface SquareEvent {
 	payload: SquareEventPayload;
 	syncToken: string;
 	eventStatus: SquareEventStatus;
-};
+}
 
 export interface SendMessageResponse {
 	createdSquareMessage: SquareMessage;
-};
+}
 
 export interface UnsendMessageResponse {
 	unsentMessage: SquareMessage;
-};
+}
 
 export interface FetchMyEventsResponse {
 	subscription: SubscriptionState;
 	events: SquareEvent[];
 	syncToken: string;
 	continuationToken: string;
-};
+}
 
 export interface GetSquareEmidResponse {
 	squareEmid: string;
-};
+}
 
 export interface GetSquareMembersBySquareResponse {
 	members: SquareMember[];
-};
+}
 
 export interface ManualRepairResponse {
 	events: SquareEvent[];
 	syncToken: string;
 	continuationToken: string;
-};
+}
 
 export interface InviteIntoSquareChatResponse {
 	inviteeMids: string[];
-};
+}
 
-export interface InviteToSquareResponse {};
+export interface InviteToSquareResponse {}
 
 export interface GetJoinedSquaresResponse {
 	squares: Square[];
@@ -4303,14 +4303,14 @@ export interface GetJoinedSquaresResponse {
 	statuses: { [k: string]: SquareStatus };
 	continuationToken: string;
 	noteStatuses: { [k: string]: NoteStatus };
-};
+}
 
-export interface MarkAsReadResponse {};
+export interface MarkAsReadResponse {}
 
 export interface ReactToMessageResponse {
 	reaction: SquareMessageReaction;
 	status: SquareMessageReactionStatus;
-};
+}
 
 export interface FindSquareByInvitationTicketResponse {
 	square: Square;
@@ -4321,19 +4321,19 @@ export interface FindSquareByInvitationTicketResponse {
 	noteStatus: NoteStatus;
 	chat: SquareChat;
 	chatStatus: SquareChatStatus;
-};
+}
 
 export interface SubscriptionState {
 	subscriptionId: Int64;
 	ttlMillis: Int64;
-};
+}
 
 export interface FetchSquareChatEventsResponse {
 	subscription: SubscriptionState;
 	events: SquareEvent[];
 	syncToken: string;
 	continuationToken: string;
-};
+}
 
 export interface GetSquareResponse {
 	square: Square;
@@ -4342,14 +4342,14 @@ export interface GetSquareResponse {
 	squareStatus: SquareStatus;
 	squareFeatureSet?: SquareFeatureSet;
 	noteStatus: NoteStatus;
-};
+}
 
 export interface GetJoinableSquareChatsResponse {
 	squareChats: SquareChat[];
 	continuationToken: string;
 	totalSquareChatCount: number;
 	squareChatStatuses: { [k: string]: SquareChatStatus };
-};
+}
 
 export interface CreateSquareResponse {
 	square: Square;
@@ -4362,7 +4362,7 @@ export interface CreateSquareResponse {
 	squareChatStatus: SquareChatStatus;
 	squareChatMember: SquareChatMember;
 	squareChatFeatureSet: SquareChatFeatureSet;
-};
+}
 
 export interface TextMessageAnnouncementContents {
 	messageId: string;
@@ -4370,11 +4370,11 @@ export interface TextMessageAnnouncementContents {
 	senderSquareMemberMid: string;
 	createdAt: Int64;
 	senderMid: string;
-};
+}
 
 export interface SquareChatAnnouncementContents {
 	textMessageAnnouncementContents: TextMessageAnnouncementContents;
-};
+}
 
 export interface SquareChatAnnouncement {
 	announcementSeq: Int64;
@@ -4382,23 +4382,23 @@ export interface SquareChatAnnouncement {
 	contents: SquareChatAnnouncementContents;
 	createdAt: Int64;
 	creator: string;
-};
+}
 
 export interface GetSquareChatAnnouncementsResponse {
 	announcements: SquareChatAnnouncement[];
-};
+}
 
 export interface GetSquareFeatureSetResponse {
 	squareFeatureSet: SquareFeatureSet;
-};
+}
 
 export interface GetSquareChatFeatureSetResponse {
 	squareChatFeatureSet: SquareChatFeatureSet;
-};
+}
 
 export interface SyncSquareMembersResponse {
 	updatedSquareMembers: SquareMember[];
-};
+}
 
 export interface SquareChatThread {
 	squareChatThreadMid: string;
@@ -4406,65 +4406,65 @@ export interface SquareChatThread {
 	squareMid: string;
 	messageId: string;
 	state: SquareChatThreadState;
-};
+}
 
 export interface GetJoinedSquareChatThreadsResponse {
 	squareChatThreads: SquareChatThread[];
 	continuationToken: string;
-};
+}
 
 export interface CreateSquareChatThreadResponse {
 	squareChatThread: SquareChatThread;
-};
+}
 
 export interface SquareChatThreadMember {
 	squareMemberMid: string;
 	squareChatThreadMid: string;
 	revision: Int64;
 	membershipState: SquareChatThreadeMembershipState;
-};
+}
 
 export interface GetSquareChatThreadResponse {
 	squareChatThread: SquareChatThread;
 	mySquareChatThreadMember: SquareChatThreadMember;
-};
+}
 
 export interface JoinSquareChatThreadResponse {
 	squareChatThread: SquareChatThread;
-};
+}
 
-export interface AcceptSpeakersResponse {};
+export interface AcceptSpeakersResponse {}
 
-export interface AcceptToChangeRoleResponse {};
+export interface AcceptToChangeRoleResponse {}
 
-export interface AcceptToListenResponse {};
+export interface AcceptToListenResponse {}
 
-export interface AcceptToSpeakResponse {};
+export interface AcceptToSpeakResponse {}
 
-export interface CancelToSpeakResponse {};
+export interface CancelToSpeakResponse {}
 
-export interface EndLiveTalkResponse {};
+export interface EndLiveTalkResponse {}
 
 export interface LiveTalkEventNotifiedUpdateLiveTalkTitle {
 	title: string;
-};
+}
 
 export interface LiveTalkEventNotifiedUpdateLiveTalkSpeakerSetting {
 	speakerSetting: LiveTalkSpeakerSetting;
-};
+}
 
 export interface LiveTalkEventNotifiedUpdateLiveTalkAnnouncement {
 	announcement: string;
-};
+}
 
 export interface LiveTalkEventNotifiedUpdateSquareMemberRole {
 	squareMemberMid: string;
 	role: SquareMemberRole;
-};
+}
 
 export interface LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak {
 	allowRequestToSpeak: boolean;
-};
+}
 
 export interface LiveTalkEventPayload {
 	notifiedUpdateLiveTalkTitle: LiveTalkEventNotifiedUpdateLiveTalkTitle;
@@ -4472,19 +4472,19 @@ export interface LiveTalkEventPayload {
 	notifiedUpdateLiveTalkAnnouncement: LiveTalkEventNotifiedUpdateLiveTalkAnnouncement;
 	notifiedUpdateSquareMemberRole: LiveTalkEventNotifiedUpdateSquareMemberRole;
 	notifiedUpdateLiveTalkAllowRequestToSpeak: LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak;
-};
+}
 
 export interface LiveTalkEvent {
 	type: LiveTalkEventType;
 	payload: LiveTalkEventPayload;
 	syncToken: string;
-};
+}
 
 export interface FetchLiveTalkEventsResponse {
 	events: LiveTalkEvent[];
 	syncToken: string;
 	hasMore: boolean;
-};
+}
 
 export interface LiveTalk {
 	squareChatMid: string;
@@ -4497,7 +4497,7 @@ export interface LiveTalk {
 	participantCount: number;
 	revision: Int64;
 	startedAt: Int64;
-};
+}
 
 export interface FindLiveTalkByInvitationTicketResponse {
 	chatInvitationTicket: string;
@@ -4505,46 +4505,46 @@ export interface FindLiveTalkByInvitationTicketResponse {
 	chat: SquareChat;
 	squareMember: SquareMember;
 	chatMembershipState: SquareChatMembershipState;
-};
+}
 
-export interface ForceEndLiveTalkResponse {};
+export interface ForceEndLiveTalkResponse {}
 
 export interface LiveTalkSpeaker {
 	displayName: string;
 	profileImageObsHash: string;
 	role: SquareMemberRole;
-};
+}
 
 export interface GetLiveTalkInfoForNonMemberResponse {
 	chatName: string;
 	liveTalk: LiveTalk;
 	speakers: LiveTalkSpeaker[];
 	chatInvitationUrl: string;
-};
+}
 
 export interface GetLiveTalkInvitationUrlResponse {
 	invitationUrl: string;
-};
+}
 
 export interface GetLiveTalkSpeakersForNonMemberResponse {
 	speakers: LiveTalkSpeaker[];
-};
+}
 
 export interface GetSquareInfoByChatMidResponse {
 	defaultChatMid: string;
 	squareName: string;
 	squareDesc: string;
-};
+}
 
-export interface InviteToChangeRoleResponse {};
+export interface InviteToChangeRoleResponse {}
 
-export interface InviteToListenResponse {};
+export interface InviteToListenResponse {}
 
-export interface InviteToLiveTalkResponse {};
+export interface InviteToLiveTalkResponse {}
 
 export interface InviteToSpeakResponse {
 	inviteRequestId: string;
-};
+}
 
 export interface JoinLiveTalkResponse {
 	hostMemberMid: string;
@@ -4561,45 +4561,45 @@ export interface JoinLiveTalkResponse {
 	polarisAddress: string;
 	polarisZone: string;
 	polarisUdpPort: number;
-};
+}
 
-export interface KickOutLiveTalkParticipantsResponse {};
+export interface KickOutLiveTalkParticipantsResponse {}
 
-export interface RejectSpeakersResponse {};
+export interface RejectSpeakersResponse {}
 
-export interface RejectToSpeakResponse {};
+export interface RejectToSpeakResponse {}
 
-export interface ReportLiveTalkResponse {};
+export interface ReportLiveTalkResponse {}
 
-export interface ReportLiveTalkSpeakerResponse {};
+export interface ReportLiveTalkSpeakerResponse {}
 
-export interface RequestToListenResponse {};
+export interface RequestToListenResponse {}
 
-export interface RequestToSpeakResponse {};
+export interface RequestToSpeakResponse {}
 
 export interface StartLiveTalkResponse {
 	liveTalk: LiveTalk;
-};
+}
 
-export interface UpdateLiveTalkAttrsResponse {};
+export interface UpdateLiveTalkAttrsResponse {}
 
 export interface AcquireLiveTalkResponse {
 	liveTalk: LiveTalk;
-};
+}
 
 export interface CreateQrCodeForSecureResponse {
 	callbackUrl: string;
 	longPollingMaxCount: number;
 	longPollingIntervalSec: number;
 	nonce: string;
-};
+}
 
 export interface RefreshApiRetryPolicy {
 	initialDelayInMillis: Int64;
 	maxDelayInMillis: Int64;
 	multiplier: number;
 	jitterRate: number;
-};
+}
 
 export interface TokenV3IssueResult {
 	accessToken: string;
@@ -4608,7 +4608,7 @@ export interface TokenV3IssueResult {
 	refreshApiRetryPolicy: RefreshApiRetryPolicy;
 	loginSessionId: string;
 	tokenIssueTimeEpochSec: Int64;
-};
+}
 
 export interface QrCodeLoginV2Response {
 	certificate: string;
@@ -4617,12 +4617,12 @@ export interface QrCodeLoginV2Response {
 	mid: string;
 	lastBindTimestamp: Int64;
 	metaData: { [k: string]: string };
-};
+}
 
 export interface RichString {
 	content: string;
 	meta: { [k: string]: string };
-};
+}
 
 export interface TargetProfileDetail {
 	snapshotTimeMillis: Int64;
@@ -4634,7 +4634,7 @@ export interface TargetProfileDetail {
 	avatarProfile: AvatarProfile;
 	pictureSource: PictureSource;
 	pictureStatus: string;
-};
+}
 
 export interface UserFriendDetail {
 	createdTime: Int64;
@@ -4643,75 +4643,75 @@ export interface UserFriendDetail {
 	hidden: boolean;
 	ringtone: string;
 	ringbackTone: string;
-};
+}
 
 export interface BotFriendDetail {
 	createdTime: Int64;
 	favoriteTime: Int64;
 	hidden: boolean;
-};
+}
 
-export interface NotFriend {};
+export interface NotFriend {}
 
 export interface FriendDetail {
 	user: UserFriendDetail;
 	bot: BotFriendDetail;
 	notFriend: NotFriend;
-};
+}
 
 export interface UserBlockDetail {
 	deletedFromBlockList: boolean;
-};
+}
 
 export interface BotBlockDetail {
 	deletedFromBlockList: boolean;
-};
+}
 
-export interface NotBlocked {};
+export interface NotBlocked {}
 
 export interface BlockDetail {
 	user: UserBlockDetail;
 	bot: BotBlockDetail;
 	notBlocked: NotBlocked;
-};
+}
 
 export interface RecommendationReasonSharedChat {
 	chatMid: string;
-};
+}
 
-export interface RecommendationReasonReverseFriendByUserId {};
+export interface RecommendationReasonReverseFriendByUserId {}
 
-export interface RecommendationReasonReverseFriendByQRCode {};
+export interface RecommendationReasonReverseFriendByQRCode {}
 
-export interface RecommendationReasonReverseFriendByPhone {};
+export interface RecommendationReasonReverseFriendByPhone {}
 
 export interface RecommendationReason {
 	sharedChat: RecommendationReasonSharedChat;
 	reverseFriendByUserId: RecommendationReasonReverseFriendByUserId;
 	reverseFriendByQrCode: RecommendationReasonReverseFriendByQRCode;
 	reverseFriendByPhone: RecommendationReasonReverseFriendByPhone;
-};
+}
 
 export interface Recommended {
 	createdTime: Int64;
 	reasons: RecommendationReason[];
 	hidden: boolean;
-};
+}
 
-export interface NotRecommended {};
+export interface NotRecommended {}
 
 export interface RecommendationDetail {
 	recommendationDetail: Recommended;
 	notRecommended: NotRecommended;
-};
+}
 
 export interface NotificationSetting {
 	mute: boolean;
-};
+}
 
 export interface NotificationSettingEntry {
 	notificationSetting: NotificationSetting;
-};
+}
 
 export interface GetContactV3Response {
 	targetUserMid: string;
@@ -4721,40 +4721,40 @@ export interface GetContactV3Response {
 	blockDetail: BlockDetail;
 	recommendationDetail: RecommendationDetail;
 	notificationSettingEntry: NotificationSettingEntry;
-};
+}
 
 export interface GetContactsV3Response {
 	responses: GetContactV3Response[];
-};
+}
 
-export interface AddFriendByMidResponse {};
+export interface AddFriendByMidResponse {}
 
 export interface GetContactCalendarEventResponse {
 	targetUserMid: string;
 	userType: UserType;
 	contactCalendarEvents: ContactCalendarEvents;
 	snapshotTimeMillis: Int64;
-};
+}
 
 export interface GetContactCalendarEventsResponse {
 	responses: GetContactCalendarEventResponse[];
-};
+}
 
 export interface Locale {
 	language: string;
 	country: string;
-};
+}
 
 export interface GetProductRequest {
 	productType: ProductType;
 	productId: string;
 	carrierCode: string;
 	saveBrowsingHistory: boolean;
-};
+}
 
 export interface GetProductResponse {
 	productDetail: ProductDetail;
-};
+}
 
 export interface ProductDetail {
 	id: string;
@@ -4800,14 +4800,14 @@ export interface ProductDetail {
 	ableToBeGivenAsPresent: boolean;
 	madeWithStickerMaker: boolean;
 	customDownloadButtonLabel: string;
-};
+}
 
 export interface ApplicationVersionRange {
 	lowerBound: string;
 	lowerBoundInclusive: boolean;
 	upperBound: string;
 	upperBoundInclusive: boolean;
-};
+}
 
 export interface EditorsPickBannerForClient {
 	id: Int64;
@@ -4816,19 +4816,19 @@ export interface EditorsPickBannerForClient {
 	showNewBadge: boolean;
 	name: string;
 	description: string;
-};
+}
 
 export interface Price {
 	currency: string;
 	amount: string;
 	priceString: string;
-};
+}
 
 export interface ProductProperty {
 	stickerProperty: StickerProperty;
 	themeProperty: ThemeProperty;
 	sticonProperty: SticonProperty;
-};
+}
 
 export interface StickerProperty {
 	hasAnimation: boolean;
@@ -4846,68 +4846,68 @@ export interface StickerProperty {
 	popupLayer: PopupLayer;
 	cpdProduct: boolean;
 	availableForCombinationSticker: boolean;
-};
+}
 
 export interface ThemeProperty {
 	thumbnail: string;
 	themeResourceType: ThemeResourceType;
-};
+}
 
 export interface SticonProperty {
 	sticonIds: string[];
 	availableForPhotoEdit: boolean;
 	sticonResourceType: SticonResourceType;
 	endPageMainImages: string[][];
-};
+}
 
 export interface ImageTextProperty {
 	status: ImageTextStatus;
 	plaintext: string;
 	nameTextMaxCharacterCount: number;
 	encryptedText: string;
-};
+}
 
 export interface LpPromotionProperty {
 	landingPageUrl: string;
 	label: string;
 	buttonLabel: string;
-};
+}
 
 export interface ProductWishProperty {
 	totalCount: Int64;
-};
+}
 
 export interface ProductSubscriptionProperty {
 	availableForSubscribe: boolean;
 	subscriptionAvailability: number;
-};
+}
 
 export interface ProductPromotionProperty {
 	lpPromotionProperty: LpPromotionProperty;
-};
+}
 
 export interface PromotionDetail {
 	promotionBuddyInfo: PromotionBuddyInfo;
 	promotionInstallInfo: PromotionInstallInfo;
 	promotionMissionInfo: PromotionMissionInfo;
-};
+}
 
 export interface PromotionInfo {
 	promotionType: PromotionType;
 	promotionDetail: PromotionDetail;
 	buddyInfo: PromotionBuddyInfo;
-};
+}
 
 export interface PromotionBuddyInfo {
 	buddyMid: string;
 	promotionBuddyDetail: PromotionBuddyDetail;
 	showBanner: boolean;
-};
+}
 
 export interface PromotionInstallInfo {
 	downloadUrl: string;
 	customUrlSchema: string;
-};
+}
 
 export interface PromotionMissionInfo {
 	promotionMissionType: PromotionMissionType;
@@ -4915,7 +4915,7 @@ export interface PromotionMissionInfo {
 	downloadUrl: string;
 	customUrlSchema: string;
 	oaMid: string;
-};
+}
 
 export interface PromotionBuddyDetail {
 	searchId: string;
@@ -4924,7 +4924,7 @@ export interface PromotionBuddyDetail {
 	pictureUrl: string;
 	statusMessage: string;
 	brandType: BrandType;
-};
+}
 
 export interface PurchaseOrder {
 	shopId: string;
@@ -4934,19 +4934,19 @@ export interface PurchaseOrder {
 	enableLinePointAutoExchange: boolean;
 	locale: Locale;
 	presentAttributes: { [k: string]: string };
-};
+}
 
 export interface PurchaseOrderResponse {
 	orderId: string;
 	attributes: { [k: string]: string };
 	billingConfirmUrl: string;
-};
+}
 
 export interface PurchaseRecordList {
 	purchaseRecords: PurchaseRecord[];
 	offset: number;
 	totalSize: number;
-};
+}
 
 export interface PurchaseRecord {
 	productDetail: ProductDetail;
@@ -4954,17 +4954,17 @@ export interface PurchaseRecord {
 	giver: string;
 	recipient: string;
 	purchasedPrice: Price;
-};
+}
 
 export interface DetailedProductList {
 	productList: ProductDetail[];
 	offset: number;
 	totalSize: number;
-};
+}
 
 export interface CreateCombinationStickerResponse {
 	id: string;
-};
+}
 
 export interface ProductSearchSummary {
 	id: string;
@@ -4988,13 +4988,13 @@ export interface ProductSearchSummary {
 	availability: ProductAvailability;
 	interactionEventParameter: string;
 	editorsPickIds: Int64[];
-};
+}
 
 export interface DemographicType {
 	demographicGenderType: DemographicGenderType;
 	demographicAgeType: DemographicAgeType;
 	defaultOrder: boolean;
-};
+}
 
 export interface ShowcaseV3 {
 	productList: ProductSearchSummary[];
@@ -5004,12 +5004,12 @@ export interface ShowcaseV3 {
 	productType: ProductType;
 	subType: SubType;
 	demographicType: DemographicType;
-};
+}
 
 export interface StickerIdRange {
 	start: Int64;
 	size: number;
-};
+}
 
 export interface StickerSummary {
 	stickerIdRanges: StickerIdRange[];
@@ -5022,25 +5022,25 @@ export interface StickerSummary {
 	popupLayer: PopupLayer;
 	stickerSize: StickerSize;
 	availableForCombinationSticker: boolean;
-};
+}
 
 export interface ThemeSummary {
 	imagePath: string;
 	version: Int64;
 	versionString: string;
-};
+}
 
 export interface SticonSummary {
 	suggestVersion: Int64;
 	availableForPhotoEdit: boolean;
 	sticonResourceType: SticonResourceType;
-};
+}
 
 export interface ProductTypeSummary {
 	stickerSummary: StickerSummary;
 	themeSummary: ThemeSummary;
 	sticonSummary: SticonSummary;
-};
+}
 
 export interface ProductSummary {
 	id: string;
@@ -5057,34 +5057,34 @@ export interface ProductSummary {
 	authorId: string;
 	canAutoDownload: boolean;
 	promotionInfo: PromotionInfo;
-};
+}
 
 export interface ProductSummaryList {
 	productList: ProductSummary[];
 	offset: number;
 	totalSize: number;
-};
+}
 
 export interface ProductValidationScheme {
 	key: string;
 	offset: Int64;
 	size: Int64;
-};
+}
 
 export interface ProductValidationResult {
 	validated: boolean;
-};
+}
 
 export interface ShopUpdates {
 	shopId: string;
 	latestUpdateTime: Int64;
-};
+}
 
 export interface SearchProductsV2Response {
 	results: ProductSearchSummary[];
 	continuationToken: string;
 	totalSize: Int64;
-};
+}
 
 export interface EditorsPickBanner {
 	id: Int64;
@@ -5099,46 +5099,46 @@ export interface EditorsPickBanner {
 	displayPeriodBegin: Int64;
 	description: string;
 	showNewBadge: boolean;
-};
+}
 
 export interface AuthorForShowcase {
 	authorId: Int64;
 	productList: ProductSearchSummary[];
 	productTotalSize: Int64;
-};
+}
 
 export interface ImageSearchSummary {
 	imageId: string;
 	product: ProductSearchSummary;
-};
+}
 
 export interface KeywordImageList {
 	tagId: string;
 	keyword: string;
 	imageList: ImageSearchSummary[];
-};
+}
 
 export interface URLItem {
 	title: string;
 	imageUrl: string;
 	url: string;
-};
+}
 
 export interface EditorsPickContent {
 	urlItem: URLItem;
 	productDetail: ProductDetail;
-};
+}
 
 export interface EditorsPick {
 	contentType: EditorsPickContentType;
 	editorsPickContent: EditorsPickContent;
-};
+}
 
 export interface EditorsPickTab {
 	editorsPickId: Int64;
 	name: string;
 	showcaseType: ShowcaseType;
-};
+}
 
 export interface EditorsPickShowcase {
 	id: Int64;
@@ -5150,7 +5150,7 @@ export interface EditorsPickShowcase {
 	description: string;
 	type: EditorsPickShowcaseType;
 	tabs: EditorsPickTab[];
-};
+}
 
 export interface Category {
 	id: Int64;
@@ -5158,7 +5158,7 @@ export interface Category {
 	newFlag: boolean;
 	productCount: number;
 	thumbnailUrl: string;
-};
+}
 
 export interface Tag {
 	id: Int64;
@@ -5166,19 +5166,19 @@ export interface Tag {
 	tagType: TagType;
 	productCount: number;
 	thumbnailUrl: string;
-};
+}
 
 export interface ProductList {
 	productList: ProductDetail[];
 	offset: number;
 	totalSize: number;
 	title: string;
-};
+}
 
 export interface CategoryProductList {
 	category: Category;
 	productList: ProductList;
-};
+}
 
 export interface AggregatedHomeV2Response {
 	showcases: ShowcaseV3[];
@@ -5189,7 +5189,7 @@ export interface AggregatedHomeV2Response {
 	detailedCategoryList: CategoryProductList[];
 	categoryList: Category[];
 	tagList: Tag[];
-};
+}
 
 export interface AggregatedCategory {
 	id: Int64;
@@ -5197,34 +5197,34 @@ export interface AggregatedCategory {
 	name: string;
 	productCount: number;
 	thumbnailUrl: string;
-};
+}
 
 export interface ListContentData {
 	showcase: ShowcaseV3;
 	editorsPickBanners: EditorsPickBanner[];
 	categories: AggregatedCategory[];
-};
+}
 
 export interface ListContent {
 	contentData: ListContentData;
 	localizedTitle: string;
 	tsKey: string;
 	moreLinkFragment: string;
-};
+}
 
 export interface AggregatedHomeNativeResponse {
 	listContents: ListContent[];
-};
+}
 
 export interface DynamicHomeNativeResponse {
 	listContents: ListContent[];
-};
+}
 
 export interface TagsProductList {
 	tasteTag: Tag;
 	characterTag: Tag;
 	products: ProductSearchSummary[];
-};
+}
 
 export interface AggregatedPremiumHomeResponse {
 	showcases: ShowcaseV3[];
@@ -5234,29 +5234,29 @@ export interface AggregatedPremiumHomeResponse {
 	categoryList: TagsProductList[];
 	browsingHistory: ShowcaseV3;
 	subscriptionSlotHistory: ShowcaseV3;
-};
+}
 
 export interface AggregatedShowcaseV4 {
 	showcases: ShowcaseV3[];
-};
+}
 
 export interface GetRecommendationResponse {
 	results: ProductSearchSummary[];
 	continuationToken: string;
 	totalSize: Int64;
-};
+}
 
 export interface AuthorListResponse {
 	authorList: AuthorForShowcase[];
 	totalSize: Int64;
 	continuationToken: string;
-};
+}
 
 export interface ProductResourceType {
 	stickerResourceType: StickerResourceType;
 	themeResourceType: ThemeResourceType;
 	sticonResourceType: SticonResourceType;
-};
+}
 
 export interface LatestProductByAuthorItem {
 	productId: string;
@@ -5265,17 +5265,17 @@ export interface LatestProductByAuthorItem {
 	newFlag: boolean;
 	productResourceType: ProductResourceType;
 	popupLayer: PopupLayer;
-};
+}
 
 export interface LatestProductsByAuthorResponse {
 	authorId: Int64;
 	author: string;
 	items: LatestProductByAuthorItem[];
-};
+}
 
 export interface GetExperimentsResponse {
 	variables: { [k: string]: string };
-};
+}
 
 export interface ProductSummaryForAutoSuggest {
 	id: string;
@@ -5287,18 +5287,18 @@ export interface ProductSummaryForAutoSuggest {
 	type: ProductType;
 	resourceType: ProductResourceType;
 	stickerSize: StickerSize;
-};
+}
 
 export interface AutoSuggestionShowcaseResponse {
 	productList: ProductSummaryForAutoSuggest[];
 	totalSize: Int64;
-};
+}
 
 export interface SuggestResource {
 	dataUrl: string;
 	version: Int64;
 	updatedTime: Int64;
-};
+}
 
 export interface SuggestDictionarySetting {
 	language: string;
@@ -5309,45 +5309,45 @@ export interface SuggestDictionarySetting {
 	suggestTagResource: SuggestResource;
 	tagPatch: any;
 	corpusResource: SuggestResource;
-};
+}
 
 export interface GetSuggestDictionarySettingResponse {
 	results: SuggestDictionarySetting[];
-};
+}
 
 export interface GetRecommendOaResponse {
 	buddyMids: string[];
-};
+}
 
 export interface GetSuggestResourcesResponse {
 	suggestResources: any;
-};
+}
 
 export interface GetSuggestResourcesV2Response {
 	suggestResources: { [k: string]: SuggestResource };
-};
+}
 
 export interface GetTagClusterFileResponse {
 	path: string;
 	updatedTimeMillis: Int64;
-};
+}
 
 export interface GetResourceFileReponse {
 	tagClusterFileResponse: GetTagClusterFileResponse;
-};
+}
 
 export interface BrowsingHistory {
 	productSearchSummary: ProductSearchSummary;
 	browsingTime: Int64;
-};
+}
 
 export interface GetBrowsingHistoryResponse {
 	browsingHistory: BrowsingHistory[];
 	continuationToken: string;
 	totalSize: number;
-};
+}
 
-export interface DeleteAllBrowsingHistoryResponse {};
+export interface DeleteAllBrowsingHistoryResponse {}
 
 export interface SticonProductMapping {
 	productId: string;
@@ -5358,23 +5358,23 @@ export interface SticonProductMapping {
 	stickerPackageId: Int64;
 	stickerPackageVersion: number;
 	stickerIds: { [k: string]: string };
-};
+}
 
 export interface GetOldSticonMappingResponse {
 	sticonProductMappings: SticonProductMapping[];
 	updatedTimeMillis: Int64;
 	updated: boolean;
-};
+}
 
 export interface SimilarImageShowcase {
 	chosenImage: ImageSearchSummary;
 	similarImageList: ImageSearchSummary[];
 	continuationToken: string;
-};
+}
 
 export interface CustomizeImageTextResponse {
 	nameTextProperty: ImageTextProperty;
-};
+}
 
 export interface SubscriptionPlan {
 	billingItemId: string;
@@ -5389,11 +5389,11 @@ export interface SubscriptionPlan {
 	cpId: string;
 	nameKey: string;
 	tier: SubscriptionPlanTier;
-};
+}
 
 export interface GetSubscriptionPlansResponse {
 	plans: SubscriptionPlan[];
-};
+}
 
 export interface SubscriptionStatus {
 	billingItemId: string;
@@ -5412,68 +5412,68 @@ export interface SubscriptionStatus {
 	accountHold: boolean;
 	maxSlotCountsByProductType: { [k: number /*ProductType*/]: number };
 	agreementAccepted: boolean;
-};
+}
 
 export interface GetSubscriptionStatusResponse {
 	subscriptions: { [k: number]: SubscriptionStatus };
 	hasValidStudentInformation: boolean;
 	otherOwnedSubscriptions: { [k: number]: SubscriptionStatus[] };
-};
+}
 
 export interface GetProductSummariesInSubscriptionSlotsResponse {
 	products: ProductSummary[];
 	continuationToken: string;
 	totalSize: Int64;
 	maxSlotCount: number;
-};
+}
 
 export interface AddProductToSubscriptionSlotResponse {
 	result: SubscriptionSlotModificationResult;
-};
+}
 
 export interface AddThemeToSubscriptionSlotResponse {
 	result: SubscriptionSlotModificationResult;
-};
+}
 
 export interface RemoveProductFromSubscriptionSlotResponse {
 	result: SubscriptionSlotModificationResult;
-};
+}
 
 export interface PurchaseSubscriptionResponse {
 	result: SubscriptionBillingResult;
 	orderId: string;
 	confirmUrl: string;
-};
+}
 
 export interface ChangeSubscriptionResponse {
 	result: SubscriptionBillingResult;
 	orderId: string;
 	confirmUrl: string;
-};
+}
 
 export interface RestoreSubscriptionResponse {
 	result: SubscriptionBillingResult;
 	orderId: string;
 	confirmUrl: string;
-};
+}
 
 export interface GetProductsByTagsV2Response {
 	results: ProductSearchSummary[];
 	continuationToken: string;
 	totalSize: Int64;
-};
+}
 
 export interface StudentInformation {
 	schoolName: string;
 	graduationDate: string;
-};
+}
 
 export interface GetStudentInformationResponse {
 	studentInformation: StudentInformation;
 	isValid: boolean;
-};
+}
 
-export interface SaveStudentInformationResponse {};
+export interface SaveStudentInformationResponse {}
 
 export interface PurchasedSubscription {
 	orderId: string;
@@ -5486,13 +5486,13 @@ export interface PurchasedSubscription {
 	price: Price;
 	nameKey: string;
 	tier: SubscriptionPlanTier;
-};
+}
 
 export interface GetPurchasedSubscriptionsResponse {
 	subscriptions: PurchasedSubscription[];
 	continuationToken: string;
 	totalSize: Int64;
-};
+}
 
 export interface FindRestorablePlanResponse {
 	result: SubscriptionBillingResult;
@@ -5501,16 +5501,16 @@ export interface FindRestorablePlanResponse {
 	originalStoreOrderId: string;
 	orderId: string;
 	mid: string;
-};
+}
 
 export interface SubscriptionMissionCampaign {
 	productType: ProductType;
 	productId: string;
-};
+}
 
 export interface SubscriptionCampaignPayload {
 	mission: SubscriptionMissionCampaign;
-};
+}
 
 export interface SubscriptionCampaign {
 	campaignId: string;
@@ -5518,75 +5518,75 @@ export interface SubscriptionCampaign {
 	toExclusive: Int64;
 	type: SubscriptionCampaignType;
 	payload: SubscriptionCampaignPayload;
-};
+}
 
 export interface GetSubscriptionCampaignsResponse {
 	campaigns: SubscriptionCampaign[];
-};
+}
 
 export interface GetSubscriptionRecommendationsResponse {
 	products: ProductSearchSummary[];
-};
+}
 
 export interface InteractionEventResponse {
 	responseStatus: number;
-};
+}
 
 export interface LibraExperiment {
 	experimentId: string;
 	groupId: string;
-};
+}
 
 export interface GetExperimentsV2Response {
 	experiments: { [k: string]: LibraExperiment };
-};
+}
 
 export interface BirthdayGiftAssociationVerifyResponse {
 	tokenStatus: BirthdayGiftAssociationVerifyTokenStatus;
 	recipientUserMid: string;
-};
+}
 
 export interface SubscriptionSlotHistory {
 	product: ProductSearchSummary;
 	addedTime: Int64;
 	removedTime: Int64;
-};
+}
 
 export interface GetSubscriptionSlotHistoryResponse {
 	history: SubscriptionSlotHistory[];
 	continuationToken: string;
 	totalSize: Int64;
-};
+}
 
 export interface PopupDisplaySettings {
 	pages: number[];
 	editorsPickIds: string[];
-};
+}
 
 export interface PopupPage {
 	imageUrl: string;
 	title: string;
 	body: string;
-};
+}
 
 export interface PopupActionButton {
 	label: string;
 	actionUrl: string;
 	textColorCode: string;
 	backgroundColorCode: string;
-};
+}
 
 export interface PopupDismissButton {
 	label: string;
 	textColorCode: string;
 	backgroundColorCode: string;
-};
+}
 
 export interface PopupContent {
 	pages: PopupPage[];
 	actionButton: PopupActionButton;
 	dismissButton: PopupDismissButton;
-};
+}
 
 export interface ShopPopup {
 	popupId: string;
@@ -5596,77 +5596,77 @@ export interface ShopPopup {
 	displayPriority: number;
 	visualType: PopupVisualType;
 	displayIntervalInDays: number;
-};
+}
 
 export interface GetPopupsResponse {
 	popups: ShopPopup[];
-};
+}
 
 export interface GetSubscriptionSlotStatusResponse {
 	productIdsInSlots: string[];
 	usedSlotCount: number;
 	maxSlotCount: number;
-};
+}
 
 export interface GetProductKeyboardListResponse {
 	productType: ProductType;
 	keyboardProductIds: string[];
-};
+}
 
 export interface GetMusicSubscriptionStatusResponse {
 	validUntil: Int64;
 	expired: boolean;
 	isStickersPremiumEnabled: boolean;
-};
+}
 
 export interface StartBundleSubscriptionResponse {
 	result: StartBundleSubscriptionResult;
-};
+}
 
 export interface StopBundleSubscriptionResponse {
 	result: StopBundleSubscriptionResult;
-};
+}
 
 export interface GetSubscriptionCouponCodeResponse {
 	result: GetSubscriptionCouponCodeResult;
 	couponCode: string;
-};
+}
 
 export interface GetSubscriptionCouponCampaignResponse {
 	status: SubscriptionCouponCampaignStatus;
-};
+}
 
 export interface PopupModel {
 	popupId: string;
 	active: boolean;
-};
+}
 
 export interface GetPopupDisplayStatusResponse {
 	popups: { [k: string]: PopupModel };
-};
+}
 
 export interface GetFilteredProductsResponse {
 	results: ProductSearchSummary[];
 	continuationToken: string;
 	totalSize: Int64;
-};
+}
 
 export interface GetProductLatestVersionForUserResponse {
 	latestVersion: Int64;
 	latestVersionString: string;
-};
+}
 
 export interface GetSubscriptionAgreementStatusResponse {
 	accepted: boolean;
-};
+}
 
 export interface AcceptSubscriptionAgreementResponse {
 	result: AcceptSubscriptionAgreementResult;
-};
+}
 
 export interface ShouldShowWelcomeStickerBannerResponse {
 	shouldShowBanner: boolean;
-};
+}
 
 export interface StickerDisplayData {
 	stickerHash: string;
@@ -5679,18 +5679,18 @@ export interface StickerDisplayData {
 	width: number;
 	version: Int64;
 	availableForCombinationSticker: boolean;
-};
+}
 
 export interface DisplayData {
 	stickerSummary: StickerDisplayData;
-};
+}
 
 export interface CollectionItem {
 	itemId: string;
 	productId: string;
 	displayData: DisplayData;
 	sortId: number;
-};
+}
 
 export interface Collection {
 	collectionId: string;
@@ -5698,24 +5698,24 @@ export interface Collection {
 	productType: ProductType;
 	createdTimeMillis: Int64;
 	updatedTimeMillis: Int64;
-};
+}
 
 export interface GetUserCollectionsResponse {
 	collections: Collection[];
 	updated: boolean;
-};
+}
 
 export interface CreateCollectionForUserResponse {
 	collection: Collection;
-};
+}
 
-export interface AddItemToCollectionResponse {};
+export interface AddItemToCollectionResponse {}
 
-export interface RemoveItemFromCollectionResponse {};
+export interface RemoveItemFromCollectionResponse {}
 
 export interface IsProductForCollectionsResponse {
 	isAvailable: boolean;
-};
+}
 
 export enum ExtendedProfileAttribute {}
 
@@ -6273,23 +6273,23 @@ export interface MessageCommitResult {
 	unregisteredCount: Int64;
 	unrelatedCount: Int64;
 	errorDescription: string;
-};
+}
 
 export interface CallHost {
 	host: string;
 	port: number;
 	zone: string;
-};
+}
 
 export interface AgeCheckDocomoResult {
 	authUrl: string;
 	userAgeType: UserAgeType;
-};
+}
 
 export interface AgeCheckRequestResult {
 	authUrl: string;
 	sessionId: string;
-};
+}
 
 export interface Announcement {
 	index: number;
@@ -6299,43 +6299,43 @@ export interface Announcement {
 	createdTime: Int64;
 	pictureUrl: string;
 	thumbnailUrl: string;
-};
+}
 
 export interface ChannelProvider {
 	name: string;
-};
+}
 
 export interface ChannelDomain {
 	host: string;
 	removed: boolean;
-};
+}
 
 export interface OTPResult {
 	otpId: string;
 	otp: string;
-};
+}
 
 export interface SquareInfo {
 	square: Square;
 	squareStatus: SquareStatus;
 	squareNoteStatus: NoteStatus;
-};
+}
 
 export interface BotUseInfo {
 	botUseAgreementAccepted: boolean;
 	botInFriends: boolean;
 	primaryApplication: string;
 	locale: string;
-};
+}
 
 export interface PaidCallAdCountry {
 	countryCode: string;
 	rateDivision: string;
-};
+}
 
 export interface PaidCallAdResult {
 	adRemains: number;
-};
+}
 
 export interface PaidCallBalance {
 	productType: PaidCallProductType;
@@ -6348,7 +6348,7 @@ export interface PaidCallBalance {
 	startTime: Int64;
 	endTime: Int64;
 	autopayEnabled: boolean;
-};
+}
 
 export interface PaidCallCurrencyExchangeRate {
 	currencyCode: string;
@@ -6357,7 +6357,7 @@ export interface PaidCallCurrencyExchangeRate {
 	preferred: boolean;
 	coinRate: string;
 	creditRate: string;
-};
+}
 
 export interface ExtendedProfileBirthday {
 	year: string;
@@ -6366,11 +6366,11 @@ export interface ExtendedProfileBirthday {
 	day: string;
 	dayPrivacyLevelType: PrivacyLevelType;
 	dayEnabled: boolean;
-};
+}
 
 export interface ExtendedProfile {
 	birthday: ExtendedProfileBirthday;
-};
+}
 
 export interface PaidCallDialing {
 	type: PaidCallType;
@@ -6391,7 +6391,7 @@ export interface PaidCallDialing {
 	adMaxMin: number;
 	adRemains: number;
 	adSessionId: string;
-};
+}
 
 export interface SpotItem {
 	name: string;
@@ -6400,20 +6400,20 @@ export interface SpotItem {
 	mid: string;
 	countryAreaCode: string;
 	freePhoneCallable: boolean;
-};
+}
 
 export interface SpotNearbyItem {
 	spotItem: SpotItem;
 	location: Location;
-};
+}
 
 export interface SpotNearbyResponse {
 	spotNearbyItems: SpotNearbyItem[];
-};
+}
 
 export interface SpotPhoneNumberResponse {
 	spotItems: SpotItem[];
-};
+}
 
 export interface PaidCallHistory {
 	seq: Int64;
@@ -6431,37 +6431,37 @@ export interface PaidCallHistory {
 	charge: number;
 	unit: string;
 	result: string;
-};
+}
 
 export interface PaidCallHistoryResult {
 	historys: PaidCallHistory[];
 	hasNext: boolean;
-};
+}
 
 export interface PaidCallMetadataResult {
 	currencyExchangeRates: PaidCallCurrencyExchangeRate[];
 	recommendedCountryCodes: string[];
 	adCountries: PaidCallAdCountry[];
-};
+}
 
 export interface PaidCallRedeemResult {
 	eventName: string;
 	eventAmount: number;
-};
+}
 
 export interface PaidCallResponse {
 	host: CallHost;
 	dialing: PaidCallDialing;
 	token: string;
 	spotItems: SpotItem[];
-};
+}
 
 export interface PaidCallUserRate {
 	countryCode: string;
 	rate: number;
 	rateDivision: string;
 	rateName: string;
-};
+}
 
 export interface ChannelInfo {
 	channelId: string;
@@ -6478,59 +6478,59 @@ export interface ChannelInfo {
 	allowedPermissions: ChannelPermission[];
 	channelDomains: ChannelDomain[];
 	updatedTimestamp: Int64;
-};
+}
 
 export interface ApprovedChannelInfo {
 	channelInfo: ChannelInfo;
 	approvedAt: Int64;
-};
+}
 
 export interface ApprovedChannelInfos {
 	approvedChannelInfos: ApprovedChannelInfo[];
 	revision: Int64;
-};
+}
 
 export interface AuthQrcode {
 	qrcode: string;
 	verifier: string;
 	callbackUrl: string;
-};
+}
 
 export interface AnalyticsInfo {
 	gaSamplingRate: number;
 	tmid: string;
-};
+}
 
 export interface ContactTransition {
 	ownerMid: string;
 	targetMid: string;
 	previousStatus: ContactStatus;
 	resultStatus: ContactStatus;
-};
+}
 
 export interface UserTicketResponse {
 	mid: string;
 	userTicket: string;
-};
+}
 
 export interface BuddyBanner {
 	buddyBannerLinkType: BuddyBannerLinkType;
 	buddyBannerLink: string;
 	buddyBannerImageUrl: string;
-};
+}
 
 export interface BuddyList {
 	classification: string;
 	displayName: string;
 	totalBuddyCount: number;
 	popularContacts: Contact[];
-};
+}
 
 export interface RegisterWithPhoneNumberResult {
 	authToken: string;
 	recommendEmailRegistration: boolean;
 	certificate: string;
-};
+}
 
 export interface BuddyMessageRequest {
 	contentType: ContentType;
@@ -6538,12 +6538,12 @@ export interface BuddyMessageRequest {
 	location: Location;
 	content: Buffer;
 	contentMetadata: { [k: string]: string };
-};
+}
 
 export interface BuddyOnAirUrls {
 	hls: { [k: string]: string };
 	smoothStreaming: { [k: string]: string };
-};
+}
 
 export interface BuddyOnAir {
 	mid: string;
@@ -6555,7 +6555,7 @@ export interface BuddyOnAir {
 	targetCount: Int64;
 	onAirType: BuddyOnAirType;
 	onAirUrls: BuddyOnAirUrls;
-};
+}
 
 export interface BuddyProfile {
 	buddyId: string;
@@ -6564,7 +6564,7 @@ export interface BuddyProfile {
 	displayName: string;
 	statusMessage: string;
 	contactCount: Int64;
-};
+}
 
 export interface CommitMessageResult {
 	message: Message;
@@ -6574,7 +6574,7 @@ export interface CommitMessageResult {
 	failCount: Int64;
 	unregisterCount: Int64;
 	blockCount: Int64;
-};
+}
 
 export interface BuddySearchResult {
 	mid: string;
@@ -6583,40 +6583,40 @@ export interface BuddySearchResult {
 	picturePath: string;
 	statusMessage: string;
 	businessAccount: boolean;
-};
+}
 
 export interface SyncParamMid {
 	mid: string;
 	diff: Diff;
 	revision: Int64;
-};
+}
 
 export interface SIMInfo {
 	phoneNumber: string;
 	countryCode: string;
-};
+}
 
 export interface SyncParamContact {
 	syncParamMid: SyncParamMid;
 	contactStatus: ContactStatus;
-};
+}
 
 export interface ChannelDomains {
 	channelDomains: ChannelDomain[];
 	revision: Int64;
-};
+}
 
 export interface ProductCategory {
 	productCategoryId: Int64;
 	title: string;
 	productCount: number;
 	newFlag: boolean;
-};
+}
 
 export interface ChannelInfos {
 	channelInfos: ChannelInfo[];
 	revision: Int64;
-};
+}
 
 export interface ChannelNotificationSetting {
 	channelId: string;
@@ -6624,14 +6624,14 @@ export interface ChannelNotificationSetting {
 	notificationReceivable: boolean;
 	messageReceivable: boolean;
 	showDefault: boolean;
-};
+}
 
 export interface ChannelSyncDatas {
 	channelInfos: ChannelInfo[];
 	channelDomains: ChannelDomain[];
 	revision: Int64;
 	expires: Int64;
-};
+}
 
 export interface NotiCenterEventData {
 	id: string;
@@ -6644,30 +6644,30 @@ export interface NotiCenterEventData {
 	operationRevision: Int64;
 	content: { [k: string]: string };
 	push: { [k: string]: string };
-};
+}
 
 export interface ChannelSettings {
 	unapprovedMessageReceivable: boolean;
-};
+}
 
 export interface ChannelIdWithLastUpdated {
 	channelId: string;
 	lastUpdated: Int64;
-};
+}
 
 export interface Coin {
 	freeCoinBalance: number;
 	payedCoinBalance: number;
 	totalCoinBalance: number;
 	rewardCoinBalance: number;
-};
+}
 
 export interface CoinPayLoad {
 	payCoin: number;
 	freeCoin: number;
 	type: PayloadType;
 	rewardCoin: number;
-};
+}
 
 export interface CoinHistory {
 	payDate: Int64;
@@ -6682,7 +6682,7 @@ export interface CoinHistory {
 	displayPrice: string;
 	payload: CoinPayLoad;
 	channelId: string;
-};
+}
 
 export interface CoinHistoryCondition {
 	start: Int64;
@@ -6690,13 +6690,13 @@ export interface CoinHistoryCondition {
 	language: string;
 	eddt: string;
 	appStoreCode: PaymentType;
-};
+}
 
 export interface CoinHistoryResult {
 	historys: CoinHistory[];
 	balance: Coin;
 	hasNext: boolean;
-};
+}
 
 export interface CoinProductItem {
 	itemId: string;
@@ -6707,7 +6707,7 @@ export interface CoinProductItem {
 	displayPrice: string;
 	name: string;
 	desc: string;
-};
+}
 
 export interface CoinPurchaseConfirm {
 	orderId: string;
@@ -6717,7 +6717,7 @@ export interface CoinPurchaseConfirm {
 	seller: string;
 	requestType: string;
 	ignoreReceipt: boolean;
-};
+}
 
 export interface CoinPurchaseReservation {
 	productId: string;
@@ -6728,13 +6728,13 @@ export interface CoinPurchaseReservation {
 	language: string;
 	pgCode: PaymentPgType;
 	redirectUrl: string;
-};
+}
 
 export interface CoinUseReservationItem {
 	itemId: string;
 	itemName: string;
 	amount: number;
-};
+}
 
 export interface CoinUseReservation {
 	channelId: string;
@@ -6742,7 +6742,7 @@ export interface CoinUseReservation {
 	appStoreCode: PaymentType;
 	items: CoinUseReservationItem[];
 	country: string;
-};
+}
 
 export interface CompactContact {
 	mid: string;
@@ -6751,18 +6751,18 @@ export interface CompactContact {
 	status: ContactStatus;
 	settings: Int64;
 	displayNameOverridden: string;
-};
+}
 
 export interface ContactReport {
 	mid: string;
 	exists: boolean;
 	contact: Contact;
-};
+}
 
 export interface ContactReportResult {
 	mid: string;
 	exists: boolean;
-};
+}
 
 export interface DeviceInfo {
 	deviceName: string;
@@ -6772,32 +6772,32 @@ export interface DeviceInfo {
 	carrierCode: CarrierCode;
 	carrierName: string;
 	applicationType: ApplicationType;
-};
+}
 
 export interface EmailConfirmation {
 	usePasswordSet: boolean;
 	email: string;
 	password: string;
 	ignoreDuplication: boolean;
-};
+}
 
 export interface EmailConfirmationSession {
 	emailConfirmationType: EmailConfirmationType;
 	verifier: string;
 	targetEmail: string;
-};
+}
 
 export interface FriendChannelMatrix {
 	channelId: string;
 	representMid: string;
 	count: number;
 	point: number;
-};
+}
 
 export interface FriendChannelMatricesResponse {
 	expires: Int64;
 	matrices: FriendChannelMatrix[];
-};
+}
 
 export interface FriendRequest {
 	eMid: string;
@@ -6810,7 +6810,7 @@ export interface FriendRequest {
 	displayName: string;
 	picturePath: string;
 	pictureStatus: string;
-};
+}
 
 export interface FriendRequestsInfo {
 	totalIncomingCount: number;
@@ -6819,23 +6819,23 @@ export interface FriendRequestsInfo {
 	recentOutgoings: FriendRequest[];
 	totalIncomingLimit: number;
 	totalOutgoingLimit: number;
-};
+}
 
 export interface Geolocation {
 	longitude: number;
 	latitude: number;
-};
+}
 
 export interface NotificationTarget {
 	applicationType: string;
 	applicationVersion: string;
 	region: string;
-};
+}
 
 export interface GroupPreference {
 	invitationTicket: string;
 	favoriteTimestamp: Int64;
-};
+}
 
 export interface Group {
 	id: string;
@@ -6848,23 +6848,23 @@ export interface Group {
 	creator: Contact;
 	invitee: Contact[];
 	notificationDisabled: boolean;
-};
+}
 
 export interface IdentityCredential {
 	provider: IdentityProvider;
 	identifier: string;
 	password: string;
-};
+}
 
 export interface LastReadMessageId {
 	mid: string;
 	lastReadMessageId: string;
-};
+}
 
 export interface LastReadMessageIds {
 	chatId: string;
 	lastReadMessageIds: LastReadMessageId[];
-};
+}
 
 export interface LoginResult {
 	authToken: string;
@@ -6875,7 +6875,7 @@ export interface LoginResult {
 	lastPrimaryBindTime: Int64;
 	displayMessage: string;
 	sessionForSMSConfirm: VerificationSessionData;
-};
+}
 
 export interface LoginRequest {
 	type: number;
@@ -6889,7 +6889,7 @@ export interface LoginRequest {
 	verifier: string;
 	secret: string;
 	e2eeVersion: number;
-};
+}
 
 export interface LoginSession {
 	tokenKey: string;
@@ -6897,7 +6897,7 @@ export interface LoginSession {
 	applicationType: ApplicationType;
 	systemName: string;
 	accessLocation: string;
-};
+}
 
 export interface MessageOperation {
 	revision: Int64;
@@ -6909,23 +6909,23 @@ export interface MessageOperation {
 	param2: string;
 	param3: string;
 	message: Message;
-};
+}
 
 export interface MessageOperations {
 	operations: MessageOperation[];
 	endFlag: boolean;
-};
+}
 
 export interface MessageStoreResult {
 	requestId: string;
 	messageIds: string[];
-};
+}
 
 export interface MetaProfile {
 	createTime: Int64;
 	regionCode: string;
 	identities: { [k: number /*RegistrationType*/]: string };
-};
+}
 
 export interface NotificationItem {
 	id: string;
@@ -6936,12 +6936,12 @@ export interface NotificationItem {
 	revision: Int64;
 	createdTime: Int64;
 	content: { [k: string]: string };
-};
+}
 
 export interface NotificationFetchResult {
 	fetchMode: NotificationItemFetchMode;
 	itemList: NotificationItem[];
-};
+}
 
 export interface PaymentReservation {
 	receiverMid: string;
@@ -6954,13 +6954,13 @@ export interface PaymentReservation {
 	messageText: string;
 	messageTemplate: number;
 	packageId: Int64;
-};
+}
 
 export interface PaymentReservationResult {
 	orderId: string;
 	confirmUrl: string;
 	extras: { [k: string]: string };
-};
+}
 
 export interface Product {
 	productId: string;
@@ -7003,7 +7003,7 @@ export interface Product {
 	hasSound: boolean;
 	recommendationsEnabled: boolean;
 	stickerResourceType: StickerResourceType;
-};
+}
 
 export interface ProductSimple {
 	productId: string;
@@ -7014,7 +7014,7 @@ export interface ProductSimple {
 	stickerIdRanges: StickerIdRange[];
 	grantedByDefault: boolean;
 	displayOrder: number;
-};
+}
 
 export interface ProductSimpleList {
 	hasNext: boolean;
@@ -7023,34 +7023,34 @@ export interface ProductSimpleList {
 	productList: ProductSimple[];
 	recentNewReleaseDate: Int64;
 	recentEventReleaseDate: Int64;
-};
+}
 
 export interface ProximityMatchCandidateResult {
 	users: Contact[];
 	buddies: Contact[];
-};
+}
 
 export interface RegisterWithSnsIdResult {
 	authToken: string;
 	userCreated: boolean;
-};
+}
 
 export interface RequestTokenResponse {
 	requestToken: string;
 	returnUrl: string;
-};
+}
 
 export interface SuggestDictionary {
 	language: string;
 	name: string;
-};
+}
 
 export interface SuggestItemDictionaryIncrement {
 	status: SuggestDictionaryIncrementStatus;
 	revision: Int64;
 	scheme: string;
 	data: Buffer;
-};
+}
 
 export interface SuggestTagDictionaryIncrement {
 	status: SuggestDictionaryIncrementStatus;
@@ -7058,35 +7058,35 @@ export interface SuggestTagDictionaryIncrement {
 	revision: Int64;
 	scheme: string;
 	data: Buffer;
-};
+}
 
 export interface SuggestDictionaryIncrements {
 	itemIncrement: SuggestItemDictionaryIncrement;
 	tagIncrements: SuggestTagDictionaryIncrement[];
-};
+}
 
 export interface SuggestItemDictionaryRevision {
 	revision: Int64;
 	scheme: string;
-};
+}
 
 export interface SuggestTagDictionaryRevision {
 	language: string;
 	revision: Int64;
 	scheme: string;
-};
+}
 
 export interface SuggestDictionaryRevisions {
 	itemRevision: SuggestItemDictionaryRevision;
 	tagRevisions: SuggestTagDictionaryRevision[];
-};
+}
 
 export interface SuggestDictionarySettings {
 	revision: Int64;
 	newRevision: Int64;
 	dictionaries: SuggestDictionary[];
 	preloadedDictionaries: string[];
-};
+}
 
 export interface PhoneInfoForChannel {
 	mid: string;
@@ -7094,27 +7094,27 @@ export interface PhoneInfoForChannel {
 	allowedToSearchByPhoneNumber: boolean;
 	allowedToReceiveMessageFromNonFriend: boolean;
 	region: string;
-};
+}
 
 export interface PhoneVerificationResult {
 	verificationResult: VerificationResult;
 	accountMigrationCheckType: AccountMigrationCheckType;
 	recommendAddFriends: boolean;
-};
+}
 
 export interface PlaceSearchInfo {
 	name: string;
 	address: string;
 	latitude: number;
 	longitude: number;
-};
+}
 
 export interface SecurityCenterResult {
 	uri: string;
 	token: string;
 	cookiePath: string;
 	skip: boolean;
-};
+}
 
 export interface SendBuddyMessageResult {
 	requestId: string;
@@ -7129,7 +7129,7 @@ export interface SendBuddyMessageResult {
 	unregisterCount: Int64;
 	timestamp: Int64;
 	message: string;
-};
+}
 
 export interface SetBuddyOnAirResult {
 	requestId: string;
@@ -7142,13 +7142,13 @@ export interface SetBuddyOnAirResult {
 	unregisterCount: Int64;
 	timestamp: Int64;
 	message: string;
-};
+}
 
 export interface SimpleChannelClient {
 	applicationType: string;
 	applicationVersion: string;
 	locale: string;
-};
+}
 
 export interface SimpleChannelContact {
 	mid: string;
@@ -7156,42 +7156,42 @@ export interface SimpleChannelContact {
 	pictureStatus: string;
 	picturePath: string;
 	statusMessage: string;
-};
+}
 
 export interface SnsFriend {
 	snsUserId: string;
 	snsUserName: string;
 	snsIdType: SnsIdType;
-};
+}
 
 export interface SnsFriendContactRegistration {
 	contact: Contact;
 	snsIdType: SnsIdType;
 	snsUserId: string;
-};
+}
 
 export interface SnsFriendModification {
 	type: ModificationType;
 	snsFriend: SnsFriend;
-};
+}
 
 export interface SnsFriends {
 	snsFriends: SnsFriend[];
 	hasMore: boolean;
-};
+}
 
 export interface SnsIdUserStatus {
 	userExisting: boolean;
 	phoneNumberRegistered: boolean;
 	sameDevice: boolean;
-};
+}
 
 export interface SnsProfile {
 	snsUserId: string;
 	snsUserName: string;
 	email: string;
 	thumbnailUrl: string;
-};
+}
 
 export interface SystemConfiguration {
 	endpoint: string;
@@ -7199,7 +7199,7 @@ export interface SystemConfiguration {
 	updateUrl: string;
 	c2dmAccount: string;
 	nniServer: string;
-};
+}
 
 export interface TMessageBox {
 	id: string;
@@ -7210,25 +7210,25 @@ export interface TMessageBox {
 	status: number;
 	midType: MIDType;
 	lastMessages: Message[];
-};
+}
 
 export interface TMessageBoxWrapUp {
 	messageBox: TMessageBox;
 	name: string;
 	contacts: Contact[];
 	pictureRevision: string;
-};
+}
 
 export interface TMessageBoxWrapUpResponse {
 	messageBoxWrapUpList: TMessageBoxWrapUp[];
 	totalSize: number;
-};
+}
 
 export interface SyncRelations {
 	syncAll: boolean;
 	syncParamContact: SyncParamContact[];
 	syncParamMid: SyncParamMid[];
-};
+}
 
 export interface SyncScope {
 	syncProfile: boolean;
@@ -7239,7 +7239,7 @@ export interface SyncScope {
 	group: SyncRelations;
 	room: SyncRelations;
 	chat: SyncRelations;
-};
+}
 
 export interface JoinSquareResponse {
 	square: Square;
@@ -7248,145 +7248,145 @@ export interface JoinSquareResponse {
 	squareMember: SquareMember;
 	squareFeatureSet: SquareFeatureSet;
 	noteStatus: NoteStatus;
-};
+}
 
 export interface JoinSquareRequest {
 	squareMid: string;
 	member: SquareMember;
-};
+}
 
 export interface JoinSquareChatResponse {
 	squareChat: SquareChat;
 	squareChatStatus: SquareChatStatus;
 	squareChatMember: SquareChatMember;
-};
+}
 
 export interface JoinSquareChatRequest {
 	squareChatMid: string;
-};
+}
 
 export interface SendMessageRequest {
 	reqSeq: number;
 	squareChatMid: string;
 	squareMessage: SquareMessage;
-};
+}
 
 export interface MarkAsReadRequest {
 	squareChatMid: string;
 	messageId: string;
-};
+}
 
 export interface ApproveSquareMembersResponse {
 	approvedMembers: SquareMember[];
 	status: SquareStatus;
-};
+}
 
 export interface ApproveSquareMembersRequest {
 	squareMid: string;
 	requestedMemberMids: string[];
-};
+}
 
 export interface CreateSquareChatResponse {
 	squareChat: SquareChat;
 	squareChatStatus: SquareChatStatus;
 	squareChatMember: SquareChatMember;
-};
+}
 
 export interface CreateSquareChatRequest {
 	reqSeq: number;
 	squareChat: SquareChat;
 	squareMemberMids: string[];
-};
+}
 
 export interface CreateSquareRequest {
 	reqSeq: number;
 	square: Square;
 	creator: SquareMember;
-};
+}
 
-export interface DeleteSquareResponse {};
+export interface DeleteSquareResponse {}
 
 export interface DeleteSquareRequest {
 	mid: string;
 	revision: Int64;
-};
+}
 
-export interface DestroyMessageResponse {};
+export interface DestroyMessageResponse {}
 
 export interface DestroyMessageRequest {
 	squareChatMid: string;
 	messageId: string;
-};
+}
 
 export interface GetSquareChatMembersRequest {
 	squareChatMid: string;
 	continuationToken: string;
 	limit: number;
-};
+}
 
 export interface GetSquareChatMembersResponse {
 	squareChatMembers: SquareMember[];
 	continuationToken: string;
-};
+}
 
 export interface GetSquareChatStatusRequest {
 	squareChatMid: string;
-};
+}
 
 export interface GetSquareChatStatusResponse {
 	chatStatus: SquareChatStatus;
-};
+}
 
 export interface GetSquareChatRequest {
 	squareChatMid: string;
-};
+}
 
 export interface GetSquareChatResponse {
 	squareChat: SquareChat;
 	squareChatMember: SquareChatMember;
 	squareChatStatus: SquareChatStatus;
-};
+}
 
 export interface GetSquareAuthorityRequest {
 	squareMid: string;
-};
+}
 
 export interface GetSquareAuthorityResponse {
 	authority: SquareAuthority;
-};
+}
 
 export interface GetJoinedSquaresRequest {
 	continuationToken: string;
 	limit: number;
-};
+}
 
 export interface GetJoinableSquareChatsRequest {
 	squareMid: string;
 	continuationToken: string;
 	limit: number;
-};
+}
 
 export interface GetInvitationTicketUrlRequest {
 	mid: string;
-};
+}
 
 export interface GetInvitationTicketUrlResponse {
 	invitationURL: string;
-};
+}
 
 export interface LeaveSquareRequest {
 	squareMid: string;
-};
+}
 
-export interface LeaveSquareResponse {};
+export interface LeaveSquareResponse {}
 
 export interface LeaveSquareChatRequest {
 	squareChatMid: string;
 	sayGoodbye: boolean;
 	squareChatMemberRevision: Int64;
-};
+}
 
-export interface LeaveSquareChatResponse {};
+export interface LeaveSquareChatResponse {}
 
 export interface SquareMemberSearchOption {
 	membershipState: SquareMembershipState;
@@ -7396,32 +7396,32 @@ export interface SquareMemberSearchOption {
 	ableToReceiveFriendRequest: BooleanState;
 	chatMidToExcludeMembers: string;
 	includingMe: boolean;
-};
+}
 
 export interface SearchSquareMembersRequest {
 	squareMid: string;
 	searchOption: SquareMemberSearchOption;
 	continuationToken: string;
 	limit: number;
-};
+}
 
 export interface SearchSquareMembersResponse {
 	members: SquareMember[];
 	revision: Int64;
 	continuationToken: string;
 	totalCount: number;
-};
+}
 
 export interface FindSquareByInvitationTicketRequest {
 	invitationTicket: string;
-};
+}
 
 export interface FetchMyEventsRequest {
 	subscriptionId: Int64;
 	syncToken: string;
 	limit: number;
 	continuationToken: string;
-};
+}
 
 export interface FetchSquareChatEventsRequest {
 	subscriptionId: Int64;
@@ -7429,85 +7429,85 @@ export interface FetchSquareChatEventsRequest {
 	syncToken: string;
 	limit: number;
 	direction: FetchDirection;
-};
+}
 
 export interface InviteToSquareRequest {
 	squareMid: string;
 	invitees: string[];
 	squareChatMid: string;
-};
+}
 
 export interface InviteToSquareChatRequest {
 	inviteeMids: string[];
 	squareChatMid: string;
-};
+}
 
 export interface InviteToSquareChatResponse {
 	inviteeMids: string[];
-};
+}
 
 export interface GetSquareMemberRequest {
 	squareMemberMid: string;
-};
+}
 
 export interface GetSquareMemberResponse {
 	squareMember: SquareMember;
 	relation: SquareMemberRelation;
 	oneOnOneChatMid: string;
-};
+}
 
 export interface GetSquareMembersRequest {
 	mids: string[];
-};
+}
 
 export interface GetSquareMembersResponse {
 	members: SquareMember;
-};
+}
 
 export interface GetSquareMemberRelationsRequest {
 	state: SquareMemberRelationState;
 	continuationToken: string;
 	limit: number;
-};
+}
 
 export interface GetSquareMemberRelationsResponse {
 	squareMembers: SquareMember[];
 	relations: { [k: string]: SquareMemberRelation };
 	continuationToken: string;
-};
+}
 
 export interface GetSquareMemberRelationRequest {
 	squareMid: string;
 	targetSquareMemberMid: string;
-};
+}
 
 export interface GetSquareMemberRelationResponse {
 	squareMid: string;
 	targetSquareMemberMid: string;
 	relation: SquareMemberRelation;
-};
+}
 
-export interface GetSquareCategoriesRequest {};
+export interface GetSquareCategoriesRequest {}
 
 export interface GetSquareCategoriesResponse {
 	categoryList: Category[];
-};
+}
 
 export interface UpdateSquareRequest {
 	updatedAttrs: SquareAttribute[];
 	square: Square;
-};
+}
 
 export interface UpdateSquareResponse {
 	updatedAttrs: SquareAttribute[];
 	square: Square;
-};
+}
 
 export interface SearchSquaresRequest {
 	query: string;
 	continuationToken: string;
 	limit: number;
-};
+}
 
 export interface SearchSquaresResponse {
 	squares: Square[];
@@ -7515,136 +7515,136 @@ export interface SearchSquaresResponse {
 	myMemberships: { [k: string]: SquareMember };
 	continuationToken: string;
 	noteStatuses: { [k: string]: NoteStatus };
-};
+}
 
 export interface GetSquareFeatureSetRequest {
 	squareMid: string;
-};
+}
 
 export interface UpdateSquareFeatureSetRequest {
 	updateAttributes: SquareFeatureSetAttribute[];
 	squareFeatureSet: SquareFeatureSet;
-};
+}
 
 export interface UpdateSquareFeatureSetResponse {
 	updateAttributes: SquareFeatureSetAttribute[];
 	squareFeatureSet: SquareFeatureSet;
-};
+}
 
 export interface UpdateSquareMemberRequest {
 	updatedAttrs: SquareMemberAttribute[];
 	updatedPreferenceAttrs: SquarePreferenceAttribute[];
 	squareMember: SquareMember;
-};
+}
 
 export interface UpdateSquareMemberResponse {
 	updatedAttrs: SquareMemberAttribute[];
 	squareMember: SquareMember;
 	updatedPreferenceAttrs: SquarePreferenceAttribute[];
-};
+}
 
 export interface UpdateSquareMembersRequest {
 	updatedAttrs: SquareMemberAttribute[];
 	members: SquareMember[];
-};
+}
 
 export interface UpdateSquareMembersResponse {
 	updatedAttrs: SquareMemberAttribute[];
 	editor: SquareMember;
 	members: { [k: string]: SquareMember };
-};
+}
 
 export interface RejectSquareMembersRequest {
 	squareMid: string;
 	requestedMemberMids: string[];
-};
+}
 
 export interface RejectSquareMembersResponse {
 	rejectedMembers: SquareMember[];
 	status: SquareStatus;
-};
+}
 
 export interface RemoveSubscriptionsRequest {
 	unsubscriptions: Int64[];
-};
+}
 
-export interface RemoveSubscriptionsResponse {};
+export interface RemoveSubscriptionsResponse {}
 
 export interface RefreshSubscriptionsRequest {
 	subscriptions: Int64[];
-};
+}
 
 export interface RefreshSubscriptionsResponse {
 	ttlMillis: Int64;
 	subscriptionStates: any;
-};
+}
 
 export interface UpdateSquareChatRequest {
 	updatedAttrs: SquareChatAttribute[];
 	squareChat: SquareChat;
-};
+}
 
 export interface UpdateSquareChatResponse {
 	updatedAttrs: SquareChatAttribute[];
 	squareChat: SquareChat;
-};
+}
 
 export interface DeleteSquareChatRequest {
 	squareChatMid: string;
 	revision: Int64;
-};
+}
 
-export interface DeleteSquareChatResponse {};
+export interface DeleteSquareChatResponse {}
 
 export interface UpdateSquareChatMemberRequest {
 	updatedAttrs: SquareChatMemberAttribute[];
 	chatMember: SquareChatMember;
-};
+}
 
 export interface UpdateSquareChatMemberResponse {
 	updatedChatMember: SquareChatMember;
-};
+}
 
 export interface UpdateSquareAuthorityRequest {
 	updateAttributes: SquareAuthorityAttribute[];
 	authority: SquareAuthority;
-};
+}
 
 export interface UpdateSquareAuthorityResponse {
 	updatdAttributes: SquareAuthorityAttribute[];
 	authority: SquareAuthority;
-};
+}
 
 export interface UpdateSquareMemberRelationRequest {
 	squareMid: string;
 	targetSquareMemberMid: string;
 	updatedAttrs: SquareMemberRelationAttribute[];
 	relation: SquareMemberRelation;
-};
+}
 
 export interface UpdateSquareMemberRelationResponse {
 	squareMid: string;
 	targetSquareMemberMid: string;
 	updatedAttrs: SquareMemberRelationAttribute[];
 	relation: SquareMemberRelation;
-};
+}
 
 export interface ReportSquareRequest {
 	squareMid: string;
 	reportType: ReportType;
 	otherReason: string;
-};
+}
 
-export interface ReportSquareResponse {};
+export interface ReportSquareResponse {}
 
 export interface ReportSquareChatRequest {
 	squareMid: string;
 	squareChatMid: string;
 	reportType: ReportType;
 	otherReason: string;
-};
+}
 
-export interface ReportSquareChatResponse {};
+export interface ReportSquareChatResponse {}
 
 export interface ReportSquareMessageRequest {
 	squareMid: string;
@@ -7652,87 +7652,87 @@ export interface ReportSquareMessageRequest {
 	squareMessageId: string;
 	reportType: ReportType;
 	otherReason: string;
-};
+}
 
-export interface ReportSquareMessageResponse {};
+export interface ReportSquareMessageResponse {}
 
 export interface ReportSquareMemberRequest {
 	squareMemberMid: string;
 	reportType: ReportType;
 	otherReason: string;
 	squareChatMid: string;
-};
+}
 
-export interface ReportSquareMemberResponse {};
+export interface ReportSquareMemberResponse {}
 
 export interface GetSquareRequest {
 	mid: string;
-};
+}
 
 export interface GetSquareStatusRequest {
 	squareMid: string;
-};
+}
 
 export interface GetSquareStatusResponse {
 	squareStatus: SquareStatus;
-};
+}
 
 export interface GetNoteStatusRequest {
 	squareMid: string;
-};
+}
 
 export interface GetNoteStatusResponse {
 	squareMid: string;
 	status: NoteStatus;
-};
+}
 
 export interface CreateSquareChatAnnouncementRequest {
 	reqSeq: number;
 	squareChatMid: string;
 	squareChatAnnouncement: SquareChatAnnouncement;
-};
+}
 
 export interface CreateSquareChatAnnouncementResponse {
 	announcement: SquareChatAnnouncement;
-};
+}
 
 export interface DeleteSquareChatAnnouncementRequest {
 	squareChatMid: string;
 	announcementSeq: Int64;
-};
+}
 
-export interface DeleteSquareChatAnnouncementResponse {};
+export interface DeleteSquareChatAnnouncementResponse {}
 
 export interface GetSquareChatAnnouncementsRequest {
 	squareChatMid: string;
-};
+}
 
 export interface GetJoinedSquareChatsRequest {
 	continuationToken: string;
 	limit: number;
-};
+}
 
 export interface GetJoinedSquareChatsResponse {
 	chats: SquareChat[];
 	chatMembers: { [k: string]: SquareChatMember };
 	statuses: { [k: string]: SquareChatStatus };
 	continuationToken: string;
-};
+}
 
 export interface UserAuthStatus {
 	phoneNumberRegistered: boolean;
 	registeredSnsIdTypes: SnsIdType[];
-};
+}
 
 export interface WapInvitation {
 	type: WapInvitationType;
 	inviteeEmail: string;
 	inviterMid: string;
 	roomMid: string;
-};
+}
 
 export interface GroupCallRoute {
 	token: string;
 	cscf: CallHost;
 	mix: CallHost;
-};
+}

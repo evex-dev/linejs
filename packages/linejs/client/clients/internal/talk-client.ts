@@ -51,7 +51,7 @@ export class TalkClient extends ChannelClient {
 				"SyncResponse",
 				this.SyncService_API_PATH,
 				{},
-				timeout
+				timeout,
 			).then((res) => resolve(res));
 		});
 	}

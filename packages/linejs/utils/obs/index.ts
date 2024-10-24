@@ -22,7 +22,7 @@ class LINE_OBS_BASE {
 	 *
 	 * @param {LINE_OBS_PREFIX} [prefix="https://obs.line-apps.com/"] the prefix of line obs uri
 	 */
-	constructor(public prefix: LINE_OBS_PREFIX = "https://obs.line-apps.com/") { }
+	constructor(public prefix: LINE_OBS_PREFIX = "https://obs.line-apps.com/") {}
 
 	/**
 	 * Gets a OBS URI by appending the given hash to the prefixSticker
@@ -56,7 +56,11 @@ class LINE_OBS_BASE {
 	 * @param {boolean} [isPreview=false] - Whether to append '/preview' to the URL.
 	 * @return {string} The getted message image URISticker
 	 */
-	public getDataUrl(messageId: string, isPreview: boolean = false, square: boolean = false): string {
+	public getDataUrl(
+		messageId: string,
+		isPreview: boolean = false,
+		square: boolean = false,
+	): string {
 		return `${this.prefix}r/${square ? "g2" : "talk"}/m/${messageId}${isPreview ? "/preview" : ""}`;
 	}
 
@@ -70,8 +74,9 @@ class LINE_OBS_BASE {
 		squareMemberId: string,
 		isPreview: boolean = false,
 	): string {
-		return `${this.prefix}r/g2/member/${squareMemberId}${isPreview ? "/preview" : ""
-			}`;
+		return `${this.prefix}r/g2/member/${squareMemberId}${
+			isPreview ? "/preview" : ""
+		}`;
 	}
 }
 

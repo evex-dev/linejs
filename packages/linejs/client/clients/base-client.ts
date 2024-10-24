@@ -40,7 +40,7 @@ import { LINE_OBS } from "../../utils/obs/index.ts";
 import { RateLimitter } from "../libs/rate-limitter/index.ts";
 import type { FetchLike } from "../entities/fetch.ts";
 import { MimeType } from "../entities/mime.ts";
-import * as LINEClass from "../entities/class.ts"
+import * as LINEClass from "../entities/class.ts";
 
 interface ClientOptions {
 	storage?: BaseStorage;
@@ -129,7 +129,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description The timeout of long polling fetch
 	 */
-	public longTimeOutMs: number = 180000;	// 3分間待ってやる
+	public longTimeOutMs: number = 180000; // 3分間待ってやる
 
 	/**
 	 * @description Emit log event
@@ -471,9 +471,19 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				for (const event of myEvents.events) {
 					this.emit("v2_square_event", event);
 
-					if (event.type === LINETypes.SquareEventType._NOTIFICATION_MESSAGE && event.payload.notificationMessage) {
-						const squareEventNotificationMessage = event.payload.notificationMessage;
-						this.emit("v2_square_message", new LINEClass.SquareMessage({ squareEventNotificationMessage }, this as LooseType));
+					if (
+						event.type === LINETypes.SquareEventType._NOTIFICATION_MESSAGE &&
+						event.payload.notificationMessage
+					) {
+						const squareEventNotificationMessage =
+							event.payload.notificationMessage;
+						this.emit(
+							"v2_square_message",
+							new LINEClass.SquareMessage(
+								{ squareEventNotificationMessage },
+								this as LooseType,
+							),
+						);
 					}
 				}
 				myEventsArg.syncToken = myEvents.syncToken;
@@ -587,15 +597,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						const chat =
 							message.toType === LINETypes.MIDType._USER
 								? () => {
-									return this.getContact({ mid: sendIn });
-								}
+										return this.getContact({ mid: sendIn });
+									}
 								: undefined;
 
 						const group =
 							message.toType !== LINETypes.MIDType._USER
 								? async () => {
-									return (await this.getChats({ mids: [sendIn] })).chats[0];
-								}
+										return (await this.getChats({ mids: [sendIn] })).chats[0];
+									}
 								: (undefined as LooseType);
 
 						const getContact = () => {
@@ -651,7 +661,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				revision = myEvents.fullSyncResponse?.nextRevision || revision;
 			} catch (e) {
 				if (!this.ignoreSyncError) {
-					throw e
+					throw e;
 				}
 			}
 			await new Promise((resolve) => setTimeout(resolve, 100));
@@ -685,7 +695,10 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 				for (const operation of myEvents.operationResponse?.operations) {
 					revision = operation.revision;
-					this.emit("v2_event", new LINEClass.Operation(operation, this as LooseType));
+					this.emit(
+						"v2_event",
+						new LINEClass.Operation(operation, this as LooseType),
+					);
 					if (
 						operation.type === LINETypes.OpType._RECEIVE_MESSAGE ||
 						operation.type === LINETypes.OpType._SEND_MESSAGE ||
@@ -698,7 +711,10 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						) {
 							continue;
 						}
-						this.emit("v2_message", new LINEClass.TalkMessage({ operation }, this as LooseType));
+						this.emit(
+							"v2_message",
+							new LINEClass.TalkMessage({ operation }, this as LooseType),
+						);
 					}
 				}
 				globalRev =
@@ -710,7 +726,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				revision = myEvents.fullSyncResponse?.nextRevision || revision;
 			} catch (e) {
 				if (!this.ignoreSyncError) {
-					throw e
+					throw e;
 				}
 			}
 			await new Promise((resolve) => setTimeout(resolve, 100));
@@ -1225,7 +1241,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType { }
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
 
 	/**
 	 * @description Will override.
@@ -1270,7 +1286,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					"x-lst": "150000",
 					"x-line-access": qrcode,
 				},
-				this.longTimeOutMs
+				this.longTimeOutMs,
 			);
 			return true;
 		} catch (error) {
@@ -1316,7 +1332,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					"x-lst": "150000",
 					"x-line-access": qrcode,
 				},
-				this.longTimeOutMs
+				this.longTimeOutMs,
 			);
 			return true;
 		} catch (error) {
@@ -1454,7 +1470,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		parse: boolean | string = true,
 		path: string = "/S3",
 		headers: Record<string, string | undefined> = {},
-		timeOutMs: number = this.timeOutMs
+		timeOutMs: number = this.timeOutMs,
 	): Promise<LooseType> {
 		try {
 			return (
@@ -1497,7 +1513,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		parse: boolean | string = true,
 		path: string = "/S3",
 		headers: Record<string, string | undefined> = {},
-		timeOutMs: number = this.timeOutMs
+		timeOutMs: number = this.timeOutMs,
 	): Promise<LooseType> {
 		try {
 			return (
@@ -1535,7 +1551,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		"/LIFF1": "LiffException",
 		"/api/v3p/rs": "TalkException",
 		"/api/v3/TalkService.do": "TalkException",
-	}
+	};
 
 	/**
 	 * @description Request to LINE API by raw.
@@ -1579,12 +1595,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		});
 
 		const Trequest = writeThrift(value, methodName, Protocol);
-		const fetchArg: [string, RequestInit] = [`https://${this.endpoint}${path}`, {
-			method: overrideMethod,
-			headers,
-			signal: AbortSignal.timeout(timeOutMs),
-			body: Trequest,
-		}]
+		const fetchArg: [string, RequestInit] = [
+			`https://${this.endpoint}${path}`,
+			{
+				method: overrideMethod,
+				headers,
+				signal: AbortSignal.timeout(timeOutMs),
+				body: Trequest,
+			},
+		];
 		this.log("fetch-send", {
 			method: "thrift",
 			thriftMethodName: methodName,
@@ -1899,18 +1918,21 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	public async getMessageObsData(
 		messageId: string,
 		isPreview: boolean = false,
-		isSquare: boolean = false
+		isSquare: boolean = false,
 	): Promise<Blob> {
 		if (!this.metadata) {
 			throw new InternalError("Not setup yet", "Please call 'login()' first");
 		}
-		const r = await this.customFetch(this.LINE_OBS.getDataUrl(messageId, isPreview, isSquare), {
-			headers: {
-				accept: "application/json, text/plain, */*",
-				"x-line-application": this.system?.type as string,
-				"x-Line-access": this.metadata.authToken,
+		const r = await this.customFetch(
+			this.LINE_OBS.getDataUrl(messageId, isPreview, isSquare),
+			{
+				headers: {
+					accept: "application/json, text/plain, */*",
+					"x-line-application": this.system?.type as string,
+					"x-Line-access": this.metadata.authToken,
+				},
 			},
-		});
+		);
 		return r.blob();
 	}
 
