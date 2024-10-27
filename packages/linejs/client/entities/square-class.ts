@@ -153,7 +153,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 		this.memberCount = squareChatStatus.otherStatus.memberCount;
 		this.note = new Note(this.squareMid, this.client);
 		if (polling) {
-			this.startListen();
+			this.startPolling();
 		}
 	}
 
@@ -212,7 +212,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 	/**
 	 * @description start listen (fetchSquareChatEvents)
 	 */
-	public async startListen(): Promise<void> {
+	public async startPolling(): Promise<void> {
 		if (!this.syncToken) {
 			while (true) {
 				const noneEvent = await this.client.fetchSquareChatEvents({
