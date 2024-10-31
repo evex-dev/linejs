@@ -69,7 +69,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		this.storage = options.storage || new MemoryStorage();
 		this.squareRateLimitter = options.squareRateLimitter || new RateLimitter();
-		this.endpoint = options.endpoint || "gw.line.naver.jp";
+		this.endpoint = options.endpoint || "https://gw.line.naver.jp";
 		this.customFetch = options.customFetch || fetch;
 		this.LINE_OBS = options.LINE_OBS || new LINE_OBS();
 		this.cache = options.cacheManager || new CacheManager(this.storage);
@@ -579,7 +579,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 							if (typeof options === "number") {
 								return this.reactToMessage({
 									reactionType: options as LINETypes.MessageReactionType,
-									messageId: message.id,
+									messageId: BigInt(message.id),
 								});
 							} else {
 								return this.reactToMessage({
@@ -589,7 +589,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 											LINETypes.MessageReactionType
 										>
 									).reactionType,
-									messageId: message.id,
+									messageId: BigInt(message.id),
 								});
 							}
 						};
@@ -597,15 +597,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						const chat =
 							message.toType === LINETypes.MIDType._USER
 								? () => {
-										return this.getContact({ mid: sendIn });
-									}
+									return this.getContact({ mid: sendIn });
+								}
 								: undefined;
 
 						const group =
 							message.toType !== LINETypes.MIDType._USER
 								? async () => {
-										return (await this.getChats({ mids: [sendIn] })).chats[0];
-									}
+									return (await this.getChats({ mids: [sendIn] })).chats[0];
+								}
 								: (undefined as LooseType);
 
 						const getContact = () => {
@@ -787,7 +787,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @description Will override.
 	 */
 	public async reactToMessage(_options: {
-		messageId: string;
+		messageId: bigint|number;
 		reactionType: LINETypes.MessageReactionType;
 	}): Promise<LINETypes.ReactToMessageResponse> {
 		return (await Symbol("Unreachable")) as LooseType;
@@ -1241,7 +1241,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType { }
 
 	/**
 	 * @description Will override.
@@ -1604,7 +1604,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				body: Trequest,
 			},
 		];
-		this.log("fetch-send", {
+		this.log("fetchSend", {
 			method: "thrift",
 			thriftMethodName: methodName,
 			httpMethod: overrideMethod,
@@ -1625,7 +1625,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 		const body = await response.arrayBuffer();
 		const parsedBody = new Uint8Array(body);
-		this.log("fetch-recv", {
+		this.log("fetchRecv", {
 			method: "thrift",
 			response,
 			data: parsedBody,
@@ -1818,7 +1818,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			const attr = typeByLabel[label];
 			const value = options[label];
 
-			const params = [
+			const params: NestedArray = [
 				[8, 1, 0],
 				[8, 2, attr],
 				[11, 3, value],

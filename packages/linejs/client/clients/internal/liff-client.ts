@@ -43,9 +43,9 @@ export class LiffClient extends BaseClient {
 			...options,
 		};
 
-		let context: NestedArray = [12, 1, []];
+		let context: NestedArray[0] = [12, 1, []];
 		let chaLINETypes;
-		let chat;
+		let chat: NestedArray[0];
 		if (chatMid) {
 			chat = [11, 1, chatMid];
 			if (["u", "c", "r"].includes(chatMid[0])) {
@@ -218,9 +218,9 @@ export class LiffClient extends BaseClient {
 			const consentResponse =
 				"DOMParser" in window
 					? new (window as LooseType).DOMParser().parseFromString(
-							text,
-							"text/html",
-						)
+						text,
+						"text/html",
+					)
 					: new (await import("jsdom"))(text).dom.window.document;
 			const channelId =
 				consentResponse

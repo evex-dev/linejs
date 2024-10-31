@@ -2,6 +2,7 @@ import * as thrift from "thrift";
 import { Buffer } from "node:buffer";
 import type { NestedArray, ProtocolKey, Protocols } from "./declares.ts";
 import type { LooseType } from "../../entities/common.ts";
+import { default as Int64 } from "node-int64";
 const Thrift = thrift.Thrift;
 
 export function writeThrift(
@@ -33,7 +34,7 @@ export function writeThrift(
 function writeStruct(output: LooseType, clValue: NestedArray = []): void {
 	output.writeStructBegin("");
 
-	clValue.forEach((e: LooseType) => {
+	clValue.forEach((e: NestedArray[0]) => {
 		if (e === null || e === undefined) {
 			return;
 		}
@@ -50,10 +51,13 @@ function writeValue(
 	ftype: LooseType,
 	fid: LooseType,
 	val:
+		| undefined
+		| null
 		| NestedArray
 		| string
 		| boolean
 		| number
+		| bigint
 		| Buffer
 		| [number, Array<LooseType>]
 		| [number, number, object],
@@ -87,8 +91,8 @@ function writeValue(
 			break;
 
 		case Thrift.Type.I64:
-			if (typeof val !== "number") {
-				// throw new TypeError(`ftype=${ftype}: value is not number`);
+			if (typeof val === "bigint") {
+				val = new Int64(val.toString(16))
 			}
 			output.writeFieldBegin("", Thrift.Type.I64, fid);
 			output.writeI64(val);

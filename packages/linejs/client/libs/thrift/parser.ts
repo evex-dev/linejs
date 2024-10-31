@@ -1,5 +1,5 @@
 import type { LooseType } from "../../entities/common.ts";
-import type * as LINEType from "../../../../types/line_types.ts";
+import type { ParsedThrift } from "./declares.ts";
 
 const TYPE = {
 	STOP: 0,
@@ -20,7 +20,7 @@ const TYPE = {
 	UTF8: 16,
 	UTF16: 17,
 };
-const EPYT = {
+const EPYT: Record<number, string> = {
 	0: "stop",
 	1: "void",
 	2: "bool",
@@ -30,10 +30,10 @@ const EPYT = {
 	8: "i32",
 	10: "i64",
 	11: "string",
-} as Record<number, string>;
+};
 
 function isStruct(obj: LooseType) {
-	return obj && obj.constructor === Array;
+	return obj && Array.isArray(obj)
 }
 
 export default class ThriftRenameParser {
@@ -116,7 +116,7 @@ export default class ThriftRenameParser {
 		return newObject;
 	}
 
-	rename_data(data: LooseType): LooseType {
+	rename_data(data: ParsedThrift): LooseType {
 		const name = data._info.fname;
 		const value = data.value;
 		const structName =
@@ -125,7 +125,7 @@ export default class ThriftRenameParser {
 		return data;
 	}
 
-	parse_data(structName: string, object?: LooseType): LooseType[][] {
+	parse_data(structName: string, object: LooseType): LooseType[][] {
 		const newThrift = [];
 		for (const fname in object) {
 			const value = object[fname];
@@ -232,7 +232,7 @@ export default class ThriftRenameParser {
 				if (typeof finfo.map === "number") {
 					thisValue[2] = [finfo.map, [value]];
 				} else {
-					thisValue[2] = [TYPE.STRUCT, [this.parse_data(finfo.map)]];
+					thisValue[2] = [TYPE.STRUCT, [this.get_cl(finfo.map)]];
 				}
 			} else if (finfo.type) {
 				thisValue[0] = finfo.type;

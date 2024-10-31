@@ -180,7 +180,7 @@ export class SquareClient extends LiffClient {
 			[
 				[11, 2, squareChatMid],
 				[11, 4, squareMessageId],
-				squareThreadMid && [11, 5, squareThreadMid],
+				squareThreadMid ? [11, 5, squareThreadMid] : null,
 			],
 			"markAsRead",
 			this.SquareService_PROTOCOL_TYPE,
@@ -218,7 +218,7 @@ export class SquareClient extends LiffClient {
 				[11, 2, squareChatMid],
 				[11, 3, squareMessageId],
 				[8, 4, reactionType],
-				squareThreadMid && [11, 5, squareThreadMid],
+				squareThreadMid ? [11, 5, squareThreadMid] : null,
 			],
 			"reactToMessage",
 			this.SquareService_PROTOCOL_TYPE,
@@ -254,7 +254,7 @@ export class SquareClient extends LiffClient {
 			[[11, 1, invitationTicket]],
 			"findSquareByInvitationTicketV2",
 			this.SquareService_PROTOCOL_TYPE,
-			true,
+			"FindSquareByInvitationTicketResponse",
 			this.SquareService_API_PATH,
 		);
 	}
@@ -364,7 +364,7 @@ export class SquareClient extends LiffClient {
 			relatedMessageId,
 		} = { contentType: 0, contentMetadata: {}, ...options };
 
-		const message = [
+		const message: NestedArray = [
 			[11, 2, squareChatMid],
 			[11, 10, text],
 			[8, 15, contentType],
@@ -800,7 +800,7 @@ export class SquareClient extends LiffClient {
 			continueRequest: !options.limit && !options.continuationToken,
 			...options,
 		};
-		const req = [
+		const req: NestedArray = [
 			[11, 1, squareChatMid],
 			[8, 3, limit],
 		];
@@ -1277,8 +1277,8 @@ export class SquareClient extends LiffClient {
 				[11, 3, squareChatMid],
 				[11, 4, squareMessageId],
 				[8, 5, reportType],
-				otherReason && [11, 6, otherReason],
-				threadMid && [11, 7, threadMid],
+				otherReason ? [11, 6, otherReason] : null,
+				threadMid ? [11, 7, threadMid] : null,
 			],
 			"reportSquareMessage",
 			this.SquareService_PROTOCOL_TYPE,
@@ -1308,9 +1308,9 @@ export class SquareClient extends LiffClient {
 			[
 				[11, 2, squareMemberMid],
 				[8, 3, reportType],
-				otherReason && [11, 4, otherReason],
-				squareChatMid && [11, 5, squareChatMid],
-				threadMid && [11, 6, threadMid],
+				otherReason && [11, 4, otherReason] || null,
+				squareChatMid && [11, 5, squareChatMid] || null,
+				threadMid && [11, 6, threadMid] || null,
 			],
 			"reportSquareMessage",
 			this.SquareService_PROTOCOL_TYPE,
@@ -1323,14 +1323,37 @@ export class SquareClient extends LiffClient {
 	 * @description Delete square message.
 	 */
 	public destroySquareMessage(options: {
-		squareChatMid?: string;
-		messageId?: string;
+		squareChatMid: string;
+		messageId: string;
+		squareThreadMid?: string;
 	}): Promise<LINETypes.DestroyMessageResponse> {
-		const { squareChatMid, messageId } = { ...options };
+		const { squareChatMid, messageId, squareThreadMid } = { ...options };
 		return this.request(
 			[
 				[11, 2, squareChatMid],
 				[11, 4, messageId],
+				[11, 5, squareThreadMid]
+			],
+			"destroyMessage",
+			this.SquareService_PROTOCOL_TYPE,
+			true,
+			this.SquareService_API_PATH,
+		);
+	}
+	/**
+	 * @description Delete square message.
+	 */
+	public destroySquareMessages(options: {
+		squareChatMid: string;
+		messageIds: string[];
+		squareThreadMid?: string;
+	}): Promise<LINETypes.DestroyMessageResponse> {
+		const { squareChatMid, messageIds, squareThreadMid } = { ...options };
+		return this.request(
+			[
+				[11, 2, squareChatMid],
+				[14, 4, [11, messageIds]],
+				[11, 5, squareThreadMid]
 			],
 			"destroyMessage",
 			this.SquareService_PROTOCOL_TYPE,
@@ -1397,7 +1420,7 @@ export class SquareClient extends LiffClient {
 			contentMetadata,
 			relatedMessageId,
 		} = { contentType: 0, contentMetadata: {}, ...options };
-		const msg = [
+		const msg: NestedArray = [
 			[11, 2, squareThreadMid],
 			[11, 10, text],
 			[8, 15, contentType],

@@ -1,5 +1,5 @@
 // For Talk (talk, group(chat), etc)
-import { default as Int64 } from "node-int64";
+
 import type { NestedArray, ProtocolKey } from "../../libs/thrift/declares.ts";
 import type * as LINETypes from "@evex/linejs-types";
 import type { LooseType } from "../../entities/common.ts";
@@ -24,9 +24,9 @@ export class TalkClient extends ChannelClient {
 	override sync(
 		options: {
 			limit?: number;
-			revision?: number;
-			globalRev?: number;
-			individualRev?: number;
+			revision?: number | bigint;
+			globalRev?: number | bigint;
+			individualRev?: number | bigint;
 			timeout?: number;
 		} = {},
 	): Promise<LINETypes.SyncResponse> {
@@ -124,13 +124,13 @@ export class TalkClient extends ChannelClient {
 		}
 
 		if (location !== undefined) {
-			const locationObj = [
+			const locationObj: NestedArray = [
 				[11, 1, location.title || "LINEJS"],
 				[11, 2, location.address || "https://github.com/evex-dev/linejs"],
 				[4, 3, location.latitude || 0],
 				[4, 4, location.longitude || 0],
 				[11, 6, location.categoryId || "PC0"],
-				[8, 7, location.provider || 2],
+				[8, 7, location.provider as number || 2],
 			];
 			message.push([12, 11, locationObj]);
 		}
@@ -200,7 +200,7 @@ export class TalkClient extends ChannelClient {
 	 * @description React to the message.
 	 */
 	override reactToMessage(options: {
-		messageId: string;
+		messageId: number | bigint;
 		reactionType: LINETypes.MessageReactionType & number;
 	}): Promise<LINETypes.ReactToMessageResponse> {
 		const { messageId, reactionType } = {
@@ -208,15 +208,14 @@ export class TalkClient extends ChannelClient {
 		};
 		return this.direct_request(
 			[
+
 				[
+					12,
+					1,
 					[
-						12,
-						1,
-						[
-							[8, 1, 0],
-							[10, 2, messageId],
-							[12, 3, [[8, 1, reactionType]]],
-						],
+						[8, 1, 0],
+						[10, 2, messageId],
+						[12, 3, [[8, 1, reactionType]]],
 					],
 				],
 			],
@@ -303,8 +302,8 @@ export class TalkClient extends ChannelClient {
 	 */
 	public async getPreviousMessagesV2(options: {
 		mid: string;
-		time: number;
-		id: number;
+		time: number | bigint;
+		id: number | bigint;
 		count?: number;
 	}): Promise<LINETypes.Message[]> {
 		const { mid, time, id, count } = { count: 100, ...options };
@@ -335,7 +334,7 @@ export class TalkClient extends ChannelClient {
 	 */
 	public async getPreviousMessagesV2WithRequest(options: {
 		mid: string;
-		time: number;
+		time: number | bigint;
 		id: number | bigint | string;
 		count?: number;
 		withReadCount?: boolean;
@@ -347,9 +346,7 @@ export class TalkClient extends ChannelClient {
 			receivedOnly: false,
 			...options,
 		};
-		const id64 = new Int64(
-			(typeof id === "string" ? BigInt(id) : id).toString(16),
-		);
+		const id64 = (typeof id === "string" ? BigInt(id) : id)
 		return (
 			await this.direct_request(
 				[
@@ -794,7 +791,7 @@ export class TalkClient extends ChannelClient {
 					12,
 					2,
 					[
-						chatSet.type ? [8, 1, chatSet.type] : [8, 1, 1],
+						chatSet.type ? [8, 1, chatSet.type as number] : [8, 1, 1],
 						[11, 2, chatMid],
 						chatSet.notificationDisabled
 							? [2, 4, chatSet.notificationDisabled]
@@ -803,20 +800,20 @@ export class TalkClient extends ChannelClient {
 						chatSet.picturePath ? [11, 7, chatSet.picturePath] : null,
 						chatSet.extra?.groupExtra
 							? [
-									12,
-									8,
+								12,
+								8,
+								[
 									[
+										12,
+										1,
 										[
-											12,
-											1,
-											[
-												[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
-												[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
-												[2, 7, chatSet.extra.groupExtra.ticketDisabled],
-											],
+											[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
+											[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
+											[2, 7, chatSet.extra.groupExtra.ticketDisabled],
 										],
 									],
-								]
+								],
+							]
 							: null,
 					],
 				],
