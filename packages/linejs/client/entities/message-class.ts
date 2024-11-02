@@ -701,7 +701,7 @@ export class TalkMessage extends ClientMessage {
 		}
 		return this.client.reactToMessage({
 			reactionType: type as LINETypes.MessageReactionType & number,
-			messageId: this.id,
+			messageId: BigInt(this.id),
 		});
 	}
 
