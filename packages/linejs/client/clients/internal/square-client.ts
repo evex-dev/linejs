@@ -1308,9 +1308,9 @@ export class SquareClient extends LiffClient {
 			[
 				[11, 2, squareMemberMid],
 				[8, 3, reportType],
-				otherReason && [11, 4, otherReason] || null,
-				squareChatMid && [11, 5, squareChatMid] || null,
-				threadMid && [11, 6, threadMid] || null,
+				(otherReason && [11, 4, otherReason]) || null,
+				(squareChatMid && [11, 5, squareChatMid]) || null,
+				(threadMid && [11, 6, threadMid]) || null,
 			],
 			"reportSquareMessage",
 			this.SquareService_PROTOCOL_TYPE,
@@ -1332,7 +1332,7 @@ export class SquareClient extends LiffClient {
 			[
 				[11, 2, squareChatMid],
 				[11, 4, messageId],
-				[11, 5, squareThreadMid]
+				[11, 5, squareThreadMid],
 			],
 			"destroyMessage",
 			this.SquareService_PROTOCOL_TYPE,
@@ -1353,7 +1353,7 @@ export class SquareClient extends LiffClient {
 			[
 				[11, 2, squareChatMid],
 				[14, 4, [11, messageIds]],
-				[11, 5, squareThreadMid]
+				[11, 5, squareThreadMid],
 			],
 			"destroyMessage",
 			this.SquareService_PROTOCOL_TYPE,

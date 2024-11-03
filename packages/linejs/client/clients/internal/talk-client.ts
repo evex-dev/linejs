@@ -130,7 +130,7 @@ export class TalkClient extends ChannelClient {
 				[4, 3, location.latitude || 0],
 				[4, 4, location.longitude || 0],
 				[11, 6, location.categoryId || "PC0"],
-				[8, 7, location.provider as number || 2],
+				[8, 7, (location.provider as number) || 2],
 			];
 			message.push([12, 11, locationObj]);
 		}
@@ -208,7 +208,6 @@ export class TalkClient extends ChannelClient {
 		};
 		return this.direct_request(
 			[
-
 				[
 					12,
 					1,
@@ -346,7 +345,7 @@ export class TalkClient extends ChannelClient {
 			receivedOnly: false,
 			...options,
 		};
-		const id64 = (typeof id === "string" ? BigInt(id) : id)
+		const id64 = typeof id === "string" ? BigInt(id) : id;
 		return (
 			await this.direct_request(
 				[
@@ -800,20 +799,20 @@ export class TalkClient extends ChannelClient {
 						chatSet.picturePath ? [11, 7, chatSet.picturePath] : null,
 						chatSet.extra?.groupExtra
 							? [
-								12,
-								8,
-								[
+									12,
+									8,
 									[
-										12,
-										1,
 										[
-											[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
-											[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
-											[2, 7, chatSet.extra.groupExtra.ticketDisabled],
+											12,
+											1,
+											[
+												[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
+												[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
+												[2, 7, chatSet.extra.groupExtra.ticketDisabled],
+											],
 										],
 									],
-								],
-							]
+								]
 							: null,
 					],
 				],

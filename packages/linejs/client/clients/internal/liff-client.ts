@@ -218,9 +218,9 @@ export class LiffClient extends BaseClient {
 			const consentResponse =
 				"DOMParser" in window
 					? new (window as LooseType).DOMParser().parseFromString(
-						text,
-						"text/html",
-					)
+							text,
+							"text/html",
+						)
 					: new (await import("jsdom"))(text).dom.window.document;
 			const channelId =
 				consentResponse

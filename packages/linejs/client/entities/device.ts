@@ -1,7 +1,7 @@
 export type Device =
 	| "DESKTOPWIN"
 	| "DESKTOPMAC"
-//	| "CHROMEOS"
+	//	| "CHROMEOS"
 	| "ANDROID"
 	| "IOS"
 	| "IOSIPAD"

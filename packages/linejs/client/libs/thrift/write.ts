@@ -92,7 +92,7 @@ function writeValue(
 
 		case Thrift.Type.I64:
 			if (typeof val === "bigint") {
-				val = new Int64(val.toString(16))
+				val = new Int64(val.toString(16));
 			}
 			output.writeFieldBegin("", Thrift.Type.I64, fid);
 			output.writeI64(val);

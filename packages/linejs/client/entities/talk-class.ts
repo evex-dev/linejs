@@ -10,6 +10,7 @@ import type { LooseType } from "./common.ts";
 import type { Buffer } from "node:buffer";
 import { TypedEventEmitter } from "../libs/typed-event-emitter/index.ts";
 import { TalkMessage, Message } from "./message-class.ts";
+import type { TimelineResponse } from "./timeline.ts";
 
 type GroupEvents = {
 	message: (message: TalkMessage) => void;
@@ -71,7 +72,7 @@ export class Note {
 	constructor(
 		public mid: string,
 		private client: Client,
-	) { }
+	) {}
 
 	public createPost(options: {
 		text?: string;
@@ -90,37 +91,39 @@ export class Note {
 		mediaObjectIds?: string[];
 		mediaObjectTypes?: string[];
 		sourceType?: string;
-	}): Promise<LooseType> {
+	}): Promise<TimelineResponse> {
 		(options as LooseType).homeId = this.mid;
 		return this.client.createPost(options as LooseType);
 	}
 	public deletePost(options: {
 		postId: string;
-	}): Promise<LooseType> {
+	}): Promise<TimelineResponse> {
 		(options as LooseType).homeId = this.mid;
 		return this.client.deletePost(options as LooseType);
 	}
 
-	public listPost(options: {
-		homeId?: string;
-		postId?: string;
-		updatedTime?: number;
-		sourceType?: string;
-	} = {}): Promise<LooseType> {
+	public listPost(
+		options: {
+			homeId?: string;
+			postId?: string;
+			updatedTime?: number;
+			sourceType?: string;
+		} = {},
+	): Promise<TimelineResponse> {
 		(options as LooseType).homeId = this.mid;
 		return this.client.listPost(options as LooseType);
 	}
 
 	public getPost(options: {
 		postId: string;
-	}) {
+	}): Promise<TimelineResponse> {
 		(options as LooseType).homeId = this.mid;
 		return this.client.getPost(options as LooseType);
 	}
 	public sharePost(options: {
 		postId: string;
 		chatMid: string;
-	}) {
+	}): Promise<TimelineResponse> {
 		(options as LooseType).homeId = this.mid;
 		return this.client.sharePost(options as LooseType);
 	}
@@ -233,14 +236,14 @@ export class User extends TypedEventEmitter<UserEvents> {
 		options:
 			| string
 			| {
-				text?: string;
-				contentType?: number;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string;
-				location?: LINETypes.Location;
-				chunk?: string[] | Buffer[];
-				e2ee?: boolean;
-			},
+					text?: string;
+					contentType?: number;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string;
+					location?: LINETypes.Location;
+					chunk?: string[] | Buffer[];
+					e2ee?: boolean;
+			  },
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
@@ -390,14 +393,14 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 		options:
 			| string
 			| {
-				text?: string;
-				contentType?: number;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string;
-				location?: LINETypes.Location;
-				chunk?: string[] | Buffer[];
-				e2ee?: boolean;
-			},
+					text?: string;
+					contentType?: number;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string;
+					location?: LINETypes.Location;
+					chunk?: string[] | Buffer[];
+					e2ee?: boolean;
+			  },
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.send({ text: options });

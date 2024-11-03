@@ -33,7 +33,7 @@ const EPYT: Record<number, string> = {
 };
 
 function isStruct(obj: LooseType) {
-	return obj && Array.isArray(obj)
+	return obj && Array.isArray(obj);
 }
 
 export default class ThriftRenameParser {

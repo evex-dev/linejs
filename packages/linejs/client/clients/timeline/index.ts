@@ -226,7 +226,7 @@ export class Timeline extends SettingsClient {
 			homeId,
 			sourceType,
 			likeLimit: "0",
-			commentLimit: "0"
+			commentLimit: "0",
 		};
 		if (postId) {
 			data.postId = postId;
@@ -235,7 +235,7 @@ export class Timeline extends SettingsClient {
 			data.updatedTime = updatedTime.toString();
 		}
 		const params = new URLSearchParams(data);
-		console.log(params.toString())
+		console.log(params.toString());
 		return this.customFetch(
 			`https://${this.endpoint}/${homeId[0] == "s" ? "sn" : "mh"}/api/v57/post/list.json?${params}`,
 			{ headers },
@@ -243,13 +243,13 @@ export class Timeline extends SettingsClient {
 	}
 
 	public async sharePost(options: {
-		postId: string,
-		chatMid: string,
-		homeId: string,
+		postId: string;
+		chatMid: string;
+		homeId: string;
 	}): Promise<TimelineResponse> {
 		const { chatMid, postId, homeId } = {
-			...options
-		}
+			...options,
+		};
 		await this.initTimeline();
 		const headers = {
 			...this.timelineHeaders,
@@ -262,9 +262,10 @@ export class Timeline extends SettingsClient {
 				method: "POST",
 				headers,
 				body: JSON.stringify({
-					"postId": postId,
-					"receiveMids": [chatMid],
+					postId: postId,
+					receiveMids: [chatMid],
 				}),
-			}).then((r) => r.json());
+			},
+		).then((r) => r.json());
 	}
 }
