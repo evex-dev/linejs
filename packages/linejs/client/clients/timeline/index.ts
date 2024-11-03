@@ -173,6 +173,27 @@ export class Timeline extends SettingsClient {
 		const { homeId, postId } = { ...options };
 		const headers = {
 			...this.timelineHeaders,
+			"x-lhm": "POST",
+			"Content-type": "application/json",
+		};
+		const params = new URLSearchParams({
+			homeId,
+			postId,
+		});
+		return this.customFetch(
+			`https://${this.endpoint}/mh/api/v57/post/delete.json?${params}`,
+			{ headers, method: "POST" },
+		).then((r) => r.json());
+	}
+
+	public async getPost(options: {
+		homeId: string;
+		postId: string;
+	}): Promise<LooseType> {
+		await this.initTimeline();
+		const { homeId, postId } = { ...options };
+		const headers = {
+			...this.timelineHeaders,
 			"x-lhm": "GET",
 			"Content-type": "application/json",
 		};
@@ -214,5 +235,30 @@ export class Timeline extends SettingsClient {
 			`https://${this.endpoint}/mh/api/v57/post/list.json?${params}`,
 			{ headers },
 		).then((r) => r.json());
+	}
+
+	public async sharePost(options: {
+		postId: string,
+		chatMid: string
+	}) {
+		const { chatMid, postId, } = {
+			...options
+		}
+		await this.initTimeline();
+		const headers = {
+			...this.timelineHeaders,
+			"x-lhm": "POST",
+			"Content-type": "application/json",
+		};
+		return this.customFetch(
+			`https://${this.endpoint}/sn/api/v57/post/sendPostToTalk.json`,
+			{
+				method: "POST",
+				headers,
+				body: JSON.stringify({
+					"postId": postId,
+					"receiveMids": [chatMid],
+				}),
+			})
 	}
 }

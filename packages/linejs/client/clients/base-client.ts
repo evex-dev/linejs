@@ -69,7 +69,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 		this.storage = options.storage || new MemoryStorage();
 		this.squareRateLimitter = options.squareRateLimitter || new RateLimitter();
-		this.endpoint = options.endpoint || "https://gw.line.naver.jp";
+		this.endpoint = options.endpoint || "gw.line.naver.jp";
 		this.customFetch = options.customFetch || fetch;
 		this.LINE_OBS = options.LINE_OBS || new LINE_OBS();
 		this.cache = options.cacheManager || new CacheManager(this.storage);

@@ -71,7 +71,7 @@ export class Note {
 	constructor(
 		public mid: string,
 		private client: Client,
-	) {}
+	) { }
 
 	public createPost(options: {
 		text?: string;
@@ -102,12 +102,26 @@ export class Note {
 	}
 
 	public listPost(options?: {
+		homeId?: string;
 		postId?: string;
 		updatedTime?: number;
 		sourceType?: string;
 	}): Promise<LooseType> {
 		(options as LooseType).homeId = this.mid;
 		return this.client.listPost(options as LooseType);
+	}
+
+	public getPost(options: {
+		postId: string;
+	}) {
+		(options as LooseType).homeId = this.mid;
+		return this.client.getPost(options as LooseType);
+	}
+	public sharePost(options: {
+		postId: string;
+		chatMid: string;
+	}) {
+		return this.client.sharePost(options);
 	}
 }
 
@@ -218,14 +232,14 @@ export class User extends TypedEventEmitter<UserEvents> {
 		options:
 			| string
 			| {
-					text?: string;
-					contentType?: number;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string;
-					location?: LINETypes.Location;
-					chunk?: string[] | Buffer[];
-					e2ee?: boolean;
-			  },
+				text?: string;
+				contentType?: number;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string;
+				location?: LINETypes.Location;
+				chunk?: string[] | Buffer[];
+				e2ee?: boolean;
+			},
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
@@ -375,14 +389,14 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 		options:
 			| string
 			| {
-					text?: string;
-					contentType?: number;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string;
-					location?: LINETypes.Location;
-					chunk?: string[] | Buffer[];
-					e2ee?: boolean;
-			  },
+				text?: string;
+				contentType?: number;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string;
+				location?: LINETypes.Location;
+				chunk?: string[] | Buffer[];
+				e2ee?: boolean;
+			},
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
