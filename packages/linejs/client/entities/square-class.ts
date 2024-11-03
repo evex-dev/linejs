@@ -3,7 +3,7 @@
  * @experimental
  * for square
  */
-import * as LINETypes from "../../../types/line_types.ts";
+import * as LINETypes from "@evex/linejs-types";
 import type { Client } from "../index.ts";
 import type { LooseType } from "./common.ts";
 import { TypedEventEmitter } from "../libs/typed-event-emitter/index.ts";
