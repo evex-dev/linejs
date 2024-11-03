@@ -3,7 +3,7 @@
  * @experimental
  * for message
  */
-import * as LINETypes from "../../../types/line_types.ts";
+import * as LINETypes from "@evex/linejs-types";
 import { parseEnum } from "../../../types/thrift.ts";
 import type { Client } from "../index.ts";
 import type { LooseType } from "./common.ts";
