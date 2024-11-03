@@ -4,7 +4,7 @@
  * for message
  */
 import * as LINETypes from "@evex/linejs-types";
-import { parseEnum } from "../../../types/thrift.ts";
+import { parseEnum } from "@evex/linejs-types/thrift";
 import type { Client } from "../index.ts";
 import type { LooseType } from "./common.ts";
 import { InternalError } from "./errors.ts";
