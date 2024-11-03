@@ -1,5 +1,6 @@
 import type { LooseType } from "../../entities/common.ts";
 import { SettingsClient } from "../internal/setting-client.ts";
+import type { TimelineResponse } from "../../entities/timeline.ts";
 
 export class Timeline extends SettingsClient {
 	protected timelineToken: string | undefined;
@@ -14,21 +15,20 @@ export class Timeline extends SettingsClient {
 			await this.approveChannelAndIssueChannelToken({ channelId: "1341209850" })
 		).channelAccessToken;
 		this.timelineHeaders = {
-			Host: "gw.line.naver.jp",
+			host: this.endpoint,
 			"x-line-bdbtemplateversion": "v1",
 			"x-lsr": "JP",
-			"user-agent": this.system?.userAgent as string,
+			"user-agent": this.system!.userAgent,
 			"x-line-channeltoken": this.timelineToken,
 			"accept-encoding": "gzip",
 			"x-line-global-config":
 				"discover.enable=true; follow.enable=true; reboot.phase=scenario",
-			"x-line-mid": this.user?.mid as string,
-			"x-line-access": this.metadata?.authToken as string,
+			"x-line-mid": this.user!.mid,
+			"x-line-access": this.metadata!.authToken,
 			"content-type": "application/json; charset=UTF-8",
-			"x-line-application": this.system?.type as string,
+			"x-line-application": this.system!.type,
 			"x-lal": "ja_JP",
 			"x-lpv": "1",
-			"x-lap": "5",
 		};
 	}
 
@@ -50,7 +50,7 @@ export class Timeline extends SettingsClient {
 		mediaObjectIds?: string[];
 		mediaObjectTypes?: string[];
 		sourceType?: string;
-	}): Promise<LooseType> {
+	}): Promise<TimelineResponse> {
 		await this.initTimeline();
 		const {
 			homeId,
@@ -160,7 +160,7 @@ export class Timeline extends SettingsClient {
 			"Content-type": "application/json",
 		};
 		return this.customFetch(
-			`https://${this.endpoint}/mh/api/v57/post/create.json?${params}`,
+			`https://${this.endpoint}/${homeId[0] == "s" ? "sn" : "mh"}/api/v57/post/create.json?${params}`,
 			{ headers, body: JSON.stringify(data), method: "POST" },
 		).then((r) => r.json());
 	}
@@ -168,7 +168,7 @@ export class Timeline extends SettingsClient {
 	public async deletePost(options: {
 		homeId: string;
 		postId: string;
-	}): Promise<LooseType> {
+	}): Promise<TimelineResponse> {
 		await this.initTimeline();
 		const { homeId, postId } = { ...options };
 		const headers = {
@@ -181,15 +181,15 @@ export class Timeline extends SettingsClient {
 			postId,
 		});
 		return this.customFetch(
-			`https://${this.endpoint}/mh/api/v57/post/delete.json?${params}`,
-			{ headers, method: "POST" },
+			`https://${this.endpoint}/${homeId[0] == "s" ? "sn" : "mh"}/api/v57/post/delete.json?${params}`,
+			{ headers, method: "GET" },
 		).then((r) => r.json());
 	}
 
 	public async getPost(options: {
 		homeId: string;
 		postId: string;
-	}): Promise<LooseType> {
+	}): Promise<TimelineResponse> {
 		await this.initTimeline();
 		const { homeId, postId } = { ...options };
 		const headers = {
@@ -202,7 +202,7 @@ export class Timeline extends SettingsClient {
 			postId,
 		});
 		return this.customFetch(
-			`https://${this.endpoint}/mh/api/v57/post/get.json?${params}`,
+			`https://${this.endpoint}/${homeId[0] == "s" ? "sn" : "mh"}/api/v57/post/get.json?${params}`,
 			{ headers },
 		).then((r) => r.json());
 	}
@@ -212,7 +212,7 @@ export class Timeline extends SettingsClient {
 		postId?: string;
 		updatedTime?: number;
 		sourceType?: string;
-	}): Promise<LooseType> {
+	}): Promise<TimelineResponse> {
 		await this.initTimeline();
 		const { homeId, postId, updatedTime, sourceType } = {
 			sourceType: "TALKROOM",
@@ -221,9 +221,13 @@ export class Timeline extends SettingsClient {
 		const headers = {
 			...this.timelineHeaders,
 			"x-lhm": "GET",
-			"Content-type": "application/json",
 		};
-		const data: Record<string, string> = { homeId, sourceType };
+		const data: Record<string, string> = {
+			homeId,
+			sourceType,
+			likeLimit: "0",
+			commentLimit: "0"
+		};
 		if (postId) {
 			data.postId = postId;
 		}
@@ -231,17 +235,19 @@ export class Timeline extends SettingsClient {
 			data.updatedTime = updatedTime.toString();
 		}
 		const params = new URLSearchParams(data);
+		console.log(params.toString())
 		return this.customFetch(
-			`https://${this.endpoint}/mh/api/v57/post/list.json?${params}`,
+			`https://${this.endpoint}/${homeId[0] == "s" ? "sn" : "mh"}/api/v57/post/list.json?${params}`,
 			{ headers },
 		).then((r) => r.json());
 	}
 
 	public async sharePost(options: {
 		postId: string,
-		chatMid: string
-	}) {
-		const { chatMid, postId, } = {
+		chatMid: string,
+		homeId: string,
+	}): Promise<TimelineResponse> {
+		const { chatMid, postId, homeId } = {
 			...options
 		}
 		await this.initTimeline();
@@ -251,7 +257,7 @@ export class Timeline extends SettingsClient {
 			"Content-type": "application/json",
 		};
 		return this.customFetch(
-			`https://${this.endpoint}/sn/api/v57/post/sendPostToTalk.json`,
+			`https://${this.endpoint}/${homeId[0] == "s" ? "sn" : "mh"}/api/v57/post/sendPostToTalk.json`,
 			{
 				method: "POST",
 				headers,
@@ -259,6 +265,6 @@ export class Timeline extends SettingsClient {
 					"postId": postId,
 					"receiveMids": [chatMid],
 				}),
-			})
+			}).then((r) => r.json());
 	}
 }

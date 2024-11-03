@@ -178,7 +178,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					? "ANDROID"
 					: "IOSIPAD"
 				: "IOSIPAD");
-		const details = await getDeviceDetails(device, options.deviceMap || {});
+		const details = getDeviceDetails(device, options.deviceMap || {});
 
 		if (!details) {
 			throw new InternalError("Unsupported device", `'${device}'`);
@@ -787,7 +787,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @description Will override.
 	 */
 	public async reactToMessage(_options: {
-		messageId: bigint|number;
+		messageId: bigint | number;
 		reactionType: LINETypes.MessageReactionType;
 	}): Promise<LINETypes.ReactToMessageResponse> {
 		return (await Symbol("Unreachable")) as LooseType;

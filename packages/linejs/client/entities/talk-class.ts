@@ -101,12 +101,12 @@ export class Note {
 		return this.client.deletePost(options as LooseType);
 	}
 
-	public listPost(options?: {
+	public listPost(options: {
 		homeId?: string;
 		postId?: string;
 		updatedTime?: number;
 		sourceType?: string;
-	}): Promise<LooseType> {
+	} = {}): Promise<LooseType> {
 		(options as LooseType).homeId = this.mid;
 		return this.client.listPost(options as LooseType);
 	}
@@ -121,7 +121,8 @@ export class Note {
 		postId: string;
 		chatMid: string;
 	}) {
-		return this.client.sharePost(options);
+		(options as LooseType).homeId = this.mid;
+		return this.client.sharePost(options as LooseType);
 	}
 }
 

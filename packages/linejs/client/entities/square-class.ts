@@ -137,7 +137,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 		super();
 		const { squareChat, squareChatMember, squareChatStatus } = rawSouce;
 		this.mid = squareChat.squareChatMid;
-		this.squareMid = squareChat.squareChatMid;
+		this.squareMid = squareChat.squareMid;
 		this.type = squareChat.type;
 		this.name = squareChat.name;
 		this.chatImageObsHash = squareChat.chatImageObsHash;

@@ -1,7 +1,7 @@
 export type Device =
 	| "DESKTOPWIN"
 	| "DESKTOPMAC"
-	| "CHROMEOS"
+//	| "CHROMEOS"
 	| "ANDROID"
 	| "IOS"
 	| "IOSIPAD"
@@ -41,6 +41,7 @@ export function getDeviceDetails(
 			}
 			systemName = "MAC";
 			break;
+		/*
 		case "CHROMEOS":
 			appVersion = "3.0.3";
 			if (deviceMap[device]) {
@@ -49,6 +50,7 @@ export function getDeviceDetails(
 			systemName = "Chrome_OS";
 			systemVersion = "1";
 			break;
+		*/
 		case "ANDROID":
 			appVersion = "13.4.1";
 			if (deviceMap[device]) {
