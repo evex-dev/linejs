@@ -9,7 +9,7 @@ await client.login({
 });
 
 await client.uploadObjTalk(
-    "mid",
+    to,
     "image",    // content type
     await fetch("https://avatars.githubusercontent.com/u/121654029").then(r => r.blob()),   // blob
     "i.png"     // file name
