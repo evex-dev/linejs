@@ -3972,7 +3972,7 @@ export interface SquareEventNotifiedSystemMessage {
 }
 
 export interface SquareEventNotifiedUpdateSquare {
-	squareChatMid: string;
+	squareMid: string;
 	square: Square;
 }
 
@@ -3984,12 +3984,12 @@ export interface SquareStatus {
 }
 
 export interface SquareEventNotifiedUpdateSquareStatus {
-	squareChatMid: string;
+	squareMid: string;
 	squareStatus: SquareStatus;
 }
 
 export interface SquareEventNotifiedUpdateSquareMember {
-	squareChatMid: string;
+	squareMid: string;
 	squareMemberMid: string;
 	squareMember: SquareMember;
 }
