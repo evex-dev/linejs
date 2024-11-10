@@ -58,7 +58,7 @@ function readValue(input: LooseType, ftype: LooseType): LooseType {
 			return bin.toString();
 		}
 	} else if (ftype == Thrift.Type.LIST) {
-		const returnData = [];
+		const returnData: any[] = [];
 		const _rtmp = input.readListBegin();
 		const _size = _rtmp.size || 0;
 		for (let _i = 0; _i < _size; ++_i) {
@@ -73,8 +73,8 @@ function readValue(input: LooseType, ftype: LooseType): LooseType {
 		const _rtmp = input.readMapBegin();
 		const _size = _rtmp.size || 0;
 		for (let _i = 0; _i < _size; ++_i) {
-			let key = null;
-			let val = null;
+			let key: any = null;
+			let val: any = null;
 			key = readValue(input, _rtmp.ktype);
 			val = readValue(input, _rtmp.vtype);
 			returnData[key] = val;
@@ -82,11 +82,11 @@ function readValue(input: LooseType, ftype: LooseType): LooseType {
 		input.readMapEnd();
 		return returnData;
 	} else if (ftype == Thrift.Type.SET) {
-		const returnData = [];
+		const returnData: any[] = [];
 		const _rtmp = input.readSetBegin();
 		const _size = _rtmp.size || 0;
 		for (let _i = 0; _i < _size; ++_i) {
-			let elem = null;
+			let elem: any = null;
 			elem = readValue(input, _rtmp.etype);
 			returnData.push(elem);
 		}
@@ -138,11 +138,11 @@ function TreadValue(input: LooseType, ftype: LooseType): LooseType {
 	} else if (ftype == Thrift.Type.STRING) {
 		return input.readString();
 	} else if (ftype == Thrift.Type.LIST) {
-		const returnData = [];
+		const returnData: any[] = [];
 		const _rtmp = input.readListBegin();
 		const _size = _rtmp.size || 0;
 		for (let _i = 0; _i < _size; ++_i) {
-			let elem = null;
+			let elem: any = null;
 			elem = TreadValue(input, _rtmp.etype);
 			returnData.push(elem);
 		}
@@ -153,8 +153,8 @@ function TreadValue(input: LooseType, ftype: LooseType): LooseType {
 		const _rtmp3384 = input.readMapBegin();
 		const _size383 = _rtmp3384.size || 0;
 		for (let _i385 = 0; _i385 < _size383; ++_i385) {
-			let key386 = null;
-			let val387 = null;
+			let key386: any = null;
+			let val387: any = null;
 			key386 = TreadValue(input, _rtmp3384.ktype);
 			val387 = TreadValue(input, _rtmp3384.vtype);
 			returnData[key386] = val387;
@@ -173,7 +173,7 @@ function TreadValue(input: LooseType, ftype: LooseType): LooseType {
 
 function TreadStruct(input: LooseType) {
 	const Thrift = thrift.Thrift;
-	const returnData = [];
+	const returnData: any[] = [];
 	input.readStructBegin();
 	let ret, ftype, fid;
 	while (true) {

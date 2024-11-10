@@ -65,6 +65,7 @@ export class Square extends TypedEventEmitter<SquareEvents> {
 	constructor(
 		public rawSouce: LINETypes.GetSquareResponse,
 		private client: Client,
+		autoUpdate: boolean = true,
 	) {
 		super();
 
@@ -100,6 +101,18 @@ export class Square extends TypedEventEmitter<SquareEvents> {
 		this.joinRequestCount = squareStatus.joinRequestCount;
 		this.lastJoinRequestAt = new Date(squareStatus.lastJoinRequestAt as number);
 		this.openChatCount = squareStatus.openChatCount;
+		if (autoUpdate) {
+			client.on("square:event", (event) => {
+				if (
+					event.payload.notifiedUpdateSquareFeatureSet &&
+					event.payload.notifiedUpdateSquareFeatureSet.squareFeatureSet
+						.squareMid === this.mid
+				) {
+					this.feature =
+						event.payload.notifiedUpdateSquareFeatureSet.squareFeatureSet;
+				}
+			});
+		}
 	}
 
 	/**

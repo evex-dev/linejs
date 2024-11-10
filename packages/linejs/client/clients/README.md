@@ -1,17 +1,19 @@
-[Timeline](./timeline/index.ts) extends
-
-[SettingsClient](./internal/setting-client.ts) extends
-
-[RelationClient](./internal/relation-client.ts) extends
-
-[E2EE](./e2ee/index.ts) extends
-
-[TalkClient](./internal/setting-client.ts) extends
-
-[ChannelClient](./internal/setting-client.ts) extends
-
-[SquareClient](./internal/setting-client.ts) extends
-
-[LiffClient](./internal/setting-client.ts) extends
-
+[Client](../index.ts)\
+↑\
+[Timeline](./timeline/index.ts)\
+↑\
+[SettingsClient](./internal/setting-client.ts)\
+↑\
+[RelationClient](./internal/relation-client.ts)\
+↑\
+[E2EE](./e2ee/index.ts)\
+↑\
+[TalkClient](./internal/setting-client.ts)\
+↑\
+[ChannelClient](./internal/setting-client.ts)\
+↑\
+[SquareClient](./internal/setting-client.ts)\
+↑\
+[LiffClient](./internal/setting-client.ts)\
+↑\
 [BaseClient](./base-client.ts)

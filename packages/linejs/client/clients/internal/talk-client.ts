@@ -908,4 +908,16 @@ export class TalkClient extends ChannelClient {
 			this.TalkService_API_PATH,
 		);
 	}
+	public findContactByUserTicket(options: {
+		ticket: string;
+	}): Promise<LINETypes.Contact> {
+		const { ticket } = { ...options };
+		return this.direct_request(
+			[[11, 2, ticket]],
+			"findContactByUserTicket",
+			this.TalkService_PROTOCOL_TYPE,
+			"Contact",
+			this.TalkService_API_PATH,
+		);
+	}
 }

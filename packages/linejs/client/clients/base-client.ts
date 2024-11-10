@@ -1582,7 +1582,6 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		if (!this.system) {
 			throw new InternalError("Not setup yet", "Please call 'login()' first");
 		}
-
 		const Protocol = Protocols[protocolType];
 		let headers = this.getHeader(this.metadata?.authToken, overrideMethod);
 
@@ -1630,7 +1629,20 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			response,
 			data: parsedBody,
 		});
-		const res = readThrift(parsedBody, Protocol);
+		let res: {
+			value: any;
+			e: any;
+			_info: any;
+		};
+		try {
+			res = readThrift(parsedBody, Protocol);
+		} catch (error) {
+			throw new InternalError(
+				"Request internal failed",
+				`Invalid response buffer: <${[...parsedBody].map((e) => e.toString(16)).join(" ")}>`,
+				{ error },
+			);
+		}
 		if (parse === true) {
 			this.parser.rename_data(res);
 		} else if (typeof parse === "string") {

@@ -235,7 +235,6 @@ export class Timeline extends SettingsClient {
 			data.updatedTime = updatedTime.toString();
 		}
 		const params = new URLSearchParams(data);
-		console.log(params.toString());
 		return this.customFetch(
 			`https://${this.endpoint}/${homeId[0] == "s" ? "sn" : "mh"}/api/v57/post/list.json?${params}`,
 			{ headers },

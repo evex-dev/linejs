@@ -1,6 +1,11 @@
 import * as thrift from "thrift";
 import { Buffer } from "node:buffer";
-import type { NestedArray, ProtocolKey, Protocols } from "./declares.ts";
+import {
+	type NestedArray,
+	type ProtocolKey,
+	type Protocols,
+	genHeader,
+} from "./declares.ts";
 import type { LooseType } from "../../entities/common.ts";
 import { default as Int64 } from "node-int64";
 const Thrift = thrift.Thrift;
@@ -12,7 +17,8 @@ export function writeThrift(
 ): Uint8Array {
 	const Transport = thrift.TBufferedTransport;
 	let myBuf: Buffer = Buffer.from([]);
-	const buftra = new Transport(myBuf, function (outBuf: Uint8Array) {
+	const buftra = new Transport(myBuf, function (outBuf?: Buffer) {
+		if (!outBuf) return;
 		myBuf = Buffer.concat([myBuf, outBuf]);
 	});
 	const myprot = new Protocol(buftra);
@@ -23,15 +29,17 @@ export function writeThrift(
 		myBuf = Buffer.from([]);
 	}
 	const writedBinary = new Uint8Array([
-		...Protocol.genHeader(name),
+		...genHeader[Protocol == thrift.TBinaryProtocol ? 3 : 4](name),
 		...myBuf,
 		0,
 	]);
 	return writedBinary;
 }
-// Thrift encoded buffer is ready to use, save or transport
 
-function writeStruct(output: LooseType, clValue: NestedArray = []): void {
+function writeStruct(
+	output: thrift.TCompactProtocol | thrift.TCompactProtocol,
+	clValue: NestedArray = [],
+): void {
 	output.writeStructBegin("");
 
 	clValue.forEach((e: NestedArray[0]) => {
@@ -47,7 +55,7 @@ function writeStruct(output: LooseType, clValue: NestedArray = []): void {
 }
 
 function writeValue(
-	output: LooseType,
+	output: thrift.TCompactProtocol | thrift.TCompactProtocol,
 	ftype: LooseType,
 	fid: LooseType,
 	val:
@@ -59,6 +67,7 @@ function writeValue(
 		| number
 		| bigint
 		| Buffer
+		| LooseType
 		| [number, Array<LooseType>]
 		| [number, number, object],
 ): void {
