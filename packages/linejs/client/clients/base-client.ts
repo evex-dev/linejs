@@ -265,172 +265,178 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		let previousMessageId: string | undefined = undefined;
 
 		while (true) {
-			if (!this.metadata) {
-				this.IS_POLLING_SQUARE = false;
-				return;
-			}
-
-			const myEvents = await this.fetchMyEvents(myEventsArg);
-
-			if (myEvents.syncToken !== myEventsArg.syncToken) {
-				for (const event of myEvents.events) {
-					this.emit("square:event", event);
-
-					if (event.type === LINETypes.SquareEventType._NOTIFICATION_MESSAGE) {
-						const payload = event.payload.notificationMessage;
-
-						if (!payload) {
-							continue;
-						}
-
-						const message = payload.squareMessage.message;
-
-						if (previousMessageId === message.id) {
-							continue;
-						}
-
-						previousMessageId = message.id;
-
-						const send = (
-							options: SquareMessageSendOptions,
-							safe: boolean = true,
-						) => {
-							if (typeof options === "string") {
-								return this.sendSquareMessage(
-									{
-										squareChatMid: message.to,
-										text: options,
-										relatedMessageId: undefined,
-									},
-									safe,
-								);
-							} else {
-								return this.sendSquareMessage(
-									{
-										squareChatMid: message.to,
-										relatedMessageId: undefined,
-										...options,
-									},
-									safe,
-								);
-							}
-						};
-
-						const reply = (
-							options: MessageReplyOptions,
-							safe: boolean = true,
-						) => {
-							if (typeof options === "string") {
-								return this.sendSquareMessage(
-									{
-										squareChatMid: message.to,
-										text: options,
-										relatedMessageId: message.id,
-									},
-									safe,
-								);
-							} else {
-								return this.sendSquareMessage(
-									{
-										squareChatMid: message.to,
-										relatedMessageId: message.id,
-										...options,
-									},
-									safe,
-								);
-							}
-						};
-
-						const react = (options: SquareMessageReactionOptions) => {
-							if (typeof options === "number") {
-								return this.reactToSquareMessage({
-									squareChatMid: payload.squareChatMid,
-									reactionType: options as LINETypes.MessageReactionType,
-									squareMessageId: message.id,
-								});
-							} else {
-								return this.reactToSquareMessage({
-									squareChatMid: payload.squareChatMid,
-									reactionType: (
-										options as Exclude<
-											SquareMessageReactionOptions,
-											LINETypes.MessageReactionType
-										>
-									).reactionType,
-									squareMessageId: message.id,
-								});
-							}
-						};
-
-						const getMyProfile = async () =>
-							await this.getSquareProfile({
-								squareMid: (
-									await this.getSquareChat({
-										squareChatMid: message.to,
-									})
-								).squareChat.squareMid,
-							});
-
-						this.emit("square:message", {
-							...payload,
-							type: "square",
-							content: typeof message.text === "string" ? message.text : "",
-							contentMetadata: message.contentMetadata,
-							contentType: message.contentType,
-							messageId: message.id,
-							replyId: message.relatedMessageId,
-							reply,
-							send,
-							react,
-							author: {
-								mid: message._from,
-								get displayName() {
-									return (
-										payload.senderDisplayName ||
-										getMyProfile().then((myProfile) => myProfile.displayName)
-									);
-								},
-								iconImage: this.LINE_OBS.getSquareMemberImage(message._from),
-							},
-							isMyMessage: async () =>
-								(await getMyProfile()).squareMemberMid === message._from,
-							getProfile: async () =>
-								(
-									await this.getSquareMember({
-										squareMemberMid: message._from,
-									})
-								).squareMember,
-							getMyProfile,
-							square: async () =>
-								await this.getSquareChat({
-									squareChatMid: payload.squareChatMid,
-								}),
-							data:
-								this.hasData(message) &&
-								(async (preview) =>
-									await this.getMessageObsData(message.id, preview)),
-							message,
-						});
-					} else if (
-						event.type ===
-						LINETypes.SquareEventType._NOTIFIED_UPDATE_SQUARE_CHAT_STATUS
-					) {
-						const payload = event.payload.notifiedUpdateSquareChatStatus;
-
-						if (!payload) {
-							continue;
-						}
-
-						this.emit("square:status", {
-							...payload,
-							...payload["statusWithoutMessage"],
-						});
-					}
+			try {
+				if (!this.metadata) {
+					this.IS_POLLING_SQUARE = false;
+					return;
 				}
-				myEventsArg.syncToken = myEvents.syncToken;
-				myEventsArg.continuationToken = myEvents.continuationToken;
-				myEventsArg.subscriptionId = myEvents.subscription
-					?.subscriptionId as number;
+
+				const myEvents = await this.fetchMyEvents(myEventsArg);
+
+				if (myEvents.syncToken !== myEventsArg.syncToken) {
+					for (const event of myEvents.events) {
+						this.emit("square:event", event);
+
+						if (event.type === LINETypes.SquareEventType._NOTIFICATION_MESSAGE) {
+							const payload = event.payload.notificationMessage;
+
+							if (!payload) {
+								continue;
+							}
+
+							const message = payload.squareMessage.message;
+
+							if (previousMessageId === message.id) {
+								continue;
+							}
+
+							previousMessageId = message.id;
+
+							const send = (
+								options: SquareMessageSendOptions,
+								safe: boolean = true,
+							) => {
+								if (typeof options === "string") {
+									return this.sendSquareMessage(
+										{
+											squareChatMid: message.to,
+											text: options,
+											relatedMessageId: undefined,
+										},
+										safe,
+									);
+								} else {
+									return this.sendSquareMessage(
+										{
+											squareChatMid: message.to,
+											relatedMessageId: undefined,
+											...options,
+										},
+										safe,
+									);
+								}
+							};
+
+							const reply = (
+								options: MessageReplyOptions,
+								safe: boolean = true,
+							) => {
+								if (typeof options === "string") {
+									return this.sendSquareMessage(
+										{
+											squareChatMid: message.to,
+											text: options,
+											relatedMessageId: message.id,
+										},
+										safe,
+									);
+								} else {
+									return this.sendSquareMessage(
+										{
+											squareChatMid: message.to,
+											relatedMessageId: message.id,
+											...options,
+										},
+										safe,
+									);
+								}
+							};
+
+							const react = (options: SquareMessageReactionOptions) => {
+								if (typeof options === "number") {
+									return this.reactToSquareMessage({
+										squareChatMid: payload.squareChatMid,
+										reactionType: options as LINETypes.MessageReactionType,
+										squareMessageId: message.id,
+									});
+								} else {
+									return this.reactToSquareMessage({
+										squareChatMid: payload.squareChatMid,
+										reactionType: (
+											options as Exclude<
+												SquareMessageReactionOptions,
+												LINETypes.MessageReactionType
+											>
+										).reactionType,
+										squareMessageId: message.id,
+									});
+								}
+							};
+
+							const getMyProfile = async () =>
+								await this.getSquareProfile({
+									squareMid: (
+										await this.getSquareChat({
+											squareChatMid: message.to,
+										})
+									).squareChat.squareMid,
+								});
+
+							this.emit("square:message", {
+								...payload,
+								type: "square",
+								content: typeof message.text === "string" ? message.text : "",
+								contentMetadata: message.contentMetadata,
+								contentType: message.contentType,
+								messageId: message.id,
+								replyId: message.relatedMessageId,
+								reply,
+								send,
+								react,
+								author: {
+									mid: message._from,
+									get displayName() {
+										return (
+											payload.senderDisplayName ||
+											getMyProfile().then((myProfile) => myProfile.displayName)
+										);
+									},
+									iconImage: this.LINE_OBS.getSquareMemberImage(message._from),
+								},
+								isMyMessage: async () =>
+									(await getMyProfile()).squareMemberMid === message._from,
+								getProfile: async () =>
+									(
+										await this.getSquareMember({
+											squareMemberMid: message._from,
+										})
+									).squareMember,
+								getMyProfile,
+								square: async () =>
+									await this.getSquareChat({
+										squareChatMid: payload.squareChatMid,
+									}),
+								data:
+									this.hasData(message) &&
+									(async (preview) =>
+										await this.getMessageObsData(message.id, preview)),
+								message,
+							});
+						} else if (
+							event.type ===
+							LINETypes.SquareEventType._NOTIFIED_UPDATE_SQUARE_CHAT_STATUS
+						) {
+							const payload = event.payload.notifiedUpdateSquareChatStatus;
+
+							if (!payload) {
+								continue;
+							}
+
+							this.emit("square:status", {
+								...payload,
+								...payload["statusWithoutMessage"],
+							});
+						}
+					}
+					myEventsArg.syncToken = myEvents.syncToken;
+					myEventsArg.continuationToken = myEvents.continuationToken;
+					myEventsArg.subscriptionId = myEvents.subscription
+						?.subscriptionId as number;
+				}
+			} catch (e) {
+				if (!this.ignorePollingError) {
+					throw e
+				}
 			}
 
 			await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -459,43 +465,48 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		};
 
 		while (true) {
-			if (!this.metadata) {
-				this.IS_POLLING_SQUARE = false;
-				return;
-			}
-			if (!this.IS_POLLING_SQUARE) {
-				return;
-			}
-			const myEvents = await this.fetchMyEvents(myEventsArg);
-			if (myEvents.syncToken !== myEventsArg.syncToken) {
-				for (const event of myEvents.events) {
-					this.emit("v2_square_event", event);
-
-					if (
-						event.type === LINETypes.SquareEventType._NOTIFICATION_MESSAGE &&
-						event.payload.notificationMessage
-					) {
-						const squareEventNotificationMessage =
-							event.payload.notificationMessage;
-						this.emit(
-							"v2_square_message",
-							new LINEClass.SquareMessage(
-								{ squareEventNotificationMessage },
-								this as LooseType,
-							),
-						);
-					}
+			try {
+				if (!this.metadata) {
+					this.IS_POLLING_SQUARE = false;
+					return;
 				}
-				myEventsArg.syncToken = myEvents.syncToken;
-				myEventsArg.continuationToken = myEvents.continuationToken;
-				myEventsArg.subscriptionId = myEvents.subscription
-					?.subscriptionId as number;
-			}
+				if (!this.IS_POLLING_SQUARE) {
+					return;
+				}
+				const myEvents = await this.fetchMyEvents(myEventsArg);
+				if (myEvents.syncToken !== myEventsArg.syncToken) {
+					for (const event of myEvents.events) {
+						this.emit("v2_square_event", event);
 
+						if (
+							event.type === LINETypes.SquareEventType._NOTIFICATION_MESSAGE &&
+							event.payload.notificationMessage
+						) {
+							const squareEventNotificationMessage =
+								event.payload.notificationMessage;
+							this.emit(
+								"v2_square_message",
+								new LINEClass.SquareMessage(
+									{ squareEventNotificationMessage },
+									this as LooseType,
+								),
+							);
+						}
+					}
+					myEventsArg.syncToken = myEvents.syncToken;
+					myEventsArg.continuationToken = myEvents.continuationToken;
+					myEventsArg.subscriptionId = myEvents.subscription
+						?.subscriptionId as number;
+				}
+			} catch (e) {
+				if (!this.ignorePollingError) {
+					throw e
+				}
+			}
 			await new Promise((resolve) => setTimeout(resolve, 1000));
 		}
 	}
-	public ignoreSyncError: boolean = true;
+	public ignorePollingError: boolean = true;
 
 	public async pollingTalkEvents() {
 		if (this.IS_POLLING_TALK) {
@@ -597,15 +608,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						const chat =
 							message.toType === LINETypes.MIDType._USER
 								? () => {
-										return this.getContact({ mid: sendIn });
-									}
+									return this.getContact({ mid: sendIn });
+								}
 								: undefined;
 
 						const group =
 							message.toType !== LINETypes.MIDType._USER
 								? async () => {
-										return (await this.getChats({ mids: [sendIn] })).chats[0];
-									}
+									return (await this.getChats({ mids: [sendIn] })).chats[0];
+								}
 								: (undefined as LooseType);
 
 						const getContact = () => {
@@ -660,7 +671,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						?.lastRevision as number) || individualRev;
 				revision = myEvents.fullSyncResponse?.nextRevision || revision;
 			} catch (e) {
-				if (!this.ignoreSyncError) {
+				if (!this.ignorePollingError) {
 					throw e;
 				}
 			}
@@ -725,7 +736,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						?.lastRevision as number) || individualRev;
 				revision = myEvents.fullSyncResponse?.nextRevision || revision;
 			} catch (e) {
-				if (!this.ignoreSyncError) {
+				if (!this.ignorePollingError) {
 					throw e;
 				}
 			}
@@ -1241,7 +1252,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType { }
 
 	/**
 	 * @description Will override.

@@ -21,7 +21,7 @@ export class TalkClient extends ChannelClient {
 	/**
 	 * @description Get line events.
 	 */
-	override sync(
+	override async sync(
 		options: {
 			limit?: number;
 			revision?: number | bigint;
@@ -38,8 +38,7 @@ export class TalkClient extends ChannelClient {
 			timeout: this.longTimeOutMs,
 			...options,
 		};
-		return new Promise<LINETypes.SyncResponse>((resolve) => {
-			this.request(
+		return await this.request(
 				[
 					[10, 1, revision],
 					[8, 2, limit],
@@ -52,8 +51,7 @@ export class TalkClient extends ChannelClient {
 				this.SyncService_API_PATH,
 				{},
 				timeout,
-			).then((res) => resolve(res));
-		});
+			)
 	}
 
 	/**

@@ -10,21 +10,21 @@ import { TypedEventEmitter } from "../libs/typed-event-emitter/index.ts";
 import { SquareMessage } from "./message-class.ts";
 import { Note } from "./talk-class.ts";
 
-// deno-lint-ignore ban-types
 type SquareEvents = {
-	updatefeature: (feature: LINETypes.SquareFeatureSet) => void;
-	updatestatus: (status: LINETypes.SquareStatus) => void;
+	"update:feature": (feature: LINETypes.SquareFeatureSet) => void;
+	"update:status": (status: LINETypes.SquareStatus) => void;
 	joinrequest: (joinrequest: LINETypes.SquareEventNotificationJoinRequest) => void;
-	updatenote: (feature: LINETypes.NoteStatus) => void;
-	updateauthority: (feature: LINETypes.SquareAuthority) => void;
-	update: (feature: LINETypes.Square) => void;
-	shutdown: (feature: LINETypes.Square) => void;
+	"update:note": (note: LINETypes.NoteStatus) => void;
+	"update:authority": (authority: LINETypes.SquareAuthority) => void;
+	update: (square: LINETypes.Square) => void;
+	shutdown: (square: LINETypes.Square) => void;
 };
 
 type SquareChatEvents = {
 	message: (message: SquareMessage) => void;
+	update: (chat: LINETypes.SquareChat) => void;
+	"update:status": (status: LINETypes.SquareChatStatusWithoutMessage) => void;
 	// todo
-	// update~: (event: LINETypes.SquareEvent & { payload: {} }) => void;
 	// kick: (event: LINETypes.SquareEvent & { payload: {} }) => void;
 	// leave: (event: LINETypes.SquareEvent & { payload: {} }) => void;
 	// join: (event: LINETypes.SquareEvent & { payload: {} }) => void;
@@ -117,14 +117,14 @@ export class Square extends TypedEventEmitter<SquareEvents> {
 				) {
 					this.feature =
 						event.payload.notifiedUpdateSquareFeatureSet.squareFeatureSet;
-					this.emit("updatefeature", this.feature)
+					this.emit("update:feature", this.feature)
 				} else if (
 					event.payload.notifiedUpdateSquareStatus &&
 					event.payload.notifiedUpdateSquareStatus.squareMid === this.mid
 				) {
 					this.status =
 						event.payload.notifiedUpdateSquareStatus.squareStatus;
-					this.emit("updatestatus", this.status)
+					this.emit("update:status", this.status)
 				} else if (
 					event.payload.notificationJoinRequest &&
 					event.payload.notificationJoinRequest.squareMid === this.mid
@@ -136,14 +136,14 @@ export class Square extends TypedEventEmitter<SquareEvents> {
 				) {
 					this.noteStatus =
 						event.payload.notifiedUpdateSquareNoteStatus.noteStatus;
-					this.emit("updatenote", this.noteStatus)
+					this.emit("update:note", this.noteStatus)
 				} else if (
 					event.payload.notifiedUpdateSquareAuthority &&
 					event.payload.notifiedUpdateSquareAuthority.squareMid === this.mid
 				) {
 					this.authority =
 						event.payload.notifiedUpdateSquareAuthority.squareAuthority;
-					this.emit("updatenote", this.noteStatus)
+					this.emit("update:authority", this.authority)
 				} else if (
 					event.payload.notifiedShutdownSquare &&
 					event.payload.notifiedShutdownSquare.square.mid === this.mid
@@ -210,12 +210,14 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 	public messageVisibility: LINETypes.MessageVisibility;
 	public ableToSearchMessage: boolean | null;
 	public memberCount: number;
+	public status: LINETypes.SquareChatStatusWithoutMessage
 	public syncToken?: string;
 	public note: Note;
 	constructor(
 		public rawSouce: LINETypes.GetSquareChatResponse,
 		private client: Client,
 		polling: boolean = false,
+		autoUpdate: boolean = true,
 	) {
 		super();
 		const { squareChat, squareChatMember, squareChatStatus } = rawSouce;
@@ -234,9 +236,47 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 		];
 		this.mymid = squareChatMember.squareMemberMid;
 		this.memberCount = squareChatStatus.otherStatus.memberCount;
+		this.status = squareChatStatus.otherStatus
 		this.note = new Note(this.squareMid, this.client);
 		if (polling) {
 			this.startPolling();
+		}
+		if (autoUpdate) {
+			client.on("square:event", (event) => {
+				if (
+					event.payload.notifiedUpdateSquareChatStatus &&
+					event.payload.notifiedUpdateSquareChatStatus.squareChatMid === this.mid
+				) {
+					this.status =
+						event.payload.notifiedUpdateSquareChatStatus.statusWithoutMessage;
+					this.memberCount = this.status.memberCount
+					//this.emit("update:status", this.status)
+				} else if (
+					event.payload.notifiedUpdateSquareChat &&
+					event.payload.notifiedUpdateSquareChat.squareChatMid === this.mid
+				) {
+					const { squareChat } = event.payload.notifiedUpdateSquareChat
+					this.mid = squareChat.squareChatMid;
+					this.squareMid = squareChat.squareMid;
+					this.type = squareChat.type;
+					this.name = squareChat.name;
+					this.chatImageObsHash = squareChat.chatImageObsHash;
+					this.squareChatRevision = squareChat.squareChatRevision as number;
+					this.maxMemberCount = squareChat.maxMemberCount;
+					this.state = squareChat.state;
+					this.invitationUrl = squareChat.invitationUrl;
+					this.messageVisibility = squareChat.messageVisibility;
+					this.ableToSearchMessage = [null, false, true][
+						LINETypes.BooleanState[squareChat.ableToSearchMessage] as number
+					];
+					this.emit("update", squareChat)
+				}
+			})
+			if (polling) {
+				this.on("event", (event) => {
+					
+				})
+			}
 		}
 	}
 
@@ -252,6 +292,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 			await client.getSquareChat({ squareChatMid }),
 			client,
 			polling,
+
 		);
 	}
 
@@ -288,11 +329,6 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 	public IS_POLLING: boolean = false;
 
 	/**
-	 * @description messages list received
-	 */
-	public messages: SquareMessage[] = [];
-
-	/**
 	 * @description start listen (fetchSquareChatEvents)
 	 */
 	public async startPolling(): Promise<void> {
@@ -327,7 +363,6 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 							{ squareEventSendMessage: event.payload.sendMessage },
 							this.client,
 						);
-						this.messages.push(message);
 						this.emit("message", message);
 					} else if (
 						event.type === "RECEIVE_MESSAGE" &&
@@ -337,7 +372,6 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 							{ squareEventReceiveMessage: event.payload.receiveMessage },
 							this.client,
 						);
-						this.messages.push(message);
 						this.emit("message", message);
 					}
 				}
