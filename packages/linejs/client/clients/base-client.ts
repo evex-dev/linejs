@@ -277,7 +277,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					for (const event of myEvents.events) {
 						this.emit("square:event", event);
 
-						if (event.type === LINETypes.SquareEventType._NOTIFICATION_MESSAGE) {
+						if (
+							event.type === LINETypes.SquareEventType._NOTIFICATION_MESSAGE
+						) {
 							const payload = event.payload.notificationMessage;
 
 							if (!payload) {
@@ -435,7 +437,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				}
 			} catch (e) {
 				if (!this.ignorePollingError) {
-					throw e
+					throw e;
 				}
 			}
 
@@ -500,7 +502,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				}
 			} catch (e) {
 				if (!this.ignorePollingError) {
-					throw e
+					throw e;
 				}
 			}
 			await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -608,15 +610,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						const chat =
 							message.toType === LINETypes.MIDType._USER
 								? () => {
-									return this.getContact({ mid: sendIn });
-								}
+										return this.getContact({ mid: sendIn });
+									}
 								: undefined;
 
 						const group =
 							message.toType !== LINETypes.MIDType._USER
 								? async () => {
-									return (await this.getChats({ mids: [sendIn] })).chats[0];
-								}
+										return (await this.getChats({ mids: [sendIn] })).chats[0];
+									}
 								: (undefined as LooseType);
 
 						const getContact = () => {
@@ -1252,7 +1254,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType { }
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
 
 	/**
 	 * @description Will override.

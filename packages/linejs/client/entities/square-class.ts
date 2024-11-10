@@ -13,7 +13,9 @@ import { Note } from "./talk-class.ts";
 type SquareEvents = {
 	"update:feature": (feature: LINETypes.SquareFeatureSet) => void;
 	"update:status": (status: LINETypes.SquareStatus) => void;
-	joinrequest: (joinrequest: LINETypes.SquareEventNotificationJoinRequest) => void;
+	joinrequest: (
+		joinrequest: LINETypes.SquareEventNotificationJoinRequest,
+	) => void;
 	"update:note": (note: LINETypes.NoteStatus) => void;
 	"update:authority": (authority: LINETypes.SquareAuthority) => void;
 	update: (square: LINETypes.Square) => void;
@@ -117,38 +119,37 @@ export class Square extends TypedEventEmitter<SquareEvents> {
 				) {
 					this.feature =
 						event.payload.notifiedUpdateSquareFeatureSet.squareFeatureSet;
-					this.emit("update:feature", this.feature)
+					this.emit("update:feature", this.feature);
 				} else if (
 					event.payload.notifiedUpdateSquareStatus &&
 					event.payload.notifiedUpdateSquareStatus.squareMid === this.mid
 				) {
-					this.status =
-						event.payload.notifiedUpdateSquareStatus.squareStatus;
-					this.emit("update:status", this.status)
+					this.status = event.payload.notifiedUpdateSquareStatus.squareStatus;
+					this.emit("update:status", this.status);
 				} else if (
 					event.payload.notificationJoinRequest &&
 					event.payload.notificationJoinRequest.squareMid === this.mid
 				) {
-					this.emit("joinrequest", event.payload.notificationJoinRequest)
+					this.emit("joinrequest", event.payload.notificationJoinRequest);
 				} else if (
 					event.payload.notifiedUpdateSquareNoteStatus &&
 					event.payload.notifiedUpdateSquareNoteStatus.squareMid === this.mid
 				) {
 					this.noteStatus =
 						event.payload.notifiedUpdateSquareNoteStatus.noteStatus;
-					this.emit("update:note", this.noteStatus)
+					this.emit("update:note", this.noteStatus);
 				} else if (
 					event.payload.notifiedUpdateSquareAuthority &&
 					event.payload.notifiedUpdateSquareAuthority.squareMid === this.mid
 				) {
 					this.authority =
 						event.payload.notifiedUpdateSquareAuthority.squareAuthority;
-					this.emit("update:authority", this.authority)
+					this.emit("update:authority", this.authority);
 				} else if (
 					event.payload.notifiedShutdownSquare &&
 					event.payload.notifiedShutdownSquare.square.mid === this.mid
 				) {
-					const { square } = event.payload.notifiedShutdownSquare
+					const { square } = event.payload.notifiedShutdownSquare;
 					this.mid = square.mid;
 					this.name = square.name;
 					this.profileImageObsHash = square.profileImageObsHash;
@@ -161,12 +162,12 @@ export class Square extends TypedEventEmitter<SquareEvents> {
 					this.emblems = square.emblems;
 					this.joinMethod = square.joinMethod;
 					this.createdAt = new Date(square.createdAt as number);
-					this.emit("shutdown", square)
+					this.emit("shutdown", square);
 				} else if (
 					event.payload.notifiedUpdateSquare &&
 					event.payload.notifiedUpdateSquare.squareMid === this.mid
 				) {
-					const { square } = event.payload.notifiedUpdateSquare
+					const { square } = event.payload.notifiedUpdateSquare;
 					this.mid = square.mid;
 					this.name = square.name;
 					this.profileImageObsHash = square.profileImageObsHash;
@@ -179,7 +180,7 @@ export class Square extends TypedEventEmitter<SquareEvents> {
 					this.emblems = square.emblems;
 					this.joinMethod = square.joinMethod;
 					this.createdAt = new Date(square.createdAt as number);
-					this.emit("update", square)
+					this.emit("update", square);
 				}
 			});
 		}
@@ -210,7 +211,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 	public messageVisibility: LINETypes.MessageVisibility;
 	public ableToSearchMessage: boolean | null;
 	public memberCount: number;
-	public status: LINETypes.SquareChatStatusWithoutMessage
+	public status: LINETypes.SquareChatStatusWithoutMessage;
 	public syncToken?: string;
 	public note: Note;
 	constructor(
@@ -236,7 +237,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 		];
 		this.mymid = squareChatMember.squareMemberMid;
 		this.memberCount = squareChatStatus.otherStatus.memberCount;
-		this.status = squareChatStatus.otherStatus
+		this.status = squareChatStatus.otherStatus;
 		this.note = new Note(this.squareMid, this.client);
 		if (polling) {
 			this.startPolling();
@@ -245,17 +246,18 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 			client.on("square:event", (event) => {
 				if (
 					event.payload.notifiedUpdateSquareChatStatus &&
-					event.payload.notifiedUpdateSquareChatStatus.squareChatMid === this.mid
+					event.payload.notifiedUpdateSquareChatStatus.squareChatMid ===
+						this.mid
 				) {
 					this.status =
 						event.payload.notifiedUpdateSquareChatStatus.statusWithoutMessage;
-					this.memberCount = this.status.memberCount
+					this.memberCount = this.status.memberCount;
 					//this.emit("update:status", this.status)
 				} else if (
 					event.payload.notifiedUpdateSquareChat &&
 					event.payload.notifiedUpdateSquareChat.squareChatMid === this.mid
 				) {
-					const { squareChat } = event.payload.notifiedUpdateSquareChat
+					const { squareChat } = event.payload.notifiedUpdateSquareChat;
 					this.mid = squareChat.squareChatMid;
 					this.squareMid = squareChat.squareMid;
 					this.type = squareChat.type;
@@ -269,13 +271,11 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 					this.ableToSearchMessage = [null, false, true][
 						LINETypes.BooleanState[squareChat.ableToSearchMessage] as number
 					];
-					this.emit("update", squareChat)
+					this.emit("update", squareChat);
 				}
-			})
+			});
 			if (polling) {
-				this.on("event", (event) => {
-					
-				})
+				this.on("event", (event) => {});
 			}
 		}
 	}
@@ -292,7 +292,6 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 			await client.getSquareChat({ squareChatMid }),
 			client,
 			polling,
-
 		);
 	}
 
@@ -311,12 +310,12 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 		options:
 			| string
 			| {
-				text?: string;
-				contentType?: number;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string;
-				location?: LINETypes.Location;
-			},
+					text?: string;
+					contentType?: number;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string;
+					location?: LINETypes.Location;
+			  },
 	): Promise<LINETypes.SendMessageResponse> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
