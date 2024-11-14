@@ -36,17 +36,16 @@ type UserEvents = {
 
 /**
  * @description Gets mid's type
+ * 
+ * USER(0),\
+ * ROOM(1),\
+ * GROUP(2),\
+ * SQUARE(3),\
+ * SQUARE_CHAT(4),\
+ * SQUARE_MEMBER(5),\
+ * BOT(6);
  */
 function getMidType(mid: string): LINETypes.MIDType | null {
-	/**
-	 * USER(0),
-	 * ROOM(1),
-	 * GROUP(2),
-	 * SQUARE(3),
-	 * SQUARE_CHAT(4),
-	 * SQUARE_MEMBER(5),
-	 * BOT(6);
-	 */
 	const _u = mid.charAt(0);
 	switch (_u) {
 		case "u":
@@ -72,7 +71,7 @@ export class Note {
 	constructor(
 		public mid: string,
 		private client: Client,
-	) {}
+	) { }
 
 	public createPost(options: {
 		text?: string;
@@ -236,14 +235,14 @@ export class User extends TypedEventEmitter<UserEvents> {
 		options:
 			| string
 			| {
-					text?: string;
-					contentType?: number;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string;
-					location?: LINETypes.Location;
-					chunk?: string[] | Buffer[];
-					e2ee?: boolean;
-			  },
+				text?: string;
+				contentType?: number;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string;
+				location?: LINETypes.Location;
+				chunk?: string[] | Buffer[];
+				e2ee?: boolean;
+			},
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
@@ -331,7 +330,6 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 				user.groupStatus.joinedAt = new Date(
 					(chat.extra.groupExtra.memberMids[key] as number) * 1000,
 				);
-				user.kick = user.kick.bind(user, chat.chatMid);
 				members.push();
 			}
 		}
@@ -393,14 +391,14 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 		options:
 			| string
 			| {
-					text?: string;
-					contentType?: number;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string;
-					location?: LINETypes.Location;
-					chunk?: string[] | Buffer[];
-					e2ee?: boolean;
-			  },
+				text?: string;
+				contentType?: number;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string;
+				location?: LINETypes.Location;
+				chunk?: string[] | Buffer[];
+				e2ee?: boolean;
+			},
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.send({ text: options });

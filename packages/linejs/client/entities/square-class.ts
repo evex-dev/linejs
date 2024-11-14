@@ -18,7 +18,8 @@ type SquareEvents = {
 	) => void;
 	"update:note": (note: LINETypes.NoteStatus) => void;
 	"update:authority": (authority: LINETypes.SquareAuthority) => void;
-	update: (square: LINETypes.Square) => void;
+	"update:square": (square: LINETypes.Square) => void;
+	"update": (square: Square) => void;
 	shutdown: (square: LINETypes.Square) => void;
 };
 
@@ -119,12 +120,14 @@ export class Square extends TypedEventEmitter<SquareEvents> {
 				) {
 					this.feature =
 						event.payload.notifiedUpdateSquareFeatureSet.squareFeatureSet;
+					this.emit("update", this);
 					this.emit("update:feature", this.feature);
 				} else if (
 					event.payload.notifiedUpdateSquareStatus &&
 					event.payload.notifiedUpdateSquareStatus.squareMid === this.mid
 				) {
 					this.status = event.payload.notifiedUpdateSquareStatus.squareStatus;
+					this.emit("update", this);
 					this.emit("update:status", this.status);
 				} else if (
 					event.payload.notificationJoinRequest &&
@@ -137,6 +140,7 @@ export class Square extends TypedEventEmitter<SquareEvents> {
 				) {
 					this.noteStatus =
 						event.payload.notifiedUpdateSquareNoteStatus.noteStatus;
+					this.emit("update", this);
 					this.emit("update:note", this.noteStatus);
 				} else if (
 					event.payload.notifiedUpdateSquareAuthority &&
@@ -144,6 +148,7 @@ export class Square extends TypedEventEmitter<SquareEvents> {
 				) {
 					this.authority =
 						event.payload.notifiedUpdateSquareAuthority.squareAuthority;
+					this.emit("update", this);
 					this.emit("update:authority", this.authority);
 				} else if (
 					event.payload.notifiedShutdownSquare &&
@@ -162,6 +167,7 @@ export class Square extends TypedEventEmitter<SquareEvents> {
 					this.emblems = square.emblems;
 					this.joinMethod = square.joinMethod;
 					this.createdAt = new Date(square.createdAt as number);
+					this.emit("update", this);
 					this.emit("shutdown", square);
 				} else if (
 					event.payload.notifiedUpdateSquare &&
@@ -180,7 +186,8 @@ export class Square extends TypedEventEmitter<SquareEvents> {
 					this.emblems = square.emblems;
 					this.joinMethod = square.joinMethod;
 					this.createdAt = new Date(square.createdAt as number);
-					this.emit("update", square);
+					this.emit("update", this);
+					this.emit("update:square", square);
 				}
 			});
 		}
@@ -247,7 +254,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 				if (
 					event.payload.notifiedUpdateSquareChatStatus &&
 					event.payload.notifiedUpdateSquareChatStatus.squareChatMid ===
-						this.mid
+					this.mid
 				) {
 					this.status =
 						event.payload.notifiedUpdateSquareChatStatus.statusWithoutMessage;
@@ -275,7 +282,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 				}
 			});
 			if (polling) {
-				this.on("event", (event) => {});
+				this.on("event", (event) => { });
 			}
 		}
 	}
@@ -310,12 +317,12 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 		options:
 			| string
 			| {
-					text?: string;
-					contentType?: number;
-					contentMetadata?: LooseType;
-					relatedMessageId?: string;
-					location?: LINETypes.Location;
-			  },
+				text?: string;
+				contentType?: number;
+				contentMetadata?: LooseType;
+				relatedMessageId?: string;
+				location?: LINETypes.Location;
+			},
 	): Promise<LINETypes.SendMessageResponse> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
@@ -374,7 +381,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 						this.emit("message", message);
 					}
 				}
-				await new Promise<void>((resolve) => setTimeout(resolve, 500));
+				await new Promise<void>((resolve) => setTimeout(resolve, 1000));
 			} catch (e) {
 				this.client.log("SquareChatPollingError", e);
 				await new Promise<void>((resolve) => setTimeout(resolve, 2000));

@@ -797,20 +797,20 @@ export class TalkClient extends ChannelClient {
 						chatSet.picturePath ? [11, 7, chatSet.picturePath] : null,
 						chatSet.extra?.groupExtra
 							? [
-									12,
-									8,
+								12,
+								8,
+								[
 									[
+										12,
+										1,
 										[
-											12,
-											1,
-											[
-												[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
-												[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
-												[2, 7, chatSet.extra.groupExtra.ticketDisabled],
-											],
+											[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
+											[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
+											[2, 7, chatSet.extra.groupExtra.ticketDisabled],
 										],
 									],
-								]
+								],
+							]
 							: null,
 					],
 				],
@@ -917,5 +917,25 @@ export class TalkClient extends ChannelClient {
 			"Contact",
 			this.TalkService_API_PATH,
 		);
+	}
+	public async findContactsByPhone(options: {
+		phones: string[];
+	}): Promise<Record<string, LINETypes.Contact>> {
+		const { phones } = { ...options };
+		const _res = await this.direct_request(
+			[[14, 2, [11, phones]]],
+			"findContactsByPhone",
+			this.TalkService_PROTOCOL_TYPE,
+			false,
+			this.TalkService_API_PATH,
+		);
+		const res: Record<string, LINETypes.Contact> = {};
+		for (const key in _res) {
+			if (Object.prototype.hasOwnProperty.call(_res, key)) {
+				const val = _res[key];
+				res[key] = this.parser.rename_thrift("Contact", val);
+			}
+		}
+		return res;
 	}
 }
