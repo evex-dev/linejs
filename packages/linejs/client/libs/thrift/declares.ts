@@ -30,6 +30,13 @@ export const Protocols = {
 };
 
 export type ProtocolKey = keyof typeof Protocols;
+
+/**
+ * @description NestedArray is an array that represents each value of thrift that is compatible with CHRLINE.
+ * ```
+ * [thrift_type, field_id, value]
+ * ```
+ */
 export type NestedArray = Array<
 	| null
 	| undefined

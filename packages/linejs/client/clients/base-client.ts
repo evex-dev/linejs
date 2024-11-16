@@ -1470,7 +1470,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Request to LINE API.
 	 *
-	 * @param {NestedArray} [value] - The value to request.
+	 * @param {NestedArray} [value] - The thrift value(argument) to request.
 	 * @param {string} [methodName] - The method name of the request.
 	 * @param {ProtocolKey} [protocolType=3] - The protocol type of the request.
 	 * @param {boolean | string} [parse=true] - Whether to parse the response.
@@ -1478,6 +1478,12 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @param {object} [headers={}] - The headers of the request.
 	 * @param {number} [timeOutMs=this.timeOutMs] - The timeout milliseconds of the request.
 	 * @returns {Promise<LooseType>} The response.
+	 * 
+	 * ---
+	 * Use for functions that take one thrift struct argument
+	 * ```
+	 * SendMessageResponse sendMessage(1: SendMessageRequest request) throws(1: SquareException e);
+	 * ```
 	 */
 	public async request(
 		value: NestedArray,
@@ -1506,7 +1512,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Request to LINE API directly.
 	 *
-	 * @param {NestedArray} [value] - The value to request.
+	 * @param {NestedArray} [value] - The thrift value(arguments) to request.
 	 * @param {string} [methodName] - The method name of the request.
 	 * @param {ProtocolKey} [protocolType=3] - The protocol type of the request.
 	 * @param {boolean | string} [parse=true] - Whether to parse the response.
@@ -1514,6 +1520,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @param {object} [headers={}] - The headers of the request.
 	 * @param {number} [timeOutMs=this.timeOutMs] - The timeout milliseconds of the request.
 	 * @returns {Promise<LooseType>} The response.
+	 * 
+	 * ---
+	 * Use for functions that take two or more arguments
+	 * ```
+	 * Message sendMessage(
+	 *  1: i32 seq,
+	 *  2: Message message
+	 * ) throws(1: TalkException e);
+	 * ```
 	 */
 	public async direct_request(
 		value: NestedArray,
@@ -1584,113 +1599,127 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		if (!this.system) {
 			throw new InternalError("Not setup yet", "Please call 'login()' first");
 		}
-		const Protocol = Protocols[protocolType];
-		let headers = this.getHeader(this.metadata?.authToken, overrideMethod);
-
-		headers = { ...headers, ...appendHeaders };
-
-		this.log("writeThrift", {
-			thriftMethodName: methodName,
-			protocolType,
-			value,
-		});
-
-		const Trequest = writeThrift(value, methodName, Protocol);
-		const fetchArg: [string, RequestInit] = [
-			`https://${this.endpoint}${path}`,
-			{
-				method: overrideMethod,
-				headers,
-				signal: AbortSignal.timeout(timeOutMs),
-				body: Trequest,
-			},
-		];
-		this.log("fetchSend", {
-			method: "thrift",
-			thriftMethodName: methodName,
-			httpMethod: overrideMethod,
-			data: Trequest,
-			headers,
-			fetchArg,
-		});
-
-		const response = await this.customFetch(...fetchArg);
-		const nextToken = response.headers.get("x-line-next-access");
-
-		if (nextToken) {
-			this.metadata = {
-				authToken: nextToken,
-			};
-
-			this.emit("update:authtoken", this.metadata.authToken);
-		}
-		const body = await response.arrayBuffer();
-		const parsedBody = new Uint8Array(body);
-		this.log("fetchRecv", {
-			method: "thrift",
-			response,
-			data: parsedBody,
-		});
-		let res: {
-			value: any;
-			e: any;
-			_info: any;
-		};
 		try {
-			res = readThrift(parsedBody, Protocol);
+			const Protocol = Protocols[protocolType];
+			let headers = this.getHeader(this.metadata?.authToken, overrideMethod);
+
+			headers = { ...headers, ...appendHeaders };
+
+			this.log("writeThrift", {
+				thriftMethodName: methodName,
+				protocolType,
+				value,
+			});
+
+			const Trequest = writeThrift(value, methodName, Protocol);
+			const fetchArg: [string, RequestInit] = [
+				`https://${this.endpoint}${path}`,
+				{
+					method: overrideMethod,
+					headers,
+					signal: AbortSignal.timeout(timeOutMs),
+					body: Trequest,
+				},
+			];
+			this.log("fetchSend", {
+				method: "thrift",
+				thriftMethodName: methodName,
+				httpMethod: overrideMethod,
+				data: Trequest,
+				headers,
+				fetchArg,
+			});
+
+			const response = await this.customFetch(...fetchArg);
+			const nextToken = response.headers.get("x-line-next-access");
+
+			if (nextToken) {
+				this.metadata = {
+					authToken: nextToken,
+				};
+
+				this.emit("update:authtoken", this.metadata.authToken);
+			}
+			const body = await response.arrayBuffer();
+			const parsedBody = new Uint8Array(body);
+			this.log("fetchRecv", {
+				thriftMethodName: methodName,
+				method: "thrift",
+				response,
+				data: parsedBody,
+			});
+			let res: {
+				value: any;
+				e: any;
+				_info: any;
+			};
+			try {
+				res = readThrift(parsedBody, Protocol);
+			} catch (error) {
+				throw new InternalError(
+					"Request internal failed",
+					`${methodName}(${path}) -> Invalid response buffer: <${[...parsedBody].map((e) => e.toString(16)).join(" ")}>`,
+					{ error },
+				);
+			}
+			if (parse === true) {
+				this.parser.rename_data(res);
+			} else if (typeof parse === "string") {
+				res.value = this.parser.rename_thrift(parse, res.value);
+			}
+
+			if (res.e) {
+				const structName = this.EXCEPTION_TYPES[path] || "TalkException";
+
+				if (structName) {
+					res.e = this.parser.rename_thrift(structName, res.e);
+				}
+			}
+
+			this.log("readThrift", {
+				thriftMethodName: methodName,
+				parsedData: res,
+			});
+
+			const isRefresh =
+				res.e &&
+				res.e["code"] === "MUST_REFRESH_V3_TOKEN" &&
+				this.storage.get("refreshToken");
+
+			if (res.e && !isRefresh) {
+				throw new InternalError(
+					"Request internal failed",
+					`${methodName}(${path}) -> ` + JSON.stringify(res.e),
+					res.e,
+				);
+			}
+
+			if (isRefresh && !isReRequest) {
+				this.log("V3_Refresh", res.e);
+				await this.tryRefreshToken();
+				return this.rawRequest(
+					path,
+					value,
+					methodName,
+					protocolType,
+					appendHeaders,
+					overrideMethod,
+					parse,
+					true,
+				);
+			}
+			return res;
 		} catch (error) {
-			throw new InternalError(
-				"Request internal failed",
-				`Invalid response buffer: <${[...parsedBody].map((e) => e.toString(16)).join(" ")}>`,
-				{ error },
-			);
-		}
-		if (parse === true) {
-			this.parser.rename_data(res);
-		} else if (typeof parse === "string") {
-			res.value = this.parser.rename_thrift(parse, res.value);
-		}
-
-		if (res.e) {
-			const structName = this.EXCEPTION_TYPES[path] || "TalkException";
-
-			if (structName) {
-				res.e = this.parser.rename_thrift(structName, res.e);
+			if (error instanceof InternalError) {
+				throw error
+			} else {
+				throw new InternalError(
+					"Request internal failed",
+					`${methodName}(${path}) -> ` + JSON.stringify({ ...(error as object) }),
+					{ error }
+				);
 			}
 		}
-
-		this.log("readThrift", {
-			parsedData: res,
-		});
-
-		const isRefresh =
-			res.e &&
-			res.e["code"] === "MUST_REFRESH_V3_TOKEN" &&
-			this.storage.get("refreshToken");
-
-		if (res.e && !isRefresh) {
-			throw new InternalError(
-				"Request internal failed",
-				JSON.stringify(res.e),
-				res.e,
-			);
-		}
-
-		if (isRefresh && !isReRequest) {
-			this.log("V3_Refresh", res.e);
-			await this.tryRefreshToken();
-			return this.rawRequest(
-				path,
-				value,
-				methodName,
-				protocolType,
-				appendHeaders,
-				overrideMethod,
-				parse,
-				true,
-			);
-		}
-		return res;
 	}
 
 	/**

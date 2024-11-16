@@ -601,16 +601,16 @@ export class SquareClient extends LiffClient {
 
 	/**
 	 * @description Update square feature set.
-	 * @param updateAttributes
-	 * CREATING_SECRET_SQUARE_CHAT(1),
-	 * INVITING_INTO_OPEN_SQUARE_CHAT(2),
-	 * CREATING_SQUARE_CHAT(3),
-	 * READONLY_DEFAULT_CHAT(4),
-	 * SHOWING_ADVERTISEMENT(5),
-	 * DELEGATE_JOIN_TO_PLUG(6),
-	 * DELEGATE_KICK_OUT_TO_PLUG(7),
-	 * DISABLE_UPDATE_JOIN_METHOD(8),
-	 * DISABLE_TRANSFER_ADMIN(9),
+	 * @param updateAttributes\
+	 * CREATING_SECRET_SQUARE_CHAT(1),\
+	 * INVITING_INTO_OPEN_SQUARE_CHAT(2),\
+	 * CREATING_SQUARE_CHAT(3),\
+	 * READONLY_DEFAULT_CHAT(4),\
+	 * SHOWING_ADVERTISEMENT(5),\
+	 * DELEGATE_JOIN_TO_PLUG(6),\
+	 * DELEGATE_KICK_OUT_TO_PLUG(7),\
+	 * DISABLE_UPDATE_JOIN_METHOD(8),\
+	 * DISABLE_TRANSFER_ADMIN(9),\
 	 * CREATING_LIVE_TALK(10);
 	 */
 	public updateSquareFeatureSet(options: {
