@@ -315,7 +315,7 @@ export class SquareClient extends LiffClient {
 		continuationToken?: string;
 		subscriptionId?: number;
 		squareThreadMid?: string;
-		direction?: number
+		direction?: number;
 	}): Promise<LINETypes.FetchSquareChatEventsResponse> {
 		const {
 			squareChatMid,
@@ -326,10 +326,11 @@ export class SquareClient extends LiffClient {
 			squareThreadMid,
 			direction,
 		} = { limit: 100, direction: 1, ...options };
-		let _syncToken = syncToken, _direction = direction;
+		let _syncToken = syncToken,
+			_direction = direction;
 		if (continuationToken) {
-			_syncToken = continuationToken
-			_direction = 2
+			_syncToken = continuationToken;
+			_direction = 2;
 		}
 		return this.request(
 			[

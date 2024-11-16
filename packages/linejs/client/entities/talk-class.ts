@@ -36,7 +36,7 @@ type UserEvents = {
 
 /**
  * @description Gets mid's type
- * 
+ *
  * USER(0),\
  * ROOM(1),\
  * GROUP(2),\
@@ -71,7 +71,7 @@ export class Note {
 	constructor(
 		public mid: string,
 		private client: Client,
-	) { }
+	) {}
 
 	public createPost(options: {
 		text?: string;
@@ -235,14 +235,14 @@ export class User extends TypedEventEmitter<UserEvents> {
 		options:
 			| string
 			| {
-				text?: string;
-				contentType?: number;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string;
-				location?: LINETypes.Location;
-				chunk?: string[] | Buffer[];
-				e2ee?: boolean;
-			},
+					text?: string;
+					contentType?: number;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string;
+					location?: LINETypes.Location;
+					chunk?: string[] | Buffer[];
+					e2ee?: boolean;
+			  },
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
@@ -256,9 +256,7 @@ export class User extends TypedEventEmitter<UserEvents> {
 	/**
 	 * @description Kickout from group.
 	 */
-	public kick(
-		chatMid: string,
-	): Promise<LINETypes.DeleteOtherFromChatResponse> {
+	public kick(chatMid: string): Promise<LINETypes.DeleteOtherFromChatResponse> {
 		return this.client.deleteOtherFromChat({ to: chatMid, mid: this.mid });
 	}
 
@@ -391,14 +389,14 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 		options:
 			| string
 			| {
-				text?: string;
-				contentType?: number;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string;
-				location?: LINETypes.Location;
-				chunk?: string[] | Buffer[];
-				e2ee?: boolean;
-			},
+					text?: string;
+					contentType?: number;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string;
+					location?: LINETypes.Location;
+					chunk?: string[] | Buffer[];
+					e2ee?: boolean;
+			  },
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
@@ -955,5 +953,3 @@ export class SendChatRemoved {
 		this.chatType = getMidType(op.param[1]);
 	}
 }
-
-

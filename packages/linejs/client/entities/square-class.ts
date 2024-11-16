@@ -19,7 +19,7 @@ type SquareEvents = {
 	"update:note": (note: LINETypes.NoteStatus) => void;
 	"update:authority": (authority: LINETypes.SquareAuthority) => void;
 	"update:square": (square: LINETypes.Square) => void;
-	"update": (square: Square) => void;
+	update: (square: Square) => void;
 	shutdown: (square: LINETypes.Square) => void;
 };
 
@@ -254,7 +254,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 				if (
 					event.payload.notifiedUpdateSquareChatStatus &&
 					event.payload.notifiedUpdateSquareChatStatus.squareChatMid ===
-					this.mid
+						this.mid
 				) {
 					this.status =
 						event.payload.notifiedUpdateSquareChatStatus.statusWithoutMessage;
@@ -282,7 +282,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 				}
 			});
 			if (polling) {
-				this.on("event", (event) => { });
+				this.on("event", (event) => {});
 			}
 		}
 	}
@@ -317,12 +317,12 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 		options:
 			| string
 			| {
-				text?: string;
-				contentType?: number;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string;
-				location?: LINETypes.Location;
-			},
+					text?: string;
+					contentType?: number;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string;
+					location?: LINETypes.Location;
+			  },
 	): Promise<LINETypes.SendMessageResponse> {
 		if (typeof options === "string") {
 			return this.send({ text: options });

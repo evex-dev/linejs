@@ -610,15 +610,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						const chat =
 							message.toType === LINETypes.MIDType._USER
 								? () => {
-									return this.getContact({ mid: sendIn });
-								}
+										return this.getContact({ mid: sendIn });
+									}
 								: undefined;
 
 						const group =
 							message.toType !== LINETypes.MIDType._USER
 								? async () => {
-									return (await this.getChats({ mids: [sendIn] })).chats[0];
-								}
+										return (await this.getChats({ mids: [sendIn] })).chats[0];
+									}
 								: (undefined as LooseType);
 
 						const getContact = () => {
@@ -1201,7 +1201,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			}
 			return authToken;
 		}
-		throw new InternalError("TimeoutError", "checkQrCodeVerified timed out")
+		throw new InternalError("TimeoutError", "checkQrCodeVerified timed out");
 	}
 
 	public async requestSQR2(): Promise<string> {
@@ -1230,7 +1230,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			this.storage.set("expire", tokenInfo[3] + tokenInfo[6]);
 			return tokenInfo[1];
 		}
-		throw new InternalError("TimeoutError", "checkQrCodeVerified timed out")
+		throw new InternalError("TimeoutError", "checkQrCodeVerified timed out");
 	}
 
 	/**
@@ -1257,7 +1257,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType { }
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
 
 	/**
 	 * @description Will override.
@@ -1478,7 +1478,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @param {object} [headers={}] - The headers of the request.
 	 * @param {number} [timeOutMs=this.timeOutMs] - The timeout milliseconds of the request.
 	 * @returns {Promise<LooseType>} The response.
-	 * 
+	 *
 	 * ---
 	 * Use for functions that take one thrift struct argument
 	 * ```
@@ -1520,7 +1520,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @param {object} [headers={}] - The headers of the request.
 	 * @param {number} [timeOutMs=this.timeOutMs] - The timeout milliseconds of the request.
 	 * @returns {Promise<LooseType>} The response.
-	 * 
+	 *
 	 * ---
 	 * Use for functions that take two or more arguments
 	 * ```
@@ -1711,12 +1711,13 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			return res;
 		} catch (error) {
 			if (error instanceof InternalError) {
-				throw error
+				throw error;
 			} else {
 				throw new InternalError(
 					"Request internal failed",
-					`${methodName}(${path}) -> ` + JSON.stringify({ ...(error as object) }),
-					{ error }
+					`${methodName}(${path}) -> ` +
+						JSON.stringify({ ...(error as object) }),
+					{ error },
 				);
 			}
 		}
@@ -2038,7 +2039,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 	private reqseqs: Record<string, number>;
 	public getReqseq(name: string = "talk"): number {
-		if (!this.reqseqs[name]) { this.reqseqs[name] = 0 };
+		if (!this.reqseqs[name]) {
+			this.reqseqs[name] = 0;
+		}
 		const seq = this.reqseqs[name];
 		this.reqseqs[name]++;
 		this.storage.set("reqseq", JSON.stringify(this.reqseqs));

@@ -797,20 +797,20 @@ export class TalkClient extends ChannelClient {
 						chatSet.picturePath ? [11, 7, chatSet.picturePath] : null,
 						chatSet.extra?.groupExtra
 							? [
-								12,
-								8,
-								[
+									12,
+									8,
 									[
-										12,
-										1,
 										[
-											[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
-											[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
-											[2, 7, chatSet.extra.groupExtra.ticketDisabled],
+											12,
+											1,
+											[
+												[2, 2, chatSet.extra.groupExtra.preventedJoinByTicket],
+												[2, 6, chatSet.extra.groupExtra.addFriendDisabled],
+												[2, 7, chatSet.extra.groupExtra.ticketDisabled],
+											],
 										],
 									],
-								],
-							]
+								]
 							: null,
 					],
 				],
