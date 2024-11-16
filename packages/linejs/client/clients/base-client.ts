@@ -277,9 +277,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					for (const event of myEvents.events) {
 						this.emit("square:event", event);
 
-						if (
-							event.type === LINETypes.SquareEventType._NOTIFICATION_MESSAGE
-						) {
+						if (event.type === "NOTIFICATION_MESSAGE") {
 							const payload = event.payload.notificationMessage;
 
 							if (!payload) {
@@ -414,10 +412,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 										await this.getMessageObsData(message.id, preview)),
 								message,
 							});
-						} else if (
-							event.type ===
-							LINETypes.SquareEventType._NOTIFIED_UPDATE_SQUARE_CHAT_STATUS
-						) {
+						} else if (event.type === "NOTIFIED_UPDATE_SQUARE_CHAT_STATUS") {
 							const payload = event.payload.notifiedUpdateSquareChatStatus;
 
 							if (!payload) {
@@ -481,7 +476,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						this.emit("v2_square_event", event);
 
 						if (
-							event.type === LINETypes.SquareEventType._NOTIFICATION_MESSAGE &&
+							event.type === "NOTIFICATION_MESSAGE" &&
 							event.payload.notificationMessage
 						) {
 							const squareEventNotificationMessage =
@@ -535,19 +530,16 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				for (const operation of myEvents.operationResponse?.operations) {
 					revision = operation.revision;
 					if (
-						operation.type === LINETypes.OpType._RECEIVE_MESSAGE ||
-						operation.type === LINETypes.OpType._SEND_MESSAGE ||
-						operation.type === LINETypes.OpType._SEND_CONTENT
+						operation.type === "RECEIVE_MESSAGE" ||
+						operation.type === "SEND_MESSAGE" ||
+						operation.type === "SEND_CONTENT"
 					) {
 						const message = await this.decryptE2EEMessage(operation.message);
-						if (
-							this.hasData(message) &&
-							operation.type == LINETypes.OpType._SEND_MESSAGE
-						) {
+						if (this.hasData(message) && operation.type == "SEND_MESSAGE") {
 							//continue;
 						}
 						let sendIn = "";
-						if (message.toType === LINETypes.MIDType._USER) {
+						if (message.toType === "USER") {
 							if (message._from === this.user?.mid) {
 								sendIn = message.to;
 							} else {
@@ -608,14 +600,14 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						};
 
 						const chat =
-							message.toType === LINETypes.MIDType._USER
+							message.toType === "USER"
 								? () => {
 										return this.getContact({ mid: sendIn });
 									}
 								: undefined;
 
 						const group =
-							message.toType !== LINETypes.MIDType._USER
+							message.toType !== "USER"
 								? async () => {
 										return (await this.getChats({ mids: [sendIn] })).chats[0];
 									}
@@ -631,9 +623,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 						this.emit("message", {
 							...operation,
-							type: (message.toType === LINETypes.MIDType._USER
-								? "chat"
-								: "group") as LooseType,
+							type: (message.toType === "USER" ? "chat" : "group") as LooseType,
 							opType: operation.type,
 							content: typeof message.text === "string" ? message.text : "",
 							contentMetadata: message.contentMetadata,
@@ -713,15 +703,12 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						new LINEClass.Operation(operation, this as LooseType),
 					);
 					if (
-						operation.type === LINETypes.OpType._RECEIVE_MESSAGE ||
-						operation.type === LINETypes.OpType._SEND_MESSAGE ||
-						operation.type === LINETypes.OpType._SEND_CONTENT
+						operation.type === "RECEIVE_MESSAGE" ||
+						operation.type === "SEND_MESSAGE" ||
+						operation.type === "SEND_CONTENT"
 					) {
 						const message = await this.decryptE2EEMessage(operation.message);
-						if (
-							this.hasData(message) &&
-							operation.type == LINETypes.OpType._SEND_MESSAGE
-						) {
+						if (this.hasData(message) && operation.type == "SEND_MESSAGE") {
 							continue;
 						}
 						this.emit(
@@ -777,7 +764,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	public async sendMessage(_options: {
 		to: string;
 		text?: string;
-		contentType?: LINETypes.ContentType;
+		contentType?: LINETypes.ContentType & number;
 		contentMetadata?: LooseType;
 		relatedMessageId?: string;
 		location?: LINETypes.Location;

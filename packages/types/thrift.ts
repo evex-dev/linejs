@@ -1,4 +1,4 @@
-export const Thrift: Record<string, Record<string, string> | any[]> = {
+export const Thrift = {
 	ApplicationType: {
 		"16": "IOS",
 		"17": "IOS_RC",

@@ -4,16 +4,10 @@ import { Buffer } from "node:buffer";
 import { TalkClient } from "../internal/talk-client.ts";
 import type { LooseType } from "../../entities/common.ts";
 import { rawReadStruct as readStruct } from "../../libs/thrift/read.ts";
-import {
-	ContentType,
-	type Location,
-	type Message,
-	MIDType,
-} from "@evex/linejs-types";
+import type { Location, Message } from "@evex/linejs-types";
 import nacl from "tweetnacl";
 import { InternalError } from "../../entities/errors.ts";
 import * as LINETypes from "@evex/linejs-types";
-
 class E2EE extends TalkClient {
 	public async getE2EESelfKeyData(mid: string): Promise<LooseType> {
 		try {
@@ -90,7 +84,7 @@ class E2EE extends TalkClient {
 		let key: LooseType = undefined;
 		let fd: LooseType, fn: LooseType;
 
-		if (toType === LINETypes.MIDType.USER) {
+		if (toType === LINETypes.enums.MIDType.USER) {
 			fd = "e2eePublicKeys";
 			fn = `:${keyId}`;
 			if (keyId !== undefined) {
@@ -427,7 +421,7 @@ class E2EE extends TalkClient {
 		const senderKeyId = selfKeyData.keyId;
 		let receiverKeyId, keyData;
 
-		if (this.getToType(to) === LINETypes.MIDType.USER) {
+		if (this.getToType(to) === LINETypes.enums.MIDType.USER) {
 			const privateKey = Buffer.from(selfKeyData.privKey, "base64");
 			const receiverKeyData = await this.negotiateE2EEPublicKey({ mid: to });
 			specVersion = receiverKeyData.specVersion;
@@ -449,7 +443,7 @@ class E2EE extends TalkClient {
 		}
 
 		let chunks;
-		if (contentType === LINETypes.ContentType.LOCATION) {
+		if (contentType === LINETypes.enums.ContentType.LOCATION) {
 			chunks = this.encryptE2EELocationMessage(
 				senderKeyId,
 				receiverKeyId,
@@ -566,14 +560,14 @@ class E2EE extends TalkClient {
 
 	override async decryptE2EEMessage(messageObj: Message): Promise<Message> {
 		if (
-			(messageObj.contentType === LINETypes.ContentType._NONE ||
-				messageObj.contentType === ContentType.NONE) &&
+			(messageObj.contentType === "NONE" ||
+				messageObj.contentType === LINETypes.enums.ContentType.NONE) &&
 			messageObj.chunks
 		) {
 			messageObj.text = await this.decryptE2EETextMessage(messageObj);
 		} else if (
-			(messageObj.contentType === LINETypes.ContentType._LOCATION ||
-				messageObj.contentType === ContentType.LOCATION) &&
+			(messageObj.contentType === "LOCATION" ||
+				messageObj.contentType === LINETypes.enums.ContentType.LOCATION) &&
 			messageObj.chunks
 		) {
 			messageObj.location = await this.decryptE2EELocationMessage(messageObj);
@@ -608,7 +602,7 @@ class E2EE extends TalkClient {
 		let privK = Buffer.from(selfKey.privKey, "base64");
 		let pubK;
 
-		if (toType === MIDType.USER || toType === MIDType._USER) {
+		if (toType === LINETypes.enums.MIDType.USER || toType === "USER") {
 			pubK = await this.getE2EELocalPublicKey(
 				isSelf ? to : _from,
 				isSelf ? receiverKeyId : senderKeyId,
@@ -663,7 +657,7 @@ class E2EE extends TalkClient {
 		let privK = Buffer.from(selfKey.privKey, "base64");
 		let pubK;
 
-		if (toType === MIDType.USER || toType === MIDType._USER) {
+		if (toType === LINETypes.enums.MIDType.USER || toType === "USER") {
 			pubK = await this.getE2EELocalPublicKey(
 				to,
 				isSelf ? receiverKeyId : senderKeyId,

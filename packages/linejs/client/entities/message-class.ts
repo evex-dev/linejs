@@ -697,10 +697,12 @@ export class TalkMessage extends ClientMessage {
 		type: LINETypes.MessageReactionType,
 	): Promise<LINETypes.ReactToMessageResponse> {
 		if (typeof type === "string") {
-			type = LINETypes.MessageReactionType[type];
+			type = LINETypes.enums.MessageReactionType[
+				type
+			] as LINETypes.MessageReactionType & number;
 		}
 		return this.client.reactToMessage({
-			reactionType: type as LINETypes.MessageReactionType & number,
+			reactionType: type,
 			messageId: BigInt(this.id),
 		});
 	}
@@ -867,11 +869,13 @@ export class SquareMessage extends ClientMessage {
 		type: LINETypes.MessageReactionType,
 	): Promise<LINETypes.ReactToMessageResponse> {
 		if (typeof type === "string") {
-			type = LINETypes.MessageReactionType[type];
+			type = LINETypes.enums.MessageReactionType[
+				type
+			] as LINETypes.MessageReactionType & number;
 		}
 		return this.client.reactToSquareMessage({
 			squareChatMid: this.to,
-			reactionType: type as LINETypes.MessageReactionType & number,
+			reactionType: type,
 			squareMessageId: this.id,
 		});
 	}

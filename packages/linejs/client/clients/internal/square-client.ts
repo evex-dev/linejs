@@ -997,7 +997,7 @@ export class SquareClient extends LiffClient {
 			...options,
 		};
 		const UPDATE_PREF_ATTRS: number[] = [];
-		const UPDATE_ATTRS = [5];
+		const UPDATE_ATTRS: (LINETypes.SquareMemberAttribute & number)[] = [5];
 		const MEMBERSHIP_STATE = allowRejoin ? 5 : 6;
 		const getSquareMemberResp = await this.getSquareMember({ squareMemberMid });
 		const squareMember = getSquareMemberResp.squareMember;

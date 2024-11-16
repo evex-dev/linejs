@@ -67,6 +67,16 @@ function getMidType(mid: string): LINETypes.MIDType | null {
 	}
 }
 
+function toBit(num: number): number[] {
+	let i = 0;
+	const nums = [];
+	while (1 << i <= num) {
+		nums.push(((1 << i) & num) >> i);
+		i++;
+	}
+	return nums;
+}
+
 export class Note {
 	constructor(
 		public mid: string,
@@ -747,20 +757,16 @@ export class NotifiedUpdateProfileContent {
 				attr as LooseType as LINETypes.ProfileAttribute;
 		} else {
 			const arr: LINETypes.ProfileAttribute[] = [];
-			parseInt(op.param[2])
-				.toString(2)
-				.split("")
-				.reverse()
-				.forEach((e, i) => {
-					if (e === "1") {
-						arr.push(
-							parseEnum(
-								"ProfileAttribute",
-								2 ** i,
-							) as LooseType as LINETypes.ProfileAttribute,
-						);
-					}
-				});
+			toBit(parseInt(op.param[2])).forEach((e, i) => {
+				if (e === 1) {
+					arr.push(
+						parseEnum(
+							"ProfileAttribute",
+							2 ** i,
+						) as LooseType as LINETypes.ProfileAttribute,
+					);
+				}
+			});
 			this.profileAttributes = arr;
 		}
 	}
@@ -793,23 +799,59 @@ export class NotifiedUpdateProfile {
 				attr as LooseType as LINETypes.ProfileAttribute;
 		} else {
 			const arr: LINETypes.ProfileAttribute[] = [];
-			parseInt(op.param[2])
-				.toString(2)
-				.split("")
-				.reverse()
-				.forEach((e, i) => {
-					if (e === "1") {
-						arr.push(
-							parseEnum(
-								"ProfileAttribute",
-								2 ** i,
-							) as LooseType as LINETypes.ProfileAttribute,
-						);
-					}
-				});
+			toBit(parseInt(op.param[2])).forEach((e, i) => {
+				if (e === 1) {
+					arr.push(
+						parseEnum(
+							"ProfileAttribute",
+							2 ** i,
+						) as LooseType as LINETypes.ProfileAttribute,
+					);
+				}
+			});
 			this.profileAttributes = arr;
 		}
 		this.info = JSON.parse(op.param[3]);
+	}
+}
+
+/**
+ * @description the profile was updated by you
+ */
+export class UpdateProfile {
+	public readonly name: string = "UpdateProfile";
+	public profileAttributes: (LINETypes.ProfileAttribute | null)[] = [];
+	public info: Record<string, LooseType> = {};
+
+	constructor(op: Operation) {
+		if (op.type !== "UPDATE_PROFILE") {
+			throw new TypeError("Wrong operation type");
+		}
+		if (
+			typeof op.param[1] === "undefined" ||
+			typeof op.param[2] === "undefined"
+		) {
+			throw new TypeError("Wrong param");
+		}
+		const attr = parseEnum("ProfileAttribute", op.param[1]);
+		if (attr !== null) {
+			this.profileAttributes[0] =
+				attr as LooseType as LINETypes.ProfileAttribute;
+		} else {
+			const arr: LINETypes.ProfileAttribute[] = [];
+			toBit(parseInt(op.param[1])).forEach((e, i) => {
+				if (e === 1) {
+					arr.push(
+						parseEnum(
+							"ProfileAttribute",
+							2 ** i,
+						) as LooseType as LINETypes.ProfileAttribute,
+					);
+				}
+			});
+			this.profileAttributes = arr;
+		}
+		this.info = JSON.parse(op.param[2]);
 	}
 }
 

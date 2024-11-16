@@ -240,7 +240,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 		this.invitationUrl = squareChat.invitationUrl;
 		this.messageVisibility = squareChat.messageVisibility;
 		this.ableToSearchMessage = [null, false, true][
-			LINETypes.BooleanState[squareChat.ableToSearchMessage] as number
+			LINETypes.enums.BooleanState[squareChat.ableToSearchMessage]
 		];
 		this.mymid = squareChatMember.squareMemberMid;
 		this.memberCount = squareChatStatus.otherStatus.memberCount;
@@ -276,7 +276,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 					this.invitationUrl = squareChat.invitationUrl;
 					this.messageVisibility = squareChat.messageVisibility;
 					this.ableToSearchMessage = [null, false, true][
-						LINETypes.BooleanState[squareChat.ableToSearchMessage] as number
+						LINETypes.enums.BooleanState[squareChat.ableToSearchMessage]
 					];
 					this.emit("update", squareChat);
 				}

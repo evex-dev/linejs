@@ -71,7 +71,7 @@ export type SquareMessage = Omit<
 export type MessageReplyOptions =
 	| {
 			text?: string;
-			contentType?: LINETypes.ContentType;
+			contentType?: LINETypes.ContentType & number;
 			contentMetadata?: LooseType;
 	  }
 	| string;
