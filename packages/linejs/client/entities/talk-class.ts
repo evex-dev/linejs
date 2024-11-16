@@ -257,7 +257,7 @@ export class User extends TypedEventEmitter<UserEvents> {
 	 * @description Kickout from group.
 	 */
 	public kick(
-		chatMid: string = "",
+		chatMid: string,
 	): Promise<LINETypes.DeleteOtherFromChatResponse> {
 		return this.client.deleteOtherFromChat({ to: chatMid, mid: this.mid });
 	}
@@ -955,3 +955,5 @@ export class SendChatRemoved {
 		this.chatType = getMidType(op.param[1]);
 	}
 }
+
+

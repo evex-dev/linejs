@@ -610,15 +610,15 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 						const chat =
 							message.toType === LINETypes.MIDType._USER
 								? () => {
-										return this.getContact({ mid: sendIn });
-									}
+									return this.getContact({ mid: sendIn });
+								}
 								: undefined;
 
 						const group =
 							message.toType !== LINETypes.MIDType._USER
 								? async () => {
-										return (await this.getChats({ mids: [sendIn] })).chats[0];
-									}
+									return (await this.getChats({ mids: [sendIn] })).chats[0];
+								}
 								: (undefined as LooseType);
 
 						const getContact = () => {
@@ -879,6 +879,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		return (await Symbol("Unreachable")) as LooseType;
 	}
 
+	/**
+	 * @description Will override.
+	 */
 	public async reactToSquareMessage(_options: {
 		squareChatMid: string;
 		reactionType?: LINETypes.MessageReactionType;
@@ -888,7 +891,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		return (await Symbol("Unreachable")) as LooseType;
 	}
 
-	protected parser: ThriftRenameParser = new ThriftRenameParser();
+	public parser: ThriftRenameParser = new ThriftRenameParser();
 	private cert: string | null = null;
 	private qrCert: string | null = null;
 
@@ -933,7 +936,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 *
 	 * @param {string} [email] The email to login with.
 	 * @param {string} [password] The password to login with.
-	 * @param {boolean} [enableE2EE=false] Enable E2EE or not.
+	 * @param {boolean} [enableE2EE=false] Enable E2EE Login or not.
 	 * @param {string} [constantPincode="114514"] The constant pincode.
 	 * @returns {Promise<string>} The auth token.
 	 * @throws {InternalError} If the system is not setup yet.
@@ -1091,7 +1094,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.log("login", {
 			method: "email",
 			email,
-			password,
+			password: "*".repeat(password.length),
 			constantPincode,
 		});
 
@@ -1198,7 +1201,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			}
 			return authToken;
 		}
-		return "";
+		throw new InternalError("TimeoutError", "checkQrCodeVerified timed out")
 	}
 
 	public async requestSQR2(): Promise<string> {
@@ -1227,7 +1230,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			this.storage.set("expire", tokenInfo[3] + tokenInfo[6]);
 			return tokenInfo[1];
 		}
-		return "";
+		throw new InternalError("TimeoutError", "checkQrCodeVerified timed out")
 	}
 
 	/**
@@ -1254,7 +1257,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/**
 	 * @description Will override.
 	 */
-	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType {}
+	public decodeE2EEKeyV1(_data: LooseType, _secret: Buffer): LooseType { }
 
 	/**
 	 * @description Will override.
@@ -1485,26 +1488,19 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		headers: Record<string, string | undefined> = {},
 		timeOutMs: number = this.timeOutMs,
 	): Promise<LooseType> {
-		try {
-			return (
-				await this.rawRequest(
-					path,
-					[[12, 1, value]],
-					methodName,
-					protocolType,
-					headers,
-					undefined,
-					parse,
-					undefined,
-					timeOutMs,
-				)
-			).value;
-		} catch (error) {
-			if ((error as Error).message === "InputBufferUnderrunError") {
-				throw new InternalError("ServerError", "Incorrect buffer received");
-			}
-			throw error;
-		}
+		return (
+			await this.rawRequest(
+				path,
+				[[12, 1, value]],
+				methodName,
+				protocolType,
+				headers,
+				undefined,
+				parse,
+				undefined,
+				timeOutMs,
+			)
+		).value;
 	}
 
 	/**
@@ -1528,26 +1524,19 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		headers: Record<string, string | undefined> = {},
 		timeOutMs: number = this.timeOutMs,
 	): Promise<LooseType> {
-		try {
-			return (
-				await this.rawRequest(
-					path,
-					value,
-					methodName,
-					protocolType,
-					headers,
-					undefined,
-					parse,
-					true,
-					timeOutMs,
-				)
-			).value;
-		} catch (error) {
-			if ((error as Error).message === "InputBufferUnderrunError") {
-				throw new InternalError("ServerError", "Incorrect buffer received");
-			}
-			throw error;
-		}
+		return (
+			await this.rawRequest(
+				path,
+				value,
+				methodName,
+				protocolType,
+				headers,
+				undefined,
+				parse,
+				true,
+				timeOutMs,
+			)
+		).value;
 	}
 
 	/**
@@ -1771,7 +1760,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 			await this.request(
 				[],
-				"logoutZ",
+				"logoutV2",
 				this.AuthService_PROTOCOL_TYPE,
 				false,
 				this.AuthService_API_PATH,
@@ -2018,9 +2007,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		);
 	}
 
-	private reqseqs: Record<string, number> = {};
+	private reqseqs: Record<string, number>;
 	public getReqseq(name: string = "talk"): number {
-		if (!this.reqseqs[name]) this.reqseqs[name] = 0;
+		if (!this.reqseqs[name]) { this.reqseqs[name] = 0 };
 		const seq = this.reqseqs[name];
 		this.reqseqs[name]++;
 		this.storage.set("reqseq", JSON.stringify(this.reqseqs));
