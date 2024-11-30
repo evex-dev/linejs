@@ -1,4 +1,4 @@
-import type { LooseType } from "../../entities/common.ts";
+import type { LooseType } from "../../client/entities/common.ts";
 import type { ParsedThrift } from "./declares.ts";
 
 const TYPE = {

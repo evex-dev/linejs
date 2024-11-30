@@ -1,4 +1,4 @@
-import type { LooseType } from "../../entities/common.ts";
+import type { LooseType } from "../../client/entities/common.ts";
 
 export interface Storage {
 	Key: string;

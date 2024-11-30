@@ -6,7 +6,7 @@ import {
 	type Protocols,
 	genHeader,
 } from "./declares.ts";
-import type { LooseType } from "../../entities/common.ts";
+import type { LooseType } from "../../client/entities/common.ts";
 import { default as Int64 } from "node-int64";
 const Thrift = thrift.Thrift;
 

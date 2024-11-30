@@ -1,5 +1,5 @@
-import type { BaseStorage } from "../../../storage/index.ts";
-import type { LooseType } from "../../entities/common.ts";
+import type { BaseStorage } from "./base-storage.ts";
+import type { LooseType } from "../../client/entities/common.ts";
 
 interface Storage {
 	Key: string;

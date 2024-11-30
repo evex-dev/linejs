@@ -1,35 +1,33 @@
 // For Base (login, request, line, relation, etc)
 
-import { getRSACrypto } from "../libs/rsa/rsa-verify.ts";
-import type { BaseStorage } from "../libs/storage/base-storage.ts";
-import { MemoryStorage } from "../libs/storage/memory-storage.ts";
-import { CacheManager } from "../libs/storage/cache-manager.ts";
+import { getRSACrypto } from "../utils/rsa/rsa-verify.ts";
+import type { BaseStorage } from "../utils/storage/base-storage.ts";
+import { MemoryStorage } from "../utils/storage/memory-storage.ts";
+import { CacheManager } from "../utils/storage/cache-manager.ts";
 import {
 	type NestedArray,
 	type ParsedThrift,
 	type ProtocolKey,
 	Protocols,
-} from "../libs/thrift/declares.ts";
-import * as LINETypes from "@evex/linejs-types";
-import ThriftRenameParser from "../libs/thrift/parser.ts";
-import { readThrift } from "../libs/thrift/read.ts";
+} from "../utils/thrift/declares.ts";
+import { readThrift } from "../utils/thrift/read.ts";
 import { Thrift } from "@evex/linejs-types/thrift";
-import { writeThrift } from "../libs/thrift/write.ts";
-import { TypedEventEmitter } from "../libs/typed-event-emitter/index.ts";
-import type { Log, LogType } from "../entities/log.ts";
-import type { LoginOptions } from "../entities/login.ts";
-import type { LooseType } from "../entities/common.ts";
-import { type Device, getDeviceDetails } from "../entities/device.ts";
-import { InternalError } from "../entities/errors.ts";
-import type { ClientEvents } from "../entities/events.ts";
-import type { Metadata } from "../entities/metadata.ts";
+import { writeThrift } from "../utils/thrift/write.ts";
+import { TypedEventEmitter } from "../utils/typed-event-emitter/index.ts";
+import type { Log, LogType } from "./entities/log.ts";
+import type { LoginOptions } from "./entities/login.ts";
+import type { LooseType } from "./entities/common.ts";
+import { type Device, getDeviceDetails } from "./entities/device.ts";
+import { InternalError } from "./entities/errors.ts";
+import type * as LINETypes from '@evex/linejs-types'
+import type { Metadata } from "./entities/metadata.ts";
 import {
 	AUTH_TOKEN_REGEX,
 	EMAIL_REGEX,
 	PASSWORD_REGEX,
 	PRIMARY_TOKEN_REGEX,
-} from "../entities/regex.ts";
-import type { System } from "../entities/system.ts";
+} from "./entities/regex.ts";
+import type { System } from "./entities/system.ts";
 import { Buffer } from "node:buffer";
 import type {
 Message,
@@ -37,13 +35,14 @@ Message,
 	SquareMessage,
 	SquareMessageReactionOptions,
 	SquareMessageSendOptions,
-} from "../entities/message.ts";
-import { LINE_OBS } from "../../utils/obs/index.ts";
-import { RateLimitter } from "../libs/rate-limitter/index.ts";
-import type { FetchLike } from "../entities/fetch.ts";
-import { MimeType } from "../entities/mime.ts";
-import * as LINEClass from "../entities/class.ts";
-import { SquaerStatus } from "../entities/square-events.ts";
+} from "./entities/message.ts";
+import { LINE_OBS } from "./../utils/obs/index.ts";
+import { RateLimitter } from "../utils/rate-limitter/index.ts";
+import type { FetchLike } from "./entities/fetch.ts";
+import { MimeType } from "./entities/mime.ts";
+import * as LINEClass from "./entities/class.ts";
+import type { SquaerStatus } from "./entities/square-events.ts";
+import ThriftRenameParser from '../utils/thrift/parser.ts'
 
 interface ClientOptions {
 	storage?: BaseStorage;

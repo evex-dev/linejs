@@ -2,9 +2,7 @@
  * @module
  * LINE SelfBot Client
  */
-import { TypedEventEmitter } from "./libs/typed-event-emitter/index.ts";
-import type { ClientEvents } from './entities/events.ts'
-import { CoreClient } from "./clients/base-client.ts";
+import { CoreClient } from "./core.ts";
 
 /**
  * @classdesc LINE SelfBot Client
