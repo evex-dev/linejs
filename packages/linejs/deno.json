@@ -2,6 +2,7 @@
 	"name": "@evex/linejs",
 	"exports": "./src/mod.ts",
 	"imports": {
+		"node-int64": "npm:node-int64@^0.4.0",
 		"thrift": "npm:thrift@^0.21.0"
 	}
 }

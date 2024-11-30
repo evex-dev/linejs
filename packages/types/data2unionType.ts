@@ -13,7 +13,9 @@ function toUnion(input: Record<string, string>, name: string) {
 	if (!unions.length) {
 		return `export type ${name} = number;`;
 	}
-	return `export type ${name} = ${unions.join(" | ")};\nenums.${name} = ${JSON.stringify(enumValue)};`;
+	return `export type ${name} = ${unions.join(" | ")};\nenums.${name} = ${
+		JSON.stringify(enumValue)
+	};`;
 }
 const types = [];
 for (const key in Thrift) {

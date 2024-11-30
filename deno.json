@@ -10,5 +10,8 @@
 	"imports": {
 		"@std/assert": "jsr:@std/assert@^1.0.2"
 	},
-	"nodeModulesDir": "auto"
+	"nodeModulesDir": "auto",
+	"tasks": {
+		"dev": "deno run -A --watch sandbox/main.ts"
+	}
 }

@@ -64,7 +64,7 @@ export type NestedArray = Array<
 	| [15, number, [number, Array<NestedArray> | Array<unknown>]?]
 >;
 export interface ParsedThrift {
-	value: unknown;
+	value: any;
 	e: unknown;
-	_info: unknown;
+	_info: any;
 }

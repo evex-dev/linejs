@@ -1,3 +1,5 @@
+import { RequestClient } from "../request/mod.ts";
+
 export class Auth {
     constructor() {
 
@@ -10,6 +12,9 @@ export class Auth {
      * @param pinCode Custom pin-code. It have to be 6-digit.
      */
     static async withPassword(email: string, password: string, pinCode: string) {
-        
+        const client = new RequestClient({
+            device: 'ANDROID'
+        })
+        client
     }
 }
