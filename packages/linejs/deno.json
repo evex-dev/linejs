@@ -1,4 +1,7 @@
 {
-    "name": "@evex/linejs",
-    "exports": "./src/mod.ts"
+	"name": "@evex/linejs",
+	"exports": "./src/mod.ts",
+	"imports": {
+		"thrift": "npm:thrift@^0.21.0"
+	}
 }
