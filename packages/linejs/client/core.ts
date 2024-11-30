@@ -16,7 +16,7 @@ import { readThrift } from "../libs/thrift/read.ts";
 import { Thrift } from "@evex/linejs-types/thrift";
 import { writeThrift } from "../libs/thrift/write.ts";
 import { TypedEventEmitter } from "../libs/typed-event-emitter/index.ts";
-import type { LogType } from "../entities/log.ts";
+import type { Log, LogType } from "../entities/log.ts";
 import type { LoginOptions } from "../entities/login.ts";
 import type { LooseType } from "../entities/common.ts";
 import { type Device, getDeviceDetails } from "../entities/device.ts";
@@ -32,7 +32,9 @@ import {
 import type { System } from "../entities/system.ts";
 import { Buffer } from "node:buffer";
 import type {
+Message,
 	MessageReplyOptions,
+	SquareMessage,
 	SquareMessageReactionOptions,
 	SquareMessageSendOptions,
 } from "../entities/message.ts";
@@ -41,6 +43,7 @@ import { RateLimitter } from "../libs/rate-limitter/index.ts";
 import type { FetchLike } from "../entities/fetch.ts";
 import { MimeType } from "../entities/mime.ts";
 import * as LINEClass from "../entities/class.ts";
+import { SquaerStatus } from "../entities/square-events.ts";
 
 interface ClientOptions {
 	storage?: BaseStorage;
@@ -51,7 +54,26 @@ interface ClientOptions {
 	cacheManager?: CacheManager;
 }
 
-export class BaseClient extends TypedEventEmitter<ClientEvents> {
+export class CoreClient extends TypedEventEmitter<{
+	pincall: (pincode: string) => void;
+	"update:cert": (cert: string) => void;
+	qrcall: (loginUrl: string) => void;
+	event: (talkEvent: LINETypes.Operation) => void;
+	"update:qrcert": (qrCert: string) => void;
+	log: (data: Log) => void;
+	"update:authtoken": (authtoken: string) => void;
+	ready: (user: LINETypes.Profile) => void;
+	"square:message": (squareMessage: SquareMessage) => void;
+	"square:status": (squareStatus: SquaerStatus) => void;
+	v2_event: (talkEvent: LINEClass.Operation) => void;
+	v2_message: (message: LINEClass.TalkMessage) => void;
+	v2_square_message: (message: LINEClass.SquareMessage) => void;
+	v2_square_event: (talkEvent: LINETypes.SquareEvent) => void;
+	message: (message: Message) => void;
+	"square:event": (squareEvent: LINETypes.SquareEvent) => void;
+	end: (user: LINETypes.Profile) => void;
+	"update:profile": (profile: LINETypes.Profile) => void;
+}> {
 	/**
 	 * @description Create a new LINE SelfBot Client instance
 	 *
@@ -64,9 +86,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * @param {CacheManager} [options.cacheManager] Cache manager for the client
 	 */
 	constructor(options: ClientOptions = {}) {
-		super();
+		super()
 		this.parser.def = Thrift;
-
 		this.storage = options.storage || new MemoryStorage();
 		this.squareRateLimitter = options.squareRateLimitter || new RateLimitter();
 		this.endpoint = options.endpoint || "gw.line.naver.jp";

@@ -1,11 +1,11 @@
 // For Liff (liff, etc)
 import type { NestedArray, ProtocolKey } from "../../libs/thrift/declares.ts";
 import type { LooseType } from "../../entities/common.ts";
-import { BaseClient } from "../base-client.ts";
+import { CoreClient } from "../base-client.ts";
 import type * as LINETypes from "@evex/linejs-types";
 import { InternalError } from "../../entities/errors.ts";
 
-export class LiffClient extends BaseClient {
+export class LiffClient extends CoreClient {
 	protected static readonly LINE_LIFF_ENDPOINT =
 		"https://api.line.me/message/v3/share";
 	protected static readonly CONSENT_API_URL =
