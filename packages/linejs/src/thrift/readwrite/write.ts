@@ -1,10 +1,13 @@
+// @ts-types="npm:@types/thrift"
+import { readFile } from "node:fs";
+
 import * as thrift from "thrift";
 import { Buffer } from "node:buffer";
 import {
+	genHeader,
 	type NestedArray,
 	type ProtocolKey,
 	type Protocols,
-	genHeader,
 } from "./declares.ts";
 import Int64 from "node-int64";
 const Thrift = thrift.Thrift;
@@ -14,12 +17,14 @@ export function writeThrift(
 	name: string,
 	Protocol: (typeof Protocols)[ProtocolKey],
 ): Uint8Array {
-	const Transport = thrift.TBufferedTransport;
 	let myBuf: Buffer = Buffer.from([]);
-	const buftra = new Transport(myBuf, function (outBuf?: Buffer) {
-		if (!outBuf) return;
-		myBuf = Buffer.concat([myBuf, outBuf]);
-	});
+	const buftra = new thrift.TBufferedTransport(
+		myBuf,
+		function (outBuf?: Buffer) {
+			if (!outBuf) return;
+			myBuf = Buffer.concat([myBuf, outBuf]);
+		},
+	);
 	const myprot = new Protocol(buftra);
 	writeStruct(myprot, value);
 	myprot.flush();
@@ -37,11 +42,11 @@ export function writeThrift(
 
 function writeStruct(
 	output: thrift.TCompactProtocol | thrift.TCompactProtocol,
-	clValue: NestedArray = [],
+	value: NestedArray = [],
 ): void {
 	output.writeStructBegin("");
 
-	clValue.forEach((e: NestedArray[0]) => {
+	value.forEach((e: NestedArray[0]) => {
 		if (e === null || e === undefined) {
 			return;
 		}
@@ -55,8 +60,8 @@ function writeStruct(
 
 function writeValue(
 	output: thrift.TCompactProtocol | thrift.TCompactProtocol,
-	ftype: unknown,
-	fid: unknown,
+	ftype: number,
+	fid: number,
 	val:
 		| undefined
 		| null
@@ -66,8 +71,7 @@ function writeValue(
 		| number
 		| bigint
 		| Buffer
-		| any
-		| [number, Array<unknown>]
+		| [number, Array<any>]
 		| [number, number, object],
 ): void {
 	if (val === undefined || val === null) {
@@ -75,13 +79,13 @@ function writeValue(
 	}
 	switch (ftype) {
 		case Thrift.Type.STRING:
-			if (Buffer === val.constructor) {
+			if (val instanceof Buffer) {
 				output.writeFieldBegin("", Thrift.Type.STRING, fid);
 				output.writeBinary(val);
 				output.writeFieldEnd();
 			} else {
 				if (typeof val !== "string") {
-					// throw new TypeError(`ftype=${ftype}: value is not string`);
+					throw new TypeError(`ftype=${ftype}: value is not string`);
 				}
 				output.writeFieldBegin("", Thrift.Type.STRING, fid);
 				output.writeString(val.toString());
@@ -91,7 +95,7 @@ function writeValue(
 
 		case Thrift.Type.DOUBLE:
 			if (typeof val !== "number") {
-				// throw new TypeError(`ftype=${ftype}: value is not number`);
+				throw new TypeError(`ftype=${ftype}: value is not number`);
 			}
 			output.writeFieldBegin("", Thrift.Type.DOUBLE, fid);
 			output.writeDouble(val);
@@ -100,16 +104,22 @@ function writeValue(
 
 		case Thrift.Type.I64:
 			if (typeof val === "bigint") {
-				val = new Int64(val.toString(16));
+				output.writeFieldBegin("", Thrift.Type.I64, fid);
+				output.writeI64(new Int64(val.toString(16)));
+				output.writeFieldEnd();
+			} else if (typeof val !== "number") {
+				throw new TypeError(`ftype=${ftype}: value is not number`);
+			} else {
+				output.writeFieldBegin("", Thrift.Type.I64, fid);
+				output.writeI64(val);
+				output.writeFieldEnd();
 			}
-			output.writeFieldBegin("", Thrift.Type.I64, fid);
-			output.writeI64(val);
-			output.writeFieldEnd();
+
 			break;
 
 		case Thrift.Type.I32:
 			if (typeof val !== "number") {
-				// throw new TypeError(`ftype=${ftype}: value is not number`);
+				throw new TypeError(`ftype=${ftype}: value is not number`);
 			}
 			output.writeFieldBegin("", Thrift.Type.I32, fid);
 			output.writeI32(val);
@@ -118,7 +128,7 @@ function writeValue(
 
 		case Thrift.Type.BOOL:
 			if (typeof val !== "boolean") {
-				// throw new TypeError(`ftype=${ftype}: value is not boolean`);
+				throw new TypeError(`ftype=${ftype}: value is not boolean`);
 			}
 			output.writeFieldBegin("", Thrift.Type.BOOL, fid);
 			output.writeBool(val);
@@ -127,7 +137,7 @@ function writeValue(
 
 		case Thrift.Type.STRUCT:
 			if (!Array.isArray(val)) {
-				// throw new TypeError(`ftype=${ftype}: value is not struct`);
+				throw new TypeError(`ftype=${ftype}: value is not struct`);
 			}
 			output.writeFieldBegin("", Thrift.Type.STRUCT, fid);
 			writeStruct(output, val as NestedArray);
@@ -136,7 +146,7 @@ function writeValue(
 
 		case Thrift.Type.MAP:
 			if (typeof val !== "object") {
-				// throw new TypeError(`ftype=${ftype}: value is not map`);
+				throw new TypeError(`ftype=${ftype}: value is not map`);
 			}
 			val = val as [number, number, object];
 			output.writeFieldBegin("", Thrift.Type.MAP, fid);
@@ -154,7 +164,7 @@ function writeValue(
 
 		case Thrift.Type.LIST:
 			if (!Array.isArray((val as Array<any>)[1])) {
-				// throw new TypeError(`ftype=${ftype}: value is not list`);
+				throw new TypeError(`ftype=${ftype}: value is not list`);
 			}
 			val = val as [number, Array<any>];
 			output.writeFieldBegin("", Thrift.Type.LIST, fid);
@@ -172,11 +182,14 @@ function writeValue(
 			break;
 		case Thrift.Type.SET:
 			if (!Array.isArray((val as Array<any>)[1])) {
-				// throw new TypeError(`ftype=${ftype}: value is not list`);
+				throw new TypeError(`ftype=${ftype}: value is not set`);
 			}
 			val = val as [number, Array<any>];
 			output.writeFieldBegin("", Thrift.Type.SET, fid);
-			output.writeSetBegin(val[0], (val[1] as NonNullable<NestedArray>).length);
+			output.writeSetBegin(
+				val[0],
+				(val[1] as NonNullable<NestedArray>).length,
+			);
 			for (const iter in val[1] as NestedArray) {
 				if (Object.prototype.hasOwnProperty.call(val[1], iter)) {
 					writeValue_(output, val[0], (val as any)[1][iter]);
@@ -191,13 +204,23 @@ function writeValue(
 }
 
 function writeValue_(
-	output: any,
-	ftype: any,
-	val: any,
+	output: thrift.TCompactProtocol | thrift.TCompactProtocol,
+	ftype: number,
+	val:
+		| undefined
+		| null
+		| NestedArray
+		| string
+		| boolean
+		| number
+		| bigint
+		| Buffer
+		| [number, Array<any>]
+		| [number, number, object],
 ): void {
 	switch (ftype) {
 		case Thrift.Type.STRING:
-			if (Buffer === val.constructor) {
+			if (val instanceof Buffer) {
 				output.writeBinary(val);
 			} else {
 				if (typeof val !== "string") {
@@ -209,37 +232,37 @@ function writeValue_(
 
 		case Thrift.Type.DOUBLE:
 			if (typeof val !== "number") {
-				// throw new TypeError(`ftype=${ftype}: value is not number`);
+				throw new TypeError(`ftype=${ftype}: value is not number`);
 			}
 			output.writeDouble(val);
 			break;
 
 		case Thrift.Type.I64:
 			if (typeof val !== "number") {
-				// throw new TypeError(`ftype=${ftype}: value is not number`);
+				throw new TypeError(`ftype=${ftype}: value is not number`);
 			}
 			output.writeI64(val);
 			break;
 
 		case Thrift.Type.I32:
 			if (typeof val !== "number") {
-				// throw new TypeError(`ftype=${ftype}: value is not number`);
+				throw new TypeError(`ftype=${ftype}: value is not number`);
 			}
 			output.writeI32(val);
 			break;
 
 		case Thrift.Type.BOOL:
 			if (typeof val !== "boolean") {
-				// throw new TypeError(`ftype=${ftype}: value is not boolean`);
+				throw new TypeError(`ftype=${ftype}: value is not boolean`);
 			}
 			output.writeBool(val);
 			break;
 
 		case Thrift.Type.STRUCT:
 			if (!Array.isArray(val)) {
-				// throw new TypeError(`ftype=${ftype}: value is not struct`);
+				throw new TypeError(`ftype=${ftype}: value is not struct`);
 			}
-			writeStruct(output, val);
+			writeStruct(output, val as NestedArray);
 			break;
 
 		default:

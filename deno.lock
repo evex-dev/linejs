@@ -5,6 +5,7 @@
     "jsr:@std/internal@^1.0.4": "1.0.4",
     "npm:@biomejs/biome@*": "1.9.3",
     "npm:@types/node@*": "22.5.4",
+    "npm:@types/thrift@*": "0.10.17",
     "npm:node-int64@0.4": "0.4.0",
     "npm:thrift@0.21": "0.21.0_ws@5.2.4"
   },
@@ -57,10 +58,27 @@
     "@biomejs/cli-win32-x64@1.9.3": {
       "integrity": "sha512-cQMy2zanBkVLpmmxXdK6YePzmZx0s5Z7KEnwmrW54rcXK3myCNbQa09SwGZ8i/8sLw0H9F3X7K4rxVNGU8/D4Q=="
     },
+    "@types/node-int64@0.4.32": {
+      "integrity": "sha512-xf/JsSlnXQ+mzvc0IpXemcrO4BrCfpgNpMco+GLcXkFk01k/gW9lGJu+Vof0ZSvHK6DsHJDPSbjFPs36QkWXqw==",
+      "dependencies": [
+        "@types/node"
+      ]
+    },
     "@types/node@22.5.4": {
       "integrity": "sha512-FDuKUJQm/ju9fT/SeX/6+gBzoPzlVCzfzmGkwKvRHQVxi4BntVbyIwf6a4Xn62mrvndLiml6z/UBXIdEVjQLXg==",
       "dependencies": [
         "undici-types"
+      ]
+    },
+    "@types/q@1.5.8": {
+      "integrity": "sha512-hroOstUScF6zhIi+5+x0dzqrHA1EJi+Irri6b1fxolMTqqHIV/Cg77EtnQcZqZCu8hR3mX2BzIxN4/GzI68Kfw=="
+    },
+    "@types/thrift@0.10.17": {
+      "integrity": "sha512-bDX6d5a5ZDWC81tgDv224n/3PKNYfIQJTPHzlbk4vBWJrYXF6Tg1ncaVmP/c3JbGN2AK9p7zmHorJC2D6oejGQ==",
+      "dependencies": [
+        "@types/node",
+        "@types/node-int64",
+        "@types/q"
       ]
     },
     "async-limiter@1.0.1": {

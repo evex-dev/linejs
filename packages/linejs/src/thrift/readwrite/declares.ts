@@ -1,5 +1,6 @@
+// @ts-types="npm:@types/thrift"
+import * as thrift from "thrift";
 import { Buffer } from "node:buffer";
-import { TBinaryProtocol, TCompactProtocol } from "thrift";
 
 export const genHeader = {
 	3: (name: string) => {
@@ -25,8 +26,8 @@ export const genHeader = {
 };
 
 export const Protocols = {
-	4: TCompactProtocol,
-	3: TBinaryProtocol,
+	4: thrift.TCompactProtocol,
+	3: thrift.TBinaryProtocol,
 };
 
 export type ProtocolKey = keyof typeof Protocols;
@@ -49,22 +50,25 @@ export type NestedArray = Array<
 	| [11, number, string | Buffer | undefined]
 	| [12, number, NestedArray?]
 	| [
-			13,
+		13,
+		number,
+		[
 			number,
-			[
-				number,
-				number,
-				(
-					| Record<string | number, NestedArray>
-					| Record<string | number, unknown>
-				),
-			]?,
-	  ]
+			number,
+			(
+				| Record<string | number, NestedArray>
+				| Record<string | number, unknown>
+			),
+		]?,
+	]
 	| [14, number, [number, Array<NestedArray> | Array<unknown>]?]
 	| [15, number, [number, Array<NestedArray> | Array<unknown>]?]
 >;
 export interface ParsedThrift {
-	value: any;
-	e: unknown;
-	_info: any;
+	data: any;
+	_info: {
+		fname: string;
+		mtype: number;
+		rseqid: number;
+	};
 }

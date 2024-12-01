@@ -1,59 +1,67 @@
-import { Protocols, type ParsedThrift, type ProtocolKey, type NestedArray } from "./thrift/declares.ts";
-import ThriftRenameParser from "./thrift/parser.ts";
-import { readThrift } from "./thrift/read.ts";
-import { writeThrift } from "./thrift/write.ts";
-import { getDeviceDetails, type Device } from './utils/devices.ts'
+import {
+    type NestedArray,
+    type ParsedThrift,
+    type ProtocolKey,
+    Protocols,
+    readThrift,
+    ThriftRenameParser,
+    writeThrift,
+} from "../thrift/mod.ts";
+import { type Device, getDeviceDetails } from "../core/utils/devices.ts";
+
+// TODO: authTokenとdeviceとendpointを上位のclientで管理
 
 interface RequestClientInit {
     /**
      * API Endpoint
      * @default gw.line.naver.jp
      */
-    endpoint?: string
+    endpoint?: string;
 
     /**
      * Device
      * @defaults `'ANDROID'`
      */
-    device: Device
+    device: Device;
 
     /**
      * Access Token
      */
-    lineAccessToken?: string
+    lineAccessToken?: string;
 }
 /**
  * Request Client
  */
 export class RequestClient {
-    #endpoint: string
-    #userAgent: string
-    #systemType: string
-    #lineAccessToken?: string
-    #parser = new ThriftRenameParser()
+    #endpoint: string;
+    #userAgent: string;
+    #systemType: string;
+    #lineAccessToken?: string;
+    #parser = new ThriftRenameParser();
     readonly #EXCEPTION_TYPES: Record<string, string | undefined> = {
-		"/S3": "TalkException",
-		"/S4": "TalkException",
-		"/SYNC4": "TalkException",
-		"/SYNC3": "TalkException",
-		"/CH3": "ChannelException",
-		"/CH4": "ChannelException",
-		"/SQ1": "SquareException",
-		"/LIFF1": "LiffException",
-		"/api/v3p/rs": "TalkException",
-		"/api/v3/TalkService.do": "TalkException",
-	};
+        "/S3": "TalkException",
+        "/S4": "TalkException",
+        "/SYNC4": "TalkException",
+        "/SYNC3": "TalkException",
+        "/CH3": "ChannelException",
+        "/CH4": "ChannelException",
+        "/SQ1": "SquareException",
+        "/LIFF1": "LiffException",
+        "/api/v3p/rs": "TalkException",
+        "/api/v3/TalkService.do": "TalkException",
+    };
 
     constructor(init: RequestClientInit) {
-        this.#endpoint = init.endpoint ?? 'gw.line.naver.jp'
-        this.#lineAccessToken = init.lineAccessToken
+        this.#endpoint = init.endpoint ?? "gw.line.naver.jp";
+        this.#lineAccessToken = init.lineAccessToken;
 
-        const deviceDetails = getDeviceDetails(init.device, {})
+        const deviceDetails = getDeviceDetails(init.device, {});
         if (!deviceDetails) {
-            throw new Error(`Unsupported device: ${init.device}.`)
+            throw new Error(`Unsupported device: ${init.device}.`);
         }
-        this.#systemType = `${init.device}\t${deviceDetails.appVersion}\t${deviceDetails.systemName}\t${deviceDetails.systemVersion}`
-        this.#userAgent = `Line/${deviceDetails.appVersion}`
+        this.#systemType =
+            `${init.device}\t${deviceDetails.appVersion}\t${deviceDetails.systemName}\t${deviceDetails.systemVersion}`;
+        this.#userAgent = `Line/${deviceDetails.appVersion}`;
     }
 
     /**
@@ -66,12 +74,8 @@ export class RequestClient {
      * @param path - The path of the request.
      * @param headers - The headers of the request.
      * @param timeout - The timeout milliseconds of the request.
+     * @param manyargs - Whether to enclose value in `[[12, 1, value]]`.
      * @returns The response.
-     * ---
-     * Use for functions that take one thrift struct argument
-     * ```
-     * SendMessageResponse sendMessage(1: SendMessageRequest request) throws(1: SquareException e);
-     * ```
      */
     public async request(
         value: NestedArray,
@@ -81,11 +85,12 @@ export class RequestClient {
         path: string = "/S3",
         headers: Record<string, string | undefined> = {},
         timeout = 1000,
+        manyargs = false,
     ): Promise<unknown> {
         return (
-            await this.rawRequest(
+            await this.requestCore(
                 path,
-                [[12, 1, value]],
+                manyargs ? value : [[12, 1, value]],
                 methodName,
                 protocolType,
                 headers,
@@ -94,7 +99,7 @@ export class RequestClient {
                 undefined,
                 timeout,
             )
-        ).value;
+        ).data.success;
     }
 
     /**
@@ -108,11 +113,11 @@ export class RequestClient {
      * @param {string} [overrideMethod="POST"] - The method of the request.
      * @param {boolean | string} [parse=true] - Whether to parse the response.
      * @param {boolean} [isReRequest=false] - Is Re-Request.
-     * @param {number} [timeOutMs=this.timeOutMs] - The timeout milliseconds of the request.
+     * @param {number} [timeout=this.timeOutMs] - The timeout milliseconds of the request.
      * @returns {Promise<ParsedThrift>} The response.
      * @throws {InternalError} If the request fails or timeout.
      */
-    public async rawRequest(
+    public async requestCore(
         path: string,
         value: NestedArray,
         methodName: string,
@@ -127,8 +132,8 @@ export class RequestClient {
 
         const headers = {
             ...this.getHeader(overrideMethod),
-            ...appendHeaders
-        }
+            ...appendHeaders,
+        };
 
         const Trequest = writeThrift(value, methodName, Protocol);
         const req = new Request(
@@ -138,55 +143,61 @@ export class RequestClient {
                 headers,
                 signal: AbortSignal.timeout(timeout),
                 body: Trequest,
-            })
+            },
+        );
 
         const response = await fetch(req);
         const nextToken = response.headers.get("x-line-next-access");
         if (nextToken) {
-            console.warn('Next token')
+            console.warn("Next token");
         }
         const body = await response.arrayBuffer();
         const parsedBody = new Uint8Array(body);
-        let res: {
-            value: any;
-            e: any;
-            _info: any;
-        };
+        let res: ParsedThrift;
         try {
             res = readThrift(parsedBody, Protocol);
         } catch {
             throw new Error(
-                `Request internal failed, ${methodName}(${path}) -> Invalid response buffer: <${[...parsedBody].map((e) => e.toString(16)).join(" ")}>`,
+                `Request internal failed, ${methodName}(${path}) -> Invalid response buffer: <${
+                    [...parsedBody].map((e) => e.toString(16)).join(" ")
+                }>`,
             );
         }
         if (parse === true) {
             this.#parser.rename_data(res);
         } else if (typeof parse === "string") {
-            res.value = this.#parser.rename_thrift(parse, res.value);
-        }
-
-        if (res.e) {
-            const structName = this.#EXCEPTION_TYPES[path] || "TalkException";
-
-            if (structName) {
-                res.e = this.#parser.rename_thrift(structName, res.e);
+            res.data.success = this.#parser.rename_thrift(parse, res.data[0]);
+            delete res.data[0];
+            if (res.data[1]) {
+                const structName = this.#EXCEPTION_TYPES[path] ||
+                    "TalkException";
+                if (structName) {
+                    res.data.e = this.#parser.rename_thrift(
+                        structName,
+                        res.data[1],
+                    );
+                    res.data.e = res.data[1];
+                } else {
+                }
+                delete res.data[1];
             }
         }
 
-        const isRefresh =
-            res.e &&
-            res.e["code"] === "MUST_REFRESH_V3_TOKEN"/*&&
+        const isRefresh = res.data.e &&
+            res.data.e["code"] === "MUST_REFRESH_V3_TOKEN"; /*&&
             this.storage.get("refreshToken");*/
 
-        if (res.e && !isRefresh) {
+        if (res.data.e && !isRefresh) {
             throw new Error(
-                `Request internal failed, ${methodName}(${path}) -> ` + JSON.stringify(res.e),
+                `Request internal failed, ${methodName}(${path}) -> ` +
+                    JSON.stringify(res.data.e),
             );
         }
 
         if (isRefresh && !isReRequest) {
-            throw new Error('Refresh token is not supported.')
+            throw new Error("Refresh token is not supported.");
             /*
+            TODO:
             await this.tryRefreshToken();
             return this.rawRequest(
                 path,
@@ -224,7 +235,7 @@ export class RequestClient {
         } as Record<string, string>;
 
         if (this.#lineAccessToken) {
-            header["x-line-access"] = this.#lineAccessToken
+            header["x-line-access"] = this.#lineAccessToken;
         }
 
         return header;
