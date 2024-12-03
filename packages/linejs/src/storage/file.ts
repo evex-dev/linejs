@@ -29,33 +29,44 @@ export class FileStorage extends BaseStorage {
 		}
 	}
 
-	public set(key: Storage["Key"], value: Storage["Value"]): void {
-		const data = this.getAll();
+	public async set(
+		key: Storage["Key"],
+		value: Storage["Value"],
+	): Promise<void> {
+		const data = await this.getAll();
 
 		data[key] = value;
-		fs.writeFileSync(this.path, JSON.stringify(data), "utf-8");
+		await new Promise((resolve) => {
+			fs.writeFile(this.path, JSON.stringify(data), "utf-8", resolve);
+		});
 	}
 
-	public get(key: Storage["Key"]): Storage["Value"] | undefined {
-		const data = this.getAll();
-
+	public async get(
+		key: Storage["Key"],
+	): Promise<Storage["Value"] | undefined> {
+		const data = await this.getAll();
 		return data[key];
 	}
 
-	public delete(key: Storage["Key"]): void {
-		const data = this.getAll();
+	public async delete(key: Storage["Key"]): Promise<void> {
+		const data = await this.getAll();
 
 		delete data[key];
-
-		fs.writeFileSync(this.path, JSON.stringify(data), "utf-8");
+		await new Promise((resolve) => {
+			fs.writeFile(this.path, JSON.stringify(data), "utf-8", resolve);
+		});
 	}
 
-	public clear(): void {
-		fs.writeFileSync(this.path, "{}", "utf-8");
+	public async clear(): Promise<void> {
+		await new Promise((resolve) => {
+			fs.writeFile(this.path, "{}", "utf-8", resolve);
+		});
 	}
 
-	public getAll(): Record<Storage["Key"], Storage["Value"]> {
-		const file = fs.readFileSync(this.path, "utf-8");
+	public async getAll(): Promise<Record<Storage["Key"], Storage["Value"]>> {
+		const file = await new Promise<string>((resolve) => {
+			fs.readFile(this.path, "utf-8", (_e, data) => resolve(data));
+		});
 		return JSON.parse(file || "{}");
 	}
 }

@@ -34,6 +34,14 @@ export interface ClientInit {
     storage?: BaseStorage;
 }
 
+export interface Config {
+    /**
+     * Timeout
+     * @default 30_000
+     */
+    timeout: number;
+}
+
 export class Client extends TypedEventEmitter<ClientEvents> {
     endpoint: string;
     device: Device;
@@ -44,8 +52,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
     storage: BaseStorage;
     e2ee: E2EE;
     user?: LINETypes.Profile;
-
-    timeout: number = 30000;
+    config: Config;
     constructor(init: ClientInit) {
         super();
         this.endpoint = init.endpoint ?? "gw.line.naver.jp";
@@ -64,6 +71,9 @@ export class Client extends TypedEventEmitter<ClientEvents> {
         this.e2ee = new E2EE({ client: this });
         this.thrift.def = def;
         this.device = init.device;
+        this.config = {
+            timeout: 30000,
+        };
     }
     log(type: string, data: Record<string, any>) {
         console.log(type, data);

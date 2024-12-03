@@ -25,7 +25,7 @@ export class RequestClient {
     endpoint: string;
     userAgent: string;
     systemType: string;
-    readonly #EXCEPTION_TYPES: Record<string, string | undefined> = {
+    static readonly EXCEPTION_TYPES: Record<string, string | undefined> = {
         "/S3": "TalkException",
         "/S4": "TalkException",
         "/SYNC4": "TalkException",
@@ -60,14 +60,14 @@ export class RequestClient {
      * @param manyargs - Whether to enclose value in `[[12, 1, value]]`.
      * @returns The response.
      */
-    public async request<T = any>(
+    public async request<T = unknown>(
         value: NestedArray,
         methodName: string,
         protocolType: ProtocolKey = 3,
         parse: boolean | string = true,
         path: string = "/S3",
         headers: Record<string, string | undefined> = {},
-        timeout = 1000,
+        timeout = this.client.timeout,
         manyargs = false,
     ): Promise<T> {
         return (
@@ -159,7 +159,7 @@ export class RequestClient {
             );
             delete res.data[0];
             if (res.data[1]) {
-                const structName = this.#EXCEPTION_TYPES[path] ||
+                const structName = RequestClient.EXCEPTION_TYPES[path] ||
                     "TalkException";
                 if (structName) {
                     res.data.e = this.client.thrift.rename_thrift(
@@ -173,9 +173,11 @@ export class RequestClient {
             }
         }
 
-        const isRefresh = res.data.e &&
-            res.data.e["code"] === "MUST_REFRESH_V3_TOKEN"; /*&&
-            this.storage.get("refreshToken");*/
+        const isRefresh = Boolean(
+            res.data.e &&
+                res.data.e["code"] === "MUST_REFRESH_V3_TOKEN" &&
+                await this.client.storage.get("refreshToken"),
+        );
 
         if (res.data.e && !isRefresh) {
             throw new Error(

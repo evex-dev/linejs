@@ -19,19 +19,24 @@ export class MemoryStorage extends BaseStorage {
 
 	private data: Map<Storage["Key"], Storage["Value"]> = new Map();
 
-	public set(key: Storage["Key"], value: Storage["Value"]): void {
+	public async set(
+		key: Storage["Key"],
+		value: Storage["Value"],
+	): Promise<void> {
 		this.data.set(key, value);
 	}
 
-	public get(key: Storage["Key"]): Storage["Value"] | undefined {
+	public async get(
+		key: Storage["Key"],
+	): Promise<Storage["Value"] | undefined> {
 		return this.data.get(key);
 	}
 
-	public delete(key: Storage["Key"]): void {
+	public async delete(key: Storage["Key"]): Promise<void> {
 		this.data.delete(key);
 	}
 
-	public clear(): void {
+	public async clear(): Promise<void> {
 		this.data.clear();
 	}
 

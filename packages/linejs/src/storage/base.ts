@@ -13,26 +13,31 @@ export abstract class BaseStorage {
 	 * @param {Storage["Key"]} key
 	 * @param {Storage["Value"]} value
 	 */
-	public abstract set(key: Storage["Key"], value: Storage["Key"]): void;
+	public abstract set(
+		key: Storage["Key"],
+		value: Storage["Key"],
+	): Promise<void>;
 
 	/**
 	 * @description Get a value.
 	 *
 	 * @param {Storage["Key"]} key
 	 *
-	 * @returns {Storage["Value"] | undefined}
+	 * @returns {Promise<Storage["Value"] | undefined>} value
 	 */
-	public abstract get(key: Storage["Key"]): Storage["Value"] | undefined;
+	public abstract get(
+		key: Storage["Key"],
+	): Promise<Storage["Value"] | undefined>;
 
 	/**
 	 * @description Delete a value.
 	 *
 	 * @param {Storage["Key"]} key
 	 */
-	public abstract delete(key: Storage["Key"]): void;
+	public abstract delete(key: Storage["Key"]): Promise<void>;
 
 	/**
-	 * @description Clear a data.
+	 * @description Clear all data.
 	 */
-	public abstract clear(): void;
+	public abstract clear(): Promise<void>;
 }

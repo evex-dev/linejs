@@ -16,7 +16,7 @@ class E2EE {
     public async getE2EESelfKeyData(mid: string): Promise<any> {
         try {
             return JSON.parse(
-                this.client.storage.get("e2eeKeys:" + mid) as string,
+                await this.client.storage.get("e2eeKeys:" + mid) as string,
             );
         } catch (_e) {
             /* Do Nothing */
@@ -25,7 +25,7 @@ class E2EE {
         for (let i = 0; i < keys.length; i++) {
             const key = keys[i];
             const { keyId } = key;
-            const _keyData = this.getE2EESelfKeyDataByKeyId(keyId);
+            const _keyData = await this.getE2EESelfKeyDataByKeyId(keyId);
             if (_keyData) {
                 this.saveE2EESelfKeyData(_keyData);
                 return _keyData;
@@ -36,23 +36,28 @@ class E2EE {
             "E2EE Key has not been saved, try register `saveE2EESelfKeyDataByKeyId` or use E2EE Login",
         );
     }
-    public getE2EESelfKeyDataByKeyId(keyId: string | number): any {
+    public async getE2EESelfKeyDataByKeyId(
+        keyId: string | number,
+    ): Promise<any> {
         try {
             return JSON.parse(
-                this.client.storage.get("e2eeKeys:" + keyId) as string,
+                await this.client.storage.get("e2eeKeys:" + keyId) as string,
             );
         } catch (_e) {
             /* Do Nothing */
         }
     }
-    public saveE2EESelfKeyDataByKeyId(
+    public async saveE2EESelfKeyDataByKeyId(
         keyId: string | number,
         value: any,
     ) {
-        this.client.storage.set("e2eeKeys:" + keyId, JSON.stringify(value));
+        await this.client.storage.set(
+            "e2eeKeys:" + keyId,
+            JSON.stringify(value),
+        );
     }
-    public saveE2EESelfKeyData(value: any) {
-        this.client.storage.set(
+    public async saveE2EESelfKeyData(value: any) {
+        await this.client.storage.set(
             "e2eeKeys:" + this.client.user?.mid,
             JSON.stringify(value),
         );
@@ -116,7 +121,7 @@ class E2EE {
                 receiverKeyData = publicKey.keyData;
                 if (receiverKeyId === keyId) {
                     key = Buffer.from(receiverKeyData).toString("base64");
-                    this.client.storage.set(fd + fn, key);
+                    await this.client.storage.set(fd + fn, key);
                 } else {
                     throw new InternalError(
                         "No E2EEKey",
@@ -163,7 +168,9 @@ class E2EE {
                 const encryptedSharedKey = e2eeGroupSharedKey
                     .encryptedSharedKey as Buffer;
                 const selfKey = Buffer.from(
-                    this.getE2EESelfKeyDataByKeyId(receiverKeyId)["privKey"],
+                    (await this.getE2EESelfKeyDataByKeyId(
+                        receiverKeyId,
+                    ))["privKey"],
                     "base64",
                 );
                 const creatorKey = await this.getE2EELocalPublicKey(
@@ -217,7 +224,7 @@ class E2EE {
         const keyIds: number[] = [];
         const encryptedSharedKeys: Buffer[] = [];
         const selfKeyId = e2eePublicKeys[this.client.user!.mid].keyId;
-        const selfKeyData = this.getE2EESelfKeyDataByKeyId(selfKeyId);
+        const selfKeyData = await this.getE2EESelfKeyDataByKeyId(selfKeyId);
         if (!selfKeyData) {
             throw new InternalError(
                 "NoE2EEKey",

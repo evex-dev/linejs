@@ -58,33 +58,58 @@ export class DirStorage extends BaseStorage {
 		}
 	}
 
-	public set(key: Storage["Key"], value: Storage["Value"]): void {
-		fs.writeFileSync(this.getPath(key), this.getTypedValue(value), "utf-8");
+	public async set(
+		key: Storage["Key"],
+		value: Storage["Value"],
+	): Promise<void> {
+		await new Promise((resolve) =>
+			fs.writeFile(this.getPath(key), this.getTypedValue(value), {
+				encoding: "utf-8",
+			}, resolve)
+		);
 	}
 
-	public get(key: Storage["Key"]): Storage["Value"] | undefined {
+	public async get(
+		key: Storage["Key"],
+	): Promise<Storage["Value"] | undefined> {
 		try {
-			return this.getValue(fs.readFileSync(this.getPath(key), "utf-8"));
+			return this.getValue(
+				await new Promise<string>((resolve) =>
+					fs.readFile(
+						this.getPath(key),
+						"utf-8",
+						(_e, data) => resolve(data),
+					)
+				),
+			);
 		} catch (_e) {
 			/* Do Nothing */
 		}
 	}
 
-	public delete(key: Storage["Key"]): void {
+	public async delete(key: Storage["Key"]): Promise<void> {
 		try {
-			fs.rmSync(this.getPath(key));
+			await new Promise((resolve) => {
+				fs.rm(this.getPath(key), resolve);
+			});
 		} catch (_e) {
 			/* Do Nothing */
 		}
 	}
 
-	public clear(): void {
-		fs.readdirSync(this.path).forEach((e) => {
-			try {
-				fs.rmSync(e);
-			} catch (_e) {
-				/* Do Nothing */
-			}
+	public async clear(): Promise<void> {
+		await new Promise<unknown>((resolve) => {
+			fs.readdir(this.path, (_e, files) => {
+				resolve(Promise.all(files.map<Promise<unknown>>((e) => {
+					return new Promise((resolve) => {
+						try {
+							fs.rm(e, resolve);
+						} catch (_e) {
+							resolve(null);
+						}
+					});
+				})));
+			});
 		});
 	}
 
