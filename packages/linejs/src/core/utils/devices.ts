@@ -9,16 +9,15 @@ export type Device =
 	| "WEAROS";
 
 export interface DeviceDetails {
+	device: Device;
 	appVersion: string;
 	systemName: string;
 	systemVersion: string;
 }
 
-export type DeviceMap = Partial<Record<Device, string>>;
-
 export function getDeviceDetails(
 	device: Device,
-	deviceMap: DeviceMap,
+	version?: string,
 ): DeviceDetails | null {
 	let appVersion;
 	let systemName;
@@ -27,12 +26,12 @@ export function getDeviceDetails(
 
 	switch (device) {
 		case "DESKTOPWIN":
-			appVersion = deviceMap[device]||"9.2.0.3403";
+			appVersion = version || "9.2.0.3403";
 			systemName = "WINDOWS";
 			systemVersion = "10.0.0-NT-x64";
 			break;
 		case "DESKTOPMAC":
-			appVersion = deviceMap[device]||"9.2.0.3402";
+			appVersion = version || "9.2.0.3402";
 			systemName = "MAC";
 			break;
 		/*
@@ -43,28 +42,28 @@ export function getDeviceDetails(
 			break;
 		*/
 		case "ANDROID":
-			appVersion = deviceMap[device]||"13.4.1";
+			appVersion = version || "13.4.1";
 			systemName = "Android OS";
 			break;
 		case "IOS":
-			appVersion = appVersion = deviceMap[device]||"13.3.0";
+			appVersion = appVersion = version || "13.3.0";
 			systemName = "iOS";
 			break;
 		case "IOSIPAD":
-			appVersion = deviceMap[device]||"13.3.0";
+			appVersion = version || "13.3.0";
 			systemName = "iOS";
 			break;
 		case "WATCHOS":
-			appVersion = deviceMap[device]||"13.3.0";
+			appVersion = version || "13.3.0";
 			systemName = "Watch OS";
 			break;
 		case "WEAROS":
-			appVersion = deviceMap[device]||"13.4.1";
+			appVersion = version || "13.4.1";
 			systemName = "Wear OS";
 			break;
 		default:
 			return null;
 	}
 
-	return { appVersion, systemName, systemVersion };
+	return { device, appVersion, systemName, systemVersion };
 }

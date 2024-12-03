@@ -3,41 +3,28 @@ import {
     type ParsedThrift,
     type ProtocolKey,
     Protocols,
-    readThrift,
-    ThriftRenameParser,
-    writeThrift,
 } from "../thrift/mod.ts";
-import { type Device, getDeviceDetails } from "../core/utils/devices.ts";
+import type { DeviceDetails } from "../core/utils/devices.ts";
+import type { ClientInitBase } from "../core/types.ts";
+import type { Client } from "../core/mod.ts";
 
-// TODO: authTokenとdeviceとendpointを上位のclientで管理
+interface RequestClientInit extends ClientInitBase {
+    deviceDetails: DeviceDetails;
 
-interface RequestClientInit {
     /**
      * API Endpoint
      * @default gw.line.naver.jp
      */
     endpoint?: string;
-
-    /**
-     * Device
-     * @defaults `'ANDROID'`
-     */
-    device: Device;
-
-    /**
-     * Access Token
-     */
-    lineAccessToken?: string;
 }
 /**
  * Request Client
  */
 export class RequestClient {
-    #endpoint: string;
-    #userAgent: string;
-    #systemType: string;
-    #lineAccessToken?: string;
-    #parser = new ThriftRenameParser();
+    client: Client;
+    endpoint: string;
+    userAgent: string;
+    systemType: string;
     readonly #EXCEPTION_TYPES: Record<string, string | undefined> = {
         "/S3": "TalkException",
         "/S4": "TalkException",
@@ -52,16 +39,12 @@ export class RequestClient {
     };
 
     constructor(init: RequestClientInit) {
-        this.#endpoint = init.endpoint ?? "gw.line.naver.jp";
-        this.#lineAccessToken = init.lineAccessToken;
-
-        const deviceDetails = getDeviceDetails(init.device, {});
-        if (!deviceDetails) {
-            throw new Error(`Unsupported device: ${init.device}.`);
-        }
-        this.#systemType =
-            `${init.device}\t${deviceDetails.appVersion}\t${deviceDetails.systemName}\t${deviceDetails.systemVersion}`;
-        this.#userAgent = `Line/${deviceDetails.appVersion}`;
+        const deviceDetails = init.deviceDetails;
+        this.endpoint = init.endpoint ?? "gw.line.naver.jp";
+        this.systemType =
+            `${deviceDetails.device}\t${deviceDetails.appVersion}\t${deviceDetails.systemName}\t${deviceDetails.systemVersion}`;
+        this.userAgent = `Line/${deviceDetails.appVersion}`;
+        this.client = init.client;
     }
 
     /**
@@ -77,7 +60,7 @@ export class RequestClient {
      * @param manyargs - Whether to enclose value in `[[12, 1, value]]`.
      * @returns The response.
      */
-    public async request(
+    public async request<T = any>(
         value: NestedArray,
         methodName: string,
         protocolType: ProtocolKey = 3,
@@ -86,7 +69,7 @@ export class RequestClient {
         headers: Record<string, string | undefined> = {},
         timeout = 1000,
         manyargs = false,
-    ): Promise<unknown> {
+    ): Promise<T> {
         return (
             await this.requestCore(
                 path,
@@ -117,7 +100,7 @@ export class RequestClient {
      * @returns {Promise<ParsedThrift>} The response.
      * @throws {InternalError} If the request fails or timeout.
      */
-    public async requestCore(
+    private async requestCore(
         path: string,
         value: NestedArray,
         methodName: string,
@@ -135,9 +118,13 @@ export class RequestClient {
             ...appendHeaders,
         };
 
-        const Trequest = writeThrift(value, methodName, Protocol);
+        const Trequest = this.client.thrift.writeThrift(
+            value,
+            methodName,
+            Protocol,
+        );
         const req = new Request(
-            `https://${this.#endpoint}${path}`,
+            `https://${this.endpoint}${path}`,
             {
                 method: overrideMethod,
                 headers,
@@ -155,7 +142,7 @@ export class RequestClient {
         const parsedBody = new Uint8Array(body);
         let res: ParsedThrift;
         try {
-            res = readThrift(parsedBody, Protocol);
+            res = this.client.thrift.readThrift(parsedBody, Protocol);
         } catch {
             throw new Error(
                 `Request internal failed, ${methodName}(${path}) -> Invalid response buffer: <${
@@ -164,20 +151,23 @@ export class RequestClient {
             );
         }
         if (parse === true) {
-            this.#parser.rename_data(res);
+            this.client.thrift.rename_data(res);
         } else if (typeof parse === "string") {
-            res.data.success = this.#parser.rename_thrift(parse, res.data[0]);
+            res.data.success = this.client.thrift.rename_thrift(
+                parse,
+                res.data[0],
+            );
             delete res.data[0];
             if (res.data[1]) {
                 const structName = this.#EXCEPTION_TYPES[path] ||
                     "TalkException";
                 if (structName) {
-                    res.data.e = this.#parser.rename_thrift(
+                    res.data.e = this.client.thrift.rename_thrift(
                         structName,
                         res.data[1],
                     );
-                    res.data.e = res.data[1];
                 } else {
+                    res.data.e = res.data[1];
                 }
                 delete res.data[1];
             }
@@ -223,10 +213,10 @@ export class RequestClient {
         overrideMethod: string = "POST",
     ): Record<string, string> {
         const header = {
-            Host: this.#endpoint,
+            Host: this.endpoint,
             accept: "application/x-thrift",
-            "user-agent": this.#userAgent,
-            "x-line-application": this.#systemType,
+            "user-agent": this.userAgent,
+            "x-line-application": this.systemType,
             "content-type": "application/x-thrift",
             "x-lal": "ja_JP",
             "x-lpv": "1",
@@ -234,8 +224,8 @@ export class RequestClient {
             "accept-encoding": "gzip",
         } as Record<string, string>;
 
-        if (this.#lineAccessToken) {
-            header["x-line-access"] = this.#lineAccessToken;
+        if (this.client.authToken) {
+            header["x-line-access"] = this.client.authToken;
         }
 
         return header;

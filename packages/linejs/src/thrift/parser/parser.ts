@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 import type { ParsedThrift } from "../readwrite/declares.ts";
 import thriftIdl from "./thrift-idl.js";
 
@@ -33,12 +34,7 @@ function isStruct(obj: any): obj is any[] {
 }
 
 export class ThriftRenameParser {
-	def: Record<string, Record<string, string> | any[]>;
-
-	constructor() {
-		this.def = {};
-	}
-
+	def: Record<string, Record<string, string> | any[]> = {};
 	add_def(input: string): void {
 		try {
 			const def = thriftIdl.parse(input);
@@ -85,9 +81,10 @@ export class ThriftRenameParser {
 			});
 			this.def = { ...this.def, ...thrift_def };
 		} catch (_e) {
+			return;
 		}
 	}
-	name2fid(structName: string, name: string): any {
+	#name2fid(structName: string, name: string): any {
 		const struct = this.def[structName];
 		if (struct && Array.isArray(struct)) {
 			const result = struct.findIndex((e: any) => {
@@ -103,7 +100,7 @@ export class ThriftRenameParser {
 		}
 	}
 
-	fid2name(structName: string, fid: string): any {
+	#fid2name(structName: string, fid: string): any {
 		const struct = this.def[structName];
 		if (struct && Array.isArray(struct)) {
 			const result = struct.findIndex((e: any) => {
@@ -124,7 +121,7 @@ export class ThriftRenameParser {
 		if (typeof object !== "object") return object;
 		for (const fid in object) {
 			const value = object[fid];
-			const finfo = this.fid2name(structName, fid);
+			const finfo = this.#fid2name(structName, fid);
 			if (typeof value === "undefined") {
 				continue;
 			}

@@ -4,7 +4,7 @@
 
 ```ts
 import * as thrift from "thrift";
-import { readThrift, ThriftRenameParser, writeThrift } from "./mod.ts";
+import { Thrift } from "./mod.ts";
 
 const thriftFile = `
 struct test_arg {
@@ -25,11 +25,11 @@ struct testResponse {
 }
 `;
 
-const parser = new ThriftRenameParser();
+const client = new Thrift();
 
 parser.add_def(thriftFile);
 
-const reqdata: Uint8Array = writeThrift(
+const reqdata: Uint8Array = client.writeThrift(
     [
         [12, 1, [
             [11, 1, "text"],
@@ -44,8 +44,8 @@ const response = await fetch("https://example.com/api/", {
     method: "POST",
 });
 
-const resdata = parser.rename_data(
-    readThrift(new Uint8Array(await response.arrayBuffer())),
+const resdata = client.rename_data(
+    client.readThrift(new Uint8Array(await response.arrayBuffer())),
 );
 
 console.log(resdata.data);

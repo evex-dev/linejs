@@ -1,8 +1,9 @@
 import { RequestClient } from "../request/mod.ts";
+import type { ClientInitBase } from "../core/types.ts";
+import { Thrift } from "@evex/linejs-types/thrift";
 
-export class Auth {
-    constructor() {
-
+export class Login {
+    constructor(init: ClientInitBase) {
     }
 
     /**
@@ -11,10 +12,6 @@ export class Auth {
      * @param password account password
      * @param pinCode Custom pin-code. It have to be 6-digit.
      */
-    static async withPassword(email: string, password: string, pinCode: string) {
-        const client = new RequestClient({
-            device: 'ANDROID'
-        })
-        client
+    async withPassword(email: string, password: string, pinCode: string) {
     }
 }

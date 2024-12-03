@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 // @ts-types="npm:@types/thrift"
 import * as thrift from "thrift";
 
@@ -119,7 +120,7 @@ export function readThrift(
 }
 
 export function readThriftStruct(
-	data: Buffer,
+	data: Uint8Array,
 	Protocol: typeof thrift.TCompactProtocol | typeof thrift.TBinaryProtocol =
 		thrift.TCompactProtocol,
 ) {
