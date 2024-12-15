@@ -8,55 +8,115 @@ type Int64 = number | bigint;
 export const enums: {
   AR0_g: Record<AR0_g & string, AR0_g & number>;
   AR0_q: Record<AR0_q & string, AR0_q & number>;
-  AccountMigrationPincodeType: Record<AccountMigrationPincodeType & string, AccountMigrationPincodeType & number>;
+  AccountMigrationPincodeType: Record<
+    AccountMigrationPincodeType & string,
+    AccountMigrationPincodeType & number
+  >;
   ApplicationType: Record<ApplicationType & string, ApplicationType & number>;
   BotType: Record<BotType & string, BotType & number>;
   CarrierCode: Record<CarrierCode & string, CarrierCode & number>;
-  ChannelErrorCode: Record<ChannelErrorCode & string, ChannelErrorCode & number>;
-  ContactAttribute: Record<ContactAttribute & string, ContactAttribute & number>;
+  ChannelErrorCode: Record<
+    ChannelErrorCode & string,
+    ChannelErrorCode & number
+  >;
+  ContactAttribute: Record<
+    ContactAttribute & string,
+    ContactAttribute & number
+  >;
   ContactSetting: Record<ContactSetting & string, ContactSetting & number>;
   ContactStatus: Record<ContactStatus & string, ContactStatus & number>;
   ContactType: Record<ContactType & string, ContactType & number>;
   ContentType: Record<ContentType & string, ContentType & number>;
   Eg_EnumC8927a: Record<Eg_EnumC8927a & string, Eg_EnumC8927a & number>;
-  EmailConfirmationStatus: Record<EmailConfirmationStatus & string, EmailConfirmationStatus & number>;
+  EmailConfirmationStatus: Record<
+    EmailConfirmationStatus & string,
+    EmailConfirmationStatus & number
+  >;
   ErrorCode: Record<ErrorCode & string, ErrorCode & number>;
   Fg_a: Record<Fg_a & string, Fg_a & number>;
-  FriendRequestStatus: Record<FriendRequestStatus & string, FriendRequestStatus & number>;
-  IdentityProvider: Record<IdentityProvider & string, IdentityProvider & number>;
+  FriendRequestStatus: Record<
+    FriendRequestStatus & string,
+    FriendRequestStatus & number
+  >;
+  IdentityProvider: Record<
+    IdentityProvider & string,
+    IdentityProvider & number
+  >;
   LN0_F0: Record<LN0_F0 & string, LN0_F0 & number>;
   LN0_X0: Record<LN0_X0 & string, LN0_X0 & number>;
   MIDType: Record<MIDType & string, MIDType & number>;
   NZ0_B0: Record<NZ0_B0 & string, NZ0_B0 & number>;
   NZ0_C0: Record<NZ0_C0 & string, NZ0_C0 & number>;
-  NZ0_EnumC12154b1: Record<NZ0_EnumC12154b1 & string, NZ0_EnumC12154b1 & number>;
-  NZ0_EnumC12169g1: Record<NZ0_EnumC12169g1 & string, NZ0_EnumC12169g1 & number>;
+  NZ0_EnumC12154b1: Record<
+    NZ0_EnumC12154b1 & string,
+    NZ0_EnumC12154b1 & number
+  >;
+  NZ0_EnumC12169g1: Record<
+    NZ0_EnumC12169g1 & string,
+    NZ0_EnumC12169g1 & number
+  >;
   NZ0_EnumC12170h: Record<NZ0_EnumC12170h & string, NZ0_EnumC12170h & number>;
   NZ0_EnumC12188n: Record<NZ0_EnumC12188n & string, NZ0_EnumC12188n & number>;
-  NZ0_EnumC12192o0: Record<NZ0_EnumC12192o0 & string, NZ0_EnumC12192o0 & number>;
-  NZ0_EnumC12193o1: Record<NZ0_EnumC12193o1 & string, NZ0_EnumC12193o1 & number>;
-  NZ0_EnumC12195p0: Record<NZ0_EnumC12195p0 & string, NZ0_EnumC12195p0 & number>;
+  NZ0_EnumC12192o0: Record<
+    NZ0_EnumC12192o0 & string,
+    NZ0_EnumC12192o0 & number
+  >;
+  NZ0_EnumC12193o1: Record<
+    NZ0_EnumC12193o1 & string,
+    NZ0_EnumC12193o1 & number
+  >;
+  NZ0_EnumC12195p0: Record<
+    NZ0_EnumC12195p0 & string,
+    NZ0_EnumC12195p0 & number
+  >;
   NZ0_EnumC12197q: Record<NZ0_EnumC12197q & string, NZ0_EnumC12197q & number>;
-  NZ0_EnumC12218x0: Record<NZ0_EnumC12218x0 & string, NZ0_EnumC12218x0 & number>;
+  NZ0_EnumC12218x0: Record<
+    NZ0_EnumC12218x0 & string,
+    NZ0_EnumC12218x0 & number
+  >;
   NZ0_I0: Record<NZ0_I0 & string, NZ0_I0 & number>;
   NZ0_K0: Record<NZ0_K0 & string, NZ0_K0 & number>;
   NZ0_N0: Record<NZ0_N0 & string, NZ0_N0 & number>;
   NZ0_S0: Record<NZ0_S0 & string, NZ0_S0 & number>;
   NZ0_W0: Record<NZ0_W0 & string, NZ0_W0 & number>;
-  NotificationStatus: Record<NotificationStatus & string, NotificationStatus & number>;
-  NotificationType: Record<NotificationType & string, NotificationType & number>;
+  NotificationStatus: Record<
+    NotificationStatus & string,
+    NotificationStatus & number
+  >;
+  NotificationType: Record<
+    NotificationType & string,
+    NotificationType & number
+  >;
   Ob1_B0: Record<Ob1_B0 & string, Ob1_B0 & number>;
   Ob1_C1: Record<Ob1_C1 & string, Ob1_C1 & number>;
   Ob1_D0: Record<Ob1_D0 & string, Ob1_D0 & number>;
-  Ob1_EnumC12607a1: Record<Ob1_EnumC12607a1 & string, Ob1_EnumC12607a1 & number>;
-  Ob1_EnumC12610b1: Record<Ob1_EnumC12610b1 & string, Ob1_EnumC12610b1 & number>;
-  Ob1_EnumC12631i1: Record<Ob1_EnumC12631i1 & string, Ob1_EnumC12631i1 & number>;
+  Ob1_EnumC12607a1: Record<
+    Ob1_EnumC12607a1 & string,
+    Ob1_EnumC12607a1 & number
+  >;
+  Ob1_EnumC12610b1: Record<
+    Ob1_EnumC12610b1 & string,
+    Ob1_EnumC12610b1 & number
+  >;
+  Ob1_EnumC12631i1: Record<
+    Ob1_EnumC12631i1 & string,
+    Ob1_EnumC12631i1 & number
+  >;
   Ob1_EnumC12638l: Record<Ob1_EnumC12638l & string, Ob1_EnumC12638l & number>;
   Ob1_EnumC12641m: Record<Ob1_EnumC12641m & string, Ob1_EnumC12641m & number>;
-  Ob1_EnumC12652p1: Record<Ob1_EnumC12652p1 & string, Ob1_EnumC12652p1 & number>;
-  Ob1_EnumC12656r0: Record<Ob1_EnumC12656r0 & string, Ob1_EnumC12656r0 & number>;
+  Ob1_EnumC12652p1: Record<
+    Ob1_EnumC12652p1 & string,
+    Ob1_EnumC12652p1 & number
+  >;
+  Ob1_EnumC12656r0: Record<
+    Ob1_EnumC12656r0 & string,
+    Ob1_EnumC12656r0 & number
+  >;
   Ob1_EnumC12664u: Record<Ob1_EnumC12664u & string, Ob1_EnumC12664u & number>;
-  Ob1_EnumC12666u1: Record<Ob1_EnumC12666u1 & string, Ob1_EnumC12666u1 & number>;
+  Ob1_EnumC12666u1: Record<
+    Ob1_EnumC12666u1 & string,
+    Ob1_EnumC12666u1 & number
+  >;
   Ob1_F1: Record<Ob1_F1 & string, Ob1_F1 & number>;
   Ob1_I: Record<Ob1_I & string, Ob1_I & number>;
   Ob1_J0: Record<Ob1_J0 & string, Ob1_J0 & number>;
@@ -84,37 +144,124 @@ export const enums: {
   Pb1_D4: Record<Pb1_D4 & string, Pb1_D4 & number>;
   Pb1_D6: Record<Pb1_D6 & string, Pb1_D6 & number>;
   Pb1_E7: Record<Pb1_E7 & string, Pb1_E7 & number>;
-  Pb1_EnumC12917a6: Record<Pb1_EnumC12917a6 & string, Pb1_EnumC12917a6 & number>;
-  Pb1_EnumC12926b1: Record<Pb1_EnumC12926b1 & string, Pb1_EnumC12926b1 & number>;
-  Pb1_EnumC12941c2: Record<Pb1_EnumC12941c2 & string, Pb1_EnumC12941c2 & number>;
-  Pb1_EnumC12945c6: Record<Pb1_EnumC12945c6 & string, Pb1_EnumC12945c6 & number>;
-  Pb1_EnumC12970e3: Record<Pb1_EnumC12970e3 & string, Pb1_EnumC12970e3 & number>;
-  Pb1_EnumC12997g2: Record<Pb1_EnumC12997g2 & string, Pb1_EnumC12997g2 & number>;
-  Pb1_EnumC12998g3: Record<Pb1_EnumC12998g3 & string, Pb1_EnumC12998g3 & number>;
-  Pb1_EnumC13009h0: Record<Pb1_EnumC13009h0 & string, Pb1_EnumC13009h0 & number>;
-  Pb1_EnumC13010h1: Record<Pb1_EnumC13010h1 & string, Pb1_EnumC13010h1 & number>;
-  Pb1_EnumC13015h6: Record<Pb1_EnumC13015h6 & string, Pb1_EnumC13015h6 & number>;
+  Pb1_EnumC12917a6: Record<
+    Pb1_EnumC12917a6 & string,
+    Pb1_EnumC12917a6 & number
+  >;
+  Pb1_EnumC12926b1: Record<
+    Pb1_EnumC12926b1 & string,
+    Pb1_EnumC12926b1 & number
+  >;
+  Pb1_EnumC12941c2: Record<
+    Pb1_EnumC12941c2 & string,
+    Pb1_EnumC12941c2 & number
+  >;
+  Pb1_EnumC12945c6: Record<
+    Pb1_EnumC12945c6 & string,
+    Pb1_EnumC12945c6 & number
+  >;
+  Pb1_EnumC12970e3: Record<
+    Pb1_EnumC12970e3 & string,
+    Pb1_EnumC12970e3 & number
+  >;
+  Pb1_EnumC12997g2: Record<
+    Pb1_EnumC12997g2 & string,
+    Pb1_EnumC12997g2 & number
+  >;
+  Pb1_EnumC12998g3: Record<
+    Pb1_EnumC12998g3 & string,
+    Pb1_EnumC12998g3 & number
+  >;
+  Pb1_EnumC13009h0: Record<
+    Pb1_EnumC13009h0 & string,
+    Pb1_EnumC13009h0 & number
+  >;
+  Pb1_EnumC13010h1: Record<
+    Pb1_EnumC13010h1 & string,
+    Pb1_EnumC13010h1 & number
+  >;
+  Pb1_EnumC13015h6: Record<
+    Pb1_EnumC13015h6 & string,
+    Pb1_EnumC13015h6 & number
+  >;
   Pb1_EnumC13022i: Record<Pb1_EnumC13022i & string, Pb1_EnumC13022i & number>;
-  Pb1_EnumC13029i6: Record<Pb1_EnumC13029i6 & string, Pb1_EnumC13029i6 & number>;
-  Pb1_EnumC13037j0: Record<Pb1_EnumC13037j0 & string, Pb1_EnumC13037j0 & number>;
+  Pb1_EnumC13029i6: Record<
+    Pb1_EnumC13029i6 & string,
+    Pb1_EnumC13029i6 & number
+  >;
+  Pb1_EnumC13037j0: Record<
+    Pb1_EnumC13037j0 & string,
+    Pb1_EnumC13037j0 & number
+  >;
   Pb1_EnumC13050k: Record<Pb1_EnumC13050k & string, Pb1_EnumC13050k & number>;
-  Pb1_EnumC13082m3: Record<Pb1_EnumC13082m3 & string, Pb1_EnumC13082m3 & number>;
-  Pb1_EnumC13093n0: Record<Pb1_EnumC13093n0 & string, Pb1_EnumC13093n0 & number>;
-  Pb1_EnumC13127p6: Record<Pb1_EnumC13127p6 & string, Pb1_EnumC13127p6 & number>;
-  Pb1_EnumC13128p7: Record<Pb1_EnumC13128p7 & string, Pb1_EnumC13128p7 & number>;
-  Pb1_EnumC13148r0: Record<Pb1_EnumC13148r0 & string, Pb1_EnumC13148r0 & number>;
-  Pb1_EnumC13151r3: Record<Pb1_EnumC13151r3 & string, Pb1_EnumC13151r3 & number>;
-  Pb1_EnumC13162s0: Record<Pb1_EnumC13162s0 & string, Pb1_EnumC13162s0 & number>;
-  Pb1_EnumC13196u6: Record<Pb1_EnumC13196u6 & string, Pb1_EnumC13196u6 & number>;
-  Pb1_EnumC13209v5: Record<Pb1_EnumC13209v5 & string, Pb1_EnumC13209v5 & number>;
-  Pb1_EnumC13221w3: Record<Pb1_EnumC13221w3 & string, Pb1_EnumC13221w3 & number>;
-  Pb1_EnumC13222w4: Record<Pb1_EnumC13222w4 & string, Pb1_EnumC13222w4 & number>;
-  Pb1_EnumC13237x5: Record<Pb1_EnumC13237x5 & string, Pb1_EnumC13237x5 & number>;
-  Pb1_EnumC13238x6: Record<Pb1_EnumC13238x6 & string, Pb1_EnumC13238x6 & number>;
-  Pb1_EnumC13251y5: Record<Pb1_EnumC13251y5 & string, Pb1_EnumC13251y5 & number>;
-  Pb1_EnumC13252y6: Record<Pb1_EnumC13252y6 & string, Pb1_EnumC13252y6 & number>;
-  Pb1_EnumC13260z0: Record<Pb1_EnumC13260z0 & string, Pb1_EnumC13260z0 & number>;
-  Pb1_EnumC13267z7: Record<Pb1_EnumC13267z7 & string, Pb1_EnumC13267z7 & number>;
+  Pb1_EnumC13082m3: Record<
+    Pb1_EnumC13082m3 & string,
+    Pb1_EnumC13082m3 & number
+  >;
+  Pb1_EnumC13093n0: Record<
+    Pb1_EnumC13093n0 & string,
+    Pb1_EnumC13093n0 & number
+  >;
+  Pb1_EnumC13127p6: Record<
+    Pb1_EnumC13127p6 & string,
+    Pb1_EnumC13127p6 & number
+  >;
+  Pb1_EnumC13128p7: Record<
+    Pb1_EnumC13128p7 & string,
+    Pb1_EnumC13128p7 & number
+  >;
+  Pb1_EnumC13148r0: Record<
+    Pb1_EnumC13148r0 & string,
+    Pb1_EnumC13148r0 & number
+  >;
+  Pb1_EnumC13151r3: Record<
+    Pb1_EnumC13151r3 & string,
+    Pb1_EnumC13151r3 & number
+  >;
+  Pb1_EnumC13162s0: Record<
+    Pb1_EnumC13162s0 & string,
+    Pb1_EnumC13162s0 & number
+  >;
+  Pb1_EnumC13196u6: Record<
+    Pb1_EnumC13196u6 & string,
+    Pb1_EnumC13196u6 & number
+  >;
+  Pb1_EnumC13209v5: Record<
+    Pb1_EnumC13209v5 & string,
+    Pb1_EnumC13209v5 & number
+  >;
+  Pb1_EnumC13221w3: Record<
+    Pb1_EnumC13221w3 & string,
+    Pb1_EnumC13221w3 & number
+  >;
+  Pb1_EnumC13222w4: Record<
+    Pb1_EnumC13222w4 & string,
+    Pb1_EnumC13222w4 & number
+  >;
+  Pb1_EnumC13237x5: Record<
+    Pb1_EnumC13237x5 & string,
+    Pb1_EnumC13237x5 & number
+  >;
+  Pb1_EnumC13238x6: Record<
+    Pb1_EnumC13238x6 & string,
+    Pb1_EnumC13238x6 & number
+  >;
+  Pb1_EnumC13251y5: Record<
+    Pb1_EnumC13251y5 & string,
+    Pb1_EnumC13251y5 & number
+  >;
+  Pb1_EnumC13252y6: Record<
+    Pb1_EnumC13252y6 & string,
+    Pb1_EnumC13252y6 & number
+  >;
+  Pb1_EnumC13260z0: Record<
+    Pb1_EnumC13260z0 & string,
+    Pb1_EnumC13260z0 & number
+  >;
+  Pb1_EnumC13267z7: Record<
+    Pb1_EnumC13267z7 & string,
+    Pb1_EnumC13267z7 & number
+  >;
   Pb1_F0: Record<Pb1_F0 & string, Pb1_F0 & number>;
   Pb1_F4: Record<Pb1_F4 & string, Pb1_F4 & number>;
   Pb1_F5: Record<Pb1_F5 & string, Pb1_F5 & number>;
@@ -163,19 +310,37 @@ export const enums: {
   Qj_h0: Record<Qj_h0 & string, Qj_h0 & number>;
   Qj_i0: Record<Qj_i0 & string, Qj_i0 & number>;
   R70_e: Record<R70_e & string, R70_e & number>;
-  RegistrationType: Record<RegistrationType & string, RegistrationType & number>;
+  RegistrationType: Record<
+    RegistrationType & string,
+    RegistrationType & number
+  >;
   ReportType: Record<ReportType & string, ReportType & number>;
   S70_a: Record<S70_a & string, S70_a & number>;
-  SettingsAttributeEx: Record<SettingsAttributeEx & string, SettingsAttributeEx & number>;
+  SettingsAttributeEx: Record<
+    SettingsAttributeEx & string,
+    SettingsAttributeEx & number
+  >;
   SnsIdType: Record<SnsIdType & string, SnsIdType & number>;
   SpammerReason: Record<SpammerReason & string, SpammerReason & number>;
   SpotCategory: Record<SpotCategory & string, SpotCategory & number>;
   SquareAttribute: Record<SquareAttribute & string, SquareAttribute & number>;
-  SquareAuthorityAttribute: Record<SquareAuthorityAttribute & string, SquareAuthorityAttribute & number>;
+  SquareAuthorityAttribute: Record<
+    SquareAuthorityAttribute & string,
+    SquareAuthorityAttribute & number
+  >;
   SquareChatType: Record<SquareChatType & string, SquareChatType & number>;
-  SquareMemberAttribute: Record<SquareMemberAttribute & string, SquareMemberAttribute & number>;
-  SquareMembershipState: Record<SquareMembershipState & string, SquareMembershipState & number>;
-  StickerResourceType: Record<StickerResourceType & string, StickerResourceType & number>;
+  SquareMemberAttribute: Record<
+    SquareMemberAttribute & string,
+    SquareMemberAttribute & number
+  >;
+  SquareMembershipState: Record<
+    SquareMembershipState & string,
+    SquareMembershipState & number
+  >;
+  StickerResourceType: Record<
+    StickerResourceType & string,
+    StickerResourceType & number
+  >;
   SyncCategory: Record<SyncCategory & string, SyncCategory & number>;
   T70_C: Record<T70_C & string, T70_C & number>;
   T70_EnumC14390b: Record<T70_EnumC14390b & string, T70_EnumC14390b & number>;
@@ -189,50 +354,137 @@ export const enums: {
   U70_c: Record<U70_c & string, U70_c & number>;
   Uf_EnumC14873o: Record<Uf_EnumC14873o & string, Uf_EnumC14873o & number>;
   VR0_l: Record<VR0_l & string, VR0_l & number>;
-  VerificationMethod: Record<VerificationMethod & string, VerificationMethod & number>;
-  VerificationResult: Record<VerificationResult & string, VerificationResult & number>;
+  VerificationMethod: Record<
+    VerificationMethod & string,
+    VerificationMethod & number
+  >;
+  VerificationResult: Record<
+    VerificationResult & string,
+    VerificationResult & number
+  >;
   WR0_a: Record<WR0_a & string, WR0_a & number>;
   a80_EnumC16644b: Record<a80_EnumC16644b & string, a80_EnumC16644b & number>;
   FetchDirection: Record<FetchDirection & string, FetchDirection & number>;
-  LiveTalkEventType: Record<LiveTalkEventType & string, LiveTalkEventType & number>;
-  LiveTalkReportType: Record<LiveTalkReportType & string, LiveTalkReportType & number>;
-  MessageSummaryReportType: Record<MessageSummaryReportType & string, MessageSummaryReportType & number>;
-  NotificationPostType: Record<NotificationPostType & string, NotificationPostType & number>;
-  SquareEventStatus: Record<SquareEventStatus & string, SquareEventStatus & number>;
+  LiveTalkEventType: Record<
+    LiveTalkEventType & string,
+    LiveTalkEventType & number
+  >;
+  LiveTalkReportType: Record<
+    LiveTalkReportType & string,
+    LiveTalkReportType & number
+  >;
+  MessageSummaryReportType: Record<
+    MessageSummaryReportType & string,
+    MessageSummaryReportType & number
+  >;
+  NotificationPostType: Record<
+    NotificationPostType & string,
+    NotificationPostType & number
+  >;
+  SquareEventStatus: Record<
+    SquareEventStatus & string,
+    SquareEventStatus & number
+  >;
   SquareEventType: Record<SquareEventType & string, SquareEventType & number>;
   AdScreen: Record<AdScreen & string, AdScreen & number>;
   BooleanState: Record<BooleanState & string, BooleanState & number>;
-  ChatroomPopupType: Record<ChatroomPopupType & string, ChatroomPopupType & number>;
-  ContentsAttribute: Record<ContentsAttribute & string, ContentsAttribute & number>;
+  ChatroomPopupType: Record<
+    ChatroomPopupType & string,
+    ChatroomPopupType & number
+  >;
+  ContentsAttribute: Record<
+    ContentsAttribute & string,
+    ContentsAttribute & number
+  >;
   FetchType: Record<FetchType & string, FetchType & number>;
-  LiveTalkAttribute: Record<LiveTalkAttribute & string, LiveTalkAttribute & number>;
+  LiveTalkAttribute: Record<
+    LiveTalkAttribute & string,
+    LiveTalkAttribute & number
+  >;
   LiveTalkRole: Record<LiveTalkRole & string, LiveTalkRole & number>;
-  LiveTalkSpeakerSetting: Record<LiveTalkSpeakerSetting & string, LiveTalkSpeakerSetting & number>;
+  LiveTalkSpeakerSetting: Record<
+    LiveTalkSpeakerSetting & string,
+    LiveTalkSpeakerSetting & number
+  >;
   LiveTalkType: Record<LiveTalkType & string, LiveTalkType & number>;
-  MessageReactionType: Record<MessageReactionType & string, MessageReactionType & number>;
-  NotifiedMessageType: Record<NotifiedMessageType & string, NotifiedMessageType & number>;
+  MessageReactionType: Record<
+    MessageReactionType & string,
+    MessageReactionType & number
+  >;
+  NotifiedMessageType: Record<
+    NotifiedMessageType & string,
+    NotifiedMessageType & number
+  >;
   PopupAttribute: Record<PopupAttribute & string, PopupAttribute & number>;
   PopupType: Record<PopupType & string, PopupType & number>;
-  SquareChatAttribute: Record<SquareChatAttribute & string, SquareChatAttribute & number>;
-  SquareChatFeatureControlState: Record<SquareChatFeatureControlState & string, SquareChatFeatureControlState & number>;
-  SquareChatMemberAttribute: Record<SquareChatMemberAttribute & string, SquareChatMemberAttribute & number>;
-  SquareChatMembershipState: Record<SquareChatMembershipState & string, SquareChatMembershipState & number>;
+  SquareChatAttribute: Record<
+    SquareChatAttribute & string,
+    SquareChatAttribute & number
+  >;
+  SquareChatFeatureControlState: Record<
+    SquareChatFeatureControlState & string,
+    SquareChatFeatureControlState & number
+  >;
+  SquareChatMemberAttribute: Record<
+    SquareChatMemberAttribute & string,
+    SquareChatMemberAttribute & number
+  >;
+  SquareChatMembershipState: Record<
+    SquareChatMembershipState & string,
+    SquareChatMembershipState & number
+  >;
   SquareChatState: Record<SquareChatState & string, SquareChatState & number>;
   SquareEmblem: Record<SquareEmblem & string, SquareEmblem & number>;
   SquareErrorCode: Record<SquareErrorCode & string, SquareErrorCode & number>;
-  SquareFeatureControlState: Record<SquareFeatureControlState & string, SquareFeatureControlState & number>;
-  SquareFeatureSetAttribute: Record<SquareFeatureSetAttribute & string, SquareFeatureSetAttribute & number>;
-  SquareJoinMethodType: Record<SquareJoinMethodType & string, SquareJoinMethodType & number>;
-  SquareMemberRelationState: Record<SquareMemberRelationState & string, SquareMemberRelationState & number>;
-  SquareMemberRole: Record<SquareMemberRole & string, SquareMemberRole & number>;
-  SquareMessageState: Record<SquareMessageState & string, SquareMessageState & number>;
-  SquareMetadataAttribute: Record<SquareMetadataAttribute & string, SquareMetadataAttribute & number>;
-  SquarePreferenceAttribute: Record<SquarePreferenceAttribute & string, SquarePreferenceAttribute & number>;
-  SquareProviderType: Record<SquareProviderType & string, SquareProviderType & number>;
+  SquareFeatureControlState: Record<
+    SquareFeatureControlState & string,
+    SquareFeatureControlState & number
+  >;
+  SquareFeatureSetAttribute: Record<
+    SquareFeatureSetAttribute & string,
+    SquareFeatureSetAttribute & number
+  >;
+  SquareJoinMethodType: Record<
+    SquareJoinMethodType & string,
+    SquareJoinMethodType & number
+  >;
+  SquareMemberRelationState: Record<
+    SquareMemberRelationState & string,
+    SquareMemberRelationState & number
+  >;
+  SquareMemberRole: Record<
+    SquareMemberRole & string,
+    SquareMemberRole & number
+  >;
+  SquareMessageState: Record<
+    SquareMessageState & string,
+    SquareMessageState & number
+  >;
+  SquareMetadataAttribute: Record<
+    SquareMetadataAttribute & string,
+    SquareMetadataAttribute & number
+  >;
+  SquarePreferenceAttribute: Record<
+    SquarePreferenceAttribute & string,
+    SquarePreferenceAttribute & number
+  >;
+  SquareProviderType: Record<
+    SquareProviderType & string,
+    SquareProviderType & number
+  >;
   SquareState: Record<SquareState & string, SquareState & number>;
-  SquareThreadAttribute: Record<SquareThreadAttribute & string, SquareThreadAttribute & number>;
-  SquareThreadMembershipState: Record<SquareThreadMembershipState & string, SquareThreadMembershipState & number>;
-  SquareThreadState: Record<SquareThreadState & string, SquareThreadState & number>;
+  SquareThreadAttribute: Record<
+    SquareThreadAttribute & string,
+    SquareThreadAttribute & number
+  >;
+  SquareThreadMembershipState: Record<
+    SquareThreadMembershipState & string,
+    SquareThreadMembershipState & number
+  >;
+  SquareThreadState: Record<
+    SquareThreadState & string,
+    SquareThreadState & number
+  >;
   SquareType: Record<SquareType & string, SquareType & number>;
   TargetChatType: Record<TargetChatType & string, TargetChatType & number>;
   TargetUserType: Record<TargetUserType & string, TargetUserType & number>;
@@ -318,17 +570,17 @@ export const enums: {
     "MAJOR_VERSION_NOT_SUPPORTED": 16642,
     "AUTHENTICATION_FAILED": 16897,
     "INTERNAL_SERVER_ERROR": 20737,
-    "SERVICE_UNAVAILABLE": 20739
+    "SERVICE_UNAVAILABLE": 20739,
   },
   "AR0_q": {
     "NOT_PURCHASED": 0,
-    "SUBSCRIPTION": 1
+    "SUBSCRIPTION": 1,
   },
   "AccountMigrationPincodeType": {
     "NOT_APPLICABLE": 0,
     "NOT_SET": 1,
     "SET": 2,
-    "NEED_ENFORCED_INPUT": 3
+    "NEED_ENFORCED_INPUT": 3,
   },
   "ApplicationType": {
     "IOS": 16,
@@ -459,13 +711,13 @@ export const enums: {
     "WEAROS": 544,
     "WEAROS_RC": 545,
     "WEAROS_BETA": 546,
-    "WEAROS_ALPHA": 547
+    "WEAROS_ALPHA": 547,
   },
   "BotType": {
     "RESERVED": 0,
     "OFFICIAL": 1,
     "LINE_AT_0": 2,
-    "LINE_AT": 3
+    "LINE_AT": 3,
   },
   "CarrierCode": {
     "NOT_SPECIFIED": 0,
@@ -480,7 +732,7 @@ export const enums: {
     "JP_USER_SELECTED_LINE": 9,
     "KR_SKT": 17,
     "KR_KT": 18,
-    "KR_LGT": 19
+    "KR_LGT": 19,
   },
   "ChannelErrorCode": {
     "ILLEGAL_ARGUMENT": 0,
@@ -490,13 +742,13 @@ export const enums: {
     "NEED_PERMISSION_APPROVAL": 4,
     "COIN_NOT_USABLE": 5,
     "WEBVIEW_NOT_ALLOWED": 6,
-    "NOT_AVAILABLE_API": 7
+    "NOT_AVAILABLE_API": 7,
   },
   "ContactAttribute": {
     "CONTACT_ATTRIBUTE_CAPABLE_VOICE_CALL": 1,
     "CONTACT_ATTRIBUTE_CAPABLE_VIDEO_CALL": 2,
     "CONTACT_ATTRIBUTE_CAPABLE_MY_HOME": 16,
-    "CONTACT_ATTRIBUTE_CAPABLE_BUDDY": 32
+    "CONTACT_ATTRIBUTE_CAPABLE_BUDDY": 32,
   },
   "ContactSetting": {
     "CONTACT_SETTING_NOTIFICATION_DISABLE": 1,
@@ -505,7 +757,7 @@ export const enums: {
     "CONTACT_SETTING_FAVORITE": 8,
     "CONTACT_SETTING_DELETE": 16,
     "CONTACT_SETTING_FRIEND_RINGTONE": 32,
-    "CONTACT_SETTING_FRIEND_RINGBACK_TONE": 64
+    "CONTACT_SETTING_FRIEND_RINGBACK_TONE": 64,
   },
   "ContactStatus": {
     "UNSPECIFIED": 0,
@@ -514,7 +766,7 @@ export const enums: {
     "RECOMMEND": 3,
     "RECOMMEND_BLOCKED": 4,
     "DELETED": 5,
-    "DELETED_BLOCKED": 6
+    "DELETED_BLOCKED": 6,
   },
   "ContactType": {
     "MID": 0,
@@ -534,7 +786,7 @@ export const enums: {
     "SINA": 2306,
     "RENREN": 2307,
     "FEIXIN": 2308,
-    "BBM": 2309
+    "BBM": 2309,
   },
   "ContentType": {
     "NONE": 0,
@@ -559,18 +811,18 @@ export const enums: {
     "MUSIC": 19,
     "PAYMENT": 20,
     "EXTIMAGE": 21,
-    "FLEX": 22
+    "FLEX": 22,
   },
   "Eg_EnumC8927a": {
     "NEW": 1,
     "UPDATE": 2,
-    "EVENT": 3
+    "EVENT": 3,
   },
   "EmailConfirmationStatus": {
     "NOT_SPECIFIED": 0,
     "NOT_YET": 1,
     "DONE": 3,
-    "NEED_ENFORCED_INPUT": 4
+    "NEED_ENFORCED_INPUT": 4,
   },
   "ErrorCode": {
     "ILLEGAL_ARGUMENT": 0,
@@ -692,7 +944,7 @@ export const enums: {
     "REFRESH_MEDIA_FLOW": 122,
     "EXCEED_FOLLOWER_LIMIT": 123,
     "INCOMPATIBLE_APP_TYPE": 124,
-    "NOT_PREMIUM": 125
+    "NOT_PREMIUM": 125,
   },
   "Fg_a": {
     "INTERNAL_ERROR": 0,
@@ -704,19 +956,19 @@ export const enums: {
     "NOT_ENABLED": 6,
     "INVALID_CONTEXT": 100,
     "APP_UPGRADE_REQUIRED": 101,
-    "NO_CONTENT": 102
+    "NO_CONTENT": 102,
   },
   "FriendRequestStatus": {
     "NONE": 0,
     "AVAILABLE": 1,
     "ALREADY_REQUESTED": 2,
-    "UNAVAILABLE": 3
+    "UNAVAILABLE": 3,
   },
   "IdentityProvider": {
     "UNKNOWN": 0,
     "LINE": 1,
     "NAVER_KR": 2,
-    "LINE_PHONE": 3
+    "LINE_PHONE": 3,
   },
   "LN0_F0": {
     "UNKNOWN": 0,
@@ -725,11 +977,11 @@ export const enums: {
     "TOO_MANY_FRIENDS": 3,
     "TOO_MANY_REQUESTS": 4,
     "MALFORMED_REQUEST": 5,
-    "TRACKING_META_QRCODE_FAVORED": 6
+    "TRACKING_META_QRCODE_FAVORED": 6,
   },
   "LN0_X0": {
     "USER": 1,
-    "BOT": 2
+    "BOT": 2,
   },
   "MIDType": {
     "USER": 0,
@@ -739,7 +991,7 @@ export const enums: {
     "SQUARE_CHAT": 4,
     "SQUARE_MEMBER": 5,
     "BOT": 6,
-    "SQUARE_THREAD": 7
+    "SQUARE_THREAD": 7,
   },
   "NZ0_B0": {
     "PAY": 0,
@@ -749,7 +1001,7 @@ export const enums: {
     "BIT": 4,
     "LIN": 5,
     "SCO": 6,
-    "POC": 7
+    "POC": 7,
   },
   "NZ0_C0": {
     "OK": 0,
@@ -758,75 +1010,75 @@ export const enums: {
     "NOT_FOUND": 3,
     "BLOCKED": 4,
     "INTERNAL_ERROR": 5,
-    "WALLET_CMS_MAINTENANCE": 6
+    "WALLET_CMS_MAINTENANCE": 6,
   },
   "NZ0_EnumC12154b1": {
     "NORMAL": 0,
-    "CAMERA": 1
+    "CAMERA": 1,
   },
   "NZ0_EnumC12169g1": {
     "WALLET": 101,
     "ASSET": 201,
-    "SHOPPING": 301
+    "SHOPPING": 301,
   },
   "NZ0_EnumC12170h": {
     "HIDE_BADGE": 0,
-    "SHOW_BADGE": 1
+    "SHOW_BADGE": 1,
   },
   "NZ0_EnumC12188n": {
     "OK": 0,
     "UNAVAILABLE": 1,
     "DUPLICATAE_REGISTRATION": 2,
-    "INTERNAL_ERROR": 3
+    "INTERNAL_ERROR": 3,
   },
   "NZ0_EnumC12192o0": {
     "LV1": 0,
     "LV2": 1,
     "LV3": 2,
-    "LV9": 3
+    "LV9": 3,
   },
   "NZ0_EnumC12193o1": {
     "INVALID_PARAMETER": 400,
     "AUTHENTICATION_FAILED": 401,
     "INTERNAL_SERVER_ERROR": 500,
-    "SERVICE_IN_MAINTENANCE_MODE": 503
+    "SERVICE_IN_MAINTENANCE_MODE": 503,
   },
   "NZ0_EnumC12195p0": {
     "ALIVE": 1,
     "SUSPENDED": 2,
-    "UNREGISTERED": 3
+    "UNREGISTERED": 3,
   },
   "NZ0_EnumC12197q": {
     "PREFIX": 0,
-    "SUFFIX": 1
+    "SUFFIX": 1,
   },
   "NZ0_EnumC12218x0": {
     "NO_CONTENT": 0,
     "OK": 1,
-    "ERROR": 2
+    "ERROR": 2,
   },
   "NZ0_I0": {
     "A": 0,
     "B": 1,
     "C": 2,
     "D": 3,
-    "UNKNOWN": 4
+    "UNKNOWN": 4,
   },
   "NZ0_K0": {
     "POCKET_MONEY": 0,
-    "REFINANCE": 1
+    "REFINANCE": 1,
   },
   "NZ0_N0": {
     "COMPACT": 0,
-    "EXPANDED": 1
+    "EXPANDED": 1,
   },
   "NZ0_S0": {
     "CARD": 0,
-    "ACTION": 1
+    "ACTION": 1,
   },
   "NZ0_W0": {
     "OK": 0,
-    "INTERNAL_ERROR": 1
+    "INTERNAL_ERROR": 1,
   },
   "NotificationStatus": {
     "NOTIFICATION_ITEM_EXIST": 1,
@@ -851,7 +1103,7 @@ export const enums: {
     "TIMELINE_GUIDE_STORY_UPDATED": 524288,
     "TIMELINE_F2F_COMPLETED": 1048576,
     "VOOM_LIVE_STATE_CHANGED": 2097152,
-    "VOOM_ACTIVITY_REWARD_ITEM_EXIST": 4194304
+    "VOOM_ACTIVITY_REWARD_ITEM_EXIST": 4194304,
   },
   "NotificationType": {
     "APPLE_APNS": 1,
@@ -871,46 +1123,46 @@ export const enums: {
     "GOOGLE_FCM": 21,
     "CLOVA": 22,
     "CLOVA_VOIP": 23,
-    "HUAWEI_HCM": 24
+    "HUAWEI_HCM": 24,
   },
   "Ob1_B0": {
     "FOREGROUND": 0,
-    "BACKGROUND": 1
+    "BACKGROUND": 1,
   },
   "Ob1_C1": {
     "NORMAL": 0,
-    "BIG": 1
+    "BIG": 1,
   },
   "Ob1_D0": {
     "PURCHASE_ONLY": 0,
     "PURCHASE_OR_SUBSCRIPTION": 1,
-    "SUBSCRIPTION_ONLY": 2
+    "SUBSCRIPTION_ONLY": 2,
   },
   "Ob1_EnumC12607a1": {
     "DEFAULT": 1,
-    "VIEW_VIDEO": 2
+    "VIEW_VIDEO": 2,
   },
   "Ob1_EnumC12610b1": {
     "NONE": 0,
     "BUDDY": 2,
     "INSTALL": 3,
     "MISSION": 4,
-    "MUSTBUY": 5
+    "MUSTBUY": 5,
   },
   "Ob1_EnumC12631i1": {
     "UNKNOWN": 0,
     "PRODUCT": 1,
     "USER": 2,
-    "PREMIUM_USER": 3
+    "PREMIUM_USER": 3,
   },
   "Ob1_EnumC12638l": {
     "VALID": 0,
-    "INVALID": 1
+    "INVALID": 1,
   },
   "Ob1_EnumC12641m": {
     "PREMIUM": 1,
     "VERIFIED": 2,
-    "UNVERIFIED": 3
+    "UNVERIFIED": 3,
   },
   "Ob1_EnumC12652p1": {
     "UNKNOWN": 0,
@@ -935,7 +1187,7 @@ export const enums: {
     "BALANCE_SHORTAGE": 17153,
     "INTERNAL_SERVER_ERROR": 20737,
     "SERVICE_IN_MAINTENANCE_MODE": 20738,
-    "SERVICE_UNAVAILABLE": 20739
+    "SERVICE_UNAVAILABLE": 20739,
   },
   "Ob1_EnumC12656r0": {
     "OK": 0,
@@ -943,7 +1195,7 @@ export const enums: {
     "TEXT_NOT_SPECIFIED": 2,
     "TEXT_STYLE_UNAVAILABLE": 3,
     "CHARACTER_COUNT_LIMIT_EXCEEDED": 4,
-    "CONTAINS_INVALID_WORD": 5
+    "CONTAINS_INVALID_WORD": 5,
   },
   "Ob1_EnumC12664u": {
     "UNKNOWN": 0,
@@ -956,7 +1208,7 @@ export const enums: {
     "PRODUCT_IS_NOT_AVAILABLE_FOR_USER": 16646,
     "AUTHENTICATION_FAILED": 16897,
     "INTERNAL_SERVER_ERROR": 20737,
-    "SERVICE_UNAVAILABLE": 20739
+    "SERVICE_UNAVAILABLE": 20739,
   },
   "Ob1_EnumC12666u1": {
     "POPULAR": 0,
@@ -973,21 +1225,21 @@ export const enums: {
     "NEW_SUBSCRIPTION": 11,
     "POPULAR_SUBSCRIPTION_30D": 12,
     "CPD_STICKER": 13,
-    "POPULAR_WITH_FREE": 14
+    "POPULAR_WITH_FREE": 14,
   },
   "Ob1_F1": {
     "STATIC": 1,
-    "ANIMATION": 2
+    "ANIMATION": 2,
   },
   "Ob1_I": {
     "STATIC": 0,
     "POPULAR": 1,
-    "NEW_RELEASE": 2
+    "NEW_RELEASE": 2,
   },
   "Ob1_J0": {
     "ON_SALE": 0,
     "OUTDATED_VERSION": 1,
-    "NOT_ON_SALE": 2
+    "NOT_ON_SALE": 2,
   },
   "Ob1_J1": {
     "OK": 0,
@@ -995,7 +1247,7 @@ export const enums: {
     "NOT_FOUND": 2,
     "NOT_SUPPORTED": 3,
     "CONFLICT": 4,
-    "NOT_ELIGIBLE": 5
+    "NOT_ELIGIBLE": 5,
   },
   "Ob1_K1": {
     "GOOGLE": 0,
@@ -1005,7 +1257,7 @@ export const enums: {
     "LINE_MUSIC": 4,
     "LYP": 5,
     "TW_CHT": 6,
-    "FREEMIUM": 7
+    "FREEMIUM": 7,
   },
   "Ob1_M1": {
     "OK": 0,
@@ -1018,30 +1270,30 @@ export const enums: {
     "OUTDATED_VERSION": 7,
     "NO_STUDENT_INFORMATION": 8,
     "ACCOUNT_HOLD": 9,
-    "RETRY_STATE": 10
+    "RETRY_STATE": 10,
   },
   "Ob1_O0": {
     "STICKER": 1,
     "THEME": 2,
-    "STICON": 3
+    "STICON": 3,
   },
   "Ob1_O1": {
     "AVAILABLE": 0,
     "DIFFERENT_STORE": 1,
     "NOT_STUDENT": 2,
-    "ALREADY_PURCHASED": 3
+    "ALREADY_PURCHASED": 3,
   },
   "Ob1_P1": {
     "GENERAL": 1,
-    "STUDENT": 2
+    "STUDENT": 2,
   },
   "Ob1_Q1": {
     "BASIC": 1,
-    "DELUXE": 2
+    "DELUXE": 2,
   },
   "Ob1_R1": {
     "MONTHLY": 1,
-    "YEARLY": 2
+    "YEARLY": 2,
   },
   "Ob1_U1": {
     "OK": 0,
@@ -1050,16 +1302,16 @@ export const enums: {
     "EXISTS": 3,
     "NOT_FOUND": 4,
     "EXCEEDS_LIMIT": 5,
-    "NOT_AVAILABLE": 6
+    "NOT_AVAILABLE": 6,
   },
   "Ob1_V1": {
     "DATE_ASC": 1,
-    "DATE_DESC": 2
+    "DATE_DESC": 2,
   },
   "Ob1_X1": {
     "GENERAL": 0,
     "CREATORS": 1,
-    "STICON": 2
+    "STICON": 2,
   },
   "Ob1_a2": {
     "NOT_PURCHASED": 0,
@@ -1067,11 +1319,11 @@ export const enums: {
     "NOT_SUBSCRIBED": 2,
     "NOT_ACCEPTED": 3,
     "NOT_PURCHASED_U2I": 4,
-    "BUDDY": 5
+    "BUDDY": 5,
   },
   "Ob1_c2": {
     "STATIC": 1,
-    "ANIMATION": 2
+    "ANIMATION": 2,
   },
   "OpType": {
     "END_OF_OPERATION": 0,
@@ -1210,11 +1462,11 @@ export const enums: {
     "DELETE_MULTI_PROFILE": 149,
     "UPDATE_PROFILE_MAPPING": 150,
     "DELETE_PROFILE_MAPPING": 151,
-    "NOTIFIED_DESTROY_NOTICENTER_PUSH": 152
+    "NOTIFIED_DESTROY_NOTICENTER_PUSH": 152,
   },
   "P70_g": {
     "INVALID_REQUEST": 1000,
-    "RETRY_REQUIRED": 1001
+    "RETRY_REQUIRED": 1001,
   },
   "PaidCallType": {
     "OUT": 0,
@@ -1224,7 +1476,7 @@ export const enums: {
     "AD": 4,
     "CS": 5,
     "OA": 6,
-    "OAM": 7
+    "OAM": 7,
   },
   "PayloadType": {
     "PAYLOAD_BUY": 101,
@@ -1232,132 +1484,132 @@ export const enums: {
     "PAYLOAD_BONUS": 121,
     "PAYLOAD_EVENT": 131,
     "PAYLOAD_POINT_AUTO_EXCHANGED": 141,
-    "PAYLOAD_POINT_MANUAL_EXCHANGED": 151
+    "PAYLOAD_POINT_MANUAL_EXCHANGED": 151,
   },
   "Pb1_A0": {
     "NORMAL": 0,
     "VIDEOCAM": 1,
     "VOIP": 2,
-    "RECORD": 3
+    "RECORD": 3,
   },
   "Pb1_A3": {
     "UNKNOWN": 0,
     "BACKGROUND_NEW_KEY_CREATED": 1,
     "BACKGROUND_PERIODICAL_VERIFICATION": 2,
     "FOREGROUND_NEW_PIN_REGISTERED": 3,
-    "FOREGROUND_VERIFICATION": 4
+    "FOREGROUND_VERIFICATION": 4,
   },
   "Pb1_B": {
     "SIRI": 1,
     "GOOGLE_ASSISTANT": 2,
-    "OS_SHARE": 3
+    "OS_SHARE": 3,
   },
   "Pb1_D0": {
     "RICH_MENU_ID": 0,
     "STATUS_BAR": 1,
-    "BUDDY_CAUTION_NOTICE": 2
+    "BUDDY_CAUTION_NOTICE": 2,
   },
   "Pb1_D4": {
     "AUDIO": 1,
     "VIDEO": 2,
-    "FACEPLAY": 3
+    "FACEPLAY": 3,
   },
   "Pb1_D6": {
     "GOOGLE": 0,
     "BAIDU": 1,
     "FOURSQUARE": 2,
     "YAHOOJAPAN": 3,
-    "KINGWAY": 4
+    "KINGWAY": 4,
   },
   "Pb1_E7": {
     "UNKNOWN": 0,
     "TALK": 1,
-    "SQUARE": 2
+    "SQUARE": 2,
   },
   "Pb1_EnumC12917a6": {
     "UNKNOWN": 0,
     "APP_FOREGROUND": 1,
     "PERIODIC": 2,
-    "MANUAL": 3
+    "MANUAL": 3,
   },
   "Pb1_EnumC12926b1": {
     "NOT_A_FRIEND": 0,
-    "ALWAYS": 1
+    "ALWAYS": 1,
   },
   "Pb1_EnumC12941c2": {
     "BLE_LCS_API_USABLE": 26,
     "PROHIBIT_MINIMIZE_CHANNEL_BROWSER": 27,
     "ALLOW_IOS_WEBKIT": 28,
     "PURCHASE_LCS_API_USABLE": 38,
-    "ALLOW_ANDROID_ENABLE_ZOOM": 48
+    "ALLOW_ANDROID_ENABLE_ZOOM": 48,
   },
   "Pb1_EnumC12945c6": {
     "V1": 1,
-    "V2": 2
+    "V2": 2,
   },
   "Pb1_EnumC12970e3": {
     "USER_AGE_CHECKED": 1,
-    "USER_APPROVAL_REQUIRED": 2
+    "USER_APPROVAL_REQUIRED": 2,
   },
   "Pb1_EnumC12997g2": {
     "PROFILE": 0,
     "FRIENDS": 1,
-    "GROUP": 2
+    "GROUP": 2,
   },
   "Pb1_EnumC12998g3": {
     "UNKNOWN": 0,
     "WIFI": 1,
-    "CELLULAR_NETWORK": 2
+    "CELLULAR_NETWORK": 2,
   },
   "Pb1_EnumC13009h0": {
     "NORMAL": 1,
-    "LOW_BATTERY": 2
+    "LOW_BATTERY": 2,
   },
   "Pb1_EnumC13010h1": {
     "NEW": 1,
-    "PLANET": 2
+    "PLANET": 2,
   },
   "Pb1_EnumC13015h6": {
     "FORWARD": 0,
     "AUTO_REPLY": 1,
     "SUBORDINATE": 2,
-    "REPLY": 3
+    "REPLY": 3,
   },
   "Pb1_EnumC13022i": {
     "SKIP": 0,
     "PINCODE": 1,
-    "SECURITY_CENTER": 2
+    "SECURITY_CENTER": 2,
   },
   "Pb1_EnumC13029i6": {
     "ADD": 0,
     "REMOVE": 1,
-    "MODIFY": 2
+    "MODIFY": 2,
   },
   "Pb1_EnumC13037j0": {
     "UNSPECIFIED": 0,
     "INACTIVE": 1,
     "ACTIVE": 2,
-    "DELETED": 3
+    "DELETED": 3,
   },
   "Pb1_EnumC13050k": {
     "UNKNOWN": 0,
     "IOS_REDUCED_ACCURACY": 1,
     "IOS_FULL_ACCURACY": 2,
     "AOS_PRECISE_LOCATION": 3,
-    "AOS_APPROXIMATE_LOCATION": 4
+    "AOS_APPROXIMATE_LOCATION": 4,
   },
   "Pb1_EnumC13082m3": {
     "SHOW": 0,
-    "HIDE": 1
+    "HIDE": 1,
   },
   "Pb1_EnumC13093n0": {
     "NONE": 0,
-    "TOP": 1
+    "TOP": 1,
   },
   "Pb1_EnumC13127p6": {
     "NORMAL": 0,
     "ALERT_DISABLED": 1,
-    "ALWAYS": 2
+    "ALWAYS": 2,
   },
   "Pb1_EnumC13128p7": {
     "UNKNOWN": 0,
@@ -1371,28 +1623,28 @@ export const enums: {
     "DIRECT_CHAT_SELECTED": 8,
     "GROUP_CHAT_SELECTED": 9,
     "ROOM_CHAT_SELECTED": 10,
-    "DEPRECATED": 11
+    "DEPRECATED": 11,
   },
   "Pb1_EnumC13148r0": {
     "ALWAYS_HIDDEN": 1,
     "ALWAYS_SHOWN": 2,
-    "SHOWN_BY_CONDITION": 3
+    "SHOWN_BY_CONDITION": 3,
   },
   "Pb1_EnumC13151r3": {
     "ONEWAY": 0,
     "BOTH": 1,
-    "NOT_REGISTERED": 2
+    "NOT_REGISTERED": 2,
   },
   "Pb1_EnumC13162s0": {
     "NOT_SUSPICIOUS": 1,
     "SUSPICIOUS_00": 2,
-    "SUSPICIOUS_01": 3
+    "SUSPICIOUS_01": 3,
   },
   "Pb1_EnumC13196u6": {
     "COIN": 0,
     "CREDIT": 1,
     "MONTHLY": 2,
-    "OAM": 3
+    "OAM": 3,
   },
   "Pb1_EnumC13209v5": {
     "DUMMY": 0,
@@ -1444,22 +1696,22 @@ export const enums: {
     "PROFILE_STUDIO_N_BADGE": 46,
     "LYP_FONT": 47,
     "TIMELINESTORY_OA": 48,
-    "TRAVEL": 49
+    "TRAVEL": 49,
   },
   "Pb1_EnumC13221w3": {
     "UNKNOWN": 0,
-    "EUROPEAN_ECONOMIC_AREA": 1
+    "EUROPEAN_ECONOMIC_AREA": 1,
   },
   "Pb1_EnumC13222w4": {
     "OBS_VIDEO": 1,
     "OBS_GENERAL": 2,
-    "OBS_RINGBACK_TONE": 3
+    "OBS_RINGBACK_TONE": 3,
   },
   "Pb1_EnumC13237x5": {
     "AUDIO": 1,
     "VIDEO": 2,
     "LIVE": 3,
-    "PHOTOBOOTH": 4
+    "PHOTOBOOTH": 4,
   },
   "Pb1_EnumC13238x6": {
     "NOT_SPECIFIED": 0,
@@ -1467,11 +1719,11 @@ export const enums: {
     "VERIFICATION_REQUIRED": 2,
     "NOT_PERMITTED": 3,
     "LIMIT_EXCEEDED": 4,
-    "LIMIT_EXCEEDED_AND_VERIFICATION_REQUIRED": 5
+    "LIMIT_EXCEEDED_AND_VERIFICATION_REQUIRED": 5,
   },
   "Pb1_EnumC13251y5": {
     "STANDARD": 1,
-    "CONSTELLA": 2
+    "CONSTELLA": 2,
   },
   "Pb1_EnumC13252y6": {
     "ALL": 0,
@@ -1481,45 +1733,45 @@ export const enums: {
     "CONTACT": 4,
     "GROUP": 5,
     "E2EE": 6,
-    "MESSAGE": 7
+    "MESSAGE": 7,
   },
   "Pb1_EnumC13260z0": {
     "ON_AIR": 0,
     "LIVE": 1,
-    "GLP": 2
+    "GLP": 2,
   },
   "Pb1_EnumC13267z7": {
     "NOTIFICATION_SETTING": 1,
-    "ALL": 255
+    "ALL": 255,
   },
   "Pb1_F0": {
     "NA": 0,
     "FRIEND_VIEW": 1,
-    "OFFICIAL_ACCOUNT_VIEW": 2
+    "OFFICIAL_ACCOUNT_VIEW": 2,
   },
   "Pb1_F4": {
     "INCOMING": 1,
-    "OUTGOING": 2
+    "OUTGOING": 2,
   },
   "Pb1_F5": {
     "UNKNOWN": 0,
     "SUCCESS": 1,
     "REQUIRE_SERVER_SIDE_EMAIL": 2,
-    "REQUIRE_CLIENT_SIDE_EMAIL": 3
+    "REQUIRE_CLIENT_SIDE_EMAIL": 3,
   },
   "Pb1_F6": {
     "JBU": 0,
-    "LIP": 1
+    "LIP": 1,
   },
   "Pb1_G3": {
     "PROMOTION_FRIENDS_INVITE": 1,
     "CAPABILITY_SERVER_SIDE_SMS": 2,
-    "LINE_CLIENT_ANALYTICS_CONFIGURATION": 3
+    "LINE_CLIENT_ANALYTICS_CONFIGURATION": 3,
   },
   "Pb1_G4": {
     "TIMELINE": 1,
     "NEARBY": 2,
-    "SQUARE": 3
+    "SQUARE": 3,
   },
   "Pb1_G6": {
     "NICE": 2,
@@ -1527,29 +1779,29 @@ export const enums: {
     "FUN": 4,
     "AMAZING": 5,
     "SAD": 6,
-    "OMG": 7
+    "OMG": 7,
   },
   "Pb1_H6": {
     "PUBLIC": 0,
-    "PRIVATE": 1
+    "PRIVATE": 1,
   },
   "Pb1_I6": {
     "NEVER_SHOW": 0,
     "ONE_WAY": 1,
-    "MUTUAL": 2
+    "MUTUAL": 2,
   },
   "Pb1_J4": {
     "OTHER": 0,
     "INITIALIZATION": 1,
     "PERIODIC_SYNC": 2,
     "MANUAL_SYNC": 3,
-    "LOCAL_DB_CORRUPTED": 4
+    "LOCAL_DB_CORRUPTED": 4,
   },
   "Pb1_K2": {
     "CHANNEL_INFO": 1,
     "CHANNEL_TOKEN": 2,
     "COMMON_DOMAIN": 4,
-    "ALL": 255
+    "ALL": 255,
   },
   "Pb1_K6": {
     "EMAIL": 1,
@@ -1562,12 +1814,12 @@ export const enums: {
     "BUDDY_STATUS": 128,
     "MUSIC_PROFILE": 256,
     "AVATAR_PROFILE": 512,
-    "ALL": 2147483647
+    "ALL": 2147483647,
   },
   "Pb1_L2": {
     "SYNC": 0,
     "REMOVE": 1,
-    "REMOVE_ALL": 2
+    "REMOVE_ALL": 2,
   },
   "Pb1_L4": {
     "UNKNOWN": 0,
@@ -1575,18 +1827,18 @@ export const enums: {
     "REVISION_GAP_TOO_LARGE_SERVER": 2,
     "OPERATION_EXPIRED": 3,
     "REVISION_HOLE": 4,
-    "FORCE_TRIGGERED": 5
+    "FORCE_TRIGGERED": 5,
   },
   "Pb1_M6": {
     "OWNER": 0,
-    "FRIEND": 1
+    "FRIEND": 1,
   },
   "Pb1_N6": {
     "NFT": 1,
     "AVATAR": 2,
     "SNOW": 3,
     "ARCZ": 4,
-    "FRENZ": 5
+    "FRENZ": 5,
   },
   "Pb1_O2": {
     "NAME": 1,
@@ -1595,20 +1847,20 @@ export const enums: {
     "NOTIFICATION_SETTING": 8,
     "INVITATION_TICKET": 16,
     "FAVORITE_TIMESTAMP": 32,
-    "CHAT_TYPE": 64
+    "CHAT_TYPE": 64,
   },
   "Pb1_O6": {
     "DEFAULT": 1,
-    "MULTI_PROFILE": 2
+    "MULTI_PROFILE": 2,
   },
   "Pb1_P6": {
     "HIDDEN": 0,
-    "PUBLIC": 1000
+    "PUBLIC": 1000,
   },
   "Pb1_Q2": {
     "BACKGROUND": 0,
     "KEYWORD": 1,
-    "CONTENT_METADATA_TAG_BASED": 2
+    "CONTENT_METADATA_TAG_BASED": 2,
   },
   "Pb1_R3": {
     "BEACON_AGREEMENT": 1,
@@ -1621,11 +1873,11 @@ export const enums: {
     "VIDEO_HIGHTLIGHT_WIZARD": 8,
     "CHAT_FOLDER": 9,
     "BLUETOOTH_SCAN": 10,
-    "AUTO_SUGGEST_FOLLOW_UP": 11
+    "AUTO_SUGGEST_FOLLOW_UP": 11,
   },
   "Pb1_S7": {
     "NONE": 1,
-    "ALL": 2
+    "ALL": 2,
   },
   "Pb1_T3": {
     "LOCATION_OS": 1,
@@ -1635,11 +1887,11 @@ export const enums: {
     "AUTO_SUGGEST_LANG": 5,
     "CHAT_EFFECT_CACHED_CONTENT_LIST": 6,
     "IFA": 7,
-    "ACCURACY_MODE": 8
+    "ACCURACY_MODE": 8,
   },
   "Pb1_T7": {
     "SYNC": 0,
-    "REPORT": 1
+    "REPORT": 1,
   },
   "Pb1_V7": {
     "UNSPECIFIED": 0,
@@ -1650,12 +1902,12 @@ export const enums: {
     "AUTO_REPAIR": 5,
     "MANUAL_REPAIR": 6,
     "INTERNAL": 7,
-    "USER_INITIATED": 8
+    "USER_INITIATED": 8,
   },
   "Pb1_W2": {
     "ANYONE_IN_CHAT": 0,
     "CREATOR_ONLY": 1,
-    "NO_ONE": 2
+    "NO_ONE": 2,
   },
   "Pb1_W3": {
     "ILLEGAL_ARGUMENT": 0,
@@ -1666,31 +1918,31 @@ export const enums: {
     "INVALID_PIN": 6,
     "PERMANENTLY_LOCKED": 7,
     "INVALID_PASSWORD": 8,
-    "MASTER_KEY_CONFLICT": 9
+    "MASTER_KEY_CONFLICT": 9,
   },
   "Pb1_X1": {
     "MESSAGE": 0,
     "MESSAGE_NOTIFICATION": 1,
-    "NOTIFICATION_CENTER": 2
+    "NOTIFICATION_CENTER": 2,
   },
   "Pb1_X2": {
     "MESSAGE": 0,
     "NOTE": 1,
-    "CHANNEL": 2
+    "CHANNEL": 2,
   },
   "Pb1_Z2": {
     "GROUP": 0,
     "ROOM": 1,
-    "PEER": 2
+    "PEER": 2,
   },
   "Pb1_gd": {
     "OVER": 1,
     "UNDER": 2,
-    "UNDEFINED": 3
+    "UNDEFINED": 3,
   },
   "Pb1_od": {
     "UNKNOWN": 0,
-    "LOCATION": 1
+    "LOCATION": 1,
   },
   "PointErrorCode": {
     "REQUEST_DUPLICATION": 3001,
@@ -1712,13 +1964,13 @@ export const enums: {
     "DCS_COMMUNICATION_FAIL": 5004,
     "UPDATE_BALANCE_FAIL": 5007,
     "SYSTEM_MAINTENANCE": 5888,
-    "SYSTEM_ERROR": 5999
+    "SYSTEM_ERROR": 5999,
   },
   "Q70_q": {
     "UNKNOWN": 0,
     "FACEBOOK": 1,
     "APPLE": 2,
-    "GOOGLE": 3
+    "GOOGLE": 3,
   },
   "Q70_r": {
     "INTERNAL_ERROR": 0,
@@ -1726,21 +1978,21 @@ export const enums: {
     "VERIFICATION_FAILED": 2,
     "RETRY_LATER": 4,
     "HUMAN_VERIFICATION_REQUIRED": 5,
-    "APP_UPGRADE_REQUIRED": 101
+    "APP_UPGRADE_REQUIRED": 101,
   },
   "Qj_EnumC13584a": {
     "NOT_DETERMINED": 0,
     "RESTRICTED": 1,
     "DENIED": 2,
-    "AUTHORIZED": 3
+    "AUTHORIZED": 3,
   },
   "Qj_EnumC13585b": {
     "WHITE": 1,
-    "BLACK": 2
+    "BLACK": 2,
   },
   "Qj_EnumC13588e": {
     "LIGHT": 1,
-    "DARK": 2
+    "DARK": 2,
   },
   "Qj_EnumC13592i": {
     "ILLEGAL_ARGUMENT": 0,
@@ -1749,7 +2001,7 @@ export const enums: {
     "AUTHENTICATION_FAILED": 3,
     "NEED_PERMISSION_APPROVAL": 4,
     "COIN_NOT_USABLE": 5,
-    "WEBVIEW_NOT_ALLOWED": 6
+    "WEBVIEW_NOT_ALLOWED": 6,
   },
   "Qj_EnumC13597n": {
     "INVALID_REQUEST": 1,
@@ -1761,7 +2013,7 @@ export const enums: {
     "PERMANENT_LINK_INVALID_REQUEST": 7,
     "NO_DESTINATION_URL": 8,
     "SERVICE_ALREADY_TERMINATED": 9,
-    "SERVER_ERROR": 100
+    "SERVER_ERROR": 100,
   },
   "Qj_EnumC13604v": {
     "GEOLOCATION": 1,
@@ -1779,36 +2031,36 @@ export const enums: {
     "SKIP_CHANNEL_VERIFICATION_SCREEN": 13,
     "PROVIDER_PAGE": 14,
     "BASIC_AUTH": 15,
-    "SIRI_DONATION": 16
+    "SIRI_DONATION": 16,
   },
   "Qj_EnumC13605w": {
     "ALLOW_DIRECT_LINK": 1,
-    "ALLOW_DIRECT_LINK_V2": 2
+    "ALLOW_DIRECT_LINK_V2": 2,
   },
   "Qj_EnumC13606x": {
     "LIGHT": 1,
     "LIGHT_TRANSLUCENT": 2,
     "DARK_TRANSLUCENT": 3,
     "LIGHT_ICON": 4,
-    "DARK_ICON": 5
+    "DARK_ICON": 5,
   },
   "Qj_a0": {
     "CONCAT": 1,
-    "REPLACE": 2
+    "REPLACE": 2,
   },
   "Qj_e0": {
     "SUCCESS": 0,
     "FAILURE": 1,
-    "CANCEL": 2
+    "CANCEL": 2,
   },
   "Qj_h0": {
     "RIGHT": 1,
-    "LEFT": 2
+    "LEFT": 2,
   },
   "Qj_i0": {
     "FULL": 1,
     "TALL": 2,
-    "COMPACT": 3
+    "COMPACT": 3,
   },
   "R70_e": {
     "INTERNAL_ERROR": 0,
@@ -1819,7 +2071,7 @@ export const enums: {
     "INVALID_CONTEXT": 100,
     "NOT_SUPPORTED": 101,
     "FORBIDDEN": 102,
-    "FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR": 201
+    "FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR": 201,
   },
   "RegistrationType": {
     "PHONE": 0,
@@ -1830,7 +2082,7 @@ export const enums: {
     "FEIXIN": 2308,
     "APPLE": 2309,
     "YAHOOJAPAN": 2310,
-    "GOOGLE": 2311
+    "GOOGLE": 2311,
   },
   "ReportType": {
     "ADVERTISING": 1,
@@ -1839,7 +2091,7 @@ export const enums: {
     "OTHER": 4,
     "IRRELEVANT_CONTENT": 5,
     "IMPERSONATION": 6,
-    "SCAM": 7
+    "SCAM": 7,
   },
   "S70_a": {
     "INTERNAL_ERROR": 0,
@@ -1847,7 +2099,7 @@ export const enums: {
     "VERIFICATION_FAILED": 2,
     "RETRY_LATER": 3,
     "INVALID_CONTEXT": 100,
-    "APP_UPGRADE_REQUIRED": 101
+    "APP_UPGRADE_REQUIRED": 101,
   },
   "SettingsAttributeEx": {
     "NOTIFICATION_ENABLE": 0,
@@ -1940,7 +2192,7 @@ export const enums: {
     "AGREEMENT_OA_AI_ASSISTANT": 87,
     "AGREEMENT_OA_AI_ASSISTANT_VERSION": 88,
     "AGREEMENT_LYP_PREMIUM_MULTI_PROFILE": 89,
-    "AGREEMENT_LYP_PREMIUM_MULTI_PROFILE_VERSION": 90
+    "AGREEMENT_LYP_PREMIUM_MULTI_PROFILE_VERSION": 90,
   },
   "SnsIdType": {
     "FACEBOOK": 1,
@@ -1950,7 +2202,7 @@ export const enums: {
     "BBM": 5,
     "APPLE": 6,
     "YAHOOJAPAN": 7,
-    "GOOGLE": 8
+    "GOOGLE": 8,
   },
   "SpammerReason": {
     "OTHER": 0,
@@ -1958,7 +2210,7 @@ export const enums: {
     "GENDER_HARASSMENT": 2,
     "HARASSMENT": 3,
     "IMPERSONATION": 4,
-    "SCAM": 5
+    "SCAM": 5,
   },
   "SpotCategory": {
     "UNKNOWN": 0,
@@ -1974,7 +2226,7 @@ export const enums: {
     "FINANCE": 10,
     "EDUCATION": 11,
     "OTHER": 12,
-    "ALL": 10000
+    "ALL": 10000,
   },
   "SquareAttribute": {
     "NAME": 1,
@@ -1989,7 +2241,7 @@ export const enums: {
     "EMBLEMS": 11,
     "JOIN_METHOD": 12,
     "CHANNEL_ID": 13,
-    "SVC_TAGS": 14
+    "SVC_TAGS": 14,
   },
   "SquareAuthorityAttribute": {
     "UPDATE_SQUARE_PROFILE": 1,
@@ -2004,13 +2256,13 @@ export const enums: {
     "CREATE_CHAT_ANNOUNCEMENT": 10,
     "UPDATE_MAX_CHAT_MEMBER_COUNT": 11,
     "USE_READONLY_DEFAULT_CHAT": 12,
-    "SEND_ALL_MENTION": 13
+    "SEND_ALL_MENTION": 13,
   },
   "SquareChatType": {
     "OPEN": 1,
     "SECRET": 2,
     "ONE_ON_ONE": 3,
-    "SQUARE_DEFAULT": 4
+    "SQUARE_DEFAULT": 4,
   },
   "SquareMemberAttribute": {
     "DISPLAY_NAME": 1,
@@ -2018,7 +2270,7 @@ export const enums: {
     "ABLE_TO_RECEIVE_MESSAGE": 3,
     "MEMBERSHIP_STATE": 5,
     "ROLE": 6,
-    "PREFERENCE": 7
+    "PREFERENCE": 7,
   },
   "SquareMembershipState": {
     "JOIN_REQUESTED": 1,
@@ -2028,7 +2280,7 @@ export const enums: {
     "KICK_OUT": 5,
     "BANNED": 6,
     "DELETED": 7,
-    "JOIN_REQUEST_WITHDREW": 8
+    "JOIN_REQUEST_WITHDREW": 8,
   },
   "StickerResourceType": {
     "STATIC": 1,
@@ -2038,7 +2290,7 @@ export const enums: {
     "POPUP": 5,
     "POPUP_SOUND": 6,
     "NAME_TEXT": 7,
-    "PER_STICKER_TEXT": 8
+    "PER_STICKER_TEXT": 8,
   },
   "SyncCategory": {
     "PROFILE": 0,
@@ -2050,7 +2302,7 @@ export const enums: {
     "GROUP": 6,
     "ROOM": 7,
     "NOTIFICATION": 8,
-    "ADDRESS_BOOK": 9
+    "ADDRESS_BOOK": 9,
   },
   "T70_C": {
     "INITIAL_BACKUP_STATE_UNSPECIFIED": 0,
@@ -2058,12 +2310,12 @@ export const enums: {
     "INITIAL_BACKUP_STATE_MESSAGE_ONGOING": 2,
     "INITIAL_BACKUP_STATE_FINISHED": 3,
     "INITIAL_BACKUP_STATE_ABORTED": 4,
-    "INITIAL_BACKUP_STATE_MEDIA_ONGOING": 5
+    "INITIAL_BACKUP_STATE_MEDIA_ONGOING": 5,
   },
   "T70_EnumC14390b": {
     "UNKNOWN": 0,
     "PHONE_NUMBER": 1,
-    "EMAIL": 2
+    "EMAIL": 2,
   },
   "T70_EnumC14392c": {
     "UNKNOWN": 0,
@@ -2071,7 +2323,7 @@ export const enums: {
     "PASSWORD": 2,
     "WEB_BASED": 3,
     "EMAIL_BASED": 4,
-    "NONE": 11
+    "NONE": 11,
   },
   "T70_EnumC14406j": {
     "INTERNAL_ERROR": 0,
@@ -2081,80 +2333,80 @@ export const enums: {
     "RETRY_LATER": 4,
     "HUMAN_VERIFICATION_REQUIRED": 5,
     "INVALID_CONTEXT": 100,
-    "APP_UPGRADE_REQUIRED": 101
+    "APP_UPGRADE_REQUIRED": 101,
   },
   "T70_K": {
     "UNKNOWN": 0,
     "SMS": 1,
     "IVR": 2,
-    "SMSPULL": 3
+    "SMSPULL": 3,
   },
   "T70_L": {
     "PREMIUM_TYPE_UNSPECIFIED": 0,
     "PREMIUM_TYPE_LYP": 1,
-    "PREMIUM_TYPE_LINE": 2
+    "PREMIUM_TYPE_LINE": 2,
   },
   "T70_Z0": {
     "PHONE_VERIF": 1,
-    "EAP_VERIF": 2
+    "EAP_VERIF": 2,
   },
   "T70_e1": {
     "UNKNOWN": 0,
     "SKIP": 1,
-    "WEB_BASED": 2
+    "WEB_BASED": 2,
   },
   "T70_j1": {
     "UNKNOWN": 0,
     "FACEBOOK": 1,
     "APPLE": 2,
-    "GOOGLE": 3
+    "GOOGLE": 3,
   },
   "U70_c": {
     "INTERNAL_ERROR": 0,
     "FORBIDDEN": 1,
-    "INVALID_CONTEXT": 100
+    "INVALID_CONTEXT": 100,
   },
   "Uf_EnumC14873o": {
     "ANDROID": 1,
-    "IOS": 2
+    "IOS": 2,
   },
   "VR0_l": {
     "DEFAULT": 1,
-    "UEN": 2
+    "UEN": 2,
   },
   "VerificationMethod": {
     "NO_AVAILABLE": 0,
     "PIN_VIA_SMS": 1,
     "CALLERID_INDIGO": 2,
     "PIN_VIA_TTS": 4,
-    "SKIP": 10
+    "SKIP": 10,
   },
   "VerificationResult": {
     "FAILED": 0,
     "OK_NOT_REGISTERED_YET": 1,
     "OK_REGISTERED_WITH_SAME_DEVICE": 2,
-    "OK_REGISTERED_WITH_ANOTHER_DEVICE": 3
+    "OK_REGISTERED_WITH_ANOTHER_DEVICE": 3,
   },
   "WR0_a": {
     "FREE": 1,
-    "PREMIUM": 2
+    "PREMIUM": 2,
   },
   "a80_EnumC16644b": {
     "UNKNOWN": 0,
     "FACEBOOK": 1,
     "APPLE": 2,
-    "GOOGLE": 3
+    "GOOGLE": 3,
   },
   "FetchDirection": {
     "FORWARD": 1,
-    "BACKWARD": 2
+    "BACKWARD": 2,
   },
   "LiveTalkEventType": {
     "NOTIFIED_UPDATE_LIVE_TALK_TITLE": 1,
     "NOTIFIED_UPDATE_LIVE_TALK_ANNOUNCEMENT": 2,
     "NOTIFIED_UPDATE_SQUARE_MEMBER_ROLE": 3,
     "NOTIFIED_UPDATE_LIVE_TALK_ALLOW_REQUEST_TO_SPEAK": 4,
-    "NOTIFIED_UPDATE_SQUARE_MEMBER": 5
+    "NOTIFIED_UPDATE_SQUARE_MEMBER": 5,
   },
   "LiveTalkReportType": {
     "ADVERTISING": 1,
@@ -2163,7 +2415,7 @@ export const enums: {
     "IRRELEVANT_CONTENT": 4,
     "OTHER": 5,
     "IMPERSONATION": 6,
-    "SCAM": 7
+    "SCAM": 7,
   },
   "MessageSummaryReportType": {
     "LEGAL_VIOLATION": 1,
@@ -2171,7 +2423,7 @@ export const enums: {
     "PERSONAL_IDENTIFIER": 3,
     "FALSE_INFORMATION": 4,
     "GENDER_HARASSMENT": 5,
-    "OTHER": 6
+    "OTHER": 6,
   },
   "NotificationPostType": {
     "POST_MENTION": 2,
@@ -2179,11 +2431,11 @@ export const enums: {
     "POST_COMMENT": 4,
     "POST_COMMENT_MENTION": 5,
     "POST_COMMENT_LIKE": 6,
-    "POST_RELAY_JOIN": 7
+    "POST_RELAY_JOIN": 7,
   },
   "SquareEventStatus": {
     "NORMAL": 1,
-    "ALERT_DISABLED": 2
+    "ALERT_DISABLED": 2,
   },
   "SquareEventType": {
     "RECEIVE_MESSAGE": 0,
@@ -2243,7 +2495,7 @@ export const enums: {
     "NOTIFIED_UPDATE_THREAD_STATUS": 57,
     "NOTIFIED_UPDATE_THREAD_MEMBER": 58,
     "NOTIFIED_UPDATE_THREAD_ROOT_MESSAGE": 59,
-    "NOTIFIED_UPDATE_THREAD_ROOT_MESSAGE_STATUS": 60
+    "NOTIFIED_UPDATE_THREAD_ROOT_MESSAGE_STATUS": 60,
   },
   "AdScreen": {
     "CHATROOM": 1,
@@ -2252,43 +2504,43 @@ export const enums: {
     "NOTE_LIST": 4,
     "NOTE_END": 5,
     "WEB_MAIN": 6,
-    "WEB_SEARCH_RESULT": 7
+    "WEB_SEARCH_RESULT": 7,
   },
   "BooleanState": {
     "NONE": 0,
     "OFF": 1,
-    "ON": 2
+    "ON": 2,
   },
   "ChatroomPopupType": {
     "IMG_TEXT": 1,
     "TEXT_ONLY": 2,
-    "IMG_ONLY": 3
+    "IMG_ONLY": 3,
   },
   "ContentsAttribute": {
     "NONE": 1,
-    "CONTENTS_HIDDEN": 2
+    "CONTENTS_HIDDEN": 2,
   },
   "FetchType": {
     "DEFAULT": 1,
     "PREFETCH_BY_SERVER": 2,
-    "PREFETCH_BY_CLIENT": 3
+    "PREFETCH_BY_CLIENT": 3,
   },
   "LiveTalkAttribute": {
     "TITLE": 1,
-    "ALLOW_REQUEST_TO_SPEAK": 2
+    "ALLOW_REQUEST_TO_SPEAK": 2,
   },
   "LiveTalkRole": {
     "HOST": 1,
     "CO_HOST": 2,
-    "GUEST": 3
+    "GUEST": 3,
   },
   "LiveTalkSpeakerSetting": {
     "APPROVAL": 1,
-    "ALL": 2
+    "ALL": 2,
   },
   "LiveTalkType": {
     "PUBLIC": 1,
-    "PRIVATE": 2
+    "PRIVATE": 2,
   },
   "MessageReactionType": {
     "ALL": 0,
@@ -2298,22 +2550,22 @@ export const enums: {
     "FUN": 4,
     "AMAZING": 5,
     "SAD": 6,
-    "OMG": 7
+    "OMG": 7,
   },
   "NotifiedMessageType": {
     "MENTION": 1,
-    "REPLY": 2
+    "REPLY": 2,
   },
   "PopupAttribute": {
     "NAME": 1,
     "ACTIVATED": 2,
     "STARTS_AT": 3,
     "ENDS_AT": 4,
-    "CONTENT": 5
+    "CONTENT": 5,
   },
   "PopupType": {
     "MAIN": 1,
-    "CHATROOM": 2
+    "CHATROOM": 2,
   },
   "SquareChatAttribute": {
     "NAME": 2,
@@ -2322,31 +2574,31 @@ export const enums: {
     "TYPE": 5,
     "MAX_MEMBER_COUNT": 6,
     "MESSAGE_VISIBILITY": 7,
-    "ABLE_TO_SEARCH_MESSAGE": 8
+    "ABLE_TO_SEARCH_MESSAGE": 8,
   },
   "SquareChatFeatureControlState": {
     "DISABLED": 1,
-    "ENABLED": 2
+    "ENABLED": 2,
   },
   "SquareChatMemberAttribute": {
     "MEMBERSHIP_STATE": 4,
     "NOTIFICATION_MESSAGE": 6,
     "NOTIFICATION_NEW_MEMBER": 7,
     "LEFT_BY_KICK_MESSAGE_LOCAL_ID": 8,
-    "MESSAGE_LOCAL_ID_WHEN_BLOCK": 9
+    "MESSAGE_LOCAL_ID_WHEN_BLOCK": 9,
   },
   "SquareChatMembershipState": {
     "JOINED": 1,
-    "LEFT": 2
+    "LEFT": 2,
   },
   "SquareChatState": {
     "ALIVE": 0,
     "DELETED": 1,
-    "SUSPENDED": 2
+    "SUSPENDED": 2,
   },
   "SquareEmblem": {
     "SUPER": 1,
-    "OFFICIAL": 2
+    "OFFICIAL": 2,
   },
   "SquareErrorCode": {
     "UNKNOWN": 0,
@@ -2360,11 +2612,11 @@ export const enums: {
     "NOT_IMPLEMENTED": 501,
     "TRY_AGAIN_LATER": 503,
     "MAINTENANCE": 505,
-    "NO_PRESENCE_EXISTS": 506
+    "NO_PRESENCE_EXISTS": 506,
   },
   "SquareFeatureControlState": {
     "DISABLED": 1,
-    "ENABLED": 2
+    "ENABLED": 2,
   },
   "SquareFeatureSetAttribute": {
     "CREATING_SECRET_SQUARE_CHAT": 1,
@@ -2381,77 +2633,77 @@ export const enums: {
     "SUMMARIZING_MESSAGES": 12,
     "CREATING_SQUARE_THREAD": 13,
     "ENABLE_SQUARE_THREAD": 14,
-    "DISABLE_CHANGE_ROLE_CO_ADMIN": 15
+    "DISABLE_CHANGE_ROLE_CO_ADMIN": 15,
   },
   "SquareJoinMethodType": {
     "NONE": 0,
     "APPROVAL": 1,
-    "CODE": 2
+    "CODE": 2,
   },
   "SquareMemberRelationState": {
     "NONE": 1,
-    "BLOCKED": 2
+    "BLOCKED": 2,
   },
   "SquareMemberRole": {
     "ADMIN": 1,
     "CO_ADMIN": 2,
-    "MEMBER": 10
+    "MEMBER": 10,
   },
   "SquareMessageState": {
     "SENT": 1,
     "DELETED": 2,
     "FORBIDDEN": 3,
-    "UNSENT": 4
+    "UNSENT": 4,
   },
   "SquareMetadataAttribute": {
     "EXCLUDED": 1,
-    "NO_AD": 2
+    "NO_AD": 2,
   },
   "SquarePreferenceAttribute": {
     "FAVORITE": 1,
-    "NOTI_FOR_NEW_JOIN_REQUEST": 2
+    "NOTI_FOR_NEW_JOIN_REQUEST": 2,
   },
   "SquareProviderType": {
     "UNKNOWN": 1,
     "YOUTUBE": 2,
-    "OA_FANSPACE": 3
+    "OA_FANSPACE": 3,
   },
   "SquareState": {
     "ALIVE": 0,
     "DELETED": 1,
-    "SUSPENDED": 2
+    "SUSPENDED": 2,
   },
   "SquareThreadAttribute": {
     "STATE": 1,
     "EXPIRES_AT": 2,
-    "READ_ONLY_AT": 3
+    "READ_ONLY_AT": 3,
   },
   "SquareThreadMembershipState": {
     "JOINED": 1,
-    "LEFT": 2
+    "LEFT": 2,
   },
   "SquareThreadState": {
     "ALIVE": 1,
-    "DELETED": 2
+    "DELETED": 2,
   },
   "SquareType": {
     "CLOSED": 0,
-    "OPEN": 1
+    "OPEN": 1,
   },
   "TargetChatType": {
     "ALL": 0,
     "MIDS": 1,
     "CATEGORIES": 2,
-    "CHANNEL_ID": 3
+    "CHANNEL_ID": 3,
   },
   "TargetUserType": {
     "ALL": 0,
-    "MIDS": 1
+    "MIDS": 1,
   },
   "do0_EnumC23139B": {
     "CLOUD": 1,
     "BLE": 2,
-    "BEACON": 3
+    "BEACON": 3,
   },
   "do0_EnumC23147e": {
     "SUCCESS": 0,
@@ -2459,12 +2711,12 @@ export const enums: {
     "BLUETOOTH_NOT_AVAILABLE": 2,
     "CONNECTION_TIMEOUT": 3,
     "CONNECTION_ERROR": 4,
-    "CONNECTION_IN_PROGRESS": 5
+    "CONNECTION_IN_PROGRESS": 5,
   },
   "do0_EnumC23148f": {
     "ONETIME": 0,
     "AUTOMATIC": 1,
-    "BEACON": 2
+    "BEACON": 2,
   },
   "do0_G": {
     "SUCCESS": 0,
@@ -2474,7 +2726,7 @@ export const enums: {
     "GATT_SERVICE_NOT_FOUND": 4,
     "GATT_CHARACTERISTIC_NOT_FOUND": 5,
     "GATT_CONNECTION_CLOSED": 6,
-    "CONNECTION_INVALID": 7
+    "CONNECTION_INVALID": 7,
   },
   "do0_M": {
     "INTERNAL_SERVER_ERROR": 0,
@@ -2482,15 +2734,15 @@ export const enums: {
     "INVALID_REQUEST": 2,
     "INVALID_STATE": 3,
     "DEVICE_LIMIT_EXCEEDED": 4096,
-    "UNSUPPORTED_REGION": 4097
+    "UNSUPPORTED_REGION": 4097,
   },
   "fN0_EnumC24466B": {
     "LINE_PREMIUM": 0,
-    "LYP_PREMIUM": 1
+    "LYP_PREMIUM": 1,
   },
   "fN0_EnumC24467C": {
     "LINE": 1,
-    "YAHOO_JAPAN": 2
+    "YAHOO_JAPAN": 2,
   },
   "fN0_EnumC24469a": {
     "OK": 1,
@@ -2498,7 +2750,7 @@ export const enums: {
     "UNDEFINED": 3,
     "NOT_ENOUGH_TICKETS": 4,
     "NOT_FRIENDS": 5,
-    "NO_AGREEMENT": 6
+    "NO_AGREEMENT": 6,
   },
   "fN0_F": {
     "OK": 1,
@@ -2507,20 +2759,20 @@ export const enums: {
     "CONFLICT": 4,
     "NOT_AVAILABLE": 5,
     "INVALID_INVITATION": 6,
-    "IN_PAYMENT_FAILURE_STATE": 7
+    "IN_PAYMENT_FAILURE_STATE": 7,
   },
   "fN0_G": {
     "APPLE": 1,
-    "GOOGLE": 2
+    "GOOGLE": 2,
   },
   "fN0_H": {
     "INACTIVE": 1,
     "ACTIVE_FINITE": 2,
-    "ACTIVE_INFINITE": 3
+    "ACTIVE_INFINITE": 3,
   },
   "fN0_o": {
     "AVAILABLE": 1,
-    "ALREADY_SUBSCRIBED": 2
+    "ALREADY_SUBSCRIBED": 2,
   },
   "fN0_p": {
     "UNKNOWN": 0,
@@ -2534,7 +2786,7 @@ export const enums: {
     "YAHOO_GOOGLE": 8,
     "LINE_APPLE": 9,
     "LINE_GOOGLE": 10,
-    "YAHOO_WALLET": 11
+    "YAHOO_WALLET": 11,
   },
   "fN0_q": {
     "UNKNOWN": 0,
@@ -2543,13 +2795,13 @@ export const enums: {
     "NOT_FOUND": 16642,
     "NOT_AVAILABLE": 16643,
     "INTERNAL_SERVER_ERROR": 16644,
-    "AUTHENTICATION_FAILED": 16645
+    "AUTHENTICATION_FAILED": 16645,
   },
   "g80_EnumC24993a": {
     "INTERNAL_ERROR": 0,
     "ILLEGAL_ARGUMENT": 1,
     "INVALID_CONTEXT": 2,
-    "TOO_MANY_REQUESTS": 3
+    "TOO_MANY_REQUESTS": 3,
   },
   "h80_EnumC25645e": {
     "INTERNAL_ERROR": 0,
@@ -2557,19 +2809,19 @@ export const enums: {
     "NOT_FOUND": 2,
     "RETRY_LATER": 3,
     "INVALID_CONTEXT": 100,
-    "NOT_SUPPORTED": 101
+    "NOT_SUPPORTED": 101,
   },
   "I80_EnumC26392b": {
     "UNKNOWN": 0,
     "SKIP": 1,
     "PASSWORD": 2,
     "EMAIL_BASED": 4,
-    "NONE": 11
+    "NONE": 11,
   },
   "I80_EnumC26394c": {
     "PHONE_NUMBER": 0,
     "APPLE": 1,
-    "GOOGLE": 2
+    "GOOGLE": 2,
   },
   "I80_EnumC26408j": {
     "INTERNAL_ERROR": 0,
@@ -2579,75 +2831,75 @@ export const enums: {
     "RETRY_LATER": 4,
     "HUMAN_VERIFICATION_REQUIRED": 5,
     "INVALID_CONTEXT": 100,
-    "APP_UPGRADE_REQUIRED": 101
+    "APP_UPGRADE_REQUIRED": 101,
   },
   "I80_EnumC26425y": {
     "UNKNOWN": 0,
     "SMS": 1,
-    "IVR": 2
+    "IVR": 2,
   },
   "j80_EnumC27228a": {
     "AUTHENTICATION_FAILED": 1,
     "INVALID_STATE": 2,
     "NOT_AUTHORIZED_DEVICE": 3,
-    "MUST_REFRESH_V3_TOKEN": 4
+    "MUST_REFRESH_V3_TOKEN": 4,
   },
   "jO0_EnumC27533B": {
     "PAYMENT_APPLE": 1,
-    "PAYMENT_GOOGLE": 2
+    "PAYMENT_GOOGLE": 2,
   },
   "jO0_EnumC27535b": {
     "ILLEGAL_ARGUMENT": 0,
     "AUTHENTICATION_FAILED": 1,
     "INTERNAL_ERROR": 20,
     "MESSAGE_DEFINED_ERROR": 29,
-    "MAINTENANCE_ERROR": 33
+    "MAINTENANCE_ERROR": 33,
   },
   "jO0_EnumC27559z": {
     "PAYMENT_PG_NONE": 0,
     "PAYMENT_PG_AU": 1,
-    "PAYMENT_PG_AL": 2
+    "PAYMENT_PG_AL": 2,
   },
   "jf_EnumC27712a": {
     "NONE": 1,
     "DOES_NOT_RESPOND": 2,
     "RESPOND_MANUALLY": 3,
-    "RESPOND_AUTOMATICALLY": 4
+    "RESPOND_AUTOMATICALLY": 4,
   },
   "jf_EnumC27717f": {
     "UNKNOWN": 0,
     "BAD_REQUEST": 1,
     "NOT_FOUND": 2,
     "FORBIDDEN": 3,
-    "INTERNAL_SERVER_ERROR": 4
+    "INTERNAL_SERVER_ERROR": 4,
   },
   "kf_EnumC28766a": {
     "ILLEGAL_ARGUMENT": 0,
     "INTERNAL_ERROR": 1,
-    "UNAUTHORIZED": 2
+    "UNAUTHORIZED": 2,
   },
   "kf_o": {
     "ANDROID": 0,
-    "IOS": 1
+    "IOS": 1,
   },
   "kf_p": {
     "RICHMENU": 0,
-    "TALK_ROOM": 1
+    "TALK_ROOM": 1,
   },
   "kf_r": {
     "WEB": 0,
     "POSTBACK": 1,
-    "SEND_MESSAGE": 2
+    "SEND_MESSAGE": 2,
   },
   "kf_u": {
     "CLICK": 0,
-    "IMPRESSION": 1
+    "IMPRESSION": 1,
   },
   "kf_x": {
     "UNKNOWN": 0,
     "PROFILE": 1,
     "TALK_LIST": 2,
-    "OA_CALL": 3
+    "OA_CALL": 3,
   },
   "n80_o": {
     "INTERNAL_ERROR": 0,
@@ -2655,7 +2907,7 @@ export const enums: {
     "FIDO_UNKNOWN_CREDENTIAL_ID": 200,
     "FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR": 201,
     "FIDO_UNACCEPTABLE_CONTENT": 202,
-    "FIDO_INVALID_REQUEST": 203
+    "FIDO_INVALID_REQUEST": 203,
   },
   "o80_e": {
     "INTERNAL_ERROR": 0,
@@ -2670,22 +2922,22 @@ export const enums: {
     "FIDO_UNKNOWN_CREDENTIAL_ID": 200,
     "FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR": 201,
     "FIDO_UNACCEPTABLE_CONTENT": 202,
-    "FIDO_INVALID_REQUEST": 203
+    "FIDO_INVALID_REQUEST": 203,
   },
   "og_E": {
     "RUNNING": 1,
     "CLOSING": 2,
     "CLOSED": 3,
-    "SUSPEND": 4
+    "SUSPEND": 4,
   },
   "og_EnumC32661b": {
     "INACTIVE": 0,
-    "ACTIVE": 1
+    "ACTIVE": 1,
   },
   "og_EnumC32663d": {
     "PREMIUM": 0,
     "VERIFIED": 1,
-    "UNVERIFIED": 2
+    "UNVERIFIED": 2,
   },
   "og_EnumC32671l": {
     "ILLEGAL_ARGUMENT": 0,
@@ -2693,12 +2945,12 @@ export const enums: {
     "INVALID_STATE": 3,
     "NOT_FOUND": 5,
     "INTERNAL_ERROR": 20,
-    "MAINTENANCE_ERROR": 33
+    "MAINTENANCE_ERROR": 33,
   },
   "og_G": {
     "FREE": 0,
     "MONTHLY": 1,
-    "PER_PAYMENT": 2
+    "PER_PAYMENT": 2,
   },
   "og_I": {
     "OK": 0,
@@ -2706,7 +2958,7 @@ export const enums: {
     "REACHED_MEMBER_LIMIT": 2,
     "ALREADY_JOINED": 3,
     "NOT_SUPPORTED_LINE_VERSION": 4,
-    "BOT_USER_REGION_IS_NOT_MATCH": 5
+    "BOT_USER_REGION_IS_NOT_MATCH": 5,
   },
   "q80_EnumC33651c": {
     "INTERNAL_ERROR": 0,
@@ -2716,28 +2968,28 @@ export const enums: {
     "VERIFICATION_NOTICE_FAILED": 4,
     "RETRY_LATER": 5,
     "INVALID_CONTEXT": 100,
-    "APP_UPGRADE_REQUIRED": 101
+    "APP_UPGRADE_REQUIRED": 101,
   },
   "qm_EnumC34112e": {
     "BUTTON": 1,
     "ENTRY_SELECTED": 2,
     "BROADCAST_ENTER": 3,
     "BROADCAST_LEAVE": 4,
-    "BROADCAST_STAY": 5
+    "BROADCAST_STAY": 5,
   },
   "qm_s": {
     "ILLEGAL_ARGUMENT": 0,
     "NOT_FOUND": 5,
-    "INTERNAL_ERROR": 20
+    "INTERNAL_ERROR": 20,
   },
   "r80_EnumC34361a": {
     "PERSONAL_ACCOUNT": 1,
-    "CURRENT_ACCOUNT": 2
+    "CURRENT_ACCOUNT": 2,
   },
   "r80_EnumC34362b": {
     "BANK_ALL": 1,
     "BANK_DEPOSIT": 2,
-    "BANK_WITHDRAWAL": 3
+    "BANK_WITHDRAWAL": 3,
   },
   "r80_EnumC34365e": {
     "BANK": 1,
@@ -2749,7 +3001,7 @@ export const enums: {
     "AUTO": 7,
     "CVS_LAWSON": 8,
     "SEVEN_BANK_DEPOSIT": 9,
-    "CODE_DEPOSIT": 10
+    "CODE_DEPOSIT": 10,
   },
   "r80_EnumC34367g": {
     "AVAILABLE": 0,
@@ -2757,11 +3009,11 @@ export const enums: {
     "UNSUPPORTED_DEVICE": 2,
     "PHONE_NUMBER_UNREGISTERED": 3,
     "UNAVAILABLE_FROM_LINE_PAY": 4,
-    "INVALID_USER": 5
+    "INVALID_USER": 5,
   },
   "r80_EnumC34368h": {
     "CHARGE": 1,
-    "WITHDRAW": 2
+    "WITHDRAW": 2,
   },
   "r80_EnumC34370j": {
     "UNKNOWN": 0,
@@ -2769,18 +3021,18 @@ export const enums: {
     "MASTER": 2,
     "AMEX": 3,
     "DINERS": 4,
-    "JCB": 5
+    "JCB": 5,
   },
   "r80_EnumC34371k": {
     "NULL": 0,
     "ATM": 1,
-    "CONVENIENCE_STORE": 2
+    "CONVENIENCE_STORE": 2,
   },
   "r80_EnumC34372l": {
     "SCALE2": 1,
     "SCALE3": 2,
     "HDPI": 3,
-    "XHDPI": 4
+    "XHDPI": 4,
   },
   "r80_EnumC34374n": {
     "SUCCESS": 0,
@@ -2835,20 +3087,20 @@ export const enums: {
     "GENERAL_USER_ERROR_CLOSE": 1698,
     "INTERNAL_SERVER_ERROR": 9000,
     "INTERNAL_SYSTEM_MAINTENANCE": 9999,
-    "UNKNOWN_ERROR": 10000
+    "UNKNOWN_ERROR": 10000,
   },
   "r80_EnumC34376p": {
     "TRANSFER": 1,
     "TRANSFER_REQUEST": 2,
     "DUTCH": 3,
-    "INVITATION": 4
+    "INVITATION": 4,
   },
   "r80_EnumC34377q": {
     "NULL": 0,
     "UNIDEN": 1,
     "WAIT": 2,
     "IDENTIFIED": 3,
-    "CHECKING": 4
+    "CHECKING": 4,
   },
   "r80_EnumC34378s": {
     "UNKNOWN": 0,
@@ -2857,7 +3109,7 @@ export const enums: {
     "TRANSFER": 3,
     "PAYMENT": 4,
     "LINECARD": 5,
-    "INVITATION": 6
+    "INVITATION": 6,
   },
   "r80_e0": {
     "NONE": 0,
@@ -2866,13 +3118,13 @@ export const enums: {
     "LINE_CARD_CASH_AGREEMENT": 3,
     "LINE_CARD_MONEY_AGREEMENT": 4,
     "JOINING_WITH_LINE_CARD_AGREEMENT": 5,
-    "LINE_CARD_AGREEMENT": 6
+    "LINE_CARD_AGREEMENT": 6,
   },
   "r80_g0": {
     "NULL": 0,
     "ATM": 1,
     "CONVENIENCE_STORE": 2,
-    "ALL": 3
+    "ALL": 3,
   },
   "r80_h0": {
     "READY": 1,
@@ -2881,13 +3133,13 @@ export const enums: {
     "CANCEL": 4,
     "FAIL": 5,
     "EXPIRE": 6,
-    "ALL": 7
+    "ALL": 7,
   },
   "r80_i0": {
     "TRANSFER_ACCEPTABLE": 1,
     "REMOVE_INVOICE": 2,
     "INVOICE_CODE": 3,
-    "SHOW_ALWAYS_INVOICE": 4
+    "SHOW_ALWAYS_INVOICE": 4,
   },
   "r80_m0": {
     "OK": 1,
@@ -2897,26 +3149,26 @@ export const enums: {
     "TRANSFER_IN_PROGRESS": 6,
     "OK_REMAINING_BALANCE": 7,
     "ADVERSE_BALANCE": 8,
-    "CONFIRM_REQUIRED": 9
+    "CONFIRM_REQUIRED": 9,
   },
   "r80_n0": {
     "LINE": 1,
-    "LINEPAY": 2
+    "LINEPAY": 2,
   },
   "r80_r": {
     "CITIZEN_ID": 1,
     "PASSPORT": 2,
     "WORK_PERMIT": 3,
-    "ALIEN_CARD": 4
+    "ALIEN_CARD": 4,
   },
   "t80_h": {
     "CLIENT": 1,
-    "SERVER": 2
+    "SERVER": 2,
   },
   "t80_i": {
     "APP_INSTANCE_LOCAL": 1,
     "APP_TYPE_LOCAL": 2,
-    "GLOBAL": 3
+    "GLOBAL": 3,
   },
   "t80_n": {
     "UNKNOWN": 0,
@@ -2931,21 +3183,21 @@ export const enums: {
     "AUTHENTICATION_FAILED": 16897,
     "INTERNAL_SERVER_ERROR": 20737,
     "SERVICE_IN_MAINTENANCE_MODE": 20738,
-    "SERVICE_UNAVAILABLE": 20739
+    "SERVICE_UNAVAILABLE": 20739,
   },
   "t80_r": {
     "USER_ACTION": 1,
     "DATA_OUTDATED": 2,
     "APP_MIGRATION": 3,
-    "OTHER": 100
+    "OTHER": 100,
   },
   "vh_EnumC37632c": {
     "ACTIVE": 1,
-    "INACTIVE": 2
+    "INACTIVE": 2,
   },
   "vh_m": {
     "SAFE": 1,
-    "NOT_SAFE": 2
+    "NOT_SAFE": 2,
   },
   "wm_EnumC38497a": {
     "UNKNOWN": 0,
@@ -2956,20 +3208,20 @@ export const enums: {
     "FORBIDDEN": 5,
     "ILLEGAL_ARGUMENT": 400,
     "AUTHENTICATION_FAILED": 401,
-    "INTERNAL_ERROR": 500
+    "INTERNAL_ERROR": 500,
   },
   "zR0_EnumC40578c": {
     "FOREGROUND": 0,
-    "BACKGROUND": 1
+    "BACKGROUND": 1,
   },
   "zR0_EnumC40579d": {
     "STICKER": 1,
     "THEME": 2,
-    "STICON": 3
+    "STICON": 3,
   },
   "zR0_h": {
     "NORMAL": 0,
-    "BIG": 1
+    "BIG": 1,
   },
   "zR0_j": {
     "UNKNOWN": 0,
@@ -2979,2708 +3231,4154 @@ export const enums: {
     "NOT_AVAILABLE": 16643,
     "AUTHENTICATION_FAILED": 16897,
     "INTERNAL_SERVER_ERROR": 20737,
-    "SERVICE_UNAVAILABLE": 20739
+    "SERVICE_UNAVAILABLE": 20739,
   },
   "zf_EnumC40713a": {
     "PERSONAL": 1,
     "ROOM": 2,
     "GROUP": 3,
-    "SQUARE_CHAT": 4
+    "SQUARE_CHAT": 4,
   },
   "zf_EnumC40715c": {
     "REGULAR": 1,
     "PRIORITY": 2,
-    "MORE": 3
+    "MORE": 3,
   },
   "zf_EnumC40716d": {
     "INVALID_REQUEST": 1,
     "UNAUTHORIZED": 2,
-    "SERVER_ERROR": 100
-  }
+    "SERVER_ERROR": 100,
+  },
 };
-export type AR0_g = 16641 | "ILLEGAL_ARGUMENT"
-  | 16642 | "MAJOR_VERSION_NOT_SUPPORTED"
-  | 16897 | "AUTHENTICATION_FAILED"
-  | 20737 | "INTERNAL_SERVER_ERROR"
-  | 20739 | "SERVICE_UNAVAILABLE"
-  ;
-
-export type AR0_q = 0 | "NOT_PURCHASED"
-  | 1 | "SUBSCRIPTION"
-  ;
-
-export type AccountMigrationPincodeType = 0 | "NOT_APPLICABLE"
-  | 1 | "NOT_SET"
-  | 2 | "SET"
-  | 3 | "NEED_ENFORCED_INPUT"
-  ;
-
-export type ApplicationType = 16 | "IOS"
-  | 17 | "IOS_RC"
-  | 18 | "IOS_BETA"
-  | 19 | "IOS_ALPHA"
-  | 32 | "ANDROID"
-  | 33 | "ANDROID_RC"
-  | 34 | "ANDROID_BETA"
-  | 35 | "ANDROID_ALPHA"
-  | 48 | "WAP"
-  | 49 | "WAP_RC"
-  | 50 | "WAP_BETA"
-  | 51 | "WAP_ALPHA"
-  | 64 | "BOT"
-  | 65 | "BOT_RC"
-  | 66 | "BOT_BETA"
-  | 67 | "BOT_ALPHA"
-  | 80 | "WEB"
-  | 81 | "WEB_RC"
-  | 82 | "WEB_BETA"
-  | 83 | "WEB_ALPHA"
-  | 96 | "DESKTOPWIN"
-  | 97 | "DESKTOPWIN_RC"
-  | 98 | "DESKTOPWIN_BETA"
-  | 99 | "DESKTOPWIN_ALPHA"
-  | 112 | "DESKTOPMAC"
-  | 113 | "DESKTOPMAC_RC"
-  | 114 | "DESKTOPMAC_BETA"
-  | 115 | "DESKTOPMAC_ALPHA"
-  | 128 | "CHANNELGW"
-  | 129 | "CHANNELGW_RC"
-  | 130 | "CHANNELGW_BETA"
-  | 131 | "CHANNELGW_ALPHA"
-  | 144 | "CHANNELCP"
-  | 145 | "CHANNELCP_RC"
-  | 146 | "CHANNELCP_BETA"
-  | 147 | "CHANNELCP_ALPHA"
-  | 160 | "WINPHONE"
-  | 161 | "WINPHONE_RC"
-  | 162 | "WINPHONE_BETA"
-  | 163 | "WINPHONE_ALPHA"
-  | 176 | "BLACKBERRY"
-  | 177 | "BLACKBERRY_RC"
-  | 178 | "BLACKBERRY_BETA"
-  | 179 | "BLACKBERRY_ALPHA"
-  | 192 | "WINMETRO"
-  | 193 | "WINMETRO_RC"
-  | 194 | "WINMETRO_BETA"
-  | 195 | "WINMETRO_ALPHA"
-  | 200 | "S40"
-  | 209 | "S40_RC"
-  | 210 | "S40_BETA"
-  | 211 | "S40_ALPHA"
-  | 224 | "CHRONO"
-  | 225 | "CHRONO_RC"
-  | 226 | "CHRONO_BETA"
-  | 227 | "CHRONO_ALPHA"
-  | 256 | "TIZEN"
-  | 257 | "TIZEN_RC"
-  | 258 | "TIZEN_BETA"
-  | 259 | "TIZEN_ALPHA"
-  | 272 | "VIRTUAL"
-  | 288 | "FIREFOXOS"
-  | 289 | "FIREFOXOS_RC"
-  | 290 | "FIREFOXOS_BETA"
-  | 291 | "FIREFOXOS_ALPHA"
-  | 304 | "IOSIPAD"
-  | 305 | "IOSIPAD_RC"
-  | 306 | "IOSIPAD_BETA"
-  | 307 | "IOSIPAD_ALPHA"
-  | 320 | "BIZIOS"
-  | 321 | "BIZIOS_RC"
-  | 322 | "BIZIOS_BETA"
-  | 323 | "BIZIOS_ALPHA"
-  | 336 | "BIZANDROID"
-  | 337 | "BIZANDROID_RC"
-  | 338 | "BIZANDROID_BETA"
-  | 339 | "BIZANDROID_ALPHA"
-  | 352 | "BIZBOT"
-  | 353 | "BIZBOT_RC"
-  | 354 | "BIZBOT_BETA"
-  | 355 | "BIZBOT_ALPHA"
-  | 368 | "CHROMEOS"
-  | 369 | "CHROMEOS_RC"
-  | 370 | "CHROMEOS_BETA"
-  | 371 | "CHROMEOS_ALPHA"
-  | 384 | "ANDROIDLITE"
-  | 385 | "ANDROIDLITE_RC"
-  | 386 | "ANDROIDLITE_BETA"
-  | 387 | "ANDROIDLITE_ALPHA"
-  | 400 | "WIN10"
-  | 401 | "WIN10_RC"
-  | 402 | "WIN10_BETA"
-  | 403 | "WIN10_ALPHA"
-  | 416 | "BIZWEB"
-  | 417 | "BIZWEB_RC"
-  | 418 | "BIZWEB_BETA"
-  | 419 | "BIZWEB_ALPHA"
-  | 432 | "DUMMYPRIMARY"
-  | 433 | "DUMMYPRIMARY_RC"
-  | 434 | "DUMMYPRIMARY_BETA"
-  | 435 | "DUMMYPRIMARY_ALPHA"
-  | 448 | "SQUARE"
-  | 449 | "SQUARE_RC"
-  | 450 | "SQUARE_BETA"
-  | 451 | "SQUARE_ALPHA"
-  | 464 | "INTERNAL"
-  | 465 | "INTERNAL_RC"
-  | 466 | "INTERNAL_BETA"
-  | 467 | "INTERNAL_ALPHA"
-  | 480 | "CLOVAFRIENDS"
-  | 481 | "CLOVAFRIENDS_RC"
-  | 482 | "CLOVAFRIENDS_BETA"
-  | 483 | "CLOVAFRIENDS_ALPHA"
-  | 496 | "WATCHOS"
-  | 497 | "WATCHOS_RC"
-  | 498 | "WATCHOS_BETA"
-  | 499 | "WATCHOS_ALPHA"
-  | 512 | "OPENCHAT_PLUG"
-  | 513 | "OPENCHAT_PLUG_RC"
-  | 514 | "OPENCHAT_PLUG_BETA"
-  | 515 | "OPENCHAT_PLUG_ALPHA"
-  | 528 | "ANDROIDSECONDARY"
-  | 529 | "ANDROIDSECONDARY_RC"
-  | 530 | "ANDROIDSECONDARY_BETA"
-  | 531 | "ANDROIDSECONDARY_ALPHA"
-  | 544 | "WEAROS"
-  | 545 | "WEAROS_RC"
-  | 546 | "WEAROS_BETA"
-  | 547 | "WEAROS_ALPHA"
-  ;
-
-export type BotType = 0 | "RESERVED"
-  | 1 | "OFFICIAL"
-  | 2 | "LINE_AT_0"
-  | 3 | "LINE_AT"
-  ;
-
-export type CarrierCode = 0 | "NOT_SPECIFIED"
-  | 1 | "JP_DOCOMO"
-  | 2 | "JP_AU"
-  | 3 | "JP_SOFTBANK"
-  | 4 | "JP_DOCOMO_LINE"
-  | 5 | "JP_SOFTBANK_LINE"
-  | 6 | "JP_AU_LINE"
-  | 7 | "JP_RAKUTEN"
-  | 8 | "JP_MVNO"
-  | 9 | "JP_USER_SELECTED_LINE"
-  | 17 | "KR_SKT"
-  | 18 | "KR_KT"
-  | 19 | "KR_LGT"
-  ;
-
-export type ChannelErrorCode = 0 | "ILLEGAL_ARGUMENT"
-  | 1 | "INTERNAL_ERROR"
-  | 2 | "CONNECTION_ERROR"
-  | 3 | "AUTHENTICATIONI_FAILED"
-  | 4 | "NEED_PERMISSION_APPROVAL"
-  | 5 | "COIN_NOT_USABLE"
-  | 6 | "WEBVIEW_NOT_ALLOWED"
-  | 7 | "NOT_AVAILABLE_API"
-  ;
-
-export type ContactAttribute = 1 | "CONTACT_ATTRIBUTE_CAPABLE_VOICE_CALL"
-  | 2 | "CONTACT_ATTRIBUTE_CAPABLE_VIDEO_CALL"
-  | 16 | "CONTACT_ATTRIBUTE_CAPABLE_MY_HOME"
-  | 32 | "CONTACT_ATTRIBUTE_CAPABLE_BUDDY"
-  ;
-
-export type ContactSetting = 1 | "CONTACT_SETTING_NOTIFICATION_DISABLE"
-  | 2 | "CONTACT_SETTING_DISPLAY_NAME_OVERRIDE"
-  | 4 | "CONTACT_SETTING_CONTACT_HIDE"
-  | 8 | "CONTACT_SETTING_FAVORITE"
-  | 16 | "CONTACT_SETTING_DELETE"
-  | 32 | "CONTACT_SETTING_FRIEND_RINGTONE"
-  | 64 | "CONTACT_SETTING_FRIEND_RINGBACK_TONE"
-  ;
-
-export type ContactStatus = 0 | "UNSPECIFIED"
-  | 1 | "FRIEND"
-  | 2 | "FRIEND_BLOCKED"
-  | 3 | "RECOMMEND"
-  | 4 | "RECOMMEND_BLOCKED"
-  | 5 | "DELETED"
-  | 6 | "DELETED_BLOCKED"
-  ;
-
-export type ContactType = 0 | "MID"
-  | 1 | "PHONE"
-  | 2 | "EMAIL"
-  | 3 | "USERID"
-  | 4 | "PROXIMITY"
-  | 5 | "GROUP"
-  | 6 | "USER"
-  | 7 | "QRCODE"
-  | 8 | "PROMOTION_BOT"
-  | 9 | "CONTACT_MESSAGE"
-  | 10 | "FRIEND_REQUEST"
-  | 11 | "BEACON"
-  | 128 | "REPAIR"
-  | 2305 | "FACEBOOK"
-  | 2306 | "SINA"
-  | 2307 | "RENREN"
-  | 2308 | "FEIXIN"
-  | 2309 | "BBM"
-  ;
-
-export type ContentType = 0 | "NONE"
-  | 1 | "IMAGE"
-  | 2 | "VIDEO"
-  | 3 | "AUDIO"
-  | 4 | "HTML"
-  | 5 | "PDF"
-  | 6 | "CALL"
-  | 7 | "STICKER"
-  | 8 | "PRESENCE"
-  | 9 | "GIFT"
-  | 10 | "GROUPBOARD"
-  | 11 | "APPLINK"
-  | 12 | "LINK"
-  | 13 | "CONTACT"
-  | 14 | "FILE"
-  | 15 | "LOCATION"
-  | 16 | "POSTNOTIFICATION"
-  | 17 | "RICH"
-  | 18 | "CHATEVENT"
-  | 19 | "MUSIC"
-  | 20 | "PAYMENT"
-  | 21 | "EXTIMAGE"
-  | 22 | "FLEX"
-  ;
-
-export type Eg_EnumC8927a = 1 | "NEW"
-  | 2 | "UPDATE"
-  | 3 | "EVENT"
-  ;
-
-export type EmailConfirmationStatus = 0 | "NOT_SPECIFIED"
-  | 1 | "NOT_YET"
-  | 3 | "DONE"
-  | 4 | "NEED_ENFORCED_INPUT"
-  ;
-
-export type ErrorCode = 0 | "ILLEGAL_ARGUMENT"
-  | 1 | "AUTHENTICATION_FAILED"
-  | 2 | "DB_FAILED"
-  | 3 | "INVALID_STATE"
-  | 4 | "EXCESSIVE_ACCESS"
-  | 5 | "NOT_FOUND"
-  | 6 | "INVALID_LENGTH"
-  | 7 | "NOT_AVAILABLE_USER"
-  | 8 | "NOT_AUTHORIZED_DEVICE"
-  | 9 | "INVALID_MID"
-  | 10 | "NOT_A_MEMBER"
-  | 11 | "INCOMPATIBLE_APP_VERSION"
-  | 12 | "NOT_READY"
-  | 13 | "NOT_AVAILABLE_SESSION"
-  | 14 | "NOT_AUTHORIZED_SESSION"
-  | 15 | "SYSTEM_ERROR"
-  | 16 | "NO_AVAILABLE_VERIFICATION_METHOD"
-  | 17 | "NOT_AUTHENTICATED"
-  | 18 | "INVALID_IDENTITY_CREDENTIAL"
-  | 19 | "NOT_AVAILABLE_IDENTITY_IDENTIFIER"
-  | 20 | "INTERNAL_ERROR"
-  | 21 | "NO_SUCH_IDENTITY_IDENFIER"
-  | 22 | "DEACTIVATED_ACCOUNT_BOUND_TO_THIS_IDENTITY"
-  | 23 | "ILLEGAL_IDENTITY_CREDENTIAL"
-  | 24 | "UNKNOWN_CHANNEL"
-  | 25 | "NO_SUCH_MESSAGE_BOX"
-  | 26 | "NOT_AVAILABLE_MESSAGE_BOX"
-  | 27 | "CHANNEL_DOES_NOT_MATCH"
-  | 28 | "NOT_YOUR_MESSAGE"
-  | 29 | "MESSAGE_DEFINED_ERROR"
-  | 30 | "USER_CANNOT_ACCEPT_PRESENTS"
-  | 32 | "USER_NOT_STICKER_OWNER"
-  | 33 | "MAINTENANCE_ERROR"
-  | 34 | "ACCOUNT_NOT_MATCHED"
-  | 35 | "ABUSE_BLOCK"
-  | 36 | "NOT_FRIEND"
-  | 37 | "NOT_ALLOWED_CALL"
-  | 38 | "BLOCK_FRIEND"
-  | 39 | "INCOMPATIBLE_VOIP_VERSION"
-  | 40 | "INVALID_SNS_ACCESS_TOKEN"
-  | 41 | "EXTERNAL_SERVICE_NOT_AVAILABLE"
-  | 42 | "NOT_ALLOWED_ADD_CONTACT"
-  | 43 | "NOT_CERTIFICATED"
-  | 44 | "NOT_ALLOWED_SECONDARY_DEVICE"
-  | 45 | "INVALID_PIN_CODE"
-  | 47 | "EXCEED_FILE_MAX_SIZE"
-  | 48 | "EXCEED_DAILY_QUOTA"
-  | 49 | "NOT_SUPPORT_SEND_FILE"
-  | 50 | "MUST_UPGRADE"
-  | 51 | "NOT_AVAILABLE_PIN_CODE_SESSION"
-  | 52 | "EXPIRED_REVISION"
-  | 54 | "NOT_YET_PHONE_NUMBER"
-  | 55 | "BAD_CALL_NUMBER"
-  | 56 | "UNAVAILABLE_CALL_NUMBER"
-  | 57 | "NOT_SUPPORT_CALL_SERVICE"
-  | 58 | "CONGESTION_CONTROL"
-  | 59 | "NO_BALANCE"
-  | 60 | "NOT_PERMITTED_CALLER_ID"
-  | 61 | "NO_CALLER_ID_LIMIT_EXCEEDED"
-  | 62 | "CALLER_ID_VERIFICATION_REQUIRED"
-  | 63 | "NO_CALLER_ID_LIMIT_EXCEEDED_AND_VERIFICATION_REQUIRED"
-  | 64 | "MESSAGE_NOT_FOUND"
-  | 65 | "INVALID_ACCOUNT_MIGRATION_PINCODE_FORMAT"
-  | 66 | "ACCOUNT_MIGRATION_PINCODE_NOT_MATCHED"
-  | 67 | "ACCOUNT_MIGRATION_PINCODE_BLOCKED"
-  | 69 | "INVALID_PASSWORD_FORMAT"
-  | 70 | "FEATURE_RESTRICTED"
-  | 71 | "MESSAGE_NOT_DESTRUCTIBLE"
-  | 72 | "PAID_CALL_REDEEM_FAILED"
-  | 73 | "PREVENTED_JOIN_BY_TICKET"
-  | 75 | "SEND_MESSAGE_NOT_PERMITTED_FROM_LINE_AT"
-  | 76 | "SEND_MESSAGE_NOT_PERMITTED_WHILE_AUTO_REPLY"
-  | 77 | "SECURITY_CENTER_NOT_VERIFIED"
-  | 78 | "SECURITY_CENTER_BLOCKED_BY_SETTING"
-  | 79 | "SECURITY_CENTER_BLOCKED"
-  | 80 | "TALK_PROXY_EXCEPTION"
-  | 81 | "E2EE_INVALID_PROTOCOL"
-  | 82 | "E2EE_RETRY_ENCRYPT"
-  | 83 | "E2EE_UPDATE_SENDER_KEY"
-  | 84 | "E2EE_UPDATE_RECEIVER_KEY"
-  | 85 | "E2EE_INVALID_ARGUMENT"
-  | 86 | "E2EE_INVALID_VERSION"
-  | 87 | "E2EE_SENDER_DISABLED"
-  | 88 | "E2EE_RECEIVER_DISABLED"
-  | 89 | "E2EE_SENDER_NOT_ALLOWED"
-  | 90 | "E2EE_RECEIVER_NOT_ALLOWED"
-  | 91 | "E2EE_RESEND_FAIL"
-  | 92 | "E2EE_RESEND_OK"
-  | 93 | "HITOKOTO_BACKUP_NO_AVAILABLE_DATA"
-  | 94 | "E2EE_UPDATE_PRIMARY_DEVICE"
-  | 95 | "SUCCESS"
-  | 96 | "CANCEL"
-  | 97 | "E2EE_PRIMARY_NOT_SUPPORT"
-  | 98 | "E2EE_RETRY_PLAIN"
-  | 99 | "E2EE_RECREATE_GROUP_KEY"
-  | 100 | "E2EE_GROUP_TOO_MANY_MEMBERS"
-  | 101 | "SERVER_BUSY"
-  | 102 | "NOT_ALLOWED_ADD_FOLLOW"
-  | 103 | "INCOMING_FRIEND_REQUEST_LIMIT"
-  | 104 | "OUTGOING_FRIEND_REQUEST_LIMIT"
-  | 105 | "OUTGOING_FRIEND_REQUEST_QUOTA"
-  | 106 | "DUPLICATED"
-  | 107 | "BANNED"
-  | 108 | "NOT_AN_INVITEE"
-  | 109 | "NOT_AN_OUTSIDER"
-  | 111 | "EMPTY_GROUP"
-  | 112 | "EXCEED_FOLLOW_LIMIT"
-  | 113 | "UNSUPPORTED_ACCOUNT_TYPE"
-  | 114 | "AGREEMENT_REQUIRED"
-  | 115 | "SHOULD_RETRY"
-  | 116 | "OVER_MAX_CHATS_PER_USER"
-  | 117 | "NOT_AVAILABLE_API"
-  | 118 | "INVALID_OTP"
-  | 119 | "MUST_REFRESH_V3_TOKEN"
-  | 120 | "ALREADY_EXPIRED"
-  | 121 | "USER_NOT_STICON_OWNER"
-  | 122 | "REFRESH_MEDIA_FLOW"
-  | 123 | "EXCEED_FOLLOWER_LIMIT"
-  | 124 | "INCOMPATIBLE_APP_TYPE"
-  | 125 | "NOT_PREMIUM"
-  ;
-
-export type Fg_a = 0 | "INTERNAL_ERROR"
-  | 1 | "ILLEGAL_ARGUMENT"
-  | 2 | "VERIFICATION_FAILED"
-  | 3 | "NOT_FOUND"
-  | 4 | "RETRY_LATER"
-  | 5 | "HUMAN_VERIFICATION_REQUIRED"
-  | 6 | "NOT_ENABLED"
-  | 100 | "INVALID_CONTEXT"
-  | 101 | "APP_UPGRADE_REQUIRED"
-  | 102 | "NO_CONTENT"
-  ;
-
-export type FriendRequestStatus = 0 | "NONE"
-  | 1 | "AVAILABLE"
-  | 2 | "ALREADY_REQUESTED"
-  | 3 | "UNAVAILABLE"
-  ;
-
-export type IdentityProvider = 0 | "UNKNOWN"
-  | 1 | "LINE"
-  | 2 | "NAVER_KR"
-  | 3 | "LINE_PHONE"
-  ;
-
-export type LN0_F0 = 0 | "UNKNOWN"
-  | 1 | "INVALID_TARGET_USER"
-  | 2 | "AGE_VALIDATION"
-  | 3 | "TOO_MANY_FRIENDS"
-  | 4 | "TOO_MANY_REQUESTS"
-  | 5 | "MALFORMED_REQUEST"
-  | 6 | "TRACKING_META_QRCODE_FAVORED"
-  ;
-
-export type LN0_X0 = 1 | "USER"
-  | 2 | "BOT"
-  ;
-
-export type MIDType = 0 | "USER"
-  | 1 | "ROOM"
-  | 2 | "GROUP"
-  | 3 | "SQUARE"
-  | 4 | "SQUARE_CHAT"
-  | 5 | "SQUARE_MEMBER"
-  | 6 | "BOT"
-  | 7 | "SQUARE_THREAD"
-  ;
-
-export type NZ0_B0 = 0 | "PAY"
-  | 1 | "POI"
-  | 2 | "FX"
-  | 3 | "SEC"
-  | 4 | "BIT"
-  | 5 | "LIN"
-  | 6 | "SCO"
-  | 7 | "POC"
-  ;
-
-export type NZ0_C0 = 0 | "OK"
-  | 1 | "MAINTENANCE"
-  | 2 | "TPS_EXCEEDED"
-  | 3 | "NOT_FOUND"
-  | 4 | "BLOCKED"
-  | 5 | "INTERNAL_ERROR"
-  | 6 | "WALLET_CMS_MAINTENANCE"
-  ;
-
-export type NZ0_EnumC12154b1 = 0 | "NORMAL"
-  | 1 | "CAMERA"
-  ;
-
-export type NZ0_EnumC12169g1 = 101 | "WALLET"
-  | 201 | "ASSET"
-  | 301 | "SHOPPING"
-  ;
-
-export type NZ0_EnumC12170h = 0 | "HIDE_BADGE"
-  | 1 | "SHOW_BADGE"
-  ;
-
-export type NZ0_EnumC12188n = 0 | "OK"
-  | 1 | "UNAVAILABLE"
-  | 2 | "DUPLICATAE_REGISTRATION"
-  | 3 | "INTERNAL_ERROR"
-  ;
-
-export type NZ0_EnumC12192o0 = 0 | "LV1"
-  | 1 | "LV2"
-  | 2 | "LV3"
-  | 3 | "LV9"
-  ;
-
-export type NZ0_EnumC12193o1 = 400 | "INVALID_PARAMETER"
-  | 401 | "AUTHENTICATION_FAILED"
-  | 500 | "INTERNAL_SERVER_ERROR"
-  | 503 | "SERVICE_IN_MAINTENANCE_MODE"
-  ;
-
-export type NZ0_EnumC12195p0 = 1 | "ALIVE"
-  | 2 | "SUSPENDED"
-  | 3 | "UNREGISTERED"
-  ;
-
-export type NZ0_EnumC12197q = 0 | "PREFIX"
-  | 1 | "SUFFIX"
-  ;
-
-export type NZ0_EnumC12218x0 = 0 | "NO_CONTENT"
-  | 1 | "OK"
-  | 2 | "ERROR"
-  ;
-
-export type NZ0_I0 = 0 | "A"
-  | 1 | "B"
-  | 2 | "C"
-  | 3 | "D"
-  | 4 | "UNKNOWN"
-  ;
-
-export type NZ0_K0 = 0 | "POCKET_MONEY"
-  | 1 | "REFINANCE"
-  ;
-
-export type NZ0_N0 = 0 | "COMPACT"
-  | 1 | "EXPANDED"
-  ;
-
-export type NZ0_S0 = 0 | "CARD"
-  | 1 | "ACTION"
-  ;
-
-export type NZ0_W0 = 0 | "OK"
-  | 1 | "INTERNAL_ERROR"
-  ;
-
-export type NotificationStatus = 1 | "NOTIFICATION_ITEM_EXIST"
-  | 2 | "TIMELINE_ITEM_EXIST"
-  | 4 | "NOTE_GROUP_NEW_ITEM_EXIST"
-  | 8 | "TIMELINE_BUDDYGROUP_CHANGED"
-  | 16 | "NOTE_ONE_TO_ONE_NEW_ITEM_EXIST"
-  | 32 | "ALBUM_ITEM_EXIST"
-  | 64 | "TIMELINE_ITEM_DELETED"
-  | 128 | "OTOGROUP_ITEM_EXIST"
-  | 256 | "GROUPHOME_NEW_ITEM_EXIST"
-  | 512 | "GROUPHOME_HIDDEN_ITEM_CHANGED"
-  | 1024 | "NOTIFICATION_ITEM_CHANGED"
-  | 2048 | "BEAD_ITEM_HIDE"
-  | 4096 | "BEAD_ITEM_SHOW"
-  | 8192 | "LINE_TICKET_UPDATED"
-  | 16384 | "TIMELINE_STORY_UPDATED"
-  | 32768 | "SMARTCH_UPDATED"
-  | 65536 | "AVATAR_UPDATED"
-  | 131072 | "HOME_NOTIFICATION_ITEM_EXIST"
-  | 262144 | "TIMELINE_REBOOT_COMPLETED"
-  | 524288 | "TIMELINE_GUIDE_STORY_UPDATED"
-  | 1048576 | "TIMELINE_F2F_COMPLETED"
-  | 2097152 | "VOOM_LIVE_STATE_CHANGED"
-  | 4194304 | "VOOM_ACTIVITY_REWARD_ITEM_EXIST"
-  ;
-
-export type NotificationType = 1 | "APPLE_APNS"
-  | 2 | "GOOGLE_C2DM"
-  | 3 | "NHN_NNI"
-  | 4 | "SKT_AOM"
-  | 5 | "MS_MPNS"
-  | 6 | "RIM_BIS"
-  | 7 | "GOOGLE_GCM"
-  | 8 | "NOKIA_NNAPI"
-  | 9 | "TIZEN"
-  | 10 | "MOZILLA_SIMPLE"
-  | 17 | "LINE_BOT"
-  | 18 | "LINE_WAP"
-  | 19 | "APPLE_APNS_VOIP"
-  | 20 | "MS_WNS"
-  | 21 | "GOOGLE_FCM"
-  | 22 | "CLOVA"
-  | 23 | "CLOVA_VOIP"
-  | 24 | "HUAWEI_HCM"
-  ;
-
-export type Ob1_B0 = 0 | "FOREGROUND"
-  | 1 | "BACKGROUND"
-  ;
-
-export type Ob1_C1 = 0 | "NORMAL"
-  | 1 | "BIG"
-  ;
-
-export type Ob1_D0 = 0 | "PURCHASE_ONLY"
-  | 1 | "PURCHASE_OR_SUBSCRIPTION"
-  | 2 | "SUBSCRIPTION_ONLY"
-  ;
-
-export type Ob1_EnumC12607a1 = 1 | "DEFAULT"
-  | 2 | "VIEW_VIDEO"
-  ;
-
-export type Ob1_EnumC12610b1 = 0 | "NONE"
-  | 2 | "BUDDY"
-  | 3 | "INSTALL"
-  | 4 | "MISSION"
-  | 5 | "MUSTBUY"
-  ;
-
-export type Ob1_EnumC12631i1 = 0 | "UNKNOWN"
-  | 1 | "PRODUCT"
-  | 2 | "USER"
-  | 3 | "PREMIUM_USER"
-  ;
-
-export type Ob1_EnumC12638l = 0 | "VALID"
-  | 1 | "INVALID"
-  ;
-
-export type Ob1_EnumC12641m = 1 | "PREMIUM"
-  | 2 | "VERIFIED"
-  | 3 | "UNVERIFIED"
-  ;
-
-export type Ob1_EnumC12652p1 = 0 | "UNKNOWN"
-  | 1 | "NONE"
-  | 16641 | "ILLEGAL_ARGUMENT"
-  | 16642 | "NOT_FOUND"
-  | 16643 | "NOT_AVAILABLE"
-  | 16644 | "NOT_PAID_PRODUCT"
-  | 16645 | "NOT_FREE_PRODUCT"
-  | 16646 | "ALREADY_OWNED"
-  | 16647 | "ERROR_WITH_CUSTOM_MESSAGE"
-  | 16648 | "NOT_AVAILABLE_TO_RECIPIENT"
-  | 16649 | "NOT_AVAILABLE_FOR_CHANNEL_ID"
-  | 16650 | "NOT_SALE_FOR_COUNTRY"
-  | 16651 | "NOT_SALES_PERIOD"
-  | 16652 | "NOT_SALE_FOR_DEVICE"
-  | 16653 | "NOT_SALE_FOR_VERSION"
-  | 16654 | "ALREADY_EXPIRED"
-  | 16655 | "LIMIT_EXCEEDED"
-  | 16656 | "MISSING_CAPABILITY"
-  | 16897 | "AUTHENTICATION_FAILED"
-  | 17153 | "BALANCE_SHORTAGE"
-  | 20737 | "INTERNAL_SERVER_ERROR"
-  | 20738 | "SERVICE_IN_MAINTENANCE_MODE"
-  | 20739 | "SERVICE_UNAVAILABLE"
-  ;
-
-export type Ob1_EnumC12656r0 = 0 | "OK"
-  | 1 | "PRODUCT_UNSUPPORTED"
-  | 2 | "TEXT_NOT_SPECIFIED"
-  | 3 | "TEXT_STYLE_UNAVAILABLE"
-  | 4 | "CHARACTER_COUNT_LIMIT_EXCEEDED"
-  | 5 | "CONTAINS_INVALID_WORD"
-  ;
-
-export type Ob1_EnumC12664u = 0 | "UNKNOWN"
-  | 1 | "NONE"
-  | 16641 | "ILLEGAL_ARGUMENT"
-  | 16642 | "NOT_FOUND"
-  | 16643 | "NOT_AVAILABLE"
-  | 16644 | "MAX_AMOUNT_OF_PRODUCTS_REACHED"
-  | 16645 | "PRODUCT_IS_NOT_PREMIUM"
-  | 16646 | "PRODUCT_IS_NOT_AVAILABLE_FOR_USER"
-  | 16897 | "AUTHENTICATION_FAILED"
-  | 20737 | "INTERNAL_SERVER_ERROR"
-  | 20739 | "SERVICE_UNAVAILABLE"
-  ;
-
-export type Ob1_EnumC12666u1 = 0 | "POPULAR"
-  | 1 | "NEW_RELEASE"
-  | 2 | "EVENT"
-  | 3 | "RECOMMENDED"
-  | 4 | "POPULAR_WEEKLY"
-  | 5 | "POPULAR_MONTHLY"
-  | 6 | "POPULAR_RECENTLY_PUBLISHED"
-  | 7 | "BUDDY"
-  | 8 | "EXTRA_EVENT"
-  | 9 | "BROWSING_HISTORY"
-  | 10 | "POPULAR_TOTAL_SALES"
-  | 11 | "NEW_SUBSCRIPTION"
-  | 12 | "POPULAR_SUBSCRIPTION_30D"
-  | 13 | "CPD_STICKER"
-  | 14 | "POPULAR_WITH_FREE"
-  ;
-
-export type Ob1_F1 = 1 | "STATIC"
-  | 2 | "ANIMATION"
-  ;
-
-export type Ob1_I = 0 | "STATIC"
-  | 1 | "POPULAR"
-  | 2 | "NEW_RELEASE"
-  ;
-
-export type Ob1_J0 = 0 | "ON_SALE"
-  | 1 | "OUTDATED_VERSION"
-  | 2 | "NOT_ON_SALE"
-  ;
-
-export type Ob1_J1 = 0 | "OK"
-  | 1 | "INVALID_PARAMETER"
-  | 2 | "NOT_FOUND"
-  | 3 | "NOT_SUPPORTED"
-  | 4 | "CONFLICT"
-  | 5 | "NOT_ELIGIBLE"
-  ;
-
-export type Ob1_K1 = 0 | "GOOGLE"
-  | 1 | "APPLE"
-  | 2 | "WEBSTORE"
-  | 3 | "LINEMO"
-  | 4 | "LINE_MUSIC"
-  | 5 | "LYP"
-  | 6 | "TW_CHT"
-  | 7 | "FREEMIUM"
-  ;
-
-export type Ob1_M1 = 0 | "OK"
-  | 1 | "UNKNOWN"
-  | 2 | "NOT_SUPPORTED"
-  | 3 | "NO_SUBSCRIPTION"
-  | 4 | "SUBSCRIPTION_EXISTS"
-  | 5 | "NOT_AVAILABLE"
-  | 6 | "CONFLICT"
-  | 7 | "OUTDATED_VERSION"
-  | 8 | "NO_STUDENT_INFORMATION"
-  | 9 | "ACCOUNT_HOLD"
-  | 10 | "RETRY_STATE"
-  ;
-
-export type Ob1_O0 = 1 | "STICKER"
-  | 2 | "THEME"
-  | 3 | "STICON"
-  ;
-
-export type Ob1_O1 = 0 | "AVAILABLE"
-  | 1 | "DIFFERENT_STORE"
-  | 2 | "NOT_STUDENT"
-  | 3 | "ALREADY_PURCHASED"
-  ;
-
-export type Ob1_P1 = 1 | "GENERAL"
-  | 2 | "STUDENT"
-  ;
-
-export type Ob1_Q1 = 1 | "BASIC"
-  | 2 | "DELUXE"
-  ;
-
-export type Ob1_R1 = 1 | "MONTHLY"
-  | 2 | "YEARLY"
-  ;
-
-export type Ob1_U1 = 0 | "OK"
-  | 1 | "UNKNOWN"
-  | 2 | "NO_SUBSCRIPTION"
-  | 3 | "EXISTS"
-  | 4 | "NOT_FOUND"
-  | 5 | "EXCEEDS_LIMIT"
-  | 6 | "NOT_AVAILABLE"
-  ;
-
-export type Ob1_V1 = 1 | "DATE_ASC"
-  | 2 | "DATE_DESC"
-  ;
-
-export type Ob1_X1 = 0 | "GENERAL"
-  | 1 | "CREATORS"
-  | 2 | "STICON"
-  ;
-
-export type Ob1_a2 = 0 | "NOT_PURCHASED"
-  | 1 | "SUBSCRIPTION"
-  | 2 | "NOT_SUBSCRIBED"
-  | 3 | "NOT_ACCEPTED"
-  | 4 | "NOT_PURCHASED_U2I"
-  | 5 | "BUDDY"
-  ;
-
-export type Ob1_c2 = 1 | "STATIC"
-  | 2 | "ANIMATION"
-  ;
-
-export type OpType = 0 | "END_OF_OPERATION"
-  | 1 | "UPDATE_PROFILE"
-  | 2 | "NOTIFIED_UPDATE_PROFILE"
-  | 3 | "REGISTER_USERID"
-  | 4 | "ADD_CONTACT"
-  | 5 | "NOTIFIED_ADD_CONTACT"
-  | 6 | "BLOCK_CONTACT"
-  | 7 | "UNBLOCK_CONTACT"
-  | 8 | "NOTIFIED_RECOMMEND_CONTACT"
-  | 9 | "CREATE_GROUP"
-  | 10 | "UPDATE_GROUP"
-  | 11 | "NOTIFIED_UPDATE_GROUP"
-  | 12 | "INVITE_INTO_GROUP"
-  | 13 | "NOTIFIED_INVITE_INTO_GROUP"
-  | 14 | "LEAVE_GROUP"
-  | 15 | "NOTIFIED_LEAVE_GROUP"
-  | 16 | "ACCEPT_GROUP_INVITATION"
-  | 17 | "NOTIFIED_ACCEPT_GROUP_INVITATION"
-  | 18 | "KICKOUT_FROM_GROUP"
-  | 19 | "NOTIFIED_KICKOUT_FROM_GROUP"
-  | 20 | "CREATE_ROOM"
-  | 21 | "INVITE_INTO_ROOM"
-  | 22 | "NOTIFIED_INVITE_INTO_ROOM"
-  | 23 | "LEAVE_ROOM"
-  | 24 | "NOTIFIED_LEAVE_ROOM"
-  | 25 | "SEND_MESSAGE"
-  | 26 | "RECEIVE_MESSAGE"
-  | 27 | "SEND_MESSAGE_RECEIPT"
-  | 28 | "RECEIVE_MESSAGE_RECEIPT"
-  | 29 | "SEND_CONTENT_RECEIPT"
-  | 30 | "RECEIVE_ANNOUNCEMENT"
-  | 31 | "CANCEL_INVITATION_GROUP"
-  | 32 | "NOTIFIED_CANCEL_INVITATION_GROUP"
-  | 33 | "NOTIFIED_UNREGISTER_USER"
-  | 34 | "REJECT_GROUP_INVITATION"
-  | 35 | "NOTIFIED_REJECT_GROUP_INVITATION"
-  | 36 | "UPDATE_SETTINGS"
-  | 37 | "NOTIFIED_REGISTER_USER"
-  | 38 | "INVITE_VIA_EMAIL"
-  | 39 | "NOTIFIED_REQUEST_RECOVERY"
-  | 40 | "SEND_CHAT_CHECKED"
-  | 41 | "SEND_CHAT_REMOVED"
-  | 42 | "NOTIFIED_FORCE_SYNC"
-  | 43 | "SEND_CONTENT"
-  | 44 | "SEND_MESSAGE_MYHOME"
-  | 45 | "NOTIFIED_UPDATE_CONTENT_PREVIEW"
-  | 46 | "REMOVE_ALL_MESSAGES"
-  | 47 | "NOTIFIED_UPDATE_PURCHASES"
-  | 48 | "DUMMY"
-  | 49 | "UPDATE_CONTACT"
-  | 50 | "NOTIFIED_RECEIVED_CALL"
-  | 51 | "CANCEL_CALL"
-  | 52 | "NOTIFIED_REDIRECT"
-  | 53 | "NOTIFIED_CHANNEL_SYNC"
-  | 54 | "FAILED_SEND_MESSAGE"
-  | 55 | "NOTIFIED_READ_MESSAGE"
-  | 56 | "FAILED_EMAIL_CONFIRMATION"
-  | 58 | "NOTIFIED_CHAT_CONTENT"
-  | 59 | "NOTIFIED_PUSH_NOTICENTER_ITEM"
-  | 60 | "NOTIFIED_JOIN_CHAT"
-  | 61 | "NOTIFIED_LEAVE_CHAT"
-  | 62 | "NOTIFIED_TYPING"
-  | 63 | "FRIEND_REQUEST_ACCEPTED"
-  | 64 | "DESTROY_MESSAGE"
-  | 65 | "NOTIFIED_DESTROY_MESSAGE"
-  | 66 | "UPDATE_PUBLICKEYCHAIN"
-  | 67 | "NOTIFIED_UPDATE_PUBLICKEYCHAIN"
-  | 68 | "NOTIFIED_BLOCK_CONTACT"
-  | 69 | "NOTIFIED_UNBLOCK_CONTACT"
-  | 70 | "UPDATE_GROUPPREFERENCE"
-  | 71 | "NOTIFIED_PAYMENT_EVENT"
-  | 72 | "REGISTER_E2EE_PUBLICKEY"
-  | 73 | "NOTIFIED_E2EE_KEY_EXCHANGE_REQ"
-  | 74 | "NOTIFIED_E2EE_KEY_EXCHANGE_RESP"
-  | 75 | "NOTIFIED_E2EE_MESSAGE_RESEND_REQ"
-  | 76 | "NOTIFIED_E2EE_MESSAGE_RESEND_RESP"
-  | 77 | "NOTIFIED_E2EE_KEY_UPDATE"
-  | 78 | "NOTIFIED_BUDDY_UPDATE_PROFILE"
-  | 79 | "NOTIFIED_UPDATE_LINEAT_TABS"
-  | 80 | "UPDATE_ROOM"
-  | 81 | "NOTIFIED_BEACON_DETECTED"
-  | 82 | "UPDATE_EXTENDED_PROFILE"
-  | 83 | "ADD_FOLLOW"
-  | 84 | "NOTIFIED_ADD_FOLLOW"
-  | 85 | "DELETE_FOLLOW"
-  | 86 | "NOTIFIED_DELETE_FOLLOW"
-  | 87 | "UPDATE_TIMELINE_SETTINGS"
-  | 88 | "NOTIFIED_FRIEND_REQUEST"
-  | 89 | "UPDATE_RINGBACK_TONE"
-  | 90 | "NOTIFIED_POSTBACK"
-  | 91 | "RECEIVE_READ_WATERMARK"
-  | 92 | "NOTIFIED_MESSAGE_DELIVERED"
-  | 93 | "NOTIFIED_UPDATE_CHAT_BAR"
-  | 94 | "NOTIFIED_CHATAPP_INSTALLED"
-  | 95 | "NOTIFIED_CHATAPP_UPDATED"
-  | 96 | "NOTIFIED_CHATAPP_NEW_MARK"
-  | 97 | "NOTIFIED_CHATAPP_DELETED"
-  | 98 | "NOTIFIED_CHATAPP_SYNC"
-  | 99 | "NOTIFIED_UPDATE_MESSAGE"
-  | 100 | "UPDATE_CHATROOMBGM"
-  | 101 | "NOTIFIED_UPDATE_CHATROOMBGM"
-  | 102 | "UPDATE_RINGTONE"
-  | 118 | "UPDATE_USER_SETTINGS"
-  | 119 | "NOTIFIED_UPDATE_STATUS_BAR"
-  | 120 | "CREATE_CHAT"
-  | 121 | "UPDATE_CHAT"
-  | 122 | "NOTIFIED_UPDATE_CHAT"
-  | 123 | "INVITE_INTO_CHAT"
-  | 124 | "NOTIFIED_INVITE_INTO_CHAT"
-  | 125 | "CANCEL_CHAT_INVITATION"
-  | 126 | "NOTIFIED_CANCEL_CHAT_INVITATION"
-  | 127 | "DELETE_SELF_FROM_CHAT"
-  | 128 | "NOTIFIED_DELETE_SELF_FROM_CHAT"
-  | 129 | "ACCEPT_CHAT_INVITATION"
-  | 130 | "NOTIFIED_ACCEPT_CHAT_INVITATION"
-  | 131 | "REJECT_CHAT_INVITATION"
-  | 132 | "DELETE_OTHER_FROM_CHAT"
-  | 133 | "NOTIFIED_DELETE_OTHER_FROM_CHAT"
-  | 134 | "NOTIFIED_CONTACT_CALENDAR_EVENT"
-  | 135 | "NOTIFIED_CONTACT_CALENDAR_EVENT_ALL"
-  | 136 | "UPDATE_THINGS_OPERATIONS"
-  | 137 | "SEND_CHAT_HIDDEN"
-  | 138 | "CHAT_META_SYNC_ALL"
-  | 139 | "SEND_REACTION"
-  | 140 | "NOTIFIED_SEND_REACTION"
-  | 141 | "NOTIFIED_UPDATE_PROFILE_CONTENT"
-  | 142 | "FAILED_DELIVERY_MESSAGE"
-  | 143 | "SEND_ENCRYPTED_E2EE_KEY_REQUESTED"
-  | 144 | "CHANNEL_PAAK_AUTHENTICATION_REQUESTED"
-  | 145 | "UPDATE_PIN_STATE"
-  | 146 | "NOTIFIED_PREMIUMBACKUP_STATE_CHANGED"
-  | 147 | "CREATE_MULTI_PROFILE"
-  | 148 | "MULTI_PROFILE_STATUS_CHANGED"
-  | 149 | "DELETE_MULTI_PROFILE"
-  | 150 | "UPDATE_PROFILE_MAPPING"
-  | 151 | "DELETE_PROFILE_MAPPING"
-  | 152 | "NOTIFIED_DESTROY_NOTICENTER_PUSH"
-  ;
-
-export type P70_g = 1000 | "INVALID_REQUEST"
-  | 1001 | "RETRY_REQUIRED"
-  ;
-
-export type PaidCallType = 0 | "OUT"
-  | 1 | "IN"
-  | 2 | "TOLLFREE"
-  | 3 | "RECORD"
-  | 4 | "AD"
-  | 5 | "CS"
-  | 6 | "OA"
-  | 7 | "OAM"
-  ;
-
-export type PayloadType = 101 | "PAYLOAD_BUY"
-  | 111 | "PAYLOAD_CS"
-  | 121 | "PAYLOAD_BONUS"
-  | 131 | "PAYLOAD_EVENT"
-  | 141 | "PAYLOAD_POINT_AUTO_EXCHANGED"
-  | 151 | "PAYLOAD_POINT_MANUAL_EXCHANGED"
-  ;
-
-export type Pb1_A0 = 0 | "NORMAL"
-  | 1 | "VIDEOCAM"
-  | 2 | "VOIP"
-  | 3 | "RECORD"
-  ;
-
-export type Pb1_A3 = 0 | "UNKNOWN"
-  | 1 | "BACKGROUND_NEW_KEY_CREATED"
-  | 2 | "BACKGROUND_PERIODICAL_VERIFICATION"
-  | 3 | "FOREGROUND_NEW_PIN_REGISTERED"
-  | 4 | "FOREGROUND_VERIFICATION"
-  ;
-
-export type Pb1_B = 1 | "SIRI"
-  | 2 | "GOOGLE_ASSISTANT"
-  | 3 | "OS_SHARE"
-  ;
-
-export type Pb1_D0 = 0 | "RICH_MENU_ID"
-  | 1 | "STATUS_BAR"
-  | 2 | "BUDDY_CAUTION_NOTICE"
-  ;
-
-export type Pb1_D4 = 1 | "AUDIO"
-  | 2 | "VIDEO"
-  | 3 | "FACEPLAY"
-  ;
-
-export type Pb1_D6 = 0 | "GOOGLE"
-  | 1 | "BAIDU"
-  | 2 | "FOURSQUARE"
-  | 3 | "YAHOOJAPAN"
-  | 4 | "KINGWAY"
-  ;
-
-export type Pb1_E7 = 0 | "UNKNOWN"
-  | 1 | "TALK"
-  | 2 | "SQUARE"
-  ;
-
-export type Pb1_EnumC12917a6 = 0 | "UNKNOWN"
-  | 1 | "APP_FOREGROUND"
-  | 2 | "PERIODIC"
-  | 3 | "MANUAL"
-  ;
-
-export type Pb1_EnumC12926b1 = 0 | "NOT_A_FRIEND"
-  | 1 | "ALWAYS"
-  ;
-
-export type Pb1_EnumC12941c2 = 26 | "BLE_LCS_API_USABLE"
-  | 27 | "PROHIBIT_MINIMIZE_CHANNEL_BROWSER"
-  | 28 | "ALLOW_IOS_WEBKIT"
-  | 38 | "PURCHASE_LCS_API_USABLE"
-  | 48 | "ALLOW_ANDROID_ENABLE_ZOOM"
-  ;
-
-export type Pb1_EnumC12945c6 = 1 | "V1"
-  | 2 | "V2"
-  ;
-
-export type Pb1_EnumC12970e3 = 1 | "USER_AGE_CHECKED"
-  | 2 | "USER_APPROVAL_REQUIRED"
-  ;
-
-export type Pb1_EnumC12997g2 = 0 | "PROFILE"
-  | 1 | "FRIENDS"
-  | 2 | "GROUP"
-  ;
-
-export type Pb1_EnumC12998g3 = 0 | "UNKNOWN"
-  | 1 | "WIFI"
-  | 2 | "CELLULAR_NETWORK"
-  ;
-
-export type Pb1_EnumC13009h0 = 1 | "NORMAL"
-  | 2 | "LOW_BATTERY"
-  ;
-
-export type Pb1_EnumC13010h1 = 1 | "NEW"
-  | 2 | "PLANET"
-  ;
-
-export type Pb1_EnumC13015h6 = 0 | "FORWARD"
-  | 1 | "AUTO_REPLY"
-  | 2 | "SUBORDINATE"
-  | 3 | "REPLY"
-  ;
-
-export type Pb1_EnumC13022i = 0 | "SKIP"
-  | 1 | "PINCODE"
-  | 2 | "SECURITY_CENTER"
-  ;
-
-export type Pb1_EnumC13029i6 = 0 | "ADD"
-  | 1 | "REMOVE"
-  | 2 | "MODIFY"
-  ;
-
-export type Pb1_EnumC13037j0 = 0 | "UNSPECIFIED"
-  | 1 | "INACTIVE"
-  | 2 | "ACTIVE"
-  | 3 | "DELETED"
-  ;
-
-export type Pb1_EnumC13050k = 0 | "UNKNOWN"
-  | 1 | "IOS_REDUCED_ACCURACY"
-  | 2 | "IOS_FULL_ACCURACY"
-  | 3 | "AOS_PRECISE_LOCATION"
-  | 4 | "AOS_APPROXIMATE_LOCATION"
-  ;
-
-export type Pb1_EnumC13082m3 = 0 | "SHOW"
-  | 1 | "HIDE"
-  ;
-
-export type Pb1_EnumC13093n0 = 0 | "NONE"
-  | 1 | "TOP"
-  ;
-
-export type Pb1_EnumC13127p6 = 0 | "NORMAL"
-  | 1 | "ALERT_DISABLED"
-  | 2 | "ALWAYS"
-  ;
-
-export type Pb1_EnumC13128p7 = 0 | "UNKNOWN"
-  | 1 | "DIRECT_INVITATION"
-  | 2 | "DIRECT_CHAT"
-  | 3 | "GROUP_INVITATION"
-  | 4 | "GROUP_CHAT"
-  | 5 | "ROOM_INVITATION"
-  | 6 | "ROOM_CHAT"
-  | 7 | "FRIEND_PROFILE"
-  | 8 | "DIRECT_CHAT_SELECTED"
-  | 9 | "GROUP_CHAT_SELECTED"
-  | 10 | "ROOM_CHAT_SELECTED"
-  | 11 | "DEPRECATED"
-  ;
-
-export type Pb1_EnumC13148r0 = 1 | "ALWAYS_HIDDEN"
-  | 2 | "ALWAYS_SHOWN"
-  | 3 | "SHOWN_BY_CONDITION"
-  ;
-
-export type Pb1_EnumC13151r3 = 0 | "ONEWAY"
-  | 1 | "BOTH"
-  | 2 | "NOT_REGISTERED"
-  ;
-
-export type Pb1_EnumC13162s0 = 1 | "NOT_SUSPICIOUS"
-  | 2 | "SUSPICIOUS_00"
-  | 3 | "SUSPICIOUS_01"
-  ;
-
-export type Pb1_EnumC13196u6 = 0 | "COIN"
-  | 1 | "CREDIT"
-  | 2 | "MONTHLY"
-  | 3 | "OAM"
-  ;
-
-export type Pb1_EnumC13209v5 = 0 | "DUMMY"
-  | 1 | "NOTICE"
-  | 2 | "MORETAB"
-  | 3 | "STICKERSHOP"
-  | 4 | "CHANNEL"
-  | 5 | "DENY_KEYWORD"
-  | 6 | "CONNECTIONINFO"
-  | 7 | "BUDDY"
-  | 8 | "TIMELINEINFO"
-  | 9 | "THEMESHOP"
-  | 10 | "CALLRATE"
-  | 11 | "CONFIGURATION"
-  | 12 | "STICONSHOP"
-  | 13 | "SUGGESTDICTIONARY"
-  | 14 | "SUGGESTSETTINGS"
-  | 15 | "USERSETTINGS"
-  | 16 | "ANALYTICSINFO"
-  | 17 | "SEARCHPOPULARKEYWORD"
-  | 18 | "SEARCHNOTICE"
-  | 19 | "TIMELINE"
-  | 20 | "SEARCHPOPULARCATEGORY"
-  | 21 | "EXTENDEDPROFILE"
-  | 22 | "SEASONALMARKETING"
-  | 23 | "NEWSTAB"
-  | 24 | "SUGGESTDICTIONARYV2"
-  | 25 | "CHATAPPSYNC"
-  | 26 | "AGREEMENTS"
-  | 27 | "INSTANTNEWS"
-  | 28 | "EMOJI_MAPPING"
-  | 29 | "SEARCHBARKEYWORDS"
-  | 30 | "SHOPPING"
-  | 31 | "CHAT_EFFECT_BACKGROUND"
-  | 32 | "CHAT_EFFECT_KEYWORD"
-  | 33 | "SEARCHINDEX"
-  | 34 | "HUBTAB"
-  | 35 | "PAY_RULE_UPDATED"
-  | 36 | "SMARTCH"
-  | 37 | "HOME_SERVICE_LIST"
-  | 38 | "TIMELINESTORY"
-  | 39 | "WALLET_TAB"
-  | 40 | "POD_TAB"
-  | 41 | "HOME_SAFETY_CHECK"
-  | 42 | "HOME_SEASONAL_EFFECT"
-  | 43 | "OPENCHAT_MAIN"
-  | 44 | "CHAT_EFFECT_CONTENT_METADATA_TAG"
-  | 45 | "VOOM_LIVE_STATE_CHANGED"
-  | 46 | "PROFILE_STUDIO_N_BADGE"
-  | 47 | "LYP_FONT"
-  | 48 | "TIMELINESTORY_OA"
-  | 49 | "TRAVEL"
-  ;
-
-export type Pb1_EnumC13221w3 = 0 | "UNKNOWN"
-  | 1 | "EUROPEAN_ECONOMIC_AREA"
-  ;
-
-export type Pb1_EnumC13222w4 = 1 | "OBS_VIDEO"
-  | 2 | "OBS_GENERAL"
-  | 3 | "OBS_RINGBACK_TONE"
-  ;
-
-export type Pb1_EnumC13237x5 = 1 | "AUDIO"
-  | 2 | "VIDEO"
-  | 3 | "LIVE"
-  | 4 | "PHOTOBOOTH"
-  ;
-
-export type Pb1_EnumC13238x6 = 0 | "NOT_SPECIFIED"
-  | 1 | "VALID"
-  | 2 | "VERIFICATION_REQUIRED"
-  | 3 | "NOT_PERMITTED"
-  | 4 | "LIMIT_EXCEEDED"
-  | 5 | "LIMIT_EXCEEDED_AND_VERIFICATION_REQUIRED"
-  ;
-
-export type Pb1_EnumC13251y5 = 1 | "STANDARD"
-  | 2 | "CONSTELLA"
-  ;
-
-export type Pb1_EnumC13252y6 = 0 | "ALL"
-  | 1 | "PROFILE"
-  | 2 | "SETTINGS"
-  | 3 | "CONFIGURATIONS"
-  | 4 | "CONTACT"
-  | 5 | "GROUP"
-  | 6 | "E2EE"
-  | 7 | "MESSAGE"
-  ;
-
-export type Pb1_EnumC13260z0 = 0 | "ON_AIR"
-  | 1 | "LIVE"
-  | 2 | "GLP"
-  ;
-
-export type Pb1_EnumC13267z7 = 1 | "NOTIFICATION_SETTING"
-  | 255 | "ALL"
-  ;
-
-export type Pb1_F0 = 0 | "NA"
-  | 1 | "FRIEND_VIEW"
-  | 2 | "OFFICIAL_ACCOUNT_VIEW"
-  ;
-
-export type Pb1_F4 = 1 | "INCOMING"
-  | 2 | "OUTGOING"
-  ;
-
-export type Pb1_F5 = 0 | "UNKNOWN"
-  | 1 | "SUCCESS"
-  | 2 | "REQUIRE_SERVER_SIDE_EMAIL"
-  | 3 | "REQUIRE_CLIENT_SIDE_EMAIL"
-  ;
-
-export type Pb1_F6 = 0 | "JBU"
-  | 1 | "LIP"
-  ;
-
-export type Pb1_G3 = 1 | "PROMOTION_FRIENDS_INVITE"
-  | 2 | "CAPABILITY_SERVER_SIDE_SMS"
-  | 3 | "LINE_CLIENT_ANALYTICS_CONFIGURATION"
-  ;
-
-export type Pb1_G4 = 1 | "TIMELINE"
-  | 2 | "NEARBY"
-  | 3 | "SQUARE"
-  ;
-
-export type Pb1_G6 = 2 | "NICE"
-  | 3 | "LOVE"
-  | 4 | "FUN"
-  | 5 | "AMAZING"
-  | 6 | "SAD"
-  | 7 | "OMG"
-  ;
-
-export type Pb1_H6 = 0 | "PUBLIC"
-  | 1 | "PRIVATE"
-  ;
-
-export type Pb1_I6 = 0 | "NEVER_SHOW"
-  | 1 | "ONE_WAY"
-  | 2 | "MUTUAL"
-  ;
-
-export type Pb1_J4 = 0 | "OTHER"
-  | 1 | "INITIALIZATION"
-  | 2 | "PERIODIC_SYNC"
-  | 3 | "MANUAL_SYNC"
-  | 4 | "LOCAL_DB_CORRUPTED"
-  ;
-
-export type Pb1_K2 = 1 | "CHANNEL_INFO"
-  | 2 | "CHANNEL_TOKEN"
-  | 4 | "COMMON_DOMAIN"
-  | 255 | "ALL"
-  ;
-
-export type Pb1_K6 = 1 | "EMAIL"
-  | 2 | "DISPLAY_NAME"
-  | 4 | "PHONETIC_NAME"
-  | 8 | "PICTURE"
-  | 16 | "STATUS_MESSAGE"
-  | 32 | "ALLOW_SEARCH_BY_USERID"
-  | 64 | "ALLOW_SEARCH_BY_EMAIL"
-  | 128 | "BUDDY_STATUS"
-  | 256 | "MUSIC_PROFILE"
-  | 512 | "AVATAR_PROFILE"
-  | 2147483647 | "ALL"
-  ;
-
-export type Pb1_L2 = 0 | "SYNC"
-  | 1 | "REMOVE"
-  | 2 | "REMOVE_ALL"
-  ;
-
-export type Pb1_L4 = 0 | "UNKNOWN"
-  | 1 | "REVISION_GAP_TOO_LARGE_CLIENT"
-  | 2 | "REVISION_GAP_TOO_LARGE_SERVER"
-  | 3 | "OPERATION_EXPIRED"
-  | 4 | "REVISION_HOLE"
-  | 5 | "FORCE_TRIGGERED"
-  ;
-
-export type Pb1_M6 = 0 | "OWNER"
-  | 1 | "FRIEND"
-  ;
-
-export type Pb1_N6 = 1 | "NFT"
-  | 2 | "AVATAR"
-  | 3 | "SNOW"
-  | 4 | "ARCZ"
-  | 5 | "FRENZ"
-  ;
-
-export type Pb1_O2 = 1 | "NAME"
-  | 2 | "PICTURE_STATUS"
-  | 4 | "PREVENTED_JOIN_BY_TICKET"
-  | 8 | "NOTIFICATION_SETTING"
-  | 16 | "INVITATION_TICKET"
-  | 32 | "FAVORITE_TIMESTAMP"
-  | 64 | "CHAT_TYPE"
-  ;
-
-export type Pb1_O6 = 1 | "DEFAULT"
-  | 2 | "MULTI_PROFILE"
-  ;
-
-export type Pb1_P6 = 0 | "HIDDEN"
-  | 1000 | "PUBLIC"
-  ;
-
-export type Pb1_Q2 = 0 | "BACKGROUND"
-  | 1 | "KEYWORD"
-  | 2 | "CONTENT_METADATA_TAG_BASED"
-  ;
-
-export type Pb1_R3 = 1 | "BEACON_AGREEMENT"
-  | 2 | "BLUETOOTH"
-  | 3 | "SHAKE_AGREEMENT"
-  | 4 | "AUTO_SUGGEST"
-  | 5 | "CHATROOM_CAPTURE"
-  | 6 | "CHATROOM_MINIMIZEBROWSER"
-  | 7 | "CHATROOM_MOBILESAFARI"
-  | 8 | "VIDEO_HIGHTLIGHT_WIZARD"
-  | 9 | "CHAT_FOLDER"
-  | 10 | "BLUETOOTH_SCAN"
-  | 11 | "AUTO_SUGGEST_FOLLOW_UP"
-  ;
-
-export type Pb1_S7 = 1 | "NONE"
-  | 2 | "ALL"
-  ;
-
-export type Pb1_T3 = 1 | "LOCATION_OS"
-  | 2 | "LOCATION_APP"
-  | 3 | "VIDEO_AUTO_PLAY"
-  | 4 | "HNI"
-  | 5 | "AUTO_SUGGEST_LANG"
-  | 6 | "CHAT_EFFECT_CACHED_CONTENT_LIST"
-  | 7 | "IFA"
-  | 8 | "ACCURACY_MODE"
-  ;
-
-export type Pb1_T7 = 0 | "SYNC"
-  | 1 | "REPORT"
-  ;
-
-export type Pb1_V7 = 0 | "UNSPECIFIED"
-  | 1 | "UNKNOWN"
-  | 2 | "INITIALIZATION"
-  | 3 | "OPERATION"
-  | 4 | "FULL_SYNC"
-  | 5 | "AUTO_REPAIR"
-  | 6 | "MANUAL_REPAIR"
-  | 7 | "INTERNAL"
-  | 8 | "USER_INITIATED"
-  ;
-
-export type Pb1_W2 = 0 | "ANYONE_IN_CHAT"
-  | 1 | "CREATOR_ONLY"
-  | 2 | "NO_ONE"
-  ;
-
-export type Pb1_W3 = 0 | "ILLEGAL_ARGUMENT"
-  | 1 | "AUTHENTICATION_FAILED"
-  | 2 | "INTERNAL_ERROR"
-  | 3 | "RESTORE_KEY_FIRST"
-  | 4 | "NO_BACKUP"
-  | 6 | "INVALID_PIN"
-  | 7 | "PERMANENTLY_LOCKED"
-  | 8 | "INVALID_PASSWORD"
-  | 9 | "MASTER_KEY_CONFLICT"
-  ;
-
-export type Pb1_X1 = 0 | "MESSAGE"
-  | 1 | "MESSAGE_NOTIFICATION"
-  | 2 | "NOTIFICATION_CENTER"
-  ;
-
-export type Pb1_X2 = 0 | "MESSAGE"
-  | 1 | "NOTE"
-  | 2 | "CHANNEL"
-  ;
-
-export type Pb1_Z2 = 0 | "GROUP"
-  | 1 | "ROOM"
-  | 2 | "PEER"
-  ;
-
-export type Pb1_gd = 1 | "OVER"
-  | 2 | "UNDER"
-  | 3 | "UNDEFINED"
-  ;
-
-export type Pb1_od = 0 | "UNKNOWN"
-  | 1 | "LOCATION"
-  ;
-
-export type PointErrorCode = 3001 | "REQUEST_DUPLICATION"
-  | 3002 | "INVALID_PARAMETER"
-  | 3003 | "NOT_ENOUGH_BALANCE"
-  | 3004 | "AUTHENTICATION_FAIL"
-  | 3005 | "API_ACCESS_FORBIDDEN"
-  | 3006 | "MEMBER_ACCOUNT_NOT_FOUND"
-  | 3007 | "SERVICE_ACCOUNT_NOT_FOUND"
-  | 3008 | "TRANSACTION_NOT_FOUND"
-  | 3009 | "ALREADY_REVERSED_TRANSACTION"
-  | 3010 | "MESSAGE_NOT_READABLE"
-  | 3011 | "HTTP_REQUEST_METHOD_NOT_SUPPORTED"
-  | 3012 | "HTTP_MEDIA_TYPE_NOT_SUPPORTED"
-  | 3013 | "NOT_ALLOWED_TO_DEPOSIT"
-  | 3014 | "NOT_ALLOWED_TO_PAY"
-  | 3015 | "TRANSACTION_ACCESS_FORBIDDEN"
-  | 4001 | "INVALID_SERVICE_CONFIGURATION"
-  | 5004 | "DCS_COMMUNICATION_FAIL"
-  | 5007 | "UPDATE_BALANCE_FAIL"
-  | 5888 | "SYSTEM_MAINTENANCE"
-  | 5999 | "SYSTEM_ERROR"
-  ;
-
-export type Q70_q = 0 | "UNKNOWN"
-  | 1 | "FACEBOOK"
-  | 2 | "APPLE"
-  | 3 | "GOOGLE"
-  ;
-
-export type Q70_r = 0 | "INTERNAL_ERROR"
-  | 1 | "ILLEGAL_ARGUMENT"
-  | 2 | "VERIFICATION_FAILED"
-  | 4 | "RETRY_LATER"
-  | 5 | "HUMAN_VERIFICATION_REQUIRED"
-  | 101 | "APP_UPGRADE_REQUIRED"
-  ;
-
-export type Qj_EnumC13584a = 0 | "NOT_DETERMINED"
-  | 1 | "RESTRICTED"
-  | 2 | "DENIED"
-  | 3 | "AUTHORIZED"
-  ;
-
-export type Qj_EnumC13585b = 1 | "WHITE"
-  | 2 | "BLACK"
-  ;
-
-export type Qj_EnumC13588e = 1 | "LIGHT"
-  | 2 | "DARK"
-  ;
-
-export type Qj_EnumC13592i = 0 | "ILLEGAL_ARGUMENT"
-  | 1 | "INTERNAL_ERROR"
-  | 2 | "CONNECTION_ERROR"
-  | 3 | "AUTHENTICATION_FAILED"
-  | 4 | "NEED_PERMISSION_APPROVAL"
-  | 5 | "COIN_NOT_USABLE"
-  | 6 | "WEBVIEW_NOT_ALLOWED"
-  ;
-
-export type Qj_EnumC13597n = 1 | "INVALID_REQUEST"
-  | 2 | "UNAUTHORIZED"
-  | 3 | "CONSENT_REQUIRED"
-  | 4 | "VERSION_UPDATE_REQUIRED"
-  | 5 | "COMPREHENSIVE_AGREEMENT_REQUIRED"
-  | 6 | "SPLASH_SCREEN_REQUIRED"
-  | 7 | "PERMANENT_LINK_INVALID_REQUEST"
-  | 8 | "NO_DESTINATION_URL"
-  | 9 | "SERVICE_ALREADY_TERMINATED"
-  | 100 | "SERVER_ERROR"
-  ;
-
-export type Qj_EnumC13604v = 1 | "GEOLOCATION"
-  | 2 | "ADVERTISING_ID"
-  | 3 | "BLUETOOTH_LE"
-  | 4 | "QR_CODE"
-  | 5 | "ADVERTISING_SDK"
-  | 6 | "ADD_TO_HOME"
-  | 7 | "SHARE_TARGET_MESSAGE"
-  | 8 | "VIDEO_AUTO_PLAY"
-  | 9 | "PROFILE_PLUS"
-  | 10 | "SUBWINDOW_OPEN"
-  | 11 | "SUBWINDOW_COMMON_MODULE"
-  | 12 | "NO_LIFF_REFERRER"
-  | 13 | "SKIP_CHANNEL_VERIFICATION_SCREEN"
-  | 14 | "PROVIDER_PAGE"
-  | 15 | "BASIC_AUTH"
-  | 16 | "SIRI_DONATION"
-  ;
-
-export type Qj_EnumC13605w = 1 | "ALLOW_DIRECT_LINK"
-  | 2 | "ALLOW_DIRECT_LINK_V2"
-  ;
-
-export type Qj_EnumC13606x = 1 | "LIGHT"
-  | 2 | "LIGHT_TRANSLUCENT"
-  | 3 | "DARK_TRANSLUCENT"
-  | 4 | "LIGHT_ICON"
-  | 5 | "DARK_ICON"
-  ;
-
-export type Qj_a0 = 1 | "CONCAT"
-  | 2 | "REPLACE"
-  ;
-
-export type Qj_e0 = 0 | "SUCCESS"
-  | 1 | "FAILURE"
-  | 2 | "CANCEL"
-  ;
-
-export type Qj_h0 = 1 | "RIGHT"
-  | 2 | "LEFT"
-  ;
-
-export type Qj_i0 = 1 | "FULL"
-  | 2 | "TALL"
-  | 3 | "COMPACT"
-  ;
-
-export type R70_e = 0 | "INTERNAL_ERROR"
-  | 1 | "ILLEGAL_ARGUMENT"
-  | 2 | "VERIFICATION_FAILED"
-  | 3 | "EXTERNAL_SERVICE_UNAVAILABLE"
-  | 4 | "RETRY_LATER"
-  | 100 | "INVALID_CONTEXT"
-  | 101 | "NOT_SUPPORTED"
-  | 102 | "FORBIDDEN"
-  | 201 | "FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR"
-  ;
-
-export type RegistrationType = 0 | "PHONE"
-  | 1 | "EMAIL_WAP"
-  | 2305 | "FACEBOOK"
-  | 2306 | "SINA"
-  | 2307 | "RENREN"
-  | 2308 | "FEIXIN"
-  | 2309 | "APPLE"
-  | 2310 | "YAHOOJAPAN"
-  | 2311 | "GOOGLE"
-  ;
-
-export type ReportType = 1 | "ADVERTISING"
-  | 2 | "GENDER_HARASSMENT"
-  | 3 | "HARASSMENT"
-  | 4 | "OTHER"
-  | 5 | "IRRELEVANT_CONTENT"
-  | 6 | "IMPERSONATION"
-  | 7 | "SCAM"
-  ;
-
-export type S70_a = 0 | "INTERNAL_ERROR"
-  | 1 | "ILLEGAL_ARGUMENT"
-  | 2 | "VERIFICATION_FAILED"
-  | 3 | "RETRY_LATER"
-  | 100 | "INVALID_CONTEXT"
-  | 101 | "APP_UPGRADE_REQUIRED"
-  ;
-
-export type SettingsAttributeEx = 0 | "NOTIFICATION_ENABLE"
-  | 1 | "NOTIFICATION_MUTE_EXPIRATION"
-  | 2 | "NOTIFICATION_NEW_MESSAGE"
-  | 3 | "NOTIFICATION_GROUP_INVITATION"
-  | 4 | "NOTIFICATION_SHOW_MESSAGE"
-  | 5 | "NOTIFICATION_INCOMING_CALL"
-  | 6 | "PRIVACY_SYNC_CONTACTS"
-  | 7 | "PRIVACY_SEARCH_BY_PHONE_NUMBER"
-  | 8 | "NOTIFICATION_SOUND_MESSAGE"
-  | 9 | "NOTIFICATION_SOUND_GROUP"
-  | 10 | "CONTACT_MY_TICKET"
-  | 11 | "IDENTITY_PROVIDER"
-  | 12 | "IDENTITY_IDENTIFIER"
-  | 13 | "PRIVACY_SEARCH_BY_USERID"
-  | 14 | "PRIVACY_SEARCH_BY_EMAIL"
-  | 15 | "PREFERENCE_LOCALE"
-  | 16 | "NOTIFICATION_DISABLED_WITH_SUB"
-  | 17 | "NOTIFICATION_PAYMENT"
-  | 18 | "SECURITY_CENTER_SETTINGS"
-  | 19 | "SNS_ACCOUNT"
-  | 20 | "PHONE_REGISTRATION"
-  | 21 | "PRIVACY_ALLOW_SECONDARY_DEVICE_LOGIN"
-  | 22 | "CUSTOM_MODE"
-  | 23 | "PRIVACY_PROFILE_IMAGE_POST_TO_MYHOME"
-  | 24 | "EMAIL_CONFIRMATION_STATUS"
-  | 25 | "PRIVACY_RECV_MESSAGES_FROM_NOT_FRIEND"
-  | 26 | "PRIVACY_AGREE_USE_LINECOIN_TO_PAIDCALL"
-  | 27 | "PRIVACY_AGREE_USE_PAIDCALL"
-  | 28 | "ACCOUNT_MIGRATION_PINCODE"
-  | 29 | "ENFORCED_INPUT_ACCOUNT_MIGRATION_PINCODE"
-  | 30 | "PRIVACY_ALLOW_FRIEND_REQUEST"
-  | 31 | "PWLESS_PRIMARY_CREDENTIAL_REGISTRATION"
-  | 32 | "ALLOWED_TO_CONNECT_EAP_ACCOUNT"
-  | 33 | "E2EE_ENABLE"
-  | 34 | "HITOKOTO_BACKUP_REQUESTED"
-  | 35 | "PRIVACY_PROFILE_MUSIC_POST_TO_MYHOME"
-  | 36 | "CONTACT_ALLOW_FOLLOWING"
-  | 37 | "PRIVACY_ALLOW_NEARBY"
-  | 38 | "AGREEMENT_NEARBY"
-  | 39 | "AGREEMENT_SQUARE"
-  | 40 | "NOTIFICATION_MENTION"
-  | 41 | "ALLOW_UNREGISTRATION_SECONDARY_DEVICE"
-  | 42 | "AGREEMENT_BOT_USE"
-  | 43 | "AGREEMENT_SHAKE_FUNCTION"
-  | 44 | "AGREEMENT_MOBILE_CONTACT_NAME"
-  | 45 | "NOTIFICATION_THUMBNAIL"
-  | 46 | "AGREEMENT_SOUND_TO_TEXT"
-  | 47 | "AGREEMENT_PRIVACY_POLICY_VERSION"
-  | 48 | "AGREEMENT_AD_BY_WEB_ACCESS"
-  | 49 | "AGREEMENT_PHONE_NUMBER_MATCHING"
-  | 50 | "AGREEMENT_COMMUNICATION_INFO"
-  | 51 | "PRIVACY_SHARE_PERSONAL_INFO_TO_FRIENDS"
-  | 52 | "AGREEMENT_THINGS_WIRELESS_COMMUNICATION"
-  | 53 | "AGREEMENT_GDPR"
-  | 54 | "PRIVACY_STATUS_MESSAGE_HISTORY"
-  | 55 | "AGREEMENT_PROVIDE_LOCATION"
-  | 56 | "AGREEMENT_BEACON"
-  | 57 | "PRIVACY_PROFILE_HISTORY"
-  | 58 | "AGREEMENT_CONTENTS_SUGGEST"
-  | 59 | "AGREEMENT_CONTENTS_SUGGEST_DATA_COLLECTION"
-  | 60 | "PRIVACY_AGE_RESULT"
-  | 61 | "PRIVACY_AGE_RESULT_RECEIVED"
-  | 62 | "AGREEMENT_OCR_IMAGE_COLLECTION"
-  | 63 | "PRIVACY_ALLOW_FOLLOW"
-  | 64 | "PRIVACY_SHOW_FOLLOW_LIST"
-  | 65 | "NOTIFICATION_BADGE_TALK_ONLY"
-  | 66 | "AGREEMENT_ICNA"
-  | 67 | "NOTIFICATION_REACTION"
-  | 68 | "AGREEMENT_MID"
-  | 69 | "HOME_NOTIFICATION_NEW_FRIEND"
-  | 70 | "HOME_NOTIFICATION_FAVORITE_FRIEND_UPDATE"
-  | 71 | "HOME_NOTIFICATION_GROUP_MEMBER_UPDATE"
-  | 72 | "HOME_NOTIFICATION_BIRTHDAY"
-  | 73 | "AGREEMENT_LINE_OUT_USE"
-  | 74 | "AGREEMENT_LINE_OUT_PROVIDE_INFO"
-  | 75 | "NOTIFICATION_SHOW_PROFILE_IMAGE"
-  | 76 | "AGREEMENT_PDPA"
-  | 77 | "AGREEMENT_LOCATION_VERSION"
-  | 78 | "ALLOWED_TO_SHOW_ZHD_PAGE"
-  | 79 | "AGREEMENT_SNOW_AI_AVATAR"
-  | 80 | "EAP_ONLY_ACCOUNT_TARGET_COUNTRY"
-  | 81 | "AGREEMENT_LYP_PREMIUM_ALBUM"
-  | 82 | "AGREEMENT_LYP_PREMIUM_ALBUM_VERSION"
-  | 83 | "AGREEMENT_ALBUM_USAGE_DATA"
-  | 84 | "AGREEMENT_ALBUM_USAGE_DATA_VERSION"
-  | 85 | "AGREEMENT_LYP_PREMIUM_BACKUP"
-  | 86 | "AGREEMENT_LYP_PREMIUM_BACKUP_VERSION"
-  | 87 | "AGREEMENT_OA_AI_ASSISTANT"
-  | 88 | "AGREEMENT_OA_AI_ASSISTANT_VERSION"
-  | 89 | "AGREEMENT_LYP_PREMIUM_MULTI_PROFILE"
-  | 90 | "AGREEMENT_LYP_PREMIUM_MULTI_PROFILE_VERSION"
-  ;
-
-export type SnsIdType = 1 | "FACEBOOK"
-  | 2 | "SINA"
-  | 3 | "RENREN"
-  | 4 | "FEIXIN"
-  | 5 | "BBM"
-  | 6 | "APPLE"
-  | 7 | "YAHOOJAPAN"
-  | 8 | "GOOGLE"
-  ;
-
-export type SpammerReason = 0 | "OTHER"
-  | 1 | "ADVERTISING"
-  | 2 | "GENDER_HARASSMENT"
-  | 3 | "HARASSMENT"
-  | 4 | "IMPERSONATION"
-  | 5 | "SCAM"
-  ;
-
-export type SpotCategory = 0 | "UNKNOWN"
-  | 1 | "GOURMET"
-  | 2 | "BEAUTY"
-  | 3 | "TRAVEL"
-  | 4 | "SHOPPING"
-  | 5 | "ENTERTAINMENT"
-  | 6 | "SPORTS"
-  | 7 | "TRANSPORT"
-  | 8 | "LIFE"
-  | 9 | "HOSPITAL"
-  | 10 | "FINANCE"
-  | 11 | "EDUCATION"
-  | 12 | "OTHER"
-  | 10000 | "ALL"
-  ;
-
-export type SquareAttribute = 1 | "NAME"
-  | 2 | "WELCOME_MESSAGE"
-  | 3 | "PROFILE_IMAGE"
-  | 4 | "DESCRIPTION"
-  | 6 | "SEARCHABLE"
-  | 7 | "CATEGORY"
-  | 8 | "INVITATION_URL"
-  | 9 | "ABLE_TO_USE_INVITATION_URL"
-  | 10 | "STATE"
-  | 11 | "EMBLEMS"
-  | 12 | "JOIN_METHOD"
-  | 13 | "CHANNEL_ID"
-  | 14 | "SVC_TAGS"
-  ;
-
-export type SquareAuthorityAttribute = 1 | "UPDATE_SQUARE_PROFILE"
-  | 2 | "INVITE_NEW_MEMBER"
-  | 3 | "APPROVE_JOIN_REQUEST"
-  | 4 | "CREATE_POST"
-  | 5 | "CREATE_OPEN_SQUARE_CHAT"
-  | 6 | "DELETE_SQUARE_CHAT_OR_POST"
-  | 7 | "REMOVE_SQUARE_MEMBER"
-  | 8 | "GRANT_ROLE"
-  | 9 | "ENABLE_INVITATION_TICKET"
-  | 10 | "CREATE_CHAT_ANNOUNCEMENT"
-  | 11 | "UPDATE_MAX_CHAT_MEMBER_COUNT"
-  | 12 | "USE_READONLY_DEFAULT_CHAT"
-  | 13 | "SEND_ALL_MENTION"
-  ;
-
-export type SquareChatType = 1 | "OPEN"
-  | 2 | "SECRET"
-  | 3 | "ONE_ON_ONE"
-  | 4 | "SQUARE_DEFAULT"
-  ;
-
-export type SquareMemberAttribute = 1 | "DISPLAY_NAME"
-  | 2 | "PROFILE_IMAGE"
-  | 3 | "ABLE_TO_RECEIVE_MESSAGE"
-  | 5 | "MEMBERSHIP_STATE"
-  | 6 | "ROLE"
-  | 7 | "PREFERENCE"
-  ;
-
-export type SquareMembershipState = 1 | "JOIN_REQUESTED"
-  | 2 | "JOINED"
-  | 3 | "REJECTED"
-  | 4 | "LEFT"
-  | 5 | "KICK_OUT"
-  | 6 | "BANNED"
-  | 7 | "DELETED"
-  | 8 | "JOIN_REQUEST_WITHDREW"
-  ;
-
-export type StickerResourceType = 1 | "STATIC"
-  | 2 | "ANIMATION"
-  | 3 | "SOUND"
-  | 4 | "ANIMATION_SOUND"
-  | 5 | "POPUP"
-  | 6 | "POPUP_SOUND"
-  | 7 | "NAME_TEXT"
-  | 8 | "PER_STICKER_TEXT"
-  ;
-
-export type SyncCategory = 0 | "PROFILE"
-  | 1 | "SETTINGS"
-  | 2 | "OPS"
-  | 3 | "CONTACT"
-  | 4 | "RECOMMEND"
-  | 5 | "BLOCK"
-  | 6 | "GROUP"
-  | 7 | "ROOM"
-  | 8 | "NOTIFICATION"
-  | 9 | "ADDRESS_BOOK"
-  ;
-
-export type T70_C = 0 | "INITIAL_BACKUP_STATE_UNSPECIFIED"
-  | 1 | "INITIAL_BACKUP_STATE_READY"
-  | 2 | "INITIAL_BACKUP_STATE_MESSAGE_ONGOING"
-  | 3 | "INITIAL_BACKUP_STATE_FINISHED"
-  | 4 | "INITIAL_BACKUP_STATE_ABORTED"
-  | 5 | "INITIAL_BACKUP_STATE_MEDIA_ONGOING"
-  ;
-
-export type T70_EnumC14390b = 0 | "UNKNOWN"
-  | 1 | "PHONE_NUMBER"
-  | 2 | "EMAIL"
-  ;
-
-export type T70_EnumC14392c = 0 | "UNKNOWN"
-  | 1 | "SKIP"
-  | 2 | "PASSWORD"
-  | 3 | "WEB_BASED"
-  | 4 | "EMAIL_BASED"
-  | 11 | "NONE"
-  ;
-
-export type T70_EnumC14406j = 0 | "INTERNAL_ERROR"
-  | 1 | "ILLEGAL_ARGUMENT"
-  | 2 | "VERIFICATION_FAILED"
-  | 3 | "NOT_FOUND"
-  | 4 | "RETRY_LATER"
-  | 5 | "HUMAN_VERIFICATION_REQUIRED"
-  | 100 | "INVALID_CONTEXT"
-  | 101 | "APP_UPGRADE_REQUIRED"
-  ;
-
-export type T70_K = 0 | "UNKNOWN"
-  | 1 | "SMS"
-  | 2 | "IVR"
-  | 3 | "SMSPULL"
-  ;
-
-export type T70_L = 0 | "PREMIUM_TYPE_UNSPECIFIED"
-  | 1 | "PREMIUM_TYPE_LYP"
-  | 2 | "PREMIUM_TYPE_LINE"
-  ;
-
-export type T70_Z0 = 1 | "PHONE_VERIF"
-  | 2 | "EAP_VERIF"
-  ;
-
-export type T70_e1 = 0 | "UNKNOWN"
-  | 1 | "SKIP"
-  | 2 | "WEB_BASED"
-  ;
-
-export type T70_j1 = 0 | "UNKNOWN"
-  | 1 | "FACEBOOK"
-  | 2 | "APPLE"
-  | 3 | "GOOGLE"
-  ;
-
-export type U70_c = 0 | "INTERNAL_ERROR"
-  | 1 | "FORBIDDEN"
-  | 100 | "INVALID_CONTEXT"
-  ;
-
-export type Uf_EnumC14873o = 1 | "ANDROID"
-  | 2 | "IOS"
-  ;
-
-export type VR0_l = 1 | "DEFAULT"
-  | 2 | "UEN"
-  ;
-
-export type VerificationMethod = 0 | "NO_AVAILABLE"
-  | 1 | "PIN_VIA_SMS"
-  | 2 | "CALLERID_INDIGO"
-  | 4 | "PIN_VIA_TTS"
-  | 10 | "SKIP"
-  ;
-
-export type VerificationResult = 0 | "FAILED"
-  | 1 | "OK_NOT_REGISTERED_YET"
-  | 2 | "OK_REGISTERED_WITH_SAME_DEVICE"
-  | 3 | "OK_REGISTERED_WITH_ANOTHER_DEVICE"
-  ;
-
-export type WR0_a = 1 | "FREE"
-  | 2 | "PREMIUM"
-  ;
-
-export type a80_EnumC16644b = 0 | "UNKNOWN"
-  | 1 | "FACEBOOK"
-  | 2 | "APPLE"
-  | 3 | "GOOGLE"
-  ;
-
-export type FetchDirection = 1 | "FORWARD"
-  | 2 | "BACKWARD"
-  ;
-
-export type LiveTalkEventType = 1 | "NOTIFIED_UPDATE_LIVE_TALK_TITLE"
-  | 2 | "NOTIFIED_UPDATE_LIVE_TALK_ANNOUNCEMENT"
-  | 3 | "NOTIFIED_UPDATE_SQUARE_MEMBER_ROLE"
-  | 4 | "NOTIFIED_UPDATE_LIVE_TALK_ALLOW_REQUEST_TO_SPEAK"
-  | 5 | "NOTIFIED_UPDATE_SQUARE_MEMBER"
-  ;
-
-export type LiveTalkReportType = 1 | "ADVERTISING"
-  | 2 | "GENDER_HARASSMENT"
-  | 3 | "HARASSMENT"
-  | 4 | "IRRELEVANT_CONTENT"
-  | 5 | "OTHER"
-  | 6 | "IMPERSONATION"
-  | 7 | "SCAM"
-  ;
-
-export type MessageSummaryReportType = 1 | "LEGAL_VIOLATION"
-  | 2 | "HARASSMENT"
-  | 3 | "PERSONAL_IDENTIFIER"
-  | 4 | "FALSE_INFORMATION"
-  | 5 | "GENDER_HARASSMENT"
-  | 6 | "OTHER"
-  ;
-
-export type NotificationPostType = 2 | "POST_MENTION"
-  | 3 | "POST_LIKE"
-  | 4 | "POST_COMMENT"
-  | 5 | "POST_COMMENT_MENTION"
-  | 6 | "POST_COMMENT_LIKE"
-  | 7 | "POST_RELAY_JOIN"
-  ;
-
-export type SquareEventStatus = 1 | "NORMAL"
-  | 2 | "ALERT_DISABLED"
-  ;
-
-export type SquareEventType = 0 | "RECEIVE_MESSAGE"
-  | 1 | "SEND_MESSAGE"
-  | 2 | "NOTIFIED_JOIN_SQUARE_CHAT"
-  | 3 | "NOTIFIED_INVITE_INTO_SQUARE_CHAT"
-  | 4 | "NOTIFIED_LEAVE_SQUARE_CHAT"
-  | 5 | "NOTIFIED_DESTROY_MESSAGE"
-  | 6 | "NOTIFIED_MARK_AS_READ"
-  | 7 | "NOTIFIED_UPDATE_SQUARE_MEMBER_PROFILE"
-  | 8 | "NOTIFIED_UPDATE_SQUARE"
-  | 9 | "NOTIFIED_UPDATE_SQUARE_STATUS"
-  | 10 | "NOTIFIED_UPDATE_SQUARE_AUTHORITY"
-  | 11 | "NOTIFIED_UPDATE_SQUARE_MEMBER"
-  | 12 | "NOTIFIED_UPDATE_SQUARE_CHAT"
-  | 13 | "NOTIFIED_UPDATE_SQUARE_CHAT_STATUS"
-  | 14 | "NOTIFIED_UPDATE_SQUARE_CHAT_MEMBER"
-  | 15 | "NOTIFIED_CREATE_SQUARE_MEMBER"
-  | 16 | "NOTIFIED_CREATE_SQUARE_CHAT_MEMBER"
-  | 17 | "NOTIFIED_UPDATE_SQUARE_MEMBER_RELATION"
-  | 18 | "NOTIFIED_SHUTDOWN_SQUARE"
-  | 19 | "NOTIFIED_KICKOUT_FROM_SQUARE"
-  | 20 | "NOTIFIED_DELETE_SQUARE_CHAT"
-  | 21 | "NOTIFICATION_JOIN_REQUEST"
-  | 22 | "NOTIFICATION_JOINED"
-  | 23 | "NOTIFICATION_PROMOTED_COADMIN"
-  | 24 | "NOTIFICATION_PROMOTED_ADMIN"
-  | 25 | "NOTIFICATION_DEMOTED_MEMBER"
-  | 26 | "NOTIFICATION_KICKED_OUT"
-  | 27 | "NOTIFICATION_SQUARE_DELETE"
-  | 28 | "NOTIFICATION_SQUARE_CHAT_DELETE"
-  | 29 | "NOTIFICATION_MESSAGE"
-  | 30 | "NOTIFIED_UPDATE_SQUARE_CHAT_PROFILE_NAME"
-  | 31 | "NOTIFIED_UPDATE_SQUARE_CHAT_PROFILE_IMAGE"
-  | 32 | "NOTIFIED_UPDATE_SQUARE_FEATURE_SET"
-  | 33 | "NOTIFIED_ADD_BOT"
-  | 34 | "NOTIFIED_REMOVE_BOT"
-  | 36 | "NOTIFIED_UPDATE_SQUARE_NOTE_STATUS"
-  | 37 | "NOTIFIED_UPDATE_SQUARE_CHAT_ANNOUNCEMENT"
-  | 38 | "NOTIFIED_UPDATE_SQUARE_CHAT_MAX_MEMBER_COUNT"
-  | 39 | "NOTIFICATION_POST_ANNOUNCEMENT"
-  | 40 | "NOTIFICATION_POST"
-  | 41 | "MUTATE_MESSAGE"
-  | 42 | "NOTIFICATION_NEW_CHAT_MEMBER"
-  | 43 | "NOTIFIED_UPDATE_READONLY_CHAT"
-  | 46 | "NOTIFIED_UPDATE_MESSAGE_STATUS"
-  | 47 | "NOTIFICATION_MESSAGE_REACTION"
-  | 48 | "NOTIFIED_CHAT_POPUP"
-  | 49 | "NOTIFIED_SYSTEM_MESSAGE"
-  | 50 | "NOTIFIED_UPDATE_SQUARE_CHAT_FEATURE_SET"
-  | 51 | "NOTIFIED_UPDATE_LIVE_TALK"
-  | 52 | "NOTIFICATION_LIVE_TALK"
-  | 53 | "NOTIFIED_UPDATE_LIVE_TALK_INFO"
-  | 54 | "NOTIFICATION_THREAD_MESSAGE"
-  | 55 | "NOTIFICATION_THREAD_MESSAGE_REACTION"
-  | 56 | "NOTIFIED_UPDATE_THREAD"
-  | 57 | "NOTIFIED_UPDATE_THREAD_STATUS"
-  | 58 | "NOTIFIED_UPDATE_THREAD_MEMBER"
-  | 59 | "NOTIFIED_UPDATE_THREAD_ROOT_MESSAGE"
-  | 60 | "NOTIFIED_UPDATE_THREAD_ROOT_MESSAGE_STATUS"
-  ;
-
-export type AdScreen = 1 | "CHATROOM"
-  | 2 | "THREAD_SPACE"
-  | 3 | "YOUR_THREADS"
-  | 4 | "NOTE_LIST"
-  | 5 | "NOTE_END"
-  | 6 | "WEB_MAIN"
-  | 7 | "WEB_SEARCH_RESULT"
-  ;
-
-export type BooleanState = 0 | "NONE"
-  | 1 | "OFF"
-  | 2 | "ON"
-  ;
-
-export type ChatroomPopupType = 1 | "IMG_TEXT"
-  | 2 | "TEXT_ONLY"
-  | 3 | "IMG_ONLY"
-  ;
-
-export type ContentsAttribute = 1 | "NONE"
-  | 2 | "CONTENTS_HIDDEN"
-  ;
-
-export type FetchType = 1 | "DEFAULT"
-  | 2 | "PREFETCH_BY_SERVER"
-  | 3 | "PREFETCH_BY_CLIENT"
-  ;
-
-export type LiveTalkAttribute = 1 | "TITLE"
-  | 2 | "ALLOW_REQUEST_TO_SPEAK"
-  ;
-
-export type LiveTalkRole = 1 | "HOST"
-  | 2 | "CO_HOST"
-  | 3 | "GUEST"
-  ;
-
-export type LiveTalkSpeakerSetting = 1 | "APPROVAL"
-  | 2 | "ALL"
-  ;
-
-export type LiveTalkType = 1 | "PUBLIC"
-  | 2 | "PRIVATE"
-  ;
-
-export type MessageReactionType = 0 | "ALL"
-  | 1 | "UNDO"
-  | 2 | "NICE"
-  | 3 | "LOVE"
-  | 4 | "FUN"
-  | 5 | "AMAZING"
-  | 6 | "SAD"
-  | 7 | "OMG"
-  ;
-
-export type NotifiedMessageType = 1 | "MENTION"
-  | 2 | "REPLY"
-  ;
-
-export type PopupAttribute = 1 | "NAME"
-  | 2 | "ACTIVATED"
-  | 3 | "STARTS_AT"
-  | 4 | "ENDS_AT"
-  | 5 | "CONTENT"
-  ;
-
-export type PopupType = 1 | "MAIN"
-  | 2 | "CHATROOM"
-  ;
-
-export type SquareChatAttribute = 2 | "NAME"
-  | 3 | "SQUARE_CHAT_IMAGE"
-  | 4 | "STATE"
-  | 5 | "TYPE"
-  | 6 | "MAX_MEMBER_COUNT"
-  | 7 | "MESSAGE_VISIBILITY"
-  | 8 | "ABLE_TO_SEARCH_MESSAGE"
-  ;
-
-export type SquareChatFeatureControlState = 1 | "DISABLED"
-  | 2 | "ENABLED"
-  ;
-
-export type SquareChatMemberAttribute = 4 | "MEMBERSHIP_STATE"
-  | 6 | "NOTIFICATION_MESSAGE"
-  | 7 | "NOTIFICATION_NEW_MEMBER"
-  | 8 | "LEFT_BY_KICK_MESSAGE_LOCAL_ID"
-  | 9 | "MESSAGE_LOCAL_ID_WHEN_BLOCK"
-  ;
-
-export type SquareChatMembershipState = 1 | "JOINED"
-  | 2 | "LEFT"
-  ;
-
-export type SquareChatState = 0 | "ALIVE"
-  | 1 | "DELETED"
-  | 2 | "SUSPENDED"
-  ;
-
-export type SquareEmblem = 1 | "SUPER"
-  | 2 | "OFFICIAL"
-  ;
-
-export type SquareErrorCode = 0 | "UNKNOWN"
-  | 400 | "ILLEGAL_ARGUMENT"
-  | 401 | "AUTHENTICATION_FAILURE"
-  | 403 | "FORBIDDEN"
-  | 404 | "NOT_FOUND"
-  | 409 | "REVISION_MISMATCH"
-  | 410 | "PRECONDITION_FAILED"
-  | 500 | "INTERNAL_ERROR"
-  | 501 | "NOT_IMPLEMENTED"
-  | 503 | "TRY_AGAIN_LATER"
-  | 505 | "MAINTENANCE"
-  | 506 | "NO_PRESENCE_EXISTS"
-  ;
-
-export type SquareFeatureControlState = 1 | "DISABLED"
-  | 2 | "ENABLED"
-  ;
-
-export type SquareFeatureSetAttribute = 1 | "CREATING_SECRET_SQUARE_CHAT"
-  | 2 | "INVITING_INTO_OPEN_SQUARE_CHAT"
-  | 3 | "CREATING_SQUARE_CHAT"
-  | 4 | "READONLY_DEFAULT_CHAT"
-  | 5 | "SHOWING_ADVERTISEMENT"
-  | 6 | "DELEGATE_JOIN_TO_PLUG"
-  | 7 | "DELEGATE_KICK_OUT_TO_PLUG"
-  | 8 | "DISABLE_UPDATE_JOIN_METHOD"
-  | 9 | "DISABLE_TRANSFER_ADMIN"
-  | 10 | "CREATING_LIVE_TALK"
-  | 11 | "DISABLE_UPDATE_SEARCHABLE"
-  | 12 | "SUMMARIZING_MESSAGES"
-  | 13 | "CREATING_SQUARE_THREAD"
-  | 14 | "ENABLE_SQUARE_THREAD"
-  | 15 | "DISABLE_CHANGE_ROLE_CO_ADMIN"
-  ;
-
-export type SquareJoinMethodType = 0 | "NONE"
-  | 1 | "APPROVAL"
-  | 2 | "CODE"
-  ;
-
-export type SquareMemberRelationState = 1 | "NONE"
-  | 2 | "BLOCKED"
-  ;
-
-export type SquareMemberRole = 1 | "ADMIN"
-  | 2 | "CO_ADMIN"
-  | 10 | "MEMBER"
-  ;
-
-export type SquareMessageState = 1 | "SENT"
-  | 2 | "DELETED"
-  | 3 | "FORBIDDEN"
-  | 4 | "UNSENT"
-  ;
-
-export type SquareMetadataAttribute = 1 | "EXCLUDED"
-  | 2 | "NO_AD"
-  ;
-
-export type SquarePreferenceAttribute = 1 | "FAVORITE"
-  | 2 | "NOTI_FOR_NEW_JOIN_REQUEST"
-  ;
-
-export type SquareProviderType = 1 | "UNKNOWN"
-  | 2 | "YOUTUBE"
-  | 3 | "OA_FANSPACE"
-  ;
-
-export type SquareState = 0 | "ALIVE"
-  | 1 | "DELETED"
-  | 2 | "SUSPENDED"
-  ;
-
-export type SquareThreadAttribute = 1 | "STATE"
-  | 2 | "EXPIRES_AT"
-  | 3 | "READ_ONLY_AT"
-  ;
-
-export type SquareThreadMembershipState = 1 | "JOINED"
-  | 2 | "LEFT"
-  ;
-
-export type SquareThreadState = 1 | "ALIVE"
-  | 2 | "DELETED"
-  ;
-
-export type SquareType = 0 | "CLOSED"
-  | 1 | "OPEN"
-  ;
-
-export type TargetChatType = 0 | "ALL"
-  | 1 | "MIDS"
-  | 2 | "CATEGORIES"
-  | 3 | "CHANNEL_ID"
-  ;
-
-export type TargetUserType = 0 | "ALL"
-  | 1 | "MIDS"
-  ;
-
-export type do0_EnumC23139B = 1 | "CLOUD"
-  | 2 | "BLE"
-  | 3 | "BEACON"
-  ;
-
-export type do0_EnumC23147e = 0 | "SUCCESS"
-  | 1 | "UNKNOWN_ERROR"
-  | 2 | "BLUETOOTH_NOT_AVAILABLE"
-  | 3 | "CONNECTION_TIMEOUT"
-  | 4 | "CONNECTION_ERROR"
-  | 5 | "CONNECTION_IN_PROGRESS"
-  ;
-
-export type do0_EnumC23148f = 0 | "ONETIME"
-  | 1 | "AUTOMATIC"
-  | 2 | "BEACON"
-  ;
-
-export type do0_G = 0 | "SUCCESS"
-  | 1 | "UNKNOWN_ERROR"
-  | 2 | "GATT_ERROR"
-  | 3 | "GATT_OPERATION_NOT_SUPPORTED"
-  | 4 | "GATT_SERVICE_NOT_FOUND"
-  | 5 | "GATT_CHARACTERISTIC_NOT_FOUND"
-  | 6 | "GATT_CONNECTION_CLOSED"
-  | 7 | "CONNECTION_INVALID"
-  ;
-
-export type do0_M = 0 | "INTERNAL_SERVER_ERROR"
-  | 1 | "UNAUTHORIZED"
-  | 2 | "INVALID_REQUEST"
-  | 3 | "INVALID_STATE"
-  | 4096 | "DEVICE_LIMIT_EXCEEDED"
-  | 4097 | "UNSUPPORTED_REGION"
-  ;
-
-export type fN0_EnumC24466B = 0 | "LINE_PREMIUM"
-  | 1 | "LYP_PREMIUM"
-  ;
-
-export type fN0_EnumC24467C = 1 | "LINE"
-  | 2 | "YAHOO_JAPAN"
-  ;
-
-export type fN0_EnumC24469a = 1 | "OK"
-  | 2 | "NOT_SUPPORTED"
-  | 3 | "UNDEFINED"
-  | 4 | "NOT_ENOUGH_TICKETS"
-  | 5 | "NOT_FRIENDS"
-  | 6 | "NO_AGREEMENT"
-  ;
-
-export type fN0_F = 1 | "OK"
-  | 2 | "NOT_SUPPORTED"
-  | 3 | "UNDEFINED"
-  | 4 | "CONFLICT"
-  | 5 | "NOT_AVAILABLE"
-  | 6 | "INVALID_INVITATION"
-  | 7 | "IN_PAYMENT_FAILURE_STATE"
-  ;
-
-export type fN0_G = 1 | "APPLE"
-  | 2 | "GOOGLE"
-  ;
-
-export type fN0_H = 1 | "INACTIVE"
-  | 2 | "ACTIVE_FINITE"
-  | 3 | "ACTIVE_INFINITE"
-  ;
-
-export type fN0_o = 1 | "AVAILABLE"
-  | 2 | "ALREADY_SUBSCRIBED"
-  ;
-
-export type fN0_p = 0 | "UNKNOWN"
-  | 1 | "SOFTBANK_BUNDLE"
-  | 2 | "YBB_BUNDLE"
-  | 3 | "YAHOO_MOBILE_BUNDLE"
-  | 4 | "PPCG_BUNDLE"
-  | 5 | "ENJOY_BUNDLE"
-  | 6 | "YAHOO_TRIAL_BUNDLE"
-  | 7 | "YAHOO_APPLE"
-  | 8 | "YAHOO_GOOGLE"
-  | 9 | "LINE_APPLE"
-  | 10 | "LINE_GOOGLE"
-  | 11 | "YAHOO_WALLET"
-  ;
-
-export type fN0_q = 0 | "UNKNOWN"
-  | 1 | "NONE"
-  | 16641 | "ILLEGAL_ARGUMENT"
-  | 16642 | "NOT_FOUND"
-  | 16643 | "NOT_AVAILABLE"
-  | 16644 | "INTERNAL_SERVER_ERROR"
-  | 16645 | "AUTHENTICATION_FAILED"
-  ;
-
-export type g80_EnumC24993a = 0 | "INTERNAL_ERROR"
-  | 1 | "ILLEGAL_ARGUMENT"
-  | 2 | "INVALID_CONTEXT"
-  | 3 | "TOO_MANY_REQUESTS"
-  ;
-
-export type h80_EnumC25645e = 0 | "INTERNAL_ERROR"
-  | 1 | "ILLEGAL_ARGUMENT"
-  | 2 | "NOT_FOUND"
-  | 3 | "RETRY_LATER"
-  | 100 | "INVALID_CONTEXT"
-  | 101 | "NOT_SUPPORTED"
-  ;
-
-export type I80_EnumC26392b = 0 | "UNKNOWN"
-  | 1 | "SKIP"
-  | 2 | "PASSWORD"
-  | 4 | "EMAIL_BASED"
-  | 11 | "NONE"
-  ;
-
-export type I80_EnumC26394c = 0 | "PHONE_NUMBER"
-  | 1 | "APPLE"
-  | 2 | "GOOGLE"
-  ;
-
-export type I80_EnumC26408j = 0 | "INTERNAL_ERROR"
-  | 1 | "ILLEGAL_ARGUMENT"
-  | 2 | "VERIFICATION_FAILED"
-  | 3 | "NOT_FOUND"
-  | 4 | "RETRY_LATER"
-  | 5 | "HUMAN_VERIFICATION_REQUIRED"
-  | 100 | "INVALID_CONTEXT"
-  | 101 | "APP_UPGRADE_REQUIRED"
-  ;
-
-export type I80_EnumC26425y = 0 | "UNKNOWN"
-  | 1 | "SMS"
-  | 2 | "IVR"
-  ;
-
-export type j80_EnumC27228a = 1 | "AUTHENTICATION_FAILED"
-  | 2 | "INVALID_STATE"
-  | 3 | "NOT_AUTHORIZED_DEVICE"
-  | 4 | "MUST_REFRESH_V3_TOKEN"
-  ;
-
-export type jO0_EnumC27533B = 1 | "PAYMENT_APPLE"
-  | 2 | "PAYMENT_GOOGLE"
-  ;
-
-export type jO0_EnumC27535b = 0 | "ILLEGAL_ARGUMENT"
-  | 1 | "AUTHENTICATION_FAILED"
-  | 20 | "INTERNAL_ERROR"
-  | 29 | "MESSAGE_DEFINED_ERROR"
-  | 33 | "MAINTENANCE_ERROR"
-  ;
-
-export type jO0_EnumC27559z = 0 | "PAYMENT_PG_NONE"
-  | 1 | "PAYMENT_PG_AU"
-  | 2 | "PAYMENT_PG_AL"
-  ;
-
-export type jf_EnumC27712a = 1 | "NONE"
-  | 2 | "DOES_NOT_RESPOND"
-  | 3 | "RESPOND_MANUALLY"
-  | 4 | "RESPOND_AUTOMATICALLY"
-  ;
-
-export type jf_EnumC27717f = 0 | "UNKNOWN"
-  | 1 | "BAD_REQUEST"
-  | 2 | "NOT_FOUND"
-  | 3 | "FORBIDDEN"
-  | 4 | "INTERNAL_SERVER_ERROR"
-  ;
-
-export type kf_EnumC28766a = 0 | "ILLEGAL_ARGUMENT"
-  | 1 | "INTERNAL_ERROR"
-  | 2 | "UNAUTHORIZED"
-  ;
-
-export type kf_o = 0 | "ANDROID"
-  | 1 | "IOS"
-  ;
-
-export type kf_p = 0 | "RICHMENU"
-  | 1 | "TALK_ROOM"
-  ;
-
-export type kf_r = 0 | "WEB"
-  | 1 | "POSTBACK"
-  | 2 | "SEND_MESSAGE"
-  ;
-
-export type kf_u = 0 | "CLICK"
-  | 1 | "IMPRESSION"
-  ;
-
-export type kf_x = 0 | "UNKNOWN"
-  | 1 | "PROFILE"
-  | 2 | "TALK_LIST"
-  | 3 | "OA_CALL"
-  ;
-
-export type n80_o = 0 | "INTERNAL_ERROR"
-  | 100 | "INVALID_CONTEXT"
-  | 200 | "FIDO_UNKNOWN_CREDENTIAL_ID"
-  | 201 | "FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR"
-  | 202 | "FIDO_UNACCEPTABLE_CONTENT"
-  | 203 | "FIDO_INVALID_REQUEST"
-  ;
-
-export type o80_e = 0 | "INTERNAL_ERROR"
-  | 1 | "VERIFICATION_FAILED"
-  | 2 | "LOGIN_NOT_ALLOWED"
-  | 3 | "EXTERNAL_SERVICE_UNAVAILABLE"
-  | 4 | "RETRY_LATER"
-  | 100 | "NOT_SUPPORTED"
-  | 101 | "ILLEGAL_ARGUMENT"
-  | 102 | "INVALID_CONTEXT"
-  | 103 | "FORBIDDEN"
-  | 200 | "FIDO_UNKNOWN_CREDENTIAL_ID"
-  | 201 | "FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR"
-  | 202 | "FIDO_UNACCEPTABLE_CONTENT"
-  | 203 | "FIDO_INVALID_REQUEST"
-  ;
-
-export type og_E = 1 | "RUNNING"
-  | 2 | "CLOSING"
-  | 3 | "CLOSED"
-  | 4 | "SUSPEND"
-  ;
-
-export type og_EnumC32661b = 0 | "INACTIVE"
-  | 1 | "ACTIVE"
-  ;
-
-export type og_EnumC32663d = 0 | "PREMIUM"
-  | 1 | "VERIFIED"
-  | 2 | "UNVERIFIED"
-  ;
-
-export type og_EnumC32671l = 0 | "ILLEGAL_ARGUMENT"
-  | 1 | "AUTHENTICATION_FAILED"
-  | 3 | "INVALID_STATE"
-  | 5 | "NOT_FOUND"
-  | 20 | "INTERNAL_ERROR"
-  | 33 | "MAINTENANCE_ERROR"
-  ;
-
-export type og_G = 0 | "FREE"
-  | 1 | "MONTHLY"
-  | 2 | "PER_PAYMENT"
-  ;
-
-export type og_I = 0 | "OK"
-  | 1 | "REACHED_TIER_LIMIT"
-  | 2 | "REACHED_MEMBER_LIMIT"
-  | 3 | "ALREADY_JOINED"
-  | 4 | "NOT_SUPPORTED_LINE_VERSION"
-  | 5 | "BOT_USER_REGION_IS_NOT_MATCH"
-  ;
-
-export type q80_EnumC33651c = 0 | "INTERNAL_ERROR"
-  | 1 | "ILLEGAL_ARGUMENT"
-  | 2 | "VERIFICATION_FAILED"
-  | 3 | "NOT_ALLOWED_QR_CODE_LOGIN"
-  | 4 | "VERIFICATION_NOTICE_FAILED"
-  | 5 | "RETRY_LATER"
-  | 100 | "INVALID_CONTEXT"
-  | 101 | "APP_UPGRADE_REQUIRED"
-  ;
-
-export type qm_EnumC34112e = 1 | "BUTTON"
-  | 2 | "ENTRY_SELECTED"
-  | 3 | "BROADCAST_ENTER"
-  | 4 | "BROADCAST_LEAVE"
-  | 5 | "BROADCAST_STAY"
-  ;
-
-export type qm_s = 0 | "ILLEGAL_ARGUMENT"
-  | 5 | "NOT_FOUND"
-  | 20 | "INTERNAL_ERROR"
-  ;
-
-export type r80_EnumC34361a = 1 | "PERSONAL_ACCOUNT"
-  | 2 | "CURRENT_ACCOUNT"
-  ;
-
-export type r80_EnumC34362b = 1 | "BANK_ALL"
-  | 2 | "BANK_DEPOSIT"
-  | 3 | "BANK_WITHDRAWAL"
-  ;
-
-export type r80_EnumC34365e = 1 | "BANK"
-  | 2 | "ATM"
-  | 3 | "CONVENIENCE_STORE"
-  | 4 | "DEBIT_CARD"
-  | 5 | "E_CHANNEL"
-  | 6 | "VIRTUAL_BANK_ACCOUNT"
-  | 7 | "AUTO"
-  | 8 | "CVS_LAWSON"
-  | 9 | "SEVEN_BANK_DEPOSIT"
-  | 10 | "CODE_DEPOSIT"
-  ;
-
-export type r80_EnumC34367g = 0 | "AVAILABLE"
-  | 1 | "DIFFERENT_REGION"
-  | 2 | "UNSUPPORTED_DEVICE"
-  | 3 | "PHONE_NUMBER_UNREGISTERED"
-  | 4 | "UNAVAILABLE_FROM_LINE_PAY"
-  | 5 | "INVALID_USER"
-  ;
-
-export type r80_EnumC34368h = 1 | "CHARGE"
-  | 2 | "WITHDRAW"
-  ;
-
-export type r80_EnumC34370j = 0 | "UNKNOWN"
-  | 1 | "VISA"
-  | 2 | "MASTER"
-  | 3 | "AMEX"
-  | 4 | "DINERS"
-  | 5 | "JCB"
-  ;
-
-export type r80_EnumC34371k = 0 | "NULL"
-  | 1 | "ATM"
-  | 2 | "CONVENIENCE_STORE"
-  ;
-
-export type r80_EnumC34372l = 1 | "SCALE2"
-  | 2 | "SCALE3"
-  | 3 | "HDPI"
-  | 4 | "XHDPI"
-  ;
-
-export type r80_EnumC34374n = 0 | "SUCCESS"
-  | 1000 | "GENERAL_USER_ERROR"
-  | 1101 | "ACCOUNT_NOT_EXISTS"
-  | 1102 | "ACCOUNT_INVALID_STATUS"
-  | 1103 | "ACCOUNT_ALREADY_EXISTS"
-  | 1104 | "MERCHANT_NOT_EXISTS"
-  | 1105 | "MERCHANT_INVALID_STATUS"
-  | 1107 | "AGREEMENT_REQUIRED"
-  | 1108 | "BLACKLISTED"
-  | 1109 | "WRONG_PASSWORD"
-  | 1110 | "INVALID_CREDIT_CARD"
-  | 1111 | "LIMIT_EXCEEDED"
-  | 1115 | "CANNOT_PROCEED"
-  | 1120 | "TOO_WEAK_PASSWORD"
-  | 1125 | "CANNOT_CREATE_ACCOUNT"
-  | 1130 | "TEMPORARY_PASSWORD_ERROR"
-  | 1140 | "MISSING_PARAMETERS"
-  | 1141 | "NO_VALID_MYCODE_ACCOUNT"
-  | 1142 | "INSUFFICIENT_BALANCE"
-  | 1150 | "TRANSACTION_NOT_FOUND"
-  | 1152 | "TRANSACTION_FINISHED"
-  | 1153 | "PAYMENT_AMOUNT_WRONG"
-  | 1157 | "BALANCE_ACCOUNT_NOT_EXISTS"
-  | 1158 | "DUPLICATED_CITIZEN_ID"
-  | 1159 | "PAYMENT_REQUEST_NOT_FOUND"
-  | 1169 | "AUTH_FAILED"
-  | 1171 | "PASSWORD_SETTING_REQUIRED"
-  | 1172 | "TRANSACTION_ALREADY_PROCESSED"
-  | 1178 | "CURRENCY_NOT_SUPPORTED"
-  | 1180 | "PAYMENT_NOT_AVAILABLE"
-  | 1181 | "TRANSFER_REQUEST_NOT_FOUND"
-  | 1183 | "INVALID_PAYMENT_AMOUNT"
-  | 1184 | "INSUFFICIENT_PAYMENT_AMOUNT"
-  | 1185 | "EXTERNAL_SYSTEM_MAINTENANCE"
-  | 1186 | "EXTERNAL_SYSTEM_INOPERATIONAL"
-  | 1192 | "SESSION_EXPIRED"
-  | 1195 | "UPGRADE_REQUIRED"
-  | 1196 | "REQUEST_TOKEN_EXPIRED"
-  | 1198 | "OPERATION_FINISHED"
-  | 1199 | "EXTERNAL_SYSTEM_ERROR"
-  | 1299 | "PARTIAL_AMOUNT_APPROVED"
-  | 1600 | "PINCODE_AUTH_REQUIRED"
-  | 1601 | "ADDITIONAL_AUTH_REQUIRED"
-  | 1603 | "NOT_BOUND"
-  | 1610 | "OTP_USER_REGISTRATION_ERROR"
-  | 1611 | "OTP_CARD_REGISTRATION_ERROR"
-  | 1612 | "NO_AUTH_METHOD"
-  | 1696 | "GENERAL_USER_ERROR_RESTART"
-  | 1697 | "GENERAL_USER_ERROR_REFRESH"
-  | 1698 | "GENERAL_USER_ERROR_CLOSE"
-  | 9000 | "INTERNAL_SERVER_ERROR"
-  | 9999 | "INTERNAL_SYSTEM_MAINTENANCE"
-  | 10000 | "UNKNOWN_ERROR"
-  ;
-
-export type r80_EnumC34376p = 1 | "TRANSFER"
-  | 2 | "TRANSFER_REQUEST"
-  | 3 | "DUTCH"
-  | 4 | "INVITATION"
-  ;
-
-export type r80_EnumC34377q = 0 | "NULL"
-  | 1 | "UNIDEN"
-  | 2 | "WAIT"
-  | 3 | "IDENTIFIED"
-  | 4 | "CHECKING"
-  ;
-
-export type r80_EnumC34378s = 0 | "UNKNOWN"
-  | 1 | "MORE_TAB"
-  | 2 | "CHAT_ROOM_PLUS_MENU"
-  | 3 | "TRANSFER"
-  | 4 | "PAYMENT"
-  | 5 | "LINECARD"
-  | 6 | "INVITATION"
-  ;
-
-export type r80_e0 = 0 | "NONE"
-  | 1 | "ONE_TIME_PAYMENT_AGREEMENT"
-  | 2 | "SIMPLE_JOINING_AGREEMENT"
-  | 3 | "LINE_CARD_CASH_AGREEMENT"
-  | 4 | "LINE_CARD_MONEY_AGREEMENT"
-  | 5 | "JOINING_WITH_LINE_CARD_AGREEMENT"
-  | 6 | "LINE_CARD_AGREEMENT"
-  ;
-
-export type r80_g0 = 0 | "NULL"
-  | 1 | "ATM"
-  | 2 | "CONVENIENCE_STORE"
-  | 3 | "ALL"
-  ;
-
-export type r80_h0 = 1 | "READY"
-  | 2 | "COMPLETE"
-  | 3 | "WAIT"
-  | 4 | "CANCEL"
-  | 5 | "FAIL"
-  | 6 | "EXPIRE"
-  | 7 | "ALL"
-  ;
-
-export type r80_i0 = 1 | "TRANSFER_ACCEPTABLE"
-  | 2 | "REMOVE_INVOICE"
-  | 3 | "INVOICE_CODE"
-  | 4 | "SHOW_ALWAYS_INVOICE"
-  ;
-
-export type r80_m0 = 1 | "OK"
-  | 2 | "NOT_ALIVE_USER"
-  | 3 | "NEED_BALANCE_DISCLAIMER"
-  | 4 | "ECONTEXT_CHARGING_IN_PROGRESS"
-  | 6 | "TRANSFER_IN_PROGRESS"
-  | 7 | "OK_REMAINING_BALANCE"
-  | 8 | "ADVERSE_BALANCE"
-  | 9 | "CONFIRM_REQUIRED"
-  ;
-
-export type r80_n0 = 1 | "LINE"
-  | 2 | "LINEPAY"
-  ;
-
-export type r80_r = 1 | "CITIZEN_ID"
-  | 2 | "PASSPORT"
-  | 3 | "WORK_PERMIT"
-  | 4 | "ALIEN_CARD"
-  ;
-
-export type t80_h = 1 | "CLIENT"
-  | 2 | "SERVER"
-  ;
-
-export type t80_i = 1 | "APP_INSTANCE_LOCAL"
-  | 2 | "APP_TYPE_LOCAL"
-  | 3 | "GLOBAL"
-  ;
-
-export type t80_n = 0 | "UNKNOWN"
-  | 1 | "NONE"
-  | 16641 | "ILLEGAL_ARGUMENT"
-  | 16642 | "NOT_FOUND"
-  | 16643 | "NOT_AVAILABLE"
-  | 16644 | "TOO_LARGE_VALUE"
-  | 16645 | "CLOCK_DRIFT_DETECTED"
-  | 16646 | "UNSUPPORTED_APPLICATION_TYPE"
-  | 16647 | "DUPLICATED_ENTRY"
-  | 16897 | "AUTHENTICATION_FAILED"
-  | 20737 | "INTERNAL_SERVER_ERROR"
-  | 20738 | "SERVICE_IN_MAINTENANCE_MODE"
-  | 20739 | "SERVICE_UNAVAILABLE"
-  ;
-
-export type t80_r = 1 | "USER_ACTION"
-  | 2 | "DATA_OUTDATED"
-  | 3 | "APP_MIGRATION"
-  | 100 | "OTHER"
-  ;
-
-export type vh_EnumC37632c = 1 | "ACTIVE"
-  | 2 | "INACTIVE"
-  ;
-
-export type vh_m = 1 | "SAFE"
-  | 2 | "NOT_SAFE"
-  ;
-
-export type wm_EnumC38497a = 0 | "UNKNOWN"
-  | 1 | "BOT_NOT_FOUND"
-  | 2 | "BOT_NOT_AVAILABLE"
-  | 3 | "NOT_A_MEMBER"
-  | 4 | "SQUARECHAT_NOT_FOUND"
-  | 5 | "FORBIDDEN"
-  | 400 | "ILLEGAL_ARGUMENT"
-  | 401 | "AUTHENTICATION_FAILED"
-  | 500 | "INTERNAL_ERROR"
-  ;
-
-export type zR0_EnumC40578c = 0 | "FOREGROUND"
-  | 1 | "BACKGROUND"
-  ;
-
-export type zR0_EnumC40579d = 1 | "STICKER"
-  | 2 | "THEME"
-  | 3 | "STICON"
-  ;
-
-export type zR0_h = 0 | "NORMAL"
-  | 1 | "BIG"
-  ;
-
-export type zR0_j = 0 | "UNKNOWN"
-  | 1 | "NONE"
-  | 16641 | "ILLEGAL_ARGUMENT"
-  | 16642 | "NOT_FOUND"
-  | 16643 | "NOT_AVAILABLE"
-  | 16897 | "AUTHENTICATION_FAILED"
-  | 20737 | "INTERNAL_SERVER_ERROR"
-  | 20739 | "SERVICE_UNAVAILABLE"
-  ;
-
-export type zf_EnumC40713a = 1 | "PERSONAL"
-  | 2 | "ROOM"
-  | 3 | "GROUP"
-  | 4 | "SQUARE_CHAT"
-  ;
-
-export type zf_EnumC40715c = 1 | "REGULAR"
-  | 2 | "PRIORITY"
-  | 3 | "MORE"
-  ;
-
-export type zf_EnumC40716d = 1 | "INVALID_REQUEST"
-  | 2 | "UNAUTHORIZED"
-  | 100 | "SERVER_ERROR"
-  ;
+export type AR0_g =
+  | 16641
+  | "ILLEGAL_ARGUMENT"
+  | 16642
+  | "MAJOR_VERSION_NOT_SUPPORTED"
+  | 16897
+  | "AUTHENTICATION_FAILED"
+  | 20737
+  | "INTERNAL_SERVER_ERROR"
+  | 20739
+  | "SERVICE_UNAVAILABLE";
+
+export type AR0_q = 0 | "NOT_PURCHASED" | 1 | "SUBSCRIPTION";
+
+export type AccountMigrationPincodeType =
+  | 0
+  | "NOT_APPLICABLE"
+  | 1
+  | "NOT_SET"
+  | 2
+  | "SET"
+  | 3
+  | "NEED_ENFORCED_INPUT";
+
+export type ApplicationType =
+  | 16
+  | "IOS"
+  | 17
+  | "IOS_RC"
+  | 18
+  | "IOS_BETA"
+  | 19
+  | "IOS_ALPHA"
+  | 32
+  | "ANDROID"
+  | 33
+  | "ANDROID_RC"
+  | 34
+  | "ANDROID_BETA"
+  | 35
+  | "ANDROID_ALPHA"
+  | 48
+  | "WAP"
+  | 49
+  | "WAP_RC"
+  | 50
+  | "WAP_BETA"
+  | 51
+  | "WAP_ALPHA"
+  | 64
+  | "BOT"
+  | 65
+  | "BOT_RC"
+  | 66
+  | "BOT_BETA"
+  | 67
+  | "BOT_ALPHA"
+  | 80
+  | "WEB"
+  | 81
+  | "WEB_RC"
+  | 82
+  | "WEB_BETA"
+  | 83
+  | "WEB_ALPHA"
+  | 96
+  | "DESKTOPWIN"
+  | 97
+  | "DESKTOPWIN_RC"
+  | 98
+  | "DESKTOPWIN_BETA"
+  | 99
+  | "DESKTOPWIN_ALPHA"
+  | 112
+  | "DESKTOPMAC"
+  | 113
+  | "DESKTOPMAC_RC"
+  | 114
+  | "DESKTOPMAC_BETA"
+  | 115
+  | "DESKTOPMAC_ALPHA"
+  | 128
+  | "CHANNELGW"
+  | 129
+  | "CHANNELGW_RC"
+  | 130
+  | "CHANNELGW_BETA"
+  | 131
+  | "CHANNELGW_ALPHA"
+  | 144
+  | "CHANNELCP"
+  | 145
+  | "CHANNELCP_RC"
+  | 146
+  | "CHANNELCP_BETA"
+  | 147
+  | "CHANNELCP_ALPHA"
+  | 160
+  | "WINPHONE"
+  | 161
+  | "WINPHONE_RC"
+  | 162
+  | "WINPHONE_BETA"
+  | 163
+  | "WINPHONE_ALPHA"
+  | 176
+  | "BLACKBERRY"
+  | 177
+  | "BLACKBERRY_RC"
+  | 178
+  | "BLACKBERRY_BETA"
+  | 179
+  | "BLACKBERRY_ALPHA"
+  | 192
+  | "WINMETRO"
+  | 193
+  | "WINMETRO_RC"
+  | 194
+  | "WINMETRO_BETA"
+  | 195
+  | "WINMETRO_ALPHA"
+  | 200
+  | "S40"
+  | 209
+  | "S40_RC"
+  | 210
+  | "S40_BETA"
+  | 211
+  | "S40_ALPHA"
+  | 224
+  | "CHRONO"
+  | 225
+  | "CHRONO_RC"
+  | 226
+  | "CHRONO_BETA"
+  | 227
+  | "CHRONO_ALPHA"
+  | 256
+  | "TIZEN"
+  | 257
+  | "TIZEN_RC"
+  | 258
+  | "TIZEN_BETA"
+  | 259
+  | "TIZEN_ALPHA"
+  | 272
+  | "VIRTUAL"
+  | 288
+  | "FIREFOXOS"
+  | 289
+  | "FIREFOXOS_RC"
+  | 290
+  | "FIREFOXOS_BETA"
+  | 291
+  | "FIREFOXOS_ALPHA"
+  | 304
+  | "IOSIPAD"
+  | 305
+  | "IOSIPAD_RC"
+  | 306
+  | "IOSIPAD_BETA"
+  | 307
+  | "IOSIPAD_ALPHA"
+  | 320
+  | "BIZIOS"
+  | 321
+  | "BIZIOS_RC"
+  | 322
+  | "BIZIOS_BETA"
+  | 323
+  | "BIZIOS_ALPHA"
+  | 336
+  | "BIZANDROID"
+  | 337
+  | "BIZANDROID_RC"
+  | 338
+  | "BIZANDROID_BETA"
+  | 339
+  | "BIZANDROID_ALPHA"
+  | 352
+  | "BIZBOT"
+  | 353
+  | "BIZBOT_RC"
+  | 354
+  | "BIZBOT_BETA"
+  | 355
+  | "BIZBOT_ALPHA"
+  | 368
+  | "CHROMEOS"
+  | 369
+  | "CHROMEOS_RC"
+  | 370
+  | "CHROMEOS_BETA"
+  | 371
+  | "CHROMEOS_ALPHA"
+  | 384
+  | "ANDROIDLITE"
+  | 385
+  | "ANDROIDLITE_RC"
+  | 386
+  | "ANDROIDLITE_BETA"
+  | 387
+  | "ANDROIDLITE_ALPHA"
+  | 400
+  | "WIN10"
+  | 401
+  | "WIN10_RC"
+  | 402
+  | "WIN10_BETA"
+  | 403
+  | "WIN10_ALPHA"
+  | 416
+  | "BIZWEB"
+  | 417
+  | "BIZWEB_RC"
+  | 418
+  | "BIZWEB_BETA"
+  | 419
+  | "BIZWEB_ALPHA"
+  | 432
+  | "DUMMYPRIMARY"
+  | 433
+  | "DUMMYPRIMARY_RC"
+  | 434
+  | "DUMMYPRIMARY_BETA"
+  | 435
+  | "DUMMYPRIMARY_ALPHA"
+  | 448
+  | "SQUARE"
+  | 449
+  | "SQUARE_RC"
+  | 450
+  | "SQUARE_BETA"
+  | 451
+  | "SQUARE_ALPHA"
+  | 464
+  | "INTERNAL"
+  | 465
+  | "INTERNAL_RC"
+  | 466
+  | "INTERNAL_BETA"
+  | 467
+  | "INTERNAL_ALPHA"
+  | 480
+  | "CLOVAFRIENDS"
+  | 481
+  | "CLOVAFRIENDS_RC"
+  | 482
+  | "CLOVAFRIENDS_BETA"
+  | 483
+  | "CLOVAFRIENDS_ALPHA"
+  | 496
+  | "WATCHOS"
+  | 497
+  | "WATCHOS_RC"
+  | 498
+  | "WATCHOS_BETA"
+  | 499
+  | "WATCHOS_ALPHA"
+  | 512
+  | "OPENCHAT_PLUG"
+  | 513
+  | "OPENCHAT_PLUG_RC"
+  | 514
+  | "OPENCHAT_PLUG_BETA"
+  | 515
+  | "OPENCHAT_PLUG_ALPHA"
+  | 528
+  | "ANDROIDSECONDARY"
+  | 529
+  | "ANDROIDSECONDARY_RC"
+  | 530
+  | "ANDROIDSECONDARY_BETA"
+  | 531
+  | "ANDROIDSECONDARY_ALPHA"
+  | 544
+  | "WEAROS"
+  | 545
+  | "WEAROS_RC"
+  | 546
+  | "WEAROS_BETA"
+  | 547
+  | "WEAROS_ALPHA";
+
+export type BotType =
+  | 0
+  | "RESERVED"
+  | 1
+  | "OFFICIAL"
+  | 2
+  | "LINE_AT_0"
+  | 3
+  | "LINE_AT";
+
+export type CarrierCode =
+  | 0
+  | "NOT_SPECIFIED"
+  | 1
+  | "JP_DOCOMO"
+  | 2
+  | "JP_AU"
+  | 3
+  | "JP_SOFTBANK"
+  | 4
+  | "JP_DOCOMO_LINE"
+  | 5
+  | "JP_SOFTBANK_LINE"
+  | 6
+  | "JP_AU_LINE"
+  | 7
+  | "JP_RAKUTEN"
+  | 8
+  | "JP_MVNO"
+  | 9
+  | "JP_USER_SELECTED_LINE"
+  | 17
+  | "KR_SKT"
+  | 18
+  | "KR_KT"
+  | 19
+  | "KR_LGT";
+
+export type ChannelErrorCode =
+  | 0
+  | "ILLEGAL_ARGUMENT"
+  | 1
+  | "INTERNAL_ERROR"
+  | 2
+  | "CONNECTION_ERROR"
+  | 3
+  | "AUTHENTICATIONI_FAILED"
+  | 4
+  | "NEED_PERMISSION_APPROVAL"
+  | 5
+  | "COIN_NOT_USABLE"
+  | 6
+  | "WEBVIEW_NOT_ALLOWED"
+  | 7
+  | "NOT_AVAILABLE_API";
+
+export type ContactAttribute =
+  | 1
+  | "CONTACT_ATTRIBUTE_CAPABLE_VOICE_CALL"
+  | 2
+  | "CONTACT_ATTRIBUTE_CAPABLE_VIDEO_CALL"
+  | 16
+  | "CONTACT_ATTRIBUTE_CAPABLE_MY_HOME"
+  | 32
+  | "CONTACT_ATTRIBUTE_CAPABLE_BUDDY";
+
+export type ContactSetting =
+  | 1
+  | "CONTACT_SETTING_NOTIFICATION_DISABLE"
+  | 2
+  | "CONTACT_SETTING_DISPLAY_NAME_OVERRIDE"
+  | 4
+  | "CONTACT_SETTING_CONTACT_HIDE"
+  | 8
+  | "CONTACT_SETTING_FAVORITE"
+  | 16
+  | "CONTACT_SETTING_DELETE"
+  | 32
+  | "CONTACT_SETTING_FRIEND_RINGTONE"
+  | 64
+  | "CONTACT_SETTING_FRIEND_RINGBACK_TONE";
+
+export type ContactStatus =
+  | 0
+  | "UNSPECIFIED"
+  | 1
+  | "FRIEND"
+  | 2
+  | "FRIEND_BLOCKED"
+  | 3
+  | "RECOMMEND"
+  | 4
+  | "RECOMMEND_BLOCKED"
+  | 5
+  | "DELETED"
+  | 6
+  | "DELETED_BLOCKED";
+
+export type ContactType =
+  | 0
+  | "MID"
+  | 1
+  | "PHONE"
+  | 2
+  | "EMAIL"
+  | 3
+  | "USERID"
+  | 4
+  | "PROXIMITY"
+  | 5
+  | "GROUP"
+  | 6
+  | "USER"
+  | 7
+  | "QRCODE"
+  | 8
+  | "PROMOTION_BOT"
+  | 9
+  | "CONTACT_MESSAGE"
+  | 10
+  | "FRIEND_REQUEST"
+  | 11
+  | "BEACON"
+  | 128
+  | "REPAIR"
+  | 2305
+  | "FACEBOOK"
+  | 2306
+  | "SINA"
+  | 2307
+  | "RENREN"
+  | 2308
+  | "FEIXIN"
+  | 2309
+  | "BBM";
+
+export type ContentType =
+  | 0
+  | "NONE"
+  | 1
+  | "IMAGE"
+  | 2
+  | "VIDEO"
+  | 3
+  | "AUDIO"
+  | 4
+  | "HTML"
+  | 5
+  | "PDF"
+  | 6
+  | "CALL"
+  | 7
+  | "STICKER"
+  | 8
+  | "PRESENCE"
+  | 9
+  | "GIFT"
+  | 10
+  | "GROUPBOARD"
+  | 11
+  | "APPLINK"
+  | 12
+  | "LINK"
+  | 13
+  | "CONTACT"
+  | 14
+  | "FILE"
+  | 15
+  | "LOCATION"
+  | 16
+  | "POSTNOTIFICATION"
+  | 17
+  | "RICH"
+  | 18
+  | "CHATEVENT"
+  | 19
+  | "MUSIC"
+  | 20
+  | "PAYMENT"
+  | 21
+  | "EXTIMAGE"
+  | 22
+  | "FLEX";
+
+export type Eg_EnumC8927a = 1 | "NEW" | 2 | "UPDATE" | 3 | "EVENT";
+
+export type EmailConfirmationStatus =
+  | 0
+  | "NOT_SPECIFIED"
+  | 1
+  | "NOT_YET"
+  | 3
+  | "DONE"
+  | 4
+  | "NEED_ENFORCED_INPUT";
+
+export type ErrorCode =
+  | 0
+  | "ILLEGAL_ARGUMENT"
+  | 1
+  | "AUTHENTICATION_FAILED"
+  | 2
+  | "DB_FAILED"
+  | 3
+  | "INVALID_STATE"
+  | 4
+  | "EXCESSIVE_ACCESS"
+  | 5
+  | "NOT_FOUND"
+  | 6
+  | "INVALID_LENGTH"
+  | 7
+  | "NOT_AVAILABLE_USER"
+  | 8
+  | "NOT_AUTHORIZED_DEVICE"
+  | 9
+  | "INVALID_MID"
+  | 10
+  | "NOT_A_MEMBER"
+  | 11
+  | "INCOMPATIBLE_APP_VERSION"
+  | 12
+  | "NOT_READY"
+  | 13
+  | "NOT_AVAILABLE_SESSION"
+  | 14
+  | "NOT_AUTHORIZED_SESSION"
+  | 15
+  | "SYSTEM_ERROR"
+  | 16
+  | "NO_AVAILABLE_VERIFICATION_METHOD"
+  | 17
+  | "NOT_AUTHENTICATED"
+  | 18
+  | "INVALID_IDENTITY_CREDENTIAL"
+  | 19
+  | "NOT_AVAILABLE_IDENTITY_IDENTIFIER"
+  | 20
+  | "INTERNAL_ERROR"
+  | 21
+  | "NO_SUCH_IDENTITY_IDENFIER"
+  | 22
+  | "DEACTIVATED_ACCOUNT_BOUND_TO_THIS_IDENTITY"
+  | 23
+  | "ILLEGAL_IDENTITY_CREDENTIAL"
+  | 24
+  | "UNKNOWN_CHANNEL"
+  | 25
+  | "NO_SUCH_MESSAGE_BOX"
+  | 26
+  | "NOT_AVAILABLE_MESSAGE_BOX"
+  | 27
+  | "CHANNEL_DOES_NOT_MATCH"
+  | 28
+  | "NOT_YOUR_MESSAGE"
+  | 29
+  | "MESSAGE_DEFINED_ERROR"
+  | 30
+  | "USER_CANNOT_ACCEPT_PRESENTS"
+  | 32
+  | "USER_NOT_STICKER_OWNER"
+  | 33
+  | "MAINTENANCE_ERROR"
+  | 34
+  | "ACCOUNT_NOT_MATCHED"
+  | 35
+  | "ABUSE_BLOCK"
+  | 36
+  | "NOT_FRIEND"
+  | 37
+  | "NOT_ALLOWED_CALL"
+  | 38
+  | "BLOCK_FRIEND"
+  | 39
+  | "INCOMPATIBLE_VOIP_VERSION"
+  | 40
+  | "INVALID_SNS_ACCESS_TOKEN"
+  | 41
+  | "EXTERNAL_SERVICE_NOT_AVAILABLE"
+  | 42
+  | "NOT_ALLOWED_ADD_CONTACT"
+  | 43
+  | "NOT_CERTIFICATED"
+  | 44
+  | "NOT_ALLOWED_SECONDARY_DEVICE"
+  | 45
+  | "INVALID_PIN_CODE"
+  | 47
+  | "EXCEED_FILE_MAX_SIZE"
+  | 48
+  | "EXCEED_DAILY_QUOTA"
+  | 49
+  | "NOT_SUPPORT_SEND_FILE"
+  | 50
+  | "MUST_UPGRADE"
+  | 51
+  | "NOT_AVAILABLE_PIN_CODE_SESSION"
+  | 52
+  | "EXPIRED_REVISION"
+  | 54
+  | "NOT_YET_PHONE_NUMBER"
+  | 55
+  | "BAD_CALL_NUMBER"
+  | 56
+  | "UNAVAILABLE_CALL_NUMBER"
+  | 57
+  | "NOT_SUPPORT_CALL_SERVICE"
+  | 58
+  | "CONGESTION_CONTROL"
+  | 59
+  | "NO_BALANCE"
+  | 60
+  | "NOT_PERMITTED_CALLER_ID"
+  | 61
+  | "NO_CALLER_ID_LIMIT_EXCEEDED"
+  | 62
+  | "CALLER_ID_VERIFICATION_REQUIRED"
+  | 63
+  | "NO_CALLER_ID_LIMIT_EXCEEDED_AND_VERIFICATION_REQUIRED"
+  | 64
+  | "MESSAGE_NOT_FOUND"
+  | 65
+  | "INVALID_ACCOUNT_MIGRATION_PINCODE_FORMAT"
+  | 66
+  | "ACCOUNT_MIGRATION_PINCODE_NOT_MATCHED"
+  | 67
+  | "ACCOUNT_MIGRATION_PINCODE_BLOCKED"
+  | 69
+  | "INVALID_PASSWORD_FORMAT"
+  | 70
+  | "FEATURE_RESTRICTED"
+  | 71
+  | "MESSAGE_NOT_DESTRUCTIBLE"
+  | 72
+  | "PAID_CALL_REDEEM_FAILED"
+  | 73
+  | "PREVENTED_JOIN_BY_TICKET"
+  | 75
+  | "SEND_MESSAGE_NOT_PERMITTED_FROM_LINE_AT"
+  | 76
+  | "SEND_MESSAGE_NOT_PERMITTED_WHILE_AUTO_REPLY"
+  | 77
+  | "SECURITY_CENTER_NOT_VERIFIED"
+  | 78
+  | "SECURITY_CENTER_BLOCKED_BY_SETTING"
+  | 79
+  | "SECURITY_CENTER_BLOCKED"
+  | 80
+  | "TALK_PROXY_EXCEPTION"
+  | 81
+  | "E2EE_INVALID_PROTOCOL"
+  | 82
+  | "E2EE_RETRY_ENCRYPT"
+  | 83
+  | "E2EE_UPDATE_SENDER_KEY"
+  | 84
+  | "E2EE_UPDATE_RECEIVER_KEY"
+  | 85
+  | "E2EE_INVALID_ARGUMENT"
+  | 86
+  | "E2EE_INVALID_VERSION"
+  | 87
+  | "E2EE_SENDER_DISABLED"
+  | 88
+  | "E2EE_RECEIVER_DISABLED"
+  | 89
+  | "E2EE_SENDER_NOT_ALLOWED"
+  | 90
+  | "E2EE_RECEIVER_NOT_ALLOWED"
+  | 91
+  | "E2EE_RESEND_FAIL"
+  | 92
+  | "E2EE_RESEND_OK"
+  | 93
+  | "HITOKOTO_BACKUP_NO_AVAILABLE_DATA"
+  | 94
+  | "E2EE_UPDATE_PRIMARY_DEVICE"
+  | 95
+  | "SUCCESS"
+  | 96
+  | "CANCEL"
+  | 97
+  | "E2EE_PRIMARY_NOT_SUPPORT"
+  | 98
+  | "E2EE_RETRY_PLAIN"
+  | 99
+  | "E2EE_RECREATE_GROUP_KEY"
+  | 100
+  | "E2EE_GROUP_TOO_MANY_MEMBERS"
+  | 101
+  | "SERVER_BUSY"
+  | 102
+  | "NOT_ALLOWED_ADD_FOLLOW"
+  | 103
+  | "INCOMING_FRIEND_REQUEST_LIMIT"
+  | 104
+  | "OUTGOING_FRIEND_REQUEST_LIMIT"
+  | 105
+  | "OUTGOING_FRIEND_REQUEST_QUOTA"
+  | 106
+  | "DUPLICATED"
+  | 107
+  | "BANNED"
+  | 108
+  | "NOT_AN_INVITEE"
+  | 109
+  | "NOT_AN_OUTSIDER"
+  | 111
+  | "EMPTY_GROUP"
+  | 112
+  | "EXCEED_FOLLOW_LIMIT"
+  | 113
+  | "UNSUPPORTED_ACCOUNT_TYPE"
+  | 114
+  | "AGREEMENT_REQUIRED"
+  | 115
+  | "SHOULD_RETRY"
+  | 116
+  | "OVER_MAX_CHATS_PER_USER"
+  | 117
+  | "NOT_AVAILABLE_API"
+  | 118
+  | "INVALID_OTP"
+  | 119
+  | "MUST_REFRESH_V3_TOKEN"
+  | 120
+  | "ALREADY_EXPIRED"
+  | 121
+  | "USER_NOT_STICON_OWNER"
+  | 122
+  | "REFRESH_MEDIA_FLOW"
+  | 123
+  | "EXCEED_FOLLOWER_LIMIT"
+  | 124
+  | "INCOMPATIBLE_APP_TYPE"
+  | 125
+  | "NOT_PREMIUM";
+
+export type Fg_a =
+  | 0
+  | "INTERNAL_ERROR"
+  | 1
+  | "ILLEGAL_ARGUMENT"
+  | 2
+  | "VERIFICATION_FAILED"
+  | 3
+  | "NOT_FOUND"
+  | 4
+  | "RETRY_LATER"
+  | 5
+  | "HUMAN_VERIFICATION_REQUIRED"
+  | 6
+  | "NOT_ENABLED"
+  | 100
+  | "INVALID_CONTEXT"
+  | 101
+  | "APP_UPGRADE_REQUIRED"
+  | 102
+  | "NO_CONTENT";
+
+export type FriendRequestStatus =
+  | 0
+  | "NONE"
+  | 1
+  | "AVAILABLE"
+  | 2
+  | "ALREADY_REQUESTED"
+  | 3
+  | "UNAVAILABLE";
+
+export type IdentityProvider =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "LINE"
+  | 2
+  | "NAVER_KR"
+  | 3
+  | "LINE_PHONE";
+
+export type LN0_F0 =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "INVALID_TARGET_USER"
+  | 2
+  | "AGE_VALIDATION"
+  | 3
+  | "TOO_MANY_FRIENDS"
+  | 4
+  | "TOO_MANY_REQUESTS"
+  | 5
+  | "MALFORMED_REQUEST"
+  | 6
+  | "TRACKING_META_QRCODE_FAVORED";
+
+export type LN0_X0 = 1 | "USER" | 2 | "BOT";
+
+export type MIDType =
+  | 0
+  | "USER"
+  | 1
+  | "ROOM"
+  | 2
+  | "GROUP"
+  | 3
+  | "SQUARE"
+  | 4
+  | "SQUARE_CHAT"
+  | 5
+  | "SQUARE_MEMBER"
+  | 6
+  | "BOT"
+  | 7
+  | "SQUARE_THREAD";
+
+export type NZ0_B0 =
+  | 0
+  | "PAY"
+  | 1
+  | "POI"
+  | 2
+  | "FX"
+  | 3
+  | "SEC"
+  | 4
+  | "BIT"
+  | 5
+  | "LIN"
+  | 6
+  | "SCO"
+  | 7
+  | "POC";
+
+export type NZ0_C0 =
+  | 0
+  | "OK"
+  | 1
+  | "MAINTENANCE"
+  | 2
+  | "TPS_EXCEEDED"
+  | 3
+  | "NOT_FOUND"
+  | 4
+  | "BLOCKED"
+  | 5
+  | "INTERNAL_ERROR"
+  | 6
+  | "WALLET_CMS_MAINTENANCE";
+
+export type NZ0_EnumC12154b1 = 0 | "NORMAL" | 1 | "CAMERA";
+
+export type NZ0_EnumC12169g1 =
+  | 101
+  | "WALLET"
+  | 201
+  | "ASSET"
+  | 301
+  | "SHOPPING";
+
+export type NZ0_EnumC12170h = 0 | "HIDE_BADGE" | 1 | "SHOW_BADGE";
+
+export type NZ0_EnumC12188n =
+  | 0
+  | "OK"
+  | 1
+  | "UNAVAILABLE"
+  | 2
+  | "DUPLICATAE_REGISTRATION"
+  | 3
+  | "INTERNAL_ERROR";
+
+export type NZ0_EnumC12192o0 = 0 | "LV1" | 1 | "LV2" | 2 | "LV3" | 3 | "LV9";
+
+export type NZ0_EnumC12193o1 =
+  | 400
+  | "INVALID_PARAMETER"
+  | 401
+  | "AUTHENTICATION_FAILED"
+  | 500
+  | "INTERNAL_SERVER_ERROR"
+  | 503
+  | "SERVICE_IN_MAINTENANCE_MODE";
+
+export type NZ0_EnumC12195p0 =
+  | 1
+  | "ALIVE"
+  | 2
+  | "SUSPENDED"
+  | 3
+  | "UNREGISTERED";
+
+export type NZ0_EnumC12197q = 0 | "PREFIX" | 1 | "SUFFIX";
+
+export type NZ0_EnumC12218x0 = 0 | "NO_CONTENT" | 1 | "OK" | 2 | "ERROR";
+
+export type NZ0_I0 = 0 | "A" | 1 | "B" | 2 | "C" | 3 | "D" | 4 | "UNKNOWN";
+
+export type NZ0_K0 = 0 | "POCKET_MONEY" | 1 | "REFINANCE";
+
+export type NZ0_N0 = 0 | "COMPACT" | 1 | "EXPANDED";
+
+export type NZ0_S0 = 0 | "CARD" | 1 | "ACTION";
+
+export type NZ0_W0 = 0 | "OK" | 1 | "INTERNAL_ERROR";
+
+export type NotificationStatus =
+  | 1
+  | "NOTIFICATION_ITEM_EXIST"
+  | 2
+  | "TIMELINE_ITEM_EXIST"
+  | 4
+  | "NOTE_GROUP_NEW_ITEM_EXIST"
+  | 8
+  | "TIMELINE_BUDDYGROUP_CHANGED"
+  | 16
+  | "NOTE_ONE_TO_ONE_NEW_ITEM_EXIST"
+  | 32
+  | "ALBUM_ITEM_EXIST"
+  | 64
+  | "TIMELINE_ITEM_DELETED"
+  | 128
+  | "OTOGROUP_ITEM_EXIST"
+  | 256
+  | "GROUPHOME_NEW_ITEM_EXIST"
+  | 512
+  | "GROUPHOME_HIDDEN_ITEM_CHANGED"
+  | 1024
+  | "NOTIFICATION_ITEM_CHANGED"
+  | 2048
+  | "BEAD_ITEM_HIDE"
+  | 4096
+  | "BEAD_ITEM_SHOW"
+  | 8192
+  | "LINE_TICKET_UPDATED"
+  | 16384
+  | "TIMELINE_STORY_UPDATED"
+  | 32768
+  | "SMARTCH_UPDATED"
+  | 65536
+  | "AVATAR_UPDATED"
+  | 131072
+  | "HOME_NOTIFICATION_ITEM_EXIST"
+  | 262144
+  | "TIMELINE_REBOOT_COMPLETED"
+  | 524288
+  | "TIMELINE_GUIDE_STORY_UPDATED"
+  | 1048576
+  | "TIMELINE_F2F_COMPLETED"
+  | 2097152
+  | "VOOM_LIVE_STATE_CHANGED"
+  | 4194304
+  | "VOOM_ACTIVITY_REWARD_ITEM_EXIST";
+
+export type NotificationType =
+  | 1
+  | "APPLE_APNS"
+  | 2
+  | "GOOGLE_C2DM"
+  | 3
+  | "NHN_NNI"
+  | 4
+  | "SKT_AOM"
+  | 5
+  | "MS_MPNS"
+  | 6
+  | "RIM_BIS"
+  | 7
+  | "GOOGLE_GCM"
+  | 8
+  | "NOKIA_NNAPI"
+  | 9
+  | "TIZEN"
+  | 10
+  | "MOZILLA_SIMPLE"
+  | 17
+  | "LINE_BOT"
+  | 18
+  | "LINE_WAP"
+  | 19
+  | "APPLE_APNS_VOIP"
+  | 20
+  | "MS_WNS"
+  | 21
+  | "GOOGLE_FCM"
+  | 22
+  | "CLOVA"
+  | 23
+  | "CLOVA_VOIP"
+  | 24
+  | "HUAWEI_HCM";
+
+export type Ob1_B0 = 0 | "FOREGROUND" | 1 | "BACKGROUND";
+
+export type Ob1_C1 = 0 | "NORMAL" | 1 | "BIG";
+
+export type Ob1_D0 =
+  | 0
+  | "PURCHASE_ONLY"
+  | 1
+  | "PURCHASE_OR_SUBSCRIPTION"
+  | 2
+  | "SUBSCRIPTION_ONLY";
+
+export type Ob1_EnumC12607a1 = 1 | "DEFAULT" | 2 | "VIEW_VIDEO";
+
+export type Ob1_EnumC12610b1 =
+  | 0
+  | "NONE"
+  | 2
+  | "BUDDY"
+  | 3
+  | "INSTALL"
+  | 4
+  | "MISSION"
+  | 5
+  | "MUSTBUY";
+
+export type Ob1_EnumC12631i1 =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "PRODUCT"
+  | 2
+  | "USER"
+  | 3
+  | "PREMIUM_USER";
+
+export type Ob1_EnumC12638l = 0 | "VALID" | 1 | "INVALID";
+
+export type Ob1_EnumC12641m = 1 | "PREMIUM" | 2 | "VERIFIED" | 3 | "UNVERIFIED";
+
+export type Ob1_EnumC12652p1 =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "NONE"
+  | 16641
+  | "ILLEGAL_ARGUMENT"
+  | 16642
+  | "NOT_FOUND"
+  | 16643
+  | "NOT_AVAILABLE"
+  | 16644
+  | "NOT_PAID_PRODUCT"
+  | 16645
+  | "NOT_FREE_PRODUCT"
+  | 16646
+  | "ALREADY_OWNED"
+  | 16647
+  | "ERROR_WITH_CUSTOM_MESSAGE"
+  | 16648
+  | "NOT_AVAILABLE_TO_RECIPIENT"
+  | 16649
+  | "NOT_AVAILABLE_FOR_CHANNEL_ID"
+  | 16650
+  | "NOT_SALE_FOR_COUNTRY"
+  | 16651
+  | "NOT_SALES_PERIOD"
+  | 16652
+  | "NOT_SALE_FOR_DEVICE"
+  | 16653
+  | "NOT_SALE_FOR_VERSION"
+  | 16654
+  | "ALREADY_EXPIRED"
+  | 16655
+  | "LIMIT_EXCEEDED"
+  | 16656
+  | "MISSING_CAPABILITY"
+  | 16897
+  | "AUTHENTICATION_FAILED"
+  | 17153
+  | "BALANCE_SHORTAGE"
+  | 20737
+  | "INTERNAL_SERVER_ERROR"
+  | 20738
+  | "SERVICE_IN_MAINTENANCE_MODE"
+  | 20739
+  | "SERVICE_UNAVAILABLE";
+
+export type Ob1_EnumC12656r0 =
+  | 0
+  | "OK"
+  | 1
+  | "PRODUCT_UNSUPPORTED"
+  | 2
+  | "TEXT_NOT_SPECIFIED"
+  | 3
+  | "TEXT_STYLE_UNAVAILABLE"
+  | 4
+  | "CHARACTER_COUNT_LIMIT_EXCEEDED"
+  | 5
+  | "CONTAINS_INVALID_WORD";
+
+export type Ob1_EnumC12664u =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "NONE"
+  | 16641
+  | "ILLEGAL_ARGUMENT"
+  | 16642
+  | "NOT_FOUND"
+  | 16643
+  | "NOT_AVAILABLE"
+  | 16644
+  | "MAX_AMOUNT_OF_PRODUCTS_REACHED"
+  | 16645
+  | "PRODUCT_IS_NOT_PREMIUM"
+  | 16646
+  | "PRODUCT_IS_NOT_AVAILABLE_FOR_USER"
+  | 16897
+  | "AUTHENTICATION_FAILED"
+  | 20737
+  | "INTERNAL_SERVER_ERROR"
+  | 20739
+  | "SERVICE_UNAVAILABLE";
+
+export type Ob1_EnumC12666u1 =
+  | 0
+  | "POPULAR"
+  | 1
+  | "NEW_RELEASE"
+  | 2
+  | "EVENT"
+  | 3
+  | "RECOMMENDED"
+  | 4
+  | "POPULAR_WEEKLY"
+  | 5
+  | "POPULAR_MONTHLY"
+  | 6
+  | "POPULAR_RECENTLY_PUBLISHED"
+  | 7
+  | "BUDDY"
+  | 8
+  | "EXTRA_EVENT"
+  | 9
+  | "BROWSING_HISTORY"
+  | 10
+  | "POPULAR_TOTAL_SALES"
+  | 11
+  | "NEW_SUBSCRIPTION"
+  | 12
+  | "POPULAR_SUBSCRIPTION_30D"
+  | 13
+  | "CPD_STICKER"
+  | 14
+  | "POPULAR_WITH_FREE";
+
+export type Ob1_F1 = 1 | "STATIC" | 2 | "ANIMATION";
+
+export type Ob1_I = 0 | "STATIC" | 1 | "POPULAR" | 2 | "NEW_RELEASE";
+
+export type Ob1_J0 = 0 | "ON_SALE" | 1 | "OUTDATED_VERSION" | 2 | "NOT_ON_SALE";
+
+export type Ob1_J1 =
+  | 0
+  | "OK"
+  | 1
+  | "INVALID_PARAMETER"
+  | 2
+  | "NOT_FOUND"
+  | 3
+  | "NOT_SUPPORTED"
+  | 4
+  | "CONFLICT"
+  | 5
+  | "NOT_ELIGIBLE";
+
+export type Ob1_K1 =
+  | 0
+  | "GOOGLE"
+  | 1
+  | "APPLE"
+  | 2
+  | "WEBSTORE"
+  | 3
+  | "LINEMO"
+  | 4
+  | "LINE_MUSIC"
+  | 5
+  | "LYP"
+  | 6
+  | "TW_CHT"
+  | 7
+  | "FREEMIUM";
+
+export type Ob1_M1 =
+  | 0
+  | "OK"
+  | 1
+  | "UNKNOWN"
+  | 2
+  | "NOT_SUPPORTED"
+  | 3
+  | "NO_SUBSCRIPTION"
+  | 4
+  | "SUBSCRIPTION_EXISTS"
+  | 5
+  | "NOT_AVAILABLE"
+  | 6
+  | "CONFLICT"
+  | 7
+  | "OUTDATED_VERSION"
+  | 8
+  | "NO_STUDENT_INFORMATION"
+  | 9
+  | "ACCOUNT_HOLD"
+  | 10
+  | "RETRY_STATE";
+
+export type Ob1_O0 = 1 | "STICKER" | 2 | "THEME" | 3 | "STICON";
+
+export type Ob1_O1 =
+  | 0
+  | "AVAILABLE"
+  | 1
+  | "DIFFERENT_STORE"
+  | 2
+  | "NOT_STUDENT"
+  | 3
+  | "ALREADY_PURCHASED";
+
+export type Ob1_P1 = 1 | "GENERAL" | 2 | "STUDENT";
+
+export type Ob1_Q1 = 1 | "BASIC" | 2 | "DELUXE";
+
+export type Ob1_R1 = 1 | "MONTHLY" | 2 | "YEARLY";
+
+export type Ob1_U1 =
+  | 0
+  | "OK"
+  | 1
+  | "UNKNOWN"
+  | 2
+  | "NO_SUBSCRIPTION"
+  | 3
+  | "EXISTS"
+  | 4
+  | "NOT_FOUND"
+  | 5
+  | "EXCEEDS_LIMIT"
+  | 6
+  | "NOT_AVAILABLE";
+
+export type Ob1_V1 = 1 | "DATE_ASC" | 2 | "DATE_DESC";
+
+export type Ob1_X1 = 0 | "GENERAL" | 1 | "CREATORS" | 2 | "STICON";
+
+export type Ob1_a2 =
+  | 0
+  | "NOT_PURCHASED"
+  | 1
+  | "SUBSCRIPTION"
+  | 2
+  | "NOT_SUBSCRIBED"
+  | 3
+  | "NOT_ACCEPTED"
+  | 4
+  | "NOT_PURCHASED_U2I"
+  | 5
+  | "BUDDY";
+
+export type Ob1_c2 = 1 | "STATIC" | 2 | "ANIMATION";
+
+export type OpType =
+  | 0
+  | "END_OF_OPERATION"
+  | 1
+  | "UPDATE_PROFILE"
+  | 2
+  | "NOTIFIED_UPDATE_PROFILE"
+  | 3
+  | "REGISTER_USERID"
+  | 4
+  | "ADD_CONTACT"
+  | 5
+  | "NOTIFIED_ADD_CONTACT"
+  | 6
+  | "BLOCK_CONTACT"
+  | 7
+  | "UNBLOCK_CONTACT"
+  | 8
+  | "NOTIFIED_RECOMMEND_CONTACT"
+  | 9
+  | "CREATE_GROUP"
+  | 10
+  | "UPDATE_GROUP"
+  | 11
+  | "NOTIFIED_UPDATE_GROUP"
+  | 12
+  | "INVITE_INTO_GROUP"
+  | 13
+  | "NOTIFIED_INVITE_INTO_GROUP"
+  | 14
+  | "LEAVE_GROUP"
+  | 15
+  | "NOTIFIED_LEAVE_GROUP"
+  | 16
+  | "ACCEPT_GROUP_INVITATION"
+  | 17
+  | "NOTIFIED_ACCEPT_GROUP_INVITATION"
+  | 18
+  | "KICKOUT_FROM_GROUP"
+  | 19
+  | "NOTIFIED_KICKOUT_FROM_GROUP"
+  | 20
+  | "CREATE_ROOM"
+  | 21
+  | "INVITE_INTO_ROOM"
+  | 22
+  | "NOTIFIED_INVITE_INTO_ROOM"
+  | 23
+  | "LEAVE_ROOM"
+  | 24
+  | "NOTIFIED_LEAVE_ROOM"
+  | 25
+  | "SEND_MESSAGE"
+  | 26
+  | "RECEIVE_MESSAGE"
+  | 27
+  | "SEND_MESSAGE_RECEIPT"
+  | 28
+  | "RECEIVE_MESSAGE_RECEIPT"
+  | 29
+  | "SEND_CONTENT_RECEIPT"
+  | 30
+  | "RECEIVE_ANNOUNCEMENT"
+  | 31
+  | "CANCEL_INVITATION_GROUP"
+  | 32
+  | "NOTIFIED_CANCEL_INVITATION_GROUP"
+  | 33
+  | "NOTIFIED_UNREGISTER_USER"
+  | 34
+  | "REJECT_GROUP_INVITATION"
+  | 35
+  | "NOTIFIED_REJECT_GROUP_INVITATION"
+  | 36
+  | "UPDATE_SETTINGS"
+  | 37
+  | "NOTIFIED_REGISTER_USER"
+  | 38
+  | "INVITE_VIA_EMAIL"
+  | 39
+  | "NOTIFIED_REQUEST_RECOVERY"
+  | 40
+  | "SEND_CHAT_CHECKED"
+  | 41
+  | "SEND_CHAT_REMOVED"
+  | 42
+  | "NOTIFIED_FORCE_SYNC"
+  | 43
+  | "SEND_CONTENT"
+  | 44
+  | "SEND_MESSAGE_MYHOME"
+  | 45
+  | "NOTIFIED_UPDATE_CONTENT_PREVIEW"
+  | 46
+  | "REMOVE_ALL_MESSAGES"
+  | 47
+  | "NOTIFIED_UPDATE_PURCHASES"
+  | 48
+  | "DUMMY"
+  | 49
+  | "UPDATE_CONTACT"
+  | 50
+  | "NOTIFIED_RECEIVED_CALL"
+  | 51
+  | "CANCEL_CALL"
+  | 52
+  | "NOTIFIED_REDIRECT"
+  | 53
+  | "NOTIFIED_CHANNEL_SYNC"
+  | 54
+  | "FAILED_SEND_MESSAGE"
+  | 55
+  | "NOTIFIED_READ_MESSAGE"
+  | 56
+  | "FAILED_EMAIL_CONFIRMATION"
+  | 58
+  | "NOTIFIED_CHAT_CONTENT"
+  | 59
+  | "NOTIFIED_PUSH_NOTICENTER_ITEM"
+  | 60
+  | "NOTIFIED_JOIN_CHAT"
+  | 61
+  | "NOTIFIED_LEAVE_CHAT"
+  | 62
+  | "NOTIFIED_TYPING"
+  | 63
+  | "FRIEND_REQUEST_ACCEPTED"
+  | 64
+  | "DESTROY_MESSAGE"
+  | 65
+  | "NOTIFIED_DESTROY_MESSAGE"
+  | 66
+  | "UPDATE_PUBLICKEYCHAIN"
+  | 67
+  | "NOTIFIED_UPDATE_PUBLICKEYCHAIN"
+  | 68
+  | "NOTIFIED_BLOCK_CONTACT"
+  | 69
+  | "NOTIFIED_UNBLOCK_CONTACT"
+  | 70
+  | "UPDATE_GROUPPREFERENCE"
+  | 71
+  | "NOTIFIED_PAYMENT_EVENT"
+  | 72
+  | "REGISTER_E2EE_PUBLICKEY"
+  | 73
+  | "NOTIFIED_E2EE_KEY_EXCHANGE_REQ"
+  | 74
+  | "NOTIFIED_E2EE_KEY_EXCHANGE_RESP"
+  | 75
+  | "NOTIFIED_E2EE_MESSAGE_RESEND_REQ"
+  | 76
+  | "NOTIFIED_E2EE_MESSAGE_RESEND_RESP"
+  | 77
+  | "NOTIFIED_E2EE_KEY_UPDATE"
+  | 78
+  | "NOTIFIED_BUDDY_UPDATE_PROFILE"
+  | 79
+  | "NOTIFIED_UPDATE_LINEAT_TABS"
+  | 80
+  | "UPDATE_ROOM"
+  | 81
+  | "NOTIFIED_BEACON_DETECTED"
+  | 82
+  | "UPDATE_EXTENDED_PROFILE"
+  | 83
+  | "ADD_FOLLOW"
+  | 84
+  | "NOTIFIED_ADD_FOLLOW"
+  | 85
+  | "DELETE_FOLLOW"
+  | 86
+  | "NOTIFIED_DELETE_FOLLOW"
+  | 87
+  | "UPDATE_TIMELINE_SETTINGS"
+  | 88
+  | "NOTIFIED_FRIEND_REQUEST"
+  | 89
+  | "UPDATE_RINGBACK_TONE"
+  | 90
+  | "NOTIFIED_POSTBACK"
+  | 91
+  | "RECEIVE_READ_WATERMARK"
+  | 92
+  | "NOTIFIED_MESSAGE_DELIVERED"
+  | 93
+  | "NOTIFIED_UPDATE_CHAT_BAR"
+  | 94
+  | "NOTIFIED_CHATAPP_INSTALLED"
+  | 95
+  | "NOTIFIED_CHATAPP_UPDATED"
+  | 96
+  | "NOTIFIED_CHATAPP_NEW_MARK"
+  | 97
+  | "NOTIFIED_CHATAPP_DELETED"
+  | 98
+  | "NOTIFIED_CHATAPP_SYNC"
+  | 99
+  | "NOTIFIED_UPDATE_MESSAGE"
+  | 100
+  | "UPDATE_CHATROOMBGM"
+  | 101
+  | "NOTIFIED_UPDATE_CHATROOMBGM"
+  | 102
+  | "UPDATE_RINGTONE"
+  | 118
+  | "UPDATE_USER_SETTINGS"
+  | 119
+  | "NOTIFIED_UPDATE_STATUS_BAR"
+  | 120
+  | "CREATE_CHAT"
+  | 121
+  | "UPDATE_CHAT"
+  | 122
+  | "NOTIFIED_UPDATE_CHAT"
+  | 123
+  | "INVITE_INTO_CHAT"
+  | 124
+  | "NOTIFIED_INVITE_INTO_CHAT"
+  | 125
+  | "CANCEL_CHAT_INVITATION"
+  | 126
+  | "NOTIFIED_CANCEL_CHAT_INVITATION"
+  | 127
+  | "DELETE_SELF_FROM_CHAT"
+  | 128
+  | "NOTIFIED_DELETE_SELF_FROM_CHAT"
+  | 129
+  | "ACCEPT_CHAT_INVITATION"
+  | 130
+  | "NOTIFIED_ACCEPT_CHAT_INVITATION"
+  | 131
+  | "REJECT_CHAT_INVITATION"
+  | 132
+  | "DELETE_OTHER_FROM_CHAT"
+  | 133
+  | "NOTIFIED_DELETE_OTHER_FROM_CHAT"
+  | 134
+  | "NOTIFIED_CONTACT_CALENDAR_EVENT"
+  | 135
+  | "NOTIFIED_CONTACT_CALENDAR_EVENT_ALL"
+  | 136
+  | "UPDATE_THINGS_OPERATIONS"
+  | 137
+  | "SEND_CHAT_HIDDEN"
+  | 138
+  | "CHAT_META_SYNC_ALL"
+  | 139
+  | "SEND_REACTION"
+  | 140
+  | "NOTIFIED_SEND_REACTION"
+  | 141
+  | "NOTIFIED_UPDATE_PROFILE_CONTENT"
+  | 142
+  | "FAILED_DELIVERY_MESSAGE"
+  | 143
+  | "SEND_ENCRYPTED_E2EE_KEY_REQUESTED"
+  | 144
+  | "CHANNEL_PAAK_AUTHENTICATION_REQUESTED"
+  | 145
+  | "UPDATE_PIN_STATE"
+  | 146
+  | "NOTIFIED_PREMIUMBACKUP_STATE_CHANGED"
+  | 147
+  | "CREATE_MULTI_PROFILE"
+  | 148
+  | "MULTI_PROFILE_STATUS_CHANGED"
+  | 149
+  | "DELETE_MULTI_PROFILE"
+  | 150
+  | "UPDATE_PROFILE_MAPPING"
+  | 151
+  | "DELETE_PROFILE_MAPPING"
+  | 152
+  | "NOTIFIED_DESTROY_NOTICENTER_PUSH";
+
+export type P70_g = 1000 | "INVALID_REQUEST" | 1001 | "RETRY_REQUIRED";
+
+export type PaidCallType =
+  | 0
+  | "OUT"
+  | 1
+  | "IN"
+  | 2
+  | "TOLLFREE"
+  | 3
+  | "RECORD"
+  | 4
+  | "AD"
+  | 5
+  | "CS"
+  | 6
+  | "OA"
+  | 7
+  | "OAM";
+
+export type PayloadType =
+  | 101
+  | "PAYLOAD_BUY"
+  | 111
+  | "PAYLOAD_CS"
+  | 121
+  | "PAYLOAD_BONUS"
+  | 131
+  | "PAYLOAD_EVENT"
+  | 141
+  | "PAYLOAD_POINT_AUTO_EXCHANGED"
+  | 151
+  | "PAYLOAD_POINT_MANUAL_EXCHANGED";
+
+export type Pb1_A0 = 0 | "NORMAL" | 1 | "VIDEOCAM" | 2 | "VOIP" | 3 | "RECORD";
+
+export type Pb1_A3 =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "BACKGROUND_NEW_KEY_CREATED"
+  | 2
+  | "BACKGROUND_PERIODICAL_VERIFICATION"
+  | 3
+  | "FOREGROUND_NEW_PIN_REGISTERED"
+  | 4
+  | "FOREGROUND_VERIFICATION";
+
+export type Pb1_B = 1 | "SIRI" | 2 | "GOOGLE_ASSISTANT" | 3 | "OS_SHARE";
+
+export type Pb1_D0 =
+  | 0
+  | "RICH_MENU_ID"
+  | 1
+  | "STATUS_BAR"
+  | 2
+  | "BUDDY_CAUTION_NOTICE";
+
+export type Pb1_D4 = 1 | "AUDIO" | 2 | "VIDEO" | 3 | "FACEPLAY";
+
+export type Pb1_D6 =
+  | 0
+  | "GOOGLE"
+  | 1
+  | "BAIDU"
+  | 2
+  | "FOURSQUARE"
+  | 3
+  | "YAHOOJAPAN"
+  | 4
+  | "KINGWAY";
+
+export type Pb1_E7 = 0 | "UNKNOWN" | 1 | "TALK" | 2 | "SQUARE";
+
+export type Pb1_EnumC12917a6 =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "APP_FOREGROUND"
+  | 2
+  | "PERIODIC"
+  | 3
+  | "MANUAL";
+
+export type Pb1_EnumC12926b1 = 0 | "NOT_A_FRIEND" | 1 | "ALWAYS";
+
+export type Pb1_EnumC12941c2 =
+  | 26
+  | "BLE_LCS_API_USABLE"
+  | 27
+  | "PROHIBIT_MINIMIZE_CHANNEL_BROWSER"
+  | 28
+  | "ALLOW_IOS_WEBKIT"
+  | 38
+  | "PURCHASE_LCS_API_USABLE"
+  | 48
+  | "ALLOW_ANDROID_ENABLE_ZOOM";
+
+export type Pb1_EnumC12945c6 = 1 | "V1" | 2 | "V2";
+
+export type Pb1_EnumC12970e3 =
+  | 1
+  | "USER_AGE_CHECKED"
+  | 2
+  | "USER_APPROVAL_REQUIRED";
+
+export type Pb1_EnumC12997g2 = 0 | "PROFILE" | 1 | "FRIENDS" | 2 | "GROUP";
+
+export type Pb1_EnumC12998g3 =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "WIFI"
+  | 2
+  | "CELLULAR_NETWORK";
+
+export type Pb1_EnumC13009h0 = 1 | "NORMAL" | 2 | "LOW_BATTERY";
+
+export type Pb1_EnumC13010h1 = 1 | "NEW" | 2 | "PLANET";
+
+export type Pb1_EnumC13015h6 =
+  | 0
+  | "FORWARD"
+  | 1
+  | "AUTO_REPLY"
+  | 2
+  | "SUBORDINATE"
+  | 3
+  | "REPLY";
+
+export type Pb1_EnumC13022i =
+  | 0
+  | "SKIP"
+  | 1
+  | "PINCODE"
+  | 2
+  | "SECURITY_CENTER";
+
+export type Pb1_EnumC13029i6 = 0 | "ADD" | 1 | "REMOVE" | 2 | "MODIFY";
+
+export type Pb1_EnumC13037j0 =
+  | 0
+  | "UNSPECIFIED"
+  | 1
+  | "INACTIVE"
+  | 2
+  | "ACTIVE"
+  | 3
+  | "DELETED";
+
+export type Pb1_EnumC13050k =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "IOS_REDUCED_ACCURACY"
+  | 2
+  | "IOS_FULL_ACCURACY"
+  | 3
+  | "AOS_PRECISE_LOCATION"
+  | 4
+  | "AOS_APPROXIMATE_LOCATION";
+
+export type Pb1_EnumC13082m3 = 0 | "SHOW" | 1 | "HIDE";
+
+export type Pb1_EnumC13093n0 = 0 | "NONE" | 1 | "TOP";
+
+export type Pb1_EnumC13127p6 =
+  | 0
+  | "NORMAL"
+  | 1
+  | "ALERT_DISABLED"
+  | 2
+  | "ALWAYS";
+
+export type Pb1_EnumC13128p7 =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "DIRECT_INVITATION"
+  | 2
+  | "DIRECT_CHAT"
+  | 3
+  | "GROUP_INVITATION"
+  | 4
+  | "GROUP_CHAT"
+  | 5
+  | "ROOM_INVITATION"
+  | 6
+  | "ROOM_CHAT"
+  | 7
+  | "FRIEND_PROFILE"
+  | 8
+  | "DIRECT_CHAT_SELECTED"
+  | 9
+  | "GROUP_CHAT_SELECTED"
+  | 10
+  | "ROOM_CHAT_SELECTED"
+  | 11
+  | "DEPRECATED";
+
+export type Pb1_EnumC13148r0 =
+  | 1
+  | "ALWAYS_HIDDEN"
+  | 2
+  | "ALWAYS_SHOWN"
+  | 3
+  | "SHOWN_BY_CONDITION";
+
+export type Pb1_EnumC13151r3 = 0 | "ONEWAY" | 1 | "BOTH" | 2 | "NOT_REGISTERED";
+
+export type Pb1_EnumC13162s0 =
+  | 1
+  | "NOT_SUSPICIOUS"
+  | 2
+  | "SUSPICIOUS_00"
+  | 3
+  | "SUSPICIOUS_01";
+
+export type Pb1_EnumC13196u6 =
+  | 0
+  | "COIN"
+  | 1
+  | "CREDIT"
+  | 2
+  | "MONTHLY"
+  | 3
+  | "OAM";
+
+export type Pb1_EnumC13209v5 =
+  | 0
+  | "DUMMY"
+  | 1
+  | "NOTICE"
+  | 2
+  | "MORETAB"
+  | 3
+  | "STICKERSHOP"
+  | 4
+  | "CHANNEL"
+  | 5
+  | "DENY_KEYWORD"
+  | 6
+  | "CONNECTIONINFO"
+  | 7
+  | "BUDDY"
+  | 8
+  | "TIMELINEINFO"
+  | 9
+  | "THEMESHOP"
+  | 10
+  | "CALLRATE"
+  | 11
+  | "CONFIGURATION"
+  | 12
+  | "STICONSHOP"
+  | 13
+  | "SUGGESTDICTIONARY"
+  | 14
+  | "SUGGESTSETTINGS"
+  | 15
+  | "USERSETTINGS"
+  | 16
+  | "ANALYTICSINFO"
+  | 17
+  | "SEARCHPOPULARKEYWORD"
+  | 18
+  | "SEARCHNOTICE"
+  | 19
+  | "TIMELINE"
+  | 20
+  | "SEARCHPOPULARCATEGORY"
+  | 21
+  | "EXTENDEDPROFILE"
+  | 22
+  | "SEASONALMARKETING"
+  | 23
+  | "NEWSTAB"
+  | 24
+  | "SUGGESTDICTIONARYV2"
+  | 25
+  | "CHATAPPSYNC"
+  | 26
+  | "AGREEMENTS"
+  | 27
+  | "INSTANTNEWS"
+  | 28
+  | "EMOJI_MAPPING"
+  | 29
+  | "SEARCHBARKEYWORDS"
+  | 30
+  | "SHOPPING"
+  | 31
+  | "CHAT_EFFECT_BACKGROUND"
+  | 32
+  | "CHAT_EFFECT_KEYWORD"
+  | 33
+  | "SEARCHINDEX"
+  | 34
+  | "HUBTAB"
+  | 35
+  | "PAY_RULE_UPDATED"
+  | 36
+  | "SMARTCH"
+  | 37
+  | "HOME_SERVICE_LIST"
+  | 38
+  | "TIMELINESTORY"
+  | 39
+  | "WALLET_TAB"
+  | 40
+  | "POD_TAB"
+  | 41
+  | "HOME_SAFETY_CHECK"
+  | 42
+  | "HOME_SEASONAL_EFFECT"
+  | 43
+  | "OPENCHAT_MAIN"
+  | 44
+  | "CHAT_EFFECT_CONTENT_METADATA_TAG"
+  | 45
+  | "VOOM_LIVE_STATE_CHANGED"
+  | 46
+  | "PROFILE_STUDIO_N_BADGE"
+  | 47
+  | "LYP_FONT"
+  | 48
+  | "TIMELINESTORY_OA"
+  | 49
+  | "TRAVEL";
+
+export type Pb1_EnumC13221w3 = 0 | "UNKNOWN" | 1 | "EUROPEAN_ECONOMIC_AREA";
+
+export type Pb1_EnumC13222w4 =
+  | 1
+  | "OBS_VIDEO"
+  | 2
+  | "OBS_GENERAL"
+  | 3
+  | "OBS_RINGBACK_TONE";
+
+export type Pb1_EnumC13237x5 =
+  | 1
+  | "AUDIO"
+  | 2
+  | "VIDEO"
+  | 3
+  | "LIVE"
+  | 4
+  | "PHOTOBOOTH";
+
+export type Pb1_EnumC13238x6 =
+  | 0
+  | "NOT_SPECIFIED"
+  | 1
+  | "VALID"
+  | 2
+  | "VERIFICATION_REQUIRED"
+  | 3
+  | "NOT_PERMITTED"
+  | 4
+  | "LIMIT_EXCEEDED"
+  | 5
+  | "LIMIT_EXCEEDED_AND_VERIFICATION_REQUIRED";
+
+export type Pb1_EnumC13251y5 = 1 | "STANDARD" | 2 | "CONSTELLA";
+
+export type Pb1_EnumC13252y6 =
+  | 0
+  | "ALL"
+  | 1
+  | "PROFILE"
+  | 2
+  | "SETTINGS"
+  | 3
+  | "CONFIGURATIONS"
+  | 4
+  | "CONTACT"
+  | 5
+  | "GROUP"
+  | 6
+  | "E2EE"
+  | 7
+  | "MESSAGE";
+
+export type Pb1_EnumC13260z0 = 0 | "ON_AIR" | 1 | "LIVE" | 2 | "GLP";
+
+export type Pb1_EnumC13267z7 = 1 | "NOTIFICATION_SETTING" | 255 | "ALL";
+
+export type Pb1_F0 = 0 | "NA" | 1 | "FRIEND_VIEW" | 2 | "OFFICIAL_ACCOUNT_VIEW";
+
+export type Pb1_F4 = 1 | "INCOMING" | 2 | "OUTGOING";
+
+export type Pb1_F5 =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "SUCCESS"
+  | 2
+  | "REQUIRE_SERVER_SIDE_EMAIL"
+  | 3
+  | "REQUIRE_CLIENT_SIDE_EMAIL";
+
+export type Pb1_F6 = 0 | "JBU" | 1 | "LIP";
+
+export type Pb1_G3 =
+  | 1
+  | "PROMOTION_FRIENDS_INVITE"
+  | 2
+  | "CAPABILITY_SERVER_SIDE_SMS"
+  | 3
+  | "LINE_CLIENT_ANALYTICS_CONFIGURATION";
+
+export type Pb1_G4 = 1 | "TIMELINE" | 2 | "NEARBY" | 3 | "SQUARE";
+
+export type Pb1_G6 =
+  | 2
+  | "NICE"
+  | 3
+  | "LOVE"
+  | 4
+  | "FUN"
+  | 5
+  | "AMAZING"
+  | 6
+  | "SAD"
+  | 7
+  | "OMG";
+
+export type Pb1_H6 = 0 | "PUBLIC" | 1 | "PRIVATE";
+
+export type Pb1_I6 = 0 | "NEVER_SHOW" | 1 | "ONE_WAY" | 2 | "MUTUAL";
+
+export type Pb1_J4 =
+  | 0
+  | "OTHER"
+  | 1
+  | "INITIALIZATION"
+  | 2
+  | "PERIODIC_SYNC"
+  | 3
+  | "MANUAL_SYNC"
+  | 4
+  | "LOCAL_DB_CORRUPTED";
+
+export type Pb1_K2 =
+  | 1
+  | "CHANNEL_INFO"
+  | 2
+  | "CHANNEL_TOKEN"
+  | 4
+  | "COMMON_DOMAIN"
+  | 255
+  | "ALL";
+
+export type Pb1_K6 =
+  | 1
+  | "EMAIL"
+  | 2
+  | "DISPLAY_NAME"
+  | 4
+  | "PHONETIC_NAME"
+  | 8
+  | "PICTURE"
+  | 16
+  | "STATUS_MESSAGE"
+  | 32
+  | "ALLOW_SEARCH_BY_USERID"
+  | 64
+  | "ALLOW_SEARCH_BY_EMAIL"
+  | 128
+  | "BUDDY_STATUS"
+  | 256
+  | "MUSIC_PROFILE"
+  | 512
+  | "AVATAR_PROFILE"
+  | 2147483647
+  | "ALL";
+
+export type Pb1_L2 = 0 | "SYNC" | 1 | "REMOVE" | 2 | "REMOVE_ALL";
+
+export type Pb1_L4 =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "REVISION_GAP_TOO_LARGE_CLIENT"
+  | 2
+  | "REVISION_GAP_TOO_LARGE_SERVER"
+  | 3
+  | "OPERATION_EXPIRED"
+  | 4
+  | "REVISION_HOLE"
+  | 5
+  | "FORCE_TRIGGERED";
+
+export type Pb1_M6 = 0 | "OWNER" | 1 | "FRIEND";
+
+export type Pb1_N6 =
+  | 1
+  | "NFT"
+  | 2
+  | "AVATAR"
+  | 3
+  | "SNOW"
+  | 4
+  | "ARCZ"
+  | 5
+  | "FRENZ";
+
+export type Pb1_O2 =
+  | 1
+  | "NAME"
+  | 2
+  | "PICTURE_STATUS"
+  | 4
+  | "PREVENTED_JOIN_BY_TICKET"
+  | 8
+  | "NOTIFICATION_SETTING"
+  | 16
+  | "INVITATION_TICKET"
+  | 32
+  | "FAVORITE_TIMESTAMP"
+  | 64
+  | "CHAT_TYPE";
+
+export type Pb1_O6 = 1 | "DEFAULT" | 2 | "MULTI_PROFILE";
+
+export type Pb1_P6 = 0 | "HIDDEN" | 1000 | "PUBLIC";
+
+export type Pb1_Q2 =
+  | 0
+  | "BACKGROUND"
+  | 1
+  | "KEYWORD"
+  | 2
+  | "CONTENT_METADATA_TAG_BASED";
+
+export type Pb1_R3 =
+  | 1
+  | "BEACON_AGREEMENT"
+  | 2
+  | "BLUETOOTH"
+  | 3
+  | "SHAKE_AGREEMENT"
+  | 4
+  | "AUTO_SUGGEST"
+  | 5
+  | "CHATROOM_CAPTURE"
+  | 6
+  | "CHATROOM_MINIMIZEBROWSER"
+  | 7
+  | "CHATROOM_MOBILESAFARI"
+  | 8
+  | "VIDEO_HIGHTLIGHT_WIZARD"
+  | 9
+  | "CHAT_FOLDER"
+  | 10
+  | "BLUETOOTH_SCAN"
+  | 11
+  | "AUTO_SUGGEST_FOLLOW_UP";
+
+export type Pb1_S7 = 1 | "NONE" | 2 | "ALL";
+
+export type Pb1_T3 =
+  | 1
+  | "LOCATION_OS"
+  | 2
+  | "LOCATION_APP"
+  | 3
+  | "VIDEO_AUTO_PLAY"
+  | 4
+  | "HNI"
+  | 5
+  | "AUTO_SUGGEST_LANG"
+  | 6
+  | "CHAT_EFFECT_CACHED_CONTENT_LIST"
+  | 7
+  | "IFA"
+  | 8
+  | "ACCURACY_MODE";
+
+export type Pb1_T7 = 0 | "SYNC" | 1 | "REPORT";
+
+export type Pb1_V7 =
+  | 0
+  | "UNSPECIFIED"
+  | 1
+  | "UNKNOWN"
+  | 2
+  | "INITIALIZATION"
+  | 3
+  | "OPERATION"
+  | 4
+  | "FULL_SYNC"
+  | 5
+  | "AUTO_REPAIR"
+  | 6
+  | "MANUAL_REPAIR"
+  | 7
+  | "INTERNAL"
+  | 8
+  | "USER_INITIATED";
+
+export type Pb1_W2 = 0 | "ANYONE_IN_CHAT" | 1 | "CREATOR_ONLY" | 2 | "NO_ONE";
+
+export type Pb1_W3 =
+  | 0
+  | "ILLEGAL_ARGUMENT"
+  | 1
+  | "AUTHENTICATION_FAILED"
+  | 2
+  | "INTERNAL_ERROR"
+  | 3
+  | "RESTORE_KEY_FIRST"
+  | 4
+  | "NO_BACKUP"
+  | 6
+  | "INVALID_PIN"
+  | 7
+  | "PERMANENTLY_LOCKED"
+  | 8
+  | "INVALID_PASSWORD"
+  | 9
+  | "MASTER_KEY_CONFLICT";
+
+export type Pb1_X1 =
+  | 0
+  | "MESSAGE"
+  | 1
+  | "MESSAGE_NOTIFICATION"
+  | 2
+  | "NOTIFICATION_CENTER";
+
+export type Pb1_X2 = 0 | "MESSAGE" | 1 | "NOTE" | 2 | "CHANNEL";
+
+export type Pb1_Z2 = 0 | "GROUP" | 1 | "ROOM" | 2 | "PEER";
+
+export type Pb1_gd = 1 | "OVER" | 2 | "UNDER" | 3 | "UNDEFINED";
+
+export type Pb1_od = 0 | "UNKNOWN" | 1 | "LOCATION";
+
+export type PointErrorCode =
+  | 3001
+  | "REQUEST_DUPLICATION"
+  | 3002
+  | "INVALID_PARAMETER"
+  | 3003
+  | "NOT_ENOUGH_BALANCE"
+  | 3004
+  | "AUTHENTICATION_FAIL"
+  | 3005
+  | "API_ACCESS_FORBIDDEN"
+  | 3006
+  | "MEMBER_ACCOUNT_NOT_FOUND"
+  | 3007
+  | "SERVICE_ACCOUNT_NOT_FOUND"
+  | 3008
+  | "TRANSACTION_NOT_FOUND"
+  | 3009
+  | "ALREADY_REVERSED_TRANSACTION"
+  | 3010
+  | "MESSAGE_NOT_READABLE"
+  | 3011
+  | "HTTP_REQUEST_METHOD_NOT_SUPPORTED"
+  | 3012
+  | "HTTP_MEDIA_TYPE_NOT_SUPPORTED"
+  | 3013
+  | "NOT_ALLOWED_TO_DEPOSIT"
+  | 3014
+  | "NOT_ALLOWED_TO_PAY"
+  | 3015
+  | "TRANSACTION_ACCESS_FORBIDDEN"
+  | 4001
+  | "INVALID_SERVICE_CONFIGURATION"
+  | 5004
+  | "DCS_COMMUNICATION_FAIL"
+  | 5007
+  | "UPDATE_BALANCE_FAIL"
+  | 5888
+  | "SYSTEM_MAINTENANCE"
+  | 5999
+  | "SYSTEM_ERROR";
+
+export type Q70_q = 0 | "UNKNOWN" | 1 | "FACEBOOK" | 2 | "APPLE" | 3 | "GOOGLE";
+
+export type Q70_r =
+  | 0
+  | "INTERNAL_ERROR"
+  | 1
+  | "ILLEGAL_ARGUMENT"
+  | 2
+  | "VERIFICATION_FAILED"
+  | 4
+  | "RETRY_LATER"
+  | 5
+  | "HUMAN_VERIFICATION_REQUIRED"
+  | 101
+  | "APP_UPGRADE_REQUIRED";
+
+export type Qj_EnumC13584a =
+  | 0
+  | "NOT_DETERMINED"
+  | 1
+  | "RESTRICTED"
+  | 2
+  | "DENIED"
+  | 3
+  | "AUTHORIZED";
+
+export type Qj_EnumC13585b = 1 | "WHITE" | 2 | "BLACK";
+
+export type Qj_EnumC13588e = 1 | "LIGHT" | 2 | "DARK";
+
+export type Qj_EnumC13592i =
+  | 0
+  | "ILLEGAL_ARGUMENT"
+  | 1
+  | "INTERNAL_ERROR"
+  | 2
+  | "CONNECTION_ERROR"
+  | 3
+  | "AUTHENTICATION_FAILED"
+  | 4
+  | "NEED_PERMISSION_APPROVAL"
+  | 5
+  | "COIN_NOT_USABLE"
+  | 6
+  | "WEBVIEW_NOT_ALLOWED";
+
+export type Qj_EnumC13597n =
+  | 1
+  | "INVALID_REQUEST"
+  | 2
+  | "UNAUTHORIZED"
+  | 3
+  | "CONSENT_REQUIRED"
+  | 4
+  | "VERSION_UPDATE_REQUIRED"
+  | 5
+  | "COMPREHENSIVE_AGREEMENT_REQUIRED"
+  | 6
+  | "SPLASH_SCREEN_REQUIRED"
+  | 7
+  | "PERMANENT_LINK_INVALID_REQUEST"
+  | 8
+  | "NO_DESTINATION_URL"
+  | 9
+  | "SERVICE_ALREADY_TERMINATED"
+  | 100
+  | "SERVER_ERROR";
+
+export type Qj_EnumC13604v =
+  | 1
+  | "GEOLOCATION"
+  | 2
+  | "ADVERTISING_ID"
+  | 3
+  | "BLUETOOTH_LE"
+  | 4
+  | "QR_CODE"
+  | 5
+  | "ADVERTISING_SDK"
+  | 6
+  | "ADD_TO_HOME"
+  | 7
+  | "SHARE_TARGET_MESSAGE"
+  | 8
+  | "VIDEO_AUTO_PLAY"
+  | 9
+  | "PROFILE_PLUS"
+  | 10
+  | "SUBWINDOW_OPEN"
+  | 11
+  | "SUBWINDOW_COMMON_MODULE"
+  | 12
+  | "NO_LIFF_REFERRER"
+  | 13
+  | "SKIP_CHANNEL_VERIFICATION_SCREEN"
+  | 14
+  | "PROVIDER_PAGE"
+  | 15
+  | "BASIC_AUTH"
+  | 16
+  | "SIRI_DONATION";
+
+export type Qj_EnumC13605w =
+  | 1
+  | "ALLOW_DIRECT_LINK"
+  | 2
+  | "ALLOW_DIRECT_LINK_V2";
+
+export type Qj_EnumC13606x =
+  | 1
+  | "LIGHT"
+  | 2
+  | "LIGHT_TRANSLUCENT"
+  | 3
+  | "DARK_TRANSLUCENT"
+  | 4
+  | "LIGHT_ICON"
+  | 5
+  | "DARK_ICON";
+
+export type Qj_a0 = 1 | "CONCAT" | 2 | "REPLACE";
+
+export type Qj_e0 = 0 | "SUCCESS" | 1 | "FAILURE" | 2 | "CANCEL";
+
+export type Qj_h0 = 1 | "RIGHT" | 2 | "LEFT";
+
+export type Qj_i0 = 1 | "FULL" | 2 | "TALL" | 3 | "COMPACT";
+
+export type R70_e =
+  | 0
+  | "INTERNAL_ERROR"
+  | 1
+  | "ILLEGAL_ARGUMENT"
+  | 2
+  | "VERIFICATION_FAILED"
+  | 3
+  | "EXTERNAL_SERVICE_UNAVAILABLE"
+  | 4
+  | "RETRY_LATER"
+  | 100
+  | "INVALID_CONTEXT"
+  | 101
+  | "NOT_SUPPORTED"
+  | 102
+  | "FORBIDDEN"
+  | 201
+  | "FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR";
+
+export type RegistrationType =
+  | 0
+  | "PHONE"
+  | 1
+  | "EMAIL_WAP"
+  | 2305
+  | "FACEBOOK"
+  | 2306
+  | "SINA"
+  | 2307
+  | "RENREN"
+  | 2308
+  | "FEIXIN"
+  | 2309
+  | "APPLE"
+  | 2310
+  | "YAHOOJAPAN"
+  | 2311
+  | "GOOGLE";
+
+export type ReportType =
+  | 1
+  | "ADVERTISING"
+  | 2
+  | "GENDER_HARASSMENT"
+  | 3
+  | "HARASSMENT"
+  | 4
+  | "OTHER"
+  | 5
+  | "IRRELEVANT_CONTENT"
+  | 6
+  | "IMPERSONATION"
+  | 7
+  | "SCAM";
+
+export type S70_a =
+  | 0
+  | "INTERNAL_ERROR"
+  | 1
+  | "ILLEGAL_ARGUMENT"
+  | 2
+  | "VERIFICATION_FAILED"
+  | 3
+  | "RETRY_LATER"
+  | 100
+  | "INVALID_CONTEXT"
+  | 101
+  | "APP_UPGRADE_REQUIRED";
+
+export type SettingsAttributeEx =
+  | 0
+  | "NOTIFICATION_ENABLE"
+  | 1
+  | "NOTIFICATION_MUTE_EXPIRATION"
+  | 2
+  | "NOTIFICATION_NEW_MESSAGE"
+  | 3
+  | "NOTIFICATION_GROUP_INVITATION"
+  | 4
+  | "NOTIFICATION_SHOW_MESSAGE"
+  | 5
+  | "NOTIFICATION_INCOMING_CALL"
+  | 6
+  | "PRIVACY_SYNC_CONTACTS"
+  | 7
+  | "PRIVACY_SEARCH_BY_PHONE_NUMBER"
+  | 8
+  | "NOTIFICATION_SOUND_MESSAGE"
+  | 9
+  | "NOTIFICATION_SOUND_GROUP"
+  | 10
+  | "CONTACT_MY_TICKET"
+  | 11
+  | "IDENTITY_PROVIDER"
+  | 12
+  | "IDENTITY_IDENTIFIER"
+  | 13
+  | "PRIVACY_SEARCH_BY_USERID"
+  | 14
+  | "PRIVACY_SEARCH_BY_EMAIL"
+  | 15
+  | "PREFERENCE_LOCALE"
+  | 16
+  | "NOTIFICATION_DISABLED_WITH_SUB"
+  | 17
+  | "NOTIFICATION_PAYMENT"
+  | 18
+  | "SECURITY_CENTER_SETTINGS"
+  | 19
+  | "SNS_ACCOUNT"
+  | 20
+  | "PHONE_REGISTRATION"
+  | 21
+  | "PRIVACY_ALLOW_SECONDARY_DEVICE_LOGIN"
+  | 22
+  | "CUSTOM_MODE"
+  | 23
+  | "PRIVACY_PROFILE_IMAGE_POST_TO_MYHOME"
+  | 24
+  | "EMAIL_CONFIRMATION_STATUS"
+  | 25
+  | "PRIVACY_RECV_MESSAGES_FROM_NOT_FRIEND"
+  | 26
+  | "PRIVACY_AGREE_USE_LINECOIN_TO_PAIDCALL"
+  | 27
+  | "PRIVACY_AGREE_USE_PAIDCALL"
+  | 28
+  | "ACCOUNT_MIGRATION_PINCODE"
+  | 29
+  | "ENFORCED_INPUT_ACCOUNT_MIGRATION_PINCODE"
+  | 30
+  | "PRIVACY_ALLOW_FRIEND_REQUEST"
+  | 31
+  | "PWLESS_PRIMARY_CREDENTIAL_REGISTRATION"
+  | 32
+  | "ALLOWED_TO_CONNECT_EAP_ACCOUNT"
+  | 33
+  | "E2EE_ENABLE"
+  | 34
+  | "HITOKOTO_BACKUP_REQUESTED"
+  | 35
+  | "PRIVACY_PROFILE_MUSIC_POST_TO_MYHOME"
+  | 36
+  | "CONTACT_ALLOW_FOLLOWING"
+  | 37
+  | "PRIVACY_ALLOW_NEARBY"
+  | 38
+  | "AGREEMENT_NEARBY"
+  | 39
+  | "AGREEMENT_SQUARE"
+  | 40
+  | "NOTIFICATION_MENTION"
+  | 41
+  | "ALLOW_UNREGISTRATION_SECONDARY_DEVICE"
+  | 42
+  | "AGREEMENT_BOT_USE"
+  | 43
+  | "AGREEMENT_SHAKE_FUNCTION"
+  | 44
+  | "AGREEMENT_MOBILE_CONTACT_NAME"
+  | 45
+  | "NOTIFICATION_THUMBNAIL"
+  | 46
+  | "AGREEMENT_SOUND_TO_TEXT"
+  | 47
+  | "AGREEMENT_PRIVACY_POLICY_VERSION"
+  | 48
+  | "AGREEMENT_AD_BY_WEB_ACCESS"
+  | 49
+  | "AGREEMENT_PHONE_NUMBER_MATCHING"
+  | 50
+  | "AGREEMENT_COMMUNICATION_INFO"
+  | 51
+  | "PRIVACY_SHARE_PERSONAL_INFO_TO_FRIENDS"
+  | 52
+  | "AGREEMENT_THINGS_WIRELESS_COMMUNICATION"
+  | 53
+  | "AGREEMENT_GDPR"
+  | 54
+  | "PRIVACY_STATUS_MESSAGE_HISTORY"
+  | 55
+  | "AGREEMENT_PROVIDE_LOCATION"
+  | 56
+  | "AGREEMENT_BEACON"
+  | 57
+  | "PRIVACY_PROFILE_HISTORY"
+  | 58
+  | "AGREEMENT_CONTENTS_SUGGEST"
+  | 59
+  | "AGREEMENT_CONTENTS_SUGGEST_DATA_COLLECTION"
+  | 60
+  | "PRIVACY_AGE_RESULT"
+  | 61
+  | "PRIVACY_AGE_RESULT_RECEIVED"
+  | 62
+  | "AGREEMENT_OCR_IMAGE_COLLECTION"
+  | 63
+  | "PRIVACY_ALLOW_FOLLOW"
+  | 64
+  | "PRIVACY_SHOW_FOLLOW_LIST"
+  | 65
+  | "NOTIFICATION_BADGE_TALK_ONLY"
+  | 66
+  | "AGREEMENT_ICNA"
+  | 67
+  | "NOTIFICATION_REACTION"
+  | 68
+  | "AGREEMENT_MID"
+  | 69
+  | "HOME_NOTIFICATION_NEW_FRIEND"
+  | 70
+  | "HOME_NOTIFICATION_FAVORITE_FRIEND_UPDATE"
+  | 71
+  | "HOME_NOTIFICATION_GROUP_MEMBER_UPDATE"
+  | 72
+  | "HOME_NOTIFICATION_BIRTHDAY"
+  | 73
+  | "AGREEMENT_LINE_OUT_USE"
+  | 74
+  | "AGREEMENT_LINE_OUT_PROVIDE_INFO"
+  | 75
+  | "NOTIFICATION_SHOW_PROFILE_IMAGE"
+  | 76
+  | "AGREEMENT_PDPA"
+  | 77
+  | "AGREEMENT_LOCATION_VERSION"
+  | 78
+  | "ALLOWED_TO_SHOW_ZHD_PAGE"
+  | 79
+  | "AGREEMENT_SNOW_AI_AVATAR"
+  | 80
+  | "EAP_ONLY_ACCOUNT_TARGET_COUNTRY"
+  | 81
+  | "AGREEMENT_LYP_PREMIUM_ALBUM"
+  | 82
+  | "AGREEMENT_LYP_PREMIUM_ALBUM_VERSION"
+  | 83
+  | "AGREEMENT_ALBUM_USAGE_DATA"
+  | 84
+  | "AGREEMENT_ALBUM_USAGE_DATA_VERSION"
+  | 85
+  | "AGREEMENT_LYP_PREMIUM_BACKUP"
+  | 86
+  | "AGREEMENT_LYP_PREMIUM_BACKUP_VERSION"
+  | 87
+  | "AGREEMENT_OA_AI_ASSISTANT"
+  | 88
+  | "AGREEMENT_OA_AI_ASSISTANT_VERSION"
+  | 89
+  | "AGREEMENT_LYP_PREMIUM_MULTI_PROFILE"
+  | 90
+  | "AGREEMENT_LYP_PREMIUM_MULTI_PROFILE_VERSION";
+
+export type SnsIdType =
+  | 1
+  | "FACEBOOK"
+  | 2
+  | "SINA"
+  | 3
+  | "RENREN"
+  | 4
+  | "FEIXIN"
+  | 5
+  | "BBM"
+  | 6
+  | "APPLE"
+  | 7
+  | "YAHOOJAPAN"
+  | 8
+  | "GOOGLE";
+
+export type SpammerReason =
+  | 0
+  | "OTHER"
+  | 1
+  | "ADVERTISING"
+  | 2
+  | "GENDER_HARASSMENT"
+  | 3
+  | "HARASSMENT"
+  | 4
+  | "IMPERSONATION"
+  | 5
+  | "SCAM";
+
+export type SpotCategory =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "GOURMET"
+  | 2
+  | "BEAUTY"
+  | 3
+  | "TRAVEL"
+  | 4
+  | "SHOPPING"
+  | 5
+  | "ENTERTAINMENT"
+  | 6
+  | "SPORTS"
+  | 7
+  | "TRANSPORT"
+  | 8
+  | "LIFE"
+  | 9
+  | "HOSPITAL"
+  | 10
+  | "FINANCE"
+  | 11
+  | "EDUCATION"
+  | 12
+  | "OTHER"
+  | 10000
+  | "ALL";
+
+export type SquareAttribute =
+  | 1
+  | "NAME"
+  | 2
+  | "WELCOME_MESSAGE"
+  | 3
+  | "PROFILE_IMAGE"
+  | 4
+  | "DESCRIPTION"
+  | 6
+  | "SEARCHABLE"
+  | 7
+  | "CATEGORY"
+  | 8
+  | "INVITATION_URL"
+  | 9
+  | "ABLE_TO_USE_INVITATION_URL"
+  | 10
+  | "STATE"
+  | 11
+  | "EMBLEMS"
+  | 12
+  | "JOIN_METHOD"
+  | 13
+  | "CHANNEL_ID"
+  | 14
+  | "SVC_TAGS";
+
+export type SquareAuthorityAttribute =
+  | 1
+  | "UPDATE_SQUARE_PROFILE"
+  | 2
+  | "INVITE_NEW_MEMBER"
+  | 3
+  | "APPROVE_JOIN_REQUEST"
+  | 4
+  | "CREATE_POST"
+  | 5
+  | "CREATE_OPEN_SQUARE_CHAT"
+  | 6
+  | "DELETE_SQUARE_CHAT_OR_POST"
+  | 7
+  | "REMOVE_SQUARE_MEMBER"
+  | 8
+  | "GRANT_ROLE"
+  | 9
+  | "ENABLE_INVITATION_TICKET"
+  | 10
+  | "CREATE_CHAT_ANNOUNCEMENT"
+  | 11
+  | "UPDATE_MAX_CHAT_MEMBER_COUNT"
+  | 12
+  | "USE_READONLY_DEFAULT_CHAT"
+  | 13
+  | "SEND_ALL_MENTION";
+
+export type SquareChatType =
+  | 1
+  | "OPEN"
+  | 2
+  | "SECRET"
+  | 3
+  | "ONE_ON_ONE"
+  | 4
+  | "SQUARE_DEFAULT";
+
+export type SquareMemberAttribute =
+  | 1
+  | "DISPLAY_NAME"
+  | 2
+  | "PROFILE_IMAGE"
+  | 3
+  | "ABLE_TO_RECEIVE_MESSAGE"
+  | 5
+  | "MEMBERSHIP_STATE"
+  | 6
+  | "ROLE"
+  | 7
+  | "PREFERENCE";
+
+export type SquareMembershipState =
+  | 1
+  | "JOIN_REQUESTED"
+  | 2
+  | "JOINED"
+  | 3
+  | "REJECTED"
+  | 4
+  | "LEFT"
+  | 5
+  | "KICK_OUT"
+  | 6
+  | "BANNED"
+  | 7
+  | "DELETED"
+  | 8
+  | "JOIN_REQUEST_WITHDREW";
+
+export type StickerResourceType =
+  | 1
+  | "STATIC"
+  | 2
+  | "ANIMATION"
+  | 3
+  | "SOUND"
+  | 4
+  | "ANIMATION_SOUND"
+  | 5
+  | "POPUP"
+  | 6
+  | "POPUP_SOUND"
+  | 7
+  | "NAME_TEXT"
+  | 8
+  | "PER_STICKER_TEXT";
+
+export type SyncCategory =
+  | 0
+  | "PROFILE"
+  | 1
+  | "SETTINGS"
+  | 2
+  | "OPS"
+  | 3
+  | "CONTACT"
+  | 4
+  | "RECOMMEND"
+  | 5
+  | "BLOCK"
+  | 6
+  | "GROUP"
+  | 7
+  | "ROOM"
+  | 8
+  | "NOTIFICATION"
+  | 9
+  | "ADDRESS_BOOK";
+
+export type T70_C =
+  | 0
+  | "INITIAL_BACKUP_STATE_UNSPECIFIED"
+  | 1
+  | "INITIAL_BACKUP_STATE_READY"
+  | 2
+  | "INITIAL_BACKUP_STATE_MESSAGE_ONGOING"
+  | 3
+  | "INITIAL_BACKUP_STATE_FINISHED"
+  | 4
+  | "INITIAL_BACKUP_STATE_ABORTED"
+  | 5
+  | "INITIAL_BACKUP_STATE_MEDIA_ONGOING";
+
+export type T70_EnumC14390b = 0 | "UNKNOWN" | 1 | "PHONE_NUMBER" | 2 | "EMAIL";
+
+export type T70_EnumC14392c =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "SKIP"
+  | 2
+  | "PASSWORD"
+  | 3
+  | "WEB_BASED"
+  | 4
+  | "EMAIL_BASED"
+  | 11
+  | "NONE";
+
+export type T70_EnumC14406j =
+  | 0
+  | "INTERNAL_ERROR"
+  | 1
+  | "ILLEGAL_ARGUMENT"
+  | 2
+  | "VERIFICATION_FAILED"
+  | 3
+  | "NOT_FOUND"
+  | 4
+  | "RETRY_LATER"
+  | 5
+  | "HUMAN_VERIFICATION_REQUIRED"
+  | 100
+  | "INVALID_CONTEXT"
+  | 101
+  | "APP_UPGRADE_REQUIRED";
+
+export type T70_K = 0 | "UNKNOWN" | 1 | "SMS" | 2 | "IVR" | 3 | "SMSPULL";
+
+export type T70_L =
+  | 0
+  | "PREMIUM_TYPE_UNSPECIFIED"
+  | 1
+  | "PREMIUM_TYPE_LYP"
+  | 2
+  | "PREMIUM_TYPE_LINE";
+
+export type T70_Z0 = 1 | "PHONE_VERIF" | 2 | "EAP_VERIF";
+
+export type T70_e1 = 0 | "UNKNOWN" | 1 | "SKIP" | 2 | "WEB_BASED";
+
+export type T70_j1 =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "FACEBOOK"
+  | 2
+  | "APPLE"
+  | 3
+  | "GOOGLE";
+
+export type U70_c =
+  | 0
+  | "INTERNAL_ERROR"
+  | 1
+  | "FORBIDDEN"
+  | 100
+  | "INVALID_CONTEXT";
+
+export type Uf_EnumC14873o = 1 | "ANDROID" | 2 | "IOS";
+
+export type VR0_l = 1 | "DEFAULT" | 2 | "UEN";
+
+export type VerificationMethod =
+  | 0
+  | "NO_AVAILABLE"
+  | 1
+  | "PIN_VIA_SMS"
+  | 2
+  | "CALLERID_INDIGO"
+  | 4
+  | "PIN_VIA_TTS"
+  | 10
+  | "SKIP";
+
+export type VerificationResult =
+  | 0
+  | "FAILED"
+  | 1
+  | "OK_NOT_REGISTERED_YET"
+  | 2
+  | "OK_REGISTERED_WITH_SAME_DEVICE"
+  | 3
+  | "OK_REGISTERED_WITH_ANOTHER_DEVICE";
+
+export type WR0_a = 1 | "FREE" | 2 | "PREMIUM";
+
+export type a80_EnumC16644b =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "FACEBOOK"
+  | 2
+  | "APPLE"
+  | 3
+  | "GOOGLE";
+
+export type FetchDirection = 1 | "FORWARD" | 2 | "BACKWARD";
+
+export type LiveTalkEventType =
+  | 1
+  | "NOTIFIED_UPDATE_LIVE_TALK_TITLE"
+  | 2
+  | "NOTIFIED_UPDATE_LIVE_TALK_ANNOUNCEMENT"
+  | 3
+  | "NOTIFIED_UPDATE_SQUARE_MEMBER_ROLE"
+  | 4
+  | "NOTIFIED_UPDATE_LIVE_TALK_ALLOW_REQUEST_TO_SPEAK"
+  | 5
+  | "NOTIFIED_UPDATE_SQUARE_MEMBER";
+
+export type LiveTalkReportType =
+  | 1
+  | "ADVERTISING"
+  | 2
+  | "GENDER_HARASSMENT"
+  | 3
+  | "HARASSMENT"
+  | 4
+  | "IRRELEVANT_CONTENT"
+  | 5
+  | "OTHER"
+  | 6
+  | "IMPERSONATION"
+  | 7
+  | "SCAM";
+
+export type MessageSummaryReportType =
+  | 1
+  | "LEGAL_VIOLATION"
+  | 2
+  | "HARASSMENT"
+  | 3
+  | "PERSONAL_IDENTIFIER"
+  | 4
+  | "FALSE_INFORMATION"
+  | 5
+  | "GENDER_HARASSMENT"
+  | 6
+  | "OTHER";
+
+export type NotificationPostType =
+  | 2
+  | "POST_MENTION"
+  | 3
+  | "POST_LIKE"
+  | 4
+  | "POST_COMMENT"
+  | 5
+  | "POST_COMMENT_MENTION"
+  | 6
+  | "POST_COMMENT_LIKE"
+  | 7
+  | "POST_RELAY_JOIN";
+
+export type SquareEventStatus = 1 | "NORMAL" | 2 | "ALERT_DISABLED";
+
+export type SquareEventType =
+  | 0
+  | "RECEIVE_MESSAGE"
+  | 1
+  | "SEND_MESSAGE"
+  | 2
+  | "NOTIFIED_JOIN_SQUARE_CHAT"
+  | 3
+  | "NOTIFIED_INVITE_INTO_SQUARE_CHAT"
+  | 4
+  | "NOTIFIED_LEAVE_SQUARE_CHAT"
+  | 5
+  | "NOTIFIED_DESTROY_MESSAGE"
+  | 6
+  | "NOTIFIED_MARK_AS_READ"
+  | 7
+  | "NOTIFIED_UPDATE_SQUARE_MEMBER_PROFILE"
+  | 8
+  | "NOTIFIED_UPDATE_SQUARE"
+  | 9
+  | "NOTIFIED_UPDATE_SQUARE_STATUS"
+  | 10
+  | "NOTIFIED_UPDATE_SQUARE_AUTHORITY"
+  | 11
+  | "NOTIFIED_UPDATE_SQUARE_MEMBER"
+  | 12
+  | "NOTIFIED_UPDATE_SQUARE_CHAT"
+  | 13
+  | "NOTIFIED_UPDATE_SQUARE_CHAT_STATUS"
+  | 14
+  | "NOTIFIED_UPDATE_SQUARE_CHAT_MEMBER"
+  | 15
+  | "NOTIFIED_CREATE_SQUARE_MEMBER"
+  | 16
+  | "NOTIFIED_CREATE_SQUARE_CHAT_MEMBER"
+  | 17
+  | "NOTIFIED_UPDATE_SQUARE_MEMBER_RELATION"
+  | 18
+  | "NOTIFIED_SHUTDOWN_SQUARE"
+  | 19
+  | "NOTIFIED_KICKOUT_FROM_SQUARE"
+  | 20
+  | "NOTIFIED_DELETE_SQUARE_CHAT"
+  | 21
+  | "NOTIFICATION_JOIN_REQUEST"
+  | 22
+  | "NOTIFICATION_JOINED"
+  | 23
+  | "NOTIFICATION_PROMOTED_COADMIN"
+  | 24
+  | "NOTIFICATION_PROMOTED_ADMIN"
+  | 25
+  | "NOTIFICATION_DEMOTED_MEMBER"
+  | 26
+  | "NOTIFICATION_KICKED_OUT"
+  | 27
+  | "NOTIFICATION_SQUARE_DELETE"
+  | 28
+  | "NOTIFICATION_SQUARE_CHAT_DELETE"
+  | 29
+  | "NOTIFICATION_MESSAGE"
+  | 30
+  | "NOTIFIED_UPDATE_SQUARE_CHAT_PROFILE_NAME"
+  | 31
+  | "NOTIFIED_UPDATE_SQUARE_CHAT_PROFILE_IMAGE"
+  | 32
+  | "NOTIFIED_UPDATE_SQUARE_FEATURE_SET"
+  | 33
+  | "NOTIFIED_ADD_BOT"
+  | 34
+  | "NOTIFIED_REMOVE_BOT"
+  | 36
+  | "NOTIFIED_UPDATE_SQUARE_NOTE_STATUS"
+  | 37
+  | "NOTIFIED_UPDATE_SQUARE_CHAT_ANNOUNCEMENT"
+  | 38
+  | "NOTIFIED_UPDATE_SQUARE_CHAT_MAX_MEMBER_COUNT"
+  | 39
+  | "NOTIFICATION_POST_ANNOUNCEMENT"
+  | 40
+  | "NOTIFICATION_POST"
+  | 41
+  | "MUTATE_MESSAGE"
+  | 42
+  | "NOTIFICATION_NEW_CHAT_MEMBER"
+  | 43
+  | "NOTIFIED_UPDATE_READONLY_CHAT"
+  | 46
+  | "NOTIFIED_UPDATE_MESSAGE_STATUS"
+  | 47
+  | "NOTIFICATION_MESSAGE_REACTION"
+  | 48
+  | "NOTIFIED_CHAT_POPUP"
+  | 49
+  | "NOTIFIED_SYSTEM_MESSAGE"
+  | 50
+  | "NOTIFIED_UPDATE_SQUARE_CHAT_FEATURE_SET"
+  | 51
+  | "NOTIFIED_UPDATE_LIVE_TALK"
+  | 52
+  | "NOTIFICATION_LIVE_TALK"
+  | 53
+  | "NOTIFIED_UPDATE_LIVE_TALK_INFO"
+  | 54
+  | "NOTIFICATION_THREAD_MESSAGE"
+  | 55
+  | "NOTIFICATION_THREAD_MESSAGE_REACTION"
+  | 56
+  | "NOTIFIED_UPDATE_THREAD"
+  | 57
+  | "NOTIFIED_UPDATE_THREAD_STATUS"
+  | 58
+  | "NOTIFIED_UPDATE_THREAD_MEMBER"
+  | 59
+  | "NOTIFIED_UPDATE_THREAD_ROOT_MESSAGE"
+  | 60
+  | "NOTIFIED_UPDATE_THREAD_ROOT_MESSAGE_STATUS";
+
+export type AdScreen =
+  | 1
+  | "CHATROOM"
+  | 2
+  | "THREAD_SPACE"
+  | 3
+  | "YOUR_THREADS"
+  | 4
+  | "NOTE_LIST"
+  | 5
+  | "NOTE_END"
+  | 6
+  | "WEB_MAIN"
+  | 7
+  | "WEB_SEARCH_RESULT";
+
+export type BooleanState = 0 | "NONE" | 1 | "OFF" | 2 | "ON";
+
+export type ChatroomPopupType =
+  | 1
+  | "IMG_TEXT"
+  | 2
+  | "TEXT_ONLY"
+  | 3
+  | "IMG_ONLY";
+
+export type ContentsAttribute = 1 | "NONE" | 2 | "CONTENTS_HIDDEN";
+
+export type FetchType =
+  | 1
+  | "DEFAULT"
+  | 2
+  | "PREFETCH_BY_SERVER"
+  | 3
+  | "PREFETCH_BY_CLIENT";
+
+export type LiveTalkAttribute = 1 | "TITLE" | 2 | "ALLOW_REQUEST_TO_SPEAK";
+
+export type LiveTalkRole = 1 | "HOST" | 2 | "CO_HOST" | 3 | "GUEST";
+
+export type LiveTalkSpeakerSetting = 1 | "APPROVAL" | 2 | "ALL";
+
+export type LiveTalkType = 1 | "PUBLIC" | 2 | "PRIVATE";
+
+export type MessageReactionType =
+  | 0
+  | "ALL"
+  | 1
+  | "UNDO"
+  | 2
+  | "NICE"
+  | 3
+  | "LOVE"
+  | 4
+  | "FUN"
+  | 5
+  | "AMAZING"
+  | 6
+  | "SAD"
+  | 7
+  | "OMG";
+
+export type NotifiedMessageType = 1 | "MENTION" | 2 | "REPLY";
+
+export type PopupAttribute =
+  | 1
+  | "NAME"
+  | 2
+  | "ACTIVATED"
+  | 3
+  | "STARTS_AT"
+  | 4
+  | "ENDS_AT"
+  | 5
+  | "CONTENT";
+
+export type PopupType = 1 | "MAIN" | 2 | "CHATROOM";
+
+export type SquareChatAttribute =
+  | 2
+  | "NAME"
+  | 3
+  | "SQUARE_CHAT_IMAGE"
+  | 4
+  | "STATE"
+  | 5
+  | "TYPE"
+  | 6
+  | "MAX_MEMBER_COUNT"
+  | 7
+  | "MESSAGE_VISIBILITY"
+  | 8
+  | "ABLE_TO_SEARCH_MESSAGE";
+
+export type SquareChatFeatureControlState = 1 | "DISABLED" | 2 | "ENABLED";
+
+export type SquareChatMemberAttribute =
+  | 4
+  | "MEMBERSHIP_STATE"
+  | 6
+  | "NOTIFICATION_MESSAGE"
+  | 7
+  | "NOTIFICATION_NEW_MEMBER"
+  | 8
+  | "LEFT_BY_KICK_MESSAGE_LOCAL_ID"
+  | 9
+  | "MESSAGE_LOCAL_ID_WHEN_BLOCK";
+
+export type SquareChatMembershipState = 1 | "JOINED" | 2 | "LEFT";
+
+export type SquareChatState = 0 | "ALIVE" | 1 | "DELETED" | 2 | "SUSPENDED";
+
+export type SquareEmblem = 1 | "SUPER" | 2 | "OFFICIAL";
+
+export type SquareErrorCode =
+  | 0
+  | "UNKNOWN"
+  | 400
+  | "ILLEGAL_ARGUMENT"
+  | 401
+  | "AUTHENTICATION_FAILURE"
+  | 403
+  | "FORBIDDEN"
+  | 404
+  | "NOT_FOUND"
+  | 409
+  | "REVISION_MISMATCH"
+  | 410
+  | "PRECONDITION_FAILED"
+  | 500
+  | "INTERNAL_ERROR"
+  | 501
+  | "NOT_IMPLEMENTED"
+  | 503
+  | "TRY_AGAIN_LATER"
+  | 505
+  | "MAINTENANCE"
+  | 506
+  | "NO_PRESENCE_EXISTS";
+
+export type SquareFeatureControlState = 1 | "DISABLED" | 2 | "ENABLED";
+
+export type SquareFeatureSetAttribute =
+  | 1
+  | "CREATING_SECRET_SQUARE_CHAT"
+  | 2
+  | "INVITING_INTO_OPEN_SQUARE_CHAT"
+  | 3
+  | "CREATING_SQUARE_CHAT"
+  | 4
+  | "READONLY_DEFAULT_CHAT"
+  | 5
+  | "SHOWING_ADVERTISEMENT"
+  | 6
+  | "DELEGATE_JOIN_TO_PLUG"
+  | 7
+  | "DELEGATE_KICK_OUT_TO_PLUG"
+  | 8
+  | "DISABLE_UPDATE_JOIN_METHOD"
+  | 9
+  | "DISABLE_TRANSFER_ADMIN"
+  | 10
+  | "CREATING_LIVE_TALK"
+  | 11
+  | "DISABLE_UPDATE_SEARCHABLE"
+  | 12
+  | "SUMMARIZING_MESSAGES"
+  | 13
+  | "CREATING_SQUARE_THREAD"
+  | 14
+  | "ENABLE_SQUARE_THREAD"
+  | 15
+  | "DISABLE_CHANGE_ROLE_CO_ADMIN";
+
+export type SquareJoinMethodType = 0 | "NONE" | 1 | "APPROVAL" | 2 | "CODE";
+
+export type SquareMemberRelationState = 1 | "NONE" | 2 | "BLOCKED";
+
+export type SquareMemberRole = 1 | "ADMIN" | 2 | "CO_ADMIN" | 10 | "MEMBER";
+
+export type SquareMessageState =
+  | 1
+  | "SENT"
+  | 2
+  | "DELETED"
+  | 3
+  | "FORBIDDEN"
+  | 4
+  | "UNSENT";
+
+export type SquareMetadataAttribute = 1 | "EXCLUDED" | 2 | "NO_AD";
+
+export type SquarePreferenceAttribute =
+  | 1
+  | "FAVORITE"
+  | 2
+  | "NOTI_FOR_NEW_JOIN_REQUEST";
+
+export type SquareProviderType =
+  | 1
+  | "UNKNOWN"
+  | 2
+  | "YOUTUBE"
+  | 3
+  | "OA_FANSPACE";
+
+export type SquareState = 0 | "ALIVE" | 1 | "DELETED" | 2 | "SUSPENDED";
+
+export type SquareThreadAttribute =
+  | 1
+  | "STATE"
+  | 2
+  | "EXPIRES_AT"
+  | 3
+  | "READ_ONLY_AT";
+
+export type SquareThreadMembershipState = 1 | "JOINED" | 2 | "LEFT";
+
+export type SquareThreadState = 1 | "ALIVE" | 2 | "DELETED";
+
+export type SquareType = 0 | "CLOSED" | 1 | "OPEN";
+
+export type TargetChatType =
+  | 0
+  | "ALL"
+  | 1
+  | "MIDS"
+  | 2
+  | "CATEGORIES"
+  | 3
+  | "CHANNEL_ID";
+
+export type TargetUserType = 0 | "ALL" | 1 | "MIDS";
+
+export type do0_EnumC23139B = 1 | "CLOUD" | 2 | "BLE" | 3 | "BEACON";
+
+export type do0_EnumC23147e =
+  | 0
+  | "SUCCESS"
+  | 1
+  | "UNKNOWN_ERROR"
+  | 2
+  | "BLUETOOTH_NOT_AVAILABLE"
+  | 3
+  | "CONNECTION_TIMEOUT"
+  | 4
+  | "CONNECTION_ERROR"
+  | 5
+  | "CONNECTION_IN_PROGRESS";
+
+export type do0_EnumC23148f = 0 | "ONETIME" | 1 | "AUTOMATIC" | 2 | "BEACON";
+
+export type do0_G =
+  | 0
+  | "SUCCESS"
+  | 1
+  | "UNKNOWN_ERROR"
+  | 2
+  | "GATT_ERROR"
+  | 3
+  | "GATT_OPERATION_NOT_SUPPORTED"
+  | 4
+  | "GATT_SERVICE_NOT_FOUND"
+  | 5
+  | "GATT_CHARACTERISTIC_NOT_FOUND"
+  | 6
+  | "GATT_CONNECTION_CLOSED"
+  | 7
+  | "CONNECTION_INVALID";
+
+export type do0_M =
+  | 0
+  | "INTERNAL_SERVER_ERROR"
+  | 1
+  | "UNAUTHORIZED"
+  | 2
+  | "INVALID_REQUEST"
+  | 3
+  | "INVALID_STATE"
+  | 4096
+  | "DEVICE_LIMIT_EXCEEDED"
+  | 4097
+  | "UNSUPPORTED_REGION";
+
+export type fN0_EnumC24466B = 0 | "LINE_PREMIUM" | 1 | "LYP_PREMIUM";
+
+export type fN0_EnumC24467C = 1 | "LINE" | 2 | "YAHOO_JAPAN";
+
+export type fN0_EnumC24469a =
+  | 1
+  | "OK"
+  | 2
+  | "NOT_SUPPORTED"
+  | 3
+  | "UNDEFINED"
+  | 4
+  | "NOT_ENOUGH_TICKETS"
+  | 5
+  | "NOT_FRIENDS"
+  | 6
+  | "NO_AGREEMENT";
+
+export type fN0_F =
+  | 1
+  | "OK"
+  | 2
+  | "NOT_SUPPORTED"
+  | 3
+  | "UNDEFINED"
+  | 4
+  | "CONFLICT"
+  | 5
+  | "NOT_AVAILABLE"
+  | 6
+  | "INVALID_INVITATION"
+  | 7
+  | "IN_PAYMENT_FAILURE_STATE";
+
+export type fN0_G = 1 | "APPLE" | 2 | "GOOGLE";
+
+export type fN0_H =
+  | 1
+  | "INACTIVE"
+  | 2
+  | "ACTIVE_FINITE"
+  | 3
+  | "ACTIVE_INFINITE";
+
+export type fN0_o = 1 | "AVAILABLE" | 2 | "ALREADY_SUBSCRIBED";
+
+export type fN0_p =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "SOFTBANK_BUNDLE"
+  | 2
+  | "YBB_BUNDLE"
+  | 3
+  | "YAHOO_MOBILE_BUNDLE"
+  | 4
+  | "PPCG_BUNDLE"
+  | 5
+  | "ENJOY_BUNDLE"
+  | 6
+  | "YAHOO_TRIAL_BUNDLE"
+  | 7
+  | "YAHOO_APPLE"
+  | 8
+  | "YAHOO_GOOGLE"
+  | 9
+  | "LINE_APPLE"
+  | 10
+  | "LINE_GOOGLE"
+  | 11
+  | "YAHOO_WALLET";
+
+export type fN0_q =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "NONE"
+  | 16641
+  | "ILLEGAL_ARGUMENT"
+  | 16642
+  | "NOT_FOUND"
+  | 16643
+  | "NOT_AVAILABLE"
+  | 16644
+  | "INTERNAL_SERVER_ERROR"
+  | 16645
+  | "AUTHENTICATION_FAILED";
+
+export type g80_EnumC24993a =
+  | 0
+  | "INTERNAL_ERROR"
+  | 1
+  | "ILLEGAL_ARGUMENT"
+  | 2
+  | "INVALID_CONTEXT"
+  | 3
+  | "TOO_MANY_REQUESTS";
+
+export type h80_EnumC25645e =
+  | 0
+  | "INTERNAL_ERROR"
+  | 1
+  | "ILLEGAL_ARGUMENT"
+  | 2
+  | "NOT_FOUND"
+  | 3
+  | "RETRY_LATER"
+  | 100
+  | "INVALID_CONTEXT"
+  | 101
+  | "NOT_SUPPORTED";
+
+export type I80_EnumC26392b =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "SKIP"
+  | 2
+  | "PASSWORD"
+  | 4
+  | "EMAIL_BASED"
+  | 11
+  | "NONE";
+
+export type I80_EnumC26394c = 0 | "PHONE_NUMBER" | 1 | "APPLE" | 2 | "GOOGLE";
+
+export type I80_EnumC26408j =
+  | 0
+  | "INTERNAL_ERROR"
+  | 1
+  | "ILLEGAL_ARGUMENT"
+  | 2
+  | "VERIFICATION_FAILED"
+  | 3
+  | "NOT_FOUND"
+  | 4
+  | "RETRY_LATER"
+  | 5
+  | "HUMAN_VERIFICATION_REQUIRED"
+  | 100
+  | "INVALID_CONTEXT"
+  | 101
+  | "APP_UPGRADE_REQUIRED";
+
+export type I80_EnumC26425y = 0 | "UNKNOWN" | 1 | "SMS" | 2 | "IVR";
+
+export type j80_EnumC27228a =
+  | 1
+  | "AUTHENTICATION_FAILED"
+  | 2
+  | "INVALID_STATE"
+  | 3
+  | "NOT_AUTHORIZED_DEVICE"
+  | 4
+  | "MUST_REFRESH_V3_TOKEN";
+
+export type jO0_EnumC27533B = 1 | "PAYMENT_APPLE" | 2 | "PAYMENT_GOOGLE";
+
+export type jO0_EnumC27535b =
+  | 0
+  | "ILLEGAL_ARGUMENT"
+  | 1
+  | "AUTHENTICATION_FAILED"
+  | 20
+  | "INTERNAL_ERROR"
+  | 29
+  | "MESSAGE_DEFINED_ERROR"
+  | 33
+  | "MAINTENANCE_ERROR";
+
+export type jO0_EnumC27559z =
+  | 0
+  | "PAYMENT_PG_NONE"
+  | 1
+  | "PAYMENT_PG_AU"
+  | 2
+  | "PAYMENT_PG_AL";
+
+export type jf_EnumC27712a =
+  | 1
+  | "NONE"
+  | 2
+  | "DOES_NOT_RESPOND"
+  | 3
+  | "RESPOND_MANUALLY"
+  | 4
+  | "RESPOND_AUTOMATICALLY";
+
+export type jf_EnumC27717f =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "BAD_REQUEST"
+  | 2
+  | "NOT_FOUND"
+  | 3
+  | "FORBIDDEN"
+  | 4
+  | "INTERNAL_SERVER_ERROR";
+
+export type kf_EnumC28766a =
+  | 0
+  | "ILLEGAL_ARGUMENT"
+  | 1
+  | "INTERNAL_ERROR"
+  | 2
+  | "UNAUTHORIZED";
+
+export type kf_o = 0 | "ANDROID" | 1 | "IOS";
+
+export type kf_p = 0 | "RICHMENU" | 1 | "TALK_ROOM";
+
+export type kf_r = 0 | "WEB" | 1 | "POSTBACK" | 2 | "SEND_MESSAGE";
+
+export type kf_u = 0 | "CLICK" | 1 | "IMPRESSION";
+
+export type kf_x =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "PROFILE"
+  | 2
+  | "TALK_LIST"
+  | 3
+  | "OA_CALL";
+
+export type n80_o =
+  | 0
+  | "INTERNAL_ERROR"
+  | 100
+  | "INVALID_CONTEXT"
+  | 200
+  | "FIDO_UNKNOWN_CREDENTIAL_ID"
+  | 201
+  | "FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR"
+  | 202
+  | "FIDO_UNACCEPTABLE_CONTENT"
+  | 203
+  | "FIDO_INVALID_REQUEST";
+
+export type o80_e =
+  | 0
+  | "INTERNAL_ERROR"
+  | 1
+  | "VERIFICATION_FAILED"
+  | 2
+  | "LOGIN_NOT_ALLOWED"
+  | 3
+  | "EXTERNAL_SERVICE_UNAVAILABLE"
+  | 4
+  | "RETRY_LATER"
+  | 100
+  | "NOT_SUPPORTED"
+  | 101
+  | "ILLEGAL_ARGUMENT"
+  | 102
+  | "INVALID_CONTEXT"
+  | 103
+  | "FORBIDDEN"
+  | 200
+  | "FIDO_UNKNOWN_CREDENTIAL_ID"
+  | 201
+  | "FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR"
+  | 202
+  | "FIDO_UNACCEPTABLE_CONTENT"
+  | 203
+  | "FIDO_INVALID_REQUEST";
+
+export type og_E = 1 | "RUNNING" | 2 | "CLOSING" | 3 | "CLOSED" | 4 | "SUSPEND";
+
+export type og_EnumC32661b = 0 | "INACTIVE" | 1 | "ACTIVE";
+
+export type og_EnumC32663d = 0 | "PREMIUM" | 1 | "VERIFIED" | 2 | "UNVERIFIED";
+
+export type og_EnumC32671l =
+  | 0
+  | "ILLEGAL_ARGUMENT"
+  | 1
+  | "AUTHENTICATION_FAILED"
+  | 3
+  | "INVALID_STATE"
+  | 5
+  | "NOT_FOUND"
+  | 20
+  | "INTERNAL_ERROR"
+  | 33
+  | "MAINTENANCE_ERROR";
+
+export type og_G = 0 | "FREE" | 1 | "MONTHLY" | 2 | "PER_PAYMENT";
+
+export type og_I =
+  | 0
+  | "OK"
+  | 1
+  | "REACHED_TIER_LIMIT"
+  | 2
+  | "REACHED_MEMBER_LIMIT"
+  | 3
+  | "ALREADY_JOINED"
+  | 4
+  | "NOT_SUPPORTED_LINE_VERSION"
+  | 5
+  | "BOT_USER_REGION_IS_NOT_MATCH";
+
+export type q80_EnumC33651c =
+  | 0
+  | "INTERNAL_ERROR"
+  | 1
+  | "ILLEGAL_ARGUMENT"
+  | 2
+  | "VERIFICATION_FAILED"
+  | 3
+  | "NOT_ALLOWED_QR_CODE_LOGIN"
+  | 4
+  | "VERIFICATION_NOTICE_FAILED"
+  | 5
+  | "RETRY_LATER"
+  | 100
+  | "INVALID_CONTEXT"
+  | 101
+  | "APP_UPGRADE_REQUIRED";
+
+export type qm_EnumC34112e =
+  | 1
+  | "BUTTON"
+  | 2
+  | "ENTRY_SELECTED"
+  | 3
+  | "BROADCAST_ENTER"
+  | 4
+  | "BROADCAST_LEAVE"
+  | 5
+  | "BROADCAST_STAY";
+
+export type qm_s =
+  | 0
+  | "ILLEGAL_ARGUMENT"
+  | 5
+  | "NOT_FOUND"
+  | 20
+  | "INTERNAL_ERROR";
+
+export type r80_EnumC34361a = 1 | "PERSONAL_ACCOUNT" | 2 | "CURRENT_ACCOUNT";
+
+export type r80_EnumC34362b =
+  | 1
+  | "BANK_ALL"
+  | 2
+  | "BANK_DEPOSIT"
+  | 3
+  | "BANK_WITHDRAWAL";
+
+export type r80_EnumC34365e =
+  | 1
+  | "BANK"
+  | 2
+  | "ATM"
+  | 3
+  | "CONVENIENCE_STORE"
+  | 4
+  | "DEBIT_CARD"
+  | 5
+  | "E_CHANNEL"
+  | 6
+  | "VIRTUAL_BANK_ACCOUNT"
+  | 7
+  | "AUTO"
+  | 8
+  | "CVS_LAWSON"
+  | 9
+  | "SEVEN_BANK_DEPOSIT"
+  | 10
+  | "CODE_DEPOSIT";
+
+export type r80_EnumC34367g =
+  | 0
+  | "AVAILABLE"
+  | 1
+  | "DIFFERENT_REGION"
+  | 2
+  | "UNSUPPORTED_DEVICE"
+  | 3
+  | "PHONE_NUMBER_UNREGISTERED"
+  | 4
+  | "UNAVAILABLE_FROM_LINE_PAY"
+  | 5
+  | "INVALID_USER";
+
+export type r80_EnumC34368h = 1 | "CHARGE" | 2 | "WITHDRAW";
+
+export type r80_EnumC34370j =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "VISA"
+  | 2
+  | "MASTER"
+  | 3
+  | "AMEX"
+  | 4
+  | "DINERS"
+  | 5
+  | "JCB";
+
+export type r80_EnumC34371k = 0 | "NULL" | 1 | "ATM" | 2 | "CONVENIENCE_STORE";
+
+export type r80_EnumC34372l =
+  | 1
+  | "SCALE2"
+  | 2
+  | "SCALE3"
+  | 3
+  | "HDPI"
+  | 4
+  | "XHDPI";
+
+export type r80_EnumC34374n =
+  | 0
+  | "SUCCESS"
+  | 1000
+  | "GENERAL_USER_ERROR"
+  | 1101
+  | "ACCOUNT_NOT_EXISTS"
+  | 1102
+  | "ACCOUNT_INVALID_STATUS"
+  | 1103
+  | "ACCOUNT_ALREADY_EXISTS"
+  | 1104
+  | "MERCHANT_NOT_EXISTS"
+  | 1105
+  | "MERCHANT_INVALID_STATUS"
+  | 1107
+  | "AGREEMENT_REQUIRED"
+  | 1108
+  | "BLACKLISTED"
+  | 1109
+  | "WRONG_PASSWORD"
+  | 1110
+  | "INVALID_CREDIT_CARD"
+  | 1111
+  | "LIMIT_EXCEEDED"
+  | 1115
+  | "CANNOT_PROCEED"
+  | 1120
+  | "TOO_WEAK_PASSWORD"
+  | 1125
+  | "CANNOT_CREATE_ACCOUNT"
+  | 1130
+  | "TEMPORARY_PASSWORD_ERROR"
+  | 1140
+  | "MISSING_PARAMETERS"
+  | 1141
+  | "NO_VALID_MYCODE_ACCOUNT"
+  | 1142
+  | "INSUFFICIENT_BALANCE"
+  | 1150
+  | "TRANSACTION_NOT_FOUND"
+  | 1152
+  | "TRANSACTION_FINISHED"
+  | 1153
+  | "PAYMENT_AMOUNT_WRONG"
+  | 1157
+  | "BALANCE_ACCOUNT_NOT_EXISTS"
+  | 1158
+  | "DUPLICATED_CITIZEN_ID"
+  | 1159
+  | "PAYMENT_REQUEST_NOT_FOUND"
+  | 1169
+  | "AUTH_FAILED"
+  | 1171
+  | "PASSWORD_SETTING_REQUIRED"
+  | 1172
+  | "TRANSACTION_ALREADY_PROCESSED"
+  | 1178
+  | "CURRENCY_NOT_SUPPORTED"
+  | 1180
+  | "PAYMENT_NOT_AVAILABLE"
+  | 1181
+  | "TRANSFER_REQUEST_NOT_FOUND"
+  | 1183
+  | "INVALID_PAYMENT_AMOUNT"
+  | 1184
+  | "INSUFFICIENT_PAYMENT_AMOUNT"
+  | 1185
+  | "EXTERNAL_SYSTEM_MAINTENANCE"
+  | 1186
+  | "EXTERNAL_SYSTEM_INOPERATIONAL"
+  | 1192
+  | "SESSION_EXPIRED"
+  | 1195
+  | "UPGRADE_REQUIRED"
+  | 1196
+  | "REQUEST_TOKEN_EXPIRED"
+  | 1198
+  | "OPERATION_FINISHED"
+  | 1199
+  | "EXTERNAL_SYSTEM_ERROR"
+  | 1299
+  | "PARTIAL_AMOUNT_APPROVED"
+  | 1600
+  | "PINCODE_AUTH_REQUIRED"
+  | 1601
+  | "ADDITIONAL_AUTH_REQUIRED"
+  | 1603
+  | "NOT_BOUND"
+  | 1610
+  | "OTP_USER_REGISTRATION_ERROR"
+  | 1611
+  | "OTP_CARD_REGISTRATION_ERROR"
+  | 1612
+  | "NO_AUTH_METHOD"
+  | 1696
+  | "GENERAL_USER_ERROR_RESTART"
+  | 1697
+  | "GENERAL_USER_ERROR_REFRESH"
+  | 1698
+  | "GENERAL_USER_ERROR_CLOSE"
+  | 9000
+  | "INTERNAL_SERVER_ERROR"
+  | 9999
+  | "INTERNAL_SYSTEM_MAINTENANCE"
+  | 10000
+  | "UNKNOWN_ERROR";
+
+export type r80_EnumC34376p =
+  | 1
+  | "TRANSFER"
+  | 2
+  | "TRANSFER_REQUEST"
+  | 3
+  | "DUTCH"
+  | 4
+  | "INVITATION";
+
+export type r80_EnumC34377q =
+  | 0
+  | "NULL"
+  | 1
+  | "UNIDEN"
+  | 2
+  | "WAIT"
+  | 3
+  | "IDENTIFIED"
+  | 4
+  | "CHECKING";
+
+export type r80_EnumC34378s =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "MORE_TAB"
+  | 2
+  | "CHAT_ROOM_PLUS_MENU"
+  | 3
+  | "TRANSFER"
+  | 4
+  | "PAYMENT"
+  | 5
+  | "LINECARD"
+  | 6
+  | "INVITATION";
+
+export type r80_e0 =
+  | 0
+  | "NONE"
+  | 1
+  | "ONE_TIME_PAYMENT_AGREEMENT"
+  | 2
+  | "SIMPLE_JOINING_AGREEMENT"
+  | 3
+  | "LINE_CARD_CASH_AGREEMENT"
+  | 4
+  | "LINE_CARD_MONEY_AGREEMENT"
+  | 5
+  | "JOINING_WITH_LINE_CARD_AGREEMENT"
+  | 6
+  | "LINE_CARD_AGREEMENT";
+
+export type r80_g0 =
+  | 0
+  | "NULL"
+  | 1
+  | "ATM"
+  | 2
+  | "CONVENIENCE_STORE"
+  | 3
+  | "ALL";
+
+export type r80_h0 =
+  | 1
+  | "READY"
+  | 2
+  | "COMPLETE"
+  | 3
+  | "WAIT"
+  | 4
+  | "CANCEL"
+  | 5
+  | "FAIL"
+  | 6
+  | "EXPIRE"
+  | 7
+  | "ALL";
+
+export type r80_i0 =
+  | 1
+  | "TRANSFER_ACCEPTABLE"
+  | 2
+  | "REMOVE_INVOICE"
+  | 3
+  | "INVOICE_CODE"
+  | 4
+  | "SHOW_ALWAYS_INVOICE";
+
+export type r80_m0 =
+  | 1
+  | "OK"
+  | 2
+  | "NOT_ALIVE_USER"
+  | 3
+  | "NEED_BALANCE_DISCLAIMER"
+  | 4
+  | "ECONTEXT_CHARGING_IN_PROGRESS"
+  | 6
+  | "TRANSFER_IN_PROGRESS"
+  | 7
+  | "OK_REMAINING_BALANCE"
+  | 8
+  | "ADVERSE_BALANCE"
+  | 9
+  | "CONFIRM_REQUIRED";
+
+export type r80_n0 = 1 | "LINE" | 2 | "LINEPAY";
+
+export type r80_r =
+  | 1
+  | "CITIZEN_ID"
+  | 2
+  | "PASSPORT"
+  | 3
+  | "WORK_PERMIT"
+  | 4
+  | "ALIEN_CARD";
+
+export type t80_h = 1 | "CLIENT" | 2 | "SERVER";
+
+export type t80_i =
+  | 1
+  | "APP_INSTANCE_LOCAL"
+  | 2
+  | "APP_TYPE_LOCAL"
+  | 3
+  | "GLOBAL";
+
+export type t80_n =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "NONE"
+  | 16641
+  | "ILLEGAL_ARGUMENT"
+  | 16642
+  | "NOT_FOUND"
+  | 16643
+  | "NOT_AVAILABLE"
+  | 16644
+  | "TOO_LARGE_VALUE"
+  | 16645
+  | "CLOCK_DRIFT_DETECTED"
+  | 16646
+  | "UNSUPPORTED_APPLICATION_TYPE"
+  | 16647
+  | "DUPLICATED_ENTRY"
+  | 16897
+  | "AUTHENTICATION_FAILED"
+  | 20737
+  | "INTERNAL_SERVER_ERROR"
+  | 20738
+  | "SERVICE_IN_MAINTENANCE_MODE"
+  | 20739
+  | "SERVICE_UNAVAILABLE";
+
+export type t80_r =
+  | 1
+  | "USER_ACTION"
+  | 2
+  | "DATA_OUTDATED"
+  | 3
+  | "APP_MIGRATION"
+  | 100
+  | "OTHER";
+
+export type vh_EnumC37632c = 1 | "ACTIVE" | 2 | "INACTIVE";
+
+export type vh_m = 1 | "SAFE" | 2 | "NOT_SAFE";
+
+export type wm_EnumC38497a =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "BOT_NOT_FOUND"
+  | 2
+  | "BOT_NOT_AVAILABLE"
+  | 3
+  | "NOT_A_MEMBER"
+  | 4
+  | "SQUARECHAT_NOT_FOUND"
+  | 5
+  | "FORBIDDEN"
+  | 400
+  | "ILLEGAL_ARGUMENT"
+  | 401
+  | "AUTHENTICATION_FAILED"
+  | 500
+  | "INTERNAL_ERROR";
+
+export type zR0_EnumC40578c = 0 | "FOREGROUND" | 1 | "BACKGROUND";
+
+export type zR0_EnumC40579d = 1 | "STICKER" | 2 | "THEME" | 3 | "STICON";
+
+export type zR0_h = 0 | "NORMAL" | 1 | "BIG";
+
+export type zR0_j =
+  | 0
+  | "UNKNOWN"
+  | 1
+  | "NONE"
+  | 16641
+  | "ILLEGAL_ARGUMENT"
+  | 16642
+  | "NOT_FOUND"
+  | 16643
+  | "NOT_AVAILABLE"
+  | 16897
+  | "AUTHENTICATION_FAILED"
+  | 20737
+  | "INTERNAL_SERVER_ERROR"
+  | 20739
+  | "SERVICE_UNAVAILABLE";
+
+export type zf_EnumC40713a =
+  | 1
+  | "PERSONAL"
+  | 2
+  | "ROOM"
+  | 3
+  | "GROUP"
+  | 4
+  | "SQUARE_CHAT";
+
+export type zf_EnumC40715c = 1 | "REGULAR" | 2 | "PRIORITY" | 3 | "MORE";
+
+export type zf_EnumC40716d =
+  | 1
+  | "INVALID_REQUEST"
+  | 2
+  | "UNAUTHORIZED"
+  | 100
+  | "SERVER_ERROR";
 
 export interface AccessTokenRefreshException {
   errorCode: P70_g;
@@ -5899,11 +7597,9 @@ export interface WalletException {
 }
 
 export interface m80_C30146a {
-
 }
 
 export interface m80_b {
-
 }
 
 export interface AD {
@@ -7112,7 +8808,6 @@ export interface ContactCalendarEvent {
 }
 
 export interface ContactCalendarEvents {
-
 }
 
 export interface ContactModification {
@@ -7444,15 +9139,12 @@ export interface EditorsPickBannerForClient {
 }
 
 export interface Eg_C8928b {
-
 }
 
 export interface Eh_C8933a {
-
 }
 
 export interface Eh_C8935c {
-
 }
 
 export interface EstablishE2EESessionRequest {
@@ -9430,27 +11122,21 @@ export interface LIFFMenuColorSetting {
 }
 
 export interface LN0_A {
-
 }
 
 export interface LN0_A0 {
-
 }
 
 export interface LN0_B {
-
 }
 
 export interface LN0_B0 {
-
 }
 
 export interface LN0_C0 {
-
 }
 
 export interface LN0_C11270b {
-
 }
 
 export interface LN0_C11274d {
@@ -9499,115 +11185,87 @@ export interface LN0_C11274d {
 }
 
 export interface LN0_C11276e {
-
 }
 
 export interface LN0_C11278f {
-
 }
 
 export interface LN0_C11280g {
-
 }
 
 export interface LN0_C11282h {
-
 }
 
 export interface LN0_C11290l {
-
 }
 
 export interface LN0_C11292m {
-
 }
 
 export interface LN0_C11294n {
-
 }
 
 export interface LN0_C11300q {
-
 }
 
 export interface LN0_C11307u {
-
 }
 
 export interface LN0_C11308u0 {
-
 }
 
 export interface LN0_C11309v {
-
 }
 
 export interface LN0_C11310v0 {
-
 }
 
 export interface LN0_C11312w0 {
-
 }
 
 export interface LN0_C11313x {
-
 }
 
 export interface LN0_C11315y {
-
 }
 
 export interface LN0_C11316z {
-
 }
 
 export interface LN0_D {
-
 }
 
 export interface LN0_E {
-
 }
 
 export interface LN0_F {
-
 }
 
 export interface LN0_G {
-
 }
 
 export interface LN0_H {
-
 }
 
 export interface LN0_L {
-
 }
 
 export interface LN0_O {
-
 }
 
 export interface LN0_P {
-
 }
 
 export interface LN0_Q {
-
 }
 
 export interface LN0_S {
-
 }
 
 export interface LN0_T {
-
 }
 
 export interface LN0_U {
-
 }
 
 export interface LN0_V {
@@ -9623,7 +11281,6 @@ export interface LN0_Z {
 }
 
 export interface LN0_r {
-
 }
 
 export interface LN0_y0 {
@@ -10188,15 +11845,12 @@ export interface MyDashboardMessageIcon {
 }
 
 export interface NZ0_C12150a0 {
-
 }
 
 export interface NZ0_C12152b {
-
 }
 
 export interface NZ0_C12155c {
-
 }
 
 export interface NZ0_C12206t0 {
@@ -10215,7 +11869,6 @@ export interface NZ0_C12206t0 {
 }
 
 export interface NZ0_C12208u {
-
 }
 
 export interface NZ0_C12209u0 {
@@ -10234,7 +11887,6 @@ export interface NZ0_C12212v0 {
 }
 
 export interface NZ0_C12214w {
-
 }
 
 export interface NZ0_C12221y0 {
@@ -10281,7 +11933,6 @@ export interface NZ0_F {
 }
 
 export interface NZ0_F0 {
-
 }
 
 export interface NZ0_G {
@@ -10294,7 +11945,6 @@ export interface NZ0_G {
 }
 
 export interface NZ0_G0 {
-
 }
 
 export interface NZ0_H {
@@ -10314,11 +11964,9 @@ export interface NZ0_M {
 }
 
 export interface NZ0_S {
-
 }
 
 export interface NZ0_U {
-
 }
 
 export interface NearbyEntry {
@@ -10404,11 +12052,9 @@ export interface OaAddFriendArea {
 }
 
 export interface Ob1_C12606a0 {
-
 }
 
 export interface Ob1_C12608b {
-
 }
 
 export interface Ob1_C12618e0 {
@@ -10425,23 +12071,18 @@ export interface Ob1_C12621f0 {
 }
 
 export interface Ob1_C12630i0 {
-
 }
 
 export interface Ob1_C12637k1 {
-
 }
 
 export interface Ob1_C12642m0 {
-
 }
 
 export interface Ob1_C12649o1 {
-
 }
 
 export interface Ob1_C12660s1 {
-
 }
 
 export interface Ob1_E {
@@ -10449,7 +12090,6 @@ export interface Ob1_E {
 }
 
 export interface Ob1_G {
-
 }
 
 export interface Ob1_H0 {
@@ -10476,7 +12116,6 @@ export interface Ob1_M {
 }
 
 export interface Ob1_N {
-
 }
 
 export interface Ob1_P0 {
@@ -10545,7 +12184,6 @@ export interface OrderInfo {
 }
 
 export interface P70_k {
-
 }
 
 export interface PaidCallDialing {
@@ -10647,11 +12285,9 @@ export interface Pb1_A4 {
 }
 
 export interface Pb1_A6 {
-
 }
 
 export interface Pb1_B3 {
-
 }
 
 export interface Pb1_C12916a5 {
@@ -10666,7 +12302,6 @@ export interface Pb1_C12938c {
 }
 
 export interface Pb1_C12946c7 {
-
 }
 
 export interface Pb1_C12953d0 {
@@ -10679,27 +12314,21 @@ export interface Pb1_C12953d0 {
 }
 
 export interface Pb1_C12980f {
-
 }
 
 export interface Pb1_C12996g1 {
-
 }
 
 export interface Pb1_C13008h {
-
 }
 
 export interface Pb1_C13019ha {
-
 }
 
 export interface Pb1_C13042j5 {
-
 }
 
 export interface Pb1_C13070l5 {
-
 }
 
 export interface Pb1_C13097n4 {
@@ -10715,19 +12344,15 @@ export interface Pb1_C13113o6 {
 }
 
 export interface Pb1_C13114o7 {
-
 }
 
 export interface Pb1_C13126p5 {
-
 }
 
 export interface Pb1_C13131pa {
-
 }
 
 export interface Pb1_C13150r2 {
-
 }
 
 export interface Pb1_C13154r6 {
@@ -10753,7 +12378,6 @@ export interface Pb1_C13169s7 {
 }
 
 export interface Pb1_C13183t7 {
-
 }
 
 export interface Pb1_C13190u0 {
@@ -10763,7 +12387,6 @@ export interface Pb1_C13190u0 {
 }
 
 export interface Pb1_C13202uc {
-
 }
 
 export interface Pb1_C13208v4 {
@@ -10772,7 +12395,6 @@ export interface Pb1_C13208v4 {
 }
 
 export interface Pb1_C13254y8 {
-
 }
 
 export interface Pb1_C13263z3 {
@@ -10782,7 +12404,6 @@ export interface Pb1_C13263z3 {
 }
 
 export interface Pb1_Ca {
-
 }
 
 export interface Pb1_E3 {
@@ -10791,55 +12412,42 @@ export interface Pb1_E3 {
 }
 
 export interface Pb1_Ea {
-
 }
 
 export interface Pb1_F3 {
-
 }
 
 export interface Pb1_H3 {
-
 }
 
 export interface Pb1_I3 {
-
 }
 
 export interface Pb1_Ia {
-
 }
 
 export interface Pb1_J5 {
-
 }
 
 export interface Pb1_K3 {
-
 }
 
 export interface Pb1_M3 {
-
 }
 
 export interface Pb1_O {
-
 }
 
 export interface Pb1_O3 {
-
 }
 
 export interface Pb1_P9 {
-
 }
 
 export interface Pb1_Q8 {
-
 }
 
 export interface Pb1_S5 {
-
 }
 
 export interface Pb1_Sb {
@@ -10849,7 +12457,6 @@ export interface Pb1_Sb {
 }
 
 export interface Pb1_U1 {
-
 }
 
 export interface Pb1_U3 {
@@ -10873,7 +12480,6 @@ export interface Pb1_V3 {
 }
 
 export interface Pb1_W4 {
-
 }
 
 export interface Pb1_W5 {
@@ -10907,15 +12513,12 @@ export interface Pb1_X7 {
 }
 
 export interface Pb1_Y4 {
-
 }
 
 export interface Pb1_Za {
-
 }
 
 export interface Pb1_Zc {
-
 }
 
 export interface Pb1_ad {
@@ -10923,7 +12526,6 @@ export interface Pb1_ad {
 }
 
 export interface Pb1_cd {
-
 }
 
 export interface PendingAgreementsResponse {
@@ -11076,7 +12678,6 @@ export interface ProductListByAuthorRequest {
 }
 
 export interface ProductSearchSummary {
-
 }
 
 export interface ProductSubscriptionProperty {
@@ -11322,11 +12923,9 @@ export interface PutE2eeKeyRequest {
 }
 
 export interface Q70_l {
-
 }
 
 export interface Q70_o {
-
 }
 
 export interface Qj_C13595l {
@@ -11345,7 +12944,6 @@ export interface Qj_C13602t {
 }
 
 export interface Qj_C13607y {
-
 }
 
 export interface QuickMenuCouponInfo {
@@ -11384,19 +12982,15 @@ export interface QuickMenuPointInfo {
 }
 
 export interface R70_a {
-
 }
 
 export interface R70_c {
-
 }
 
 export interface R70_d {
-
 }
 
 export interface R70_t {
-
 }
 
 export interface RSAEncryptedLoginInfo {
@@ -11877,11 +13471,9 @@ export interface Rssi {
 }
 
 export interface S70_b {
-
 }
 
 export interface S70_k {
-
 }
 
 export interface SCC {
@@ -12327,7 +13919,7 @@ export interface SquareChat {
 
 export interface SquareChatAnnouncement {
   announcementSeq: Int64;
-  type: any;
+  type: number;
   contents: SquareChatAnnouncementContents;
   createdAt: Int64;
   creator: string;
@@ -13160,19 +14752,15 @@ export interface SyncSquareMembersResponse {
 }
 
 export interface T70_C14398f {
-
 }
 
 export interface T70_g1 {
-
 }
 
 export interface T70_o1 {
-
 }
 
 export interface T70_s1 {
-
 }
 
 export interface TGlobalEvents {
@@ -13350,15 +14938,12 @@ export interface TryAgainLaterExtraInfo {
 }
 
 export interface U70_a {
-
 }
 
 export interface U70_t {
-
 }
 
 export interface U70_v {
-
 }
 
 export interface UEN {
@@ -13728,7 +15313,6 @@ export interface Z70_a {
 }
 
 export interface ZQ0_b {
-
 }
 
 export interface acceptChatInvitationByTicket_args {
@@ -15181,102 +16765,81 @@ export interface clearRingtone_result {
 }
 
 export interface AcceptSpeakersResponse {
-
 }
 
 export interface AcceptToChangeRoleResponse {
-
 }
 
 export interface AcceptToListenResponse {
-
 }
 
 export interface AcceptToSpeakResponse {
-
 }
 
 export interface AgreeToTermsResponse {
-
 }
 
 export interface AllNonMemberLiveTalkParticipants {
-
 }
 
 export interface CancelToSpeakResponse {
-
 }
 
 export interface DeleteSquareChatAnnouncementResponse {
-
 }
 
 export interface DeleteSquareChatResponse {
-
 }
 
 export interface DeleteSquareResponse {
-
 }
 
 export interface DestroyMessageResponse {
-
 }
 
 export interface DestroyMessagesResponse {
-
 }
 
 export interface ForceEndLiveTalkResponse {
-
 }
 
 export interface GetPopularKeywordsRequest {
-
 }
 
 export interface GetSquareCategoriesRequest {
-
 }
 
 export interface HideSquareMemberContentsResponse {
-
 }
 
 export interface InviteToChangeRoleResponse {
-
 }
 
 export interface InviteToListenResponse {
-
 }
 
 export interface InviteToLiveTalkResponse {
-
 }
 
 export interface InviteToSquareResponse {
-
 }
 
 export interface KickOutLiveTalkParticipantsResponse {
-
 }
 
 export interface LeaveSquareChatResponse {
-
 }
 
 export interface LeaveSquareResponse {
-
 }
 
 export interface LiveTalkEventPayload {
   notifiedUpdateLiveTalkTitle: LiveTalkEventNotifiedUpdateLiveTalkTitle;
-  notifiedUpdateLiveTalkAnnouncement: LiveTalkEventNotifiedUpdateLiveTalkAnnouncement;
+  notifiedUpdateLiveTalkAnnouncement:
+    LiveTalkEventNotifiedUpdateLiveTalkAnnouncement;
   notifiedUpdateSquareMemberRole: LiveTalkEventNotifiedUpdateSquareMemberRole;
-  notifiedUpdateLiveTalkAllowRequestToSpeak: LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak;
+  notifiedUpdateLiveTalkAllowRequestToSpeak:
+    LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak;
   notifiedUpdateSquareMember: LiveTalkEventNotifiedUpdateSquareMember;
 }
 
@@ -15286,67 +16849,51 @@ export interface LiveTalkKickOutTarget {
 }
 
 export interface MarkAsReadResponse {
-
 }
 
 export interface MarkChatsAsReadResponse {
-
 }
 
 export interface MarkThreadsAsReadResponse {
-
 }
 
 export interface RejectSpeakersResponse {
-
 }
 
 export interface RejectToSpeakResponse {
-
 }
 
 export interface RemoveLiveTalkSubscriptionResponse {
-
 }
 
 export interface RemoveSubscriptionsResponse {
-
 }
 
 export interface ReportLiveTalkResponse {
-
 }
 
 export interface ReportLiveTalkSpeakerResponse {
-
 }
 
 export interface ReportMessageSummaryResponse {
-
 }
 
 export interface ReportSquareChatResponse {
-
 }
 
 export interface ReportSquareMemberResponse {
-
 }
 
 export interface ReportSquareMessageResponse {
-
 }
 
 export interface ReportSquareResponse {
-
 }
 
 export interface RequestToListenResponse {
-
 }
 
 export interface RequestToSpeakResponse {
-
 }
 
 export interface SquareEventPayload {
@@ -15364,7 +16911,8 @@ export interface SquareEventPayload {
   notifiedUpdateSquareChatMember: SquareEventNotifiedDeleteSquareChat;
   notifiedUpdateSquareAuthority: SquareEventNotifiedUpdateSquareChatProfileName;
   notifiedUpdateSquareStatus: SquareEventNotifiedUpdateSquareChatProfileImage;
-  notifiedUpdateSquareChatStatus: SquareEventNotifiedUpdateSquareChatMaxMemberCount;
+  notifiedUpdateSquareChatStatus:
+    SquareEventNotifiedUpdateSquareChatMaxMemberCount;
   notifiedCreateSquareMember: SquareEventNotifiedAddBot;
   notifiedCreateSquareChatMember: SquareEventNotifiedRemoveBot;
   notifiedUpdateSquareMemberRelation: SquareEventNotifiedUpdateReadonlyChat;
@@ -15386,8 +16934,10 @@ export interface SquareEventPayload {
   notifiedAddBot: SquareEventNotifiedUpdateSquareMemberRelation;
   notifiedRemoveBot: SquareEventNotifiedUpdateSquareFeatureSet;
   notifiedUpdateSquareNoteStatus: SquareEventNotifiedUpdateSquareChatFeatureSet;
-  notifiedUpdateSquareChatAnnouncement: SquareEventNotifiedUpdateSquareNoteStatus;
-  notifiedUpdateSquareChatMaxMemberCount: SquareEventNotifiedUpdateSquareChatAnnouncement;
+  notifiedUpdateSquareChatAnnouncement:
+    SquareEventNotifiedUpdateSquareNoteStatus;
+  notifiedUpdateSquareChatMaxMemberCount:
+    SquareEventNotifiedUpdateSquareChatAnnouncement;
   notificationPostAnnouncement: SquareEventNotifiedUpdateLiveTalk;
   notificationPost: SquareEventNotificationJoinRequest;
   mutateMessage: SquareEventNotificationMemberUpdate;
@@ -15411,15 +16961,12 @@ export interface SquareEventPayload {
 }
 
 export interface UnhideSquareMemberContentsResponse {
-
 }
 
 export interface UpdateLiveTalkAttrsResponse {
-
 }
 
 export interface UpdateUserSettingsResponse {
-
 }
 
 export interface ButtonBGColor {
@@ -15434,7 +16981,6 @@ export interface ButtonContent {
 }
 
 export interface DefaultGradientColor {
-
 }
 
 export interface ErrorExtraInfo {
@@ -15716,11 +17262,9 @@ export interface do0_C23143a {
 }
 
 export interface do0_C23152j {
-
 }
 
 export interface do0_C23153k {
-
 }
 
 export interface do0_C23158p {
@@ -15730,15 +17274,12 @@ export interface do0_C23158p {
 }
 
 export interface do0_C23161t {
-
 }
 
 export interface do0_C23165x {
-
 }
 
 export interface do0_C23167z {
-
 }
 
 export interface do0_F {
@@ -15760,15 +17301,12 @@ export interface do0_I {
 }
 
 export interface do0_V {
-
 }
 
 export interface do0_X {
-
 }
 
 export interface do0_m0 {
-
 }
 
 export interface editItemsInCollection_args {
@@ -15807,19 +17345,15 @@ export interface existPinCode_result {
 }
 
 export interface fN0_C24471c {
-
 }
 
 export interface fN0_C24473e {
-
 }
 
 export interface fN0_C24475g {
-
 }
 
 export interface fN0_C24476h {
-
 }
 
 export interface fetchOperations_args {
@@ -15927,11 +17461,9 @@ export interface follow_result {
 }
 
 export interface gN0_C25143G {
-
 }
 
 export interface gN0_C25147d {
-
 }
 
 export interface generateUserTicket_args {
@@ -17643,7 +19175,6 @@ export interface getWebLoginDisallowedUrl_result {
 }
 
 export interface h80_C25643c {
-
 }
 
 export interface h80_t {
@@ -17652,31 +19183,24 @@ export interface h80_t {
 }
 
 export interface h80_v {
-
 }
 
 export interface I80_A0 {
-
 }
 
 export interface I80_C26398e {
-
 }
 
 export interface I80_C26404h {
-
 }
 
 export interface I80_F0 {
-
 }
 
 export interface I80_r0 {
-
 }
 
 export interface I80_v0 {
-
 }
 
 export interface inviteFriends_args {
@@ -17836,15 +19360,12 @@ export interface joinChatByCallUrl_result {
 }
 
 export interface jp_naver_line_shop_protocol_thrift_ProductProperty {
-
 }
 
 export interface kf_i {
-
 }
 
 export interface kf_k {
-
 }
 
 export interface kf_m {
@@ -17908,19 +19429,15 @@ export interface lookupPaidCall_result {
 }
 
 export interface m80_l {
-
 }
 
 export interface m80_n {
-
 }
 
 export interface m80_q {
-
 }
 
 export interface m80_s {
-
 }
 
 export interface mapProfileToUsers_args {
@@ -17960,11 +19477,9 @@ export interface migratePrimaryUsingQrCode_result {
 }
 
 export interface n80_C31222b {
-
 }
 
 export interface n80_d {
-
 }
 
 export interface negotiateE2EEPublicKey_args {
@@ -18082,19 +19597,15 @@ export interface notifyUpdated_result {
 }
 
 export interface o80_C32273b {
-
 }
 
 export interface o80_d {
-
 }
 
 export interface o80_m {
-
 }
 
 export interface og_u {
-
 }
 
 export interface openAuthSession_args {
@@ -18176,15 +19687,12 @@ export interface putE2eeKey_result {
 }
 
 export interface q80_C33650b {
-
 }
 
 export interface q80_q {
-
 }
 
 export interface q80_s {
-
 }
 
 export interface qm_C34110c {
@@ -18240,11 +19748,9 @@ export interface queryBeaconActions_result {
 }
 
 export interface r80_C34358N {
-
 }
 
 export interface r80_C34360P {
-
 }
 
 export interface react_args {
@@ -19338,7 +20844,6 @@ export interface verifySocialLogin_result {
 }
 
 export interface vh_C37633d {
-
 }
 
 export interface wakeUpLongPolling_args {
@@ -19351,7 +20856,6 @@ export interface wakeUpLongPolling_result {
 }
 
 export interface zR0_C40576a {
-
 }
 
 export interface zR0_C40580e {

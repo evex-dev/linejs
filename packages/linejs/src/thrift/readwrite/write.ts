@@ -42,6 +42,9 @@ function writeStruct(
 	output: thrift.TCompactProtocol | thrift.TCompactProtocol,
 	value: NestedArray = [],
 ): void {
+	if (!value.length) {
+		return;
+	}
 	output.writeStructBegin("");
 
 	value.forEach((e: NestedArray[0]) => {
@@ -69,8 +72,8 @@ function writeValue(
 		| number
 		| bigint
 		| Buffer
-		| [number, Array<any>]
-		| [number, number, object],
+		| [number, Array<any>?]
+		| [number, number, object?],
 ): void {
 	if (val === undefined || val === null) {
 		return;
@@ -143,10 +146,11 @@ function writeValue(
 			break;
 
 		case Thrift.Type.MAP:
-			if (typeof val !== "object") {
-				throw new TypeError(`ftype=${ftype}: value is not map`);
-			}
 			val = val as [number, number, object];
+			if (typeof val[2] !== "object") {
+				//throw new TypeError(`ftype=${ftype}: value is not map`);
+				return;
+			}
 			output.writeFieldBegin("", Thrift.Type.MAP, fid);
 			output.writeMapBegin(val[0], val[1], Thrift.objectLength(val[2]));
 			for (const kiter in val[2]) {
@@ -161,10 +165,11 @@ function writeValue(
 			break;
 
 		case Thrift.Type.LIST:
-			if (!Array.isArray((val as Array<any>)[1])) {
-				throw new TypeError(`ftype=${ftype}: value is not list`);
-			}
 			val = val as [number, Array<any>];
+			if (!Array.isArray(val[1])) {
+				//throw new TypeError(`ftype=${ftype}: value is not list`);
+				return;
+			}
 			output.writeFieldBegin("", Thrift.Type.LIST, fid);
 			output.writeListBegin(
 				val[0],
@@ -179,10 +184,11 @@ function writeValue(
 			output.writeFieldEnd();
 			break;
 		case Thrift.Type.SET:
-			if (!Array.isArray((val as Array<any>)[1])) {
-				throw new TypeError(`ftype=${ftype}: value is not set`);
-			}
 			val = val as [number, Array<any>];
+			if (!Array.isArray(val[1])) {
+				//throw new TypeError(`ftype=${ftype}: value is not set`);
+				return;
+			}
 			output.writeFieldBegin("", Thrift.Type.SET, fid);
 			output.writeSetBegin(
 				val[0],
@@ -216,6 +222,9 @@ function writeValue_(
 		| [number, Array<any>]
 		| [number, number, object],
 ): void {
+	if (val === undefined || val === null) {
+		return;
+	}
 	switch (ftype) {
 		case Thrift.Type.STRING:
 			if (val instanceof Buffer) {

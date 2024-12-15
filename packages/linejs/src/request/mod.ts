@@ -4,9 +4,7 @@ import {
     type ProtocolKey,
     Protocols,
 } from "../thrift/mod.ts";
-import type { DeviceDetails } from "../core/utils/devices.ts";
-import type { ClientInitBase } from "../core/types.ts";
-import type { Client } from "../core/mod.ts";
+import type { Client, ClientInitBase, DeviceDetails } from "../core/mod.ts";
 
 interface RequestClientInit extends ClientInitBase {
     deviceDetails: DeviceDetails;
@@ -57,7 +55,6 @@ export class RequestClient {
      * @param path - The path of the request.
      * @param headers - The headers of the request.
      * @param timeout - The timeout milliseconds of the request.
-     * @param manyargs - Whether to enclose value in `[[12, 1, value]]`.
      * @returns The response.
      */
     public async request<T = unknown>(
@@ -68,12 +65,11 @@ export class RequestClient {
         path: string = "/S3",
         headers: Record<string, string | undefined> = {},
         timeout = this.client.config.timeout,
-        manyargs = false,
     ): Promise<T> {
         return (
             await this.requestCore(
                 path,
-                manyargs ? value : [[12, 1, value]],
+                value,
                 methodName,
                 protocolType,
                 headers,

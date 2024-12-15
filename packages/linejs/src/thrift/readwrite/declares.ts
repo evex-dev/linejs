@@ -58,11 +58,12 @@ export type NestedArray = Array<
 			(
 				| Record<string | number, NestedArray>
 				| Record<string | number, unknown>
+				| undefined
 			),
 		]?,
 	]
-	| [14, number, [number, Array<NestedArray> | Array<unknown>]?]
-	| [15, number, [number, Array<NestedArray> | Array<unknown>]?]
+	| [14, number, [number, NestedArray[] | unknown[] | undefined]?]
+	| [15, number, [number, NestedArray[] | unknown[] | undefined]?]
 >;
 export interface ParsedThrift {
 	data: any;

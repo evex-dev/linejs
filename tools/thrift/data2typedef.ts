@@ -3,7 +3,7 @@
  * Warning: messy code
  */
 
-const Thrift = JSON.parse(Deno.readTextFileSync(Deno.args[0]));
+const thrift = JSON.parse(Deno.readTextFileSync(Deno.args[0]));
 
 const enums: Record<string, any> = {};
 
@@ -36,7 +36,7 @@ const toType = (tname: string | number) =>
 		? (tname !== "_any"
 			? (tname !== "_anykey"
 				? (typeof tname === "string"
-					? (typeof (Thrift as any)[tname] !== "undefined"
+					? (typeof (thrift as any)[tname] !== "undefined"
 						? tname
 						: "any")
 					: ttype[tname])
@@ -92,9 +92,9 @@ function toInterface(input: tdata[], name: string) {
 }
 const types = [];
 const tname = [];
-for (const key in Thrift) {
-	if (Object.prototype.hasOwnProperty.call(Thrift, key)) {
-		const element = (Thrift as any)[key];
+for (const key in thrift) {
+	if (Object.prototype.hasOwnProperty.call(thrift, key)) {
+		const element = (thrift as any)[key];
 		if (!Array.isArray(element)) {
 			tname.push(`${key}: Record<${key}&string,${key}&number>;`);
 			types.push(toUnion(element, key));
