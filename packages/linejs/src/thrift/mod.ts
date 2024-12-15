@@ -5,7 +5,7 @@ export {
     Protocols,
 } from "./readwrite/declares.ts";
 
-import { ThriftRenameParser } from "./parser/parser.ts";
+import { ThriftRenameParser } from "./rename/parser.ts";
 import { readThrift, readThriftStruct } from "./readwrite/read.ts";
 import { writeThrift } from "./readwrite/write.ts";
 

@@ -5,7 +5,7 @@ import type * as LINETypes from "@evex/linejs-types";
 import type { ClientInitBase } from "../../core/types.ts";
 import type { Client } from "../../core/mod.ts";
 
-export class ChannelClient {
+export class ChannelService {
     public ChannelService_API_PATH = "/CH3";
     public ChannelService_PROTOCOL_TYPE: ProtocolKey = 3;
     public client: Client;
@@ -32,7 +32,7 @@ export class ChannelClient {
             true,
             this.ChannelService_API_PATH,
             {},
-            this.client.timeout,
+            this.client.config.timeout,
             false,
         );
     }

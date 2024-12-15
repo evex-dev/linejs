@@ -67,7 +67,7 @@ export class RequestClient {
         parse: boolean | string = true,
         path: string = "/S3",
         headers: Record<string, string | undefined> = {},
-        timeout = this.client.timeout,
+        timeout = this.client.config.timeout,
         manyargs = false,
     ): Promise<T> {
         return (
@@ -136,7 +136,7 @@ export class RequestClient {
         const response = await fetch(req);
         const nextToken = response.headers.get("x-line-next-access");
         if (nextToken) {
-            console.warn("Next token");
+            /* TODO: emit */
         }
         const body = await response.arrayBuffer();
         const parsedBody = new Uint8Array(body);
@@ -145,7 +145,7 @@ export class RequestClient {
             res = this.client.thrift.readThrift(parsedBody, Protocol);
         } catch {
             throw new Error(
-                `Request internal failed, ${methodName}(${path}) -> Invalid response buffer: <${
+                `Request internal failed: Invalid response buffer <${
                     [...parsedBody].map((e) => e.toString(16)).join(" ")
                 }>`,
             );

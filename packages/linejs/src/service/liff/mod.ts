@@ -5,7 +5,7 @@ import { InternalError } from "../../core/utils/error.ts";
 import type { ClientInitBase } from "../../core/types.ts";
 import type { Client } from "../../core/mod.ts";
 
-export class LiffClient {
+export class LiffService {
     protected static readonly LINE_LIFF_ENDPOINT =
         "https://api.line.me/message/v3/share";
     protected static readonly CONSENT_API_URL =
@@ -60,7 +60,7 @@ export class LiffClient {
             }
             context = [12, chaLINETypes, [chat]];
         }
-        return this.client.request.request<LINETypes.LiffViewResponse>(
+        return await this.client.request.request<LINETypes.LiffViewResponse>(
             [
                 [11, 1, liffId],
                 [12, 2, [context]],
@@ -203,7 +203,7 @@ export class LiffClient {
             "Accept-Language": "ja-JP,en-US;q=0.8",
             ...(referer ? { referer } : {}),
         };
-        const response = await fetch(LiffClient.CONSENT_API_URL, {
+        const response = await fetch(LiffService.CONSENT_API_URL, {
             method: "POST",
             body: payload,
             headers,
@@ -250,7 +250,7 @@ export class LiffClient {
                     allow: "true",
                 });
 
-                const authResponse = await fetch(LiffClient.AUTH_CONSENT_URL, {
+                const authResponse = await fetch(LiffService.AUTH_CONSENT_URL, {
                     method: "POST",
                     body: payload.toString(),
                     headers,

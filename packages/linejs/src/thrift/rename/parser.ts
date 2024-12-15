@@ -1,6 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
 import type { ParsedThrift } from "../readwrite/declares.ts";
-import thriftIdl from "./thrift-idl.js";
 
 const TYPE: Record<string, number> = {
 	STOP: 0,
@@ -35,55 +34,7 @@ function isStruct(obj: any): obj is any[] {
 
 export class ThriftRenameParser {
 	def: Record<string, Record<string, string> | any[]> = {};
-	add_def(input: string): void {
-		try {
-			const def = thriftIdl.parse(input);
-			const thrift_def: any = {};
-			def.definitions.forEach((e: any) => {
-				if (e.type === "Struct" || e.type === "Exception") {
-					const name = e.id.name;
-					const fields_def = [];
-					const fields = e.fields;
-					for (let i = 0; i < fields.length; i++) {
-						const field = fields[i];
-						const field_fid = field.id.value;
-						const field_name = field.name;
-						const field_def: any = {
-							fid: field_fid,
-							name: field_name,
-						};
-						if (field.valueType.type == "Identifier") {
-							field_def.struct = field.valueType.name;
-						} else if (field.valueType.type == "Map") {
-							field_def.map = getType(field.valueType.valueType);
-							field_def.key = getType(field.valueType.keyType);
-						} else if (field.valueType.type == "List") {
-							field_def.list = getType(field.valueType.valueType);
-						} else if (field.valueType.type == "Set") {
-							field_def.set = getType(field.valueType.valueType);
-						} else if (field.valueType.baseType) {
-							field_def.type =
-								TYPE[field.valueType.baseType.toUpperCase()];
-						}
-						fields_def.push(field_def);
-					}
-					thrift_def[name] = fields_def;
-				} else if (e.type === "Enum") {
-					const name = e.id.name;
-					const defs_def: any = {};
-					const defs = e.definitions;
-					for (let i = 0; i < defs.length; i++) {
-						const def = defs[i];
-						defs_def[def.value.value] = def.id.name;
-					}
-					thrift_def[name] = defs_def;
-				}
-			});
-			this.def = { ...this.def, ...thrift_def };
-		} catch (_e) {
-			return;
-		}
-	}
+
 	#name2fid(structName: string, name: string): any {
 		const struct = this.def[structName];
 		if (struct && Array.isArray(struct)) {
@@ -173,9 +124,9 @@ export class ThriftRenameParser {
 		return newObject;
 	}
 
-	rename_data(data: ParsedThrift): ParsedThrift {
+	rename_data(data: ParsedThrift, square?: boolean): ParsedThrift {
 		const name = data._info.fname;
-		const struct_name = name + "_result";
+		const struct_name = (square ? "SquareService_" : "") + name + "_result";
 		data.data = this.rename_thrift(struct_name, data.data);
 		return data;
 	}

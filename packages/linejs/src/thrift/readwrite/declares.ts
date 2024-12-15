@@ -66,9 +66,5 @@ export type NestedArray = Array<
 >;
 export interface ParsedThrift {
 	data: any;
-	_info: {
-		fname: string;
-		mtype: number;
-		rseqid: number;
-	};
+	_info: thrift.TMessage;
 }

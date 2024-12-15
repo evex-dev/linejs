@@ -1,6 +1,4 @@
 // @ts-types="npm:@types/thrift"
-import { readFile } from "node:fs";
-
 import * as thrift from "thrift";
 import { Buffer } from "node:buffer";
 import {
