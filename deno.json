@@ -22,6 +22,7 @@
 		"types": ["node-types"]
 	},
 	"tasks": {
-		"dev": "deno run -A --watch sandbox/main.ts"
+		"dev": "deno run -A --watch sandbox/main.ts",
+		"thrift": "deno run --allow-read --allow-write tools/thrift/tool.ts"
 	}
 }
