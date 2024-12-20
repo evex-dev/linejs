@@ -5,4 +5,5 @@ export interface BaseService {
     client: Client;
     protocolType: ProtocolKey;
     requestPath: string;
+    errorName: string;
 }

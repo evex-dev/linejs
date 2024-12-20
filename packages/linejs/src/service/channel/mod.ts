@@ -1,39 +1,34 @@
 // For Channel (channel, voom, etc)
 
-import type { ProtocolKey } from "../../thrift/mod.ts";
+import { LINEStruct, type ProtocolKey } from "../../thrift/mod.ts";
 import type * as LINETypes from "@evex/linejs-types";
 import type { ClientInitBase } from "../../core/types.ts";
 import type { Client } from "../../core/mod.ts";
-
-export class ChannelService {
-    public ChannelService_API_PATH = "/CH3";
-    public ChannelService_PROTOCOL_TYPE: ProtocolKey = 3;
-    public client: Client;
-
-    constructor(param: ClientInitBase) {
-        this.client = param.client;
+import type { BaseService } from "../types.ts";
+export class ChannelService implements BaseService {
+    client: Client;
+    protocolType: ProtocolKey = 4;
+    requestPath = "/CH4";
+    errorName = "ChannelServiceError";
+    constructor(client: Client) {
+        this.client = client;
     }
-
     /**
      * @description Gets the ChannelToken by channelId.\
      * channelIds:
      * - linevoom: 1341209850
      */
-    public approveChannelAndIssueChannelToken(options: {
-        channelId: string;
-    }): Promise<LINETypes.ChannelToken> {
-        const { channelId } = {
-            ...options,
-        };
-        return this.client.request.request<LINETypes.ChannelToken>(
-            [[11, 1, channelId]],
+    async approveChannelAndIssueChannelToken(
+        ...param: Parameters<
+            typeof LINEStruct.approveChannelAndIssueChannelToken_args
+        >
+    ): Promise<LINETypes.approveChannelAndIssueChannelToken_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.approveChannelAndIssueChannelToken_args(...param),
             "approveChannelAndIssueChannelToken",
-            this.ChannelService_PROTOCOL_TYPE,
+            this.protocolType,
             true,
-            this.ChannelService_API_PATH,
-            {},
-            this.client.config.timeout,
-            false,
+            this.requestPath,
         );
     }
 }

@@ -2,37 +2,24 @@
 import type { NestedArray, ProtocolKey } from "../../thrift/mod.ts";
 import type * as LINETypes from "@evex/linejs-types";
 import { InternalError } from "../../core/utils/error.ts";
-import type { ClientInitBase } from "../../core/types.ts";
 import type { Client } from "../../core/mod.ts";
-
-export class LiffService {
-    protected static readonly LINE_LIFF_ENDPOINT =
-        "https://api.line.me/message/v3/share";
-    protected static readonly CONSENT_API_URL =
+import type { BaseService } from "../types.ts";
+export class LiffService implements BaseService {
+    static readonly LINE_LIFF_ENDPOINT = "https://api.line.me/message/v3/share";
+    static readonly CONSENT_API_URL =
         "https://access.line.me/dialog/api/permissions";
-    protected static readonly AUTH_CONSENT_URL =
+    static readonly AUTH_CONSENT_URL =
         "https://access.line.me/oauth2/v2.1/authorize/consent";
-    protected liff_token_cache: { [key: string]: string } = {};
-    public LiffService_API_PATH = "/LIFF1";
-    public LiffService_PROTOCOL_TYPE: ProtocolKey = 4;
-    protected liffId = "1562242036-RW04okm";
+    liffTokenCache: { [key: string]: string } = {};
+    requestPath = "/LIFF1";
+    protocolType: ProtocolKey = 4;
+    errorName = "LiffServiceError";
+    liffId = "1562242036-RW04okm";
 
-    public client: Client;
+    client: Client;
 
-    constructor(param: ClientInitBase) {
-        this.client = param.client;
-    }
-    protected getToType(mid: string): number | null {
-        const typeMapping: { [key: string]: number } = {
-            u: 0,
-            r: 1,
-            c: 2,
-            s: 3,
-            m: 4,
-            p: 5,
-            v: 6,
-        };
-        return typeMapping[mid[0]] ?? null;
+    constructor(client: Client) {
+        this.client = client;
     }
 
     /**
@@ -67,9 +54,9 @@ export class LiffService {
                 [11, 3, lang],
             ],
             "issueLiffView",
-            this.LiffService_PROTOCOL_TYPE,
+            this.protocolType,
             true,
-            this.LiffService_API_PATH,
+            this.requestPath,
         );
     }
 
@@ -98,13 +85,13 @@ export class LiffService {
             if (error instanceof InternalError) {
                 this.client.log("liff-error", { ...error.data });
                 if (error.data.code === 3 && tryConsent) {
-                    const data: LINETypes.LiffException = error
+                    const data = error
                         .data as LINETypes.LiffException;
                     const payload = data.payload;
                     const consentRequired = payload.consentRequired;
                     const channelId = consentRequired.channelId;
                     const consentUrl = consentRequired.consentUrl;
-                    const toType = chatMid && this.getToType(chatMid);
+                    const toType = chatMid && this.client.getToType(chatMid);
                     let hasConsent = false;
 
                     if (channelId && consentUrl) {
@@ -124,7 +111,8 @@ export class LiffService {
                     }
                 }
             }
-            throw new Error(
+            throw new InternalError(
+                this.errorName,
                 `Failed to get LiffToken: ${liffId}${
                     chatMid ? "@" + chatMid : ""
                 }`,
@@ -152,13 +140,13 @@ export class LiffService {
             forceIssue: false,
             ...options,
         };
-        if (!this.liff_token_cache[to] || forceIssue) {
+        if (!this.liffTokenCache[to] || forceIssue) {
             token = await this.getLiffToken({
                 chatMid: to,
                 liffId: this.liffId,
             });
         } else {
-            token = this.liff_token_cache[to];
+            token = this.liffTokenCache[to];
         }
 
         const liffHeaders = {
@@ -171,19 +159,23 @@ export class LiffService {
             "content-type": "application/json",
         };
         const payload = JSON.stringify({ messages });
-        const response = await fetch("https://api.line.me/message/v3/share", {
-            method: "POST",
-            body: payload,
-            headers: liffHeaders,
-        });
-
-        if (!response.ok) {
-            throw new Error(
-                `Failed to send Liff message: ${response.statusText}`,
-            );
-        }
+        const response = await this.client.fetch(
+            "https://api.line.me/message/v3/share",
+            {
+                method: "POST",
+                body: payload,
+                headers: liffHeaders,
+            },
+        );
 
         const responseBody = await response.json();
+        if (!response.ok) {
+            throw new InternalError(
+                this.errorName,
+                `Failed to send Liff message: ${response.statusText}`,
+                responseBody,
+            );
+        }
         return responseBody;
     }
 
@@ -203,7 +195,7 @@ export class LiffService {
             "Accept-Language": "ja-JP,en-US;q=0.8",
             ...(referer ? { referer } : {}),
         };
-        const response = await fetch(LiffService.CONSENT_API_URL, {
+        const response = await this.client.fetch(LiffService.CONSENT_API_URL, {
             method: "POST",
             body: payload,
             headers,
@@ -222,7 +214,10 @@ export class LiffService {
             "X-Line-Application": this.client.request.systemType as string,
         };
 
-        const response = await fetch(consentUrl, { method: "GET", headers });
+        const response = await this.client.fetch(consentUrl, {
+            method: "GET",
+            headers,
+        });
         if (response.ok) {
             const text = await response.text();
             const consentResponse = "DOMParser" in window
@@ -250,11 +245,14 @@ export class LiffService {
                     allow: "true",
                 });
 
-                const authResponse = await fetch(LiffService.AUTH_CONSENT_URL, {
-                    method: "POST",
-                    body: payload.toString(),
-                    headers,
-                });
+                const authResponse = await this.client.fetch(
+                    LiffService.AUTH_CONSENT_URL,
+                    {
+                        method: "POST",
+                        body: payload.toString(),
+                        headers,
+                    },
+                );
 
                 return authResponse.ok;
             }

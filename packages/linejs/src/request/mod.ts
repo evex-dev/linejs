@@ -19,7 +19,7 @@ interface RequestClientInit extends ClientInitBase {
  * Request Client
  */
 export class RequestClient {
-    client: Client;
+    readonly client: Client;
     endpoint: string;
     userAgent: string;
     systemType: string;
@@ -129,7 +129,7 @@ export class RequestClient {
             },
         );
 
-        const response = await fetch(req);
+        const response = await this.client.fetch(req);
         const nextToken = response.headers.get("x-line-next-access");
         if (nextToken) {
             /* TODO: emit */

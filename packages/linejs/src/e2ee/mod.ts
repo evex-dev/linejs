@@ -9,7 +9,7 @@ import type { ClientInitBase } from "../core/types.ts";
 import type { Client } from "../core/mod.ts";
 
 class E2EE {
-    client: Client;
+    readonly client: Client;
     constructor(param: ClientInitBase) {
         this.client = param.client;
     }

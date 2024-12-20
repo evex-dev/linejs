@@ -1,9 +1,8 @@
-import { RequestClient } from "../request/mod.ts";
 import type { ClientInitBase } from "../core/types.ts";
-import { Thrift } from "@evex/linejs-types/thrift";
-
 export class Login {
+    readonly client;
     constructor(init: ClientInitBase) {
+        this.client = init.client;
     }
 
     /**
