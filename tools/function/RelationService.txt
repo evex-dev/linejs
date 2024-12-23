@@ -1,19 +1,4 @@
-// For Relation (find user, etc)
-
-import { LINEStruct, type ProtocolKey } from "../../thrift/mod.ts";
-import type * as LINETypes from "@evex/linejs-types";
-import type { ClientInitBase } from "../../core/types.ts";
-import type { Client } from "../../core/mod.ts";
-import type { BaseService } from "../types.ts";
-export class RelationService implements BaseService {
-    client: Client;
-    protocolType: ProtocolKey = 4;
-    requestPath = "/RE4";
-    errorName = "RelationServiceError";
-    constructor(client: Client) {
-        this.client = client;
-    }
-    async getTargetProfiles(
+async getTargetProfiles(
         ...param: Parameters<typeof LINEStruct.getTargetProfiles_args>
     ): Promise<LINETypes.getTargetProfiles_result["success"]> {
         return await this.client.request.request(
@@ -25,7 +10,7 @@ export class RelationService implements BaseService {
         );
     }
 
-    async getRecommendationDetails(
+async getRecommendationDetails(
         ...param: Parameters<typeof LINEStruct.getRecommendationDetails_args>
     ): Promise<LINETypes.getRecommendationDetails_result["success"]> {
         return await this.client.request.request(
@@ -37,7 +22,7 @@ export class RelationService implements BaseService {
         );
     }
 
-    async getContactCalendarEvents(
+async getContactCalendarEvents(
         ...param: Parameters<typeof LINEStruct.getContactCalendarEvents_args>
     ): Promise<LINETypes.getContactCalendarEvents_result["success"]> {
         return await this.client.request.request(
@@ -49,7 +34,7 @@ export class RelationService implements BaseService {
         );
     }
 
-    async getContactsV3(
+async getContactsV3(
         ...param: Parameters<typeof LINEStruct.getContactsV3_args>
     ): Promise<LINETypes.getContactsV3_result["success"]> {
         return await this.client.request.request(
@@ -61,7 +46,7 @@ export class RelationService implements BaseService {
         );
     }
 
-    async getFriendDetails(
+async getFriendDetails(
         ...param: Parameters<typeof LINEStruct.getFriendDetails_args>
     ): Promise<LINETypes.getFriendDetails_result["success"]> {
         return await this.client.request.request(
@@ -73,7 +58,7 @@ export class RelationService implements BaseService {
         );
     }
 
-    async addFriendByMid(
+async addFriendByMid(
         ...param: Parameters<typeof LINEStruct.addFriendByMid_args>
     ): Promise<LINETypes.addFriendByMid_result["success"]> {
         return await this.client.request.request(
@@ -84,4 +69,3 @@ export class RelationService implements BaseService {
             this.requestPath,
         );
     }
-}

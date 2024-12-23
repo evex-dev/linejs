@@ -1,0 +1,23 @@
+async getE2EEKeyBackupCertificates(
+        ...param: Parameters<typeof LINEStruct.getE2EEKeyBackupCertificates_args>
+    ): Promise<LINETypes.getE2EEKeyBackupCertificates_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getE2EEKeyBackupCertificates_args(...param),
+            "getE2EEKeyBackupCertificates",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getE2EEKeyBackupInfo(
+        ...param: Parameters<typeof LINEStruct.getE2EEKeyBackupInfo_args>
+    ): Promise<LINETypes.getE2EEKeyBackupInfo_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getE2EEKeyBackupInfo_args(...param),
+            "getE2EEKeyBackupInfo",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }

@@ -1,0 +1,23 @@
+async refresh(
+        ...param: Parameters<typeof LINEStruct.refresh_args>
+    ): Promise<LINETypes.refresh_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.refresh_args(...param),
+            "refresh",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async reportRefreshedAccessToken(
+        ...param: Parameters<typeof LINEStruct.reportRefreshedAccessToken_args>
+    ): Promise<LINETypes.reportRefreshedAccessToken_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.reportRefreshedAccessToken_args(...param),
+            "reportRefreshedAccessToken",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }

@@ -1,0 +1,47 @@
+async connectEapAccount(
+        ...param: Parameters<typeof LINEStruct.connectEapAccount_args>
+    ): Promise<LINETypes.connectEapAccount_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.connectEapAccount_args(...param),
+            "connectEapAccount",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async disconnectEapAccount(
+        ...param: Parameters<typeof LINEStruct.disconnectEapAccount_args>
+    ): Promise<LINETypes.disconnectEapAccount_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.disconnectEapAccount_args(...param),
+            "disconnectEapAccount",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async openSession(
+        ...param: Parameters<typeof LINEStruct.openSession_args>
+    ): Promise<LINETypes.openSession_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.openSession_args(...param),
+            "openSession",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async verifyEapLogin(
+        ...param: Parameters<typeof LINEStruct.verifyEapLogin_args>
+    ): Promise<LINETypes.verifyEapLogin_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.verifyEapLogin_args(...param),
+            "verifyEapLogin",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }

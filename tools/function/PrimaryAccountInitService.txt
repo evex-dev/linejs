@@ -1,0 +1,155 @@
+async openSession(
+        ...param: Parameters<typeof LINEStruct.openSession_args>
+    ): Promise<LINETypes.openSession_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.openSession_args(...param),
+            "openSession",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getCountryInfo(
+        ...param: Parameters<typeof LINEStruct.getCountryInfo_args>
+    ): Promise<LINETypes.getCountryInfo_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getCountryInfo_args(...param),
+            "getCountryInfo",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async validateProfile(
+        ...param: Parameters<typeof LINEStruct.validateProfile_args>
+    ): Promise<LINETypes.validateProfile_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.validateProfile_args(...param),
+            "validateProfile",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async setPassword(
+        ...param: Parameters<typeof LINEStruct.setPassword_args>
+    ): Promise<LINETypes.setPassword_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.setPassword_args(...param),
+            "setPassword",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getPhoneVerifMethodV2(
+        ...param: Parameters<typeof LINEStruct.getPhoneVerifMethodV2_args>
+    ): Promise<LINETypes.getPhoneVerifMethodV2_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getPhoneVerifMethodV2_args(...param),
+            "getPhoneVerifMethodV2",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async requestToSendPhonePinCode(
+        ...param: Parameters<typeof LINEStruct.requestToSendPhonePinCode_args>
+    ): Promise<LINETypes.requestToSendPhonePinCode_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.requestToSendPhonePinCode_args(...param),
+            "requestToSendPhonePinCode",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async verifyPhonePinCode(
+        ...param: Parameters<typeof LINEStruct.verifyPhonePinCode_args>
+    ): Promise<LINETypes.verifyPhonePinCode_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.verifyPhonePinCode_args(...param),
+            "verifyPhonePinCode",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async registerPrimaryUsingPhoneWithTokenV3(
+        ...param: Parameters<typeof LINEStruct.registerPrimaryUsingPhoneWithTokenV3_args>
+    ): Promise<LINETypes.registerPrimaryUsingPhoneWithTokenV3_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.registerPrimaryUsingPhoneWithTokenV3_args(...param),
+            "registerPrimaryUsingPhoneWithTokenV3",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async registerPrimaryUsingPhoneWithTokenV3(
+        ...param: Parameters<typeof LINEStruct.registerPrimaryUsingPhoneWithTokenV3_args>
+    ): Promise<LINETypes.registerPrimaryUsingPhoneWithTokenV3_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.registerPrimaryUsingPhoneWithTokenV3_args(...param),
+            "registerPrimaryUsingPhoneWithTokenV3",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async lookupAvailableEap(
+        ...param: Parameters<typeof LINEStruct.lookupAvailableEap_args>
+    ): Promise<LINETypes.lookupAvailableEap_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.lookupAvailableEap_args(...param),
+            "lookupAvailableEap",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getAllowedRegistrationMethod(
+        ...param: Parameters<typeof LINEStruct.getAllowedRegistrationMethod_args>
+    ): Promise<LINETypes.getAllowedRegistrationMethod_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getAllowedRegistrationMethod_args(...param),
+            "getAllowedRegistrationMethod",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async verifyEapAccountForRegistration(
+        ...param: Parameters<typeof LINEStruct.verifyEapAccountForRegistration_args>
+    ): Promise<LINETypes.verifyEapAccountForRegistration_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.verifyEapAccountForRegistration_args(...param),
+            "verifyEapAccountForRegistration",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async registerPrimaryUsingEapAccount(
+        ...param: Parameters<typeof LINEStruct.registerPrimaryUsingEapAccount_args>
+    ): Promise<LINETypes.registerPrimaryUsingEapAccount_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.registerPrimaryUsingEapAccount_args(...param),
+            "registerPrimaryUsingEapAccount",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }

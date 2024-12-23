@@ -1,0 +1,35 @@
+async issueLiffView(
+        ...param: Parameters<typeof LINEStruct.issueLiffView_args>
+    ): Promise<LINETypes.issueLiffView_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.issueLiffView_args(...param),
+            "issueLiffView",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getLiffViewWithoutUserContext(
+        ...param: Parameters<typeof LINEStruct.getLiffViewWithoutUserContext_args>
+    ): Promise<LINETypes.getLiffViewWithoutUserContext_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getLiffViewWithoutUserContext_args(...param),
+            "getLiffViewWithoutUserContext",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async issueSubLiffView(
+        ...param: Parameters<typeof LINEStruct.issueSubLiffView_args>
+    ): Promise<LINETypes.issueSubLiffView_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.issueSubLiffView_args(...param),
+            "issueSubLiffView",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }

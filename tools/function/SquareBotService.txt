@@ -1,0 +1,11 @@
+async getSquareBot(
+        ...param: Parameters<typeof LINEStruct.getSquareBot_args>
+    ): Promise<LINETypes.getSquareBot_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getSquareBot_args(...param),
+            "getSquareBot",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }

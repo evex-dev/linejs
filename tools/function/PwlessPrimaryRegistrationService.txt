@@ -1,0 +1,35 @@
+async createSession(
+        ...param: Parameters<typeof LINEStruct.createSession_args>
+    ): Promise<LINETypes.createSession_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.createSession_args(...param),
+            "createSession",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getChallengeForPrimaryReg(
+        ...param: Parameters<typeof LINEStruct.getChallengeForPrimaryReg_args>
+    ): Promise<LINETypes.getChallengeForPrimaryReg_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getChallengeForPrimaryReg_args(...param),
+            "getChallengeForPrimaryReg",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async registerPrimaryCredential(
+        ...param: Parameters<typeof LINEStruct.registerPrimaryCredential_args>
+    ): Promise<LINETypes.registerPrimaryCredential_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.registerPrimaryCredential_args(...param),
+            "registerPrimaryCredential",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }

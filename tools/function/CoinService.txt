@@ -1,0 +1,59 @@
+async getTotalCoinBalance(
+        ...param: Parameters<typeof LINEStruct.getTotalCoinBalance_args>
+    ): Promise<LINETypes.getTotalCoinBalance_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getTotalCoinBalance_args(...param),
+            "getTotalCoinBalance",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getCoinPurchaseHistory(
+        ...param: Parameters<typeof LINEStruct.getCoinPurchaseHistory_args>
+    ): Promise<LINETypes.getCoinPurchaseHistory_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getCoinPurchaseHistory_args(...param),
+            "getCoinPurchaseHistory",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getCoinProducts(
+        ...param: Parameters<typeof LINEStruct.getCoinProducts_args>
+    ): Promise<LINETypes.getCoinProducts_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getCoinProducts_args(...param),
+            "getCoinProducts",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async reserveCoinPurchase(
+        ...param: Parameters<typeof LINEStruct.reserveCoinPurchase_args>
+    ): Promise<LINETypes.reserveCoinPurchase_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.reserveCoinPurchase_args(...param),
+            "reserveCoinPurchase",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getCoinUseAndRefundHistory(
+        ...param: Parameters<typeof LINEStruct.getCoinUseAndRefundHistory_args>
+    ): Promise<LINETypes.getCoinUseAndRefundHistory_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getCoinUseAndRefundHistory_args(...param),
+            "getCoinUseAndRefundHistory",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }

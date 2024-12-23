@@ -1,5 +1,9 @@
 // For Liff (liff, etc)
-import type { NestedArray, ProtocolKey } from "../../thrift/mod.ts";
+import {
+    LINEStruct,
+    type NestedArray,
+    type ProtocolKey,
+} from "../../thrift/mod.ts";
 import type * as LINETypes from "@evex/linejs-types";
 import { InternalError } from "../../core/utils/error.ts";
 import type { Client } from "../../core/mod.ts";
@@ -59,7 +63,31 @@ export class LiffService implements BaseService {
             this.requestPath,
         );
     }
+    async getLiffViewWithoutUserContext(
+        ...param: Parameters<
+            typeof LINEStruct.getLiffViewWithoutUserContext_args
+        >
+    ): Promise<LINETypes.getLiffViewWithoutUserContext_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getLiffViewWithoutUserContext_args(...param),
+            "getLiffViewWithoutUserContext",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
 
+    async issueSubLiffView(
+        ...param: Parameters<typeof LINEStruct.issueSubLiffView_args>
+    ): Promise<LINETypes.issueSubLiffView_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.issueSubLiffView_args(...param),
+            "issueSubLiffView",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
     /**
      * @description Gets the LiffToken by liffId and chatMid with consent.
      */

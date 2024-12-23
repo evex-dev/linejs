@@ -1,0 +1,59 @@
+async deleteMultiProfile(
+        ...param: Parameters<typeof LINEStruct.deleteMultiProfile_args>
+    ): Promise<LINETypes.deleteMultiProfile_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.deleteMultiProfile_args(...param),
+            "deleteMultiProfile",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getMappedProfileIds(
+        ...param: Parameters<typeof LINEStruct.getMappedProfileIds_args>
+    ): Promise<LINETypes.getMappedProfileIds_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getMappedProfileIds_args(...param),
+            "getMappedProfileIds",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async mapProfileToUsers(
+        ...param: Parameters<typeof LINEStruct.mapProfileToUsers_args>
+    ): Promise<LINETypes.mapProfileToUsers_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.mapProfileToUsers_args(...param),
+            "mapProfileToUsers",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async updateProfileAttributes(
+        ...param: Parameters<typeof LINEStruct.updateProfileAttributes_args>
+    ): Promise<void> {
+        return await this.client.request.request(
+            LINEStruct.updateProfileAttributes_args(...param),
+            "updateProfileAttributes",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async createMultiProfile(
+        ...param: Parameters<typeof LINEStruct.createMultiProfile_args>
+    ): Promise<LINETypes.createMultiProfile_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.createMultiProfile_args(...param),
+            "createMultiProfile",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }

@@ -1,0 +1,59 @@
+async getUserCollections(
+        ...param: Parameters<typeof LINEStruct.getUserCollections_args>
+    ): Promise<LINETypes.getUserCollections_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getUserCollections_args(...param),
+            "getUserCollections",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async createCollectionForUser(
+        ...param: Parameters<typeof LINEStruct.createCollectionForUser_args>
+    ): Promise<LINETypes.createCollectionForUser_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.createCollectionForUser_args(...param),
+            "createCollectionForUser",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async addItemToCollection(
+        ...param: Parameters<typeof LINEStruct.addItemToCollection_args>
+    ): Promise<LINETypes.addItemToCollection_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.addItemToCollection_args(...param),
+            "addItemToCollection",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async removeItemFromCollection(
+        ...param: Parameters<typeof LINEStruct.removeItemFromCollection_args>
+    ): Promise<LINETypes.removeItemFromCollection_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.removeItemFromCollection_args(...param),
+            "removeItemFromCollection",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async isProductForCollections(
+        ...param: Parameters<typeof LINEStruct.isProductForCollections_args>
+    ): Promise<LINETypes.isProductForCollections_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.isProductForCollections_args(...param),
+            "isProductForCollections",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }

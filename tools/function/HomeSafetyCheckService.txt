@@ -1,0 +1,35 @@
+async deleteSafetyStatus(
+        ...param: Parameters<typeof LINEStruct.deleteSafetyStatus_args>
+    ): Promise<void> {
+        return await this.client.request.request(
+            LINEStruct.deleteSafetyStatus_args(...param),
+            "deleteSafetyStatus",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getDisasterCases(
+        ...param: Parameters<typeof LINEStruct.getDisasterCases_args>
+    ): Promise<LINETypes.getDisasterCases_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getDisasterCases_args(...param),
+            "getDisasterCases",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async updateSafetyStatus(
+        ...param: Parameters<typeof LINEStruct.updateSafetyStatus_args>
+    ): Promise<void> {
+        return await this.client.request.request(
+            LINEStruct.updateSafetyStatus_args(...param),
+            "updateSafetyStatus",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }

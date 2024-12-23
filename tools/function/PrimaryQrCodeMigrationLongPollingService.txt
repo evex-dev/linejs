@@ -1,0 +1,11 @@
+async checkIfEncryptedE2EEKeyReceived(
+        ...param: Parameters<typeof LINEStruct.checkIfEncryptedE2EEKeyReceived_args>
+    ): Promise<LINETypes.checkIfEncryptedE2EEKeyReceived_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.checkIfEncryptedE2EEKeyReceived_args(...param),
+            "checkIfEncryptedE2EEKeyReceived",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }

@@ -1,0 +1,443 @@
+async getProductsByAuthor(
+        ...param: Parameters<typeof LINEStruct.getProductsByAuthor_args>
+    ): Promise<LINETypes.getProductsByAuthor_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getProductsByAuthor_args(...param),
+            "getProductsByAuthor",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getStudentInformation(
+        ...param: Parameters<typeof LINEStruct.getStudentInformation_args>
+    ): Promise<LINETypes.getStudentInformation_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getStudentInformation_args(...param),
+            "getStudentInformation",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async canReceivePresent(
+        ...param: Parameters<typeof LINEStruct.canReceivePresent_args>
+    ): Promise<void> {
+        return await this.client.request.request(
+            LINEStruct.canReceivePresent_args(...param),
+            "canReceivePresent",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getOwnedProductSummaries(
+        ...param: Parameters<typeof LINEStruct.getOwnedProductSummaries_args>
+    ): Promise<LINETypes.getOwnedProductSummaries_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getOwnedProductSummaries_args(...param),
+            "getOwnedProductSummaries",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getProductV2(
+        ...param: Parameters<typeof LINEStruct.getProductV2_args>
+    ): Promise<LINETypes.getProductV2_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getProductV2_args(...param),
+            "getProductV2",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getProductByVersion(
+        ...param: Parameters<typeof LINEStruct.getProductByVersion_args>
+    ): Promise<LINETypes.getProductByVersion_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getProductByVersion_args(...param),
+            "getProductByVersion",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async placePurchaseOrderForFreeProduct(
+        ...param: Parameters<typeof LINEStruct.placePurchaseOrderForFreeProduct_args>
+    ): Promise<LINETypes.placePurchaseOrderForFreeProduct_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.placePurchaseOrderForFreeProduct_args(...param),
+            "placePurchaseOrderForFreeProduct",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async placePurchaseOrderWithLineCoin(
+        ...param: Parameters<typeof LINEStruct.placePurchaseOrderWithLineCoin_args>
+    ): Promise<LINETypes.placePurchaseOrderWithLineCoin_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.placePurchaseOrderWithLineCoin_args(...param),
+            "placePurchaseOrderWithLineCoin",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getPurchasedProducts(
+        ...param: Parameters<typeof LINEStruct.getPurchasedProducts_args>
+    ): Promise<LINETypes.getPurchasedProducts_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getPurchasedProducts_args(...param),
+            "getPurchasedProducts",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getReceivedPresents(
+        ...param: Parameters<typeof LINEStruct.getReceivedPresents_args>
+    ): Promise<LINETypes.getReceivedPresents_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getReceivedPresents_args(...param),
+            "getReceivedPresents",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getSentPresents(
+        ...param: Parameters<typeof LINEStruct.getSentPresents_args>
+    ): Promise<LINETypes.getSentPresents_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getSentPresents_args(...param),
+            "getSentPresents",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async notifyProductEvent(
+        ...param: Parameters<typeof LINEStruct.notifyProductEvent_args>
+    ): Promise<void> {
+        return await this.client.request.request(
+            LINEStruct.notifyProductEvent_args(...param),
+            "notifyProductEvent",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getProductValidationScheme(
+        ...param: Parameters<typeof LINEStruct.getProductValidationScheme_args>
+    ): Promise<LINETypes.getProductValidationScheme_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getProductValidationScheme_args(...param),
+            "getProductValidationScheme",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async validateProduct(
+        ...param: Parameters<typeof LINEStruct.validateProduct_args>
+    ): Promise<LINETypes.validateProduct_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.validateProduct_args(...param),
+            "validateProduct",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getRecommendationList(
+        ...param: Parameters<typeof LINEStruct.getRecommendationList_args>
+    ): Promise<LINETypes.getRecommendationList_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getRecommendationList_args(...param),
+            "getRecommendationList",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async removeProductFromSubscriptionSlot(
+        ...param: Parameters<typeof LINEStruct.removeProductFromSubscriptionSlot_args>
+    ): Promise<LINETypes.removeProductFromSubscriptionSlot_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.removeProductFromSubscriptionSlot_args(...param),
+            "removeProductFromSubscriptionSlot",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async buyMustbuyProduct(
+        ...param: Parameters<typeof LINEStruct.buyMustbuyProduct_args>
+    ): Promise<void> {
+        return await this.client.request.request(
+            LINEStruct.buyMustbuyProduct_args(...param),
+            "buyMustbuyProduct",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getSubscriptionPlans(
+        ...param: Parameters<typeof LINEStruct.getSubscriptionPlans_args>
+    ): Promise<LINETypes.getSubscriptionPlans_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getSubscriptionPlans_args(...param),
+            "getSubscriptionPlans",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getBrowsingHistory(
+        ...param: Parameters<typeof LINEStruct.getBrowsingHistory_args>
+    ): Promise<LINETypes.getBrowsingHistory_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getBrowsingHistory_args(...param),
+            "getBrowsingHistory",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getResourceFile(
+        ...param: Parameters<typeof LINEStruct.getResourceFile_args>
+    ): Promise<LINETypes.getResourceFile_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getResourceFile_args(...param),
+            "getResourceFile",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getAutoSuggestionShowcase(
+        ...param: Parameters<typeof LINEStruct.getAutoSuggestionShowcase_args>
+    ): Promise<LINETypes.getAutoSuggestionShowcase_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getAutoSuggestionShowcase_args(...param),
+            "getAutoSuggestionShowcase",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async changeSubscription(
+        ...param: Parameters<typeof LINEStruct.changeSubscription_args>
+    ): Promise<LINETypes.changeSubscription_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.changeSubscription_args(...param),
+            "changeSubscription",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getSubscriptionStatus(
+        ...param: Parameters<typeof LINEStruct.getSubscriptionStatus_args>
+    ): Promise<LINETypes.getSubscriptionStatus_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getSubscriptionStatus_args(...param),
+            "getSubscriptionStatus",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async purchaseSubscription(
+        ...param: Parameters<typeof LINEStruct.purchaseSubscription_args>
+    ): Promise<LINETypes.purchaseSubscription_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.purchaseSubscription_args(...param),
+            "purchaseSubscription",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getProductSummariesInSubscriptionSlots(
+        ...param: Parameters<typeof LINEStruct.getProductSummariesInSubscriptionSlots_args>
+    ): Promise<LINETypes.getProductSummariesInSubscriptionSlots_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getProductSummariesInSubscriptionSlots_args(...param),
+            "getProductSummariesInSubscriptionSlots",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getSuggestDictionarySetting(
+        ...param: Parameters<typeof LINEStruct.getSuggestDictionarySetting_args>
+    ): Promise<LINETypes.getSuggestDictionarySetting_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getSuggestDictionarySetting_args(...param),
+            "getSuggestDictionarySetting",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getSuggestResourcesV2(
+        ...param: Parameters<typeof LINEStruct.getSuggestResourcesV2_args>
+    ): Promise<LINETypes.getSuggestResourcesV2_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getSuggestResourcesV2_args(...param),
+            "getSuggestResourcesV2",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getAuthorsLatestProducts(
+        ...param: Parameters<typeof LINEStruct.getAuthorsLatestProducts_args>
+    ): Promise<LINETypes.getAuthorsLatestProducts_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getAuthorsLatestProducts_args(...param),
+            "getAuthorsLatestProducts",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async addProductToSubscriptionSlot(
+        ...param: Parameters<typeof LINEStruct.addProductToSubscriptionSlot_args>
+    ): Promise<LINETypes.addProductToSubscriptionSlot_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.addProductToSubscriptionSlot_args(...param),
+            "addProductToSubscriptionSlot",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async saveStudentInformation(
+        ...param: Parameters<typeof LINEStruct.saveStudentInformation_args>
+    ): Promise<LINETypes.saveStudentInformation_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.saveStudentInformation_args(...param),
+            "saveStudentInformation",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async verifyBirthdayGiftAssociationToken(
+        ...param: Parameters<typeof LINEStruct.verifyBirthdayGiftAssociationToken_args>
+    ): Promise<LINETypes.verifyBirthdayGiftAssociationToken_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.verifyBirthdayGiftAssociationToken_args(...param),
+            "verifyBirthdayGiftAssociationToken",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getSubscriptionSlotHistory(
+        ...param: Parameters<typeof LINEStruct.getSubscriptionSlotHistory_args>
+    ): Promise<LINETypes.getSubscriptionSlotHistory_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getSubscriptionSlotHistory_args(...param),
+            "getSubscriptionSlotHistory",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async reserveCoinPurchase(
+        ...param: Parameters<typeof LINEStruct.reserveCoinPurchase_args>
+    ): Promise<LINETypes.reserveCoinPurchase_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.reserveCoinPurchase_args(...param),
+            "reserveCoinPurchase",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getCoinUseAndRefundHistory(
+        ...param: Parameters<typeof LINEStruct.getCoinUseAndRefundHistory_args>
+    ): Promise<LINETypes.getCoinUseAndRefundHistory_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getCoinUseAndRefundHistory_args(...param),
+            "getCoinUseAndRefundHistory",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getCoinProducts(
+        ...param: Parameters<typeof LINEStruct.getCoinProducts_args>
+    ): Promise<LINETypes.getCoinProducts_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getCoinProducts_args(...param),
+            "getCoinProducts",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getCoinPurchaseHistory(
+        ...param: Parameters<typeof LINEStruct.getCoinPurchaseHistory_args>
+    ): Promise<LINETypes.getCoinPurchaseHistory_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getCoinPurchaseHistory_args(...param),
+            "getCoinPurchaseHistory",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async createCombinationSticker(
+        ...param: Parameters<typeof LINEStruct.createCombinationSticker_args>
+    ): Promise<LINETypes.createCombinationSticker_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.createCombinationSticker_args(...param),
+            "createCombinationSticker",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }

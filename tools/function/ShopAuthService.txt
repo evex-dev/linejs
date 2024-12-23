@@ -1,0 +1,11 @@
+async establishE2EESession(
+        ...param: Parameters<typeof LINEStruct.establishE2EESession_args>
+    ): Promise<LINETypes.establishE2EESession_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.establishE2EESession_args(...param),
+            "establishE2EESession",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }

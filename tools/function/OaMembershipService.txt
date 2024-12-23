@@ -1,0 +1,23 @@
+async activateSubscription(
+        ...param: Parameters<typeof LINEStruct.activateSubscription_args>
+    ): Promise<void> {
+        return await this.client.request.request(
+            LINEStruct.activateSubscription_args(...param),
+            "activateSubscription",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getJoinedMembership(
+        ...param: Parameters<typeof LINEStruct.getJoinedMembership_args>
+    ): Promise<LINETypes.getJoinedMembership_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getJoinedMembership_args(...param),
+            "getJoinedMembership",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }

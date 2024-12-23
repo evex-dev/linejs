@@ -1,0 +1,47 @@
+async getAssertionChallenge(
+        ...param: Parameters<typeof LINEStruct.getAssertionChallenge_args>
+    ): Promise<LINETypes.getAssertionChallenge_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getAssertionChallenge_args(...param),
+            "getAssertionChallenge",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getAttestationChallenge(
+        ...param: Parameters<typeof LINEStruct.getAttestationChallenge_args>
+    ): Promise<LINETypes.getAttestationChallenge_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getAttestationChallenge_args(...param),
+            "getAttestationChallenge",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async verifyAssertion(
+        ...param: Parameters<typeof LINEStruct.verifyAssertion_args>
+    ): Promise<LINETypes.verifyAssertion_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.verifyAssertion_args(...param),
+            "verifyAssertion",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async verifyAttestation(
+        ...param: Parameters<typeof LINEStruct.verifyAttestation_args>
+    ): Promise<LINETypes.verifyAttestation_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.verifyAttestation_args(...param),
+            "verifyAttestation",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }

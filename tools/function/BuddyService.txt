@@ -1,0 +1,107 @@
+async getPromotedBuddyContacts(
+        ...param: Parameters<typeof LINEStruct.getPromotedBuddyContacts_args>
+    ): Promise<LINETypes.getPromotedBuddyContacts_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getPromotedBuddyContacts_args(...param),
+            "getPromotedBuddyContacts",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getBuddyChatBarV2(
+        ...param: Parameters<typeof LINEStruct.getBuddyChatBarV2_args>
+    ): Promise<LINETypes.getBuddyChatBarV2_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getBuddyChatBarV2_args(...param),
+            "getBuddyChatBarV2",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getBuddyStatusBarV2(
+        ...param: Parameters<typeof LINEStruct.getBuddyStatusBarV2_args>
+    ): Promise<LINETypes.getBuddyStatusBarV2_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getBuddyStatusBarV2_args(...param),
+            "getBuddyStatusBarV2",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getBuddyDetailWithPersonal(
+        ...param: Parameters<typeof LINEStruct.getBuddyDetailWithPersonal_args>
+    ): Promise<LINETypes.getBuddyDetailWithPersonal_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getBuddyDetailWithPersonal_args(...param),
+            "getBuddyDetailWithPersonal",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getBuddyLive(
+        ...param: Parameters<typeof LINEStruct.getBuddyLive_args>
+    ): Promise<LINETypes.getBuddyLive_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getBuddyLive_args(...param),
+            "getBuddyLive",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getNewlyReleasedBuddyIds(
+        ...param: Parameters<typeof LINEStruct.getNewlyReleasedBuddyIds_args>
+    ): Promise<LINETypes.getNewlyReleasedBuddyIds_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getNewlyReleasedBuddyIds_args(...param),
+            "getNewlyReleasedBuddyIds",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getBuddyOnAir(
+        ...param: Parameters<typeof LINEStruct.getBuddyOnAir_args>
+    ): Promise<LINETypes.getBuddyOnAir_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getBuddyOnAir_args(...param),
+            "getBuddyOnAir",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async getBuddyDetail(
+        ...param: Parameters<typeof LINEStruct.getBuddyDetail_args>
+    ): Promise<LINETypes.getBuddyDetail_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.getBuddyDetail_args(...param),
+            "getBuddyDetail",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
+
+async findBuddyContactsByQuery(
+        ...param: Parameters<typeof LINEStruct.findBuddyContactsByQuery_args>
+    ): Promise<LINETypes.findBuddyContactsByQuery_result["success"]> {
+        return await this.client.request.request(
+            LINEStruct.findBuddyContactsByQuery_args(...param),
+            "findBuddyContactsByQuery",
+            this.protocolType,
+            true,
+            this.requestPath,
+        );
+    }
