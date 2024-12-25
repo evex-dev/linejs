@@ -14,7 +14,6 @@ import { TypedEventEmitter } from "./typed-event-emitter/index.ts";
 import type { ClientEvents } from "./utils/events.ts";
 import type { Log } from "./utils/events.ts";
 import type { ClientInitBase, fetchLike } from "./types.ts";
-export { mergeObject } from "./utils/mergeObject.ts";
 export type { ClientInitBase, Device, DeviceDetails, fetchLike, Log };
 import {
     AuthService,

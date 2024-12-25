@@ -4,7 +4,6 @@ import type { BaseService } from "../types.ts";
 import type * as LINETypes from "@evex/linejs-types";
 import { LINEStruct } from "../../thrift/mod.ts";
 import type { Buffer } from "node:buffer";
-import { mergeObject } from "../../core/mod.ts";
 
 export class TalkService implements BaseService {
     client: Client;
@@ -25,10 +24,13 @@ export class TalkService implements BaseService {
         chunk?: string[] | Buffer[];
         e2ee?: boolean;
     }): Promise<LINETypes.sendMessage_result["success"]> {
-        const message = mergeObject(options, {
+        const message = {
             contentMetadata: {},
-            contentType: "NONE",
-        });
+            contentType: "NONE" as LINETypes.ContentType,
+            ...options,
+        };
+        message;
+        message.contentMetadata;
         // TODO: e2ee
         return await this.client.request.request(
             LINEStruct.sendMessage_args({ message }),
@@ -1325,18 +1327,6 @@ export class TalkService implements BaseService {
         return await this.client.request.request(
             LINEStruct.getPreviousMessagesV2WithRequest_args(...param),
             "getPreviousMessagesV2WithRequest",
-            this.protocolType,
-            true,
-            this.requestPath,
-        );
-    }
-
-    async sync(
-        ...param: Parameters<typeof LINEStruct.sync_args>
-    ): Promise<LINETypes.sync_result["success"]> {
-        return await this.client.request.request(
-            LINEStruct.sync_args(...param),
-            "sync",
             this.protocolType,
             true,
             this.requestPath,
