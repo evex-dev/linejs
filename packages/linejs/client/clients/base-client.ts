@@ -1629,7 +1629,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			}
 			const body = await response.arrayBuffer();
 			const parsedBody = new Uint8Array(body);
-			
+
 			// patch empty response
 			if (Object.keys(parsedBody).length === 0) {
 				return { value: null, e: null, _info: null };
@@ -2014,6 +2014,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		}
 		const toType: "talk" | "g2" =
 			to[0] === "m" || to[0] === "t" ? "g2" : "talk";
+		const encodedParams = btoa(
+			String.fromCharCode(...new TextEncoder().encode(JSON.stringify(param))),
+		);
 		return this.customFetch(
 			this.LINE_OBS.prefix + "r/" + toType + "/m/reqseq",
 			{
@@ -2022,7 +2025,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					"x-line-application": this.system?.type as string,
 					"x-Line-access": this.metadata.authToken,
 					"content-type": "application/x-www-form-urlencoded",
-					"x-obs-params": btoa(JSON.stringify(param)),
+					"x-obs-params": encodedParams,
 				},
 				body: data,
 				method: "POST",
