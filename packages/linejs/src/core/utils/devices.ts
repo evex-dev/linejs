@@ -14,7 +14,11 @@ export interface DeviceDetails {
 	systemName: string;
 	systemVersion: string;
 }
-
+export function isV3Support(
+	device: Device,
+): device is "DESKTOPWIN" | "DESKTOPMAC" {
+	return ["DESKTOPWIN", "DESKTOPMAC"].includes(device);
+}
 export function getDeviceDetails(
 	device: Device,
 	version?: string,

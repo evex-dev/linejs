@@ -476,6 +476,17 @@ export class TalkService implements BaseService {
             this.requestPath,
         );
     }
+    public async getE2EEPublicKeys(): Promise<
+        LINETypes.getE2EEPublicKeys_result["success"]
+    > {
+        return await this.client.request.request(
+            [],
+            "getE2EEPublicKeys",
+            this.protocolType,
+            false,
+            this.requestPath,
+        );
+    }
 
     async registerE2EEPublicKey(
         ...param: Parameters<typeof LINEStruct.registerE2EEPublicKey_args>

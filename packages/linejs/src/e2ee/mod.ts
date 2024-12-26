@@ -21,13 +21,13 @@ class E2EE {
         } catch (_e) {
             /* Do Nothing */
         }
-        const keys = await this.getE2EEPublicKeys();
+        const keys = await this.client.talk.getE2EEPublicKeys();
         for (let i = 0; i < keys.length; i++) {
             const key = keys[i];
             const { keyId } = key;
             const _keyData = await this.getE2EESelfKeyDataByKeyId(keyId);
             if (_keyData) {
-                this.saveE2EESelfKeyData(_keyData);
+                await this.saveE2EESelfKeyData(_keyData);
                 return _keyData;
             }
         }
@@ -62,44 +62,11 @@ class E2EE {
             JSON.stringify(value),
         );
     }
-    public getToType(mid: string): number | null {
-        /**
-         * USER(0),
-         * ROOM(1),
-         * GROUP(2),
-         * SQUARE(3),
-         * SQUARE_CHAT(4),
-         * SQUARE_MEMBER(5),
-         * SQUARE_BOT(6),
-         * SQUARE_THREAD(7):;
-         */
-        const _u = mid.charAt(0);
-        switch (_u) {
-            case "u":
-                return 0;
-            case "r":
-                return 1;
-            case "c":
-                return 2;
-            case "s":
-                return 3;
-            case "m":
-                return 4;
-            case "p":
-                return 5;
-            case "v":
-                return 6;
-            case "t":
-                return 7;
-            default:
-                return null;
-        }
-    }
     public async getE2EELocalPublicKey(
         mid: string,
         keyId?: string | number | undefined,
     ): Promise<any> {
-        const toType = this.getToType(mid);
+        const toType = this.client.getToType(mid);
         let key: any = undefined;
         let fd: any, fn: any;
 
@@ -109,9 +76,11 @@ class E2EE {
             if (keyId !== undefined) {
                 key = this.client.storage.get(fd + fn);
             }
-            let receiverKeyData;
+            let receiverKeyData: LINETypes.E2EENegotiationResult;
             if (!key) {
-                receiverKeyData = await this.negotiateE2EEPublicKey({ mid });
+                receiverKeyData = await this.client.talk.negotiateE2EEPublicKey(
+                    { mid },
+                );
                 const specVersion = receiverKeyData.specVersion;
                 if (specVersion === -1) {
                     throw new InternalError("Not support E2EE", `${mid}`);

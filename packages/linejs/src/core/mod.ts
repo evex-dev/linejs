@@ -1,20 +1,21 @@
-import { Login } from "../login/mod.ts";
-import { Thrift } from "../thrift/mod.ts";
-import { RequestClient } from "../request/mod.ts";
-import { E2EE } from "../e2ee/mod.ts";
 import {
     type Device,
     type DeviceDetails,
     getDeviceDetails,
 } from "./utils/devices.ts";
-import { Thrift as def } from "@evex/linejs-types/thrift";
-import type * as LINETypes from "@evex/linejs-types";
+
 import { type BaseStorage, MemoryStorage } from "../storage/mod.ts";
+
 import { TypedEventEmitter } from "./typed-event-emitter/index.ts";
-import type { ClientEvents } from "./utils/events.ts";
-import type { Log } from "./utils/events.ts";
+
+import type { ClientEvents, Log } from "./utils/events.ts";
+import { InternalError } from "./utils/error.ts";
+
 import type { ClientInitBase, fetchLike } from "./types.ts";
+
 export type { ClientInitBase, Device, DeviceDetails, fetchLike, Log };
+export { InternalError };
+
 import {
     AuthService,
     CallService,
@@ -25,6 +26,15 @@ import {
     SquareService,
     TalkService,
 } from "../service/mod.ts";
+
+import { Login } from "../login/mod.ts";
+import { Thrift } from "../thrift/mod.ts";
+import { RequestClient } from "../request/mod.ts";
+import { E2EE } from "../e2ee/mod.ts";
+
+import { Thrift as def } from "@evex/linejs-types/thrift";
+import type * as LINETypes from "@evex/linejs-types";
+
 export interface ClientInit {
     /**
      * version which LINE App to emurating
