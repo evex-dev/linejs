@@ -4,7 +4,7 @@ import { EMAIL_REGEX, PASSWORD_REGEX } from "./regex.ts";
 import { isV3Support } from "../core/utils/devices.ts";
 import { InternalError } from "../core/mod.ts";
 import type * as LINETypes from "@evex/linejs-types";
-import type { Buffer } from "node:buffer";
+import { Buffer } from "node:buffer";
 import { LINEStruct } from "../thrift/mod.ts";
 
 interface PasswordLoginOption {
@@ -32,10 +32,49 @@ interface PasswordLoginOption {
 }
 export class Login {
     readonly client;
+    cert: string | null;
+    qrCert: string | null;
     constructor(init: ClientInitBase) {
         this.client = init.client;
+        this.qrCert = null;
+        this.cert = null;
     }
 
+    /**
+     * @description Registers a certificate to be used for login.
+     *
+     * @param {string | null} cert - The certificate to register. If null, the certificate will be cleared.
+     */
+    public registerCert(cert: string | null): void {
+        this.cert = cert;
+    }
+
+    /**
+     * @description Reads the certificate from the registered path, if it exists.
+     *
+     * @return {Promise<string | null>} The certificate, or null if it does not exist or an error occurred.
+     */
+    public getCert(): string | null {
+        return this.cert;
+    }
+
+    /**
+     * @description Registers a certificate to be used for login.
+     *
+     * @param {string | null} qrCert - The certificate to register. If null, the certificate will be cleared.
+     */
+    public registerQrCert(qrCert: string | null): void {
+        this.qrCert = qrCert;
+    }
+
+    /**
+     * @description Reads the certificate from the registered path, if it exists.
+     *
+     * @return {Promise<string | null>} The certificate, or null if it does not exist or an error occurred.
+     */
+    public getQrCert(): string | null {
+        return this.qrCert;
+    }
     /**
      * Login with email and password.
      * @param options.email account e-mail address
@@ -130,9 +169,9 @@ export class Login {
             secretPK: string | undefined;
 
         if (enableE2EE) {
-            [secret, secretPK] = this.createSqrSecret(true);
-            e2eeData = this.encryptAESECB(
-                this.getSHA256Sum(constantPincode),
+            [secret, secretPK] = this.client.e2ee.createSqrSecret(true);
+            e2eeData = this.client.e2ee.encryptAESECB(
+                this.client.e2ee.getSHA256Sum(constantPincode),
                 Buffer.from(secretPK, "base64"),
             );
         }
