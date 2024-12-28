@@ -96,7 +96,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
     readonly square: SquareService;
     readonly talk: TalkService;
     fetch: fetchLike;
-    user?: LINETypes.Profile;
+    profile?: LINETypes.Profile;
     config: Config;
     constructor(init: ClientInit) {
         super();

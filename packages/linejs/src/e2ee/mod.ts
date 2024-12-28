@@ -63,7 +63,7 @@ class E2EE {
     }
     public async saveE2EESelfKeyData(value: any) {
         await this.client.storage.set(
-            "e2eeKeys:" + this.client.user?.mid,
+            "e2eeKeys:" + this.client.profile?.mid,
             JSON.stringify(value),
         );
     }
@@ -210,7 +210,7 @@ class E2EE {
         const members: string[] = [];
         const keyIds: number[] = [];
         const encryptedSharedKeys: Buffer[] = [];
-        const selfKeyId = e2eePublicKeys[this.client.user!.mid].keyId;
+        const selfKeyId = e2eePublicKeys[this.client.profile!.mid].keyId;
         const selfKeyData = await this.getE2EESelfKeyDataByKeyId(selfKeyId);
         if (!selfKeyData) {
             throw new InternalError(
@@ -442,7 +442,7 @@ class E2EE {
         contentType = 0,
         specVersion = 2,
     ): Promise<Buffer[]> {
-        const _from = this.client.user?.mid as string;
+        const _from = this.client.profile?.mid as string;
         const selfKeyData = await this.getE2EESelfKeyData(_from);
 
         if (
@@ -623,7 +623,7 @@ class E2EE {
     ): Promise<string> {
         const _from = messageObj.from;
         const to = messageObj.to;
-        if (_from === this.client.user?.mid) {
+        if (_from === this.client.profile?.mid) {
             isSelf = true;
         }
         const toType = messageObj.toType;
@@ -638,7 +638,7 @@ class E2EE {
         this.e2eeLog("decryptE2EETextMessageSenderKeyId", senderKeyId);
         this.e2eeLog("decryptE2EETextMessageReceiverKeyId", receiverKeyId);
 
-        const selfKey = await this.getE2EESelfKeyData(this.client.user!.mid);
+        const selfKey = await this.getE2EESelfKeyData(this.client.profile!.mid);
         let privK = Buffer.from(selfKey.privKey, "base64");
         let pubK: any;
 
@@ -654,7 +654,7 @@ class E2EE {
             ) as GroupKey;
             privK = Buffer.from(groupK.privKey, "base64");
             pubK = Buffer.from(selfKey.pubKey, "base64");
-            if (_from !== this.client.user?.mid) {
+            if (_from !== this.client.profile?.mid) {
                 pubK = await this.getE2EELocalPublicKey(_from, senderKeyId);
             }
         }
@@ -697,7 +697,7 @@ class E2EE {
         this.e2eeLog("decryptE2EELocationMessageReceiverKeyId", receiverKeyId);
 
         const selfKey = await this.getE2EESelfKeyData(
-            this.client.user?.mid as string,
+            this.client.profile?.mid as string,
         );
         let privK = Buffer.from(selfKey.privKey, "base64");
         let pubK: any;
@@ -714,7 +714,7 @@ class E2EE {
             ) as GroupKey;
             privK = Buffer.from(groupK.privKey, "base64");
             pubK = Buffer.from(selfKey.pubKey, "base64");
-            if (_from !== this.client.user?.mid) {
+            if (_from !== this.client.profile?.mid) {
                 pubK = await this.getE2EELocalPublicKey(_from, senderKeyId);
             }
         }
