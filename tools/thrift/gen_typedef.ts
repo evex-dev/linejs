@@ -130,7 +130,7 @@ export function main(
 
 	Deno.writeTextFileSync(
 		path || path_.fromFileUrl(import.meta.resolve(
-			"../../packages/linejs/src/thrift/readwrite/struct.ts",
+			"../../packages/types/line_types.ts",
 		)),
 		out.join("\n"),
 		{ create: true },

@@ -13,7 +13,7 @@ interface GroupKey {
     keyId: number;
 }
 
-class E2EE {
+export class E2EE {
     readonly client: Client;
     constructor(param: ClientInitBase) {
         this.client = param.client;
@@ -877,5 +877,3 @@ function _bin2bytes(k: string) {
     }
     return new Uint8Array(e);
 }
-
-export { E2EE };

@@ -38,7 +38,7 @@ function isBinary(bin: Buffer) {
 function bigInt(bin: Buffer): number | bigint {
 	const str = bin.toString("hex");
 	const num = parseInt(str, 16);
-	if (str !== num.toString(16)) {
+	if (Number.MAX_SAFE_INTEGER < num) {
 		return BigInt("0x" + str);
 	}
 	return num;

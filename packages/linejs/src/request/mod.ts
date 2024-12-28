@@ -66,19 +66,18 @@ export class RequestClient {
         headers: Record<string, string | undefined> = {},
         timeout = this.client.config.timeout,
     ): Promise<T> {
-        return (
-            await this.requestCore(
-                path,
-                value,
-                methodName,
-                protocolType,
-                headers,
-                undefined,
-                parse,
-                undefined,
-                timeout,
-            )
-        ).data.success;
+        const res = await this.requestCore(
+            path,
+            value,
+            methodName,
+            protocolType,
+            headers,
+            undefined,
+            parse,
+            undefined,
+            timeout,
+        );
+        return res.data.success;
     }
 
     /**
@@ -107,19 +106,35 @@ export class RequestClient {
         isReRequest: boolean = false,
         timeout: number = 1000,
     ): Promise<ParsedThrift> {
-        const Protocol = Protocols[protocolType];
+        const protocol = Protocols[protocolType];
 
         const headers = {
             ...this.getHeader(overrideMethod),
             ...appendHeaders,
         };
 
+        this.client.log("writeThrift", {
+            value,
+            methodName,
+            protocolType,
+        });
+
         const Trequest = this.client.thrift.writeThrift(
             value,
             methodName,
-            Protocol,
+            protocol,
         );
-        const req = new Request(
+
+        this.client.log("request", {
+            methodName,
+            path: `https://${this.endpoint}${path}`,
+            method: overrideMethod,
+            headers,
+            timeout,
+            body: Trequest,
+        });
+
+        const response = await this.client.fetch(
             `https://${this.endpoint}${path}`,
             {
                 method: overrideMethod,
@@ -128,17 +143,20 @@ export class RequestClient {
                 body: Trequest,
             },
         );
-
-        const response = await this.client.fetch(req);
         const nextToken = response.headers.get("x-line-next-access");
         if (nextToken) {
-            /* TODO: emit */
+            this.client.emit("update:authtoken", nextToken);
         }
         const body = await response.arrayBuffer();
         const parsedBody = new Uint8Array(body);
+        this.client.log("response", {
+            ...response,
+            parsedBody,
+            methodName,
+        });
         let res: ParsedThrift;
         try {
-            res = this.client.thrift.readThrift(parsedBody, Protocol);
+            res = this.client.thrift.readThrift(parsedBody, protocol);
         } catch {
             throw new Error(
                 `Request internal failed: Invalid response buffer <${
@@ -167,7 +185,27 @@ export class RequestClient {
                 }
                 delete res.data[1];
             }
+        } else {
+            res.data.success = res.data[0];
+            delete res.data[0];
+            if (res.data[1]) {
+                const structName = RequestClient.EXCEPTION_TYPES[path] ||
+                    "TalkException";
+                if (structName) {
+                    res.data.e = this.client.thrift.rename_thrift(
+                        structName,
+                        res.data[1],
+                    );
+                } else {
+                    res.data.e = res.data[1];
+                }
+                delete res.data[1];
+            }
         }
+
+        this.client.log("readThrift", {
+            res,
+        });
 
         const isRefresh = Boolean(
             res.data.e &&

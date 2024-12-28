@@ -95,7 +95,7 @@ export class Login {
         if (!this.client.authToken) {
             throw new InternalError("NotAuthorized", "try login first");
         }
-        this.client.profile = (await this.client.talk.getProfile()).profile;
+        this.client.profile = await this.client.talk.getProfile();
         this.client.emit("ready", this.client.profile);
     }
 
@@ -132,12 +132,15 @@ export class Login {
                 authToken = await this.requestSQR();
             }
         }
-        this.client.emit("update:authToken", authToken);
+        this.client.emit("update:authtoken", authToken);
         this.client.authToken = authToken;
     }
 
     public async requestSQR(): Promise<string> {
-        const { 1: sqr } = await this.createSession();
+        const _tmp = await this.createSession();
+        console.log(_tmp);
+
+        const { 1: sqr } = _tmp;
         let { 1: url } = await this.createQrCode(sqr);
         const [secret, secretUrl] = this.client.e2ee.createSqrSecret();
         url = url + secretUrl;
@@ -154,6 +157,7 @@ export class Login {
             const { 1: pem, 2: authToken, 4: e2eeInfo, 5: _mid } = response;
             if (pem) {
                 this.client.emit("update:qrcert", pem);
+                await this.registerQrCert(pem);
             }
             if (e2eeInfo) {
                 this.client.e2ee.decodeE2EEKeyV1(e2eeInfo, Buffer.from(secret));
@@ -184,6 +188,7 @@ export class Login {
             const { 1: pem, 3: tokenInfo, 4: _mid, 10: e2eeInfo } = response;
             if (pem) {
                 this.client.emit("update:qrcert", pem);
+                await this.registerQrCert(pem);
             }
             if (e2eeInfo) {
                 this.client.e2ee.decodeE2EEKeyV1(e2eeInfo, Buffer.from(secret));
@@ -246,7 +251,7 @@ export class Login {
                 );
             }
         }
-        this.client.emit("update:authToken", authToken);
+        this.client.emit("update:authtoken", authToken);
         this.client.authToken = authToken;
     }
 
@@ -396,6 +401,7 @@ export class Login {
         }
         if (response.certificate) {
             this.client.emit("update:cert", response.certificate);
+            this.registerCert(response.certificate);
         }
         return response.authToken;
     }
@@ -496,6 +502,7 @@ export class Login {
         }
         if (response[2]) {
             this.client.emit("update:cert", response[2]);
+            this.registerCert(response[2]);
         }
         this.client.storage.set("refreshToken", response[9][2]);
         this.client.storage.set("expire", response[9][3] + response[9][6]);
@@ -513,7 +520,7 @@ export class Login {
         provider: LINETypes.IdentityProvider = 0,
     ): Promise<LINETypes.RSAKey> {
         return await this.client.request.request(
-            [[8, 2, LINEStruct.IdentityProvider(provider)]],
+            [[12, 1, [[8, 2, LINEStruct.IdentityProvider(provider)]]]],
             "getRSAKeyInfo",
             3,
             "RSAKey",
@@ -563,8 +570,8 @@ export class Login {
         );
     }
 
-    public createSession(): Promise<string> {
-        return this.client.request.request(
+    public async createSession(): Promise<any> {
+        return await this.client.request.request(
             [],
             "createSession",
             4,
@@ -575,7 +582,7 @@ export class Login {
 
     public async createQrCode(qrcode: string): Promise<any> {
         return await this.client.request.request(
-            [[11, 1, qrcode]],
+            [[12, 1, [[11, 1, qrcode]]]],
             "createQrCode",
             4,
             false,
@@ -586,16 +593,16 @@ export class Login {
     public async checkQrCodeVerified(qrcode: string): Promise<boolean> {
         try {
             await this.client.request.request(
-                [[11, 1, qrcode]],
+                [[12, 1, [[11, 1, qrcode]]]],
                 "checkQrCodeVerified",
                 4,
                 false,
                 "/acct/lp/lgn/sq/v1",
                 {
-                    "x-lst": "150000",
+                    "x-lst": "180000",
                     "x-line-access": qrcode,
                 },
-                this.client.config.timeout,
+                this.client.config.longTimeout,
             );
             return true;
         } catch (error) {
@@ -608,10 +615,7 @@ export class Login {
         cert?: string | undefined,
     ): Promise<any> {
         return await this.client.request.request(
-            [
-                [11, 1, qrcode],
-                [11, 2, cert],
-            ],
+            [[12, 1, [[11, 1, qrcode], [11, 2, cert]]]],
             "verifyCertificate",
             4,
             false,
@@ -621,7 +625,7 @@ export class Login {
 
     public async createPinCode(qrcode: string): Promise<any> {
         return await this.client.request.request(
-            [[11, 1, qrcode]],
+            [[12, 1, [[11, 1, qrcode]]]],
             "createPinCode",
             4,
             false,
@@ -632,13 +636,13 @@ export class Login {
     public async checkPinCodeVerified(qrcode: string): Promise<boolean> {
         try {
             await this.client.request.request(
-                [[11, 1, qrcode]],
+                [[12, 1, [[11, 1, qrcode]]]],
                 "checkPinCodeVerified",
                 4,
                 false,
                 "/acct/lp/lgn/sq/v1",
                 {
-                    "x-lst": "150000",
+                    "x-lst": "180000",
                     "x-line-access": qrcode,
                 },
                 this.client.config.longTimeout,
@@ -654,11 +658,11 @@ export class Login {
         autoLoginIsRequired: boolean = true,
     ): Promise<any> {
         return await this.client.request.request(
-            [
+            [[12, 1, [
                 [11, 1, authSessionId],
                 [11, 2, this.client.device],
                 [2, 3, autoLoginIsRequired],
-            ],
+            ]]],
             "qrCodeLogin",
             4,
             false,
@@ -673,12 +677,12 @@ export class Login {
         autoLoginIsRequired: boolean = true,
     ): Promise<any> {
         return await this.client.request.request(
-            [
+            [[12, 1, [
                 [11, 1, authSessionId],
                 [11, 2, systemName],
                 [11, 3, modelName],
                 [2, 4, autoLoginIsRequired],
-            ],
+            ]]],
             "qrCodeLoginV2",
             4,
             false,

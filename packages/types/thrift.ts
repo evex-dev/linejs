@@ -32766,15 +32766,15 @@ export const Thrift: Record<string, Record<string, string> | any[]> = {
   "getProfile_args": [
     {
       "fid": 1,
-      "name": "request",
-      "struct": "GetProfileRequest"
+      "name": "syncReason",
+      "struct": "Pb1_V7"
     }
   ],
   "getProfile_result": [
     {
       "fid": 0,
       "name": "success",
-      "struct": "GetProfileResponse"
+      "struct": "Profile"
     },
     {
       "fid": 1,
@@ -37568,6 +37568,48 @@ export const Thrift: Record<string, Record<string, string> | any[]> = {
       "fid": 1,
       "name": "sticker",
       "struct": "Sticker"
+    }
+  ],
+  "LoginResult": [
+    {
+      "fid": 1,
+      "name": "authToken",
+      "type": 11
+    },
+    {
+      "fid": 2,
+      "name": "certificate",
+      "type": 11
+    },
+    {
+      "fid": 3,
+      "name": "verifier",
+      "type": 11
+    },
+    {
+      "fid": 4,
+      "name": "pinCode",
+      "type": 11
+    },
+    {
+      "fid": 5,
+      "name": "type",
+      "struct": "LoginResultType"
+    },
+    {
+      "fid": 6,
+      "name": "lastPrimaryBindTime",
+      "type": 10
+    },
+    {
+      "fid": 7,
+      "name": "displayMessage",
+      "type": 11
+    },
+    {
+      "fid": 8,
+      "name": "sessionForSMSConfirm",
+      "struct": "VerificationSessionData"
     }
   ]
 }

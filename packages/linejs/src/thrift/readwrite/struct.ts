@@ -3318,13 +3318,6 @@ export function GetPreviousMessagesV2Request(
         [2, 5, param.receivedOnly],
     ];
 }
-export function GetProfileRequest(
-    param?: PartialDeep<LINETypes.GetProfileRequest> | undefined,
-): NestedArray {
-    return typeof param === "undefined" ? [] : [
-        [11, 1, param.profileId],
-    ];
-}
 export function GetProfilesRequest(
     param?: PartialDeep<LINETypes.GetProfilesRequest> | undefined,
 ): NestedArray {
@@ -7525,7 +7518,7 @@ export function getProfile_args(
     param?: PartialDeep<LINETypes.getProfile_args> | undefined,
 ): NestedArray {
     return typeof param === "undefined" ? [] : [
-        [12, 1, GetProfileRequest(param.request)],
+        [8, 1, Pb1_V7(param.syncReason)],
     ];
 }
 export function getProfiles_args(
@@ -7535,6 +7528,7 @@ export function getProfiles_args(
         [12, 1, GetProfilesRequest(param.request)],
     ];
 }
+
 export function getPromotedBuddyContacts_args(
     param?: PartialDeep<LINETypes.getPromotedBuddyContacts_args> | undefined,
 ): NestedArray {

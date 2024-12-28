@@ -14887,17 +14887,8 @@ struct getProfile_args {
     1: Pb1_V7 syncReason;
 }
 
-struct getProfile_args {
-    1: GetProfileRequest request;
-}
-
 struct getProfile_result {
     0: Profile success;
-    1: TalkException e;
-}
-
-struct getProfile_result {
-    0: GetProfileResponse success;
     1: TalkException e;
 }
 
@@ -17116,4 +17107,15 @@ struct zR0_C40576a {
 
 struct zR0_C40580e {
     1: Sticker sticker;
+}
+
+struct LoginResult {
+    1: string authToken;
+    2: string certificate;
+    3: string verifier;
+    4: string pinCode;
+    5: LoginResultType type;
+    6: i64 lastPrimaryBindTime;
+    7: string displayMessage;
+    8: VerificationSessionData sessionForSMSConfirm;
 }
