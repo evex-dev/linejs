@@ -3,8 +3,9 @@
 import { LINEStruct, type ProtocolKey } from "../../thrift/mod.ts";
 import type * as LINETypes from "@evex/linejs-types";
 import type { ClientInitBase } from "../../core/types.ts";
-import type { Client } from "../../core/mod.ts";
+import { type Client, InternalError } from "../../core/mod.ts";
 import type { BaseService } from "../types.ts";
+
 export class AuthService implements BaseService {
 	client: Client;
 	protocolType: ProtocolKey = 4;
@@ -13,6 +14,26 @@ export class AuthService implements BaseService {
 	constructor(client: Client) {
 		this.client = client;
 	}
+
+	/**
+	 * @description Try to refresh token.
+	 */
+	public async tryRefreshToken() {
+		const refreshToken = await this.client.storage.get("refreshToken");
+		if (typeof refreshToken === "string") {
+			const RATR = await this.refresh({ request: { refreshToken } });
+			this.client.authToken = RATR.accessToken;
+			this.client.emit("update:authtoken", RATR.accessToken);
+			await this.client.storage.set(
+				"expire",
+				(RATR.tokenIssueTimeEpochSec as number) +
+				(RATR.durationUntilRefreshInSec as number) as number,
+			);
+		} else {
+			throw new InternalError("refreshError", "refreshToken not found");
+		}
+	}
+
 	async refresh(
 		...param: Parameters<typeof LINEStruct.refresh_args>
 	): Promise<LINETypes.refresh_result["success"]> {
@@ -21,7 +42,7 @@ export class AuthService implements BaseService {
 			"refresh",
 			this.protocolType,
 			true,
-			this.requestPath,
+			"/EXT/auth/tokenrefresh/v1",
 		);
 	}
 

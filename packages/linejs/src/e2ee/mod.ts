@@ -439,7 +439,7 @@ export class E2EE {
 	public async encryptE2EEMessage(
 		to: string,
 		text: string | Location,
-		contentType = 0,
+		contentType: LINETypes.ContentType = 0,
 		specVersion = 2,
 	): Promise<Buffer[]> {
 		const _from = this.client.profile?.mid as string;
@@ -482,7 +482,10 @@ export class E2EE {
 			receiverKeyId = groupK.keyId;
 			keyData = this.generateSharedSecret(privK, pubK);
 		}
-		if (contentType === LINETypes.enums.ContentType.LOCATION) {
+		if (
+			contentType === "LOCATION" ||
+			contentType === LINETypes.enums.ContentType.LOCATION
+		) {
 			return this.encryptE2EELocationMessage(
 				senderKeyId,
 				receiverKeyId,

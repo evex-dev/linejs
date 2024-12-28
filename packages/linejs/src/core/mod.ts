@@ -145,4 +145,19 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		};
 		return typeMapping[mid[0]] ?? null;
 	}
+	reqseqs?: Record<string, number>;
+	async getReqseq(name: string = "talk"): Promise<number> {
+		if (!this.reqseqs) {
+			this.reqseqs = JSON.parse(
+				((await this.storage.get("reqseq")) ?? "{}").toString(),
+			) as Record<string, number>;
+		}
+		if (!this.reqseqs[name]) {
+			this.reqseqs[name] = 0;
+		}
+		const seq = this.reqseqs[name];
+		this.reqseqs[name]++;
+		await this.storage.set("reqseq", JSON.stringify(this.reqseqs));
+		return seq;
+	}
 }

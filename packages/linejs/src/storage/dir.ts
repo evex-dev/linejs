@@ -128,6 +128,8 @@ export class DirStorage extends BaseStorage {
 				return "n" + obj.toString();
 			case "boolean":
 				return "b" + obj ? "T" : "";
+			case "object":
+				return "o" + JSON.stringify(obj);
 			default:
 				return "x";
 		}
@@ -141,6 +143,8 @@ export class DirStorage extends BaseStorage {
 				return Number(value.substring(1));
 			case "b":
 				return Boolean(value.substring(1));
+			case "o":
+				return JSON.parse(value.substring(1));
 			case "x":
 				return null;
 			default:

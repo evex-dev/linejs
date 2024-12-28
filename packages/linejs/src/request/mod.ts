@@ -221,20 +221,17 @@ export class RequestClient {
 		}
 
 		if (isRefresh && !isReRequest) {
-			throw new Error("Refresh token is not supported.");
-			/*
-            TODO:
-            await this.tryRefreshToken();
-            return this.rawRequest(
-                path,
-                value,
-                methodName,
-                protocolType,
-                appendHeaders,
-                overrideMethod,
-                parse,
-                true,
-            );*/
+			await this.client.auth.tryRefreshToken();
+			return this.requestCore(
+				path,
+				value,
+				methodName,
+				protocolType,
+				appendHeaders,
+				overrideMethod,
+				parse,
+				true,
+			);
 		}
 		return res;
 	}

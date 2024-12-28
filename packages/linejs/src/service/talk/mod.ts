@@ -1,4 +1,4 @@
-import type { Client } from "../../core/mod.ts";
+import { type Client, InternalError } from "../../core/mod.ts";
 import type { ProtocolKey } from "../../thrift/mod.ts";
 import type { BaseService } from "../types.ts";
 import type * as LINETypes from "@evex/linejs-types";
@@ -14,6 +14,48 @@ export class TalkService implements BaseService {
 		this.client = client;
 	}
 
+	/**
+	 * @description Get line events.
+	 */
+	async sync(
+		options: {
+			limit?: number;
+			revision?: number | bigint;
+			globalRev?: number | bigint;
+			individualRev?: number | bigint;
+			timeout?: number;
+		} = {},
+	): Promise<LINETypes.sync_result["success"]> {
+		const { limit, revision, individualRev, globalRev, timeout } = {
+			limit: 100,
+			revision: 0,
+			globalRev: 0,
+			individualRev: 0,
+			timeout: this.client.config.longTimeout,
+			...options,
+		};
+		return await this.client.request.request(
+			LINEStruct.sync_args({
+				request: {
+					lastRevision: revision,
+					lastGlobalRevision: globalRev,
+					lastIndividualRevision: individualRev,
+					count: limit,
+					fullSyncRequestReason: "OTHER",
+				},
+			}),
+			"sync",
+			4,
+			true,
+			"/SYNC4",
+			{},
+			timeout,
+		);
+	}
+
+	/**
+	 * @description Send message to talk.
+	 */
 	async sendMessage(options: {
 		to: string;
 		text?: string;
@@ -21,24 +63,91 @@ export class TalkService implements BaseService {
 		contentMetadata?: Record<string, string>;
 		relatedMessageId?: string;
 		location?: LINETypes.Location;
-		chunk?: string[] | Buffer[];
+		chunks?: string[] | Buffer[];
 		e2ee?: boolean;
-	}): Promise<LINETypes.sendMessage_result["success"]> {
-		const message = {
-			contentMetadata: {},
+	}): Promise<LINETypes.Message> {
+		const {
+			to,
+			text,
+			contentType,
+			contentMetadata,
+			relatedMessageId,
+			location,
+			e2ee,
+			chunks,
+		} = {
 			contentType: "NONE" as LINETypes.ContentType,
+			contentMetadata: {},
+			e2ee: true,
 			...options,
 		};
-		message;
-		message.contentMetadata;
-		// TODO: e2ee
-		return await this.client.request.request(
-			LINEStruct.sendMessage_args({ message }),
-			"sendMessage",
-			this.protocolType,
-			true,
-			this.requestPath,
-		);
+		if ((e2ee && !chunks && location) || (e2ee && !chunks && text)) {
+			const chunk = await this.client.e2ee.encryptE2EEMessage(
+				to,
+				text || location || "invalid",
+				contentType,
+			);
+			const _contentMetadata = {
+				...contentMetadata,
+				...{
+					e2eeVersion: "2",
+					contentType: contentType.toString(),
+					e2eeMark: "2",
+				},
+			};
+			const options = {
+				to,
+				contentType,
+				contentMetadata: _contentMetadata,
+				relatedMessageId,
+				e2ee,
+				chunk,
+			};
+			return this.sendMessage(options);
+		}
+
+		const message = LINEStruct.sendMessage_args({
+			seq: await this.client.getReqseq(),
+			message: {
+				to,
+				createdTime: 0,
+				deliveredTime: 0,
+				hasContent: false,
+				contentType,
+				contentMetadata,
+				sessionId: 0,
+				text,
+				location,
+				chunks,
+				relatedMessageId,
+				...relatedMessageId
+					? {
+						messageRelationType: "REPLY",
+						relatedMessageServiceCode: "TALK",
+					}
+					: {},
+			},
+		});
+		try {
+			return await this.client.request.request(
+				message,
+				"sendMessage",
+				this.protocolType,
+				true,
+				this.requestPath,
+			);
+		} catch (error) {
+			if (
+				error instanceof InternalError &&
+				(error.data?.code.toString()).includes("E2EE") &&
+				typeof e2ee === "undefined"
+			) {
+				options.e2ee = true;
+				return this.sendMessage(options);
+			} else {
+				throw error;
+			}
+		}
 	}
 
 	async getProfile(

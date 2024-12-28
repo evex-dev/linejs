@@ -15,7 +15,7 @@ export abstract class BaseStorage {
 	 */
 	public abstract set(
 		key: Storage["Key"],
-		value: Storage["Key"],
+		value: Storage["Value"],
 	): Promise<void>;
 
 	/**
