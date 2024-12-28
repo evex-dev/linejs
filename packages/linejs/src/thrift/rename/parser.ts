@@ -86,8 +86,8 @@ export class ThriftRenameParser {
 						value,
 					);
 				} else {
-					newObject[finfo.name] =
-						(this.def[finfo.struct] as any)[value] || value;
+					newObject[finfo.name] = (this.def[finfo.struct] as any)[value] ||
+						value;
 				}
 			} else if (
 				typeof finfo.list === "string" && typeof value === "object"

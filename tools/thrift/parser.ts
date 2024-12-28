@@ -63,8 +63,7 @@ export function parseThrift(
 				} else if (field.valueType.type == "Set") {
 					field_def.set = getType(field.valueType.valueType);
 				} else if (field.valueType.baseType) {
-					field_def.type =
-						TYPE[field.valueType.baseType.toUpperCase()];
+					field_def.type = TYPE[field.valueType.baseType.toUpperCase()];
 				}
 				fields_def.push(field_def);
 			}

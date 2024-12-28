@@ -1,6 +1,4 @@
-import type { LooseType } from "../../entities/common.ts";
-
-type RecordEvent = Record<string, (...args: LooseType[]) => LooseType>;
+type RecordEvent = Record<string, (...args: any[]) => any>;
 
 export class TypedEventEmitter<
 	T extends RecordEvent,
@@ -27,7 +25,10 @@ export class TypedEventEmitter<
 
 				this.listeners
 					.get(event)
-					?.splice(this.listeners.get(event)?.indexOf(listener) ?? 0, 1);
+					?.splice(
+						this.listeners.get(event)?.indexOf(listener) ?? 0,
+						1,
+					);
 			}
 		}
 

@@ -1,4 +1,4 @@
-// @ts-types="npm:@types/thrift"
+// @ts-types="thrift-types"
 import * as thrift from "thrift";
 import { Buffer } from "node:buffer";
 import {
