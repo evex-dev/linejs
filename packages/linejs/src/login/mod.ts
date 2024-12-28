@@ -1,11 +1,16 @@
 import type { ClientInitBase } from "../core/types.ts";
 import { getRSACrypto } from "./rsa-verify.ts";
 import { EMAIL_REGEX, PASSWORD_REGEX } from "./regex.ts";
-import { isV3Support } from "../core/utils/devices.ts";
+import { type Device, isV3Support } from "../core/utils/devices.ts";
 import { InternalError } from "../core/mod.ts";
 import type * as LINETypes from "@evex/linejs-types";
 import { Buffer } from "node:buffer";
 import { LINEStruct } from "../thrift/mod.ts";
+
+interface LoginVer {
+    loginV2: any;
+    loginZ: LINETypes.LoginResult;
+}
 
 interface PasswordLoginOption {
     /**
@@ -183,7 +188,7 @@ export class Login {
         let response = await this.loginV2(
             keynm,
             encryptedMessage,
-            this.system?.device,
+            this.client.device,
             undefined,
             e2eeData,
             cert,
@@ -191,13 +196,12 @@ export class Login {
         );
 
         if (!response.authToken) {
-            this.emit("pincall", response.pinCode || constantPincode);
+            this.client.emit("pincall", response.pinCode || constantPincode);
             if (enableE2EE && secret) {
                 const headers = {
-                    Host: this.endpoint,
                     accept: "application/x-thrift",
-                    "user-agent": this.system.userAgent,
-                    "x-line-application": this.system.type,
+                    "user-agent": this.client.request.userAgent,
+                    "x-line-application": this.client.request.systemType,
                     "x-line-access": response.verifier,
                     "x-lal": "ja_JP",
                     "x-lpv": "1",
@@ -205,13 +209,19 @@ export class Login {
                     "accept-encoding": "gzip",
                 };
                 const e2eeInfo = (
-                    await this.customFetch(`https://${this.endpoint}/LF1`, {
-                        headers: headers,
-                    }).then((res) => res.json())
+                    await this.client.fetch(
+                        `https://${this.client.request.endpoint}/LF1`,
+                        {
+                            headers: headers,
+                        },
+                    ).then((res) => res.json())
                 ).result;
-                this.log("response", e2eeInfo);
-                this.decodeE2EEKeyV1(e2eeInfo.metadata, Buffer.from(secret));
-                const deviceSecret = this.encryptDeviceSecret(
+                this.client.log("response", e2eeInfo);
+                this.client.e2ee.decodeE2EEKeyV1(
+                    e2eeInfo.metadata,
+                    Buffer.from(secret),
+                );
+                const deviceSecret = this.client.e2ee.encryptDeviceSecret(
                     Buffer.from(e2eeInfo.metadata.publicKey, "base64"),
                     Buffer.from(secret),
                     Buffer.from(e2eeInfo.metadata.encryptedKeyChain, "base64"),
@@ -223,7 +233,7 @@ export class Login {
                 response = await this.loginV2(
                     keynm,
                     encryptedMessage,
-                    this.system.device,
+                    this.client.device,
                     e2eeLogin,
                     e2eeData,
                     cert,
@@ -231,27 +241,26 @@ export class Login {
                 );
             } else {
                 const headers = {
-                    Host: this.endpoint,
                     accept: "application/x-thrift",
-                    "user-agent": this.system.userAgent,
-                    "x-line-application": this.system.type,
+                    "user-agent": this.client.request.userAgent,
+                    "x-line-application": this.client.request.systemType,
                     "x-line-access": response.verifier,
                     "x-lal": "ja_JP",
                     "x-lpv": "1",
                     "x-lhm": "GET",
                     "accept-encoding": "gzip",
                 };
-                const verifier = await this.customFetch(
-                    `https://${this.endpoint}/Q`,
+                const verifier = await this.client.fetch(
+                    `https://${this.client.request.endpoint}/Q`,
                     {
                         headers: headers,
                     },
                 ).then((res) => res.json());
-                this.log("response", verifier);
+                this.client.log("response", verifier);
                 response = await this.loginV2(
                     keynm,
                     encryptedMessage,
-                    this.system.device,
+                    this.client.device,
                     verifier.result.verifier,
                     e2eeData,
                     cert,
@@ -272,15 +281,196 @@ export class Login {
      * @returns {Promise<LINETypes.RSAKey>} RSA key info.
      * @throws {FetchError} If failed to fetch RSA key info.
      */
-    public getRSAKeyInfo(
+    public async getRSAKeyInfo(
         provider: LINETypes.IdentityProvider = 0,
     ): Promise<LINETypes.RSAKey> {
-        return this.client.request.request(
+        return await this.client.request.request(
             [[8, 2, LINEStruct.IdentityProvider(provider)]],
             "getRSAKeyInfo",
             3,
             "RSAKey",
             "/api/v3/TalkService.do",
+        );
+    }
+
+    private async loginV2<K extends keyof LoginVer>(
+        keynm: string,
+        encryptedMessage: string,
+        deviceName: Device,
+        verifier: string | undefined,
+        secret: Buffer | undefined,
+        cert: string | undefined,
+        methodName: K,
+    ): Promise<LoginVer[K]> {
+        let loginType = 2;
+        if (!secret) loginType = 0;
+        if (verifier) {
+            loginType = 1;
+        }
+        return await this.client.request.request(
+            [
+                [
+                    12,
+                    2,
+                    [
+                        [8, 1, loginType],
+                        [8, 2, 1],
+                        [11, 3, keynm],
+                        [11, 4, encryptedMessage],
+                        [2, 5, 0],
+                        [11, 6, ""],
+                        [11, 7, deviceName],
+                        [11, 8, cert],
+                        [11, 9, verifier],
+                        [11, 10, secret],
+                        [8, 11, 1],
+                        [11, 12, "System Product Name"],
+                    ],
+                ],
+            ],
+            methodName,
+            3,
+            methodName === "loginZ" ? "LoginResult" : false,
+            "/api/v3p/rs",
+        );
+    }
+
+    public createSession(): Promise<string> {
+        return this.client.request.request(
+            [],
+            "createSession",
+            4,
+            false,
+            "/acct/lgn/sq/v1",
+        );
+    }
+
+    public async createQrCode(qrcode: string): Promise<any> {
+        return await this.client.request.request(
+            [[11, 1, qrcode]],
+            "createQrCode",
+            4,
+            false,
+            "/acct/lgn/sq/v1",
+        );
+    }
+
+    public async checkQrCodeVerified(qrcode: string): Promise<boolean> {
+        try {
+            await this.client.request.request(
+                [[11, 1, qrcode]],
+                "checkQrCodeVerified",
+                4,
+                false,
+                "/acct/lp/lgn/sq/v1",
+                {
+                    "x-lst": "150000",
+                    "x-line-access": qrcode,
+                },
+                this.client.config.timeout,
+            );
+            return true;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    public async verifyCertificate(
+        qrcode: string,
+        cert?: string | undefined,
+    ): Promise<any> {
+        return await this.client.request.request(
+            [
+                [11, 1, qrcode],
+                [11, 2, cert],
+            ],
+            "verifyCertificate",
+            4,
+            false,
+            "/acct/lgn/sq/v1",
+        );
+    }
+
+    public async createPinCode(qrcode: string): Promise<any> {
+        return await this.client.request.request(
+            [[11, 1, qrcode]],
+            "createPinCode",
+            4,
+            false,
+            "/acct/lgn/sq/v1",
+        );
+    }
+
+    public async checkPinCodeVerified(qrcode: string): Promise<boolean> {
+        try {
+            await this.client.request.request(
+                [[11, 1, qrcode]],
+                "checkPinCodeVerified",
+                4,
+                false,
+                "/acct/lp/lgn/sq/v1",
+                {
+                    "x-lst": "150000",
+                    "x-line-access": qrcode,
+                },
+                this.client.config.longTimeout,
+            );
+            return true;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    public async qrCodeLogin(
+        authSessionId: string,
+        autoLoginIsRequired: boolean = true,
+    ): Promise<any> {
+        return await this.client.request.request(
+            [
+                [11, 1, authSessionId],
+                [11, 2, this.client.device],
+                [2, 3, autoLoginIsRequired],
+            ],
+            "qrCodeLogin",
+            4,
+            false,
+            "/acct/lgn/sq/v1",
+        );
+    }
+
+    public async qrCodeLoginV2(
+        authSessionId: string,
+        modelName: string = "evex",
+        systemName: string = "linejs",
+        autoLoginIsRequired: boolean = true,
+    ): Promise<any> {
+        return await this.client.request.request(
+            [
+                [11, 1, authSessionId],
+                [11, 2, systemName],
+                [11, 3, modelName],
+                [2, 4, autoLoginIsRequired],
+            ],
+            "qrCodeLoginV2",
+            4,
+            false,
+            "/acct/lgn/sq/v1",
+        );
+    }
+
+    public async confirmE2EELogin(
+        verifier: string,
+        deviceSecret: Buffer,
+    ): Promise<any> {
+        return await this.client.request.request(
+            [
+                [11, 1, verifier],
+                [11, 2, deviceSecret],
+            ],
+            "confirmE2EELogin",
+            3,
+            false,
+            "/api/v3p/rs",
         );
     }
 }

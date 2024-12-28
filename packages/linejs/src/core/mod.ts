@@ -71,10 +71,15 @@ export interface Config {
      * @default 30_000
      */
     timeout: number;
+
+    /**
+     * Long timeout
+     * @default 180_000
+     */
+    longTimeout: number;
 }
 
 export class Client extends TypedEventEmitter<ClientEvents> {
-    endpoint: string;
     authToken?: string;
     readonly device: Device;
     readonly login: Login;
@@ -95,14 +100,13 @@ export class Client extends TypedEventEmitter<ClientEvents> {
     config: Config;
     constructor(init: ClientInit) {
         super();
-        this.endpoint = init.endpoint ?? "legy.line-apps.com";
         const deviceDetails = getDeviceDetails(init.device, init.version);
         if (!deviceDetails) {
             throw new Error(`Unsupported device: ${init.device}.`);
         }
         this.storage = init.storage ?? new MemoryStorage();
         this.request = new RequestClient({
-            endpoint: this.endpoint,
+            endpoint: init.endpoint ?? "legy.line-apps.com",
             client: this,
             deviceDetails,
         });
@@ -113,7 +117,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
         this.device = init.device;
         this.fetch = init.fetch ?? fetch;
         this.config = {
-            timeout: 30000,
+            timeout: 30_000,
+            longTimeout: 180_000,
         };
         this.auth = new AuthService(this);
         this.call = new CallService(this);

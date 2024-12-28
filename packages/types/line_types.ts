@@ -19407,6 +19407,27 @@ export interface linkDevice_result {
   e: ThingsException;
 }
 
+export type LoginResultType =
+  | 1
+  | "SUCCESS"
+  | 2
+  | "REQUIRE_QRCODE"
+  | 3
+  | "REQUIRE_DEVICE_CONFIRM"
+  | 4
+  | "REQUIRE_SMS_CONFIRM";
+
+export interface LoginResult {
+  authToken: string;
+  certificate: string;
+  verifier: string;
+  pinCode: string;
+  type: LoginResultType;
+  lastPrimaryBindTime: Int64;
+  displayMessage: string;
+  sessionForSMSConfirm: VerificationSessionData;
+}
+
 export interface logoutV2_result {
   e: TalkException;
 }

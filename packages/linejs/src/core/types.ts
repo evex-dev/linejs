@@ -6,6 +6,6 @@ export interface ClientInitBase {
     client: Client;
 }
 export type fetchLike = (
-    input: Request | URL | string,
+    input: URL | string,
     init?: RequestInit,
 ) => Promise<Response>;
