@@ -669,11 +669,20 @@ export class TalkService implements BaseService {
 		);
 	}
 
-	async react(
-		...param: Parameters<typeof LINEStruct.react_args>
-	): Promise<void> {
+	async react(options: {
+		id: bigint | number;
+		reaction: LINETypes.MessageReactionType;
+	}): Promise<void> {
 		return await this.client.request.request(
-			LINEStruct.react_args(...param),
+			LINEStruct.react_args({
+				reactRequest: {
+					reqSeq: 0,
+					messageId: options.id,
+					reactionType: {
+						predefinedReactionType: options.reaction,
+					},
+				},
+			}),
 			"react",
 			this.protocolType,
 			true,
@@ -1451,5 +1460,70 @@ export class TalkService implements BaseService {
 			true,
 			this.requestPath,
 		);
+	}
+
+	/**
+	 * @description Gets the server time
+	 */
+	public async getServerTime(): Promise<number> {
+		return await this.client.request.request(
+			[],
+			"getServerTime",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+	/**
+	 * @description Get user information from mid.
+	 */
+	async getContact(
+		options: {
+			mid: string;
+		},
+	): Promise<LINETypes.Contact> {
+		const { mid } = { ...options };
+		return await this.client.request.request(
+			[[11, 2, mid]],
+			"getContact",
+			this.protocolType,
+			"Contact",
+			this.requestPath,
+		);
+	}
+	/**
+	 * @description Get users information from mids.
+	 */
+	public async getContacts(
+		options: {
+			mids: string[];
+		},
+	): Promise<LINETypes.Contact[]> {
+		const { mids } = { ...options };
+		const response = (await this.client.request.request<any[]>(
+			[[15, 2, [11, mids]]],
+			"getContacts",
+			this.protocolType,
+			false,
+			this.requestPath,
+		)).map((e) =>
+			this.client.thrift.rename_thrift("Contact", e)
+		) as LINETypes.Contact[];
+		return response;
+	}
+	public async getContactsV2(
+		options: {
+			mids: string[];
+		},
+	): Promise<LINETypes.GetContactsV2Response> {
+		const { mids } = { ...options };
+
+		return (await this.client.request.request(
+			[[12, 1, [[15, 1, [11, mids]]]]],
+			"getContactsV2",
+			this.protocolType,
+			"GetContactsV2Response",
+			this.requestPath,
+		));
 	}
 }

@@ -49,10 +49,17 @@ export class RelationService implements BaseService {
 	}
 
 	async getContactsV3(
-		...param: Parameters<typeof LINEStruct.getContactsV3_args>
+		options: { mids: string[] },
 	): Promise<LINETypes.getContactsV3_result["success"]> {
 		return await this.client.request.request(
-			LINEStruct.getContactsV3_args(...param),
+			LINEStruct.getContactsV3_args({
+				request: {
+					targetUsers: options.mids.map((m) => ({
+						targetUserMid: m,
+					})),
+					syncReason: "UNKNOWN",
+				},
+			}),
 			"getContactsV3",
 			this.protocolType,
 			true,

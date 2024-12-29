@@ -144,7 +144,9 @@ export function main(
 	 */
 	`);
 	out.push("type Int64 = number | bigint;");
-	out.push(`import type { Buffer } from "node:buffer";`);
+	out.push(
+		`import type { Buffer } from "node:buffer";\nexport type { Pb1_C13154r6 as Operation, Pb1_EnumC13151r3 as ContactRelation };`,
+	);
 	out.push(
 		`export const enums:{${tname.join("\n")}} = ${
 			JSON.stringify(enums, null, 2)
