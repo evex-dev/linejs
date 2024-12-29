@@ -1,55 +1,87 @@
-import type { BaseStorage, Storage } from "./base.ts";
+import { BaseStorage, type Storage } from "./base.ts";
+import { type Kv, openKv } from "@deno/kv";
 
 /**
  * @lassdesc Deno.Kv Storage for LINE Client
  * @constructor
  */
-export class DenoKvStorage implements BaseStorage {
-    kv?: Deno.Kv;
-    isAwaited: Promise<void>;
+export class DenoKvStorage extends BaseStorage {
+    useDeno = true;
+    kv?: Deno.Kv | Kv;
+    path?: string;
     kvPrefix = "LINEJS_Storage";
     constructor(path?: string) {
+        super();
         if (typeof globalThis.Deno === "undefined") {
-            throw new Error("Only available in deno");
+            this.useDeno = false;
         }
-        this.isAwaited = (async () => {
-            this.kv = await Deno.openKv(path);
-        })();
+        this.path = path;
     }
     public async set(
         key: Storage["Key"],
         value: Storage["Value"],
     ): Promise<void> {
-        await this.isAwaited;
         if (!this.kv) {
-            throw new Error("Only available in deno");
+            if (this.useDeno) {
+                this.kv = await Deno.openKv(this.path);
+            } else {
+                this.kv = await openKv(this.path);
+            }
         }
         await this.kv.set([this.kvPrefix, key], value);
     }
     public async get(
         key: Storage["Key"],
     ): Promise<Storage["Value"] | undefined> {
-        await this.isAwaited;
         if (!this.kv) {
-            throw new Error("Only available in deno");
+            if (this.useDeno) {
+                this.kv = await Deno.openKv(this.path);
+            } else {
+                this.kv = await openKv(this.path);
+            }
         }
         return (await this.kv.get([this.kvPrefix, key])).value as any;
     }
     public async delete(key: Storage["Key"]): Promise<void> {
-        await this.isAwaited;
         if (!this.kv) {
-            throw new Error("Only available in deno");
+            if (this.useDeno) {
+                this.kv = await Deno.openKv(this.path);
+            } else {
+                this.kv = await openKv(this.path);
+            }
         }
         await this.kv.delete([this.kvPrefix, key]);
     }
     public async clear(): Promise<void> {
-        await this.isAwaited;
         if (!this.kv) {
-            throw new Error("Only available in deno");
+            if (this.useDeno) {
+                this.kv = await Deno.openKv(this.path);
+            } else {
+                this.kv = await openKv(this.path);
+            }
         }
         const entries = this.kv.list({ prefix: [this.kvPrefix] });
         for await (const entry of entries) {
-            await this.kv.delete(entry.key);
+            await this.kv.delete(entry.key as any);
+        }
+    }
+    public async migrate(storage: BaseStorage): Promise<void> {
+        if (!this.kv) {
+            if (this.useDeno) {
+                this.kv = await Deno.openKv(this.path);
+            } else {
+                this.kv = await openKv(this.path);
+            }
+        }
+        const entries = this.kv.list({ prefix: [this.kvPrefix] });
+        for await (const entry of entries) {
+            const key = (entry.key.at(1) || "").toString();
+            if (key) {
+                storage.set(
+                    key,
+                    (await this.kv.get(entry.key as any)).value as any,
+                );
+            }
         }
     }
 }

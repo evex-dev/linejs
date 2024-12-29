@@ -40,4 +40,9 @@ export abstract class BaseStorage {
 	 * @description Clear all data.
 	 */
 	public abstract clear(): Promise<void>;
+
+	/**
+	 * @description Migrate all data to another storage.
+	 */
+	public abstract migrate(storage: BaseStorage): Promise<void>;
 }

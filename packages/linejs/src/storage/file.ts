@@ -69,4 +69,13 @@ export class FileStorage extends BaseStorage {
 		});
 		return JSON.parse(file || "{}");
 	}
+	public async migrate(storage: BaseStorage): Promise<void> {
+		const kv = await this.getAll();
+		for (const key in kv) {
+			if (Object.prototype.hasOwnProperty.call(kv, key)) {
+				const value = kv[key];
+				await storage.set(key, value);
+			}
+		}
+	}
 }

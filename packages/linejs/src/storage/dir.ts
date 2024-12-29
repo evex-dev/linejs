@@ -6,8 +6,8 @@ import { BaseStorage, type Storage } from "./base.ts";
  * @constructor
  */
 export class DirStorage extends BaseStorage {
-	private path: string;
-	private keyIdPair: Array<{ key: Storage["Key"]; id: number }> = [];
+	public path: string;
+	public keyIdPair: Array<{ key: Storage["Key"]; id: number }> = [];
 	/**
 	 * @description Construct a DirStorage with the given directory path.
 	 *
@@ -149,6 +149,15 @@ export class DirStorage extends BaseStorage {
 				return null;
 			default:
 				return null;
+		}
+	}
+
+	public async migrate(storage: BaseStorage): Promise<void> {
+		for (const key of this.keyIdPair) {
+			const value = await this.get(key.key);
+			if (typeof value !== "undefined") {
+				await storage.set(key.key, value);
+			}
 		}
 	}
 }
