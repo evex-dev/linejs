@@ -11,6 +11,7 @@ exportするパッケージ
     - **/core** メインのclient
     - **/e2ee** encrypt/decrypt
     - **/login** email, qr
+    - **/polling** event, emit
     - **/request** fetch
     - **/service** LINEのservice
       - **/auth** LoginService + AuthService + AccessTokenRefreshService
@@ -44,5 +45,6 @@ exportするパッケージ
   - latest_device 最新verを取得
 - **/thrift**
   - parser thriftファイル解析
-  - data2typedef line_types生成
-  - java2thrift apk解析
+  - gen_typedef line_types生成
+  - gen_struct NestedArray
+  - java2thrift java解析

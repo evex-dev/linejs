@@ -46,18 +46,11 @@ MessageType, etc.) are provided.
 
 - client - (@evex/linejs) or (@evex/linejs/client)
   - Client - LINE SelfBot Client
-- utils - (@evex/linejs/utils)
-  - LINE_SCHEME - LINE Scheme utility
-  - LINE_OBS - LINE OBS utility
-  - LINE_REGEX - LINE URI Regex utility
-  - LINE_FUNCTIONS - LINE Function utility (search openchat, ticket to emid,
-    etc...)
 - storage - (@evex/linejs/storage)
   - BaseStorage - LINE Client Base Storage
   - MemoryStorage - LINE Client Memory Storage
   - FileStorage - LINE Client File Storage
-- rate-limit - (@evex/linejs/rate-limit)
-  - RateLimitter - RateLimit for Safety
+  - DenoKvStorage - LINE Client `Deno.Kv` Storage
 - types - (@evex/linejs-types)
   - All Types for LINE
 
