@@ -27,7 +27,7 @@ import {
 	TalkService,
 } from "../service/mod.ts";
 
-import { Login } from "../login/mod.ts";
+import { Login, LoginOption } from "../login/mod.ts";
 import { Thrift } from "../thrift/mod.ts";
 import { RequestClient } from "../request/mod.ts";
 import { E2EE } from "../e2ee/mod.ts";
@@ -82,7 +82,7 @@ export interface Config {
 export class Client extends TypedEventEmitter<ClientEvents> {
 	authToken?: string;
 	readonly device: Device;
-	readonly login: Login;
+	readonly loginProcess: Login;
 	readonly thrift: Thrift;
 	readonly request: RequestClient;
 	readonly storage: BaseStorage;
@@ -110,7 +110,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			client: this,
 			deviceDetails,
 		});
-		this.login = new Login({ client: this });
+		this.loginProcess = new Login({ client: this });
 		this.thrift = new Thrift();
 		this.e2ee = new E2EE({ client: this });
 		this.thrift.def = def;
@@ -129,6 +129,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		this.square = new SquareService(this);
 		this.talk = new TalkService(this);
 	}
+
 	log(type: string, data: Record<string, any>) {
 		console.log(type, data);
 	}
@@ -159,5 +160,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		this.reqseqs[name]++;
 		await this.storage.set("reqseq", JSON.stringify(this.reqseqs));
 		return seq;
+	}
+	async login(options?: LoginOption) {
+		return await this.loginProcess.login(options);
 	}
 }

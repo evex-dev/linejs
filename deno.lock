@@ -4,9 +4,12 @@
     "jsr:@std/assert@^1.0.2": "1.0.6",
     "jsr:@std/internal@^1.0.4": "1.0.4",
     "npm:@biomejs/biome@*": "1.9.3",
+    "npm:@deno/kv@*": "0.8.4",
+    "npm:@deno/kv@~0.8.4": "0.8.4",
     "npm:@types/node@*": "22.5.4",
     "npm:@types/node@latest": "22.9.0",
     "npm:@types/thrift@*": "0.10.17",
+    "npm:@types/thrift@~0.10.17": "0.10.17",
     "npm:curve25519-js@^0.0.4": "0.0.4",
     "npm:jsdom@25.0.0": "25.0.0",
     "npm:node-bignumber@^1.2.2": "1.2.2",
@@ -63,6 +66,27 @@
     },
     "@biomejs/cli-win32-x64@1.9.3": {
       "integrity": "sha512-cQMy2zanBkVLpmmxXdK6YePzmZx0s5Z7KEnwmrW54rcXK3myCNbQa09SwGZ8i/8sLw0H9F3X7K4rxVNGU8/D4Q=="
+    },
+    "@deno/kv-darwin-arm64@0.8.4": {
+      "integrity": "sha512-j86nnE1QdLw20OrUs/6Iw6ZYzC8pmfU1+K4hNSVHO9K0bfy3VBd4JSHkHLmYCiHDkgIm+wTxct33thl6HxXz0Q=="
+    },
+    "@deno/kv-darwin-x64@0.8.4": {
+      "integrity": "sha512-qdczxcqkN2fbDX/nIzUetI6i8usNu8kpN3sDV0rXcSWlg9E5huWWjGp6PbOS4w1xarUWbqFAZvy4VSmGTVN1Zw=="
+    },
+    "@deno/kv-linux-x64-gnu@0.8.4": {
+      "integrity": "sha512-xv2rM6wrVHVOM4Nswl8iyfdZZiEp5r85jwLajj0NGTiLMAQLBtDsBE/kpH4Ap3K6yiqJX3nTb44Z8AJ+IyzO4Q=="
+    },
+    "@deno/kv-win32-x64-msvc@0.8.4": {
+      "integrity": "sha512-xTEByTpC1DWw4A1F9isD8B16v1+CQFHFvi/Mm2bqlO9iD5HfIGgalWJbL3EvgYeybQ9yA27KGqaGnKxXdaX5Rg=="
+    },
+    "@deno/kv@0.8.4": {
+      "integrity": "sha512-5q2izU1tp6wv8rDIwMb6GXe/B+aO/sjAjRAOIigEtX+qOiTLsPE++ibJbfafVb0LmjEdlA18Kpfo23fln73OtQ==",
+      "dependencies": [
+        "@deno/kv-darwin-arm64",
+        "@deno/kv-darwin-x64",
+        "@deno/kv-linux-x64-gnu",
+        "@deno/kv-win32-x64-msvc"
+      ]
     },
     "@types/node-int64@0.4.32": {
       "integrity": "sha512-xf/JsSlnXQ+mzvc0IpXemcrO4BrCfpgNpMco+GLcXkFk01k/gW9lGJu+Vof0ZSvHK6DsHJDPSbjFPs36QkWXqw==",
@@ -477,6 +501,8 @@
     "members": {
       "packages/linejs": {
         "dependencies": [
+          "npm:@deno/kv@~0.8.4",
+          "npm:@types/thrift@~0.10.17",
           "npm:node-int64@0.4",
           "npm:thrift@0.21"
         ]

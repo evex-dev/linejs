@@ -8,12 +8,18 @@ import { Buffer } from "node:buffer";
 import { LINEStruct } from "../thrift/mod.ts";
 import type { Client } from "../core/mod.ts";
 
+export type LoginOption = PasswordLoginOption | QrCodeLoginOption | {
+	authToken: string;
+	email?: undefined;
+	qr?: undefined;
+};
+
 interface LoginVer {
 	loginV2: any;
 	loginZ: LINETypes.LoginResult;
 }
 
-interface PasswordLoginOption {
+export interface PasswordLoginOption {
 	/**
 	 * account e-mail address
 	 */
@@ -35,10 +41,15 @@ interface PasswordLoginOption {
 	 * @default true
 	 */
 	e2ee?: boolean;
+	qr?: undefined;
+
+	authToken?: undefined;
 }
 
 interface QrCodeLoginOption {
 	email?: undefined;
+	authToken?: undefined;
+	qr?: true;
 	/**
 	 * use v3 login or not.
 	 */
@@ -99,13 +110,18 @@ export class Login {
 		this.client.emit("ready", this.client.profile);
 	}
 
-	async login(options?: PasswordLoginOption | QrCodeLoginOption) {
+	async login(
+		options?: LoginOption,
+	) {
 		if (!options) {
 			await this.withQrCode();
+		} else if (options.qr) {
+			await this.withQrCode({ v3: options.v3 });
+		} else if (options.authToken) {
+			this.client.emit("update:authtoken", options.authToken);
+			this.client.authToken = options.authToken;
 		} else if (options.email) {
 			await this.withPassword(options);
-		} else if (options.v3) {
-			await this.withQrCode({ v3: options.v3 });
 		} else {
 			await this.withQrCode();
 		}

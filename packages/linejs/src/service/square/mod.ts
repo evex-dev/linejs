@@ -4,6 +4,7 @@ import { LINEStruct, type ProtocolKey } from "../../thrift/mod.ts";
 import type * as LINETypes from "@evex/linejs-types";
 import type { Client } from "../../core/mod.ts";
 import type { BaseService } from "../types.ts";
+
 export class SquareService implements BaseService {
 	client: Client;
 	protocolType: ProtocolKey = 4;
@@ -127,10 +128,39 @@ export class SquareService implements BaseService {
 	}
 
 	async sendMessage(
-		...param: Parameters<typeof LINEStruct.SquareService_sendMessage_args>
+		options: {
+			squareChatMid: string;
+			text?: string;
+			contentType?: LINETypes.ContentType;
+			contentMetadata?: Record<string, string>;
+			relatedMessageId?: string;
+			location?: LINETypes.Location;
+		},
 	): Promise<LINETypes.SquareService_sendMessage_result["success"]> {
 		return await this.client.request.request(
-			LINEStruct.SquareService_sendMessage_args(...param),
+			LINEStruct.SquareService_sendMessage_args({
+				request: {
+					reqSeq: await this.client.getReqseq("sq"),
+					squareChatMid: options.squareChatMid,
+					squareMessage: {
+						squareMessageRevision: 4,
+						message: {
+							to: options.squareChatMid,
+							text: options.text,
+							contentType: options.contentType,
+							contentMetadata: options.contentMetadata,
+							location: options.location,
+							...options.relatedMessageId
+								? {
+									relatedMessageId: options.relatedMessageId,
+									relatedMessageServiceCode: "SQUARE",
+									messageRelationType: "REPLY",
+								}
+								: {},
+						},
+					},
+				},
+			}),
 			"sendMessage",
 			this.protocolType,
 			true,
@@ -166,11 +196,45 @@ export class SquareService implements BaseService {
 		);
 	}
 
-	async createSquare(
-		...param: Parameters<typeof LINEStruct.SquareService_createSquare_args>
-	): Promise<LINETypes.SquareService_createSquare_result["success"]> {
+	defaultSquareCoverImageObsHash =
+		"0h6tJfahRYaVt3H0eLAsAWDFheczgHd3wTCTx2eApNKSoefHNVGRdwfgxbdgUMLi8MSngnPFMeNmpbLi8MSngnPFMeNmpbLi8MSngnPQ";
+
+	/**
+	 *  @description Create square.
+	 */
+	async createSquare(options: {
+		squareName: string;
+		displayName: string;
+		profileImageObsHash?: string;
+		description?: string;
+		searchable?: boolean;
+		SquareJoinMethodType?: LINETypes.SquareJoinMethodType;
+	}): Promise<LINETypes.SquareService_createSquare_result["success"]> {
 		return await this.client.request.request(
-			LINEStruct.SquareService_createSquare_args(...param),
+			LINEStruct.SquareService_createSquare_args({
+				request: {
+					reqSeq: await this.client.getReqseq("sq"),
+					square: {
+						name: options.squareName,
+						profileImageObsHash: options.profileImageObsHash ||
+							this.defaultSquareCoverImageObsHash,
+						desc: options.description,
+						searchable: options.searchable,
+						type: "OPEN",
+						categoryId: 1,
+						revision: 0,
+						ableToUseInvitationTicket: true,
+						joinMethod: { type: options.SquareJoinMethodType },
+						adultOnly: "NONE",
+						svcTags: [],
+					},
+					creator: {
+						displayName: options.displayName,
+						ableToReceiveMessage: true,
+						revision: 0,
+					},
+				},
+			}),
 			"createSquare",
 			this.protocolType,
 			true,
@@ -251,10 +315,30 @@ export class SquareService implements BaseService {
 	}
 
 	async joinSquare(
-		...param: Parameters<typeof LINEStruct.SquareService_joinSquare_args>
+		options: {
+			squareMid: string;
+			displayName: string;
+			ableToReceiveMessage?: boolean;
+			passCode?: string | undefined;
+			joinMessage?: string;
+		},
 	): Promise<LINETypes.SquareService_joinSquare_result["success"]> {
 		return await this.client.request.request(
-			LINEStruct.SquareService_joinSquare_args(...param),
+			LINEStruct.SquareService_joinSquare_args({
+				request: {
+					squareMid: options.squareMid,
+					joinValue: {
+						approvalValue: { message: options.joinMessage },
+						codeValue: { code: options.passCode },
+					},
+					member: {
+						squareMid: options.squareMid,
+						displayName: options.displayName,
+						ableToReceiveMessage: options.ableToReceiveMessage,
+						revision: 0,
+					},
+				},
+			}),
 			"joinSquare",
 			this.protocolType,
 			true,
