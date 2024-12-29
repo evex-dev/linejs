@@ -40,6 +40,7 @@ import { Thrift } from "../thrift/mod.ts";
 import { RequestClient } from "../request/mod.ts";
 import { E2EE } from "../e2ee/mod.ts";
 import { LineObs } from "../obs/mod.ts";
+import { Timeline } from "../timeline/mod.ts";
 
 import { Thrift as def } from "@evex/linejs-types/thrift";
 import type * as LINETypes from "@evex/linejs-types";
@@ -97,6 +98,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	readonly storage: BaseStorage;
 	readonly e2ee: E2EE;
 	readonly obs: LineObs;
+	readonly timeline: Timeline;
 
 	readonly auth: AuthService;
 	readonly call: CallService;
@@ -125,6 +127,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		this.thrift = new Thrift();
 		this.e2ee = new E2EE({ client: this });
 		this.obs = new LineObs({ client: this });
+		this.timeline = new Timeline({ client: this });
 		this.thrift.def = def;
 		this.device = init.device;
 		this.fetch = init.fetch ?? fetch;

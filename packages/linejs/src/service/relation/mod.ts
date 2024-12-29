@@ -4,6 +4,7 @@ import { LINEStruct, type ProtocolKey } from "../../thrift/mod.ts";
 import type * as LINETypes from "@evex/linejs-types";
 import type { Client } from "../../core/mod.ts";
 import type { BaseService } from "../types.ts";
+
 export class RelationService implements BaseService {
 	client: Client;
 	protocolType: ProtocolKey = 4;
@@ -79,14 +80,39 @@ export class RelationService implements BaseService {
 		);
 	}
 
-	async addFriendByMid(
-		...param: Parameters<typeof LINEStruct.addFriendByMid_args>
-	): Promise<LINETypes.addFriendByMid_result["success"]> {
+	/**
+	 * @description Add friend by mid.
+	 */
+	public async addFriendByMid(options: {
+		mid: string;
+		reference?: string;
+		trackingMetaType?: number;
+		trackingMetaHint?: string;
+	}): Promise<any> {
+		const { mid, reference, trackingMetaType, trackingMetaHint } = {
+			trackingMetaType: 5,
+			...options,
+		};
 		return await this.client.request.request(
-			LINEStruct.addFriendByMid_args(...param),
+			[
+				[8, 1, await this.client.getReqseq()], // seq
+				[11, 2, mid],
+				[
+					12,
+					3,
+					[
+						[11, 1, reference],
+						[12, 2, [[12, trackingMetaType, [[
+							11,
+							1,
+							trackingMetaHint,
+						]]]]],
+					],
+				],
+			],
 			"addFriendByMid",
 			this.protocolType,
-			true,
+			false,
 			this.requestPath,
 		);
 	}

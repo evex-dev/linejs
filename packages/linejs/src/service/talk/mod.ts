@@ -211,10 +211,18 @@ export class TalkService implements BaseService {
 	}
 
 	async inviteIntoChat(
-		...param: Parameters<typeof LINEStruct.inviteIntoChat_args>
+		options: {
+			chatMid: string;
+			targetUserMids: string[];
+		},
 	): Promise<LINETypes.inviteIntoChat_result["success"]> {
 		return await this.client.request.request(
-			LINEStruct.inviteIntoChat_args(...param),
+			LINEStruct.inviteIntoChat_args({
+				request: {
+					targetUserMids: options.targetUserMids,
+					chatMid: options.chatMid,
+				},
+			}),
 			"inviteIntoChat",
 			this.protocolType,
 			true,
@@ -1412,28 +1420,40 @@ export class TalkService implements BaseService {
 		);
 	}
 
-	async addFriendByMid(
-		...param: Parameters<typeof LINEStruct.addFriendByMid_args>
-	): Promise<LINETypes.addFriendByMid_result["success"]> {
+	async getChats(
+		options: {
+			chatMids: string[];
+			withInvitees?: boolean;
+			withMembers?: boolean;
+		},
+	): Promise<LINETypes.getChats_result["success"]> {
 		return await this.client.request.request(
-			LINEStruct.addFriendByMid_args(...param),
-			"addFriendByMid",
+			LINEStruct.getChats_args({
+				request: {
+					withInvitees: true,
+					withMembers: true,
+					...options,
+				},
+				syncReason: "INTERNAL",
+			}),
+			"getChats",
 			this.protocolType,
 			true,
 			this.requestPath,
 		);
 	}
 
-	async getChats(
-		...param: Parameters<typeof LINEStruct.getChats_args>
-	): Promise<LINETypes.getChats_result["success"]> {
-		return await this.client.request.request(
-			LINEStruct.getChats_args(...param),
-			"getChats",
-			this.protocolType,
-			true,
-			this.requestPath,
-		);
+	async getChat(options: {
+		chatMid: string;
+		withInvitees?: boolean;
+		withMembers?: boolean;
+	}): Promise<LINETypes.Chat> {
+		const res = await this.getChats({
+			chatMids: [options.chatMid],
+			withInvitees: options.withInvitees,
+			withMembers: options.withMembers,
+		});
+		return res.chats[0];
 	}
 
 	async getAllChatMids(

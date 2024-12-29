@@ -101,13 +101,13 @@ export class Note {
 		sourceType?: string;
 	}): Promise<TimelineResponse> {
 		(options as any).homeId = this.mid;
-		return this.client.createPost(options as any);
+		return this.client.timeline.createPost(options as any);
 	}
 	public deletePost(options: {
 		postId: string;
 	}): Promise<TimelineResponse> {
 		(options as any).homeId = this.mid;
-		return this.client.deletePost(options as any);
+		return this.client.timeline.deletePost(options as any);
 	}
 
 	public listPost(
@@ -119,21 +119,21 @@ export class Note {
 		} = {},
 	): Promise<TimelineResponse> {
 		(options as any).homeId = this.mid;
-		return this.client.listPost(options as any);
+		return this.client.timeline.listPost(options as any);
 	}
 
 	public getPost(options: {
 		postId: string;
 	}): Promise<TimelineResponse> {
 		(options as any).homeId = this.mid;
-		return this.client.getPost(options as any);
+		return this.client.timeline.getPost(options as any);
 	}
 	public sharePost(options: {
 		postId: string;
 		chatMid: string;
 	}): Promise<TimelineResponse> {
 		(options as any).homeId = this.mid;
-		return this.client.sharePost(options as any);
+		return this.client.timeline.sharePost(options as any);
 	}
 }
 
@@ -277,19 +277,22 @@ export class User extends TypedEventEmitter<UserEvents> {
 	/**
 	 * @description Invite to group.
 	 */
-	public invite(chatMid: string): Promise<LINETypes.InviteIntoChatResponse> {
-		return this.client.inviteIntoChat({ to: chatMid, mids: [this.mid] });
+	public async invite(chatMid: string): Promise<void> {
+		await this.client.talk.inviteIntoChat({
+			chatMid,
+			targetUserMids: [this.mid],
+		});
 	}
 
 	/**
 	 * @description Add to friend.
 	 */
-	public addFriend(): Promise<any> {
-		return this.client.addFriendByMid({ mid: this.mid });
+	public async addFriend(): Promise<any> {
+		return await this.client.relation.addFriendByMid({ mid: this.mid });
 	}
 
 	public isMe(): boolean {
-		return this.client.user?.mid === this.mid;
+		return this.client.profile?.mid === this.mid;
 	}
 }
 
@@ -315,11 +318,11 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 		client: Client,
 	): Promise<Group> {
 		const chat: LINETypes.Chat = typeof gidOrChat === "string"
-			? await client.getChat({ gid: gidOrChat })
+			? await client.talk.getChat({ chatMid: gidOrChat })
 			: gidOrChat;
 		const creator = await User.from(chat.extra.groupExtra.creator, client);
 		const _members = (
-			await client.getContactsV2({
+			await client.talk.getContactsV2({
 				mids: Object.keys(chat.extra.groupExtra.memberMids),
 			})
 		).contacts;
@@ -327,11 +330,11 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 		for (const key in _members) {
 			if (Object.prototype.hasOwnProperty.call(_members, key)) {
 				let user: User;
-				if (key === client.user?.mid) {
+				if (key === client.profile?.mid) {
 					user = new User(
 						{
 							..._members[key],
-							contact: await client.getContact({ mid: key }),
+							contact: await client.talk.getContact({ mid: key }),
 						},
 						client,
 					);
@@ -345,7 +348,7 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 			}
 		}
 		const _invitee = (
-			await client.getContactsV2({
+			await client.talk.getContactsV2({
 				mids: Object.keys(chat.extra.groupExtra.inviteeMids),
 			})
 		).contacts;
@@ -353,11 +356,11 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 		for (const key in _invitee) {
 			if (Object.prototype.hasOwnProperty.call(_invitee, key)) {
 				let user: User;
-				if (key === client.user?.mid) {
+				if (key === client.profile?.mid) {
 					user = new User(
 						{
 							..._invitee[key],
-							contact: await client.getContact({ mid: key }),
+							contact: await client.talk.getContact({ mid: key }),
 						},
 						client,
 					);
@@ -398,7 +401,7 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 	/**
 	 * @description Send msg to group.
 	 */
-	public send(
+	public async send(
 		options:
 			| string
 			| {
@@ -412,45 +415,58 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 			},
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
-			return this.send({ text: options });
+			return await this.send({ text: options });
 		} else {
 			const _options: any = options;
 			_options.to = this.mid;
-			return this.client.sendMessage(_options);
+			return await this.client.talk.sendMessage(_options);
 		}
 	}
 
 	/**
 	 * @description Update group status.
 	 */
-	public set(options: {
+	public async set(options: {
 		chatSet: Partial<LINETypes.Chat>;
-		updatedAttribute: LINETypes.ChatAttribute;
-	}): Promise<LINETypes.UpdateChatResponse> {
+		updatedAttribute: LINETypes.Pb1_O2;
+	}): Promise<LINETypes.Pb1_Zc> {
 		const _options: any = options;
 		_options.chatMid = this.mid;
-		return this.client.updateChat(_options);
+		return await this.client.talk.updateChat(_options);
 	}
 
 	/**
 	 * @description Update group name.
 	 */
-	public setName(name: string): Promise<LINETypes.UpdateChatResponse> {
-		return this.set({ chatSet: { chatName: name }, updatedAttribute: 1 });
+	public async setName(name: string): Promise<LINETypes.Pb1_Zc> {
+		return await this.set({
+			chatSet: { chatName: name },
+			updatedAttribute: "NAME",
+		});
 	}
 
 	/**
 	 * @description Invite user.
 	 */
-	public invite(mids: string[]): Promise<LINETypes.InviteIntoChatResponse> {
-		return this.client.inviteIntoChat({ to: this.mid, mids });
+	public async invite(
+		mids: string[],
+	): Promise<LINETypes.Pb1_J5> {
+		return await this.client.talk.inviteIntoChat({
+			targetUserMids: mids,
+			chatMid: this.mid,
+		});
 	}
 
 	/**
 	 * @description Kickout user.
 	 */
-	public kick(mid: string): Promise<LINETypes.DeleteOtherFromChatResponse> {
-		return this.client.deleteOtherFromChat({ to: this.mid, mid: mid });
+	public kick(mid: string): Promise<LINETypes.Pb1_M3> {
+		return this.client.talk.deleteOtherFromChat({
+			request: {
+				targetUserMids: [mid],
+				chatMid: this.mid,
+			},
+		});
 	}
 }
 
@@ -466,7 +482,7 @@ export class Operation {
 	public type: LINETypes.OpType;
 	public reqSeq: number = 0;
 	public checksum?: string;
-	public status?: "ALERT_DISABLED" | LINETypes.OpStatus;
+	public status?: "ALERT_DISABLED" | LINETypes.Pb1_EnumC13127p6;
 	public param: { 1?: string; 2?: string; 3?: string } = {};
 	public event?:
 		| SendChatRemoved
@@ -498,8 +514,10 @@ export class Operation {
 		this.type = (parseEnum("OpType", source.type) as LINETypes.OpType) ||
 			source.type;
 		this.reqSeq = source.reqSeq;
-		this.status =
-			(parseEnum("OpStatus", source.status) as LINETypes.OpStatus) ||
+		this.status = (parseEnum(
+			"OpStatus",
+			source.status,
+		) as LINETypes.Pb1_EnumC13127p6) ||
 			source.status;
 		this.param = {
 			1: source.param1,
@@ -554,7 +572,7 @@ export class Operation {
 			this.event = new DeleteOtherFromChat(this);
 		}
 		if (emit && client) {
-			client.emit("event", source);
+			// TODO: client.emit("event", source);
 		}
 	}
 }
@@ -744,7 +762,7 @@ export class DeleteOtherFromChat {
 export class NotifiedUpdateProfileContent {
 	public readonly name: string = "NotifiedUpdateProfileContent";
 	public userMid: string;
-	public profileAttributes: (LINETypes.ProfileAttribute | null)[] = [];
+	public profileAttributes: (LINETypes.Pb1_K6 | null)[] = [];
 
 	constructor(op: Operation) {
 		if (op.type !== "NOTIFIED_UPDATE_PROFILE_CONTENT") {
@@ -759,17 +777,16 @@ export class NotifiedUpdateProfileContent {
 		this.userMid = op.param[1];
 		const attr = parseEnum("ProfileAttribute", op.param[2]);
 		if (attr !== null) {
-			this.profileAttributes[0] =
-				attr as any as LINETypes.ProfileAttribute;
+			this.profileAttributes[0] = attr as any as LINETypes.Pb1_K6;
 		} else {
-			const arr: LINETypes.ProfileAttribute[] = [];
+			const arr: LINETypes.Pb1_K6[] = [];
 			toBit(parseInt(op.param[2])).forEach((e, i) => {
 				if (e === 1) {
 					arr.push(
 						parseEnum(
 							"ProfileAttribute",
 							2 ** i,
-						) as any as LINETypes.ProfileAttribute,
+						) as any as LINETypes.Pb1_K6,
 					);
 				}
 			});
@@ -784,7 +801,7 @@ export class NotifiedUpdateProfileContent {
 export class NotifiedUpdateProfile {
 	public readonly name: string = "NotifiedUpdateProfile";
 	public userMid: string;
-	public profileAttributes: (LINETypes.ProfileAttribute | null)[] = [];
+	public profileAttributes: (LINETypes.Pb1_K6 | null)[] = [];
 	public info: Record<string, any> = {};
 
 	constructor(op: Operation) {
@@ -801,17 +818,16 @@ export class NotifiedUpdateProfile {
 		this.userMid = op.param[1];
 		const attr = parseEnum("ProfileAttribute", op.param[2]);
 		if (attr !== null) {
-			this.profileAttributes[0] =
-				attr as any as LINETypes.ProfileAttribute;
+			this.profileAttributes[0] = attr as any as LINETypes.Pb1_K6;
 		} else {
-			const arr: LINETypes.ProfileAttribute[] = [];
+			const arr: LINETypes.Pb1_K6[] = [];
 			toBit(parseInt(op.param[2])).forEach((e, i) => {
 				if (e === 1) {
 					arr.push(
 						parseEnum(
 							"ProfileAttribute",
 							2 ** i,
-						) as any as LINETypes.ProfileAttribute,
+						) as any as LINETypes.Pb1_K6,
 					);
 				}
 			});
@@ -826,7 +842,7 @@ export class NotifiedUpdateProfile {
  */
 export class UpdateProfile {
 	public readonly name: string = "UpdateProfile";
-	public profileAttributes: (LINETypes.ProfileAttribute | null)[] = [];
+	public profileAttributes: (LINETypes.Pb1_K6 | null)[] = [];
 	public info: Record<string, any> = {};
 
 	constructor(op: Operation) {
@@ -841,17 +857,16 @@ export class UpdateProfile {
 		}
 		const attr = parseEnum("ProfileAttribute", op.param[1]);
 		if (attr !== null) {
-			this.profileAttributes[0] =
-				attr as any as LINETypes.ProfileAttribute;
+			this.profileAttributes[0] = attr as any as LINETypes.Pb1_K6;
 		} else {
-			const arr: LINETypes.ProfileAttribute[] = [];
+			const arr: LINETypes.Pb1_K6[] = [];
 			toBit(parseInt(op.param[1])).forEach((e, i) => {
 				if (e === 1) {
 					arr.push(
 						parseEnum(
 							"ProfileAttribute",
 							2 ** i,
-						) as any as LINETypes.ProfileAttribute,
+						) as any as LINETypes.Pb1_K6,
 					);
 				}
 			});
@@ -869,7 +884,7 @@ export class SendReaction {
 	public chatMid: string;
 	public chatType: LINETypes.MIDType;
 	public messageId: string;
-	public reactionType: LINETypes.PredefinedReactionType;
+	public reactionType: LINETypes.MessageReactionType;
 	constructor(op: Operation) {
 		if (op.type !== "SEND_REACTION") {
 			throw new TypeError("Wrong operation type");
@@ -887,7 +902,7 @@ export class SendReaction {
 		this.reactionType = parseEnum(
 			"PredefinedReactionType",
 			data.curr.predefinedReactionType,
-		) as LINETypes.PredefinedReactionType;
+		) as LINETypes.MessageReactionType;
 	}
 }
 
@@ -900,7 +915,7 @@ export class NotifiedSendReaction {
 	public chatType: LINETypes.MIDType;
 	public messageId: string;
 	public userMid: string;
-	public reactionType: LINETypes.PredefinedReactionType;
+	public reactionType: LINETypes.MessageReactionType;
 	constructor(op: Operation) {
 		if (op.type !== "NOTIFIED_SEND_REACTION") {
 			throw new TypeError("Wrong operation type");
@@ -920,7 +935,7 @@ export class NotifiedSendReaction {
 		this.reactionType = parseEnum(
 			"PredefinedReactionType",
 			data.curr.predefinedReactionType,
-		) as LINETypes.PredefinedReactionType;
+		) as LINETypes.MessageReactionType;
 	}
 }
 
