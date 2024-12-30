@@ -46,7 +46,7 @@ export interface PasswordLoginOption {
 	authToken?: undefined;
 }
 
-interface QrCodeLoginOption {
+export interface QrCodeLoginOption {
 	email?: undefined;
 	authToken?: undefined;
 	qr?: true;

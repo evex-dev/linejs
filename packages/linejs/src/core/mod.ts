@@ -35,7 +35,7 @@ import {
 	TalkService,
 } from "../service/mod.ts";
 
-import { Login, type LoginOption } from "../login/mod.ts";
+import { Login } from "../login/mod.ts";
 import { Thrift } from "../thrift/mod.ts";
 import { RequestClient } from "../request/mod.ts";
 import { E2EE } from "../e2ee/mod.ts";
@@ -45,6 +45,16 @@ import { Polling } from "../polling/mod.ts";
 
 import { Thrift as def } from "@evex/linejs-types/thrift";
 import type * as LINETypes from "@evex/linejs-types";
+
+export interface LoginOption {
+	email?: string;
+	password?: string;
+	pincode?: string;
+	authToken?: string;
+	qr?: boolean;
+	e2ee?: boolean;
+	v3?: boolean;
+}
 
 type PollingOption = "talk" | "square";
 
@@ -183,8 +193,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		await this.storage.set("reqseq", JSON.stringify(this.reqseqs));
 		return seq;
 	}
-	async login(options?: LoginOption): Promise<void> {
-		return await this.loginProcess.login(options);
+	async login(
+		options?: LoginOption,
+	): Promise<void> {
+		return await this.loginProcess.login(options as any);
 	}
 	polling(options: PollingOption[]): Promise<void[]> {
 		const promise: Promise<void>[] = [];

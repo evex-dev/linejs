@@ -20,7 +20,7 @@ export class Polling {
     sync: SyncData = { talk: {} };
     polling_talk = false;
     polling_square = false;
-    polling_delay = 5000;
+    polling_delay = 1000;
 
     client: Client;
     constructor(init: { client: Client }) {
