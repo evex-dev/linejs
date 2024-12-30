@@ -19,7 +19,10 @@ export default defineConfig({
 		nav: [
 			{ text: "Home", link: "/" },
 			{ text: "Docs", link: "/docs/start" },
-			{ text: "Examples", link: "https://github.com/evex-dev/linejs/tree/main/examples" },
+			{
+				text: "Examples",
+				link: "https://github.com/evex-dev/linejs/tree/main/examples",
+			},
 		],
 
 		sidebar: [
@@ -30,7 +33,7 @@ export default defineConfig({
 					{ text: "Next Steps", link: "/docs/start-2" },
 					{ text: "Message Event", link: "/docs/message-event" },
 					{ text: "Client Options", link: "/docs/client-options" },
-					{ text: "Utils", link: "/docs/utils" },
+					// { text: "Utils", link: "/docs/utils" },
 					{ text: "Talk Methods", link: "/docs/talk-methods" },
 				],
 			},
@@ -88,5 +91,5 @@ export default defineConfig({
 		}],
 	],
 
-	cleanUrls: true
+	cleanUrls: true,
 });

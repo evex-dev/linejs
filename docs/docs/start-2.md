@@ -9,7 +9,7 @@ All you have to do is call the client's method as follows.
 ```ts
 import { Client } from "@evex/linejs";
 
-const client = new Client();
+const client = new Client({ device: "IOSIPAD" });
 
 client.on("pincall", (pincode) => {
 	console.log(`pincode: ${pincode}`);
@@ -87,7 +87,8 @@ await client.login({
 ## Important notice
 
 However, this login method has pitfalls. LINE uses _e2ee_ for encryption, but
-the key to decrypt it can only be obtained with an email login with pincode, or QR login.
+the key to decrypt it can only be obtained with an email login with pincode, or
+QR login.
 
 Therefore, if you login only with an authToken, you will not be able to retrieve
 group talk events.\
@@ -107,6 +108,7 @@ This can be `FileStorage`. As follows.
 import { FileStorage } from "@evex/linejs/storage";
 
 const client = new Client({
+	device: "IOSIPAD",
 	storage: new FileStorage("./storage.json"), // path to storage file (This is secret file)
 });
 ```
@@ -117,14 +119,11 @@ This concludes our first trip.\
 But there is still a journey left to be made.\
 Enjoy.
 
-:::tip  
-If you want to create your own storage such as connecting to the cloud
-api,\
+:::tip\
+If you want to create your own storage such as connecting to the cloud api,\
 import `BaseStorage` and extend it to create your own storage. (Please ask for
-details.) 
-:::  
+details.) :::
 
-:::info  
+:::info\
 If you want to use v1, please ask for details at
-[discord.gg/evex](https://discord.gg/evex). 
-:::  
+[discord.gg/evex](https://discord.gg/evex). :::

@@ -21,7 +21,7 @@ Next, let's create a script that just retrieves your profile!
 ```ts
 import { Client } from "@evex/linejs";
 
-const client = new Client();
+const client = new Client({ device: "IOSIPAD" });
 
 client.on("pincall", (pincode) => {
 	console.log(`pincode: ${pincode}`);
@@ -40,9 +40,8 @@ await client.login({
 First, log in using your _email_. We will explain each code later.\
 (LINEJS supports login by **AuthToken**, **QR** and **Pincode**.)
 
-:::warning  
-Please enable email login in your settings. 
-:::  
+:::warning\
+Please enable email login in your settings. :::
 
 The method of execution depends on the runtime.
 
