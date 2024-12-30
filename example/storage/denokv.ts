@@ -1,5 +1,8 @@
-import { BaseStorage, type Storage } from "./base.ts";
-import { type Kv, openKv } from "@deno/kv";
+import {
+	BaseStorage,
+	type Storage,
+} from "../../packages/linejs/src/storage/base.ts";
+import { type Kv, openKv } from "npm:@deno/kv";
 
 /**
  * @lassdesc Deno.Kv Storage for LINE Client
