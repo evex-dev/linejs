@@ -1,6 +1,6 @@
 // deno-lint-ignore no-explicit-any
 
-import { type Client } from "../core/mod.ts";
+import type { Client } from "../core/mod.ts";
 export type TimelineResponse<T = any> = {
 	code: number;
 	message: string;
@@ -121,8 +121,7 @@ export class Timeline {
 			longitude: number;
 			name: string;
 		}[] = [];
-		const medias: { objectId: string; type: string; obsFace: string }[] =
-			[];
+		const medias: { objectId: string; type: string; obsFace: string }[] = [];
 		stickerIds.forEach((stickerId, stickerIndex) => {
 			stickers.push({
 				id: stickerId,

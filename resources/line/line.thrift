@@ -12499,22 +12499,8 @@ struct getProductsByAuthor_result {
 struct getProfile_args {
     1: Pb1_V7 syncReason;
 }
-struct getProfile_args {
-    1: GetProfileRequest request;
-}
 struct getProfile_result {
     0: Profile success;
-    1: TalkException e;
-}
-struct getProfile_result {
-    0: GetProfileResponse success;
-    1: TalkException e;
-}
-struct getProfiles_args {
-    1: GetProfilesRequest request;
-}
-struct getProfiles_result {
-    0: GetProfilesResponse success;
     1: TalkException e;
 }
 struct getPromotedBuddyContacts_args {
@@ -14270,4 +14256,41 @@ struct ContactEntry {
     2: i64 snapshotTimeMillis;
     3: Contact contact;
     4: ContactCalendarEvents calendarEvents;
+}
+
+struct LoginResult {
+    1: string authToken;
+    2: string certificate;
+    3: string verifier;
+    4: string pinCode;
+    5: LoginResultType type;
+    6: i64 lastPrimaryBindTime;
+    7: string displayMessage;
+    8: VerificationSessionData sessionForSMSConfirm;
+}
+
+enum LoginResultType {
+    SUCCESS = 1;
+    REQUIRE_QRCODE = 2;
+    REQUIRE_DEVICE_CONFIRM = 3;
+    REQUIRE_SMS_CONFIRM = 4;
+}
+
+struct VerificationSessionData {
+    1: string sessionId;
+    2: VerificationMethod method;
+    3: string callback;
+    4: string normalizedPhone;
+    5: string countryCode;
+    6: string nationalSignificantNumber;
+    7: list<VerificationMethod> availableVerificationMethods;
+    8: string callerIdMask;
+}
+
+enum VerificationMethod {
+    NO_AVAILABLE = 0;
+    PIN_VIA_SMS = 1;
+    CALLERID_INDIGO = 2;
+    PIN_VIA_TTS = 4;
+    SKIP = 10;
 }

@@ -176,7 +176,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		await this.storage.set("reqseq", JSON.stringify(this.reqseqs));
 		return seq;
 	}
-	async login(options?: LoginOption) {
+	async login(options?: LoginOption): Promise<void> {
 		return await this.loginProcess.login(options);
 	}
 }
