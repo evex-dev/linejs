@@ -41,7 +41,6 @@ export class TalkService implements BaseService {
 					lastGlobalRevision: globalRev,
 					lastIndividualRevision: individualRev,
 					count: limit,
-					fullSyncRequestReason: "OTHER",
 				},
 			}),
 			"sync",

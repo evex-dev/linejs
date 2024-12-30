@@ -1,4 +1,9 @@
 import type * as LINETypes from "@evex/linejs-types";
+import type {
+	Operation,
+	SquareMessage,
+	TalkMessage,
+} from "../../polling/events/class.ts";
 type LogType = "login" | "request" | "response" | (string & {});
 
 export interface Log {
@@ -16,10 +21,9 @@ export type ClientEvents = {
 	"update:cert": (cert: string) => void;
 	"update:qrcert": (qrCert: string) => void;
 	log: (data: Log) => void;
-	//"square:message": (squareMessage: SquareMessage) => void;
-	//"square:status": (squareStatus: SquaerStatus) => void;
-	"square:event": (squareEvent: LINETypes.SquareEvent) => void;
-	//message: (message: Message) => void;
+	"square:message": (message: SquareMessage) => void;
+	"square:event": (event: LINETypes.SquareEvent) => void;
+	message: (message: TalkMessage) => void;
+	event: (event: Operation) => void;
 	// TODO: Add more as square
-	//event: (talkEvent: LINETypes.Operation) => void;
 };

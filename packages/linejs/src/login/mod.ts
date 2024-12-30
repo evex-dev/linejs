@@ -232,7 +232,7 @@ export class Login {
 		if (!EMAIL_REGEX.test(options.email)) {
 			throw new InternalError("RegExpUnmatch", "invalid email");
 		}
-		if (PASSWORD_REGEX.test(options.password)) {
+		if (!PASSWORD_REGEX.test(options.password)) {
 			throw new InternalError("RegExpUnmatch", "invalid password");
 		}
 
@@ -289,7 +289,7 @@ export class Login {
 		email: string,
 		password: string,
 		constantPincode: string = "114514",
-		enableE2EE: boolean = false,
+		enableE2EE: boolean = true,
 	): Promise<string> {
 		if (constantPincode.length !== 6) {
 			throw new InternalError(

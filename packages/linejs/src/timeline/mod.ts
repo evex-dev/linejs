@@ -1,5 +1,4 @@
-// deno-lint-ignore no-explicit-any
-
+// deno-lint-ignore-file no-explicit-any
 import type { Client } from "../core/mod.ts";
 export type TimelineResponse<T = any> = {
 	code: number;

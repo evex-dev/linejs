@@ -35,15 +35,18 @@ import {
 	TalkService,
 } from "../service/mod.ts";
 
-import { Login, LoginOption } from "../login/mod.ts";
+import { Login, type LoginOption } from "../login/mod.ts";
 import { Thrift } from "../thrift/mod.ts";
 import { RequestClient } from "../request/mod.ts";
 import { E2EE } from "../e2ee/mod.ts";
 import { LineObs } from "../obs/mod.ts";
 import { Timeline } from "../timeline/mod.ts";
+import { Polling } from "../polling/mod.ts";
 
 import { Thrift as def } from "@evex/linejs-types/thrift";
 import type * as LINETypes from "@evex/linejs-types";
+
+type PollingOption = "talk" | "square";
 
 export interface ClientInit {
 	/**
@@ -99,6 +102,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	readonly e2ee: E2EE;
 	readonly obs: LineObs;
 	readonly timeline: Timeline;
+	readonly pollingProcess: Polling;
 
 	readonly auth: AuthService;
 	readonly call: CallService;
@@ -117,6 +121,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		if (!deviceDetails) {
 			throw new Error(`Unsupported device: ${init.device}.`);
 		}
+
 		this.storage = init.storage ?? new MemoryStorage();
 		this.request = new RequestClient({
 			endpoint: init.endpoint ?? "legy.line-apps.com",
@@ -128,6 +133,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		this.e2ee = new E2EE({ client: this });
 		this.obs = new LineObs({ client: this });
 		this.timeline = new Timeline({ client: this });
+		this.pollingProcess = new Polling({ client: this });
+
 		this.thrift.def = def;
 		this.device = init.device;
 		this.fetch = init.fetch ?? fetch;
@@ -146,7 +153,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	}
 
 	log(type: string, data: Record<string, any>) {
-		console.log(type, data);
+		this.emit("log", { type, data });
 	}
 	getToType(mid: string): number | null {
 		const typeMapping: { [key: string]: number } = {
@@ -178,5 +185,15 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	}
 	async login(options?: LoginOption): Promise<void> {
 		return await this.loginProcess.login(options);
+	}
+	polling(options: PollingOption[]): Promise<void[]> {
+		const promise: Promise<void>[] = [];
+		if (options.includes("talk")) {
+			promise.push(this.pollingProcess.talk());
+		}
+		if (options.includes("square")) {
+			promise.push(this.pollingProcess.square());
+		}
+		return Promise.all(promise);
 	}
 }

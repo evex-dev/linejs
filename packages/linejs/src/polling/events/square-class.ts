@@ -130,7 +130,8 @@ export class Square extends TypedEventEmitter<SquareEvents> {
 					event.payload.notifiedUpdateSquareStatus.squareMid ===
 						this.mid
 				) {
-					this.status = event.payload.notifiedUpdateSquareStatus.squareStatus;
+					this.status =
+						event.payload.notifiedUpdateSquareStatus.squareStatus;
 					this.emit("update", this);
 					this.emit("update:status", this.status);
 				} else if (
@@ -230,6 +231,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 	public status: LINETypes.SquareChatStatusWithoutMessage;
 	public syncToken?: string;
 	public note: Note;
+	public polling_delay = 1000;
 	constructor(
 		public rawSouce: LINETypes.GetSquareChatResponse,
 		private client: Client,
@@ -260,7 +262,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 		this.status = squareChatStatus.otherStatus;
 		this.note = new Note(this.squareMid, this.client);
 		if (polling) {
-			this.startPolling();
+			this.polling();
 		}
 		if (autoUpdate) {
 			client.on("square:event", (event) => {
@@ -280,7 +282,8 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 					event.payload.notifiedUpdateSquareChat.squareChatMid ===
 						this.mid
 				) {
-					const { squareChat } = event.payload.notifiedUpdateSquareChat;
+					const { squareChat } =
+						event.payload.notifiedUpdateSquareChat;
 					this.mid = squareChat.squareChatMid;
 					this.squareMid = squareChat.squareMid;
 					this.type = squareChat.type;
@@ -365,7 +368,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 	/**
 	 * @description start listen (fetchSquareChatEvents)
 	 */
-	public async startPolling(): Promise<void> {
+	public async polling(): Promise<void> {
 		if (!this.syncToken) {
 			while (true) {
 				const noneEvent = await this.client.square
@@ -401,7 +404,8 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 					) {
 						const message = new SquareMessage(
 							{
-								squareEventSendMessage: event.payload.sendMessage,
+								squareEventSendMessage:
+									event.payload.sendMessage,
 							},
 							this.client,
 						);
@@ -412,14 +416,17 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 					) {
 						const message = new SquareMessage(
 							{
-								squareEventReceiveMessage: event.payload.receiveMessage,
+								squareEventReceiveMessage:
+									event.payload.receiveMessage,
 							},
 							this.client,
 						);
 						this.emit("message", message);
 					}
 				}
-				await new Promise<void>((resolve) => setTimeout(resolve, 1000));
+				await new Promise<void>((resolve) =>
+					setTimeout(resolve, this.polling_delay)
+				);
 			} catch (error) {
 				this.client.log("SquareChatPollingError", { error });
 				await new Promise<void>((resolve) => setTimeout(resolve, 2000));

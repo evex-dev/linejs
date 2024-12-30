@@ -90,4 +90,7 @@ await client.login({ qr: true });
 
 // login with authToken
 await client.login({ authToken: ... });
+
+// start polling
+client.polling(["talk", "square"]);
 ```

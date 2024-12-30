@@ -475,7 +475,7 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 export class Operation {
 	public rawSource: LINETypes.Operation;
 	protected client?: Client;
-	public message?: Message | TalkMessage;
+	public message?: TalkMessage;
 	public revision: number;
 	public createdTime: Date;
 	public type: LINETypes.OpType;
@@ -502,8 +502,7 @@ export class Operation {
 
 	constructor(
 		source: LINETypes.Operation,
-		client?: Client,
-		emit: boolean = false,
+		client: Client,
 	) {
 		this.rawSource = source;
 		this.client = client;
@@ -514,7 +513,7 @@ export class Operation {
 			source.type;
 		this.reqSeq = source.reqSeq;
 		this.status = (parseEnum(
-			"OpStatus",
+			"Pb1_EnumC13127p6",
 			source.status,
 		) as LINETypes.Pb1_EnumC13127p6) ||
 			source.status;
@@ -528,14 +527,10 @@ export class Operation {
 			source.type === "SEND_MESSAGE" ||
 			source.type === "SEND_CONTENT"
 		) {
-			if (client) {
-				this.message = new TalkMessage(
-					{ message: source.message },
-					client,
-				);
-			} else {
-				this.message = new Message({ message: source.message });
-			}
+			this.message = new TalkMessage(
+				{ message: source.message },
+				client,
+			);
 		}
 		if (source.type == "SEND_CHAT_REMOVED") {
 			this.event = new SendChatRemoved(this);
@@ -569,9 +564,6 @@ export class Operation {
 			this.event = new DeleteOtherFromChat(this);
 		} else if (source.type == "NOTIFIED_DELETE_OTHER_FROM_CHAT") {
 			this.event = new DeleteOtherFromChat(this);
-		}
-		if (emit && client) {
-			// TODO: client.emit("event", source);
 		}
 	}
 }

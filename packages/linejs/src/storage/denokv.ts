@@ -14,6 +14,11 @@ export class DenoKvStorage extends BaseStorage {
 		super();
 		if (typeof globalThis.Deno === "undefined") {
 			this.useDeno = false;
+		} else if (typeof Deno.openKv === "undefined") {
+			console.warn(
+				"info: Deno.openKv() is an unstable API.\nhint: Run again with `--unstable-kv` flag to enable this API.",
+			);
+			this.useDeno = false;
 		}
 		this.path = path;
 	}

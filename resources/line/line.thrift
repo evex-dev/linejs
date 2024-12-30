@@ -5,22 +5,26 @@ enum AR0_g {
     INTERNAL_SERVER_ERROR = 20737;
     SERVICE_UNAVAILABLE = 20739;
 }
+
 enum AR0_q {
     NOT_PURCHASED = 0;
     SUBSCRIPTION = 1;
 }
+
 enum AccountMigrationPincodeType {
     NOT_APPLICABLE = 0;
     NOT_SET = 1;
     SET = 2;
     NEED_ENFORCED_INPUT = 3;
 }
+
 enum AccountMigrationPincodeType {
     NOT_APPLICABLE = 0;
     NOT_SET = 1;
     SET = 2;
     NEED_ENFORCED_INPUT = 3;
 }
+
 enum ApplicationType {
     IOS = 16;
     IOS_RC = 17;
@@ -152,6 +156,7 @@ enum ApplicationType {
     WEAROS_BETA = 546;
     WEAROS_ALPHA = 547;
 }
+
 enum ApplicationType {
     IOS = 16;
     IOS_RC = 17;
@@ -283,12 +288,14 @@ enum ApplicationType {
     WEAROS_BETA = 546;
     WEAROS_ALPHA = 547;
 }
+
 enum BotType {
     RESERVED = 0;
     OFFICIAL = 1;
     LINE_AT_0 = 2;
     LINE_AT = 3;
 }
+
 enum CarrierCode {
     NOT_SPECIFIED = 0;
     JP_DOCOMO = 1;
@@ -304,6 +311,7 @@ enum CarrierCode {
     JP_MVNO = 8;
     JP_USER_SELECTED_LINE = 9;
 }
+
 enum ChannelErrorCode {
     ILLEGAL_ARGUMENT = 0;
     INTERNAL_ERROR = 1;
@@ -314,12 +322,14 @@ enum ChannelErrorCode {
     WEBVIEW_NOT_ALLOWED = 6;
     NOT_AVAILABLE_API = 7;
 }
+
 enum ContactAttribute {
     CONTACT_ATTRIBUTE_CAPABLE_VOICE_CALL = 1;
     CONTACT_ATTRIBUTE_CAPABLE_VIDEO_CALL = 2;
     CONTACT_ATTRIBUTE_CAPABLE_MY_HOME = 16;
     CONTACT_ATTRIBUTE_CAPABLE_BUDDY = 32;
 }
+
 enum ContactSetting {
     CONTACT_SETTING_NOTIFICATION_DISABLE = 1;
     CONTACT_SETTING_DISPLAY_NAME_OVERRIDE = 2;
@@ -329,6 +339,7 @@ enum ContactSetting {
     CONTACT_SETTING_FRIEND_RINGTONE = 32;
     CONTACT_SETTING_FRIEND_RINGBACK_TONE = 64;
 }
+
 enum ContactStatus {
     UNSPECIFIED = 0;
     FRIEND = 1;
@@ -338,6 +349,7 @@ enum ContactStatus {
     DELETED = 5;
     DELETED_BLOCKED = 6;
 }
+
 enum ContactStatus {
     UNSPECIFIED = 0;
     FRIEND = 1;
@@ -347,6 +359,7 @@ enum ContactStatus {
     DELETED = 5;
     DELETED_BLOCKED = 6;
 }
+
 enum ContactType {
     MID = 0;
     PHONE = 1;
@@ -367,6 +380,7 @@ enum ContactType {
     BBM = 2309;
     BEACON = 11;
 }
+
 enum ContentType {
     NONE = 0;
     IMAGE = 1;
@@ -392,17 +406,20 @@ enum ContentType {
     EXTIMAGE = 21;
     FLEX = 22;
 }
+
 enum Eg_EnumC8927a {
     NEW = 1;
     UPDATE = 2;
     EVENT = 3;
 }
+
 enum EmailConfirmationStatus {
     NOT_SPECIFIED = 0;
     NOT_YET = 1;
     DONE = 3;
     NEED_ENFORCED_INPUT = 4;
 }
+
 enum ErrorCode {
     ILLEGAL_ARGUMENT = 0;
     AUTHENTICATION_FAILED = 1;
@@ -525,6 +542,7 @@ enum ErrorCode {
     INCOMPATIBLE_APP_TYPE = 124;
     NOT_PREMIUM = 125;
 }
+
 enum Fg_a {
     INTERNAL_ERROR = 0;
     ILLEGAL_ARGUMENT = 1;
@@ -537,18 +555,21 @@ enum Fg_a {
     APP_UPGRADE_REQUIRED = 101;
     NO_CONTENT = 102;
 }
+
 enum FriendRequestStatus {
     NONE = 0;
     AVAILABLE = 1;
     ALREADY_REQUESTED = 2;
     UNAVAILABLE = 3;
 }
+
 enum IdentityProvider {
     UNKNOWN = 0;
     LINE = 1;
     NAVER_KR = 2;
     LINE_PHONE = 3;
 }
+
 enum LN0_F0 {
     UNKNOWN = 0;
     INVALID_TARGET_USER = 1;
@@ -558,10 +579,12 @@ enum LN0_F0 {
     MALFORMED_REQUEST = 5;
     TRACKING_META_QRCODE_FAVORED = 6;
 }
+
 enum LN0_X0 {
     USER = 1;
     BOT = 2;
 }
+
 enum MIDType {
     USER = 0;
     ROOM = 1;
@@ -572,6 +595,7 @@ enum MIDType {
     BOT = 6;
     SQUARE_THREAD = 7;
 }
+
 enum NZ0_B0 {
     PAY = 0;
     POI = 1;
@@ -582,6 +606,7 @@ enum NZ0_B0 {
     SCO = 6;
     POC = 7;
 }
+
 enum NZ0_C0 {
     OK = 0;
     MAINTENANCE = 1;
@@ -591,51 +616,61 @@ enum NZ0_C0 {
     INTERNAL_ERROR = 5;
     WALLET_CMS_MAINTENANCE = 6;
 }
+
 enum NZ0_EnumC12154b1 {
     NORMAL = 0;
     CAMERA = 1;
 }
+
 enum NZ0_EnumC12169g1 {
     WALLET = 101;
     ASSET = 201;
     SHOPPING = 301;
 }
+
 enum NZ0_EnumC12170h {
     HIDE_BADGE = 0;
     SHOW_BADGE = 1;
 }
+
 enum NZ0_EnumC12188n {
     OK = 0;
     UNAVAILABLE = 1;
     DUPLICATAE_REGISTRATION = 2;
     INTERNAL_ERROR = 3;
 }
+
 enum NZ0_EnumC12192o0 {
     LV1 = 0;
     LV2 = 1;
     LV3 = 2;
     LV9 = 3;
 }
+
 enum NZ0_EnumC12193o1 {
     AUTHENTICATION_FAILED = 401;
     INTERNAL_SERVER_ERROR = 500;
     SERVICE_IN_MAINTENANCE_MODE = 503;
     INVALID_PARAMETER = 400;
 }
+
 enum NZ0_EnumC12195p0 {
     ALIVE = 1;
     SUSPENDED = 2;
     UNREGISTERED = 3;
 }
+
 enum NZ0_EnumC12197q {
     PREFIX = 0;
     SUFFIX = 1;
 }
+
 enum NZ0_EnumC12218x0 {
     NO_CONTENT = 0;
     OK = 1;
     ERROR = 2;
 }
+
 enum NZ0_I0 {
     A = 0;
     B = 1;
@@ -643,22 +678,27 @@ enum NZ0_I0 {
     D = 3;
     UNKNOWN = 4;
 }
+
 enum NZ0_K0 {
     POCKET_MONEY = 0;
     REFINANCE = 1;
 }
+
 enum NZ0_N0 {
     COMPACT = 0;
     EXPANDED = 1;
 }
+
 enum NZ0_S0 {
     CARD = 0;
     ACTION = 1;
 }
+
 enum NZ0_W0 {
     OK = 0;
     INTERNAL_ERROR = 1;
 }
+
 enum NotificationStatus {
     NOTIFICATION_ITEM_EXIST = 1;
     TIMELINE_ITEM_EXIST = 2;
@@ -684,6 +724,7 @@ enum NotificationStatus {
     VOOM_LIVE_STATE_CHANGED = 2097152;
     VOOM_ACTIVITY_REWARD_ITEM_EXIST = 4194304;
 }
+
 enum NotificationType {
     APPLE_APNS = 1;
     GOOGLE_C2DM = 2;
@@ -704,23 +745,28 @@ enum NotificationType {
     CLOVA_VOIP = 23;
     HUAWEI_HCM = 24;
 }
+
 enum Ob1_B0 {
     FOREGROUND = 0;
     BACKGROUND = 1;
 }
+
 enum Ob1_C1 {
     NORMAL = 0;
     BIG = 1;
 }
+
 enum Ob1_D0 {
     PURCHASE_ONLY = 0;
     PURCHASE_OR_SUBSCRIPTION = 1;
     SUBSCRIPTION_ONLY = 2;
 }
+
 enum Ob1_EnumC12607a1 {
     DEFAULT = 1;
     VIEW_VIDEO = 2;
 }
+
 enum Ob1_EnumC12610b1 {
     NONE = 0;
     BUDDY = 2;
@@ -728,21 +774,25 @@ enum Ob1_EnumC12610b1 {
     MISSION = 4;
     MUSTBUY = 5;
 }
+
 enum Ob1_EnumC12631i1 {
     UNKNOWN = 0;
     PRODUCT = 1;
     USER = 2;
     PREMIUM_USER = 3;
 }
+
 enum Ob1_EnumC12638l {
     VALID = 0;
     INVALID = 1;
 }
+
 enum Ob1_EnumC12641m {
     PREMIUM = 1;
     VERIFIED = 2;
     UNVERIFIED = 3;
 }
+
 enum Ob1_EnumC12652p1 {
     UNKNOWN = 0;
     NONE = 1;
@@ -768,6 +818,7 @@ enum Ob1_EnumC12652p1 {
     SERVICE_IN_MAINTENANCE_MODE = 20738;
     SERVICE_UNAVAILABLE = 20739;
 }
+
 enum Ob1_EnumC12656r0 {
     OK = 0;
     PRODUCT_UNSUPPORTED = 1;
@@ -776,6 +827,7 @@ enum Ob1_EnumC12656r0 {
     CHARACTER_COUNT_LIMIT_EXCEEDED = 4;
     CONTAINS_INVALID_WORD = 5;
 }
+
 enum Ob1_EnumC12664u {
     UNKNOWN = 0;
     NONE = 1;
@@ -789,6 +841,7 @@ enum Ob1_EnumC12664u {
     INTERNAL_SERVER_ERROR = 20737;
     SERVICE_UNAVAILABLE = 20739;
 }
+
 enum Ob1_EnumC12666u1 {
     POPULAR = 0;
     NEW_RELEASE = 1;
@@ -806,20 +859,24 @@ enum Ob1_EnumC12666u1 {
     CPD_STICKER = 13;
     POPULAR_WITH_FREE = 14;
 }
+
 enum Ob1_F1 {
     STATIC = 1;
     ANIMATION = 2;
 }
+
 enum Ob1_I {
     STATIC = 0;
     POPULAR = 1;
     NEW_RELEASE = 2;
 }
+
 enum Ob1_J0 {
     ON_SALE = 0;
     OUTDATED_VERSION = 1;
     NOT_ON_SALE = 2;
 }
+
 enum Ob1_J1 {
     OK = 0;
     INVALID_PARAMETER = 1;
@@ -828,6 +885,7 @@ enum Ob1_J1 {
     CONFLICT = 4;
     NOT_ELIGIBLE = 5;
 }
+
 enum Ob1_K1 {
     GOOGLE = 0;
     APPLE = 1;
@@ -838,6 +896,7 @@ enum Ob1_K1 {
     TW_CHT = 6;
     FREEMIUM = 7;
 }
+
 enum Ob1_M1 {
     OK = 0;
     UNKNOWN = 1;
@@ -851,29 +910,35 @@ enum Ob1_M1 {
     ACCOUNT_HOLD = 9;
     RETRY_STATE = 10;
 }
+
 enum Ob1_O0 {
     STICKER = 1;
     THEME = 2;
     STICON = 3;
 }
+
 enum Ob1_O1 {
     AVAILABLE = 0;
     DIFFERENT_STORE = 1;
     NOT_STUDENT = 2;
     ALREADY_PURCHASED = 3;
 }
+
 enum Ob1_P1 {
     GENERAL = 1;
     STUDENT = 2;
 }
+
 enum Ob1_Q1 {
     BASIC = 1;
     DELUXE = 2;
 }
+
 enum Ob1_R1 {
     MONTHLY = 1;
     YEARLY = 2;
 }
+
 enum Ob1_U1 {
     OK = 0;
     UNKNOWN = 1;
@@ -883,15 +948,18 @@ enum Ob1_U1 {
     EXCEEDS_LIMIT = 5;
     NOT_AVAILABLE = 6;
 }
+
 enum Ob1_V1 {
     DATE_ASC = 1;
     DATE_DESC = 2;
 }
+
 enum Ob1_X1 {
     GENERAL = 0;
     CREATORS = 1;
     STICON = 2;
 }
+
 enum Ob1_a2 {
     NOT_PURCHASED = 0;
     SUBSCRIPTION = 1;
@@ -900,10 +968,12 @@ enum Ob1_a2 {
     NOT_PURCHASED_U2I = 4;
     BUDDY = 5;
 }
+
 enum Ob1_c2 {
     STATIC = 1;
     ANIMATION = 2;
 }
+
 enum OpType {
     END_OF_OPERATION = 0;
     UPDATE_PROFILE = 1;
@@ -1043,10 +1113,12 @@ enum OpType {
     DELETE_PROFILE_MAPPING = 151;
     NOTIFIED_DESTROY_NOTICENTER_PUSH = 152;
 }
+
 enum P70_g {
     INVALID_REQUEST = 1000;
     RETRY_REQUIRED = 1001;
 }
+
 enum PaidCallType {
     OUT = 0;
     IN = 1;
@@ -1057,6 +1129,7 @@ enum PaidCallType {
     OA = 6;
     OAM = 7;
 }
+
 enum PayloadType {
     PAYLOAD_BUY = 101;
     PAYLOAD_CS = 111;
@@ -1065,12 +1138,14 @@ enum PayloadType {
     PAYLOAD_POINT_AUTO_EXCHANGED = 141;
     PAYLOAD_POINT_MANUAL_EXCHANGED = 151;
 }
+
 enum Pb1_A0 {
     NORMAL = 0;
     VIDEOCAM = 1;
     VOIP = 2;
     RECORD = 3;
 }
+
 enum Pb1_A3 {
     UNKNOWN = 0;
     BACKGROUND_NEW_KEY_CREATED = 1;
@@ -1078,21 +1153,25 @@ enum Pb1_A3 {
     FOREGROUND_NEW_PIN_REGISTERED = 3;
     FOREGROUND_VERIFICATION = 4;
 }
+
 enum Pb1_B {
     SIRI = 1;
     GOOGLE_ASSISTANT = 2;
     OS_SHARE = 3;
 }
+
 enum Pb1_D0 {
     RICH_MENU_ID = 0;
     STATUS_BAR = 1;
     BUDDY_CAUTION_NOTICE = 2;
 }
+
 enum Pb1_D4 {
     AUDIO = 1;
     VIDEO = 2;
     FACEPLAY = 3;
 }
+
 enum Pb1_D6 {
     GOOGLE = 0;
     BAIDU = 1;
@@ -1100,21 +1179,25 @@ enum Pb1_D6 {
     YAHOOJAPAN = 3;
     KINGWAY = 4;
 }
+
 enum Pb1_E7 {
     UNKNOWN = 0;
     TALK = 1;
     SQUARE = 2;
 }
+
 enum Pb1_EnumC12917a6 {
     UNKNOWN = 0;
     APP_FOREGROUND = 1;
     PERIODIC = 2;
     MANUAL = 3;
 }
+
 enum Pb1_EnumC12926b1 {
     NOT_A_FRIEND = 0;
     ALWAYS = 1;
 }
+
 enum Pb1_EnumC12941c2 {
     BLE_LCS_API_USABLE = 26;
     PROHIBIT_MINIMIZE_CHANNEL_BROWSER = 27;
@@ -1122,54 +1205,65 @@ enum Pb1_EnumC12941c2 {
     PURCHASE_LCS_API_USABLE = 38;
     ALLOW_ANDROID_ENABLE_ZOOM = 48;
 }
+
 enum Pb1_EnumC12945c6 {
     V1 = 1;
     V2 = 2;
 }
+
 enum Pb1_EnumC12970e3 {
     USER_AGE_CHECKED = 1;
     USER_APPROVAL_REQUIRED = 2;
 }
+
 enum Pb1_EnumC12997g2 {
     PROFILE = 0;
     FRIENDS = 1;
     GROUP = 2;
 }
+
 enum Pb1_EnumC12998g3 {
     UNKNOWN = 0;
     WIFI = 1;
     CELLULAR_NETWORK = 2;
 }
+
 enum Pb1_EnumC13009h0 {
     NORMAL = 1;
     LOW_BATTERY = 2;
 }
+
 enum Pb1_EnumC13010h1 {
     NEW = 1;
     PLANET = 2;
 }
+
 enum Pb1_EnumC13015h6 {
     FORWARD = 0;
     AUTO_REPLY = 1;
     SUBORDINATE = 2;
     REPLY = 3;
 }
+
 enum Pb1_EnumC13022i {
     SKIP = 0;
     PINCODE = 1;
     SECURITY_CENTER = 2;
 }
+
 enum Pb1_EnumC13029i6 {
     ADD = 0;
     REMOVE = 1;
     MODIFY = 2;
 }
+
 enum Pb1_EnumC13037j0 {
     UNSPECIFIED = 0;
     INACTIVE = 1;
     ACTIVE = 2;
     DELETED = 3;
 }
+
 enum Pb1_EnumC13050k {
     UNKNOWN = 0;
     IOS_REDUCED_ACCURACY = 1;
@@ -1177,19 +1271,23 @@ enum Pb1_EnumC13050k {
     AOS_PRECISE_LOCATION = 3;
     AOS_APPROXIMATE_LOCATION = 4;
 }
+
 enum Pb1_EnumC13082m3 {
     SHOW = 0;
     HIDE = 1;
 }
+
 enum Pb1_EnumC13093n0 {
     NONE = 0;
     TOP = 1;
 }
+
 enum Pb1_EnumC13127p6 {
     NORMAL = 0;
     ALERT_DISABLED = 1;
     ALWAYS = 2;
 }
+
 enum Pb1_EnumC13128p7 {
     UNKNOWN = 0;
     DIRECT_INVITATION = 1;
@@ -1204,27 +1302,32 @@ enum Pb1_EnumC13128p7 {
     ROOM_CHAT_SELECTED = 10;
     DEPRECATED = 11;
 }
+
 enum Pb1_EnumC13148r0 {
     ALWAYS_HIDDEN = 1;
     ALWAYS_SHOWN = 2;
     SHOWN_BY_CONDITION = 3;
 }
+
 enum Pb1_EnumC13151r3 {
     ONEWAY = 0;
     BOTH = 1;
     NOT_REGISTERED = 2;
 }
+
 enum Pb1_EnumC13162s0 {
     NOT_SUSPICIOUS = 1;
     SUSPICIOUS_00 = 2;
     SUSPICIOUS_01 = 3;
 }
+
 enum Pb1_EnumC13196u6 {
     COIN = 0;
     CREDIT = 1;
     MONTHLY = 2;
     OAM = 3;
 }
+
 enum Pb1_EnumC13209v5 {
     DUMMY = 0;
     NOTICE = 1;
@@ -1277,21 +1380,25 @@ enum Pb1_EnumC13209v5 {
     TIMELINESTORY_OA = 48;
     TRAVEL = 49;
 }
+
 enum Pb1_EnumC13221w3 {
     UNKNOWN = 0;
     EUROPEAN_ECONOMIC_AREA = 1;
 }
+
 enum Pb1_EnumC13222w4 {
     OBS_VIDEO = 1;
     OBS_GENERAL = 2;
     OBS_RINGBACK_TONE = 3;
 }
+
 enum Pb1_EnumC13237x5 {
     AUDIO = 1;
     VIDEO = 2;
     LIVE = 3;
     PHOTOBOOTH = 4;
 }
+
 enum Pb1_EnumC13238x6 {
     NOT_SPECIFIED = 0;
     VALID = 1;
@@ -1300,10 +1407,12 @@ enum Pb1_EnumC13238x6 {
     LIMIT_EXCEEDED = 4;
     LIMIT_EXCEEDED_AND_VERIFICATION_REQUIRED = 5;
 }
+
 enum Pb1_EnumC13251y5 {
     STANDARD = 1;
     CONSTELLA = 2;
 }
+
 enum Pb1_EnumC13252y6 {
     ALL = 0;
     PROFILE = 1;
@@ -1314,44 +1423,53 @@ enum Pb1_EnumC13252y6 {
     E2EE = 6;
     MESSAGE = 7;
 }
+
 enum Pb1_EnumC13260z0 {
     ON_AIR = 0;
     LIVE = 1;
     GLP = 2;
 }
+
 enum Pb1_EnumC13267z7 {
     ALL = 255;
     NOTIFICATION_SETTING = 1;
 }
+
 enum Pb1_F0 {
     NA = 0;
     FRIEND_VIEW = 1;
     OFFICIAL_ACCOUNT_VIEW = 2;
 }
+
 enum Pb1_F4 {
     INCOMING = 1;
     OUTGOING = 2;
 }
+
 enum Pb1_F5 {
     UNKNOWN = 0;
     SUCCESS = 1;
     REQUIRE_SERVER_SIDE_EMAIL = 2;
     REQUIRE_CLIENT_SIDE_EMAIL = 3;
 }
+
 enum Pb1_F6 {
     JBU = 0;
     LIP = 1;
 }
+
 enum Pb1_G3 {
     PROMOTION_FRIENDS_INVITE = 1;
     CAPABILITY_SERVER_SIDE_SMS = 2;
     LINE_CLIENT_ANALYTICS_CONFIGURATION = 3;
 }
+
 enum Pb1_G4 {
     TIMELINE = 1;
     NEARBY = 2;
     SQUARE = 3;
 }
+
 enum Pb1_G6 {
     NICE = 2;
     LOVE = 3;
@@ -1360,15 +1478,18 @@ enum Pb1_G6 {
     SAD = 6;
     OMG = 7;
 }
+
 enum Pb1_H6 {
     PUBLIC = 0;
     PRIVATE = 1;
 }
+
 enum Pb1_I6 {
     NEVER_SHOW = 0;
     ONE_WAY = 1;
     MUTUAL = 2;
 }
+
 enum Pb1_J4 {
     OTHER = 0;
     INITIALIZATION = 1;
@@ -1376,12 +1497,14 @@ enum Pb1_J4 {
     MANUAL_SYNC = 3;
     LOCAL_DB_CORRUPTED = 4;
 }
+
 enum Pb1_K2 {
     ALL = 255;
     CHANNEL_INFO = 1;
     CHANNEL_TOKEN = 2;
     COMMON_DOMAIN = 4;
 }
+
 enum Pb1_K6 {
     ALL = 2147483647;
     EMAIL = 1;
@@ -1395,11 +1518,13 @@ enum Pb1_K6 {
     MUSIC_PROFILE = 256;
     AVATAR_PROFILE = 512;
 }
+
 enum Pb1_L2 {
     SYNC = 0;
     REMOVE = 1;
     REMOVE_ALL = 2;
 }
+
 enum Pb1_L4 {
     UNKNOWN = 0;
     REVISION_GAP_TOO_LARGE_CLIENT = 1;
@@ -1408,10 +1533,12 @@ enum Pb1_L4 {
     REVISION_HOLE = 4;
     FORCE_TRIGGERED = 5;
 }
+
 enum Pb1_M6 {
     OWNER = 0;
     FRIEND = 1;
 }
+
 enum Pb1_N6 {
     NFT = 1;
     AVATAR = 2;
@@ -1419,6 +1546,7 @@ enum Pb1_N6 {
     ARCZ = 4;
     FRENZ = 5;
 }
+
 enum Pb1_O2 {
     NAME = 1;
     PICTURE_STATUS = 2;
@@ -1428,19 +1556,23 @@ enum Pb1_O2 {
     FAVORITE_TIMESTAMP = 32;
     CHAT_TYPE = 64;
 }
+
 enum Pb1_O6 {
     DEFAULT = 1;
     MULTI_PROFILE = 2;
 }
+
 enum Pb1_P6 {
     HIDDEN = 0;
     PUBLIC = 1000;
 }
+
 enum Pb1_Q2 {
     BACKGROUND = 0;
     KEYWORD = 1;
     CONTENT_METADATA_TAG_BASED = 2;
 }
+
 enum Pb1_R3 {
     BEACON_AGREEMENT = 1;
     BLUETOOTH = 2;
@@ -1454,10 +1586,12 @@ enum Pb1_R3 {
     BLUETOOTH_SCAN = 10;
     AUTO_SUGGEST_FOLLOW_UP = 11;
 }
+
 enum Pb1_S7 {
     NONE = 1;
     ALL = 2;
 }
+
 enum Pb1_T3 {
     LOCATION_OS = 1;
     LOCATION_APP = 2;
@@ -1468,10 +1602,12 @@ enum Pb1_T3 {
     IFA = 7;
     ACCURACY_MODE = 8;
 }
+
 enum Pb1_T7 {
     SYNC = 0;
     REPORT = 1;
 }
+
 enum Pb1_V7 {
     UNSPECIFIED = 0;
     UNKNOWN = 1;
@@ -1483,11 +1619,13 @@ enum Pb1_V7 {
     INTERNAL = 7;
     USER_INITIATED = 8;
 }
+
 enum Pb1_W2 {
     ANYONE_IN_CHAT = 0;
     CREATOR_ONLY = 1;
     NO_ONE = 2;
 }
+
 enum Pb1_W3 {
     ILLEGAL_ARGUMENT = 0;
     AUTHENTICATION_FAILED = 1;
@@ -1499,30 +1637,36 @@ enum Pb1_W3 {
     INVALID_PASSWORD = 8;
     MASTER_KEY_CONFLICT = 9;
 }
+
 enum Pb1_X1 {
     MESSAGE = 0;
     MESSAGE_NOTIFICATION = 1;
     NOTIFICATION_CENTER = 2;
 }
+
 enum Pb1_X2 {
     MESSAGE = 0;
     NOTE = 1;
     CHANNEL = 2;
 }
+
 enum Pb1_Z2 {
     GROUP = 0;
     ROOM = 1;
     PEER = 2;
 }
+
 enum Pb1_gd {
     OVER = 1;
     UNDER = 2;
     UNDEFINED = 3;
 }
+
 enum Pb1_od {
     UNKNOWN = 0;
     LOCATION = 1;
 }
+
 enum PointErrorCode {
     REQUEST_DUPLICATION = 3001;
     INVALID_PARAMETER = 3002;
@@ -1545,12 +1689,14 @@ enum PointErrorCode {
     SYSTEM_ERROR = 5999;
     SYSTEM_MAINTENANCE = 5888;
 }
+
 enum Q70_q {
     UNKNOWN = 0;
     FACEBOOK = 1;
     APPLE = 2;
     GOOGLE = 3;
 }
+
 enum Q70_r {
     INTERNAL_ERROR = 0;
     ILLEGAL_ARGUMENT = 1;
@@ -1559,20 +1705,24 @@ enum Q70_r {
     HUMAN_VERIFICATION_REQUIRED = 5;
     APP_UPGRADE_REQUIRED = 101;
 }
+
 enum Qj_EnumC13584a {
     NOT_DETERMINED = 0;
     RESTRICTED = 1;
     DENIED = 2;
     AUTHORIZED = 3;
 }
+
 enum Qj_EnumC13585b {
     WHITE = 1;
     BLACK = 2;
 }
+
 enum Qj_EnumC13588e {
     LIGHT = 1;
     DARK = 2;
 }
+
 enum Qj_EnumC13592i {
     ILLEGAL_ARGUMENT = 0;
     INTERNAL_ERROR = 1;
@@ -1582,6 +1732,7 @@ enum Qj_EnumC13592i {
     COIN_NOT_USABLE = 5;
     WEBVIEW_NOT_ALLOWED = 6;
 }
+
 enum Qj_EnumC13597n {
     INVALID_REQUEST = 1;
     UNAUTHORIZED = 2;
@@ -1594,6 +1745,7 @@ enum Qj_EnumC13597n {
     SERVICE_ALREADY_TERMINATED = 9;
     SERVER_ERROR = 100;
 }
+
 enum Qj_EnumC13604v {
     GEOLOCATION = 1;
     ADVERTISING_ID = 2;
@@ -1612,10 +1764,12 @@ enum Qj_EnumC13604v {
     BASIC_AUTH = 15;
     SIRI_DONATION = 16;
 }
+
 enum Qj_EnumC13605w {
     ALLOW_DIRECT_LINK = 1;
     ALLOW_DIRECT_LINK_V2 = 2;
 }
+
 enum Qj_EnumC13606x {
     LIGHT = 1;
     LIGHT_TRANSLUCENT = 2;
@@ -1623,24 +1777,29 @@ enum Qj_EnumC13606x {
     LIGHT_ICON = 4;
     DARK_ICON = 5;
 }
+
 enum Qj_a0 {
     CONCAT = 1;
     REPLACE = 2;
 }
+
 enum Qj_e0 {
     SUCCESS = 0;
     FAILURE = 1;
     CANCEL = 2;
 }
+
 enum Qj_h0 {
     RIGHT = 1;
     LEFT = 2;
 }
+
 enum Qj_i0 {
     FULL = 1;
     TALL = 2;
     COMPACT = 3;
 }
+
 enum R70_e {
     INTERNAL_ERROR = 0;
     ILLEGAL_ARGUMENT = 1;
@@ -1652,6 +1811,7 @@ enum R70_e {
     FORBIDDEN = 102;
     FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR = 201;
 }
+
 enum RegistrationType {
     PHONE = 0;
     EMAIL_WAP = 1;
@@ -1663,6 +1823,7 @@ enum RegistrationType {
     YAHOOJAPAN = 2310;
     GOOGLE = 2311;
 }
+
 enum ReportType {
     ADVERTISING = 1;
     GENDER_HARASSMENT = 2;
@@ -1672,6 +1833,7 @@ enum ReportType {
     IMPERSONATION = 6;
     SCAM = 7;
 }
+
 enum S70_a {
     INTERNAL_ERROR = 0;
     ILLEGAL_ARGUMENT = 1;
@@ -1680,6 +1842,7 @@ enum S70_a {
     INVALID_CONTEXT = 100;
     APP_UPGRADE_REQUIRED = 101;
 }
+
 enum SettingsAttributeEx {
     NOTIFICATION_ENABLE = 0;
     NOTIFICATION_MUTE_EXPIRATION = 1;
@@ -1773,6 +1936,7 @@ enum SettingsAttributeEx {
     HOME_NOTIFICATION_GROUP_MEMBER_UPDATE = 71;
     HOME_NOTIFICATION_BIRTHDAY = 72;
 }
+
 enum SnsIdType {
     FACEBOOK = 1;
     SINA = 2;
@@ -1783,6 +1947,7 @@ enum SnsIdType {
     YAHOOJAPAN = 7;
     GOOGLE = 8;
 }
+
 enum SpammerReason {
     OTHER = 0;
     ADVERTISING = 1;
@@ -1791,6 +1956,7 @@ enum SpammerReason {
     IMPERSONATION = 4;
     SCAM = 5;
 }
+
 enum SpammerReason {
     OTHER = 0;
     ADVERTISING = 1;
@@ -1799,6 +1965,7 @@ enum SpammerReason {
     IMPERSONATION = 4;
     SCAM = 5;
 }
+
 enum SpotCategory {
     UNKNOWN = 0;
     GOURMET = 1;
@@ -1815,6 +1982,7 @@ enum SpotCategory {
     OTHER = 12;
     ALL = 10000;
 }
+
 enum SquareAttribute {
     NAME = 1;
     WELCOME_MESSAGE = 2;
@@ -1830,6 +1998,7 @@ enum SquareAttribute {
     CHANNEL_ID = 13;
     SVC_TAGS = 14;
 }
+
 enum SquareAuthorityAttribute {
     UPDATE_SQUARE_PROFILE = 1;
     INVITE_NEW_MEMBER = 2;
@@ -1845,12 +2014,14 @@ enum SquareAuthorityAttribute {
     USE_READONLY_DEFAULT_CHAT = 12;
     SEND_ALL_MENTION = 13;
 }
+
 enum SquareChatType {
     OPEN = 1;
     SECRET = 2;
     ONE_ON_ONE = 3;
     SQUARE_DEFAULT = 4;
 }
+
 enum SquareMemberAttribute {
     DISPLAY_NAME = 1;
     PROFILE_IMAGE = 2;
@@ -1859,6 +2030,7 @@ enum SquareMemberAttribute {
     ROLE = 6;
     PREFERENCE = 7;
 }
+
 enum SquareMembershipState {
     JOIN_REQUESTED = 1;
     JOINED = 2;
@@ -1869,6 +2041,7 @@ enum SquareMembershipState {
     DELETED = 7;
     JOIN_REQUEST_WITHDREW = 8;
 }
+
 enum StickerResourceType {
     STATIC = 1;
     ANIMATION = 2;
@@ -1877,6 +2050,7 @@ enum StickerResourceType {
     POPUP = 5;
     POPUP_SOUND = 6;
 }
+
 enum StickerResourceType {
     STATIC = 1;
     ANIMATION = 2;
@@ -1887,6 +2061,7 @@ enum StickerResourceType {
     NAME_TEXT = 7;
     PER_STICKER_TEXT = 8;
 }
+
 enum SyncCategory {
     PROFILE = 0;
     SETTINGS = 1;
@@ -1899,6 +2074,7 @@ enum SyncCategory {
     NOTIFICATION = 8;
     ADDRESS_BOOK = 9;
 }
+
 enum T70_C {
     INITIAL_BACKUP_STATE_UNSPECIFIED = 0;
     INITIAL_BACKUP_STATE_READY = 1;
@@ -1907,11 +2083,13 @@ enum T70_C {
     INITIAL_BACKUP_STATE_FINISHED = 3;
     INITIAL_BACKUP_STATE_ABORTED = 4;
 }
+
 enum T70_EnumC14390b {
     UNKNOWN = 0;
     PHONE_NUMBER = 1;
     EMAIL = 2;
 }
+
 enum T70_EnumC14392c {
     UNKNOWN = 0;
     SKIP = 1;
@@ -1920,6 +2098,7 @@ enum T70_EnumC14392c {
     EMAIL_BASED = 4;
     NONE = 11;
 }
+
 enum T70_EnumC14406j {
     INTERNAL_ERROR = 0;
     ILLEGAL_ARGUMENT = 1;
@@ -1930,45 +2109,54 @@ enum T70_EnumC14406j {
     INVALID_CONTEXT = 100;
     APP_UPGRADE_REQUIRED = 101;
 }
+
 enum T70_K {
     UNKNOWN = 0;
     SMS = 1;
     IVR = 2;
     SMSPULL = 3;
 }
+
 enum T70_L {
     PREMIUM_TYPE_UNSPECIFIED = 0;
     PREMIUM_TYPE_LYP = 1;
     PREMIUM_TYPE_LINE = 2;
 }
+
 enum T70_Z0 {
     PHONE_VERIF = 1;
     EAP_VERIF = 2;
 }
+
 enum T70_e1 {
     UNKNOWN = 0;
     SKIP = 1;
     WEB_BASED = 2;
 }
+
 enum T70_j1 {
     UNKNOWN = 0;
     FACEBOOK = 1;
     APPLE = 2;
     GOOGLE = 3;
 }
+
 enum U70_c {
     INTERNAL_ERROR = 0;
     FORBIDDEN = 1;
     INVALID_CONTEXT = 100;
 }
+
 enum Uf_EnumC14873o {
     ANDROID = 1;
     IOS = 2;
 }
+
 enum VR0_l {
     DEFAULT = 1;
     UEN = 2;
 }
+
 enum VerificationMethod {
     NO_AVAILABLE = 0;
     PIN_VIA_SMS = 1;
@@ -1976,26 +2164,31 @@ enum VerificationMethod {
     PIN_VIA_TTS = 4;
     SKIP = 10;
 }
+
 enum VerificationResult {
     FAILED = 0;
     OK_NOT_REGISTERED_YET = 1;
     OK_REGISTERED_WITH_SAME_DEVICE = 2;
     OK_REGISTERED_WITH_ANOTHER_DEVICE = 3;
 }
+
 enum WR0_a {
     FREE = 1;
     PREMIUM = 2;
 }
+
 enum a80_EnumC16644b {
     UNKNOWN = 0;
     FACEBOOK = 1;
     APPLE = 2;
     GOOGLE = 3;
 }
+
 enum FetchDirection {
     FORWARD = 1;
     BACKWARD = 2;
 }
+
 enum LiveTalkEventType {
     NOTIFIED_UPDATE_LIVE_TALK_TITLE = 1;
     NOTIFIED_UPDATE_LIVE_TALK_ANNOUNCEMENT = 2;
@@ -2003,6 +2196,7 @@ enum LiveTalkEventType {
     NOTIFIED_UPDATE_LIVE_TALK_ALLOW_REQUEST_TO_SPEAK = 4;
     NOTIFIED_UPDATE_SQUARE_MEMBER = 5;
 }
+
 enum LiveTalkReportType {
     ADVERTISING = 1;
     GENDER_HARASSMENT = 2;
@@ -2012,6 +2206,7 @@ enum LiveTalkReportType {
     IMPERSONATION = 6;
     SCAM = 7;
 }
+
 enum MessageSummaryReportType {
     LEGAL_VIOLATION = 1;
     HARASSMENT = 2;
@@ -2020,6 +2215,7 @@ enum MessageSummaryReportType {
     GENDER_HARASSMENT = 5;
     OTHER = 6;
 }
+
 enum NotificationPostType {
     POST_MENTION = 2;
     POST_LIKE = 3;
@@ -2028,10 +2224,12 @@ enum NotificationPostType {
     POST_COMMENT_LIKE = 6;
     POST_RELAY_JOIN = 7;
 }
+
 enum SquareEventStatus {
     NORMAL = 1;
     ALERT_DISABLED = 2;
 }
+
 enum SquareEventType {
     RECEIVE_MESSAGE = 0;
     SEND_MESSAGE = 1;
@@ -2092,6 +2290,7 @@ enum SquareEventType {
     NOTIFICATION_THREAD_MESSAGE = 54;
     NOTIFICATION_THREAD_MESSAGE_REACTION = 55;
 }
+
 enum AdScreen {
     CHATROOM = 1;
     THREAD_SPACE = 2;
@@ -2101,42 +2300,51 @@ enum AdScreen {
     WEB_MAIN = 6;
     WEB_SEARCH_RESULT = 7;
 }
+
 enum BooleanState {
     NONE = 0;
     OFF = 1;
     ON = 2;
 }
+
 enum ChatroomPopupType {
     IMG_TEXT = 1;
     TEXT_ONLY = 2;
     IMG_ONLY = 3;
 }
+
 enum ContentsAttribute {
     NONE = 1;
     CONTENTS_HIDDEN = 2;
 }
+
 enum FetchType {
     DEFAULT = 1;
     PREFETCH_BY_SERVER = 2;
     PREFETCH_BY_CLIENT = 3;
 }
+
 enum LiveTalkAttribute {
     TITLE = 1;
     ALLOW_REQUEST_TO_SPEAK = 2;
 }
+
 enum LiveTalkRole {
     HOST = 1;
     CO_HOST = 2;
     GUEST = 3;
 }
+
 enum LiveTalkSpeakerSetting {
     APPROVAL = 1;
     ALL = 2;
 }
+
 enum LiveTalkType {
     PUBLIC = 1;
     PRIVATE = 2;
 }
+
 enum MessageReactionType {
     ALL = 0;
     UNDO = 1;
@@ -2147,10 +2355,12 @@ enum MessageReactionType {
     SAD = 6;
     OMG = 7;
 }
+
 enum NotifiedMessageType {
     MENTION = 1;
     REPLY = 2;
 }
+
 enum PopupAttribute {
     NAME = 1;
     ACTIVATED = 2;
@@ -2158,10 +2368,12 @@ enum PopupAttribute {
     ENDS_AT = 4;
     CONTENT = 5;
 }
+
 enum PopupType {
     MAIN = 1;
     CHATROOM = 2;
 }
+
 enum SquareChatAttribute {
     NAME = 2;
     SQUARE_CHAT_IMAGE = 3;
@@ -2171,10 +2383,12 @@ enum SquareChatAttribute {
     MESSAGE_VISIBILITY = 7;
     ABLE_TO_SEARCH_MESSAGE = 8;
 }
+
 enum SquareChatFeatureControlState {
     DISABLED = 1;
     ENABLED = 2;
 }
+
 enum SquareChatMemberAttribute {
     MEMBERSHIP_STATE = 4;
     NOTIFICATION_MESSAGE = 6;
@@ -2182,19 +2396,23 @@ enum SquareChatMemberAttribute {
     LEFT_BY_KICK_MESSAGE_LOCAL_ID = 8;
     MESSAGE_LOCAL_ID_WHEN_BLOCK = 9;
 }
+
 enum SquareChatMembershipState {
     JOINED = 1;
     LEFT = 2;
 }
+
 enum SquareChatState {
     ALIVE = 0;
     DELETED = 1;
     SUSPENDED = 2;
 }
+
 enum SquareEmblem {
     SUPER = 1;
     OFFICIAL = 2;
 }
+
 enum SquareErrorCode {
     UNKNOWN = 0;
     INTERNAL_ERROR = 500;
@@ -2209,10 +2427,12 @@ enum SquareErrorCode {
     REVISION_MISMATCH = 409;
     PRECONDITION_FAILED = 410;
 }
+
 enum SquareFeatureControlState {
     DISABLED = 1;
     ENABLED = 2;
 }
+
 enum SquareFeatureSetAttribute {
     CREATING_SECRET_SQUARE_CHAT = 1;
     INVITING_INTO_OPEN_SQUARE_CHAT = 2;
@@ -2230,76 +2450,92 @@ enum SquareFeatureSetAttribute {
     ENABLE_SQUARE_THREAD = 14;
     DISABLE_CHANGE_ROLE_CO_ADMIN = 15;
 }
+
 enum SquareJoinMethodType {
     NONE = 0;
     APPROVAL = 1;
     CODE = 2;
 }
+
 enum SquareMemberRelationState {
     NONE = 1;
     BLOCKED = 2;
 }
+
 enum SquareMemberRole {
     ADMIN = 1;
     CO_ADMIN = 2;
     MEMBER = 10;
 }
+
 enum SquareMessageState {
     SENT = 1;
     DELETED = 2;
     FORBIDDEN = 3;
     UNSENT = 4;
 }
+
 enum SquareMetadataAttribute {
     EXCLUDED = 1;
     NO_AD = 2;
 }
+
 enum SquarePreferenceAttribute {
     FAVORITE = 1;
     NOTI_FOR_NEW_JOIN_REQUEST = 2;
 }
+
 enum SquareProviderType {
     UNKNOWN = 1;
     YOUTUBE = 2;
     OA_FANSPACE = 3;
 }
+
 enum SquareState {
     ALIVE = 0;
     DELETED = 1;
     SUSPENDED = 2;
 }
+
 enum SquareThreadAttribute {
     STATE = 1;
     EXPIRES_AT = 2;
     READ_ONLY_AT = 3;
 }
+
 enum SquareThreadMembershipState {
     JOINED = 1;
     LEFT = 2;
 }
+
 enum SquareThreadState {
     ALIVE = 1;
     DELETED = 2;
 }
+
 enum SquareType {
     CLOSED = 0;
     OPEN = 1;
 }
+
 enum TargetChatType {
     ALL = 0;
     MIDS = 1;
     CATEGORIES = 2;
     CHANNEL_ID = 3;
 }
+
 enum TargetUserType {
     ALL = 0;
     MIDS = 1;
 }
+
 enum do0_EnumC23139B {
     CLOUD = 1;
     BLE = 2;
     BEACON = 3;
 }
+
 enum do0_EnumC23147e {
     SUCCESS = 0;
     UNKNOWN_ERROR = 1;
@@ -2308,11 +2544,13 @@ enum do0_EnumC23147e {
     CONNECTION_ERROR = 4;
     CONNECTION_IN_PROGRESS = 5;
 }
+
 enum do0_EnumC23148f {
     ONETIME = 0;
     AUTOMATIC = 1;
     BEACON = 2;
 }
+
 enum do0_G {
     SUCCESS = 0;
     UNKNOWN_ERROR = 1;
@@ -2323,6 +2561,7 @@ enum do0_G {
     GATT_CONNECTION_CLOSED = 6;
     CONNECTION_INVALID = 7;
 }
+
 enum do0_M {
     INTERNAL_SERVER_ERROR = 0;
     UNAUTHORIZED = 1;
@@ -2331,14 +2570,17 @@ enum do0_M {
     DEVICE_LIMIT_EXCEEDED = 4096;
     UNSUPPORTED_REGION = 4097;
 }
+
 enum fN0_EnumC24466B {
     LINE_PREMIUM = 0;
     LYP_PREMIUM = 1;
 }
+
 enum fN0_EnumC24467C {
     LINE = 1;
     YAHOO_JAPAN = 2;
 }
+
 enum fN0_EnumC24469a {
     OK = 1;
     NOT_SUPPORTED = 2;
@@ -2347,6 +2589,7 @@ enum fN0_EnumC24469a {
     NOT_FRIENDS = 5;
     NO_AGREEMENT = 6;
 }
+
 enum fN0_F {
     OK = 1;
     NOT_SUPPORTED = 2;
@@ -2356,19 +2599,23 @@ enum fN0_F {
     INVALID_INVITATION = 6;
     IN_PAYMENT_FAILURE_STATE = 7;
 }
+
 enum fN0_G {
     APPLE = 1;
     GOOGLE = 2;
 }
+
 enum fN0_H {
     INACTIVE = 1;
     ACTIVE_FINITE = 2;
     ACTIVE_INFINITE = 3;
 }
+
 enum fN0_o {
     AVAILABLE = 1;
     ALREADY_SUBSCRIBED = 2;
 }
+
 enum fN0_p {
     UNKNOWN = 0;
     SOFTBANK_BUNDLE = 1;
@@ -2383,6 +2630,7 @@ enum fN0_p {
     LINE_GOOGLE = 10;
     YAHOO_WALLET = 11;
 }
+
 enum fN0_q {
     UNKNOWN = 0;
     NONE = 1;
@@ -2392,12 +2640,14 @@ enum fN0_q {
     INTERNAL_SERVER_ERROR = 16644;
     AUTHENTICATION_FAILED = 16645;
 }
+
 enum g80_EnumC24993a {
     INTERNAL_ERROR = 0;
     ILLEGAL_ARGUMENT = 1;
     INVALID_CONTEXT = 2;
     TOO_MANY_REQUESTS = 3;
 }
+
 enum h80_EnumC25645e {
     INTERNAL_ERROR = 0;
     ILLEGAL_ARGUMENT = 1;
@@ -2406,6 +2656,7 @@ enum h80_EnumC25645e {
     INVALID_CONTEXT = 100;
     NOT_SUPPORTED = 101;
 }
+
 enum I80_EnumC26392b {
     UNKNOWN = 0;
     SKIP = 1;
@@ -2413,11 +2664,13 @@ enum I80_EnumC26392b {
     EMAIL_BASED = 4;
     NONE = 11;
 }
+
 enum I80_EnumC26394c {
     PHONE_NUMBER = 0;
     APPLE = 1;
     GOOGLE = 2;
 }
+
 enum I80_EnumC26408j {
     INTERNAL_ERROR = 0;
     ILLEGAL_ARGUMENT = 1;
@@ -2428,21 +2681,25 @@ enum I80_EnumC26408j {
     INVALID_CONTEXT = 100;
     APP_UPGRADE_REQUIRED = 101;
 }
+
 enum I80_EnumC26425y {
     UNKNOWN = 0;
     SMS = 1;
     IVR = 2;
 }
+
 enum j80_EnumC27228a {
     AUTHENTICATION_FAILED = 1;
     INVALID_STATE = 2;
     NOT_AUTHORIZED_DEVICE = 3;
     MUST_REFRESH_V3_TOKEN = 4;
 }
+
 enum jO0_EnumC27533B {
     PAYMENT_APPLE = 1;
     PAYMENT_GOOGLE = 2;
 }
+
 enum jO0_EnumC27535b {
     ILLEGAL_ARGUMENT = 0;
     AUTHENTICATION_FAILED = 1;
@@ -2450,17 +2707,20 @@ enum jO0_EnumC27535b {
     MESSAGE_DEFINED_ERROR = 29;
     MAINTENANCE_ERROR = 33;
 }
+
 enum jO0_EnumC27559z {
     PAYMENT_PG_NONE = 0;
     PAYMENT_PG_AU = 1;
     PAYMENT_PG_AL = 2;
 }
+
 enum jf_EnumC27712a {
     NONE = 1;
     DOES_NOT_RESPOND = 2;
     RESPOND_MANUALLY = 3;
     RESPOND_AUTOMATICALLY = 4;
 }
+
 enum jf_EnumC27717f {
     UNKNOWN = 0;
     BAD_REQUEST = 1;
@@ -2468,34 +2728,41 @@ enum jf_EnumC27717f {
     FORBIDDEN = 3;
     INTERNAL_SERVER_ERROR = 4;
 }
+
 enum kf_EnumC28766a {
     ILLEGAL_ARGUMENT = 0;
     INTERNAL_ERROR = 1;
     UNAUTHORIZED = 2;
 }
+
 enum kf_o {
     ANDROID = 0;
     IOS = 1;
 }
+
 enum kf_p {
     RICHMENU = 0;
     TALK_ROOM = 1;
 }
+
 enum kf_r {
     WEB = 0;
     POSTBACK = 1;
     SEND_MESSAGE = 2;
 }
+
 enum kf_u {
     CLICK = 0;
     IMPRESSION = 1;
 }
+
 enum kf_x {
     UNKNOWN = 0;
     PROFILE = 1;
     TALK_LIST = 2;
     OA_CALL = 3;
 }
+
 enum n80_o {
     INTERNAL_ERROR = 0;
     INVALID_CONTEXT = 100;
@@ -2504,6 +2771,7 @@ enum n80_o {
     FIDO_UNACCEPTABLE_CONTENT = 202;
     FIDO_INVALID_REQUEST = 203;
 }
+
 enum o80_e {
     INTERNAL_ERROR = 0;
     VERIFICATION_FAILED = 1;
@@ -2519,21 +2787,25 @@ enum o80_e {
     FIDO_UNACCEPTABLE_CONTENT = 202;
     FIDO_INVALID_REQUEST = 203;
 }
+
 enum og_E {
     RUNNING = 1;
     CLOSING = 2;
     CLOSED = 3;
     SUSPEND = 4;
 }
+
 enum og_EnumC32661b {
     INACTIVE = 0;
     ACTIVE = 1;
 }
+
 enum og_EnumC32663d {
     PREMIUM = 0;
     VERIFIED = 1;
     UNVERIFIED = 2;
 }
+
 enum og_EnumC32671l {
     ILLEGAL_ARGUMENT = 0;
     AUTHENTICATION_FAILED = 1;
@@ -2542,11 +2814,13 @@ enum og_EnumC32671l {
     INTERNAL_ERROR = 20;
     MAINTENANCE_ERROR = 33;
 }
+
 enum og_G {
     FREE = 0;
     MONTHLY = 1;
     PER_PAYMENT = 2;
 }
+
 enum og_I {
     OK = 0;
     REACHED_TIER_LIMIT = 1;
@@ -2555,6 +2829,7 @@ enum og_I {
     NOT_SUPPORTED_LINE_VERSION = 4;
     BOT_USER_REGION_IS_NOT_MATCH = 5;
 }
+
 enum q80_EnumC33651c {
     INTERNAL_ERROR = 0;
     ILLEGAL_ARGUMENT = 1;
@@ -2565,6 +2840,7 @@ enum q80_EnumC33651c {
     INVALID_CONTEXT = 100;
     APP_UPGRADE_REQUIRED = 101;
 }
+
 enum qm_EnumC34112e {
     BUTTON = 1;
     ENTRY_SELECTED = 2;
@@ -2572,20 +2848,24 @@ enum qm_EnumC34112e {
     BROADCAST_STAY = 5;
     BROADCAST_LEAVE = 4;
 }
+
 enum qm_s {
     ILLEGAL_ARGUMENT = 0;
     NOT_FOUND = 5;
     INTERNAL_ERROR = 20;
 }
+
 enum r80_EnumC34361a {
     PERSONAL_ACCOUNT = 1;
     CURRENT_ACCOUNT = 2;
 }
+
 enum r80_EnumC34362b {
     BANK_ALL = 1;
     BANK_DEPOSIT = 2;
     BANK_WITHDRAWAL = 3;
 }
+
 enum r80_EnumC34365e {
     BANK = 1;
     ATM = 2;
@@ -2598,6 +2878,7 @@ enum r80_EnumC34365e {
     SEVEN_BANK_DEPOSIT = 9;
     CODE_DEPOSIT = 10;
 }
+
 enum r80_EnumC34367g {
     AVAILABLE = 0;
     DIFFERENT_REGION = 1;
@@ -2606,10 +2887,12 @@ enum r80_EnumC34367g {
     UNAVAILABLE_FROM_LINE_PAY = 4;
     INVALID_USER = 5;
 }
+
 enum r80_EnumC34368h {
     CHARGE = 1;
     WITHDRAW = 2;
 }
+
 enum r80_EnumC34370j {
     UNKNOWN = 0;
     VISA = 1;
@@ -2618,17 +2901,20 @@ enum r80_EnumC34370j {
     DINERS = 4;
     JCB = 5;
 }
+
 enum r80_EnumC34371k {
     NULL = 0;
     ATM = 1;
     CONVENIENCE_STORE = 2;
 }
+
 enum r80_EnumC34372l {
     SCALE2 = 1;
     SCALE3 = 2;
     HDPI = 3;
     XHDPI = 4;
 }
+
 enum r80_EnumC34374n {
     SUCCESS = 0;
     GENERAL_USER_ERROR = 1000;
@@ -2684,12 +2970,14 @@ enum r80_EnumC34374n {
     INTERNAL_SYSTEM_MAINTENANCE = 9999;
     UNKNOWN_ERROR = 10000;
 }
+
 enum r80_EnumC34376p {
     TRANSFER = 1;
     TRANSFER_REQUEST = 2;
     DUTCH = 3;
     INVITATION = 4;
 }
+
 enum r80_EnumC34377q {
     NULL = 0;
     UNIDEN = 1;
@@ -2697,6 +2985,7 @@ enum r80_EnumC34377q {
     IDENTIFIED = 3;
     CHECKING = 4;
 }
+
 enum r80_EnumC34378s {
     UNKNOWN = 0;
     MORE_TAB = 1;
@@ -2706,6 +2995,7 @@ enum r80_EnumC34378s {
     LINECARD = 5;
     INVITATION = 6;
 }
+
 enum r80_e0 {
     NONE = 0;
     ONE_TIME_PAYMENT_AGREEMENT = 1;
@@ -2715,12 +3005,14 @@ enum r80_e0 {
     JOINING_WITH_LINE_CARD_AGREEMENT = 5;
     LINE_CARD_AGREEMENT = 6;
 }
+
 enum r80_g0 {
     NULL = 0;
     ATM = 1;
     CONVENIENCE_STORE = 2;
     ALL = 3;
 }
+
 enum r80_h0 {
     ALL = 7;
     READY = 1;
@@ -2730,12 +3022,14 @@ enum r80_h0 {
     FAIL = 5;
     EXPIRE = 6;
 }
+
 enum r80_i0 {
     TRANSFER_ACCEPTABLE = 1;
     REMOVE_INVOICE = 2;
     INVOICE_CODE = 3;
     SHOW_ALWAYS_INVOICE = 4;
 }
+
 enum r80_m0 {
     OK = 1;
     NOT_ALIVE_USER = 2;
@@ -2746,25 +3040,30 @@ enum r80_m0 {
     ADVERSE_BALANCE = 8;
     CONFIRM_REQUIRED = 9;
 }
+
 enum r80_n0 {
     LINE = 1;
     LINEPAY = 2;
 }
+
 enum r80_r {
     CITIZEN_ID = 1;
     PASSPORT = 2;
     WORK_PERMIT = 3;
     ALIEN_CARD = 4;
 }
+
 enum t80_h {
     CLIENT = 1;
     SERVER = 2;
 }
+
 enum t80_i {
     APP_INSTANCE_LOCAL = 1;
     APP_TYPE_LOCAL = 2;
     GLOBAL = 3;
 }
+
 enum t80_n {
     UNKNOWN = 0;
     NONE = 1;
@@ -2780,20 +3079,24 @@ enum t80_n {
     SERVICE_IN_MAINTENANCE_MODE = 20738;
     SERVICE_UNAVAILABLE = 20739;
 }
+
 enum t80_r {
     USER_ACTION = 1;
     DATA_OUTDATED = 2;
     APP_MIGRATION = 3;
     OTHER = 100;
 }
+
 enum vh_EnumC37632c {
     ACTIVE = 1;
     INACTIVE = 2;
 }
+
 enum vh_m {
     SAFE = 1;
     NOT_SAFE = 2;
 }
+
 enum wm_EnumC38497a {
     UNKNOWN = 0;
     INTERNAL_ERROR = 500;
@@ -2805,19 +3108,23 @@ enum wm_EnumC38497a {
     SQUARECHAT_NOT_FOUND = 4;
     FORBIDDEN = 5;
 }
+
 enum zR0_EnumC40578c {
     FOREGROUND = 0;
     BACKGROUND = 1;
 }
+
 enum zR0_EnumC40579d {
     STICKER = 1;
     THEME = 2;
     STICON = 3;
 }
+
 enum zR0_h {
     NORMAL = 0;
     BIG = 1;
 }
+
 enum zR0_j {
     UNKNOWN = 0;
     NONE = 1;
@@ -2828,218 +3135,266 @@ enum zR0_j {
     INTERNAL_SERVER_ERROR = 20737;
     SERVICE_UNAVAILABLE = 20739;
 }
+
 enum zf_EnumC40713a {
     PERSONAL = 1;
     ROOM = 2;
     GROUP = 3;
     SQUARE_CHAT = 4;
 }
+
 enum zf_EnumC40715c {
     PRIORITY = 2;
     REGULAR = 1;
     MORE = 3;
 }
+
 enum zf_EnumC40716d {
     INVALID_REQUEST = 1;
     UNAUTHORIZED = 2;
     SERVER_ERROR = 100;
 }
+
 exception AccessTokenRefreshException {
     1: P70_g errorCode;
     2: i64 reasonCode;
 }
+
 exception AccountEapConnectException {
     1: Q70_r code;
     2: string alertMessage;
     11: WebAuthDetails webAuthDetails;
 }
+
 exception I80_C26390a {
     1: I80_EnumC26408j code;
     2: string alertMessage;
     11: I80_K0 webAuthDetails;
 }
+
 exception AuthException {
     1: T70_EnumC14406j code;
     2: string alertMessage;
     11: WebAuthDetails webAuthDetails;
 }
+
 exception BotException {
     1: wm_EnumC38497a errorCode;
     2: string reason;
     3: map<string, string> parameterMap;
 }
+
 exception BotExternalException {
     1: kf_EnumC28766a errorCode;
     2: string reason;
 }
+
 exception ChannelException {
     1: ChannelErrorCode code;
     2: string reason;
     3: map<string, string> parameterMap;
 }
+
 exception ChannelPaakAuthnException {
     1: n80_o code;
     2: string errorMessage;
 }
+
 exception ChatappException {
     1: zf_EnumC40716d code;
     2: string reason;
 }
+
 exception CoinException {
     1: jO0_EnumC27535b code;
     2: string reason;
     3: map<string, string> parameterMap;
 }
+
 exception CollectionException {
     1: Ob1_EnumC12664u code;
     2: string reason;
     3: map<string, string> parameterMap;
 }
+
 exception E2EEKeyBackupException {
     1: Pb1_W3 code;
     2: string reason;
     3: map<string, string> parameterMap;
 }
+
 exception ExcessiveRequestItemException {
     1: i32 max_size;
     2: string hint;
 }
+
 exception HomeException {
     1: Fg_a exceptionCode;
     2: string message;
     3: i64 retryTimeMillis;
 }
+
 exception LFLPremiumException {
     1: AR0_g code;
 }
+
 exception LiffChannelException {
     1: Qj_EnumC13592i code;
     2: string reason;
     3: map<string, string> parameterMap;
 }
+
 exception LiffException {
     1: Qj_EnumC13597n code;
     2: string message;
     3: Qj_C13599p payload;
 }
+
 exception MembershipException {
     1: og_EnumC32671l code;
     2: string reason;
     3: map<string, string> parameterMap;
 }
+
 exception OaChatException {
     1: jf_EnumC27717f code;
     2: string reason;
     3: map<string, string> parameterMap;
 }
+
 exception PasswordUpdateException {
     1: U70_c errorCode;
     2: string errorMessage;
 }
+
 exception PaymentException {
     1: r80_EnumC34374n errorCode;
     2: string debugReason;
     3: string serverDefinedMessage;
     4: map<string, string> errorDetailMap;
 }
+
 exception PointException {
     1: PointErrorCode code;
     2: string reason;
     3: map<string, string> extra;
 }
+
 exception PremiumException {
     1: fN0_q code;
     2: string reason;
 }
+
 exception PrimaryQrCodeMigrationException {
     1: h80_EnumC25645e code;
     2: string errorMessage;
 }
+
 exception PwlessCredentialException {
     1: R70_e code;
     2: string alertMessage;
 }
+
 exception RejectedException {
     1: LN0_F0 rejectionReason;
     2: string hint;
 }
+
 exception SeamlessLoginException {
     1: g80_EnumC24993a code;
     2: string errorMessage;
     3: string errorTitle;
 }
+
 exception SecondAuthFactorPinCodeException {
     1: S70_a code;
     2: string alertMessage;
 }
+
 exception SecondaryPwlessLoginException {
     1: o80_e code;
     2: string alertMessage;
 }
+
 exception SecondaryQrCodeException {
     1: q80_EnumC33651c code;
     2: string alertMessage;
 }
+
 exception ServerFailureException {
     1: string hint;
 }
+
 exception SettingsException {
     1: t80_n code;
     2: string reason;
     3: map<string, string> parameters;
 }
+
 exception ShopException {
     1: Ob1_EnumC12652p1 code;
     2: string reason;
     3: map<string, string> parameterMap;
 }
+
 exception SquareException {
     1: SquareErrorCode errorCode;
     2: ErrorExtraInfo errorExtraInfo;
     3: string reason;
 }
+
 exception SuggestTrialException {
     1: zR0_j code;
     2: string reason;
     3: map<string, string> parameterMap;
 }
+
 exception TalkException {
     1: ErrorCode code;
     2: string reason;
     3: map<string, string> parameterMap;
 }
+
 exception TalkException {
     1: qm_s code;
     2: string reason;
     3: map<string, string> parameterMap;
 }
+
 exception ThingsException {
     1: do0_M code;
     2: string reason;
 }
+
 exception TokenAuthException {
     1: j80_EnumC27228a code;
     2: string reason;
 }
+
 exception WalletException {
     1: NZ0_EnumC12193o1 code;
     2: string reason;
     3: map<string, string> attributes;
 }
+
 exception m80_C30146a {
     
 }
+
 exception m80_b {
     
 }
+
 struct AD {
     1: string body;
     2: Priority priority;
     3: string lossUrl;
 }
+
 struct AR0_o {
-    1: AR0_Sticker sticker;
+    1: _any sticker;
 }
+
 struct AbuseMessage {
     1: i64 messageId;
     2: string message;
@@ -3048,6 +3403,7 @@ struct AbuseMessage {
     5: i64 createdTime;
     6: map<string, string> metadata;
 }
+
 struct AbuseReport {
     1: Pb1_EnumC13128p7 reportSource;
     2: ApplicationType applicationType;
@@ -3055,210 +3411,262 @@ struct AbuseReport {
     4: list<AbuseMessage> abuseMessages;
     5: map<string, string> metadata;
 }
+
 struct AbuseReportLineMeeting {
     1: string reporteeMid;
     2: list<i32> spammerReasons;
     3: list<EvidenceId> evidenceIds;
     4: string chatMid;
 }
+
 struct AcceptChatInvitationByTicketRequest {
     1: i32 reqSeq;
     2: string chatMid;
     3: string ticketId;
 }
+
 struct AcceptChatInvitationRequest {
     1: i32 reqSeq;
     2: string chatMid;
 }
+
 struct AcceptSpeakersRequest {
     1: string squareChatMid;
     2: string sessionId;
     3: set<string> targetMids;
 }
+
 struct AcceptToChangeRoleRequest {
     1: string squareChatMid;
     2: string sessionId;
     3: string inviteRequestId;
 }
+
 struct AcceptToListenRequest {
     1: string squareChatMid;
     2: string sessionId;
     3: string inviteRequestId;
 }
+
 struct AcceptToSpeakRequest {
     1: string squareChatMid;
     2: string sessionId;
     3: string inviteRequestId;
 }
+
 struct AccountIdentifier {
     1: T70_EnumC14390b type;
     2: string identifier;
     11: string countryCode;
 }
+
 struct AcquireLiveTalkRequest {
     1: string squareChatMid;
     2: string title;
     3: LiveTalkType type;
     4: LiveTalkSpeakerSetting speakerSetting;
 }
+
 struct AcquireLiveTalkResponse {
     1: LiveTalk liveTalk;
 }
+
 struct AcquireOACallRouteRequest {
     1: string searchId;
     2: map<string, string> fromEnvInfo;
     3: string otp;
 }
+
 struct AcquireOACallRouteResponse {
     1: Pb1_C13113o6 oaCallRoute;
 }
+
 struct ActionButton {
     1: string label;
 }
+
 struct ActivateSubscriptionRequest {
     1: string uniqueKey;
     2: og_EnumC32661b activeStatus;
 }
+
 struct AdRequest {
     1: map<string, string> headers;
     2: map<string, string> queryParams;
 }
+
 struct AdTypeOptOutClickEventRequest {
     1: string moduleAdId;
     2: string targetId;
 }
+
 struct AddFriendByMidRequest {
     1: i32 reqSeq;
     2: string userMid;
     3: AddFriendTracking tracking;
 }
+
 struct AddFriendTracking {
     1: string reference;
     2: LN0_C11274d trackingMeta;
 }
+
 struct AddItemToCollectionRequest {
     1: string collectionId;
     2: Ob1_O0 productType;
     3: string productId;
     4: string itemId;
 }
+
 struct AddMetaByPhone {
     1: string phone;
 }
+
 struct AddMetaBySearchId {
     1: string searchId;
 }
+
 struct AddMetaByUserTicket {
     1: string ticket;
 }
+
 struct AddMetaChatNote {
     1: string chatMid;
 }
+
 struct AddMetaChatNoteMenu {
     1: string chatMid;
 }
+
 struct AddMetaGroupMemberList {
     1: string chatMid;
 }
+
 struct AddMetaGroupVideoCall {
     1: string chatMid;
 }
+
 struct AddMetaInvalid {
     1: string hint;
 }
+
 struct AddMetaMentionInChat {
     1: string chatMid;
     2: string messageId;
 }
+
 struct AddMetaProfileUndefined {
     1: string hint;
 }
+
 struct AddMetaSearchIdInUnifiedSearch {
     1: string searchId;
 }
+
 struct AddMetaShareContact {
     1: string messageId;
     2: string chatMid;
     3: string senderMid;
 }
+
 struct AddMetaStrangerCall {
     1: string messageId;
 }
+
 struct AddMetaStrangerMessage {
     1: string messageId;
     2: string chatMid;
 }
+
 struct AddOaFriendResponse {
     1: string status;
 }
+
 struct AddProductToSubscriptionSlotRequest {
     1: Ob1_O0 productType;
     2: string productId;
     3: string oldProductId;
     4: Ob1_S1 subscriptionService;
 }
+
 struct AddProductToSubscriptionSlotResponse {
     1: Ob1_U1 result;
 }
+
 struct AddThemeToSubscriptionSlotRequest {
     1: string productId;
     2: string currentlyAppliedProductId;
     3: Ob1_S1 subscriptionService;
 }
+
 struct AddThemeToSubscriptionSlotResponse {
     1: Ob1_U1 result;
 }
+
 struct AddToFollowBlacklistRequest {
     1: Pb1_A4 followMid;
 }
+
 struct AgeCheckRequestResult {
     1: string authUrl;
     2: string sessionId;
 }
+
 struct AgreeToTermsRequest {
     1: TermsType termsType;
     2: TermsAgreement termsAgreement;
 }
+
 struct AiQnABotTermsAgreement {
     1: i32 termsVersion;
 }
+
 struct AnalyticsInfo {
     1: double gaSamplingRate;
     2: string tmid;
 }
+
 struct AnimationEffectContent {
     1: string animationImageUrl;
 }
+
 struct AnimationLayer {
     1: RichImage initialImage;
     2: RichImage frontImage;
     3: RichImage backgroundImage;
 }
+
 struct ApplicationVersionRange {
     1: string lowerBound;
     2: bool lowerBoundInclusive;
     3: string upperBound;
     4: bool upperBoundInclusive;
 }
+
 struct ApprovalValue {
     1: string message;
 }
+
 struct ApproveSquareMembersRequest {
     2: string squareMid;
     3: list<string> requestedMemberMids;
 }
+
 struct ApproveSquareMembersResponse {
     1: list<SquareMember> approvedMembers;
     2: SquareStatus status;
 }
+
 struct ApprovedChannelInfo {
     1: ChannelInfo channelInfo;
     2: i64 approvedAt;
 }
+
 struct ApprovedChannelInfos {
     1: list<ApprovedChannelInfo> approvedChannelInfos;
     2: i64 revision;
 }
+
 struct AssetServiceInfo {
     1: NZ0_C0 status;
     2: NZ0_B0 myAssetServiceCode;
@@ -3273,84 +3681,103 @@ struct AssetServiceInfo {
     11: string availableBalanceString;
     12: string availableBalance;
 }
+
 struct AuthPublicKeyCredential {
     1: string id;
     2: string type;
     3: AuthenticatorAssertionResponse response;
     4: AuthenticationExtensionsClientOutputs extensionResults;
 }
+
 struct AuthPublicKeyCredential {
     1: string id;
     2: string type;
     3: AuthenticatorAssertionResponse response;
     4: AuthenticationExtensionsClientOutputs extensionResults;
 }
+
 struct AuthSessionRequest {
     1: map<string, string> metaData;
 }
+
 struct AuthenticateWithPaakRequest {
     1: string authSessionId;
     2: AuthPublicKeyCredential credential;
 }
+
 struct AuthenticateWithPaakRequest {
     1: string sessionId;
     2: AuthPublicKeyCredential credential;
 }
+
 struct AuthenticationExtensionsClientInputs {
     91: set<string> lineAuthenSel;
 }
+
 struct AuthenticationExtensionsClientInputs {
     91: set<string> lineAuthenSel;
 }
+
 struct AuthenticationExtensionsClientOutputs {
     91: bool lineAuthenSel;
 }
+
 struct AuthenticationExtensionsClientOutputs {
     91: bool lineAuthenSel;
 }
+
 struct AuthenticatorAssertionResponse {
     1: string clientDataJSON;
     2: string authenticatorData;
     3: string signature;
     4: string userHandle;
 }
+
 struct AuthenticatorAssertionResponse {
     1: string clientDataJSON;
     2: string authenticatorData;
     3: string signature;
     4: string userHandle;
 }
+
 struct AuthenticatorAttestationResponse {
     1: string clientDataJSON;
     2: string attestationObject;
     3: set<string> transports;
 }
+
 struct AuthenticatorSelectionCriteria {
     1: string authenticatorAttachment;
     2: bool requireResidentKey;
     3: string userVerification;
 }
+
 struct AutoSuggestionShowcaseRequest {
     1: Ob1_O0 productType;
     2: Ob1_a2 suggestionType;
 }
+
 struct AutoSuggestionShowcaseResponse {
     1: list<ProductSummaryForAutoSuggest> productList;
     2: i64 totalSize;
 }
+
 struct AvatarProfile {
     1: string version;
     2: i64 updatedMillis;
     3: string thumbnail;
     4: bool usablePublicly;
 }
+
 struct BadgeInfo {
     1: bool enabled;
     2: i64 badgeRevision;
 }
+
 struct Balance {
     1: string currentPointsFixedPointDecimal;
 }
+
 struct BalanceShortcut {
     1: bool osPayment;
     2: i32 iconPosition;
@@ -3363,27 +3790,32 @@ struct BalanceShortcut {
     9: string iconUrlDarkMode;
     10: Tooltip toolTip;
 }
+
 struct BalanceShortcutInfo {
     1: list<BalanceShortcut> balanceShortcuts;
     2: BalanceShortcut osPaymentFallbackShortcut;
 }
+
 struct BalanceShortcutInfoV4 {
     1: list<CompactShortcut> compactShortcuts;
     2: list<BalanceShortcut> balanceShortcuts;
     3: bool defaultExpand;
 }
+
 struct BankBranchInfo {
     1: string branchId;
     2: string branchCode;
     3: string name;
     4: string name2;
 }
+
 struct BannerRequest {
     1: bool test;
     2: Uf_C14856C trigger;
     3: AdRequest ad;
     4: ContentRequest content;
 }
+
 struct BannerResponse {
     1: string rid;
     2: i64 timestamp;
@@ -3392,21 +3824,25 @@ struct BannerResponse {
     5: Uf_C14856C trigger;
     6: list<Uf_p> payloads;
 }
+
 struct Beacon {
     1: string hardwareId;
 }
+
 struct BeaconBackgroundNotification {
     1: i64 actionInterval;
     2: list<qm_C34110c> actionAndConditions;
     3: i64 actionDelay;
     4: list<list<_any>> actionConditions;
 }
+
 struct BeaconData {
     1: string hwid;
     2: i32 rssi;
     3: i32 txPower;
     4: i64 scannedTimestampMs;
 }
+
 struct BeaconLayerInfoAndActions {
     1: string pictureUrl;
     2: string label;
@@ -3416,6 +3852,7 @@ struct BeaconLayerInfoAndActions {
     6: list<list<_any>> showConditions;
     7: i64 timeToHide;
 }
+
 struct BeaconQueryResponse {
     2: list<string> deprecated_actionUrls;
     3: i64 cacheTtl;
@@ -3439,20 +3876,25 @@ struct BeaconQueryResponse {
     22: string botMid;
     23: bool pop;
 }
+
 struct BeaconTouchActions {
     1: list<string> actions;
 }
+
 struct BirthdayGiftAssociationVerifyRequest {
     1: string associationToken;
 }
+
 struct BirthdayGiftAssociationVerifyResponse {
     1: Ob1_EnumC12638l tokenStatus;
     2: string recipientUserMid;
 }
+
 struct BleNotificationReceivedTrigger {
     1: string serviceUuid;
     2: string characteristicUuid;
 }
+
 struct BleProduct {
     1: string serviceUuid;
     2: string psdiServiceUuid;
@@ -3461,6 +3903,7 @@ struct BleProduct {
     5: string profileImageLocation;
     6: bool bondingRequired;
 }
+
 struct Bot {
     1: string mid;
     2: string basicSearchId;
@@ -3469,40 +3912,50 @@ struct Bot {
     5: string pictureUrl;
     6: og_EnumC32663d brandType;
 }
+
 struct BotBlockDetail {
     3: bool deletedFromBlockList;
 }
+
 struct BotFriendDetail {
     1: i64 createdTime;
     4: i64 favoriteTime;
     6: bool hidden;
 }
+
 struct BotOaCallDetail {
     1: string oaCallUrl;
 }
+
 struct BotTalkroomAds {
     1: bool talkroomAdsEnabled;
     2: list<BotTalkroomAdsInventoryKey> botTalkroomAdsInventoryKeys;
     3: bool displayTalkroomAdsToMembershipUser;
 }
+
 struct BotTalkroomAdsInventoryKey {
     1: Pb1_EnumC13093n0 talkroomAdsPosition;
     2: string talkroomAdsIosInventoryKey;
     3: string talkroomAdsAndroidInventoryKey;
 }
+
 struct BrowsingHistory {
     1: ProductSearchSummary productSearchSummary;
     2: i64 browsingTime;
 }
+
 struct BuddyCautionNotice {
     1: Pb1_EnumC13162s0 type;
 }
+
 struct BuddyCautionNoticeFromCMS {
     1: Pb1_EnumC13148r0 visibility;
 }
+
 struct BuddyChatBar {
     1: list<Pb1_C13190u0> barItems;
 }
+
 struct BuddyDetail {
     1: string mid;
     2: i64 memberCount;
@@ -3543,10 +3996,12 @@ struct BuddyDetail {
     37: BuddyCautionNoticeFromCMS buddyCautionNoticeFromCMS;
     38: string region;
 }
+
 struct BuddyDetailWithPersonal {
     1: BuddyDetail buddyDetail;
     2: BuddyPersonalDetail personalDetail;
 }
+
 struct BuddyLive {
     1: string mid;
     2: bool onLive;
@@ -3554,6 +4009,7 @@ struct BuddyLive {
     4: i64 viewerCount;
     5: string liveUrl;
 }
+
 struct BuddyOnAir {
     1: string mid;
     3: i64 freshnessLifetime;
@@ -3575,20 +4031,24 @@ struct BuddyOnAir {
     52: string lowerBannerUrl;
     53: string lowerBannerLabel;
 }
+
 struct BuddyOnAirUrls {
     1: map<string, string> hls;
     2: map<string, string> smoothStreaming;
 }
+
 struct BuddyPersonalDetail {
     1: string richMenuId;
     2: i64 statusBarRevision;
     3: BuddyCautionNotice buddyCautionNotice;
 }
+
 struct BuddyRichMenuChatBarItem {
     1: string label;
     2: string body;
     3: bool selected;
 }
+
 struct BuddySearchResult {
     1: string mid;
     2: string displayName;
@@ -3599,6 +4059,7 @@ struct BuddySearchResult {
     7: i32 iconType;
     8: BotType botType;
 }
+
 struct BuddyStatusBar {
     1: string label;
     2: Pb1_EnumC12926b1 displayType;
@@ -3606,55 +4067,68 @@ struct BuddyStatusBar {
     4: string iconUrl;
     5: string linkUrl;
 }
+
 struct BuddyWebChatBarItem {
     1: string label;
     2: string url;
 }
+
 struct BuddyWidget {
     1: string icon;
     2: string label;
     3: string url;
 }
+
 struct BuddyWidgetListCharBarItem {
     1: string label;
     2: list<BuddyWidget> widgets;
     3: bool selected;
 }
+
 struct BulkFollowRequest {
     1: set<string> followTargetMids;
     2: set<string> unfollowTargetMids;
     3: bool hasNext;
 }
+
 struct BulkGetRequest {
     1: set<GetRequest> requests;
 }
+
 struct BulkGetResponse {
     1: map<string, t80_g> values;
 }
+
 struct BulkSetRequest {
     1: set<SetRequest> requests;
 }
+
 struct BulkSetResponse {
     1: map<string, t80_l> values;
 }
+
 struct Button {
     1: ButtonContent content;
     2: ButtonStyle style;
 }
+
 struct ButtonStyle {
     1: string textColorHexCode;
     2: ButtonBGColor bgColor;
 }
+
 struct BuyMustbuyRequest {
     1: Ob1_O0 productType;
     2: string productId;
     3: string serialNumber;
 }
+
 struct CallHost {
     1: string host;
     2: i32 port;
     3: string zone;
 }
+
 struct CallRoute {
     1: string fromToken;
     2: Pb1_EnumC13010h1 callFlowType;
@@ -3677,6 +4151,7 @@ struct CallRoute {
     19: bool drCall;
     20: string stnpk;
 }
+
 struct Callback {
     1: string impEventUrl;
     2: string clickEventUrl;
@@ -3686,12 +4161,14 @@ struct Callback {
     6: string bounceEventUrl;
     7: string undeliveredEventUrl;
 }
+
 struct CampaignContent {
     1: string iconUrl;
     2: string iconAltText;
     3: IconDisplayRule iconDisplayRule;
     4: AnimationEffectContent animationEffectContent;
 }
+
 struct CampaignProperty {
     1: string id;
     2: string name;
@@ -3699,73 +4176,91 @@ struct CampaignProperty {
     4: HeaderContent headerContent;
     5: CampaignContent campaignContent;
 }
+
 struct CanCreateCombinationStickerRequest {
     1: set<string> packageIds;
 }
+
 struct CanCreateCombinationStickerResponse {
     1: bool canCreate;
     2: set<string> usablePackageIds;
 }
+
 struct CancelChatInvitationRequest {
     1: i32 reqSeq;
     2: string chatMid;
     3: set<string> targetUserMids;
 }
+
 struct CancelPaakAuthRequest {
     1: string sessionId;
 }
+
 struct CancelPaakAuthenticationRequest {
     1: string authSessionId;
 }
+
 struct CancelPinCodeRequest {
     1: string authSessionId;
 }
+
 struct CancelReactionRequest {
     1: i32 reqSeq;
     2: i64 messageId;
 }
+
 struct CancelToSpeakRequest {
     1: string squareChatMid;
     2: string sessionId;
 }
+
 struct Candidate {
     1: zR0_EnumC40579d type;
     2: string productId;
     3: string itemId;
 }
+
 struct Category {
     1: i32 id;
     2: string name;
 }
+
 struct CategoryName {
     1: i32 categoryId;
     2: map<string, string> names;
 }
+
 struct ChangeSubscriptionRequest {
     1: string billingItemId;
     2: Ob1_S1 subscriptionService;
     3: Ob1_K1 storeCode;
 }
+
 struct ChangeSubscriptionResponse {
     1: Ob1_M1 result;
     2: string orderId;
     3: string confirmUrl;
 }
+
 struct ChannelContext {
     1: string channelName;
 }
+
 struct ChannelDomain {
     1: string host;
     2: bool removed;
 }
+
 struct ChannelDomains {
     1: list<ChannelDomain> channelDomains;
     2: i64 revision;
 }
+
 struct ChannelIdWithLastUpdated {
     1: string channelId;
     2: i64 lastUpdated;
 }
+
 struct ChannelInfo {
     1: string channelId;
     3: string name;
@@ -3783,6 +4278,7 @@ struct ChannelInfo {
     16: i64 updatedTimestamp;
     17: set<Pb1_EnumC12941c2> featureLicenses;
 }
+
 struct ChannelNotificationSetting {
     1: string channelId;
     2: string name;
@@ -3790,13 +4286,16 @@ struct ChannelNotificationSetting {
     4: bool messageReceivable;
     5: bool showDefault;
 }
+
 struct ChannelProvider {
     1: string name;
     2: bool certified;
 }
+
 struct ChannelSettings {
     1: bool unapprovedMessageReceivable;
 }
+
 struct ChannelToken {
     1: string token;
     2: string obsToken;
@@ -3804,6 +4303,7 @@ struct ChannelToken {
     4: string refreshToken;
     5: string channelAccessToken;
 }
+
 struct Chat {
     1: Pb1_Z2 type;
     2: string chatMid;
@@ -3814,6 +4314,7 @@ struct Chat {
     7: string picturePath;
     8: Pb1_C13208v4 extra;
 }
+
 struct ChatEffectMeta {
     1: i64 contentId;
     2: Pb1_Q2 category;
@@ -3827,10 +4328,12 @@ struct ChatEffectMeta {
     10: i64 updatedTimeMillis;
     11: string contentMetadataTag;
 }
+
 struct ChatEffectMetaContent {
     1: string url;
     2: string checksum;
 }
+
 struct ChatRoomAnnouncement {
     1: i64 announcementSeq;
     2: Pb1_X2 type;
@@ -3839,11 +4342,13 @@ struct ChatRoomAnnouncement {
     5: i64 createdTime;
     6: Pb1_W2 deletePermission;
 }
+
 struct ChatRoomAnnouncementContentMetadata {
     1: string replace;
     2: string sticonOwnership;
     3: string postNotificationMetadata;
 }
+
 struct ChatRoomAnnouncementContents {
     1: i32 displayFields;
     2: string text;
@@ -3851,11 +4356,13 @@ struct ChatRoomAnnouncementContents {
     4: string thumbnail;
     5: ChatRoomAnnouncementContentMetadata contentMetadata;
 }
+
 struct ChatRoomBGM {
     1: string creatorMid;
     2: i64 createdTime;
     3: string chatRoomBGMInfo;
 }
+
 struct Chatapp {
     1: string chatappId;
     2: string name;
@@ -3863,6 +4370,7 @@ struct Chatapp {
     4: string url;
     5: list<i32> availableChatTypes;
 }
+
 struct ChatroomPopup {
     1: string imageObsHash;
     2: string title;
@@ -3876,16 +4384,20 @@ struct ChatroomPopup {
     10: TargetUserType targetUserType;
     11: TargetUsers targetUsers;
 }
+
 struct I80_C26396d {
     1: string authSessionId;
 }
+
 struct CheckEmailAssignedResponse {
     1: bool sameAccountFromPhone;
 }
+
 struct CheckIfEncryptedE2EEKeyReceivedRequest {
     1: string sessionId;
     2: h80_t secureChannelData;
 }
+
 struct CheckIfEncryptedE2EEKeyReceivedResponse {
     1: string nonce;
     2: h80_Z70_a encryptedSecureChannelPayload;
@@ -3893,63 +4405,78 @@ struct CheckIfEncryptedE2EEKeyReceivedResponse {
     4: bool appTypeDifferentFromPrevDevice;
     5: bool e2eeKeyBackupServiceConfig;
 }
+
 struct I80_C26400f {
     1: string authSessionId;
 }
+
 struct I80_C26402g {
     1: bool verified;
 }
+
 struct CheckIfPhonePinCodeMsgVerifiedRequest {
     1: string authSessionId;
     2: UserPhoneNumber userPhoneNumber;
 }
+
 struct CheckIfPhonePinCodeMsgVerifiedResponse {
     1: bool accountExist;
     2: bool sameUdidFromAccount;
     3: bool allowedToRegister;
     11: UserProfile userProfile;
 }
+
 struct CheckJoinCodeRequest {
     2: string squareMid;
     3: string joinCode;
 }
+
 struct CheckJoinCodeResponse {
     1: string joinToken;
 }
+
 struct CheckOperationResult {
     1: bool tradable;
     2: string reason;
     3: string detailMessage;
 }
+
 struct CheckUserAgeAfterApprovalWithDocomoV2Request {
     1: string accessToken;
     2: string agprm;
 }
+
 struct CheckUserAgeAfterApprovalWithDocomoV2Response {
     1: Pb1_gd userAgeType;
 }
+
 struct CheckUserAgeWithDocomoV2Request {
     1: string authCode;
 }
+
 struct CheckUserAgeWithDocomoV2Response {
     1: Pb1_EnumC12970e3 responseType;
     2: Pb1_gd userAgeType;
     3: string approvalRedirectUrl;
     4: string accessToken;
 }
+
 struct ClientNetworkStatus {
     1: Pb1_EnumC12998g3 networkType;
     2: list<WifiSignal> wifiSignals;
 }
+
 struct CodeValue {
     1: string code;
 }
+
 struct Coin {
     1: i32 freeCoinBalance;
     2: i32 payedCoinBalance;
     3: i32 totalCoinBalance;
     4: i32 rewardCoinBalance;
 }
+
 struct CoinHistory {
     1: i64 payDate;
     2: i32 coinBalance;
@@ -3964,12 +4491,14 @@ struct CoinHistory {
     11: CoinPayLoad payload;
     12: string channelId;
 }
+
 struct CoinPayLoad {
     1: i32 payCoin;
     2: i32 freeCoin;
     3: PayloadType type;
     4: i32 rewardCoin;
 }
+
 struct CoinProductItem {
     1: string itemId;
     2: i32 coin;
@@ -3980,6 +4509,7 @@ struct CoinProductItem {
     8: string name;
     9: string desc;
 }
+
 struct CoinPurchaseReservation {
     1: string productId;
     2: string country;
@@ -3990,6 +4520,7 @@ struct CoinPurchaseReservation {
     7: jO0_EnumC27559z pgCode;
     8: string redirectUrl;
 }
+
 struct Collection {
     1: string collectionId;
     2: list<CollectionItem> items;
@@ -3997,23 +4528,27 @@ struct Collection {
     4: i64 createdTimeMillis;
     5: i64 updatedTimeMillis;
 }
+
 struct CollectionItem {
     1: string itemId;
     2: string productId;
     3: Ob1_E displayData;
     4: i32 sortId;
 }
+
 struct CombinationStickerMetadata {
     1: i64 version;
     2: double canvasWidth;
     3: double canvasHeight;
     4: list<StickerLayout> stickerLayouts;
 }
+
 struct CombinationStickerStickerData {
     1: string packageId;
     2: string stickerId;
     3: i64 version;
 }
+
 struct CompactShortcut {
     1: i32 iconPosition;
     2: string iconUrl;
@@ -4022,22 +4557,27 @@ struct CompactShortcut {
     5: string linkUrl;
     6: string tsTargetId;
 }
+
 struct Configurations {
     1: i64 revision;
     2: map<string, string> configMap;
 }
+
 struct ConfigurationsParams {
     1: string regionOfUsim;
     2: string regionOfTelephone;
     3: string regionOfLocale;
     4: string carrier;
 }
+
 struct ConnectDeviceOperation {
     1: i64 connectionTimeoutMillis;
 }
+
 struct ConnectEapAccountRequest {
     1: string authSessionId;
 }
+
 struct Contact {
     1: string mid;
     2: i64 createdTime;
@@ -4070,6 +4610,7 @@ struct Contact {
     48: Pb1_N6 pictureSource;
     49: string profileId;
 }
+
 struct ContactCalendarEvent {
     1: string id;
     2: Pb1_EnumC13082m3 state;
@@ -4077,9 +4618,11 @@ struct ContactCalendarEvent {
     4: i32 month;
     5: i32 day;
 }
+
 struct ContactCalendarEvents {
     1: map<i32, list<_any>> events;
 }
+
 struct ContactModification {
     1: Pb1_EnumC13029i6 type;
     2: string luid;
@@ -4089,12 +4632,14 @@ struct ContactModification {
     14: string mobileContactName;
     15: string phoneticName;
 }
+
 struct ContactRegistration {
     1: Contact contact;
     10: string luid;
     11: ContactType contactType;
     12: string contactKey;
 }
+
 struct Content {
     1: string title;
     2: string desc;
@@ -4110,15 +4655,18 @@ struct Content {
     12: bool voteSupported;
     13: Priority priority;
 }
+
 struct ContentRequest {
     1: Uf_EnumC14873o os;
     2: string appv;
     3: string lineAcceptableLanguage;
     4: string countryCode;
 }
+
 struct CountryCode {
     1: string code;
 }
+
 struct CreateChatRequest {
     1: i32 reqSeq;
     2: Pb1_Z2 type;
@@ -4126,71 +4674,90 @@ struct CreateChatRequest {
     4: set<string> targetUserMids;
     5: string picturePath;
 }
+
 struct CreateChatResponse {
     1: Chat chat;
 }
+
 struct CreateCollectionForUserRequest {
     1: Ob1_O0 productType;
 }
+
 struct CreateCollectionForUserResponse {
     1: Collection collection;
 }
+
 struct CreateCombinationStickerRequest {
     1: CombinationStickerMetadata metadata;
     2: list<CombinationStickerStickerData> stickers;
     3: string idOfPreviousVersionOfCombinationSticker;
 }
+
 struct CreateCombinationStickerResponse {
     1: string id;
 }
+
 struct CreateGroupCallUrlRequest {
     1: string title;
 }
+
 struct CreateGroupCallUrlResponse {
     1: GroupCallUrl url;
 }
+
 struct CreateMultiProfileRequest {
     1: string displayName;
 }
+
 struct CreateMultiProfileResponse {
     1: string profileId;
 }
+
 struct I80_C26406i {
     1: string authSessionId;
 }
+
 struct CreateSessionResponse {
     1: string sessionId;
 }
+
 struct CreateSessionResponse {
     1: string sessionId;
 }
+
 struct CreateSessionResponse {
     1: string sessionId;
 }
+
 struct CreateSquareChatAnnouncementRequest {
     1: i32 reqSeq;
     2: string squareChatMid;
     3: SquareChatAnnouncement squareChatAnnouncement;
 }
+
 struct CreateSquareChatAnnouncementResponse {
     1: SquareChatAnnouncement announcement;
 }
+
 struct CreateSquareChatRequest {
     1: i32 reqSeq;
     2: SquareChat squareChat;
     3: list<string> squareMemberMids;
 }
+
 struct CreateSquareChatResponse {
     1: SquareChat squareChat;
     2: SquareChatStatus squareChatStatus;
     3: SquareChatMember squareChatMember;
     4: SquareChatFeatureSet squareChatFeatureSet;
 }
+
 struct CreateSquareRequest {
     1: i32 reqSeq;
     2: Square square;
     3: SquareMember creator;
 }
+
 struct CreateSquareResponse {
     1: Square square;
     2: SquareMember creator;
@@ -4203,19 +4770,23 @@ struct CreateSquareResponse {
     9: SquareChatMember squareChatMember;
     10: SquareChatFeatureSet squareChatFeatureSet;
 }
+
 struct CurrencyProperty {
     1: string code;
     2: string symbol;
     3: NZ0_EnumC12197q position;
     4: i32 scale;
 }
+
 struct CustomBadgeLabel {
     1: string text;
     2: string backgroundColorCode;
 }
+
 struct CustomColor {
     1: string hexColorCode;
 }
+
 struct DataRetention {
     1: string productId;
     2: string productRegion;
@@ -4223,24 +4794,30 @@ struct DataRetention {
     4: bool inDataRetention;
     5: i64 dataRetentionEndTime;
 }
+
 struct DataUserBot {
     1: string mid;
     4: string placeName;
 }
+
 struct DeleteGroupCallUrlRequest {
     1: string urlId;
 }
+
 struct DeleteMultiProfileRequest {
     1: string profileId;
 }
+
 struct DeleteOtherFromChatRequest {
     1: i32 reqSeq;
     2: string chatMid;
     3: set<string> targetUserMids;
 }
+
 struct DeleteSafetyStatusRequest {
     1: string disasterId;
 }
+
 struct DeleteSelfFromChatRequest {
     1: i32 reqSeq;
     2: string chatMid;
@@ -4249,53 +4826,66 @@ struct DeleteSelfFromChatRequest {
     5: i64 lastMessageDeliveredTime;
     6: string lastMessageId;
 }
+
 struct DeleteSquareChatAnnouncementRequest {
     2: string squareChatMid;
     3: i64 announcementSeq;
 }
+
 struct DeleteSquareChatRequest {
     2: string squareChatMid;
     3: i64 revision;
 }
+
 struct DeleteSquareRequest {
     2: string mid;
     3: i64 revision;
 }
+
 struct DestinationLIFFRequest {
     1: string originalUrl;
 }
+
 struct DestinationLIFFResponse {
     1: string destinationUrl;
 }
+
 struct DestroyMessageRequest {
     2: string squareChatMid;
     4: string messageId;
     5: string threadMid;
 }
+
 struct DestroyMessagesRequest {
     2: string squareChatMid;
     4: set<string> messageIds;
     5: string threadMid;
 }
+
 struct DetermineMediaMessageFlowRequest {
     1: string chatMid;
 }
+
 struct DetermineMediaMessageFlowResponse {
     1: map<i32, i32> flowMap;
     2: i64 cacheTtlMillis;
 }
+
 struct Device {
     1: string deviceModel;
     2: string deviceId;
 }
+
 struct Device {
     1: string udid;
     2: string deviceModel;
 }
+
 struct Device {
     1: string udid;
     2: string deviceModel;
 }
+
 struct DeviceInfo {
     1: string deviceName;
     2: string systemName;
@@ -4306,15 +4896,19 @@ struct DeviceInfo {
     11: string carrierName;
     20: ApplicationType applicationType;
 }
+
 struct DeviceLinkRequest {
     1: string deviceId;
 }
+
 struct DeviceLinkResponse {
     1: i64 latestOffset;
 }
+
 struct DeviceUnlinkRequest {
     1: string deviceId;
 }
+
 struct DisasterInfo {
     1: string disasterId;
     2: string title;
@@ -4324,43 +4918,53 @@ struct DisasterInfo {
     7: vh_EnumC37632c status;
     8: bool highImpact;
 }
+
 struct DisconnectEapAccountRequest {
     1: Q70_q eapType;
 }
+
 struct DisplayMoney {
     1: string amount;
     2: string amountString;
     3: string currency;
 }
+
 struct E2EEKeyChain {
     1: list<Pb1_V3> keychain;
 }
+
 struct E2EEMessageInfo {
     1: ContentType contentType;
     2: map<string, string> contentMetadata;
     3: list<string> chunks;
 }
+
 struct E2EEMetadata {
     1: i64 e2EEPublicKeyId;
 }
+
 struct E2EENegotiationResult {
     1: set<i32> allowedTypes;
     2: Pb1_C13097n4 publicKey;
     3: i32 specVersion;
 }
+
 struct EapLogin {
     1: Q70_q type;
     2: string accessToken;
 }
+
 struct EapLogin {
     1: a80_EnumC16644b type;
     2: string accessToken;
     3: string countryCode;
 }
+
 struct EditItemsInCollectionRequest {
     1: string collectionId;
     2: list<CollectionItem> items;
 }
+
 struct EditorsPickBannerForClient {
     1: i64 id;
     2: string endPageBannerImageUrl;
@@ -4369,38 +4973,48 @@ struct EditorsPickBannerForClient {
     5: string name;
     6: string description;
 }
+
 struct Eg_C8928b {
     
 }
+
 struct Eh_C8933a {
     
 }
+
 struct Eh_C8935c {
     
 }
+
 struct EstablishE2EESessionRequest {
     1: string clientPublicKey;
 }
+
 struct EstablishE2EESessionResponse {
     1: string sessionId;
     2: string serverPublicKey;
     3: i64 expireAt;
 }
+
 struct EventButton {
     1: string text;
     2: string linkUrl;
 }
+
 struct EvidenceId {
     1: string spaceId;
     2: string objectId;
 }
+
 struct ExecuteOnetimeScenarioOperation {
     1: string connectionId;
     2: Scenario scenario;
 }
+
 struct ExistPinCodeResponse {
     1: bool exists;
 }
+
 struct ExtendedMessageBox {
     1: string id;
     2: MIDType midType;
@@ -4412,9 +5026,11 @@ struct ExtendedMessageBox {
     9: i64 lastRemovedTime;
     10: i64 hiddenAtMessageId;
 }
+
 struct ExtendedProfile {
     1: ExtendedProfileBirthday birthday;
 }
+
 struct ExtendedProfileBirthday {
     1: string year;
     2: Pb1_H6 yearPrivacyLevelType;
@@ -4423,45 +5039,54 @@ struct ExtendedProfileBirthday {
     6: Pb1_H6 dayPrivacyLevelType;
     7: bool dayEnabled;
 }
+
 struct FetchLiveTalkEventsRequest {
     1: string squareChatMid;
     2: string sessionId;
     3: string syncToken;
     4: i32 limit;
 }
+
 struct FetchLiveTalkEventsResponse {
     1: list<LiveTalkEvent> events;
     2: string syncToken;
     3: bool hasMore;
 }
+
 struct FetchMyEventsRequest {
     1: i64 subscriptionId;
     2: string syncToken;
     3: i32 limit;
     4: string continuationToken;
 }
+
 struct FetchMyEventsResponse {
     1: SubscriptionState subscription;
     2: list<SquareEvent> events;
     3: string syncToken;
     4: string continuationToken;
 }
+
 struct FetchOperationsRequest {
     1: string deviceId;
     2: i64 offsetFrom;
 }
+
 struct FetchOperationsResponse {
     1: list<ThingsOperation> operations;
     2: bool hasNext;
 }
+
 struct FetchPhonePinCodeMsgRequest {
     1: string authSessionId;
     2: UserPhoneNumber userPhoneNumber;
 }
+
 struct FetchPhonePinCodeMsgResponse {
     1: string pinCodeMessage;
     2: string destinationPhoneNumber;
 }
+
 struct FetchSquareChatEventsRequest {
     1: i64 subscriptionId;
     2: string squareChatMid;
@@ -4473,25 +5098,31 @@ struct FetchSquareChatEventsRequest {
     8: FetchType fetchType;
     9: string threadMid;
 }
+
 struct FetchSquareChatEventsResponse {
     1: SubscriptionState subscription;
     2: list<SquareEvent> events;
     3: string syncToken;
     4: string continuationToken;
 }
+
 struct FileMeta {
     1: string url;
     2: string hash;
 }
+
 struct FindChatByTicketRequest {
     1: string ticketId;
 }
+
 struct FindChatByTicketResponse {
     1: Chat chat;
 }
+
 struct FindLiveTalkByInvitationTicketRequest {
     1: string invitationTicket;
 }
+
 struct FindLiveTalkByInvitationTicketResponse {
     1: string chatInvitationTicket;
     2: LiveTalk liveTalk;
@@ -4500,9 +5131,11 @@ struct FindLiveTalkByInvitationTicketResponse {
     5: SquareChatMembershipState chatMembershipState;
     6: BooleanState squareAdultOnly;
 }
+
 struct FindSquareByEmidRequest {
     1: string emid;
 }
+
 struct FindSquareByEmidResponse {
     1: Square square;
     2: SquareMember myMembership;
@@ -4511,9 +5144,11 @@ struct FindSquareByEmidResponse {
     5: SquareFeatureSet squareFeatureSet;
     6: NoteStatus noteStatus;
 }
+
 struct FindSquareByInvitationTicketRequest {
     2: string invitationTicket;
 }
+
 struct FindSquareByInvitationTicketResponse {
     1: Square square;
     2: SquareMember myMembership;
@@ -4524,9 +5159,11 @@ struct FindSquareByInvitationTicketResponse {
     7: SquareChat chat;
     8: SquareChatStatus chatStatus;
 }
+
 struct FindSquareByInvitationTicketV2Request {
     1: string invitationTicket;
 }
+
 struct FindSquareByInvitationTicketV2Response {
     1: Square square;
     2: SquareMember myMembership;
@@ -4537,9 +5174,11 @@ struct FindSquareByInvitationTicketV2Response {
     7: SquareChat chat;
     8: SquareChatStatusWithoutMessage chatStatus;
 }
+
 struct FollowBuddyDetail {
     1: i32 iconType;
 }
+
 struct FollowProfile {
     1: Pb1_A4 followMid;
     2: string displayName;
@@ -4548,9 +5187,11 @@ struct FollowProfile {
     5: bool allowFollow;
     6: FollowBuddyDetail followBuddyDetail;
 }
+
 struct FollowRequest {
     1: Pb1_A4 followMid;
 }
+
 struct FontMeta {
     1: string id;
     2: string name;
@@ -4560,19 +5201,23 @@ struct FontMeta {
     6: FileMeta fontSubset;
     7: i64 expiresAtMillis;
 }
+
 struct ForceEndLiveTalkRequest {
     1: string squareChatMid;
     2: string sessionId;
 }
+
 struct ForceSelectedSubTabInfo {
     1: string subTabId;
     2: i64 forceSelectedSubTabRevision;
     3: string wrsDefaultTabModelId;
 }
+
 struct FormattedPhoneNumbers {
     1: string localFormatPhoneNumber;
     2: string prettifiedFormatPhoneNumber;
 }
+
 struct FriendRequest {
     1: string eMid;
     2: string mid;
@@ -4585,6 +5230,7 @@ struct FriendRequest {
     11: string picturePath;
     12: string pictureStatus;
 }
+
 struct FriendRequestsInfo {
     1: i32 totalIncomingCount;
     2: i32 totalOutgoingCount;
@@ -4593,14 +5239,17 @@ struct FriendRequestsInfo {
     5: i32 totalIncomingLimit;
     6: i32 totalOutgoingLimit;
 }
+
 struct FullSyncResponse {
     1: set<i32> reasons;
     2: i64 nextRevision;
 }
+
 struct GattReadAction {
     1: string serviceUuid;
     2: string characteristicUuid;
 }
+
 struct Geolocation {
     1: double longitude;
     2: double latitude;
@@ -4610,6 +5259,7 @@ struct Geolocation {
     6: double bearingDegrees;
     7: list<BeaconData> beaconData;
 }
+
 struct GeolocationAccuracy {
     1: double radiusMeters;
     2: double radiusConfidence;
@@ -4618,85 +5268,106 @@ struct GeolocationAccuracy {
     5: double bearingAccuracy;
     6: Pb1_EnumC13050k accuracyMode;
 }
+
 struct GetAccessTokenRequest {
     1: string fontId;
 }
+
 struct GetAccessTokenResponse {
     1: map<string, list<_any>> queryParams;
     2: map<string, list<_any>> headers;
     3: i64 expiresAtMillis;
 }
+
 struct I80_C26410k {
     1: string authSessionId;
 }
+
 struct GetAcctVerifMethodResponse {
     1: T70_EnumC14392c availableMethod;
     2: bool sameAccountFromAuthFactor;
 }
+
 struct I80_C26412l {
     1: I80_EnumC26392b availableMethod;
 }
+
 struct GetAllChatMidsRequest {
     1: bool withMemberChats;
     2: bool withInvitedChats;
 }
+
 struct GetAllChatMidsResponse {
     1: set<string> memberChatMids;
     2: set<string> invitedChatMids;
 }
+
 struct GetAllowedRegistrationMethodResponse {
     1: T70_Z0 registrationMethod;
 }
+
 struct GetAssertionChallengeResponse {
     1: string sessionId;
     2: string challenge;
 }
+
 struct GetAttestationChallengeResponse {
     1: string sessionId;
     2: string challenge;
 }
+
 struct GetBalanceResponse {
     1: Balance balance;
 }
+
 struct GetBalanceSummaryResponseV2 {
     1: LinePayInfo payInfo;
     2: list<LinePayPromotion> payPromotions;
     4: LinePointInfo pointInfo;
     5: BalanceShortcutInfo balanceShortcutInfo;
 }
+
 struct GetBalanceSummaryV4WithPayV3Response {
     1: LinePayInfoV3 payInfo;
     2: list<LinePayPromotion> payPromotions;
     3: BalanceShortcutInfoV4 balanceShortcutInfo;
     4: LinePointInfo pointInfo;
 }
+
 struct GetBirthdayEffectResponse {
     1: HomeEffect effect;
 }
+
 struct GetBleDeviceRequest {
     1: string serviceUuid;
     2: string psdi;
 }
+
 struct GetBuddyChatBarRequest {
     1: string buddyMid;
     2: i64 chatBarRevision;
     3: string richMenuId;
 }
+
 struct GetBuddyLiveRequest {
     1: string mid;
 }
+
 struct GetBuddyLiveResponse {
     1: BuddyLive info;
     2: i64 refreshedIn;
 }
+
 struct GetBuddyStatusBarV2Request {
     1: string botMid;
     2: i64 revision;
 }
+
 struct GetCallStatusRequest {
     1: string basicSearchId;
     2: string otp;
 }
+
 struct GetCallStatusResponse {
     1: bool isInsideBusinessHours;
     2: string displayName;
@@ -4704,53 +5375,68 @@ struct GetCallStatusResponse {
     4: bool isExpiredOtp;
     5: bool requireOtpInCallUrl;
 }
+
 struct GetCampaignRequest {
     1: string campaignType;
 }
+
 struct GetCampaignResponse {
     1: NZ0_EnumC12188n campaignStatus;
     2: CampaignProperty campaignProperty;
     3: i64 intervalDateTimeMillis;
 }
+
 struct GetChallengeForPaakAuthRequest {
     1: string authSessionId;
 }
+
 struct GetChallengeForPaakAuthRequest {
     1: string sessionId;
 }
+
 struct GetChallengeForPaakAuthResponse {
     1: PublicKeyCredentialRequestOptions options;
 }
+
 struct GetChallengeForPaakAuthResponse {
     1: o80_p80_j options;
 }
+
 struct GetChallengeForPrimaryRegRequest {
     1: string sessionId;
 }
+
 struct GetChallengeForPrimaryRegResponse {
     1: PublicKeyCredentialCreationOptions options;
 }
+
 struct GetChannelContextRequest {
     1: string authSessionId;
 }
+
 struct GetChannelContextResponse {
     1: n80_W70_a channelContext;
 }
+
 struct GetChatappRequest {
     1: string chatappId;
     2: string language;
 }
+
 struct GetChatappResponse {
     1: Chatapp app;
 }
+
 struct GetChatsRequest {
     1: list<string> chatMids;
     2: bool withMembers;
     3: bool withInvitees;
 }
+
 struct GetChatsResponse {
     1: list<Chat> chats;
 }
+
 struct GetCoinHistoryRequest {
     1: jO0_EnumC27533B appStoreCode;
     2: string country;
@@ -4759,38 +5445,46 @@ struct GetCoinHistoryRequest {
     5: i32 offset;
     6: i32 limit;
 }
+
 struct GetCoinHistoryResponse {
     1: list<CoinHistory> histories;
     2: Coin balance;
     3: i32 offset;
     4: bool hasNext;
 }
+
 struct GetCoinProductsRequest {
     1: jO0_EnumC27533B appStoreCode;
     2: string country;
     3: string language;
     4: jO0_EnumC27559z pgCode;
 }
+
 struct GetCoinProductsResponse {
     1: list<CoinProductItem> items;
 }
+
 struct GetContactCalendarEventResponse {
     1: string targetUserMid;
     2: LN0_X0 userType;
     3: ContactCalendarEvents ContactCalendarEvents;
     4: i64 snapshotTimeMillis;
 }
+
 struct GetContactCalendarEventTarget {
     1: string targetUserMid;
 }
+
 struct GetContactCalendarEventsRequest {
     1: list<GetContactCalendarEventTarget> targetUsers;
     2: Pb1_V7 syncReason;
     3: set<Pb1_EnumC13096n3> requiredContactCalendarEvents;
 }
+
 struct GetContactCalendarEventsResponse {
     1: list<GetContactCalendarEventResponse> responses;
 }
+
 struct GetContactV3Response {
     1: string targetUserMid;
     2: LN0_X0 userType;
@@ -4800,39 +5494,48 @@ struct GetContactV3Response {
     6: LN0_y0 recommendationDetail;
     7: NotificationSettingEntry notificationSettingEntry;
 }
+
 struct GetContactV3Target {
     1: string targetUserMid;
 }
+
 struct GetContactsV3Request {
     1: list<GetContactV3Target> targetUsers;
     2: Pb1_V7 syncReason;
     3: bool checkUserStatusStrictly;
 }
+
 struct GetContactsV3Response {
     1: list<GetContactV3Response> responses;
 }
+
 struct I80_C26413m {
     1: string authSessionId;
     2: I80_B0 simCard;
 }
+
 struct I80_C26414n {
     1: string countryCode;
     2: bool countryInEEA;
     3: set<string> countrySetOfEEA;
 }
+
 struct GetCountryInfoResponse {
     1: string countryCode;
     2: bool countryInEEA;
     3: set<string> countrySetOfEEA;
 }
+
 struct GetDisasterCasesResponse {
     1: list<DisasterInfo> disasters;
     2: list<string> messageTemplate;
     3: i64 ttlInMillis;
 }
+
 struct GetE2EEKeyBackupCertificatesResponse {
     1: list<string> urlHashList;
 }
+
 struct GetE2EEKeyBackupInfoResponse {
     1: string blobHeaderHash;
     2: string blobPayloadHash;
@@ -4840,97 +5543,121 @@ struct GetE2EEKeyBackupInfoResponse {
     4: i64 startTimeMillis;
     5: i64 endTimeMillis;
 }
+
 struct GetExchangeKeyRequest {
     1: string sessionId;
 }
+
 struct GetExchangeKeyResponse {
     2: map<string, string> exchangeKey;
 }
+
 struct GetFollowBlacklistRequest {
     1: string cursor;
 }
+
 struct GetFollowBlacklistResponse {
     1: list<FollowProfile> profiles;
     2: string cursor;
 }
+
 struct GetFollowersRequest {
     1: Pb1_A4 followMid;
     2: string cursor;
 }
+
 struct GetFollowersResponse {
     1: list<FollowProfile> profiles;
     2: string cursor;
     3: i64 followingCount;
     4: i64 followerCount;
 }
+
 struct GetFollowingsRequest {
     1: Pb1_A4 followMid;
     2: string cursor;
 }
+
 struct GetFollowingsResponse {
     1: list<FollowProfile> profiles;
     2: string cursor;
     3: i64 followingCount;
     4: i64 followerCount;
 }
+
 struct GetFontMetasRequest {
     1: VR0_l requestCause;
 }
+
 struct GetFontMetasResponse {
     1: list<FontMeta> fontMetas;
     2: i32 ttlInSeconds;
 }
+
 struct GetFriendDetailResponse {
     1: string targetUserMid;
     2: LN0_Z friendDetail;
 }
+
 struct GetFriendDetailTarget {
     1: string targetUserMid;
 }
+
 struct GetFriendDetailsRequest {
     1: list<GetFriendDetailTarget> targetUsers;
     2: Pb1_V7 syncReason;
 }
+
 struct GetFriendDetailsResponse {
     1: list<GetFriendDetailResponse> responses;
 }
+
 struct GetGnbBadgeStatusRequest {
     1: string uenRevision;
 }
+
 struct GetGnbBadgeStatusResponse {
     1: string uenRevision;
     2: NZ0_EnumC12170h badgeStatus;
 }
+
 struct GetGoogleAdOptionsRequest {
     1: string squareMid;
     2: string chatMid;
     3: AdScreen adScreen;
 }
+
 struct GetGoogleAdOptionsResponse {
     1: bool showAd;
     2: list<string> contentUrls;
     3: map<string, list<_any>> customTargeting;
     4: i32 clientCacheTtlSeconds;
 }
+
 struct GetGroupCallUrlInfoRequest {
     1: string urlId;
 }
+
 struct GetGroupCallUrlInfoResponse {
     1: string title;
     2: i64 createdTimeMillis;
 }
+
 struct GetGroupCallUrlsResponse {
     1: list<GroupCallUrl> urls;
 }
+
 struct GetHomeFlexContentRequest {
     1: i32 supportedFlexVersion;
 }
+
 struct GetHomeFlexContentResponse {
     1: list<HomeTabPlacement> placements;
     2: i64 expireTimeMillis;
     3: string gnbBadgeId;
     4: i64 gnbBadgeExpireTimeMillis;
 }
+
 struct GetHomeServiceListResponse {
     1: list<HomeService> services;
     2: list<i32> fixedServiceIds;
@@ -4939,54 +5666,67 @@ struct GetHomeServiceListResponse {
     5: list<i32> fixedServiceIdsV3;
     6: i32 specificServiceId;
 }
+
 struct GetHomeServicesRequest {
     1: list<i32> ids;
 }
+
 struct GetHomeServicesResponse {
     1: list<HomeService> services;
 }
+
 struct GetIncentiveStatusResponse {
     1: i32 paypayPoint;
     2: string incentiveCode;
     3: bool subscribedFromViral;
 }
+
 struct GetInvitationTicketUrlRequest {
     2: string mid;
 }
+
 struct GetInvitationTicketUrlResponse {
     1: string invitationURL;
 }
+
 struct GetJoinableSquareChatsRequest {
     1: string squareMid;
     10: string continuationToken;
     11: i32 limit;
 }
+
 struct GetJoinableSquareChatsResponse {
     1: list<SquareChat> squareChats;
     2: string continuationToken;
     3: i32 totalSquareChatCount;
     4: map<string, SquareChatStatus> squareChatStatuses;
 }
+
 struct GetJoinedMembershipByBotMidRequest {
     1: string botMid;
 }
+
 struct GetJoinedMembershipRequest {
     1: string uniqueKey;
 }
+
 struct GetJoinedSquareChatsRequest {
     2: string continuationToken;
     3: i32 limit;
 }
+
 struct GetJoinedSquareChatsResponse {
     1: list<SquareChat> chats;
     2: map<string, SquareChatMember> chatMembers;
     3: map<string, SquareChatStatus> statuses;
     4: string continuationToken;
 }
+
 struct GetJoinedSquaresRequest {
     2: string continuationToken;
     3: i32 limit;
 }
+
 struct GetJoinedSquaresResponse {
     1: list<Square> squares;
     2: map<string, SquareMember> members;
@@ -4995,19 +5735,23 @@ struct GetJoinedSquaresResponse {
     5: string continuationToken;
     6: map<string, NoteStatus> noteStatuses;
 }
+
 struct GetKeyBackupCertificatesV2Response {
     1: list<string> urlHashList;
 }
+
 struct GetLFLSuggestionResponse {
     1: string majorVersion;
     2: string minorVersion;
     3: string clusterLink;
 }
+
 struct GetLiveTalkInfoForNonMemberRequest {
     1: string squareChatMid;
     2: string sessionId;
     3: list<string> speakers;
 }
+
 struct GetLiveTalkInfoForNonMemberResponse {
     1: string chatName;
     2: string chatImageObsHash;
@@ -5015,51 +5759,65 @@ struct GetLiveTalkInfoForNonMemberResponse {
     4: list<LiveTalkSpeaker> speakers;
     5: string chatInvitationTicket;
 }
+
 struct GetLiveTalkInvitationUrlRequest {
     1: string squareChatMid;
     2: string sessionId;
 }
+
 struct GetLiveTalkInvitationUrlResponse {
     1: string invitationUrl;
 }
+
 struct GetLiveTalkSpeakersForNonMemberRequest {
     1: string squareChatMid;
     2: string sessionId;
     3: list<string> speakers;
 }
+
 struct GetLiveTalkSpeakersForNonMemberResponse {
     1: list<LiveTalkSpeaker> speakers;
 }
+
 struct GetLoginActorContextRequest {
     1: string authSessionId;
 }
+
 struct GetLoginActorContextRequest {
     1: string sessionId;
 }
+
 struct GetLoginActorContextResponse {
     1: string appType;
     2: string accessLocation;
 }
+
 struct GetLoginActorContextResponse {
     1: string applicationType;
     2: string ipAddress;
     3: string location;
 }
+
 struct GetMappedProfileIdsRequest {
     1: list<string> targetUserMids;
 }
+
 struct GetMappedProfileIdsResponse {
     1: map<string, string> mappings;
 }
+
 struct I80_C26415o {
     1: string authSessionId;
 }
+
 struct I80_C26416p {
     1: string maskedEmail;
 }
+
 struct GetMaskedEmailResponse {
     1: string maskedEmail;
 }
+
 struct GetMessageReactionsRequest {
     1: string squareChatMid;
     2: string messageId;
@@ -5068,24 +5826,29 @@ struct GetMessageReactionsRequest {
     5: i32 limit;
     6: string threadMid;
 }
+
 struct GetMessageReactionsResponse {
     1: list<SquareMessageReaction> reactions;
     2: SquareMessageReactionStatus status;
     3: string continuationToken;
 }
+
 struct GetModuleLayoutV4Request {
     2: string etag;
 }
+
 struct GetModulesRequestV2 {
     1: string etag;
     2: string deviceAdId;
 }
+
 struct GetModulesRequestV3 {
     1: string etag;
     2: NZ0_EnumC12169g1 tabIdentifier;
     3: string deviceAdId;
     4: bool agreedWithTargetingAdByMid;
 }
+
 struct GetModulesV4WithStatusRequest {
     1: string etag;
     2: string subTabId;
@@ -5093,14 +5856,17 @@ struct GetModulesV4WithStatusRequest {
     4: bool agreedWithTargetingAdByMid;
     5: string deviceId;
 }
+
 struct GetMusicSubscriptionStatusResponse {
     1: i64 validUntil;
     2: bool expired;
     3: bool isStickersPremiumEnabled;
 }
+
 struct GetMyAssetInformationV2Request {
     1: bool refresh;
 }
+
 struct GetMyAssetInformationV2Response {
     1: HeaderInfo headerInfo;
     2: list<AssetServiceInfo> assetServiceInfos;
@@ -5111,126 +5877,157 @@ struct GetMyAssetInformationV2Response {
     7: ScoreInfo scoreInfo;
     8: i64 timestamp;
 }
+
 struct GetMyChatappsRequest {
     1: string language;
     2: string continuationToken;
 }
+
 struct GetMyChatappsResponse {
     1: list<MyChatapp> apps;
     2: string continuationToken;
 }
+
 struct GetMyDashboardRequest {
     1: NZ0_EnumC12169g1 tabIdentifier;
 }
+
 struct GetMyDashboardResponse {
     1: NZ0_W0 responseStatus;
     2: list<MyDashboardItem> messages;
     3: i32 cacheTimeSec;
     4: string cautionText;
 }
+
 struct GetNoteStatusRequest {
     2: string squareMid;
 }
+
 struct GetNoteStatusResponse {
     1: string squareMid;
     2: NoteStatus status;
 }
+
 struct GetNotificationSettingsRequest {
     1: set<string> chatMids;
     2: Pb1_V7 syncReason;
 }
+
 struct GetNotificationSettingsResponse {
     1: map<string, NotificationSettingEntry> notificationSettingEntries;
 }
+
 struct I80_C26417q {
     1: string authSessionId;
 }
+
 struct GetPasswordHashingParametersForPwdRegRequest {
     1: string authSessionId;
 }
+
 struct GetPasswordHashingParametersForPwdRegResponse {
     1: PasswordHashingParameters params;
     2: list<PasswordValidationRule> passwordValidationRule;
 }
+
 struct I80_C26418r {
     1: PasswordHashingParameters params;
     2: list<PasswordValidationRule> passwordValidationRule;
 }
+
 struct GetPasswordHashingParametersForPwdVerifRequest {
     1: string authSessionId;
     2: AccountIdentifier accountIdentifier;
 }
+
 struct I80_C26419s {
     1: string authSessionId;
 }
+
 struct GetPasswordHashingParametersForPwdVerifResponse {
     1: bool isV1HashRequired;
     2: V1PasswordHashingParameters v1HashParams;
     3: PasswordHashingParameters hashParams;
 }
+
 struct I80_C26420t {
     1: bool isV1HashRequired;
     2: V1PasswordHashingParameters v1HashParams;
     3: PasswordHashingParameters hashParams;
 }
+
 struct GetPasswordHashingParametersRequest {
     1: string sessionId;
 }
+
 struct GetPasswordHashingParametersResponse {
     1: string hmacKey;
     2: ScryptParams scryptParams;
     3: list<PasswordValidationRule> passwordValidationRule;
 }
+
 struct GetPhoneVerifMethodForRegistrationRequest {
     1: string authSessionId;
     2: Device device;
     3: UserPhoneNumber userPhoneNumber;
 }
+
 struct GetPhoneVerifMethodForRegistrationResponse {
     1: list<i32> availableMethods;
     2: string prettifiedPhoneNumber;
 }
+
 struct GetPhoneVerifMethodV2Request {
     1: string authSessionId;
     2: Device device;
     3: UserPhoneNumber userPhoneNumber;
 }
+
 struct I80_C26421u {
     1: string authSessionId;
     2: UserPhoneNumber userPhoneNumber;
 }
+
 struct I80_C26422v {
     1: list<i32> availableMethods;
     3: string prettifiedPhoneNumber;
 }
+
 struct GetPhoneVerifMethodV2Response {
     1: list<i32> availableMethods;
     3: string prettifiedPhoneNumber;
 }
+
 struct GetPhotoboothBalanceResponse {
     1: i32 availableTickets;
     2: i64 nextTicketAvailableAt;
 }
+
 struct GetPopularKeywordsResponse {
     1: list<PopularKeyword> popularKeywords;
     2: i64 expiredAt;
 }
+
 struct GetPredefinedScenarioSetsRequest {
     1: list<string> deviceIds;
 }
+
 struct GetPredefinedScenarioSetsResponse {
     1: map<string, ScenarioSet> scenarioSets;
 }
+
 struct GetPremiumContextForMigResponse {
     1: bool isPremiumActive;
     2: bool isPremiumBackupActive;
     3: T70_L premiumType;
     4: list<i32> availablePremiumTypes;
 }
+
 struct GetPremiumDataRetentionResponse {
     1: list<DataRetention> dataRetentions;
     2: i64 noSyncUntil;
 }
+
 struct GetPremiumStatusResponse {
     1: bool active;
     2: i64 validUntil;
@@ -5251,6 +6048,7 @@ struct GetPremiumStatusResponse {
     18: list<i32> canceledProviders;
     19: i64 nextPaymentTime;
 }
+
 struct GetPreviousMessagesV2Request {
     1: string messageBoxId;
     2: MessageBoxV2MessageId endMessageId;
@@ -5258,62 +6056,78 @@ struct GetPreviousMessagesV2Request {
     4: bool withReadCount;
     5: bool receivedOnly;
 }
+
 struct GetProductLatestVersionForUserRequest {
     1: Ob1_O0 productType;
     2: string productId;
 }
+
 struct GetProductLatestVersionForUserResponse {
     1: i64 latestVersion;
     2: string latestVersionString;
 }
+
 struct GetProductRequest {
     1: Ob1_O0 productType;
     2: string productId;
     3: string carrierCode;
     4: bool saveBrowsingHistory;
 }
+
 struct GetProductResponse {
     1: ProductDetail productDetail;
 }
+
 struct GetProfileRequest {
     1: string profileId;
 }
+
 struct GetProfileResponse {
     1: Profile profile;
 }
+
 struct GetProfilesRequest {
     1: Pb1_V7 syncReason;
 }
+
 struct GetProfilesResponse {
     1: list<Profile> profiles;
 }
+
 struct GetPublishedMembershipsRequest {
     1: string basicSearchId;
 }
+
 struct GetQuickMenuResponse {
     1: QuickMenuPointInfo pointInfo;
     2: QuickMenuCouponInfo couponInfo;
     3: QuickMenuMyCardInfo myCardInfo;
 }
+
 struct GetRecommendationDetailResponse {
     1: string targetUserMid;
     2: LN0_y0 recommendationOrNot;
 }
+
 struct GetRecommendationDetailTarget {
     1: string targetUserMid;
 }
+
 struct GetRecommendationDetailsRequest {
     1: list<GetRecommendationDetailTarget> targetUsers;
     2: Pb1_V7 syncReason;
 }
+
 struct GetRecommendationDetailsResponse {
     1: list<GetRecommendationDetailResponse> responses;
 }
+
 struct GetRecommendationResponse {
     1: list<ProductSearchSummary> results;
     2: string continuationToken;
     3: i64 totalSize;
 }
+
 struct GetRepairElementsRequest {
     1: bool profile;
     2: bool settings;
@@ -5328,6 +6142,7 @@ struct GetRepairElementsRequest {
     11: Pb1_V7 syncReason;
     12: map<string, i32> localProfileMappings;
 }
+
 struct GetRepairElementsResponse {
     1: RepairTriggerProfileElement profile;
     2: RepairTriggerSettingsElement settings;
@@ -5341,41 +6156,53 @@ struct GetRepairElementsResponse {
     10: RepairTriggerGroupMembersElement groupMembers;
     11: RepairTriggerProfileMappingListElement profileMappings;
 }
+
 struct GetRequest {
     1: string keyName;
     2: t80_h ns;
 }
+
 struct GetResourceFileReponse {
     1: GetTagClusterFileResponse tagClusterFileResponse;
 }
+
 struct GetResourceFileRequest {
     1: Ob1_C12642m0 tagClusterFileRequest;
     2: bool staging;
 }
+
 struct GetResponse {
     1: SettingValue value;
 }
+
 struct GetResponseStatusRequest {
     1: string botMid;
 }
+
 struct GetResponseStatusResponse {
     1: jf_EnumC27712a displayedResponseStatus;
 }
+
 struct GetSCCRequest {
     1: string basicSearchId;
 }
+
 struct I80_C26423w {
     1: string authSessionId;
 }
+
 struct I80_C26424x {
     1: I80_y0 encryptionKey;
 }
+
 struct GetSeasonalEffectsResponse {
     1: list<HomeEffect> effects;
 }
+
 struct GetSecondAuthMethodResponse {
     1: T70_e1 secondAuthMethod;
 }
+
 struct GetServiceShortcutMenuResponse {
     1: string revision;
     2: i32 refreshTimeSec;
@@ -5384,156 +6211,198 @@ struct GetServiceShortcutMenuResponse {
     5: string menuDescription;
     6: i32 numberOfItemsInRow;
 }
+
 struct GetSessionContentBeforeMigCompletionResponse {
     1: bool appTypeDifferentFromPrevDevice;
     2: bool e2eeKeyBackupServiceConfig;
     4: i32 e2eeKeyBackupPeriodServiceConfig;
 }
+
 struct GetSmartChannelRecommendationsRequest {
     1: i32 maxResults;
     2: string placement;
     3: bool testMode;
 }
+
 struct GetSmartChannelRecommendationsResponse {
     1: list<SmartChannelRecommendation> smartChannelRecommendations;
     2: i32 minInterval;
     3: string requestId;
 }
+
 struct GetSquareAuthoritiesRequest {
     2: set<string> squareMids;
 }
+
 struct GetSquareAuthoritiesResponse {
     1: map<string, SquareAuthority> authorities;
 }
+
 struct GetSquareAuthorityRequest {
     1: string squareMid;
 }
+
 struct GetSquareAuthorityResponse {
     1: SquareAuthority authority;
 }
+
 struct GetSquareBotRequest {
     1: string botMid;
 }
+
 struct GetSquareBotResponse {
     1: SquareBot squareBot;
 }
+
 struct GetSquareCategoriesResponse {
     1: list<Category> categoryList;
 }
+
 struct GetSquareChatAnnouncementsRequest {
     2: string squareChatMid;
 }
+
 struct GetSquareChatAnnouncementsResponse {
     1: list<SquareChatAnnouncement> announcements;
 }
+
 struct GetSquareChatEmidRequest {
     1: string squareChatMid;
 }
+
 struct GetSquareChatEmidResponse {
     1: string squareChatEmid;
 }
+
 struct GetSquareChatFeatureSetRequest {
     2: string squareChatMid;
 }
+
 struct GetSquareChatFeatureSetResponse {
     1: SquareChatFeatureSet squareChatFeatureSet;
 }
+
 struct GetSquareChatMemberRequest {
     2: string squareMemberMid;
     3: string squareChatMid;
 }
+
 struct GetSquareChatMemberResponse {
     1: SquareChatMember squareChatMember;
 }
+
 struct GetSquareChatMembersRequest {
     1: string squareChatMid;
     2: string continuationToken;
     3: i32 limit;
 }
+
 struct GetSquareChatMembersResponse {
     1: list<SquareMember> squareChatMembers;
     2: string continuationToken;
     3: map<string, i32> contentsAttributes;
 }
+
 struct GetSquareChatRequest {
     1: string squareChatMid;
 }
+
 struct GetSquareChatResponse {
     1: SquareChat squareChat;
     2: SquareChatMember squareChatMember;
     3: SquareChatStatus squareChatStatus;
 }
+
 struct GetSquareChatStatusRequest {
     2: string squareChatMid;
 }
+
 struct GetSquareChatStatusResponse {
     1: SquareChatStatus chatStatus;
 }
+
 struct GetSquareEmidRequest {
     1: string squareMid;
 }
+
 struct GetSquareEmidResponse {
     1: string squareEmid;
 }
+
 struct GetSquareFeatureSetRequest {
     2: string squareMid;
 }
+
 struct GetSquareFeatureSetResponse {
     1: SquareFeatureSet squareFeatureSet;
 }
+
 struct GetSquareInfoByChatMidRequest {
     1: string squareChatMid;
 }
+
 struct GetSquareInfoByChatMidResponse {
     1: string defaultChatMid;
     2: string squareName;
     3: string squareDesc;
 }
+
 struct GetSquareMemberRelationRequest {
     2: string squareMid;
     3: string targetSquareMemberMid;
 }
+
 struct GetSquareMemberRelationResponse {
     1: string squareMid;
     2: string targetSquareMemberMid;
     3: SquareMemberRelation relation;
 }
+
 struct GetSquareMemberRelationsRequest {
     2: SquareMemberRelationState state;
     3: string continuationToken;
     4: i32 limit;
 }
+
 struct GetSquareMemberRelationsResponse {
     1: list<SquareMember> squareMembers;
     2: map<string, SquareMemberRelation> relations;
     3: string continuationToken;
 }
+
 struct GetSquareMemberRequest {
     2: string squareMemberMid;
 }
+
 struct GetSquareMemberResponse {
     1: SquareMember squareMember;
     2: SquareMemberRelation relation;
     3: string oneOnOneChatMid;
     4: ContentsAttribute contentsAttribute;
 }
+
 struct GetSquareMembersBySquareRequest {
     2: string squareMid;
     3: set<string> squareMemberMids;
 }
+
 struct GetSquareMembersBySquareResponse {
     1: list<SquareMember> members;
     2: map<string, i32> contentsAttributes;
 }
+
 struct GetSquareMembersRequest {
     2: set<string> mids;
 }
+
 struct GetSquareMembersResponse {
     1: map<string, SquareMember> members;
 }
+
 struct GetSquareRequest {
     2: string mid;
 }
+
 struct GetSquareResponse {
     1: Square square;
     2: SquareMember myMembership;
@@ -5543,71 +6412,89 @@ struct GetSquareResponse {
     6: NoteStatus noteStatus;
     7: SquareExtraInfo extraInfo;
 }
+
 struct GetSquareStatusRequest {
     2: string squareMid;
 }
+
 struct GetSquareStatusResponse {
     1: SquareStatus squareStatus;
 }
+
 struct GetSquareThreadMidRequest {
     1: string chatMid;
     2: string messageId;
 }
+
 struct GetSquareThreadMidResponse {
     1: string threadMid;
 }
+
 struct GetSquareThreadRequest {
     1: string threadMid;
     2: bool includeRootMessage;
 }
+
 struct GetSquareThreadResponse {
     1: SquareThread squareThread;
     2: SquareThreadMember myThreadMember;
     3: SquareMessage rootMessage;
 }
+
 struct GetStudentInformationResponse {
     1: StudentInformation studentInformation;
     2: bool isValid;
 }
+
 struct GetSubscriptionPlansRequest {
     1: Ob1_S1 subscriptionService;
     2: Ob1_K1 storeCode;
 }
+
 struct GetSubscriptionPlansResponse {
     1: list<SubscriptionPlan> plans;
 }
+
 struct GetSubscriptionStatusRequest {
     1: bool includeOtherOwnedSubscriptions;
 }
+
 struct GetSubscriptionStatusResponse {
     1: map<i32, SubscriptionStatus> subscriptions;
     2: bool hasValidStudentInformation;
     3: map<i32, list<_any>> otherOwnedSubscriptions;
 }
+
 struct GetSuggestDictionarySettingResponse {
     1: list<SuggestDictionarySetting> results;
 }
+
 struct GetSuggestResourcesV2Request {
     1: Ob1_O0 productType;
     2: list<string> productIds;
 }
+
 struct GetSuggestResourcesV2Response {
     1: map<string, SuggestResource> suggestResources;
 }
+
 struct GetSuggestTrialRecommendationResponse {
     1: list<SuggestTrialRecommendation> recommendations;
     2: i64 expiresAt;
     3: string recommendationGrouping;
 }
+
 struct GetTagClusterFileResponse {
     1: string path;
     2: i64 updatedTimeMillis;
 }
+
 struct GetTaiwanBankBalanceRequest {
     1: string accessToken;
     2: string authorizationCode;
     3: string codeVerifier;
 }
+
 struct GetTaiwanBankBalanceResponse {
     1: string maintenaceText;
     2: list<LineBankPromotion> lineBankPromotions;
@@ -5615,37 +6502,46 @@ struct GetTaiwanBankBalanceResponse {
     4: LineBankShortcutInfo lineBankShortcutInfo;
     5: TaiwanBankLoginParameters loginParameters;
 }
+
 struct GetTargetProfileResponse {
     1: string targetUserMid;
     2: LN0_X0 userType;
     3: TargetProfileDetail targetProfileDetail;
 }
+
 struct GetTargetProfileTarget {
     1: string targetUserMid;
 }
+
 struct GetTargetProfilesRequest {
     1: list<GetTargetProfileTarget> targetUsers;
     2: Pb1_V7 syncReason;
 }
+
 struct GetTargetProfilesResponse {
     1: list<GetTargetProfileResponse> responses;
 }
+
 struct GetTargetingPopupResponse {
     1: list<PopupProperty> targetingPopups;
     2: i32 intervalTimeSec;
 }
+
 struct GetThaiBankBalanceRequest {
     1: string deviceId;
 }
+
 struct GetThaiBankBalanceResponse {
     1: string maintenaceText;
     2: ThaiBankBalanceInfo thaiBankBalanceInfo;
     3: list<LineBankPromotion> lineBankPromotions;
     4: LineBankShortcutInfo lineBankShortcutInfo;
 }
+
 struct GetTotalCoinBalanceRequest {
     1: jO0_EnumC27533B appStoreCode;
 }
+
 struct GetTotalCoinBalanceResponse {
     1: string totalBalance;
     2: string paidCoinBalance;
@@ -5653,40 +6549,50 @@ struct GetTotalCoinBalanceResponse {
     4: string rewardCoinBalance;
     5: string expectedAutoExchangedCoinBalance;
 }
+
 struct GetUserCollectionsRequest {
     1: i64 lastUpdatedTimeMillis;
     2: bool includeSummary;
     3: Ob1_O0 productType;
 }
+
 struct GetUserCollectionsResponse {
     1: list<Collection> collections;
     2: bool updated;
 }
+
 struct GetUserProfileResponse {
     1: UserProfile userProfile;
 }
+
 struct GetUserSettingsRequest {
     1: set<SquareUserSettingsAttribute> requestedAttrs;
 }
+
 struct GetUserSettingsResponse {
     1: set<i32> requestedAttrs;
     2: SquareUserSettings userSettings;
 }
+
 struct GetUserVectorRequest {
     1: string majorVersion;
 }
+
 struct GetUserVectorResponse {
     1: list<double> userVector;
     2: string majorVersion;
     3: string minorVersion;
 }
+
 struct GetUsersMappedByProfileRequest {
     1: string profileId;
     2: Pb1_V7 syncReason;
 }
+
 struct GetUsersMappedByProfileResponse {
     1: list<string> mappedMids;
 }
+
 struct GlobalEvent {
     1: Pb1_EnumC13209v5 type;
     2: i32 minDelayInMinutes;
@@ -5694,6 +6600,7 @@ struct GlobalEvent {
     4: i64 createTimeMillis;
     5: bool maxDelayHardLimit;
 }
+
 struct GroupCall {
     1: bool online;
     2: string chatMid;
@@ -5704,6 +6611,7 @@ struct GroupCall {
     7: Pb1_EnumC13251y5 protocol;
     8: i32 maxAllowableMembers;
 }
+
 struct GroupCallRoute {
     1: string token;
     2: CallHost cscf;
@@ -5723,11 +6631,13 @@ struct GroupCallRoute {
     16: string voipAddress6;
     17: string stnpk;
 }
+
 struct GroupCallUrl {
     1: string urlId;
     2: string title;
     3: i64 createdTimeMillis;
 }
+
 struct GroupExtra {
     1: string creator;
     2: bool preventedJoinByTicket;
@@ -5738,6 +6648,7 @@ struct GroupExtra {
     7: bool ticketDisabled;
     8: bool autoName;
 }
+
 struct HeaderContent {
     1: string iconUrl;
     2: string iconAltText;
@@ -5746,18 +6657,22 @@ struct HeaderContent {
     5: string animationImageUrl;
     6: string tooltipText;
 }
+
 struct HeaderInfo {
     1: string totalBalance;
     2: CurrencyProperty currencyProperty;
 }
+
 struct HideSquareMemberContentsRequest {
     1: string squareMemberMid;
 }
+
 struct HomeCategory {
     1: i32 id;
     2: string title;
     3: list<i32> ids;
 }
+
 struct HomeEffect {
     1: string id;
     2: string resourceUrl;
@@ -5765,6 +6680,7 @@ struct HomeEffect {
     4: i64 startDate;
     5: i64 endDate;
 }
+
 struct HomeService {
     1: i32 id;
     2: string title;
@@ -5777,6 +6693,7 @@ struct HomeService {
     9: string serviceDescription;
     10: bool iconThemeDisabled;
 }
+
 struct HomeTabPlacement {
     1: string placementTemplateId;
     2: string placementService;
@@ -5784,19 +6701,23 @@ struct HomeTabPlacement {
     4: string contents;
     5: string crsPlacementImpressionTrackingUrl;
 }
+
 struct Icon {
     1: string darkModeUrl;
     2: string lightModeUrl;
 }
+
 struct IconDisplayRule {
     1: string rule;
     2: i32 offset;
 }
+
 struct IdentifierConfirmationRequest {
     1: map<string, string> metaData;
     2: bool forceRegistration;
     3: string verificationCode;
 }
+
 struct IdentityCredentialRequest {
     1: map<string, string> metaData;
     2: IdentityProvider identityProvider;
@@ -5804,23 +6725,27 @@ struct IdentityCredentialRequest {
     4: string cipherText;
     5: IdentifierConfirmationRequest confirmationRequest;
 }
+
 struct IdentityCredentialResponse {
     1: map<string, string> metaData;
     2: Pb1_F5 responseType;
     3: string confirmationVerifier;
     4: i64 timeoutInSeconds;
 }
+
 struct Image {
     1: string url;
     2: i32 height;
     3: i32 width;
 }
+
 struct ImageTextProperty {
     1: Ob1_EnumC12656r0 status;
     2: string plainText;
     3: i32 nameTextMaxCharacterCount;
     4: string encryptedText;
 }
+
 struct InstantNews {
     1: i64 newsId;
     2: string newsService;
@@ -5832,82 +6757,102 @@ struct InstantNews {
     8: string url;
     9: string image;
 }
+
 struct InviteFriendsRequest {
     1: string campaignId;
     2: list<string> invitees;
 }
+
 struct InviteFriendsResponse {
     1: fN0_EnumC24469a result;
 }
+
 struct InviteIntoChatRequest {
     1: i32 reqSeq;
     2: string chatMid;
     3: set<string> targetUserMids;
 }
+
 struct InviteIntoSquareChatRequest {
     1: list<string> inviteeMids;
     2: string squareChatMid;
 }
+
 struct InviteIntoSquareChatResponse {
     1: list<string> inviteeMids;
 }
+
 struct InviteToChangeRoleRequest {
     1: string squareChatMid;
     2: string sessionId;
     3: string targetMid;
     4: LiveTalkRole targetRole;
 }
+
 struct InviteToListenRequest {
     1: string squareChatMid;
     2: string sessionId;
     3: string targetMid;
 }
+
 struct InviteToLiveTalkRequest {
     1: string squareChatMid;
     2: string sessionId;
     3: list<string> invitees;
 }
+
 struct InviteToSpeakRequest {
     1: string squareChatMid;
     2: string sessionId;
     3: string targetMid;
 }
+
 struct InviteToSpeakResponse {
     1: string inviteRequestId;
 }
+
 struct InviteToSquareRequest {
     2: string squareMid;
     3: list<string> invitees;
     4: string squareChatMid;
 }
+
 struct IpassTokenProperty {
     1: string token;
     2: string tokenIssuedTimestamp;
 }
+
 struct IsProductForCollectionsRequest {
     1: Ob1_O0 productType;
     2: string productId;
 }
+
 struct IsProductForCollectionsResponse {
     1: bool isAvailable;
 }
+
 struct IsStickerAvailableForCombinationStickerRequest {
     1: string packageId;
 }
+
 struct IsStickerAvailableForCombinationStickerResponse {
     1: bool availableForCombinationSticker;
 }
+
 struct IssueBirthdayGiftTokenRequest {
     1: string recipientUserMid;
 }
+
 struct IssueBirthdayGiftTokenResponse {
     1: string giftAssociationToken;
 }
+
 struct IssueV3TokenForPrimaryRequest {
     1: string udid;
     2: string systemDisplayName;
     3: string modelName;
 }
+
 struct IssueV3TokenForPrimaryResponse {
     1: string accessToken;
     2: string refreshToken;
@@ -5917,22 +6862,27 @@ struct IssueV3TokenForPrimaryResponse {
     6: i64 tokenIssueTimeEpochSec;
     7: string mid;
 }
+
 struct IssueWebAuthDetailsForSecondAuthResponse {
     1: WebAuthDetails webAuthDetails;
 }
+
 struct JoinChatByCallUrlRequest {
     1: string urlId;
     2: i32 reqSeq;
 }
+
 struct JoinChatByCallUrlResponse {
     1: Chat chat;
 }
+
 struct JoinLiveTalkRequest {
     1: string squareChatMid;
     2: string sessionId;
     3: bool wantToSpeak;
     4: BooleanState claimAdult;
 }
+
 struct JoinLiveTalkResponse {
     1: string hostMemberMid;
     2: string memberSessionId;
@@ -5950,14 +6900,17 @@ struct JoinLiveTalkResponse {
     14: i32 polarisUdpPort;
     15: bool speaker;
 }
+
 struct JoinSquareChatRequest {
     1: string squareChatMid;
 }
+
 struct JoinSquareChatResponse {
     1: SquareChat squareChat;
     2: SquareChatStatus squareChatStatus;
     3: SquareChatMember squareChatMember;
 }
+
 struct JoinSquareRequest {
     2: string squareMid;
     3: SquareMember member;
@@ -5965,6 +6918,7 @@ struct JoinSquareRequest {
     5: SquareJoinMethodValue joinValue;
     6: BooleanState claimAdult;
 }
+
 struct JoinSquareResponse {
     1: Square square;
     2: SquareAuthority squareAuthority;
@@ -5976,32 +6930,39 @@ struct JoinSquareResponse {
     8: SquareChatStatus squareChatStatus;
     9: SquareChatMember squareChatMember;
 }
+
 struct JoinSquareThreadRequest {
     1: string chatMid;
     2: string threadMid;
 }
+
 struct JoinSquareThreadResponse {
     1: SquareThreadMember threadMember;
 }
+
 struct JoinedMemberships {
     1: list<MemberInfo> subscribing;
     2: list<MemberInfo> expired;
 }
+
 struct KickOutLiveTalkParticipantsRequest {
     1: string squareChatMid;
     2: string sessionId;
     3: LiveTalkKickOutTarget target;
 }
+
 struct KickoutFromGroupCallRequest {
     1: string chatMid;
     2: list<string> targetMids;
 }
+
 struct LFLClusterV2 {
     1: string majorVersion;
     2: string minorVersion;
     3: list<Tag> tags;
     4: list<Product> products;
 }
+
 struct LIFFMenuColor {
     1: i32 iconColor;
     2: Qj_EnumC13585b statusBarColor;
@@ -6014,179 +6975,221 @@ struct LIFFMenuColor {
     9: i32 titleButtonAreaBackgroundColor;
     10: i32 titleButtonAreaBorderColor;
 }
+
 struct LIFFMenuColorSetting {
     1: LIFFMenuColor lightModeColor;
     2: LIFFMenuColor darkModeColor;
 }
+
 struct LN0_A {
     
 }
+
 struct LN0_A0 {
     
 }
+
 struct LN0_B {
     
 }
+
 struct LN0_B0 {
     
 }
+
 struct LN0_C0 {
     
 }
+
 struct LN0_C11270b {
     
 }
+
 struct LN0_C11274d {
-    1: LN0_AddMetaInvalid invalid;
-    2: LN0_AddMetaByPhone byPhone;
-    3: LN0_AddMetaBySearchId bySearchId;
-    4: LN0_AddMetaByUserTicket byUserTicket;
-    5: LN0_AddMetaGroupMemberList groupMemberList;
-    6: LN0_AddMetaTimelineCPF timelineCPF;
-    7: LN0_AddMetaSmartChannelCPF smartChannelCPF;
-    8: LN0_AddMetaOpenchatCPF openchatCPF;
-    9: LN0_AddMetaBeaconBanner beaconBanner;
-    10: LN0_AddMetaFriendRecommendation friendRecommendation;
-    11: LN0_AddMetaHomeRecommendation homeRecommendation;
-    12: LN0_AddMetaShareContact shareContact;
-    13: LN0_AddMetaStrangerMessage strangerMessage;
-    14: LN0_AddMetaStrangerCall strangerCall;
-    15: LN0_AddMetaMentionInChat mentionInChat;
-    16: LN0_AddMetaTimeline timeline;
-    17: LN0_AddMetaUnifiedSearch unifiedSearch;
-    18: LN0_AddMetaLineLab lineLab;
-    19: LN0_AddMetaLineToCall lineToCall;
-    20: LN0_AddMetaGroupVideoCall groupVideo;
-    21: LN0_AddMetaFriendRequest friendRequest;
-    22: LN0_AddMetaLineLiveViewer liveViewer;
-    23: LN0_AddMetaLineThings lineThings;
-    24: LN0_AddMetaMediaCapture mediaCapture;
-    25: LN0_AddMetaAvatarOASetting avatarOASetting;
-    26: LN0_AddMetaUrlScheme urlScheme;
-    27: LN0_AddMetaAddressBook addressBook;
-    28: LN0_AddMetaUnifiedSearchOATab unifiedSearchOATab;
-    29: LN0_AddMetaProfileUndefined profileUndefined;
-    30: LN0_AddMetaOAChatHeader DEPRECATED_oaChatHeader;
-    31: LN0_AddMetaChatMenu chatMenu;
-    32: LN0_AddMetaChatHeader chatHeader;
-    33: LN0_AddMetaHomeTabCPF homeTabCPF;
-    34: LN0_AddMetaChatList chatList;
-    35: LN0_AddMetaChatNote chatNote;
-    36: LN0_AddMetaChatNoteMenu chatNoteMenu;
-    37: LN0_AddMetaWalletTabCPF walletTabCPF;
-    38: LN0_AddMetaOACall oaCall;
-    39: LN0_AddMetaSearchIdInUnifiedSearch searchIdInUnifiedSearch;
-    40: LN0_AddMetaNewsDigestADCPF newsDigestADCPF;
-    41: LN0_AddMetaAlbumCPF albumCPF;
-    42: LN0_AddMetaPremiumAgreement premiumAgreement;
+    1: AddMetaInvalid invalid;
+    2: AddMetaByPhone byPhone;
+    3: AddMetaBySearchId bySearchId;
+    4: AddMetaByUserTicket byUserTicket;
+    5: AddMetaGroupMemberList groupMemberList;
+    6: LN0_P timelineCPF;
+    7: LN0_L smartChannelCPF;
+    8: LN0_G openchatCPF;
+    9: LN0_C11282h beaconBanner;
+    10: LN0_C11300q friendRecommendation;
+    11: LN0_C11307u homeRecommendation;
+    12: AddMetaShareContact shareContact;
+    13: AddMetaStrangerMessage strangerMessage;
+    14: AddMetaStrangerCall strangerCall;
+    15: AddMetaMentionInChat mentionInChat;
+    16: LN0_O timeline;
+    17: LN0_Q unifiedSearch;
+    18: LN0_C11313x lineLab;
+    19: LN0_A lineToCall;
+    20: AddMetaGroupVideoCall groupVideo;
+    21: LN0_r friendRequest;
+    22: LN0_C11315y liveViewer;
+    23: LN0_C11316z lineThings;
+    24: LN0_B mediaCapture;
+    25: LN0_C11280g avatarOASetting;
+    26: LN0_T urlScheme;
+    27: LN0_C11276e addressBook;
+    28: LN0_S unifiedSearchOATab;
+    29: AddMetaProfileUndefined profileUndefined;
+    30: LN0_F DEPRECATED_oaChatHeader;
+    31: LN0_C11294n chatMenu;
+    32: LN0_C11290l chatHeader;
+    33: LN0_C11309v homeTabCPF;
+    34: LN0_C11292m chatList;
+    35: AddMetaChatNote chatNote;
+    36: AddMetaChatNoteMenu chatNoteMenu;
+    37: LN0_U walletTabCPF;
+    38: LN0_E oaCall;
+    39: AddMetaSearchIdInUnifiedSearch searchIdInUnifiedSearch;
+    40: LN0_D newsDigestADCPF;
+    41: LN0_C11278f albumCPF;
+    42: LN0_H premiumAgreement;
 }
+
 struct LN0_C11276e {
     
 }
+
 struct LN0_C11278f {
     
 }
+
 struct LN0_C11280g {
     
 }
+
 struct LN0_C11282h {
     
 }
+
 struct LN0_C11290l {
     
 }
+
 struct LN0_C11292m {
     
 }
+
 struct LN0_C11294n {
     
 }
+
 struct LN0_C11300q {
     
 }
+
 struct LN0_C11307u {
     
 }
+
 struct LN0_C11308u0 {
     
 }
+
 struct LN0_C11309v {
     
 }
+
 struct LN0_C11310v0 {
     
 }
+
 struct LN0_C11312w0 {
     
 }
+
 struct LN0_C11313x {
     
 }
+
 struct LN0_C11315y {
     
 }
+
 struct LN0_C11316z {
     
 }
+
 struct LN0_D {
     
 }
+
 struct LN0_E {
     
 }
+
 struct LN0_F {
     
 }
+
 struct LN0_G {
     
 }
+
 struct LN0_H {
     
 }
+
 struct LN0_L {
     
 }
+
 struct LN0_O {
     
 }
+
 struct LN0_P {
     
 }
+
 struct LN0_Q {
     
 }
+
 struct LN0_S {
     
 }
+
 struct LN0_T {
     
 }
+
 struct LN0_U {
     
 }
+
 struct LN0_V {
-    1: LN0_UserBlockDetail user;
-    2: LN0_BotBlockDetail bot;
-    3: LN0_NotBlocked notBlocked;
+    1: UserBlockDetail user;
+    2: BotBlockDetail bot;
+    3: LN0_C11308u0 notBlocked;
 }
+
 struct LN0_Z {
-    1: LN0_UserFriendDetail user;
-    2: LN0_BotFriendDetail bot;
-    3: LN0_NotFriend notFriend;
+    1: UserFriendDetail user;
+    2: BotFriendDetail bot;
+    3: LN0_C11310v0 notFriend;
 }
+
 struct LN0_r {
     
 }
+
 struct LN0_y0 {
-    1: LN0_RecommendationDetail recommendationDetail;
-    2: LN0_NotRecommended notRecommended;
+    1: RecommendationDetail recommendationDetail;
+    2: LN0_C11312w0 notRecommended;
 }
+
 struct LN0_z0 {
-    1: LN0_RecommendationReasonSharedChat sharedChat;
-    2: LN0_RecommendationReasonReverseFriendByUserId reverseFriendByUserId;
-    3: LN0_RecommendationReasonReverseFriendByQRCode reverseFriendByQrCode;
-    4: LN0_RecommendationReasonReverseFriendByPhone reverseFriendByPhone;
+    1: RecommendationReasonSharedChat sharedChat;
+    2: LN0_C0 reverseFriendByUserId;
+    3: LN0_B0 reverseFriendByQrCode;
+    4: LN0_A0 reverseFriendByPhone;
 }
+
 struct LatestProductByAuthorItem {
     1: string productId;
     2: string displayName;
@@ -6195,65 +7198,80 @@ struct LatestProductByAuthorItem {
     5: Ob1_I0 productResourceType;
     6: Ob1_B0 popupLayer;
 }
+
 struct LatestProductsByAuthorRequest {
     1: Ob1_O0 productType;
     2: i64 authorId;
     3: i32 limit;
 }
+
 struct LatestProductsByAuthorResponse {
     1: i64 authorId;
     2: string author;
     3: list<LatestProductByAuthorItem> items;
 }
+
 struct LeaveSquareChatRequest {
     2: string squareChatMid;
     3: bool sayGoodbye;
     4: i64 squareChatMemberRevision;
 }
+
 struct LeaveSquareRequest {
     2: string squareMid;
 }
+
 struct LeaveSquareThreadRequest {
     1: string chatMid;
     2: string threadMid;
 }
+
 struct LeaveSquareThreadResponse {
     1: SquareThreadMember threadMember;
 }
+
 struct LeftSquareMember {
     1: string squareMemberMid;
     2: string displayName;
     3: string profileImageObsHash;
     4: i64 updatedAt;
 }
+
 struct LiffAdvertisingId {
     1: string advertisingId;
     2: bool tracking;
     3: Qj_EnumC13584a att;
     4: SKAdNetwork skAdNetwork;
 }
+
 struct LiffChatContext {
     1: string chatMid;
 }
+
 struct LiffDeviceSetting {
     1: bool videoAutoPlayAllowed;
     2: LiffAdvertisingId advertisingId;
 }
+
 struct LiffErrorConsentRequired {
     1: string channelId;
     2: string consentUrl;
 }
+
 struct LiffErrorPermanentLinkInvalidRequest {
     1: string liffId;
     2: string fallbackUrl;
 }
+
 struct LiffFIDOExternalService {
     1: string rpId;
     2: string rpApiBaseUrl;
 }
+
 struct LiffSquareChatContext {
     1: string squareChatMid;
 }
+
 struct LiffView {
     1: string type;
     2: string url;
@@ -6287,6 +7305,7 @@ struct LiffView {
     31: bool useGmaSdkAllowed;
     32: bool useMinimizeButtonAllowed;
 }
+
 struct LiffViewRequest {
     1: string liffId;
     2: Qj_C13595l context;
@@ -6296,6 +7315,7 @@ struct LiffViewRequest {
     6: bool subsequentLiff;
     7: string domain;
 }
+
 struct LiffViewResponse {
     1: LiffView view;
     2: string contextToken;
@@ -6320,20 +7340,24 @@ struct LiffViewResponse {
     21: Qj_C13602t fido;
     22: bool omitLiffReferrer;
 }
+
 struct LiffViewWithoutUserContextRequest {
     1: string liffId;
 }
+
 struct LiffWebLoginRequest {
     1: string hookedFullUrl;
     2: string sessionString;
     3: Qj_C13595l context;
     4: LiffDeviceSetting deviceSetting;
 }
+
 struct LiffWebLoginResponse {
     1: string returnUrl;
     2: string sessionString;
     3: string liffId;
 }
+
 struct LineBankBalanceShortcut {
     1: i32 iconPosition;
     2: string iconUrl;
@@ -6344,15 +7368,18 @@ struct LineBankBalanceShortcut {
     7: string tsTargetId;
     8: ShortcutUserGuidePopupInfo userGuidePopupInfo;
 }
+
 struct LineBankPromotion {
     1: string mainText;
     2: string linkUrl;
     3: string tsTargetId;
 }
+
 struct LineBankShortcutInfo {
     1: list<LineBankBalanceShortcut> mainShortcuts;
     2: list<LineBankBalanceShortcut> subShortcuts;
 }
+
 struct LinePayInfo {
     1: string balanceAmount;
     2: CurrencyProperty currencyProperty;
@@ -6369,6 +7396,7 @@ struct LinePayInfo {
     13: string suspendedText;
     14: NZ0_W0 responseStatus;
 }
+
 struct LinePayInfoV3 {
     1: string availableBalance;
     2: string availableBalanceString;
@@ -6382,6 +7410,7 @@ struct LinePayInfoV3 {
     10: string suspendedText;
     11: NZ0_W0 responseStatus;
 }
+
 struct LinePayPromotion {
     1: string mainText;
     2: string subText;
@@ -6390,6 +7419,7 @@ struct LinePayPromotion {
     5: string linkUrl;
     6: string tsTargetId;
 }
+
 struct LinePointInfo {
     1: string balanceAmount;
     2: string applicationUrl;
@@ -6397,11 +7427,13 @@ struct LinePointInfo {
     4: string displayText;
     5: NZ0_W0 responseStatus;
 }
+
 struct LinkRewardInfo {
     1: AssetServiceInfo assetServiceInfo;
     2: bool autoConversion;
     3: string backgroundColorCode;
 }
+
 struct LiveTalk {
     1: string squareChatMid;
     2: string sessionId;
@@ -6415,49 +7447,61 @@ struct LiveTalk {
     10: i64 revision;
     11: i64 startedAt;
 }
+
 struct LiveTalkEvent {
     1: LiveTalkEventType type;
     2: LiveTalkEventPayload payload;
     3: i64 revision;
 }
+
 struct LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak {
     1: bool allowRequestToSpeak;
 }
+
 struct LiveTalkEventNotifiedUpdateLiveTalkAnnouncement {
     1: string announcement;
 }
+
 struct LiveTalkEventNotifiedUpdateLiveTalkTitle {
     1: string title;
 }
+
 struct LiveTalkEventNotifiedUpdateSquareMember {
     1: string squareMemberMid;
     2: string displayName;
     3: string profileImageObsHash;
     4: SquareMemberRole role;
 }
+
 struct LiveTalkEventNotifiedUpdateSquareMemberRole {
     1: string squareMemberMid;
     2: SquareMemberRole role;
 }
+
 struct LiveTalkExtraInfo {
     1: string saturnResponse;
 }
+
 struct LiveTalkParticipant {
     1: string mid;
 }
+
 struct LiveTalkSpeaker {
     1: string displayName;
     2: string profileImageObsHash;
     3: SquareMemberRole role;
 }
+
 struct LiveTalkSubscriptionNotification {
     1: string squareChatMid;
     2: string sessionId;
 }
+
 struct Locale {
     1: string language;
     2: string country;
 }
+
 struct Location {
     1: string title;
     2: string address;
@@ -6469,52 +7513,65 @@ struct Location {
     8: GeolocationAccuracy accuracy;
     9: double altitudeMeters;
 }
+
 struct LocationDebugInfo {
     1: PoiInfo poiInfo;
 }
+
 struct LookupAvailableEapRequest {
     1: string authSessionId;
 }
+
 struct LookupAvailableEapResponse {
     1: list<i32> availableEap;
 }
+
 struct LpPromotionProperty {
     1: string landingPageUrl;
     2: string label;
     3: string buttonLabel;
 }
+
 struct MainPopup {
     1: string imageObsHash;
     2: Button button;
 }
+
 struct ManualRepairRequest {
     1: string syncToken;
     2: i32 limit;
     3: string continuationToken;
 }
+
 struct ManualRepairResponse {
     1: list<SquareEvent> events;
     2: string syncToken;
     3: string continuationToken;
 }
+
 struct MapProfileToUsersRequest {
     1: string profileId;
     2: list<string> targetMids;
 }
+
 struct MapProfileToUsersResponse {
     1: list<string> mappedMids;
 }
+
 struct MarkAsReadRequest {
     2: string squareChatMid;
     4: string messageId;
     5: string threadMid;
 }
+
 struct MarkChatsAsReadRequest {
     2: set<string> chatMids;
 }
+
 struct MarkThreadsAsReadRequest {
     1: string chatMid;
 }
+
 struct MemberInfo {
     1: Membership membership;
     2: i32 memberNo;
@@ -6523,6 +7580,7 @@ struct MemberInfo {
     5: i64 validUntil;
     6: string billingItemName;
 }
+
 struct Membership {
     1: i64 membershipId;
     2: string uniqueKey;
@@ -6541,12 +7599,14 @@ struct Membership {
     15: string membershipCardUrl;
     16: string openchatUrl;
 }
+
 struct MentionableBot {
     1: string mid;
     2: string displayName;
     3: string profileImageObsHash;
     4: string squareMid;
 }
+
 struct MentionableSquareMember {
     1: string mid;
     2: string displayName;
@@ -6554,6 +7614,7 @@ struct MentionableSquareMember {
     4: SquareMemberRole role;
     5: string squareMid;
 }
+
 struct Message {
     1: string from;
     2: string to;
@@ -6576,10 +7637,12 @@ struct Message {
     25: Pb1_B appExtensionType;
     27: list<Reaction> reactions;
 }
+
 struct MessageBoxList {
     1: list<ExtendedMessageBox> messageBoxes;
     2: bool hasNext;
 }
+
 struct MessageBoxListRequest {
     1: string minChatId;
     2: string maxChatId;
@@ -6589,35 +7652,42 @@ struct MessageBoxListRequest {
     6: i32 lastMessagesPerMessageBoxCount;
     7: bool unreadOnly;
 }
+
 struct MessageBoxV2MessageId {
     1: i64 deliveredTime;
     2: i64 messageId;
 }
+
 struct MessageSummary {
     1: list<string> summary;
     2: list<string> keywords;
     3: MessageSummaryRange range;
     4: list<string> detailedSummary;
 }
+
 struct MessageSummaryContent {
     1: list<string> summary;
     2: list<string> keywords;
     3: MessageSummaryRange range;
 }
+
 struct MessageSummaryRange {
     1: i64 from;
     2: i64 to;
 }
+
 struct MessageVisibility {
     1: bool showJoinMessage;
     2: bool showLeaveMessage;
     3: bool showKickoutMessage;
 }
+
 struct MigratePrimaryUsingQrCodeRequest {
     1: string sessionId;
     2: string nonce;
     3: h80_Y70_a newDevice;
 }
+
 struct MigratePrimaryUsingQrCodeResponse {
     1: string mid;
     2: TokenV3IssueResult tokenV3IssueResult;
@@ -6625,6 +7695,7 @@ struct MigratePrimaryUsingQrCodeResponse {
     4: h80_X70_a accountCountryCode;
     5: FormattedPhoneNumbers formattedPhoneNumbers;
 }
+
 struct MigratePrimaryWithTokenV3Response {
     1: string authToken;
     2: TokenV3IssueResult tokenV3IssueResult;
@@ -6633,17 +7704,21 @@ struct MigratePrimaryWithTokenV3Response {
     5: string localFormatPhoneNumber;
     6: string mid;
 }
+
 struct ModuleResponse {
     1: NZ0_C12206t0 moduleInstance;
 }
+
 struct ModuleWithStatusResponse {
     1: NZ0_C12221y0 moduleInstance;
 }
+
 struct MyChatapp {
     1: Chatapp app;
     2: zf_EnumC40715c category;
     3: i64 priority;
 }
+
 struct MyDashboardItem {
     1: string id;
     2: string messageText;
@@ -6657,20 +7732,25 @@ struct MyDashboardItem {
     11: string fullMessageText;
     12: string templateCautionText;
 }
+
 struct MyDashboardMessageIcon {
     1: string walletTabIconUrl;
     2: string assetTabIconUrl;
     3: string iconAltText;
 }
+
 struct NZ0_C12150a0 {
     
 }
+
 struct NZ0_C12152b {
     
 }
+
 struct NZ0_C12155c {
     
 }
+
 struct NZ0_C12206t0 {
     1: string id;
     2: string templateName;
@@ -6685,15 +7765,18 @@ struct NZ0_C12206t0 {
     11:list<_any>categories;
     12:list<_any>headers;
 }
+
 struct NZ0_C12208u {
     
 }
+
 struct NZ0_C12209u0 {
     1: list<NZ0_C12206t0> fixedModules;
     2: string etag;
     3: i32 refreshTimeSec;
     4: list<NZ0_C12206t0> recommendedModules;
 }
+
 struct NZ0_C12212v0 {
     1: TopTab topTab;
     2: list<SubTab> subTabs;
@@ -6701,9 +7784,11 @@ struct NZ0_C12212v0 {
     4: i32 refreshTimeSec;
     6: string etag;
 }
+
 struct NZ0_C12214w {
     
 }
+
 struct NZ0_C12221y0 {
     1: NZ0_EnumC12218x0 status;
     2: string id;
@@ -6718,17 +7803,20 @@ struct NZ0_C12221y0 {
     11:list<_any>categories;
     12:list<_any>headers;
 }
+
 struct NZ0_C12224z0 {
     1: string etag;
     2: i32 refreshTimeSec;
     3: list<NZ0_C12221y0> fixedModules;
     4: list<NZ0_C12221y0> recommendedModules;
 }
+
 struct NZ0_D {
-    1: NZ0_ModuleLayoutV4Response moduleLayoutV4;
-    2: NZ0_com_linecorp_wallet_api_NotModified notModified;
-    3: NZ0_com_linecorp_wallet_api_NotFound notFound;
+    1: NZ0_C12212v0 moduleLayoutV4;
+    2: NZ0_G0 notModified;
+    3: NZ0_F0 notFound;
 }
+
 struct NZ0_E {
     1: string id;
     2: string etag;
@@ -6737,14 +7825,17 @@ struct NZ0_E {
     5: bool agreedWithTargetingAdByMid;
     6: string deviceId;
 }
+
 struct NZ0_F {
-    1: NZ0_ModuleResponse moduleResponse;
-    2: NZ0_com_linecorp_wallet_api_NotModified notModified;
-    3: NZ0_com_linecorp_wallet_api_NotFound notFound;
+    1: ModuleResponse moduleResponse;
+    2: NZ0_G0 notModified;
+    3: NZ0_F0 notFound;
 }
+
 struct NZ0_F0 {
     
 }
+
 struct NZ0_G {
     1: string id;
     2: string etag;
@@ -6753,28 +7844,35 @@ struct NZ0_G {
     5: bool agreedWithTargetingAdByMid;
     6: string deviceId;
 }
+
 struct NZ0_G0 {
     
 }
+
 struct NZ0_H {
-    1: NZ0_ModuleWithStatusResponse moduleResponse;
-    2: NZ0_com_linecorp_wallet_api_NotModified notModified;
-    3: NZ0_com_linecorp_wallet_api_NotFound notFound;
+    1: ModuleWithStatusResponse moduleResponse;
+    2: NZ0_G0 notModified;
+    3: NZ0_F0 notFound;
 }
+
 struct NZ0_K {
-    1: NZ0_ModuleAggregationResponseV2 moduleAggregationResponse;
-    2: NZ0_com_linecorp_wallet_api_NotModified notModified;
+    1: NZ0_C12209u0 moduleAggregationResponse;
+    2: NZ0_G0 notModified;
 }
+
 struct NZ0_M {
-    1: NZ0_ModuleWithStatusAggregationResponse moduleAggregationResponse;
-    2: NZ0_com_linecorp_wallet_api_NotModified notModified;
+    1: NZ0_C12224z0 moduleAggregationResponse;
+    2: NZ0_G0 notModified;
 }
+
 struct NZ0_S {
     
 }
+
 struct NZ0_U {
     
 }
+
 struct NearbyEntry {
     1: string emid;
     2: double distance;
@@ -6782,26 +7880,32 @@ struct NearbyEntry {
     4: map<string, string> property;
     5: Profile profile;
 }
+
 struct NoBidCallback {
     1: string impEventUrl;
     2: string vimpEventUrl;
     3: string imp100pEventUrl;
 }
+
 struct NoteStatus {
     1: i32 noteCount;
     2: i64 latestCreatedAt;
 }
+
 struct NotificationSetting {
     1: bool mute;
 }
+
 struct NotificationSettingEntry {
     1: NotificationSetting notificationSetting;
 }
+
 struct NotifyChatAdEntryRequest {
     1: string chatMid;
     2: string scenarioId;
     3: string sdata;
 }
+
 struct NotifyDeviceConnectionRequest {
     1: string deviceId;
     2: string connectionId;
@@ -6811,26 +7915,32 @@ struct NotifyDeviceConnectionRequest {
     6: i64 startTime;
     7: i64 endTime;
 }
+
 struct NotifyDeviceConnectionResponse {
     1: i64 latestOffset;
 }
+
 struct NotifyDeviceDisconnectionRequest {
     1: string deviceId;
     2: string connectionId;
     4: i64 disconnectedTime;
 }
+
 struct NotifyOATalkroomEventsRequest {
     1: list<OATalkroomEvent> events;
 }
+
 struct NotifyScenarioExecutedRequest {
     2: list<do0_F> scenarioResults;
 }
+
 struct OATalkroomEvent {
     1: string eventId;
     2: kf_p type;
     3: OATalkroomEventContext context;
     4: kf_m content;
 }
+
 struct OATalkroomEventContext {
     1: i64 timestampMillis;
     2: string botMid;
@@ -6840,74 +7950,93 @@ struct OATalkroomEventContext {
     6: string appVersion;
     7: string region;
 }
+
 struct OaAddFriendArea {
     1: string text;
 }
+
 struct Ob1_C12606a0 {
     
 }
+
 struct Ob1_C12608b {
     
 }
+
 struct Ob1_C12618e0 {
     1: Ob1_S1 subscriptionService;
     2: string continuationToken;
     3: i32 limit;
     4: Ob1_O0 productType;
 }
+
 struct Ob1_C12621f0 {
     1: list<SubscriptionSlotHistory> history;
     2: string continuationToken;
     3: i64 totalSize;
 }
+
 struct Ob1_C12630i0 {
     
 }
+
 struct Ob1_C12637k1 {
     
 }
+
 struct Ob1_C12642m0 {
     
 }
+
 struct Ob1_C12649o1 {
     
 }
+
 struct Ob1_C12660s1 {
     
 }
+
 struct Ob1_E {
-    1: Ob1_StickerDisplayData stickerSummary;
+    1: _any stickerSummary;
 }
+
 struct Ob1_G {
     
 }
+
 struct Ob1_H0 {
-    1: Ob1_LpPromotionProperty lpPromotionProperty;
+    1: _any lpPromotionProperty;
 }
+
 struct Ob1_I0 {
     1: i32 stickerResourceType;
     2: i32 themeResourceType;
     3: i32 sticonResourceType;
 }
+
 struct Ob1_L {
     1: set<Ob1_O0> productTypes;
     2: string continuationToken;
     3: i32 limit;
     4: ShopFilter shopFilter;
 }
+
 struct Ob1_M {
     1: list<BrowsingHistory> browsingHistory;
     2: string continuationToken;
     3: i32 totalSize;
 }
+
 struct Ob1_N {
     
 }
+
 struct Ob1_P0 {
-    1: Ob1_StickerSummary stickerSummary;
-    2: Ob1_ThemeSummary themeSummary;
-    3: Ob1_SticonSummary sticonSummary;
+    1: StickerSummary stickerSummary;
+    2: ThemeSummary themeSummary;
+    3: SticonSummary sticonSummary;
 }
+
 struct Ob1_U {
     1: Ob1_O0 productType;
     2: string continuationToken;
@@ -6915,12 +8044,14 @@ struct Ob1_U {
     4: Ob1_S1 subscriptionService;
     5: Ob1_V1 sortType;
 }
+
 struct Ob1_V {
     1: list<ProductSummary> products;
     2: string continuationToken;
     3: i64 totalSize;
     4: i32 maxSlotCount;
 }
+
 struct Ob1_W {
     1: string continuationToken;
     2: i32 limit;
@@ -6932,39 +8063,48 @@ struct Ob1_W {
     8: bool includeStickerIds;
     9: ShopFilter shopFilter;
 }
+
 struct Ob1_W0 {
-    1: Ob1_PromotionBuddyInfo promotionBuddyInfo;
-    2: Ob1_PromotionInstallInfo promotionInstallInfo;
-    3: Ob1_PromotionMissionInfo promotionMissionInfo;
+    1: PromotionBuddyInfo promotionBuddyInfo;
+    2: PromotionInstallInfo promotionInstallInfo;
+    3: PromotionMissionInfo promotionMissionInfo;
 }
+
 struct OkButton {
     1: string text;
 }
+
 struct OpenSessionRequest {
     1: Device device;
     2: Q70_q type;
 }
+
 struct OpenSessionRequest {
     1: map<string, string> metaData;
 }
+
 struct OpenSessionResponse {
     1: string authSessionId;
 }
+
 struct OperationResponse {
     1: list<Pb1_C13154r6> operations;
     2: bool hasMoreOps;
     3: TGlobalEvents globalEvents;
     4: TIndividualEvents individualEvents;
 }
+
 struct OrderInfo {
     1: string productId;
     2: string orderId;
     3: string confirmUrl;
     4: Bot bot;
 }
+
 struct P70_k {
     
 }
+
 struct PaidCallDialing {
     1: PaidCallType type;
     2: string dialedNumber;
@@ -6985,54 +8125,66 @@ struct PaidCallDialing {
     21: i32 adRemains;
     22: string adSessionId;
 }
+
 struct PaidCallResponse {
     1: CallHost host;
     2: PaidCallDialing dialing;
     3: string token;
     4: list<SpotItem> spotItems;
 }
+
 struct PartialFullSyncResponse {
     1: map<i32, i64> targetCategories;
 }
+
 struct PasswordHashingParameters {
     1: string hmacKey;
     2: ScryptParams scryptParams;
 }
+
 struct PasswordHashingParameters {
     1: string hmacKey;
     2: ScryptParams scryptParams;
 }
+
 struct PasswordValidationRule {
     1: T70_p1 type;
     2: list<string> pattern;
     3: string clientNoticeMessage;
 }
+
 struct PasswordValidationRule {
     1: U70_q type;
     2: list<string> pattern;
     3: string clientNoticeMessage;
 }
+
 struct PasswordValidationRule {
     1: c80_EnumC18292e type;
     2: list<string> pattern;
     3: string clientNoticeMessage;
 }
+
 struct PaymentAuthenticationInfo {
     1: string authToken;
     2: string confirmMessage;
 }
+
 struct PaymentEligibleFriendStatus {
     1: string mid;
     2: r80_EnumC34367g status;
 }
+
 struct PaymentLineCardInfo {
     1: string designCode;
     2: string imageUrl;
 }
+
 struct PaymentLineCardIssueForm {
     1: r80_e0 requiredTermsOfServiceBundle;
     2: list<PaymentLineCardInfo> availableLineCards;
 }
+
 struct PaymentRequiredAgreementsInfo {
     1: string title;
     2: string desc;
@@ -7040,11 +8192,13 @@ struct PaymentRequiredAgreementsInfo {
     4: string linkUrl;
     5: list<string> newAgreements;
 }
+
 struct PaymentReservationResult {
     1: string orderId;
     2: string confirmUrl;
     3: map<string, string> extras;
 }
+
 struct PaymentTradeInfo {
     1: string chargeRequestId;
     2: r80_g0 chargeRequestType;
@@ -7060,28 +8214,35 @@ struct PaymentTradeInfo {
     14: string helpUrl;
     15: string guideMessage;
 }
+
 struct Pb1_A4 {
     1: string mid;
     2: string eMid;
 }
+
 struct Pb1_A6 {
     
 }
+
 struct Pb1_B3 {
     
 }
+
 struct Pb1_C12916a5 {
     1: string wrappedNonce;
     2: string kdfParameter1;
     3: string kdfParameter2;
 }
+
 struct Pb1_C12938c {
-    1: Pb1_AbuseReport message;
-    2: Pb1_AbuseReportLineMeeting lineMeeting;
+    1: AbuseReport message;
+    2: AbuseReportLineMeeting lineMeeting;
 }
+
 struct Pb1_C12946c7 {
     
 }
+
 struct Pb1_C12953d0 {
     2: string verifier;
     3: string pinCode;
@@ -7090,46 +8251,59 @@ struct Pb1_C12953d0 {
     6: string encryptedKeyChain;
     7: string hashKeyChain;
 }
+
 struct Pb1_C12980f {
     
 }
+
 struct Pb1_C12996g1 {
     
 }
+
 struct Pb1_C13008h {
     
 }
+
 struct Pb1_C13019ha {
     
 }
+
 struct Pb1_C13042j5 {
     
 }
+
 struct Pb1_C13070l5 {
     
 }
+
 struct Pb1_C13097n4 {
     1: i32 version;
     2: i32 keyId;
     4: string keyData;
     5: i64 createdTime;
 }
+
 struct Pb1_C13113o6 {
-    1: Pb1_CallRoute callRoute;
-    2: Pb1_PaidCallResponse paidCallResponse;
+    1: CallRoute callRoute;
+    2: PaidCallResponse paidCallResponse;
 }
+
 struct Pb1_C13114o7 {
     
 }
+
 struct Pb1_C13126p5 {
     
 }
+
 struct Pb1_C13131pa {
     
 }
+
 struct Pb1_C13150r2 {
     
 }
+
 struct Pb1_C13154r6 {
     1: i64 revision;
     2: i64 createdTime;
@@ -7142,90 +8316,116 @@ struct Pb1_C13154r6 {
     12: string param3;
     20: Message message;
 }
+
 struct Pb1_C13155r7 {
     1: string restoreClaim;
 }
+
 struct Pb1_C13169s7 {
     1: string recoveryKey;
     2: string blobPayload;
 }
+
 struct Pb1_C13183t7 {
     
 }
+
 struct Pb1_C13190u0 {
-    1: Pb1_BuddyRichMenuChatBarItem rich;
-    2: Pb1_BuddyWidgetListCharBarItem widgetList;
-    3: Pb1_BuddyWebChatBarItem web;
+    1: BuddyRichMenuChatBarItem rich;
+    2: BuddyWidgetListCharBarItem widgetList;
+    3: BuddyWebChatBarItem web;
 }
+
 struct Pb1_C13202uc {
     
 }
+
 struct Pb1_C13208v4 {
-    1: Pb1_GroupExtra groupExtra;
-    2: Pb1_PeerExtra peerExtra;
+    1: GroupExtra groupExtra;
+    2: Pb1_A6 peerExtra;
 }
+
 struct Pb1_C13254y8 {
     
 }
+
 struct Pb1_C13263z3 {
     1: string blobHeader;
     2: string blobPayload;
     3: Pb1_A3 reason;
 }
+
 struct Pb1_Ca {
     
 }
+
 struct Pb1_E3 {
     1: string blobHeader;
     2: list<Pb1_X5> payloadDataList;
 }
+
 struct Pb1_Ea {
     
 }
+
 struct Pb1_F3 {
     
 }
+
 struct Pb1_H3 {
     
 }
+
 struct Pb1_I3 {
     
 }
+
 struct Pb1_Ia {
     
 }
+
 struct Pb1_J5 {
     
 }
+
 struct Pb1_K3 {
     
 }
+
 struct Pb1_M3 {
     
 }
+
 struct Pb1_O {
     
 }
+
 struct Pb1_O3 {
     
 }
+
 struct Pb1_P9 {
     
 }
+
 struct Pb1_Q8 {
     
 }
+
 struct Pb1_S5 {
     
 }
+
 struct Pb1_Sb {
     1: i32 reqSeq;
     2: string encryptedKeyChain;
     3: string hashKeyChain;
 }
+
 struct Pb1_U1 {
     
 }
+
 struct Pb1_U3 {
     1: i32 keyVersion;
     2: i32 groupKeyId;
@@ -7237,6 +8437,7 @@ struct Pb1_U3 {
     8: set<i32> allowedTypes;
     9: i32 specVersion;
 }
+
 struct Pb1_V3 {
     1: i32 version;
     2: i32 keyId;
@@ -7244,18 +8445,22 @@ struct Pb1_V3 {
     5: string privateKey;
     6: i64 createdTime;
 }
+
 struct Pb1_W4 {
     
 }
+
 struct Pb1_W5 {
-    1: Pb1_E2EEMetadata e2ee;
-    2: Pb1_SingleValueMetadata singleValue;
+    1: E2EEMetadata e2ee;
+    2: SingleValueMetadata singleValue;
 }
+
 struct Pb1_W6 {
     1: i32 reqSeq;
     2: Pb1_C13097n4 publicKey;
     3: string blobPayload;
 }
+
 struct Pb1_X {
     1: string verifier;
     2: Pb1_C13097n4 publicKey;
@@ -7263,63 +8468,79 @@ struct Pb1_X {
     4: string hashKeyChain;
     5: ErrorCode errorCode;
 }
+
 struct Pb1_X5 {
     1: Pb1_W5 metadata;
     2: string blobPayload;
 }
+
 struct Pb1_X7 {
-    1: Pb1_OperationResponse operationResponse;
-    2: Pb1_FullSyncResponse fullSyncResponse;
-    3: Pb1_PartialFullSyncResponse partialFullSyncResponse;
+    1: OperationResponse operationResponse;
+    2: FullSyncResponse fullSyncResponse;
+    3: PartialFullSyncResponse partialFullSyncResponse;
 }
+
 struct Pb1_Y4 {
     
 }
+
 struct Pb1_Za {
     
 }
+
 struct Pb1_Zc {
     
 }
+
 struct Pb1_ad {
     1: string title;
 }
+
 struct Pb1_cd {
     
 }
+
 struct PendingAgreementsResponse {
     1: list<i32> pendingAgreements;
 }
+
 struct PermitLoginRequest {
     1: string sessionId;
     2: map<string, string> metaData;
 }
+
 struct PermitLoginResponse {
     1: string oneTimeToken;
 }
+
 struct PhoneVerificationResult {
     1: VerificationResult verificationResult;
     2: Pb1_EnumC13022i accountMigrationCheckType;
     3: bool recommendAddFriends;
 }
+
 struct PocketMoneyInfo {
     1: AssetServiceInfo assetServiceInfo;
     2: NZ0_I0 displayType;
     3: NZ0_K0 productType;
     4: string refinanceText;
 }
+
 struct PoiInfo {
     1: string poiId;
     2: Pb1_F6 poiRealm;
 }
+
 struct PointInfo {
     1: AssetServiceInfo assetServiceInfo;
 }
+
 struct PopularKeyword {
     1: string value;
     2: bool highlighted;
     3: i64 id;
 }
+
 struct Popup {
     1: i64 id;
     2: string country;
@@ -7332,12 +8553,14 @@ struct Popup {
     9: i64 endsAt;
     10: i64 createdAt;
 }
+
 struct PopupContent {
     1: string imageUrl;
     2: string imageAltText;
     3: string linkUrl;
     5: string backgroundColorCode;
 }
+
 struct PopupProperty {
     1: string id;
     2: string name;
@@ -7348,19 +8571,23 @@ struct PopupProperty {
     7: bool optOut;
     8: NZ0_N0 layoutSize;
 }
+
 struct Price {
     1: string currency;
     2: string amount;
     3: string priceString;
 }
+
 struct Priority {
     1: i64 value;
 }
+
 struct Product {
     1: string id;
     2: i64 productVersion;
     3: AR0_o productDetails;
 }
+
 struct ProductDetail {
     1: string id;
     2: string billingItemId;
@@ -7406,12 +8633,14 @@ struct ProductDetail {
     107: bool madeWithStickerMaker;
     108: string customDownloadButtonLabel;
 }
+
 struct ProductList {
     1: list<ProductDetail> productList;
     2: i32 offset;
     3: i32 totalSize;
     11: string title;
 }
+
 struct ProductListByAuthorRequest {
     1: Ob1_O0 productType;
     2: string authorId;
@@ -7422,13 +8651,16 @@ struct ProductListByAuthorRequest {
     7: list<i32> additionalProductTypes;
     8: Ob1_EnumC12666u1 showcaseType;
 }
+
 struct ProductSearchSummary {
     
 }
+
 struct ProductSubscriptionProperty {
     1: bool availableForSubscribe;
     2: Ob1_D0 subscriptionAvailability;
 }
+
 struct ProductSummary {
     1: string id;
     11: string name;
@@ -7445,6 +8677,7 @@ struct ProductSummary {
     99: bool canAutoDownload;
     100: PromotionInfo promotionInfo;
 }
+
 struct ProductSummaryForAutoSuggest {
     1: string id;
     2: i64 version;
@@ -7456,26 +8689,32 @@ struct ProductSummaryForAutoSuggest {
     8: Ob1_I0 resourceType;
     9: Ob1_C1 stickerSize;
 }
+
 struct ProductSummaryList {
     1: list<ProductSummary> productList;
     2: i32 offset;
     3: i32 totalSize;
 }
+
 struct ProductValidationRequest {
     1: ProductValidationScheme validationScheme;
     10: string authCode;
 }
+
 struct ProductValidationResult {
     1: bool validated;
 }
+
 struct ProductValidationScheme {
     10: string key;
     11: i64 offset;
     12: i64 size;
 }
+
 struct ProductWishProperty {
     1: i64 totalCount;
 }
+
 struct Profile {
     1: string mid;
     3: string userid;
@@ -7500,13 +8739,16 @@ struct Profile {
     41: Pb1_O6 profileType;
     42: i64 createdTimeMillis;
 }
+
 struct ProfileContent {
     1: string value;
     2: map<string, string> meta;
 }
+
 struct ProfileRefererContent {
     1: map<string, string> oatQueryParameters;
 }
+
 struct PromotionBuddyDetail {
     1: string searchId;
     2: ContactStatus contactStatus;
@@ -7515,20 +8757,24 @@ struct PromotionBuddyDetail {
     5: string statusMessage;
     6: Ob1_EnumC12641m brandType;
 }
+
 struct PromotionBuddyInfo {
     1: string buddyMid;
     2: PromotionBuddyDetail promotionBuddyDetail;
     3: bool showBanner;
 }
+
 struct PromotionInfo {
     1: Ob1_EnumC12610b1 promotionType;
     2: Ob1_W0 promotionDetail;
     51: PromotionBuddyInfo buddyInfo;
 }
+
 struct PromotionInstallInfo {
     1: string downloadUrl;
     2: string customUrlSchema;
 }
+
 struct PromotionMissionInfo {
     1: Ob1_EnumC12607a1 promotionMissionType;
     2: bool missionCompleted;
@@ -7536,11 +8782,13 @@ struct PromotionMissionInfo {
     4: string customUrlSchema;
     5: string oaMid;
 }
+
 struct Provider {
     1: string id;
     2: string name;
     3: string providerPageUrl;
 }
+
 struct PublicKeyCredentialCreationOptions {
     1: PublicKeyCredentialRpEntity rp;
     2: PublicKeyCredentialUserEntity user;
@@ -7552,20 +8800,24 @@ struct PublicKeyCredentialCreationOptions {
     8: string attestation;
     9: AuthenticationExtensionsClientInputs extensions;
 }
+
 struct PublicKeyCredentialDescriptor {
     1: string type;
     2: string id;
     3: set<string> transports;
 }
+
 struct PublicKeyCredentialDescriptor {
     1: string type;
     2: string id;
     3: set<string> transports;
 }
+
 struct PublicKeyCredentialParameters {
     1: string type;
     2: i32 alg;
 }
+
 struct PublicKeyCredentialRequestOptions {
     1: string challenge;
     2: i64 timeout;
@@ -7574,6 +8826,7 @@ struct PublicKeyCredentialRequestOptions {
     5: string userVerification;
     6: AuthenticationExtensionsClientInputs extensions;
 }
+
 struct PublicKeyCredentialRequestOptions {
     1: string challenge;
     2: i64 timeout;
@@ -7582,20 +8835,24 @@ struct PublicKeyCredentialRequestOptions {
     5: string userVerification;
     6: AuthenticationExtensionsClientInputs extensions;
 }
+
 struct PublicKeyCredentialRpEntity {
     1: string name;
     2: string icon;
     3: string id;
 }
+
 struct PublicKeyCredentialUserEntity {
     1: string name;
     2: string icon;
     3: string id;
     4: string displayName;
 }
+
 struct PurchaseEnabledRequest {
     1: string uniqueKey;
 }
+
 struct PurchaseOrder {
     1: string shopId;
     2: string productId;
@@ -7605,11 +8862,13 @@ struct PurchaseOrder {
     21: Locale locale;
     31: map<string, string> presentAttributes;
 }
+
 struct PurchaseOrderResponse {
     1: string orderId;
     11: map<string, string> attributes;
     12: string billingConfirmUrl;
 }
+
 struct PurchaseRecord {
     1: ProductDetail productDetail;
     11: i64 purchasedTime;
@@ -7617,11 +8876,13 @@ struct PurchaseRecord {
     22: string recipient;
     31: Price purchasedPrice;
 }
+
 struct PurchaseRecordList {
     1: list<PurchaseRecord> purchaseRecords;
     2: i32 offset;
     3: i32 totalSize;
 }
+
 struct PurchaseSubscriptionRequest {
     1: string billingItemId;
     2: Ob1_S1 subscriptionService;
@@ -7630,11 +8891,13 @@ struct PurchaseSubscriptionRequest {
     5: bool outsideAppPurchase;
     6: bool unavailableItemPurchase;
 }
+
 struct PurchaseSubscriptionResponse {
     1: Ob1_M1 result;
     2: string orderId;
     3: string confirmUrl;
 }
+
 struct PushRecvReport {
     1: string pushTrackingId;
     2: i64 recvTimestamp;
@@ -7644,31 +8907,39 @@ struct PushRecvReport {
     6: string carrierCode;
     7: i64 displayTimestamp;
 }
+
 struct PutE2eeKeyRequest {
     1: string sessionId;
     2: map<string, string> e2eeKey;
 }
+
 struct Q70_l {
     
 }
+
 struct Q70_o {
     
 }
+
 struct Qj_C13595l {
     1: _any none;
-    2: Qj_LiffChatContext chat;
-    3: Qj_LiffSquareChatContext squareChat;
+    2: LiffChatContext chat;
+    3: LiffSquareChatContext squareChat;
 }
+
 struct Qj_C13599p {
-    3: Qj_LiffErrorConsentRequired consentRequired;
-    4: Qj_LiffErrorPermanentLinkInvalidRequest permanentLinkInvalidRequest;
+    3: LiffErrorConsentRequired consentRequired;
+    4: LiffErrorPermanentLinkInvalidRequest permanentLinkInvalidRequest;
 }
+
 struct Qj_C13602t {
-    1: Qj_LiffFIDOExternalService externalService;
+    1: _any externalService;
 }
+
 struct Qj_C13607y {
     
 }
+
 struct QuickMenuCouponInfo {
     1: string couponCount;
     2: string mainText;
@@ -7679,10 +8950,12 @@ struct QuickMenuCouponInfo {
     7: NZ0_W0 responseStatus;
     8: string darkModeIconUrl;
 }
+
 struct QuickMenuMyCardInfo {
     1: list<QuickMenuMyCardItem> myCardItems;
     2: NZ0_W0 responseStatus;
 }
+
 struct QuickMenuMyCardItem {
     1: NZ0_S0 itemType;
     2: string mainText;
@@ -7692,6 +8965,7 @@ struct QuickMenuMyCardItem {
     6: string targetName;
     7: string darkModeIconUrl;
 }
+
 struct QuickMenuPointInfo {
     1: string balance;
     2: string linkUrl;
@@ -7700,37 +8974,46 @@ struct QuickMenuPointInfo {
     5: string targetName;
     6: NZ0_W0 responseStatus;
 }
+
 struct R70_a {
     
 }
+
 struct R70_c {
     
 }
+
 struct R70_d {
     
 }
+
 struct R70_t {
     
 }
+
 struct RSAEncryptedLoginInfo {
     1: string loginId;
     2: string loginPassword;
 }
+
 struct RSAEncryptedPassword {
     1: string encrypted;
     2: string keyName;
 }
+
 struct RSAKey {
     1: string keynm;
     2: string nvalue;
     3: string evalue;
     4: string sessionKey;
 }
+
 struct ReactRequest {
     1: i32 reqSeq;
     2: i64 messageId;
     3: ReactionType reactionType;
 }
+
 struct ReactToMessageRequest {
     1: i32 reqSeq;
     2: string squareChatMid;
@@ -7738,29 +9021,36 @@ struct ReactToMessageRequest {
     4: MessageReactionType reactionType;
     5: string threadMid;
 }
+
 struct ReactToMessageResponse {
     1: SquareMessageReaction reaction;
     2: SquareMessageReactionStatus status;
 }
+
 struct Reaction {
     1: string fromUserMid;
     2: i64 atMillis;
     3: ReactionType reactionType;
 }
+
 struct ReactionType {
     1: MessageReactionType predefinedReactionType;
 }
+
 struct RecommendationDetail {
     1: i64 createdTime;
     2: list<LN0_z0> reasons;
     4: bool hidden;
 }
+
 struct RecommendationReasonSharedChat {
     1: string chatMid;
 }
+
 struct RefreshAccessTokenRequest {
     1: string refreshToken;
 }
+
 struct RefreshAccessTokenResponse {
     1: string accessToken;
     2: i64 durationUntilRefreshInSec;
@@ -7768,40 +9058,48 @@ struct RefreshAccessTokenResponse {
     4: i64 tokenIssueTimeEpochSec;
     5: string refreshToken;
 }
+
 struct RefreshApiRetryPolicy {
     1: i64 initialDelayInMillis;
     2: i64 maxDelayInMillis;
     3: double multiplier;
     4: double jitterRate;
 }
+
 struct RefreshApiRetryPolicy {
     1: i64 initialDelayInMillis;
     2: i64 maxDelayInMillis;
     3: double multiplier;
     4: double jitterRate;
 }
+
 struct RefreshApiRetryPolicy {
     1: i64 initialDelayInMillis;
     2: i64 maxDelayInMillis;
     3: double multiplier;
     4: double jitterRate;
 }
+
 struct RefreshSubscriptionsRequest {
     2: list<i64> subscriptions;
 }
+
 struct RefreshSubscriptionsResponse {
     1: i64 ttlMillis;
     2: map<i64, SubscriptionState> subscriptionStates;
 }
+
 struct RegPublicKeyCredential {
     1: string id;
     2: string type;
     3: AuthenticatorAttestationResponse response;
     4: AuthenticationExtensionsClientOutputs extensionResults;
 }
+
 struct RegisterCampaignRewardRequest {
     1: string campaignId;
 }
+
 struct RegisterCampaignRewardResponse {
     1: NZ0_EnumC12188n campaignStatus;
     2: ResultPopupProperty resultPopupProperty;
@@ -7810,146 +9108,180 @@ struct RegisterCampaignRewardResponse {
     5: i64 registeredDateTimeMillis;
     6: string redirectUrlWithoutResultPopup;
 }
+
 struct RegisterE2EEPublicKeyV2Response {
     1: Pb1_C13097n4 publicKey;
     2: bool isMasterKeyConflict;
 }
+
 struct RegisterPrimaryCredentialRequest {
     1: string sessionId;
     2: R70_p80_m credential;
 }
+
 struct RegisterPrimaryWithTokenV3Response {
     1: string authToken;
     2: TokenV3IssueResult tokenV3IssueResult;
     3: string mid;
 }
+
 struct I80_q0 {
     1: string authSessionId;
     2: I80_y0 encryptionKey;
 }
+
 struct RegularBadge {
     1: string label;
     2: string color;
 }
+
 struct ReissueChatTicketRequest {
     1: i32 reqSeq;
     2: string groupMid;
 }
+
 struct ReissueChatTicketResponse {
     1: string ticketId;
 }
+
 struct RejectChatInvitationRequest {
     1: i32 reqSeq;
     2: string chatMid;
 }
+
 struct RejectSpeakersRequest {
     1: string squareChatMid;
     2: string sessionId;
     3: set<string> targetMids;
 }
+
 struct RejectSquareMembersRequest {
     2: string squareMid;
     3: list<string> requestedMemberMids;
 }
+
 struct RejectSquareMembersResponse {
     1: list<SquareMember> rejectedMembers;
     2: SquareStatus status;
 }
+
 struct RejectToSpeakRequest {
     1: string squareChatMid;
     2: string sessionId;
     3: string inviteRequestId;
 }
+
 struct RemoveFollowerRequest {
     1: Pb1_A4 followMid;
 }
+
 struct RemoveFromFollowBlacklistRequest {
     1: Pb1_A4 followMid;
 }
+
 struct RemoveItemFromCollectionRequest {
     1: string collectionId;
     3: string productId;
     4: string itemId;
 }
+
 struct RemoveLiveTalkSubscriptionRequest {
     1: string squareChatMid;
     2: string sessionId;
 }
+
 struct RemoveProductFromSubscriptionSlotRequest {
     1: Ob1_O0 productType;
     2: string productId;
     3: Ob1_S1 subscriptionService;
     4: set<string> productIds;
 }
+
 struct RemoveProductFromSubscriptionSlotResponse {
     1: Ob1_U1 result;
 }
+
 struct RemoveSubscriptionsRequest {
     2: list<i64> unsubscriptions;
 }
+
 struct RepairGroupMembers {
     1: i32 numMembers;
     3: bool invalidGroup;
 }
+
 struct RepairProfileMappingMembers {
     1: bool matched;
     2: i32 numMembers;
 }
+
 struct RepairTriggerConfigurationsElement {
     1: Configurations serverConfigurations;
     2: i32 nextCallIntervalMinutes;
 }
+
 struct RepairTriggerGroupMembersElement {
     1: map<string, RepairGroupMembers> matchedGroups;
     2: map<string, RepairGroupMembers> mismatchedGroups;
     3: i32 nextCallIntervalMinutes;
 }
+
 struct RepairTriggerNumElement {
     1: bool matched;
     2: i32 numValue;
     3: i32 nextCallIntervalMinutes;
 }
+
 struct RepairTriggerProfileElement {
     1: Profile serverProfile;
     2: i32 nextCallIntervalMinutes;
     3: list<Profile> serverMultiProfiles;
 }
+
 struct RepairTriggerProfileMappingListElement {
     1: map<string, RepairProfileMappingMembers> profileMappings;
     2: i32 nextCallIntervalMinutes;
 }
+
 struct RepairTriggerSettingsElement {
     1: Settings serverSettings;
     2: i32 nextCallIntervalMinutes;
 }
+
 struct ReportAbuseExRequest {
     1: Pb1_C12938c abuseReportEntry;
 }
+
 struct ReportLiveTalkRequest {
     1: string squareChatMid;
     2: string sessionId;
     3: LiveTalkReportType reportType;
 }
+
 struct ReportLiveTalkSpeakerRequest {
     1: string squareChatMid;
     2: string sessionId;
     3: string speakerMemberMid;
     4: LiveTalkReportType reportType;
 }
+
 struct ReportMessageSummaryRequest {
     1: string chatEmid;
     2: i64 messageSummaryRangeTo;
     3: MessageSummaryReportType reportType;
 }
+
 struct ReportRefreshedAccessTokenRequest {
     1: string accessToken;
 }
+
 struct ReportSquareChatRequest {
     2: string squareMid;
     3: string squareChatMid;
     5: ReportType reportType;
     6: string otherReason;
 }
+
 struct ReportSquareMemberRequest {
     2: string squareMemberMid;
     3: ReportType reportType;
@@ -7957,6 +9289,7 @@ struct ReportSquareMemberRequest {
     5: string squareChatMid;
     6: string threadMid;
 }
+
 struct ReportSquareMessageRequest {
     2: string squareMid;
     3: string squareChatMid;
@@ -7965,53 +9298,66 @@ struct ReportSquareMessageRequest {
     6: string otherReason;
     7: string threadMid;
 }
+
 struct ReportSquareRequest {
     2: string squareMid;
     3: ReportType reportType;
     4: string otherReason;
 }
+
 struct ReqToSendPhonePinCodeRequest {
     1: string authSessionId;
     2: UserPhoneNumber userPhoneNumber;
     3: T70_K verifMethod;
 }
+
 struct I80_s0 {
     1: string authSessionId;
     2: UserPhoneNumber userPhoneNumber;
     3: I80_EnumC26425y verifMethod;
 }
+
 struct I80_t0 {
     1: list<i32> availableMethods;
 }
+
 struct ReqToSendPhonePinCodeResponse {
     1: list<i32> availableMethods;
 }
+
 struct RequestToListenRequest {
     1: string squareChatMid;
     2: string sessionId;
 }
+
 struct I80_u0 {
     1: string authSessionId;
     2: string email;
 }
+
 struct RequestToSendPasswordSetVerificationEmailResponse {
     1: i64 timeoutMinutes;
 }
+
 struct RequestToSpeakRequest {
     1: string squareChatMid;
     2: string sessionId;
 }
+
 struct RequestTokenResponse {
     1: string requestToken;
     2: string returnUrl;
 }
+
 struct ReserveInfo {
     1: og_I purchaseEnabledStatus;
     2: OrderInfo orderInfo;
 }
+
 struct ReserveRequest {
     1: string uniqueKey;
 }
+
 struct ReserveSubscriptionPurchaseRequest {
     1: string billingItemId;
     2: fN0_G storeCode;
@@ -8020,14 +9366,17 @@ struct ReserveSubscriptionPurchaseRequest {
     5: string campaignId;
     6: string invitationId;
 }
+
 struct ReserveSubscriptionPurchaseResponse {
     1: fN0_F result;
     2: string orderId;
     3: string confirmUrl;
 }
+
 struct I80_w0 {
     1: string authSessionId;
 }
+
 struct I80_x0 {
     1: string mid;
     2: TokenV3IssueResult tokenV3IssueResult;
@@ -8035,6 +9384,7 @@ struct I80_x0 {
     4: I80_X70_a accountCountryCode;
     5: FormattedPhoneNumbers formattedPhoneNumbers;
 }
+
 struct ResultPopupProperty {
     1: string iconUrl;
     2: string text;
@@ -8044,18 +9394,22 @@ struct ResultPopupProperty {
     6: EventButton eventButton;
     7: OaAddFriendArea oaAddfreindArea;
 }
+
 struct RetrieveRequestTokenWithDocomoV2Response {
     1: string loginRedirectUrl;
 }
+
 struct RetryPolicy {
     1: i64 initialDelayInMillis;
     2: i64 maxDelayInMillis;
     3: double multiplier;
     4: double jitterRate;
 }
+
 struct RevokeTokensRequest {
     1: list<string> accessTokens;
 }
+
 struct RichContent {
     1: Callback callback;
     2: NoBidCallback noBidCallback;
@@ -8065,9 +9419,11 @@ struct RichContent {
     6: Priority priority;
     7: Uf_t richFormatPayload;
 }
+
 struct RichImage {
     1: string url;
 }
+
 struct RichItem {
     1: string eyeCatchMessage;
     2: string message;
@@ -8076,14 +9432,17 @@ struct RichItem {
     5: string linkUrl;
     6: string fallbackUrl;
 }
+
 struct RichString {
     1: string content;
     2: map<string, string> meta;
 }
+
 struct RichmenuCoordinates {
     1: double x;
     2: double y;
 }
+
 struct RichmenuEvent {
     1: kf_u type;
     2: string richmenuId;
@@ -8092,6 +9451,7 @@ struct RichmenuEvent {
     5: string clickUrl;
     6: kf_r clickAction;
 }
+
 struct RingbackTone {
     1: string uuid;
     2: string trackId;
@@ -8102,12 +9462,14 @@ struct RingbackTone {
     7: string artist;
     8: string channelId;
 }
+
 struct Ringtone {
     1: string title;
     2: string artist;
     3: string oid;
     4: string channelId;
 }
+
 struct Room {
     1: string mid;
     2: i64 createdTime;
@@ -8115,15 +9477,19 @@ struct Room {
     31: bool notificationDisabled;
     40: list<string> memberMids;
 }
+
 struct Rssi {
     1: i32 value;
 }
+
 struct S70_b {
     
 }
+
 struct S70_k {
     
 }
+
 struct SCC {
     1: string businessName;
     2: string tel;
@@ -8133,25 +9499,31 @@ struct SCC {
     6: string personName;
     7: string memo;
 }
+
 struct SIMInfo {
     1: string phoneNumber;
     2: string countryCode;
 }
+
 struct SKAdNetwork {
     1: string identifiers;
     2: string version;
 }
+
 struct I80_y0 {
     1: string keyMaterial;
 }
+
 struct SaveStudentInformationRequest {
     1: StudentInformation studentInformation;
 }
+
 struct Scenario {
     1: string id;
     2: do0_I trigger;
     3: list<do0_C23141D> actions;
 }
+
 struct ScenarioSet {
     1: list<Scenario> scenarios;
     2: bool autoClose;
@@ -8159,62 +9531,74 @@ struct ScenarioSet {
     4: i64 revision;
     5: i64 modifiedTime;
 }
+
 struct ScoreInfo {
     1: AssetServiceInfo assetServiceInfo;
 }
+
 struct ScryptParams {
     1: string salt;
     2: string nrp;
     3: i32 dkLen;
 }
+
 struct ScryptParams {
     1: string salt;
     2: string nrp;
     3: i64 dkLen;
 }
+
 struct ScryptParams {
     1: string salt;
     2: string nrp;
     3: i64 dkLen;
 }
+
 struct SearchSquareChatMembersRequest {
     1: string squareChatMid;
     2: SquareChatMemberSearchOption searchOption;
     3: string continuationToken;
     4: i32 limit;
 }
+
 struct SearchSquareChatMembersResponse {
     1: list<SquareMember> members;
     2: string continuationToken;
     3: i32 totalCount;
 }
+
 struct SearchSquareChatMentionablesRequest {
     1: string squareChatMid;
     2: SquareChatMentionableSearchOption searchOption;
     3: string continuationToken;
     4: i32 limit;
 }
+
 struct SearchSquareChatMentionablesResponse {
     1: list<Mentionable> mentionables;
     2: string continuationToken;
 }
+
 struct SearchSquareMembersRequest {
     2: string squareMid;
     3: SquareMemberSearchOption searchOption;
     4: string continuationToken;
     5: i32 limit;
 }
+
 struct SearchSquareMembersResponse {
     1: list<SquareMember> members;
     2: i64 revision;
     3: string continuationToken;
     4: i32 totalCount;
 }
+
 struct SearchSquaresRequest {
     2: string query;
     3: string continuationToken;
     4: i32 limit;
 }
+
 struct SearchSquaresResponse {
     1: list<Square> squares;
     2: map<string, SquareStatus> squareStatuses;
@@ -8222,44 +9606,53 @@ struct SearchSquaresResponse {
     4: string continuationToken;
     5: map<string, NoteStatus> noteStatuses;
 }
+
 struct SecurityCenterResult {
     1: string uri;
     2: string token;
     3: string cookiePath;
     4: bool skip;
 }
+
 struct SendEncryptedE2EEKeyRequest {
     1: string sessionId;
     2: h80_Z70_a encryptedSecureChannelPayload;
 }
+
 struct SendMessageRequest {
     1: i32 reqSeq;
     2: string squareChatMid;
     3: SquareMessage squareMessage;
 }
+
 struct SendMessageResponse {
     1: SquareMessage createdSquareMessage;
 }
+
 struct SendPostbackRequest {
     1: string messageId;
     2: string url;
     3: string chatMID;
     4: string originMID;
 }
+
 struct SendSquareThreadMessageRequest {
     1: i32 reqSeq;
     2: string chatMid;
     3: string threadMid;
     4: SquareMessage threadMessage;
 }
+
 struct SendSquareThreadMessageResponse {
     1: SquareMessage createdThreadMessage;
 }
+
 struct ServiceDisclaimerInfo {
     1: string disclaimerText;
     2: string popupTitle;
     3: string popupText;
 }
+
 struct ServiceShortcut {
     1: string id;
     2: string name;
@@ -8272,24 +9665,29 @@ struct ServiceShortcut {
     9: Icon coloredPictogramIcon;
     10: CustomBadgeLabel customBadgeLabel;
 }
+
 struct SetChatHiddenStatusRequest {
     1: i32 reqSeq;
     2: string chatMid;
     3: i64 lastMessageId;
     4: bool hidden;
 }
+
 struct I80_z0 {
     1: string authSessionId;
     2: string password;
 }
+
 struct SetHashedPasswordRequest {
     1: string authSessionId;
     2: string password;
 }
+
 struct SetPasswordRequest {
     1: string sessionId;
     2: string hashedPassword;
 }
+
 struct SetRequest {
     1: string keyName;
     2: t80_p value;
@@ -8298,16 +9696,19 @@ struct SetRequest {
     5: string transactionId;
     6: UpdateReason updateReason;
 }
+
 struct SetResponse {
     1: SettingValue value;
     2: string updateTransactionId;
 }
+
 struct SettingValue {
     1: t80_p value;
     2: i64 updateTimeMillis;
     3: t80_i scope;
     4: string scopeKey;
 }
+
 struct Settings {
     10: bool notificationEnable;
     11: i64 notificationMuteExpiration;
@@ -8400,41 +9801,50 @@ struct Settings {
     119: i64 agreementLypPremiumMultiProfile;
     120: i64 agreementLypPremiumMultiProfileVersion;
 }
+
 struct ShareTargetPickerResultRequest {
     1: string ott;
     2: string liffId;
     3: Qj_e0 resultCode;
     4: string resultDescription;
 }
+
 struct ShopFilter {
     1: set<i32> productAvailabilities;
     2: set<i32> stickerSizes;
     3: set<i32> popupLayers;
 }
+
 struct ShortcutUserGuidePopupInfo {
     1: string popupTitle;
     2: string popupText;
     3: i64 revisionTimeMillis;
 }
+
 struct ShouldShowWelcomeStickerBannerResponse {
     1: bool shouldShowBanner;
 }
+
 struct I80_B0 {
     1: string countryCode;
     2: string hni;
     3: string carrierName;
 }
+
 struct SimCard {
     1: string countryCode;
     2: string hni;
     3: string carrierName;
 }
+
 struct SingleValueMetadata {
     1: Pb1_K7 type;
 }
+
 struct SleepAction {
     1: i64 sleepMillis;
 }
+
 struct SmartChannelRecommendation {
     1: i32 minDisplayDuration;
     2: string title;
@@ -8450,15 +9860,18 @@ struct SmartChannelRecommendation {
     12: string downvoteEventUrl;
     13: SmartChannelRecommendationTemplate template;
 }
+
 struct SmartChannelRecommendationTemplate {
     1: string type;
     2: string bgColorName;
 }
+
 struct SocialLogin {
     1: T70_j1 type;
     2: string accessToken;
     3: string countryCode;
 }
+
 struct SpotItem {
     2: string name;
     3: string phone;
@@ -8467,6 +9880,7 @@ struct SpotItem {
     6: string countryAreaCode;
     10: bool freePhoneCallable;
 }
+
 struct Square {
     1: string mid;
     2: string name;
@@ -8486,6 +9900,7 @@ struct Square {
     16: list<string> svcTags;
     17: i64 createdAt;
 }
+
 struct SquareAuthority {
     1: string squareMid;
     2: SquareMemberRole updateSquareProfile;
@@ -8503,6 +9918,7 @@ struct SquareAuthority {
     14: SquareMemberRole useReadonlyDefaultChat;
     15: SquareMemberRole sendAllMention;
 }
+
 struct SquareBot {
     1: string botMid;
     2: bool active;
@@ -8512,6 +9928,7 @@ struct SquareBot {
     6: i64 lastModifiedAt;
     7: i64 expiredIn;
 }
+
 struct SquareChat {
     1: string squareChatMid;
     2: string squareMid;
@@ -8525,6 +9942,7 @@ struct SquareChat {
     10: MessageVisibility messageVisibility;
     11: BooleanState ableToSearchMessage;
 }
+
 struct SquareChatAnnouncement {
     1: i64 announcementSeq;
     2: i32 type;
@@ -8532,16 +9950,19 @@ struct SquareChatAnnouncement {
     4: i64 createdAt;
     5: string creator;
 }
+
 struct SquareChatFeature {
     1: SquareChatFeatureControlState controlState;
     2: BooleanState booleanValue;
 }
+
 struct SquareChatFeatureSet {
     1: string squareChatMid;
     2: i64 revision;
     11: SquareChatFeature disableUpdateMaxChatMemberCount;
     12: SquareChatFeature disableMarkAsReadEvent;
 }
+
 struct SquareChatMember {
     1: string squareMemberMid;
     2: string squareChatMid;
@@ -8550,18 +9971,22 @@ struct SquareChatMember {
     5: bool notificationForMessage;
     6: bool notificationForNewMember;
 }
+
 struct SquareChatMemberSearchOption {
     1: string displayName;
     2: bool includingMe;
 }
+
 struct SquareChatMentionableSearchOption {
     1: string displayName;
 }
+
 struct SquareChatStatus {
     3: SquareMessage lastMessage;
     4: string senderDisplayName;
     5: SquareChatStatusWithoutMessage otherStatus;
 }
+
 struct SquareChatStatusWithoutMessage {
     1: i32 memberCount;
     2: i32 unreadMessageCount;
@@ -8570,9 +9995,11 @@ struct SquareChatStatusWithoutMessage {
     5: NotifiedMessageType notifiedMessageType;
     6: list<i32> badges;
 }
+
 struct SquareCleanScore {
     1: double score;
 }
+
 struct SquareEvent {
     2: i64 createdTime;
     3: SquareEventType type;
@@ -8580,12 +10007,14 @@ struct SquareEvent {
     5: string syncToken;
     6: SquareEventStatus eventStatus;
 }
+
 struct SquareEventChatPopup {
     1: string squareChatMid;
     2: i64 popupId;
     3: string flexJson;
     4: ButtonContent button;
 }
+
 struct SquareEventMutateMessage {
     1: string squareChatMid;
     2: SquareMessage squareMessage;
@@ -8593,23 +10022,27 @@ struct SquareEventMutateMessage {
     4: string senderDisplayName;
     5: string threadMid;
 }
+
 struct SquareEventNotificationJoinRequest {
     1: string squareMid;
     2: string squareName;
     3: string requestMemberName;
     4: string profileImageObsHash;
 }
+
 struct SquareEventNotificationLiveTalk {
     1: string squareChatMid;
     2: string liveTalkInvitationTicket;
     3: string squareChatName;
     4: string chatImageObsHash;
 }
+
 struct SquareEventNotificationMemberUpdate {
     1: string squareMid;
     2: string squareName;
     3: string profileImageObsHash;
 }
+
 struct SquareEventNotificationMessage {
     1: string squareChatMid;
     2: SquareMessage squareMessage;
@@ -8620,6 +10053,7 @@ struct SquareEventNotificationMessage {
     7: NotifiedMessageType notifiedMessageType;
     8: i32 reqSeq;
 }
+
 struct SquareEventNotificationMessageReaction {
     1: string squareChatMid;
     2: string messageId;
@@ -8629,10 +10063,12 @@ struct SquareEventNotificationMessageReaction {
     6: string messageText;
     7: MessageReactionType type;
 }
+
 struct SquareEventNotificationNewChatMember {
     1: string squareChatMid;
     2: string squareChatName;
 }
+
 struct SquareEventNotificationPost {
     1: string squareMid;
     2: NotificationPostType notificationPostType;
@@ -8640,22 +10076,26 @@ struct SquareEventNotificationPost {
     4: string text;
     5: string actionUri;
 }
+
 struct SquareEventNotificationPostAnnouncement {
     1: string squareMid;
     2: string squareName;
     3: string squareProfileImageObsHash;
     4: string actionUri;
 }
+
 struct SquareEventNotificationSquareChatDelete {
     1: string squareChatMid;
     2: string squareChatName;
     3: string profileImageObsHash;
 }
+
 struct SquareEventNotificationSquareDelete {
     1: string squareMid;
     2: string squareName;
     3: string profileImageObsHash;
 }
+
 struct SquareEventNotificationThreadMessage {
     1: string threadMid;
     2: string chatMid;
@@ -8665,6 +10105,7 @@ struct SquareEventNotificationThreadMessage {
     6: i64 totalMessageCount;
     7: string threadRootMessageId;
 }
+
 struct SquareEventNotificationThreadMessageReaction {
     1: string threadMid;
     2: string chatMid;
@@ -8673,12 +10114,14 @@ struct SquareEventNotificationThreadMessageReaction {
     5: string reactorName;
     6: string thumbnailObsHash;
 }
+
 struct SquareEventNotifiedAddBot {
     1: string squareChatMid;
     2: SquareMember squareMember;
     3: string botMid;
     4: string botDisplayName;
 }
+
 struct SquareEventNotifiedCreateSquareChatMember {
     1: SquareChat chat;
     2: SquareChatStatus chatStatus;
@@ -8687,6 +10130,7 @@ struct SquareEventNotifiedCreateSquareChatMember {
     5: SquareMember peerSquareMember;
     6: SquareChatFeatureSet squareChatFeatureSet;
 }
+
 struct SquareEventNotifiedCreateSquareMember {
     1: Square square;
     2: SquareAuthority squareAuthority;
@@ -8695,146 +10139,178 @@ struct SquareEventNotifiedCreateSquareMember {
     5: SquareFeatureSet squareFeatureSet;
     6: NoteStatus noteStatus;
 }
+
 struct SquareEventNotifiedDeleteSquareChat {
     1: SquareChat squareChat;
 }
+
 struct SquareEventNotifiedDestroyMessage {
     1: string squareChatMid;
     3: string messageId;
     4: string threadMid;
 }
+
 struct SquareEventNotifiedInviteIntoSquareChat {
     1: string squareChatMid;
     2: list<SquareMember> invitees;
     3: SquareMember invitor;
     4: SquareMemberRelation invitorRelation;
 }
+
 struct SquareEventNotifiedJoinSquareChat {
     1: string squareChatMid;
     2: SquareMember joinedMember;
 }
+
 struct SquareEventNotifiedKickoutFromSquare {
     1: string squareChatMid;
     2: list<SquareMember> kickees;
     3: SquareMember kicker;
 }
+
 struct SquareEventNotifiedLeaveSquareChat {
     1: string squareChatMid;
     2: string squareMemberMid;
     3: bool sayGoodbye;
     4: SquareMember squareMember;
 }
+
 struct SquareEventNotifiedMarkAsRead {
     1: string squareChatMid;
     2: string sMemberMid;
     4: string messageId;
 }
+
 struct SquareEventNotifiedRemoveBot {
     1: string squareChatMid;
     2: SquareMember squareMember;
     3: string botMid;
     4: string botDisplayName;
 }
+
 struct SquareEventNotifiedShutdownSquare {
     1: string squareChatMid;
     2: Square square;
 }
+
 struct SquareEventNotifiedSystemMessage {
     1: string squareChatMid;
     2: string text;
     3: string messageKey;
 }
+
 struct SquareEventNotifiedUpdateLiveTalk {
     1: string squareChatMid;
     2: string sessionId;
     3: bool liveTalkOnAir;
 }
+
 struct SquareEventNotifiedUpdateLiveTalkInfo {
     1: string squareChatMid;
     2: LiveTalk liveTalk;
     3: bool liveTalkOnAir;
 }
+
 struct SquareEventNotifiedUpdateMessageStatus {
     1: string squareChatMid;
     2: string messageId;
     3: SquareMessageStatus messageStatus;
     4: string threadMid;
 }
+
 struct SquareEventNotifiedUpdateReadonlyChat {
     1: string squareChatMid;
     2: bool readonly;
 }
+
 struct SquareEventNotifiedUpdateSquare {
     1: string squareMid;
     2: Square square;
 }
+
 struct SquareEventNotifiedUpdateSquareAuthority {
     1: string squareMid;
     2: SquareAuthority squareAuthority;
 }
+
 struct SquareEventNotifiedUpdateSquareChat {
     1: string squareMid;
     2: string squareChatMid;
     3: SquareChat squareChat;
 }
+
 struct SquareEventNotifiedUpdateSquareChatAnnouncement {
     1: string squareChatMid;
     2: i64 announcementSeq;
 }
+
 struct SquareEventNotifiedUpdateSquareChatFeatureSet {
     1: SquareChatFeatureSet squareChatFeatureSet;
 }
+
 struct SquareEventNotifiedUpdateSquareChatMaxMemberCount {
     1: string squareChatMid;
     2: i32 maxMemberCount;
     3: SquareMember editor;
 }
+
 struct SquareEventNotifiedUpdateSquareChatMember {
     1: string squareChatMid;
     3: SquareChatMember squareChatMember;
 }
+
 struct SquareEventNotifiedUpdateSquareChatProfileImage {
     1: string squareChatMid;
     2: SquareMember editor;
 }
+
 struct SquareEventNotifiedUpdateSquareChatProfileName {
     1: string squareChatMid;
     2: SquareMember editor;
     3: string updatedChatName;
 }
+
 struct SquareEventNotifiedUpdateSquareChatStatus {
     1: string squareChatMid;
     2: SquareChatStatusWithoutMessage statusWithoutMessage;
 }
+
 struct SquareEventNotifiedUpdateSquareFeatureSet {
     1: SquareFeatureSet squareFeatureSet;
 }
+
 struct SquareEventNotifiedUpdateSquareMember {
     1: string squareMid;
     2: string squareMemberMid;
     3: SquareMember squareMember;
 }
+
 struct SquareEventNotifiedUpdateSquareMemberProfile {
     1: string squareChatMid;
     2: SquareMember squareMember;
 }
+
 struct SquareEventNotifiedUpdateSquareMemberRelation {
     1: string squareMid;
     2: string myMemberMid;
     3: string targetSquareMemberMid;
     4: SquareMemberRelation squareMemberRelation;
 }
+
 struct SquareEventNotifiedUpdateSquareNoteStatus {
     1: string squareMid;
     2: NoteStatus noteStatus;
 }
+
 struct SquareEventNotifiedUpdateSquareStatus {
     1: string squareMid;
     2: SquareStatus squareStatus;
 }
+
 struct SquareEventNotifiedUpdateThread {
     1: SquareThread squareThread;
 }
+
 struct SquareEventNotifiedUpdateThreadMember {
     1: SquareThreadMember threadMember;
     2: SquareThread squareThread;
@@ -8843,9 +10319,11 @@ struct SquareEventNotifiedUpdateThreadMember {
     5: SquareMessage lastMessage;
     6: string lastMessageSenderDisplayName;
 }
+
 struct SquareEventNotifiedUpdateThreadRootMessage {
     1: SquareThread squareThread;
 }
+
 struct SquareEventNotifiedUpdateThreadRootMessageStatus {
     1: string chatMid;
     2: string threadMid;
@@ -8853,12 +10331,14 @@ struct SquareEventNotifiedUpdateThreadRootMessageStatus {
     4: i64 totalMessageCount;
     5: i64 lastMessageAt;
 }
+
 struct SquareEventNotifiedUpdateThreadStatus {
     1: string threadMid;
     2: string chatMid;
     3: i64 unreadCount;
     4: string markAsReadMessageId;
 }
+
 struct SquareEventReceiveMessage {
     1: string squareChatMid;
     2: SquareMessage squareMessage;
@@ -8871,6 +10351,7 @@ struct SquareEventReceiveMessage {
     9: i64 threadLastMessageAt;
     10: ContentsAttribute contentsAttribute;
 }
+
 struct SquareEventSendMessage {
     1: string squareChatMid;
     2: SquareMessage squareMessage;
@@ -8881,13 +10362,16 @@ struct SquareEventSendMessage {
     7: i64 threadTotalMessageCount;
     8: i64 threadLastMessageAt;
 }
+
 struct SquareExtraInfo {
     1: string country;
 }
+
 struct SquareFeature {
     1: SquareFeatureControlState controlState;
     2: BooleanState booleanValue;
 }
+
 struct SquareFeatureSet {
     1: string squareMid;
     2: i64 revision;
@@ -8907,19 +10391,23 @@ struct SquareFeatureSet {
     24: SquareFeature enableSquareThread;
     25: SquareFeature disableChangeRoleCoAdmin;
 }
+
 struct SquareInfo {
     1: Square square;
     2: SquareStatus squareStatus;
     3: NoteStatus squareNoteStatus;
 }
+
 struct SquareJoinMethod {
     1: SquareJoinMethodType type;
     2: SquareJoinMethodValue value;
 }
+
 struct SquareJoinMethodValue {
     1: ApprovalValue approvalValue;
     2: CodeValue codeValue;
 }
+
 struct SquareMember {
     1: string squareMemberMid;
     2: string squareMid;
@@ -8933,10 +10421,12 @@ struct SquareMember {
     11: string joinMessage;
     12: i64 createdAt;
 }
+
 struct SquareMemberRelation {
     1: SquareMemberRelationState state;
     2: i64 revision;
 }
+
 struct SquareMemberSearchOption {
     1: SquareMembershipState membershipState;
     2: set<SquareMemberRole> memberRoles;
@@ -8948,6 +10438,7 @@ struct SquareMemberSearchOption {
     8: bool excludeBlockedMembers;
     9: bool includingMeOnlyMatch;
 }
+
 struct SquareMessage {
     1: Message message;
     3: MIDType fromType;
@@ -8955,23 +10446,27 @@ struct SquareMessage {
     5: SquareMessageState state;
     6: SquareMessageThreadInfo threadInfo;
 }
+
 struct SquareMessageInfo {
     1: SquareMessage message;
     2: Square square;
     3: SquareChat chat;
     4: SquareMember sender;
 }
+
 struct SquareMessageReaction {
     1: MessageReactionType type;
     2: SquareMember reactor;
     3: i64 createdAt;
     4: i64 updatedAt;
 }
+
 struct SquareMessageReactionStatus {
     1: i32 totalCount;
     2: map<i32, i32> countByReactionType;
     3: SquareMessageReaction myReaction;
 }
+
 struct SquareMessageStatus {
     1: string squareChatMid;
     2: string globalMessageId;
@@ -8980,10 +10475,12 @@ struct SquareMessageStatus {
     5: i64 publishedAt;
     6: string squareChatThreadMid;
 }
+
 struct SquareMessageThreadInfo {
     1: string chatThreadMid;
     2: bool threadRoot;
 }
+
 struct SquareMetadata {
     1: string mid;
     2: set<i32> excluded;
@@ -8991,16 +10488,19 @@ struct SquareMetadata {
     4: bool noAd;
     5: i64 updatedAt;
 }
+
 struct SquarePreference {
     1: i64 favoriteTimestamp;
     2: bool notiForNewJoinRequest;
 }
+
 struct SquareStatus {
     1: i32 memberCount;
     2: i32 joinRequestCount;
     3: i64 lastJoinRequestAt;
     4: i32 openChatCount;
 }
+
 struct SquareThread {
     1: string threadMid;
     2: string chatMid;
@@ -9011,6 +10511,7 @@ struct SquareThread {
     7: i64 readOnlyAt;
     8: i64 revision;
 }
+
 struct SquareThreadMember {
     1: string squareMemberMid;
     2: string threadMid;
@@ -9018,38 +10519,47 @@ struct SquareThreadMember {
     4: i64 revision;
     5: SquareThreadMembershipState membershipState;
 }
+
 struct SquareUserSettings {
     1: BooleanState liveTalkNotification;
 }
+
 struct SquareVisibility {
     1: bool common;
     2: bool search;
 }
+
 struct StartPhotoboothRequest {
     1: string chatMid;
 }
+
 struct StartPhotoboothResponse {
     1: string photoboothSessionId;
 }
+
 struct I80_C0 {
     1: string authSessionId;
     2: string modelName;
     3: string deviceUid;
 }
+
 struct I80_D0 {
     1: string displayName;
     2: list<i32> availableAuthFactors;
 }
+
 struct Sticker {
     1: AR0_zR0_g resourceType;
     2: zR0_EnumC40578c popupLayer;
     3: AR0_zR0_h stickerSize;
 }
+
 struct Sticker {
     1: string stickerId;
     2: StickerResourceType resourceType;
     3: zR0_EnumC40578c popupLayer;
 }
+
 struct StickerDisplayData {
     1: string stickerHash;
     2: StickerResourceType stickerResourceType;
@@ -9062,14 +10572,17 @@ struct StickerDisplayData {
     9: i64 version;
     10: bool availableForCombinationSticker;
 }
+
 struct StickerIdRange {
     1: i64 start;
     2: i32 size;
 }
+
 struct StickerLayout {
     1: StickerLayoutInfo layoutInfo;
     2: StickerLayoutStickerInfo stickerInfo;
 }
+
 struct StickerLayoutInfo {
     1: double width;
     2: double height;
@@ -9077,6 +10590,7 @@ struct StickerLayoutInfo {
     4: double x;
     5: double y;
 }
+
 struct StickerLayoutStickerInfo {
     1: i64 stickerId;
     2: i64 productId;
@@ -9084,6 +10598,7 @@ struct StickerLayoutStickerInfo {
     4: string stickerOptions;
     5: i64 stickerVersion;
 }
+
 struct StickerProperty {
     1: bool hasAnimation;
     2: bool hasSound;
@@ -9101,6 +10616,7 @@ struct StickerProperty {
     15: bool cpdProduct;
     16: bool availableForCombinationSticker;
 }
+
 struct StickerSummary {
     1: list<StickerIdRange> stickerIdRanges;
     2: i64 suggestVersion;
@@ -9113,32 +10629,39 @@ struct StickerSummary {
     9: Ob1_C1 stickerSize;
     10: bool availableForCombinationSticker;
 }
+
 struct SticonProperty {
     2: list<string> sticonIds;
     3: bool availableForPhotoEdit;
     4: Ob1_F1 sticonResourceType;
     5: list<list<_any>> endPageMainImages;
 }
+
 struct SticonSummary {
     1: i64 suggestVersion;
     2: bool availableForPhotoEdit;
     3: Ob1_F1 sticonResourceType;
 }
+
 struct StopBundleSubscriptionRequest {
     1: Ob1_S1 subscriptionService;
     2: Ob1_K1 storeCode;
 }
+
 struct StopBundleSubscriptionResponse {
     1: Ob1_J1 result;
 }
+
 struct StopNotificationAction {
     1: string serviceUuid;
     2: string characteristicUuid;
 }
+
 struct StudentInformation {
     1: string schoolName;
     2: string graduationDate;
 }
+
 struct SubLiffView {
     1: Qj_i0 presentationType;
     2: string url;
@@ -9148,6 +10671,7 @@ struct SubLiffView {
     6: string closeButtonLabel;
     7: bool skipWebRTCPermissionPopupAllowed;
 }
+
 struct SubTab {
     1: string id;
     2: string name;
@@ -9156,13 +10680,16 @@ struct SubTab {
     5: list<string> modulesOrder;
     6: string wrsSubTabModelId;
 }
+
 struct SubWindowResultRequest {
     1: string msit;
     2: string mstVerifier;
 }
+
 struct SubscriptionNotification {
     1: i64 subscriptionId;
 }
+
 struct SubscriptionPlan {
     1: string billingItemId;
     2: Ob1_S1 subscriptionService;
@@ -9177,15 +10704,18 @@ struct SubscriptionPlan {
     11: string nameKey;
     12: Ob1_Q1 tier;
 }
+
 struct SubscriptionSlotHistory {
     1: ProductSearchSummary product;
     2: i64 addedTime;
     3: i64 removedTime;
 }
+
 struct SubscriptionState {
     1: i64 subscriptionId;
     2: i64 ttlMillis;
 }
+
 struct SubscriptionStatus {
     1: string billingItemId;
     2: Ob1_S1 subscriptionService;
@@ -9205,6 +10735,7 @@ struct SubscriptionStatus {
     16: bool agreementAccepted;
     17: i64 originalValidUntil;
 }
+
 struct SuggestDictionarySetting {
     1: string language;
     2: string name;
@@ -9215,15 +10746,18 @@ struct SuggestDictionarySetting {
     7: map<i64, string> tagPatch;
     8: SuggestResource corpusResource;
 }
+
 struct SuggestResource {
     1: string dataUrl;
     2: i64 version;
     3: i64 updatedTime;
 }
+
 struct SuggestTag {
     1: string tagId;
     2: double weight;
 }
+
 struct SuggestTrialRecommendation {
     1: string productId;
     2: i64 productVersion;
@@ -9231,6 +10765,7 @@ struct SuggestTrialRecommendation {
     4: zR0_C40580e resource;
     5: list<SuggestTag> tags;
 }
+
 struct SyncRequest {
     1: i64 lastRevision;
     2: i32 count;
@@ -9239,51 +10774,64 @@ struct SyncRequest {
     5: Pb1_J4 fullSyncRequestReason;
     6: map<i32, i64> lastPartialFullSyncs;
 }
+
 struct SyncSquareMembersRequest {
     1: string squareMid;
     2: map<string, i64> squareMembers;
 }
+
 struct SyncSquareMembersResponse {
     1: list<SquareMember> updatedSquareMembers;
 }
+
 struct T70_C14398f {
     
 }
+
 struct T70_g1 {
     
 }
+
 struct T70_o1 {
     
 }
+
 struct T70_s1 {
     
 }
+
 struct TGlobalEvents {
     1: map<i32, GlobalEvent> events;
     2: i64 lastRevision;
 }
+
 struct TIndividualEvents {
     1: set<i32> events;
     2: i64 lastRevision;
 }
+
 struct TMessageReadRange {
     1: string chatId;
     2: map<string, list<_any>> ranges;
 }
+
 struct TMessageReadRangeEntry {
     1: i64 startMessageId;
     2: i64 endMessageId;
     3: i64 startTime;
     4: i64 endTime;
 }
+
 struct Tag {
     1: string tagId;
     2: list<Candidate> candidates;
 }
+
 struct TaiwanBankAgreementRequiredPopupInfo {
     1: string popupTitle;
     2: string popupContent;
 }
+
 struct TaiwanBankBalanceInfo {
     1: bool bankUser;
     2: i64 balance;
@@ -9294,6 +10842,7 @@ struct TaiwanBankBalanceInfo {
     7: bool agreedToShowBalance;
     8: TaiwanBankAgreementRequiredPopupInfo agreementRequiredPopupInfo;
 }
+
 struct TaiwanBankLoginParameters {
     1: string loginScheme;
     2: string type;
@@ -9303,15 +10852,18 @@ struct TaiwanBankLoginParameters {
     6: string codeChallengeMethod;
     7: string clientId;
 }
+
 struct TalkroomEnterReferer {
     1: string urlScheme;
     2: kf_x type;
     3: kf_w content;
 }
+
 struct TalkroomEvent {
     1: kf_z type;
     2: TalkroomEnterReferer referer;
 }
+
 struct TargetProfileDetail {
     1: i64 snapshotTimeMillis;
     2: string profileName;
@@ -9324,14 +10876,17 @@ struct TargetProfileDetail {
     9: string pictureStatus;
     10: string profileId;
 }
+
 struct TermsAgreementExtraInfo {
     1: TermsType termsType;
     2: i32 termsVersion;
     3: string lanUrl;
 }
+
 struct TextButton {
     1: string text;
 }
+
 struct TextMessageAnnouncementContents {
     1: string messageId;
     2: string text;
@@ -9339,21 +10894,25 @@ struct TextMessageAnnouncementContents {
     4: i64 createdAt;
     5: string senderMid;
 }
+
 struct ThaiBankBalanceInfo {
     1: bool bankUser;
     2: bool balanceDisplay;
     3: double balance;
     4: string balanceLinkUrl;
 }
+
 struct ThemeProperty {
     1: string thumbnailUrl;
     2: Ob1_c2 themeResourceType;
 }
+
 struct ThemeSummary {
     1: string imagePath;
     2: i64 version;
     3: string versionString;
 }
+
 struct ThingsDevice {
     1: string deviceId;
     2: string actionUri;
@@ -9366,23 +10925,28 @@ struct ThingsDevice {
     9: string serviceUuid;
     10: bool bondingRequired;
 }
+
 struct ThingsOperation {
     1: string deviceId;
     2: i64 offset;
     3: do0_C23138A action;
 }
+
 struct ThumbnailLayer {
     1: RichImage frontThumbnailImage;
     2: RichImage backgroundThumbnailImage;
 }
+
 struct Ticket {
     1: string id;
     10: i64 expirationTime;
     21: i32 maxUseCount;
 }
+
 struct TokenV1IssueResult {
     1: string tokenSecret;
 }
+
 struct TokenV3IssueResult {
     1: string accessToken;
     2: string refreshToken;
@@ -9391,6 +10955,7 @@ struct TokenV3IssueResult {
     5: string loginSessionId;
     6: i64 tokenIssueTimeEpochSec;
 }
+
 struct TokenV3IssueResult {
     1: string accessToken;
     2: string refreshToken;
@@ -9399,199 +10964,248 @@ struct TokenV3IssueResult {
     5: string loginSessionId;
     6: i64 tokenIssueTimeEpochSec;
 }
+
 struct Tooltip {
     1: string text;
     2: i64 revisionTimeMillis;
 }
+
 struct TooltipInfo {
     1: string text;
     2: i64 tooltipRevision;
 }
+
 struct TopTab {
     1: string id;
     2: list<string> modulesOrder;
 }
+
 struct TryAgainLaterExtraInfo {
     1: i32 blockSecs;
 }
+
 struct U70_a {
     
 }
+
 struct U70_t {
     
 }
+
 struct U70_v {
     
 }
+
 struct UEN {
     1: i64 revision;
 }
+
 struct Uf_C14856C {
-    1: Uf_UEN uen;
-    2: Uf_Beacon beacon;
+    1: UEN uen;
+    2: Beacon beacon;
 }
+
 struct Uf_C14864f {
-    1: Uf_RegularBadge regularBadge;
-    2: Uf_UrgentBadge urgentBadge;
+    1: RegularBadge regularBadge;
+    2: UrgentBadge urgentBadge;
 }
+
 struct Uf_p {
-    1: Uf_AD ad;
-    2: Uf_Content content;
-    3: Uf_RichContent richContent;
+    1: AD ad;
+    2: Content content;
+    3: RichContent richContent;
 }
+
 struct Uf_t {
-    1: Uf_RichItem typeA;
-    2: Uf_RichItem typeB;
+    1: RichItem typeA;
+    2: RichItem typeB;
 }
+
 struct UnfollowRequest {
     1: Pb1_A4 followMid;
 }
+
 struct UnhideSquareMemberContentsRequest {
     1: string squareMemberMid;
 }
+
 struct UnregisterAvailabilityInfo {
     1: r80_m0 result;
     2: string message;
 }
+
 struct UnsendMessageRequest {
     2: string squareChatMid;
     3: string messageId;
     4: string threadMid;
 }
+
 struct UnsendMessageResponse {
     1: SquareMessage unsentMessage;
 }
+
 struct UpdateChatRequest {
     1: i32 reqSeq;
     2: Chat chat;
     3: Pb1_O2 updatedAttribute;
 }
+
 struct UpdateGroupCallUrlRequest {
     1: string urlId;
     2: Pb1_ad targetAttribute;
 }
+
 struct UpdateLiveTalkAttrsRequest {
     1: set<LiveTalkAttribute> updatedAttrs;
     2: LiveTalk liveTalk;
 }
+
 struct UpdatePasswordRequest {
     1: string sessionId;
     2: string hashedPassword;
 }
+
 struct UpdateProfileAttributesRequest {
     1: i32 reqSeq;
     2: map<i32, gN0_L6> profileAttributes;
     3: string profileId;
 }
+
 struct UpdateProfileAttributesRequest {
     1: map<i32, ProfileContent> profileAttributes;
 }
+
 struct UpdateReason {
     1: t80_r type;
     2: string detail;
 }
+
 struct UpdateSafetyStatusRequest {
     1: string disasterId;
     2: vh_m safetyStatus;
     3: string message;
 }
+
 struct UpdateSquareAuthorityRequest {
     2: set<SquareAuthorityAttribute> updateAttributes;
     3: SquareAuthority authority;
 }
+
 struct UpdateSquareAuthorityResponse {
     1: set<i32> updatdAttributes;
     2: SquareAuthority authority;
 }
+
 struct UpdateSquareChatMemberRequest {
     2: set<SquareChatMemberAttribute> updatedAttrs;
     3: SquareChatMember chatMember;
 }
+
 struct UpdateSquareChatMemberResponse {
     1: SquareChatMember updatedChatMember;
 }
+
 struct UpdateSquareChatRequest {
     2: set<SquareChatAttribute> updatedAttrs;
     3: SquareChat squareChat;
 }
+
 struct UpdateSquareChatResponse {
     1: set<i32> updatedAttrs;
     2: SquareChat squareChat;
 }
+
 struct UpdateSquareFeatureSetRequest {
     2: set<SquareFeatureSetAttribute> updateAttributes;
     3: SquareFeatureSet squareFeatureSet;
 }
+
 struct UpdateSquareFeatureSetResponse {
     1: set<i32> updateAttributes;
     2: SquareFeatureSet squareFeatureSet;
 }
+
 struct UpdateSquareMemberRelationRequest {
     2: string squareMid;
     3: string targetSquareMemberMid;
     4: set<i32> updatedAttrs;
     5: SquareMemberRelation relation;
 }
+
 struct UpdateSquareMemberRelationResponse {
     1: string squareMid;
     2: string targetSquareMemberMid;
     3: set<i32> updatedAttrs;
     4: SquareMemberRelation relation;
 }
+
 struct UpdateSquareMemberRequest {
     2: set<SquareMemberAttribute> updatedAttrs;
     3: set<SquarePreferenceAttribute> updatedPreferenceAttrs;
     4: SquareMember squareMember;
 }
+
 struct UpdateSquareMemberResponse {
     1: set<i32> updatedAttrs;
     2: SquareMember squareMember;
     3: set<i32> updatedPreferenceAttrs;
 }
+
 struct UpdateSquareMembersRequest {
     2: set<SquareMemberAttribute> updatedAttrs;
     3: list<SquareMember> members;
 }
+
 struct UpdateSquareMembersResponse {
     1: set<i32> updatedAttrs;
     2: SquareMember editor;
     3: map<string, SquareMember> members;
 }
+
 struct UpdateSquareRequest {
     2: set<SquareAttribute> updatedAttrs;
     3: Square square;
 }
+
 struct UpdateSquareResponse {
     1: set<i32> updatedAttrs;
     2: Square square;
 }
+
 struct UpdateUserSettingsRequest {
     1: set<SquareUserSettingsAttribute> updatedAttrs;
     2: SquareUserSettings userSettings;
 }
+
 struct UrgentBadge {
     1: string bgColor;
     2: string label;
     3: string color;
 }
+
 struct UrlButton {
     1: string text;
     2: string url;
 }
+
 struct UsePhotoboothTicketRequest {
     1: string chatMid;
     2: string photoboothSessionId;
 }
+
 struct UsePhotoboothTicketResponse {
     1: string signedTicketJwt;
 }
+
 struct UserBlockDetail {
     3: bool deletedFromBlockList;
 }
+
 struct UserDevice {
     1: ThingsDevice device;
     2: string deviceDisplayName;
 }
+
 struct UserFriendDetail {
     1: i64 createdTime;
     3: string overriddenName;
@@ -9600,33 +11214,41 @@ struct UserFriendDetail {
     7: string ringtone;
     8: string ringbackTone;
 }
+
 struct UserPhoneNumber {
     1: string phoneNumber;
     2: string countryCode;
 }
+
 struct UserPhoneNumber {
     1: string phoneNumber;
     2: string countryCode;
 }
+
 struct UserProfile {
     1: string displayName;
     2: string profileImageUrl;
 }
+
 struct UserProfile {
     1: string displayName;
     2: string profileImageUrl;
 }
+
 struct UserRestrictionExtraInfo {
     1: string linkUrl;
 }
+
 struct V1PasswordHashingParameters {
     1: string aesKey;
     2: string salt;
 }
+
 struct V1PasswordHashingParameters {
     1: string aesKey;
     2: string salt;
 }
+
 struct VerificationSessionData {
     1: string sessionId;
     2: VerificationMethod method;
@@ -9637,103 +11259,126 @@ struct VerificationSessionData {
     7: list<i32> availableVerificationMethods;
     8: string callerIdMask;
 }
+
 struct VerifyAccountUsingHashedPwdRequest {
     1: string authSessionId;
     2: AccountIdentifier accountIdentifier;
     3: string v1HashedPassword;
     4: string clientHashedPassword;
 }
+
 struct I80_E0 {
     1: string authSessionId;
     2: string v1HashedPassword;
     3: string clientHashedPassword;
 }
+
 struct VerifyAccountUsingHashedPwdResponse {
     1: UserProfile userProfile;
 }
+
 struct VerifyAssertionRequest {
     1: string sessionId;
     2: string credentialId;
     3: string assertionObject;
     4: string clientDataJSON;
 }
+
 struct VerifyAttestationRequest {
     1: string sessionId;
     2: string attestationObject;
     3: string clientDataJSON;
 }
+
 struct VerifyEapLoginRequest {
     1: string authSessionId;
     2: EapLogin eapLogin;
 }
+
 struct I80_G0 {
     1: string authSessionId;
     2: EapLogin eapLogin;
 }
+
 struct VerifyEapLoginResponse {
     1: bool accountExists;
 }
+
 struct I80_H0 {
     1: I80_V70_a userProfile;
 }
+
 struct VerifyPhonePinCodeRequest {
     1: string authSessionId;
     2: UserPhoneNumber userPhoneNumber;
     3: string pinCode;
 }
+
 struct I80_I0 {
     1: string authSessionId;
     2: UserPhoneNumber userPhoneNumber;
     3: string pinCode;
 }
+
 struct VerifyPhonePinCodeResponse {
     1: bool accountExist;
     2: bool sameUdidFromAccount;
     3: bool allowedToRegister;
     11: UserProfile userProfile;
 }
+
 struct I80_J0 {
     1: I80_V70_a userProfile;
 }
+
 struct VerifyPinCodeRequest {
     1: string authSessionId;
     2: string pinCode;
 }
+
 struct VerifyPinCodeRequest {
     1: string pinCode;
 }
+
 struct VerifyQrCodeRequest {
     1: string authSessionId;
     2: map<string, string> metaData;
 }
+
 struct VerifySocialLoginResponse {
     2: bool accountExist;
     11: UserProfile userProfile;
     12: bool sameUdidFromAccount;
 }
+
 struct I80_K0 {
     1: string baseUrl;
     2: string token;
 }
+
 struct WebAuthDetails {
     1: string baseUrl;
     2: string token;
 }
+
 struct WebAuthDetails {
     1: string baseUrl;
     2: string token;
 }
+
 struct WebLoginRequest {
     1: string hookedFullUrl;
     2: string sessionString;
     3: bool fromIAB;
     4: string sourceApplication;
 }
+
 struct WebLoginResponse {
     1: string returnUrl;
     2: string optionalReturnUrl;
     3: string redirectConfirmationPageUrl;
 }
+
 struct WifiSignal {
     2: string ssid;
     3: string bssid;
@@ -9742,249 +11387,318 @@ struct WifiSignal {
     10: i64 lastSeenTimestamp;
     11: i32 rssi;
 }
+
 struct Z70_a {
     1: string recoveryKey;
     2: string backupBlobPayload;
 }
+
 struct ZQ0_b {
     
 }
+
 struct acceptChatInvitationByTicket_args {
     1: AcceptChatInvitationByTicketRequest request;
 }
+
 struct acceptChatInvitationByTicket_result {
     0: Pb1_C12980f success;
     1: TalkException e;
 }
+
 struct acceptChatInvitation_args {
     1: AcceptChatInvitationRequest request;
 }
+
 struct acceptChatInvitation_result {
     0: Pb1_C13008h success;
     1: TalkException e;
 }
+
 struct SquareService_acceptSpeakers_result {
     0: AcceptSpeakersResponse success;
     1: SquareException e;
 }
+
 struct SquareService_acceptToChangeRole_result {
     0: AcceptToChangeRoleResponse success;
     1: SquareException e;
 }
+
 struct SquareService_acceptToListen_result {
     0: AcceptToListenResponse success;
     1: SquareException e;
 }
+
 struct SquareService_acceptToSpeak_result {
     0: AcceptToSpeakResponse success;
     1: SquareException e;
 }
+
 struct SquareService_acquireLiveTalk_result {
     0: AcquireLiveTalkResponse success;
     1: SquareException e;
 }
+
 struct SquareService_cancelToSpeak_result {
     0: CancelToSpeakResponse success;
     1: SquareException e;
 }
+
 struct SquareService_fetchLiveTalkEvents_result {
     0: FetchLiveTalkEventsResponse success;
     1: SquareException e;
 }
+
 struct SquareService_findLiveTalkByInvitationTicket_result {
     0: FindLiveTalkByInvitationTicketResponse success;
     1: SquareException e;
 }
+
 struct SquareService_forceEndLiveTalk_result {
     0: ForceEndLiveTalkResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getLiveTalkInfoForNonMember_result {
     0: GetLiveTalkInfoForNonMemberResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getLiveTalkInvitationUrl_result {
     0: GetLiveTalkInvitationUrlResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getLiveTalkSpeakersForNonMember_result {
     0: GetLiveTalkSpeakersForNonMemberResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getSquareInfoByChatMid_result {
     0: GetSquareInfoByChatMidResponse success;
     1: SquareException e;
 }
+
 struct SquareService_inviteToChangeRole_result {
     0: InviteToChangeRoleResponse success;
     1: SquareException e;
 }
+
 struct SquareService_inviteToListen_result {
     0: InviteToListenResponse success;
     1: SquareException e;
 }
+
 struct SquareService_inviteToLiveTalk_result {
     0: InviteToLiveTalkResponse success;
     1: SquareException e;
 }
+
 struct SquareService_inviteToSpeak_result {
     0: InviteToSpeakResponse success;
     1: SquareException e;
 }
+
 struct SquareService_joinLiveTalk_result {
     0: JoinLiveTalkResponse success;
     1: SquareException e;
 }
+
 struct SquareService_kickOutLiveTalkParticipants_result {
     0: KickOutLiveTalkParticipantsResponse success;
     1: SquareException e;
 }
+
 struct SquareService_rejectSpeakers_result {
     0: RejectSpeakersResponse success;
     1: SquareException e;
 }
+
 struct SquareService_rejectToSpeak_result {
     0: RejectToSpeakResponse success;
     1: SquareException e;
 }
+
 struct SquareService_removeLiveTalkSubscription_result {
     0: RemoveLiveTalkSubscriptionResponse success;
     1: SquareException e;
 }
+
 struct SquareService_reportLiveTalk_result {
     0: ReportLiveTalkResponse success;
     1: SquareException e;
 }
+
 struct SquareService_reportLiveTalkSpeaker_result {
     0: ReportLiveTalkSpeakerResponse success;
     1: SquareException e;
 }
+
 struct SquareService_requestToListen_result {
     0: RequestToListenResponse success;
     1: SquareException e;
 }
+
 struct SquareService_requestToSpeak_result {
     0: RequestToSpeakResponse success;
     1: SquareException e;
 }
+
 struct SquareService_updateLiveTalkAttrs_result {
     0: UpdateLiveTalkAttrsResponse success;
     1: SquareException e;
 }
+
 struct SquareService_acceptSpeakers_args {
     1: AcceptSpeakersRequest request;
 }
+
 struct SquareService_acceptToChangeRole_args {
     1: AcceptToChangeRoleRequest request;
 }
+
 struct SquareService_acceptToListen_args {
     1: AcceptToListenRequest request;
 }
+
 struct SquareService_acceptToSpeak_args {
     1: AcceptToSpeakRequest request;
 }
+
 struct SquareService_acquireLiveTalk_args {
     1: AcquireLiveTalkRequest request;
 }
+
 struct SquareService_cancelToSpeak_args {
     1: CancelToSpeakRequest request;
 }
+
 struct SquareService_fetchLiveTalkEvents_args {
     1: FetchLiveTalkEventsRequest request;
 }
+
 struct SquareService_findLiveTalkByInvitationTicket_args {
     1: FindLiveTalkByInvitationTicketRequest request;
 }
+
 struct SquareService_forceEndLiveTalk_args {
     1: ForceEndLiveTalkRequest request;
 }
+
 struct SquareService_getLiveTalkInfoForNonMember_args {
     1: GetLiveTalkInfoForNonMemberRequest request;
 }
+
 struct SquareService_getLiveTalkInvitationUrl_args {
     1: GetLiveTalkInvitationUrlRequest request;
 }
+
 struct SquareService_getLiveTalkSpeakersForNonMember_args {
     1: GetLiveTalkSpeakersForNonMemberRequest request;
 }
+
 struct SquareService_getSquareInfoByChatMid_args {
     1: GetSquareInfoByChatMidRequest request;
 }
+
 struct SquareService_inviteToChangeRole_args {
     1: InviteToChangeRoleRequest request;
 }
+
 struct SquareService_inviteToListen_args {
     1: InviteToListenRequest request;
 }
+
 struct SquareService_inviteToLiveTalk_args {
     1: InviteToLiveTalkRequest request;
 }
+
 struct SquareService_inviteToSpeak_args {
     1: InviteToSpeakRequest request;
 }
+
 struct SquareService_joinLiveTalk_args {
     1: JoinLiveTalkRequest request;
 }
+
 struct SquareService_kickOutLiveTalkParticipants_args {
     1: KickOutLiveTalkParticipantsRequest request;
 }
+
 struct SquareService_rejectSpeakers_args {
     1: RejectSpeakersRequest request;
 }
+
 struct SquareService_rejectToSpeak_args {
     1: RejectToSpeakRequest request;
 }
+
 struct SquareService_removeLiveTalkSubscription_args {
     1: RemoveLiveTalkSubscriptionRequest request;
 }
+
 struct SquareService_reportLiveTalk_args {
     1: ReportLiveTalkRequest request;
 }
+
 struct SquareService_reportLiveTalkSpeaker_args {
     1: ReportLiveTalkSpeakerRequest request;
 }
+
 struct SquareService_requestToListen_args {
     1: RequestToListenRequest request;
 }
+
 struct SquareService_requestToSpeak_args {
     1: RequestToSpeakRequest request;
 }
+
 struct SquareService_updateLiveTalkAttrs_args {
     1: UpdateLiveTalkAttrsRequest request;
 }
+
 struct acquireCallRoute_args {
     2: string to;
     3: Pb1_D4 callType;
     4: map<string, string> fromEnvInfo;
 }
+
 struct acquireCallRoute_result {
     0: CallRoute success;
     1: TalkException e;
 }
+
 struct acquireEncryptedAccessToken_args {
     2: Pb1_EnumC13222w4 featureType;
 }
+
 struct acquireEncryptedAccessToken_result {
     0: string success;
     1: TalkException e;
 }
+
 struct acquireGroupCallRoute_args {
     2: string chatMid;
     3: Pb1_EnumC13237x5 mediaType;
     4: bool isInitialHost;
     5: list<string> capabilities;
 }
+
 struct acquireGroupCallRoute_result {
     0: GroupCallRoute success;
     1: TalkException e;
 }
+
 struct acquireOACallRoute_args {
     2: AcquireOACallRouteRequest request;
 }
+
 struct acquireOACallRoute_result {
     0: AcquireOACallRouteResponse success;
     1: TalkException e;
 }
+
 struct acquirePaidCallRoute_args {
     2: PaidCallType paidCallType;
     3: string dialedNumber;
@@ -9994,675 +11708,867 @@ struct acquirePaidCallRoute_args {
     7: string referer;
     8: string adSessionId;
 }
+
 struct acquirePaidCallRoute_result {
     0: PaidCallResponse success;
     1: TalkException e;
 }
+
 struct activateSubscription_args {
     1: ActivateSubscriptionRequest request;
 }
+
 struct activateSubscription_result {
     1: MembershipException e;
 }
+
 struct adTypeOptOutClickEvent_args {
     1: AdTypeOptOutClickEventRequest request;
 }
+
 struct adTypeOptOutClickEvent_result {
     0: NZ0_C12152b success;
     1: WalletException e;
 }
+
 struct addFriendByMid_args {
     1: AddFriendByMidRequest request;
 }
+
 struct addFriendByMid_result {
     0: LN0_C11270b success;
     1: RejectedException be;
     2: ServerFailureException ce;
     3: TalkException te;
 }
+
 struct addItemToCollection_args {
     1: AddItemToCollectionRequest request;
 }
+
 struct addItemToCollection_result {
     0: Ob1_C12608b success;
     1: CollectionException e;
 }
+
 struct addOaFriend_args {
     1: NZ0_C12155c request;
 }
+
 struct addOaFriend_result {
     0: AddOaFriendResponse success;
     1: WalletException e;
 }
+
 struct addProductToSubscriptionSlot_args {
     2: AddProductToSubscriptionSlotRequest req;
 }
+
 struct addProductToSubscriptionSlot_result {
     0: AddProductToSubscriptionSlotResponse success;
     1: ShopException e;
 }
+
 struct addThemeToSubscriptionSlot_args {
     2: AddThemeToSubscriptionSlotRequest req;
 }
+
 struct addThemeToSubscriptionSlot_result {
     0: AddThemeToSubscriptionSlotResponse success;
     1: ShopException e;
 }
+
 struct addToFollowBlacklist_args {
     2: AddToFollowBlacklistRequest addToFollowBlacklistRequest;
 }
+
 struct addToFollowBlacklist_result {
     1: TalkException e;
 }
+
 struct SquareService_agreeToTerms_result {
     0: AgreeToTermsResponse success;
     1: SquareException e;
 }
+
 struct SquareService_approveSquareMembers_result {
     0: ApproveSquareMembersResponse success;
     1: SquareException e;
 }
+
 struct SquareService_checkJoinCode_result {
     0: CheckJoinCodeResponse success;
     1: SquareException e;
 }
+
 struct SquareService_createSquareChatAnnouncement_result {
     0: CreateSquareChatAnnouncementResponse success;
     1: SquareException e;
 }
+
 struct SquareService_createSquareChat_result {
     0: CreateSquareChatResponse success;
     1: SquareException e;
 }
+
 struct SquareService_createSquare_result {
     0: CreateSquareResponse success;
     1: SquareException e;
 }
+
 struct SquareService_deleteSquareChatAnnouncement_result {
     0: DeleteSquareChatAnnouncementResponse success;
     1: SquareException e;
 }
+
 struct SquareService_deleteSquareChat_result {
     0: DeleteSquareChatResponse success;
     1: SquareException e;
 }
+
 struct SquareService_deleteSquare_result {
     0: DeleteSquareResponse success;
     1: SquareException e;
 }
+
 struct SquareService_destroyMessage_result {
     0: DestroyMessageResponse success;
     1: SquareException e;
 }
+
 struct SquareService_destroyMessages_result {
     0: DestroyMessagesResponse success;
     1: SquareException e;
 }
+
 struct SquareService_fetchMyEvents_result {
     0: FetchMyEventsResponse success;
     1: SquareException e;
 }
+
 struct SquareService_fetchSquareChatEvents_result {
     0: FetchSquareChatEventsResponse success;
     1: SquareException e;
 }
+
 struct SquareService_findSquareByEmid_result {
     0: FindSquareByEmidResponse success;
     1: SquareException e;
 }
+
 struct SquareService_findSquareByInvitationTicket_result {
     0: FindSquareByInvitationTicketResponse success;
     1: SquareException e;
 }
+
 struct SquareService_findSquareByInvitationTicketV2_result {
     0: FindSquareByInvitationTicketV2Response success;
     1: SquareException e;
 }
+
 struct SquareService_getGoogleAdOptions_result {
     0: GetGoogleAdOptionsResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getInvitationTicketUrl_result {
     0: GetInvitationTicketUrlResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getJoinableSquareChats_result {
     0: GetJoinableSquareChatsResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getJoinedSquareChats_result {
     0: GetJoinedSquareChatsResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getJoinedSquares_result {
     0: GetJoinedSquaresResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getMessageReactions_result {
     0: GetMessageReactionsResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getNoteStatus_result {
     0: GetNoteStatusResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getPopularKeywords_result {
     0: GetPopularKeywordsResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getSquareAuthorities_result {
     0: GetSquareAuthoritiesResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getSquareAuthority_result {
     0: GetSquareAuthorityResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getCategories_result {
     0: GetSquareCategoriesResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getSquareChatAnnouncements_result {
     0: GetSquareChatAnnouncementsResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getSquareChatEmid_result {
     0: GetSquareChatEmidResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getSquareChatFeatureSet_result {
     0: GetSquareChatFeatureSetResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getSquareChatMember_result {
     0: GetSquareChatMemberResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getSquareChatMembers_result {
     0: GetSquareChatMembersResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getSquareChat_result {
     0: GetSquareChatResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getSquareChatStatus_result {
     0: GetSquareChatStatusResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getSquareEmid_result {
     0: GetSquareEmidResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getSquareFeatureSet_result {
     0: GetSquareFeatureSetResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getSquareMemberRelation_result {
     0: GetSquareMemberRelationResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getSquareMemberRelations_result {
     0: GetSquareMemberRelationsResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getSquareMember_result {
     0: GetSquareMemberResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getSquareMembersBySquare_result {
     0: GetSquareMembersBySquareResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getSquareMembers_result {
     0: GetSquareMembersResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getSquare_result {
     0: GetSquareResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getSquareStatus_result {
     0: GetSquareStatusResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getSquareThreadMid_result {
     0: GetSquareThreadMidResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getSquareThread_result {
     0: GetSquareThreadResponse success;
     1: SquareException e;
 }
+
 struct SquareService_getUserSettings_result {
     0: GetUserSettingsResponse success;
     1: SquareException e;
 }
+
 struct SquareService_hideSquareMemberContents_result {
     0: HideSquareMemberContentsResponse success;
     1: SquareException e;
 }
+
 struct SquareService_inviteIntoSquareChat_result {
     0: InviteIntoSquareChatResponse success;
     1: SquareException e;
 }
+
 struct SquareService_inviteToSquare_result {
     0: InviteToSquareResponse success;
     1: SquareException e;
 }
+
 struct SquareService_joinSquareChat_result {
     0: JoinSquareChatResponse success;
     1: SquareException e;
 }
+
 struct SquareService_joinSquare_result {
     0: JoinSquareResponse success;
     1: SquareException e;
 }
+
 struct SquareService_joinSquareThread_result {
     0: JoinSquareThreadResponse success;
     1: SquareException e;
 }
+
 struct SquareService_leaveSquareChat_result {
     0: LeaveSquareChatResponse success;
     1: SquareException e;
 }
+
 struct SquareService_leaveSquare_result {
     0: LeaveSquareResponse success;
     1: SquareException e;
 }
+
 struct SquareService_leaveSquareThread_result {
     0: LeaveSquareThreadResponse success;
     1: SquareException e;
 }
+
 struct SquareService_manualRepair_result {
     0: ManualRepairResponse success;
     1: SquareException e;
 }
+
 struct SquareService_markAsRead_result {
     0: MarkAsReadResponse success;
     1: SquareException e;
 }
+
 struct SquareService_markChatsAsRead_result {
     0: MarkChatsAsReadResponse success;
     1: SquareException e;
 }
+
 struct SquareService_markThreadsAsRead_result {
     0: MarkThreadsAsReadResponse success;
     1: SquareException e;
 }
+
 struct SquareService_reactToMessage_result {
     0: ReactToMessageResponse success;
     1: SquareException e;
 }
+
 struct SquareService_refreshSubscriptions_result {
     0: RefreshSubscriptionsResponse success;
     1: SquareException e;
 }
+
 struct SquareService_rejectSquareMembers_result {
     0: RejectSquareMembersResponse success;
     1: SquareException e;
 }
+
 struct SquareService_removeSubscriptions_result {
     0: RemoveSubscriptionsResponse success;
     1: SquareException e;
 }
+
 struct SquareService_reportMessageSummary_result {
     0: ReportMessageSummaryResponse success;
     1: SquareException e;
 }
+
 struct SquareService_reportSquareChat_result {
     0: ReportSquareChatResponse success;
     1: SquareException e;
 }
+
 struct SquareService_reportSquareMember_result {
     0: ReportSquareMemberResponse success;
     1: SquareException e;
 }
+
 struct SquareService_reportSquareMessage_result {
     0: ReportSquareMessageResponse success;
     1: SquareException e;
 }
+
 struct SquareService_reportSquare_result {
     0: ReportSquareResponse success;
     1: SquareException e;
 }
+
 struct SquareService_searchSquareChatMembers_result {
     0: SearchSquareChatMembersResponse success;
     1: SquareException e;
 }
+
 struct SquareService_searchSquareChatMentionables_result {
     0: SearchSquareChatMentionablesResponse success;
     1: SquareException e;
 }
+
 struct SquareService_searchSquareMembers_result {
     0: SearchSquareMembersResponse success;
     1: SquareException e;
 }
+
 struct SquareService_searchSquares_result {
     0: SearchSquaresResponse success;
     1: SquareException e;
 }
+
 struct SquareService_sendMessage_result {
     0: SendMessageResponse success;
     1: SquareException e;
 }
+
 struct SquareService_sendSquareThreadMessage_result {
     0: SendSquareThreadMessageResponse success;
     1: SquareException e;
 }
+
 struct SquareService_syncSquareMembers_result {
     0: SyncSquareMembersResponse success;
     1: SquareException e;
 }
+
 struct SquareService_unhideSquareMemberContents_result {
     0: UnhideSquareMemberContentsResponse success;
     1: SquareException e;
 }
+
 struct SquareService_unsendMessage_result {
     0: UnsendMessageResponse success;
     1: SquareException e;
 }
+
 struct SquareService_updateSquareAuthority_result {
     0: UpdateSquareAuthorityResponse success;
     1: SquareException e;
 }
+
 struct SquareService_updateSquareChatMember_result {
     0: UpdateSquareChatMemberResponse success;
     1: SquareException e;
 }
+
 struct SquareService_updateSquareChat_result {
     0: UpdateSquareChatResponse success;
     1: SquareException e;
 }
+
 struct SquareService_updateSquareFeatureSet_result {
     0: UpdateSquareFeatureSetResponse success;
     1: SquareException e;
 }
+
 struct SquareService_updateSquareMemberRelation_result {
     0: UpdateSquareMemberRelationResponse success;
     1: SquareException e;
 }
+
 struct SquareService_updateSquareMember_result {
     0: UpdateSquareMemberResponse success;
     1: SquareException e;
 }
+
 struct SquareService_updateSquareMembers_result {
     0: UpdateSquareMembersResponse success;
     1: SquareException e;
 }
+
 struct SquareService_updateSquare_result {
     0: UpdateSquareResponse success;
     1: SquareException e;
 }
+
 struct SquareService_updateUserSettings_result {
     0: UpdateUserSettingsResponse success;
     1: SquareException e;
 }
+
 struct SquareService_agreeToTerms_args {
     1: AgreeToTermsRequest request;
 }
+
 struct SquareService_approveSquareMembers_args {
     1: ApproveSquareMembersRequest request;
 }
+
 struct SquareService_checkJoinCode_args {
     1: CheckJoinCodeRequest request;
 }
+
 struct SquareService_createSquareChatAnnouncement_args {
     1: CreateSquareChatAnnouncementRequest createSquareChatAnnouncementRequest;
 }
+
 struct SquareService_createSquareChat_args {
     1: CreateSquareChatRequest request;
 }
+
 struct SquareService_createSquare_args {
     1: CreateSquareRequest request;
 }
+
 struct SquareService_deleteSquareChatAnnouncement_args {
     1: DeleteSquareChatAnnouncementRequest deleteSquareChatAnnouncementRequest;
 }
+
 struct SquareService_deleteSquareChat_args {
     1: DeleteSquareChatRequest request;
 }
+
 struct SquareService_deleteSquare_args {
     1: DeleteSquareRequest request;
 }
+
 struct SquareService_destroyMessage_args {
     1: DestroyMessageRequest request;
 }
+
 struct SquareService_destroyMessages_args {
     1: DestroyMessagesRequest request;
 }
+
 struct SquareService_fetchMyEvents_args {
     1: FetchMyEventsRequest request;
 }
+
 struct SquareService_fetchSquareChatEvents_args {
     1: FetchSquareChatEventsRequest request;
 }
+
 struct SquareService_findSquareByEmid_args {
     1: FindSquareByEmidRequest findSquareByEmidRequest;
 }
+
 struct SquareService_findSquareByInvitationTicket_args {
     1: FindSquareByInvitationTicketRequest request;
 }
+
 struct SquareService_findSquareByInvitationTicketV2_args {
     1: FindSquareByInvitationTicketV2Request request;
 }
+
 struct SquareService_getGoogleAdOptions_args {
     1: GetGoogleAdOptionsRequest request;
 }
+
 struct SquareService_getInvitationTicketUrl_args {
     1: GetInvitationTicketUrlRequest request;
 }
+
 struct SquareService_getJoinableSquareChats_args {
     1: GetJoinableSquareChatsRequest request;
 }
+
 struct SquareService_getJoinedSquareChats_args {
     1: GetJoinedSquareChatsRequest request;
 }
+
 struct SquareService_getJoinedSquares_args {
     1: GetJoinedSquaresRequest request;
 }
+
 struct SquareService_getMessageReactions_args {
     1: GetMessageReactionsRequest request;
 }
+
 struct SquareService_getNoteStatus_args {
     1: GetNoteStatusRequest request;
 }
+
 struct SquareService_getPopularKeywords_args {
     1: GetPopularKeywordsRequest request;
 }
+
 struct SquareService_getSquareAuthorities_args {
     1: GetSquareAuthoritiesRequest request;
 }
+
 struct SquareService_getSquareAuthority_args {
     1: GetSquareAuthorityRequest request;
 }
+
 struct SquareService_getCategories_args {
     1: GetSquareCategoriesRequest request;
 }
+
 struct SquareService_getSquareChatAnnouncements_args {
     1: GetSquareChatAnnouncementsRequest getSquareChatAnnouncementsRequest;
 }
+
 struct SquareService_getSquareChatEmid_args {
     1: GetSquareChatEmidRequest request;
 }
+
 struct SquareService_getSquareChatFeatureSet_args {
     1: GetSquareChatFeatureSetRequest request;
 }
+
 struct SquareService_getSquareChatMember_args {
     1: GetSquareChatMemberRequest request;
 }
+
 struct SquareService_getSquareChatMembers_args {
     1: GetSquareChatMembersRequest request;
 }
+
 struct SquareService_getSquareChat_args {
     1: GetSquareChatRequest request;
 }
+
 struct SquareService_getSquareChatStatus_args {
     1: GetSquareChatStatusRequest request;
 }
+
 struct SquareService_getSquareEmid_args {
     1: GetSquareEmidRequest request;
 }
+
 struct SquareService_getSquareFeatureSet_args {
     1: GetSquareFeatureSetRequest request;
 }
+
 struct SquareService_getSquareMemberRelation_args {
     1: GetSquareMemberRelationRequest request;
 }
+
 struct SquareService_getSquareMemberRelations_args {
     1: GetSquareMemberRelationsRequest request;
 }
+
 struct SquareService_getSquareMember_args {
     1: GetSquareMemberRequest request;
 }
+
 struct SquareService_getSquareMembersBySquare_args {
     1: GetSquareMembersBySquareRequest request;
 }
+
 struct SquareService_getSquareMembers_args {
     1: GetSquareMembersRequest request;
 }
+
 struct SquareService_getSquare_args {
     1: GetSquareRequest request;
 }
+
 struct SquareService_getSquareStatus_args {
     1: GetSquareStatusRequest request;
 }
+
 struct SquareService_getSquareThreadMid_args {
     1: GetSquareThreadMidRequest request;
 }
+
 struct SquareService_getSquareThread_args {
     1: GetSquareThreadRequest request;
 }
+
 struct SquareService_getUserSettings_args {
     1: GetUserSettingsRequest request;
 }
+
 struct SquareService_hideSquareMemberContents_args {
     1: HideSquareMemberContentsRequest request;
 }
+
 struct SquareService_inviteIntoSquareChat_args {
     1: InviteIntoSquareChatRequest request;
 }
+
 struct SquareService_inviteToSquare_args {
     1: InviteToSquareRequest request;
 }
+
 struct SquareService_joinSquareChat_args {
     1: JoinSquareChatRequest request;
 }
+
 struct SquareService_joinSquare_args {
     1: JoinSquareRequest request;
 }
+
 struct SquareService_joinSquareThread_args {
     1: JoinSquareThreadRequest request;
 }
+
 struct SquareService_leaveSquareChat_args {
     1: LeaveSquareChatRequest request;
 }
+
 struct SquareService_leaveSquare_args {
     1: LeaveSquareRequest request;
 }
+
 struct SquareService_leaveSquareThread_args {
     1: LeaveSquareThreadRequest request;
 }
+
 struct SquareService_manualRepair_args {
     1: ManualRepairRequest request;
 }
+
 struct SquareService_markAsRead_args {
     1: MarkAsReadRequest request;
 }
+
 struct SquareService_markChatsAsRead_args {
     1: MarkChatsAsReadRequest request;
 }
+
 struct SquareService_markThreadsAsRead_args {
     1: MarkThreadsAsReadRequest request;
 }
+
 struct SquareService_reactToMessage_args {
     1: ReactToMessageRequest request;
 }
+
 struct SquareService_refreshSubscriptions_args {
     1: RefreshSubscriptionsRequest request;
 }
+
 struct SquareService_rejectSquareMembers_args {
     1: RejectSquareMembersRequest request;
 }
+
 struct SquareService_removeSubscriptions_args {
     1: RemoveSubscriptionsRequest request;
 }
+
 struct SquareService_reportMessageSummary_args {
     1: ReportMessageSummaryRequest request;
 }
+
 struct SquareService_reportSquareChat_args {
     1: ReportSquareChatRequest request;
 }
+
 struct SquareService_reportSquareMember_args {
     1: ReportSquareMemberRequest request;
 }
+
 struct SquareService_reportSquareMessage_args {
     1: ReportSquareMessageRequest request;
 }
+
 struct SquareService_reportSquare_args {
     1: ReportSquareRequest request;
 }
+
 struct SquareService_searchSquareChatMembers_args {
     1: SearchSquareChatMembersRequest request;
 }
+
 struct SquareService_searchSquareChatMentionables_args {
     1: SearchSquareChatMentionablesRequest request;
 }
+
 struct SquareService_searchSquareMembers_args {
     1: SearchSquareMembersRequest request;
 }
+
 struct SquareService_searchSquares_args {
     1: SearchSquaresRequest request;
 }
+
 struct SquareService_sendMessage_args {
     1: SendMessageRequest request;
 }
+
 struct SquareService_sendSquareThreadMessage_args {
     1: SendSquareThreadMessageRequest request;
 }
+
 struct SquareService_syncSquareMembers_args {
     1: SyncSquareMembersRequest request;
 }
+
 struct SquareService_unhideSquareMemberContents_args {
     1: UnhideSquareMemberContentsRequest request;
 }
+
 struct SquareService_unsendMessage_args {
     1: UnsendMessageRequest request;
 }
+
 struct SquareService_updateSquareAuthority_args {
     1: UpdateSquareAuthorityRequest request;
 }
+
 struct SquareService_updateSquareChatMember_args {
     1: UpdateSquareChatMemberRequest request;
 }
+
 struct SquareService_updateSquareChat_args {
     1: UpdateSquareChatRequest request;
 }
+
 struct SquareService_updateSquareFeatureSet_args {
     1: UpdateSquareFeatureSetRequest request;
 }
+
 struct SquareService_updateSquareMemberRelation_args {
     1: UpdateSquareMemberRelationRequest request;
 }
+
 struct SquareService_updateSquareMember_args {
     1: UpdateSquareMemberRequest request;
 }
+
 struct SquareService_updateSquareMembers_args {
     1: UpdateSquareMembersRequest request;
 }
+
 struct SquareService_updateSquare_args {
     1: UpdateSquareRequest request;
 }
+
 struct SquareService_updateUserSettings_args {
     1: UpdateUserSettingsRequest request;
 }
+
 struct approveChannelAndIssueChannelToken_args {
     1: string channelId;
 }
+
 struct approveChannelAndIssueChannelToken_result {
     0: ChannelToken success;
     1: ChannelException e;
 }
+
 struct authenticateUsingBankAccountEx_args {
     1: r80_EnumC34362b type;
     2: string bankId;
@@ -10671,293 +12577,377 @@ struct authenticateUsingBankAccountEx_args {
     5: r80_EnumC34361a accountProductCode;
     6: string authToken;
 }
+
 struct authenticateUsingBankAccountEx_result {
     0: PaymentAuthenticationInfo success;
     1: PaymentException e;
 }
+
 struct authenticateWithPaak_args {
     1: AuthenticateWithPaakRequest request;
 }
+
 struct authenticateWithPaak_args {
     1: AuthenticateWithPaakRequest request;
 }
+
 struct authenticateWithPaak_result {
     0: n80_C31222b success;
     1: ChannelPaakAuthnException cpae;
     2: TokenAuthException tae;
 }
+
 struct authenticateWithPaak_result {
     0: o80_C32273b success;
     1: SecondaryPwlessLoginException e;
 }
+
 struct blockContact_args {
     1: i32 reqSeq;
     2: string id;
 }
+
 struct blockContact_result {
     1: TalkException e;
 }
+
 struct blockRecommendation_args {
     1: i32 reqSeq;
     2: string targetMid;
 }
+
 struct blockRecommendation_result {
     1: TalkException e;
 }
+
 struct bulkFollow_args {
     2: BulkFollowRequest bulkFollowRequest;
 }
+
 struct bulkFollow_result {
     0: Pb1_C12996g1 success;
     1: TalkException e;
 }
+
 struct bulkGetSetting_args {
     2: BulkGetRequest request;
 }
+
 struct bulkGetSetting_result {
     0: s80_t80_b success;
     1: SettingsException e;
 }
+
 struct bulkSetSetting_args {
     2: s80_t80_c request;
 }
+
 struct bulkSetSetting_result {
     0: s80_t80_d success;
     1: SettingsException e;
 }
+
 struct buyMustbuyProduct_args {
     2: BuyMustbuyRequest request;
 }
+
 struct buyMustbuyProduct_result {
     1: ShopException e;
 }
+
 struct canCreateCombinationSticker_args {
     2: CanCreateCombinationStickerRequest request;
 }
+
 struct canCreateCombinationSticker_result {
     0: CanCreateCombinationStickerResponse success;
     1: ShopException e;
 }
+
 struct canReceivePresent_args {
     2: string shopId;
     3: string productId;
     4: Locale locale;
     5: string recipientMid;
 }
+
 struct canReceivePresent_result {
     1: ShopException e;
 }
+
 struct cancelChatInvitation_args {
     1: CancelChatInvitationRequest request;
 }
+
 struct cancelChatInvitation_result {
     0: Pb1_U1 success;
     1: TalkException e;
 }
+
 struct cancelPaakAuth_args {
     1: CancelPaakAuthRequest request;
 }
+
 struct cancelPaakAuth_result {
     0: o80_d success;
     1: SecondaryPwlessLoginException e;
 }
+
 struct cancelPaakAuthentication_args {
     1: CancelPaakAuthenticationRequest request;
 }
+
 struct cancelPaakAuthentication_result {
     0: n80_d success;
     1: ChannelPaakAuthnException cpae;
     2: TokenAuthException tae;
 }
+
 struct cancelPinCode_args {
     1: CancelPinCodeRequest request;
 }
+
 struct cancelPinCode_result {
     0: q80_C33650b success;
     1: SecondaryQrCodeException e;
 }
+
 struct cancelReaction_args {
     1: CancelReactionRequest cancelReactionRequest;
 }
+
 struct cancelReaction_result {
     1: TalkException e;
 }
+
 struct changeSubscription_args {
     2: YN0_Ob1_r req;
 }
+
 struct changeSubscription_result {
     0: ChangeSubscriptionResponse success;
     1: ShopException e;
 }
+
 struct changeVerificationMethod_args {
     2: string sessionId;
     3: VerificationMethod method;
 }
+
 struct changeVerificationMethod_result {
     0: VerificationSessionData success;
     1: TalkException e;
 }
+
 struct checkCanUnregisterEx_args {
     1: r80_n0 type;
 }
+
 struct checkCanUnregisterEx_result {
     0: UnregisterAvailabilityInfo success;
     1: PaymentException e;
 }
+
 struct I80_C26370F {
     1: I80_C26396d request;
 }
+
 struct checkEmailAssigned_args {
     1: string authSessionId;
     2: AccountIdentifier accountIdentifier;
 }
+
 struct checkEmailAssigned_result {
     0: CheckEmailAssignedResponse success;
     1: AuthException e;
 }
+
 struct I80_C26371G {
     0: I80_C26398e success;
     1: I80_C26390a e;
 }
+
 struct checkIfEncryptedE2EEKeyReceived_args {
     1: CheckIfEncryptedE2EEKeyReceivedRequest request;
 }
+
 struct checkIfEncryptedE2EEKeyReceived_result {
     0: CheckIfEncryptedE2EEKeyReceivedResponse success;
     1: PrimaryQrCodeMigrationException e;
 }
+
 struct I80_C26372H {
     1: I80_C26400f request;
 }
+
 struct checkIfPasswordSetVerificationEmailVerified_args {
     1: string authSessionId;
 }
+
 struct checkIfPasswordSetVerificationEmailVerified_result {
     0: T70_C14398f success;
     1: AuthException e;
 }
+
 struct I80_C26373I {
     0: I80_C26402g success;
     1: I80_C26390a e;
 }
+
 struct checkIfPhonePinCodeMsgVerified_args {
     1: CheckIfPhonePinCodeMsgVerifiedRequest request;
 }
+
 struct checkIfPhonePinCodeMsgVerified_result {
     0: CheckIfPhonePinCodeMsgVerifiedResponse success;
     1: AuthException e;
 }
+
 struct checkOperationTimeEx_args {
     1: r80_EnumC34368h type;
     2: string lpAccountNo;
     3: r80_EnumC34371k channelType;
 }
+
 struct checkOperationTimeEx_result {
     0: CheckOperationResult success;
     1: PaymentException e;
 }
+
 struct checkUserAgeAfterApprovalWithDocomoV2_args {
     1: CheckUserAgeAfterApprovalWithDocomoV2Request request;
 }
+
 struct checkUserAgeAfterApprovalWithDocomoV2_result {
     0: CheckUserAgeAfterApprovalWithDocomoV2Response success;
     1: TalkException e;
 }
+
 struct checkUserAgeWithDocomoV2_args {
     1: CheckUserAgeWithDocomoV2Request request;
 }
+
 struct checkUserAgeWithDocomoV2_result {
     0: CheckUserAgeWithDocomoV2Response success;
     1: TalkException e;
 }
+
 struct checkUserAge_args {
     2: CarrierCode carrier;
     3: string sessionId;
     4: string verifier;
     5: i32 standardAge;
 }
+
 struct checkUserAge_result {
     0: Pb1_gd success;
     1: TalkException e;
 }
+
 struct clearRingbackTone_result {
     1: TalkException e;
 }
+
 struct clearRingtone_args {
     1: string oid;
 }
+
 struct clearRingtone_result {
     1: TalkException e;
 }
+
 struct AcceptSpeakersResponse {
     
 }
+
 struct AcceptToChangeRoleResponse {
     
 }
+
 struct AcceptToListenResponse {
     
 }
+
 struct AcceptToSpeakResponse {
     
 }
+
 struct AgreeToTermsResponse {
     
 }
+
 struct AllNonMemberLiveTalkParticipants {
     
 }
+
 struct CancelToSpeakResponse {
     
 }
+
 struct DeleteSquareChatAnnouncementResponse {
     
 }
+
 struct DeleteSquareChatResponse {
     
 }
+
 struct DeleteSquareResponse {
     
 }
+
 struct DestroyMessageResponse {
     
 }
+
 struct DestroyMessagesResponse {
     
 }
+
 struct ForceEndLiveTalkResponse {
     
 }
+
 struct GetPopularKeywordsRequest {
     
 }
+
 struct GetSquareCategoriesRequest {
     
 }
+
 struct HideSquareMemberContentsResponse {
     
 }
+
 struct InviteToChangeRoleResponse {
     
 }
+
 struct InviteToListenResponse {
     
 }
+
 struct InviteToLiveTalkResponse {
     
 }
+
 struct InviteToSquareResponse {
     
 }
+
 struct KickOutLiveTalkParticipantsResponse {
     
 }
+
 struct LeaveSquareChatResponse {
     
 }
+
 struct LeaveSquareResponse {
     
 }
+
 struct LiveTalkEventPayload {
     1: LiveTalkEventNotifiedUpdateLiveTalkTitle notifiedUpdateLiveTalkTitle;
     2: LiveTalkEventNotifiedUpdateLiveTalkAnnouncement notifiedUpdateLiveTalkAnnouncement;
@@ -10965,58 +12955,76 @@ struct LiveTalkEventPayload {
     4: LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak notifiedUpdateLiveTalkAllowRequestToSpeak;
     5: LiveTalkEventNotifiedUpdateSquareMember notifiedUpdateSquareMember;
 }
+
 struct LiveTalkKickOutTarget {
     1: LiveTalkParticipant liveTalkParticipant;
     2: AllNonMemberLiveTalkParticipants allNonMemberLiveTalkParticipants;
 }
+
 struct MarkAsReadResponse {
     
 }
+
 struct MarkChatsAsReadResponse {
     
 }
+
 struct MarkThreadsAsReadResponse {
     
 }
+
 struct RejectSpeakersResponse {
     
 }
+
 struct RejectToSpeakResponse {
     
 }
+
 struct RemoveLiveTalkSubscriptionResponse {
     
 }
+
 struct RemoveSubscriptionsResponse {
     
 }
+
 struct ReportLiveTalkResponse {
     
 }
+
 struct ReportLiveTalkSpeakerResponse {
     
 }
+
 struct ReportMessageSummaryResponse {
     
 }
+
 struct ReportSquareChatResponse {
     
 }
+
 struct ReportSquareMemberResponse {
     
 }
+
 struct ReportSquareMessageResponse {
     
 }
+
 struct ReportSquareResponse {
     
 }
+
 struct RequestToListenResponse {
     
 }
+
 struct RequestToSpeakResponse {
     
 }
+
 struct SquareEventPayload {
     1: SquareEventReceiveMessage receiveMessage;
     2: SquareEventSendMessage sendMessage;
@@ -11077,27 +13085,34 @@ struct SquareEventPayload {
     57: SquareEventNotifiedUpdateThreadRootMessage notifiedUpdateThreadRootMessage;
     58: SquareEventNotifiedUpdateThreadRootMessageStatus notifiedUpdateThreadRootMessageStatus;
 }
+
 struct UnhideSquareMemberContentsResponse {
     
 }
+
 struct UpdateLiveTalkAttrsResponse {
     
 }
+
 struct UpdateUserSettingsResponse {
     
 }
+
 struct ButtonBGColor {
     1: CustomColor custom;
     2: DefaultGradientColor defaultGradient;
 }
+
 struct ButtonContent {
     1: UrlButton urlButton;
     2: TextButton textButton;
     3: OkButton okButton;
 }
+
 struct DefaultGradientColor {
     
 }
+
 struct ErrorExtraInfo {
     1: i32 preconditionFailedExtraInfo;
     2: UserRestrictionExtraInfo userRestrictionInfo;
@@ -11105,257 +13120,332 @@ struct ErrorExtraInfo {
     4: LiveTalkExtraInfo liveTalkExtraInfo;
     5: TermsAgreementExtraInfo termsAgreementExtraInfo;
 }
+
 struct Mentionable {
     1: MentionableSquareMember squareMember;
     2: MentionableBot bot;
 }
+
 struct MessageStatusContents {
-    1: SquareMessageReactionStatus messageReactionStatus;
+    1: _any messageReactionStatus;
 }
+
 struct PopupContent {
     1: MainPopup mainPopUp;
     2: ChatroomPopup chatroomPopup;
 }
+
 struct SquareActivityScore {
-    1: SquareCleanScore cleanScore;
+    1: _any cleanScore;
+}
+struct TextMessageAnnouncementContents {
+    1: string messageId;
+    2: string text;
+    3: string senderSquareMemberMid;
+    4: i64 createdAt;
 }
 struct SquareChatAnnouncementContents {
     1: TextMessageAnnouncementContents textMessageAnnouncementContents;
 }
+
 struct TargetChats {
-    1: set<_any> mids;
-    2: set<_any> categories;
+    1: set<string> mids;
+    2: set<string> categories;
     3: i32 channelId;
 }
+
 struct TargetUsers {
-    1: set<_any> mids;
+    1: set<string> mids;
 }
+
 struct TermsAgreement {
-    1: AiQnABotTermsAgreement aiQnABot;
+    1: _any aiQnABot;
 }
+
 struct confirmIdentifier_args {
     2: string authSessionId;
     3: IdentityCredentialRequest request;
 }
+
 struct confirmIdentifier_result {
     0: IdentityCredentialResponse success;
     1: TalkException e;
 }
+
 struct connectEapAccount_args {
     1: ConnectEapAccountRequest request;
 }
+
 struct connectEapAccount_result {
     0: Q70_l success;
     1: AccountEapConnectException e;
 }
+
 struct createChatRoomAnnouncement_args {
     1: i32 reqSeq;
     2: string chatRoomMid;
     3: Pb1_X2 type;
     4: ChatRoomAnnouncementContents contents;
 }
+
 struct createChatRoomAnnouncement_result {
     0: ChatRoomAnnouncement success;
     1: TalkException e;
 }
+
 struct createChat_args {
     1: CreateChatRequest request;
 }
+
 struct createChat_result {
     0: CreateChatResponse success;
     1: TalkException e;
 }
+
 struct createCollectionForUser_args {
     1: YN0_Ob1_A request;
 }
+
 struct createCollectionForUser_result {
     0: YN0_Ob1_B success;
     1: CollectionException e;
 }
+
 struct createCombinationSticker_args {
     2: YN0_Ob1_C request;
 }
+
 struct createCombinationSticker_result {
     0: YN0_Ob1_D success;
     1: ShopException e;
 }
+
 struct createE2EEKeyBackupEnforced_args {
     2: Pb1_C13263z3 request;
 }
+
 struct createE2EEKeyBackupEnforced_result {
     0: Pb1_B3 success;
     1: E2EEKeyBackupException e;
 }
+
 struct createGroupCallUrl_args {
     2: CreateGroupCallUrlRequest request;
 }
+
 struct createGroupCallUrl_result {
     0: CreateGroupCallUrlResponse success;
     1: TalkException e;
 }
+
 struct createLifetimeKeyBackup_args {
     2: Pb1_E3 request;
 }
+
 struct createLifetimeKeyBackup_result {
     0: Pb1_F3 success;
     1: E2EEKeyBackupException e;
 }
+
 struct createMultiProfile_args {
     1: CreateMultiProfileRequest request;
 }
+
 struct createMultiProfile_result {
     0: CreateMultiProfileResponse success;
     1: TalkException e;
 }
+
 struct createRoomV2_args {
     1: i32 reqSeq;
     2: list<string> contactIds;
 }
+
 struct createRoomV2_result {
     0: Room success;
     1: TalkException e;
 }
+
 struct createSession_args {
     1: R70_a request;
 }
+
 struct createSession_args {
     1: U70_a request;
 }
+
 struct createSession_args {
     1: h80_C25643c request;
 }
+
 struct I80_C26365A {
     1: I80_C26404h request;
 }
+
 struct createSession_result {
     0: CreateSessionResponse success;
     1: PwlessCredentialException e;
 }
+
 struct createSession_result {
     0: CreateSessionResponse success;
     1: PasswordUpdateException pue;
     2: TokenAuthException tae;
 }
+
 struct createSession_result {
     0: CreateSessionResponse success;
     1: PrimaryQrCodeMigrationException pqme;
     2: TokenAuthException tae;
 }
+
 struct I80_C26366B {
     0: I80_C26406i success;
     1: I80_C26390a e;
     2: TokenAuthException tae;
 }
+
 struct decryptFollowEMid_args {
     2: string eMid;
 }
+
 struct decryptFollowEMid_result {
     0: string success;
     1: TalkException e;
 }
+
 struct deleteE2EEKeyBackup_args {
     2: Pb1_H3 request;
 }
+
 struct deleteE2EEKeyBackup_result {
     0: Pb1_I3 success;
     1: E2EEKeyBackupException e;
 }
+
 struct deleteGroupCallUrl_args {
     2: DeleteGroupCallUrlRequest request;
 }
+
 struct deleteGroupCallUrl_result {
     0: Pb1_K3 success;
     1: TalkException e;
 }
+
 struct deleteMultiProfile_args {
     1: DeleteMultiProfileRequest request;
 }
+
 struct deleteMultiProfile_result {
     0: gN0_C25147d success;
     1: TalkException e;
 }
+
 struct deleteOtherFromChat_args {
     1: DeleteOtherFromChatRequest request;
 }
+
 struct deleteOtherFromChat_result {
     0: Pb1_M3 success;
     1: TalkException e;
 }
+
 struct deletePrimaryCredential_args {
     1: R70_c request;
 }
+
 struct deletePrimaryCredential_result {
     0: R70_d success;
     1: PwlessCredentialException e;
 }
+
 struct deleteSafetyStatus_args {
     1: DeleteSafetyStatusRequest req;
 }
+
 struct deleteSafetyStatus_result {
     1: vh_Fg_b e;
 }
+
 struct deleteSelfFromChat_args {
     1: DeleteSelfFromChatRequest request;
 }
+
 struct deleteSelfFromChat_result {
     0: Pb1_O3 success;
     1: TalkException e;
 }
+
 struct determineMediaMessageFlow_args {
     1: DetermineMediaMessageFlowRequest request;
 }
+
 struct determineMediaMessageFlow_result {
     0: DetermineMediaMessageFlowResponse success;
     1: TalkException e;
 }
+
 struct disableNearby_result {
     1: TalkException e;
 }
+
 struct disconnectEapAccount_args {
     1: DisconnectEapAccountRequest request;
 }
+
 struct disconnectEapAccount_result {
     0: Q70_o success;
     1: AccountEapConnectException e;
 }
+
 struct do0_C23138A {
-    1: do0_ConnectDeviceOperation connectDevice;
-    2: do0_ExecuteOnetimeScenarioOperation executeOnetimeScenario;
+    1: ConnectDeviceOperation connectDevice;
+    2: ExecuteOnetimeScenarioOperation executeOnetimeScenario;
 }
+
 struct do0_C23141D {
-    1: do0_GattReadAction gattRead;
-    2: do0_GattWriteAction gattWrite;
-    3: do0_SleepAction sleep;
-    4: do0_DisconnectAction disconnect;
-    5: do0_StopNotificationAction stopNotification;
+    1: GattReadAction gattRead;
+    2: do0_C23158p gattWrite;
+    3: SleepAction sleep;
+    4: do0_C23153k disconnect;
+    5: StopNotificationAction stopNotification;
 }
+
 struct do0_C23142E {
-    1: do0_VoidScenarioActionResult voidResult;
-    2: do0_BinaryScenarioActionResult binaryResult;
+    1: do0_m0 voidResult;
+    2: do0_C23143a binaryResult;
 }
+
 struct do0_C23143a {
     1: string bytes;
 }
+
 struct do0_C23152j {
     
 }
+
 struct do0_C23153k {
     
 }
+
 struct do0_C23158p {
     1: string serviceUuid;
     2: string characteristicUuid;
     3: string data;
 }
+
 struct do0_C23161t {
     
 }
+
 struct do0_C23165x {
     
 }
+
 struct do0_C23167z {
     
 }
+
 struct do0_F {
     1: string scenarioId;
     2: string deviceId;
@@ -11368,88 +13458,113 @@ struct do0_F {
     9: list<do0_C23142E> actionResults;
     10: string connectionId;
 }
+
 struct do0_I {
-    1: do0_ImmediateTrigger immediate;
-    2: do0_BleNotificationReceivedTrigger bleNotificationReceived;
+    1: do0_C23161t immediate;
+    2: BleNotificationReceivedTrigger bleNotificationReceived;
 }
+
 struct do0_V {
     
 }
+
 struct do0_X {
     
 }
+
 struct do0_m0 {
     
 }
+
 struct editItemsInCollection_args {
     1: YN0_Ob1_F request;
 }
+
 struct editItemsInCollection_result {
     0: YN0_Ob1_G success;
     1: CollectionException e;
 }
+
 struct enablePointForOneTimeKey_args {
     1: bool usePoint;
 }
+
 struct enablePointForOneTimeKey_result {
     1: PaymentException e;
 }
+
 struct establishE2EESession_args {
     1: YN0_Ob1_J request;
 }
+
 struct establishE2EESession_result {
     0: YN0_Ob1_K success;
     1: ShopException e;
 }
+
 struct existPinCode_args {
     1: S70_b request;
 }
+
 struct existPinCode_result {
     0: ExistPinCodeResponse success;
     1: SecondAuthFactorPinCodeException e;
 }
+
 struct fN0_C24471c {
     
 }
+
 struct fN0_C24473e {
     
 }
+
 struct fN0_C24475g {
     
 }
+
 struct fN0_C24476h {
     
 }
+
 struct fetchOperations_args {
     1: FetchOperationsRequest request;
 }
+
 struct fetchOperations_result {
     0: FetchOperationsResponse success;
     1: ThingsException e;
 }
+
 struct fetchPhonePinCodeMsg_args {
     1: FetchPhonePinCodeMsgRequest request;
 }
+
 struct fetchPhonePinCodeMsg_result {
     0: FetchPhonePinCodeMsgResponse success;
     1: AuthException e;
 }
+
 struct findAndAddContactByMetaTag_result {
     0: Contact success;
     1: TalkException e;
 }
+
 struct findAndAddContactsByMid_result {
     0: map<string, Contact> success;
     1: TalkException e;
 }
+
 struct findAndAddContactsByPhone_result {
     0: map<string, Contact> success;
     1: TalkException e;
 }
+
 struct findAndAddContactsByUserid_result {
     0: map<string, Contact> success;
     1: TalkException e;
 }
+
 struct findBuddyContactsByQuery_args {
     2: string language;
     3: string country;
@@ -11458,420 +13573,535 @@ struct findBuddyContactsByQuery_args {
     6: i32 count;
     7: Pb1_F0 requestSource;
 }
+
 struct findBuddyContactsByQuery_result {
     0: list<BuddySearchResult> success;
     1: TalkException e;
 }
+
 struct findChatByTicket_args {
     1: FindChatByTicketRequest request;
 }
+
 struct findChatByTicket_result {
     0: FindChatByTicketResponse success;
     1: TalkException e;
 }
+
 struct findContactByUserTicket_args {
     2: string ticketIdWithTag;
 }
+
 struct findContactByUserTicket_result {
     0: Contact success;
     1: TalkException e;
 }
+
 struct findContactByUserid_args {
     2: string searchId;
 }
+
 struct findContactByUserid_result {
     0: Contact success;
     1: TalkException e;
 }
+
 struct findContactsByPhone_args {
     2: set<string> phones;
 }
+
 struct findContactsByPhone_result {
     0: map<string, Contact> success;
     1: TalkException e;
 }
+
 struct finishUpdateVerification_args {
     2: string sessionId;
 }
+
 struct finishUpdateVerification_result {
     1: TalkException e;
 }
+
 struct follow_args {
     2: FollowRequest followRequest;
 }
+
 struct follow_result {
     1: TalkException e;
 }
+
 struct gN0_C25143G {
     
 }
+
 struct gN0_C25147d {
     
 }
+
 struct generateUserTicket_args {
     3: i64 expirationTime;
     4: i32 maxUseCount;
 }
+
 struct generateUserTicket_result {
     0: Ticket success;
     1: TalkException e;
 }
+
 struct getAccessToken_args {
     1: GetAccessTokenRequest request;
 }
+
 struct getAccessToken_result {
     0: GetAccessTokenResponse success;
     1: TalkException e;
 }
+
 struct getAccountBalanceAsync_args {
     1: string requestToken;
     2: string accountId;
 }
+
 struct getAccountBalanceAsync_result {
     1: PaymentException e;
 }
+
 struct I80_C26374J {
     1: I80_C26410k request;
 }
+
 struct getAcctVerifMethod_args {
     1: string authSessionId;
     2: AccountIdentifier accountIdentifier;
 }
+
 struct getAcctVerifMethod_result {
     0: GetAcctVerifMethodResponse success;
     1: AuthException e;
 }
+
 struct I80_C26375K {
     0: I80_C26412l success;
     1: I80_C26390a e;
 }
+
 struct getAllChatMids_args {
     1: GetAllChatMidsRequest request;
     2: Pb1_V7 syncReason;
 }
+
 struct getAllChatMids_result {
     0: GetAllChatMidsResponse success;
     1: TalkException e;
 }
+
 struct getAllContactIds_args {
     1: Pb1_V7 syncReason;
 }
+
 struct getAllContactIds_result {
     0: list<string> success;
     1: TalkException e;
 }
+
 struct getAllowedRegistrationMethod_args {
     1: string authSessionId;
     2: string countryCode;
 }
+
 struct getAllowedRegistrationMethod_result {
     0: GetAllowedRegistrationMethodResponse success;
     1: AuthException e;
 }
+
 struct getAnalyticsInfo_result {
     0: AnalyticsInfo success;
     1: TalkException e;
 }
+
 struct getApprovedChannels_args {
     2: i64 lastSynced;
     3: string locale;
 }
+
 struct getApprovedChannels_result {
     0: ApprovedChannelInfos success;
     1: ChannelException e;
 }
+
 struct getAssertionChallenge_args {
     1: m80_l request;
 }
+
 struct getAssertionChallenge_result {
     0: GetAssertionChallengeResponse success;
     1: m80_b deviceAttestationException;
     2: m80_C30146a attestationRequiredException;
 }
+
 struct getAttestationChallenge_args {
     1: m80_n request;
 }
+
 struct getAttestationChallenge_result {
     0: GetAttestationChallengeResponse success;
     1: m80_b deviceAttestationException;
 }
+
 struct getAuthRSAKey_args {
     2: string authSessionId;
     3: IdentityProvider identityProvider;
 }
+
 struct getAuthRSAKey_result {
     0: RSAKey success;
     1: TalkException e;
 }
+
 struct getAuthorsLatestProducts_args {
     2: LatestProductsByAuthorRequest latestProductsByAuthorRequest;
 }
+
 struct getAuthorsLatestProducts_result {
     0: LatestProductsByAuthorResponse success;
     1: ShopException e;
 }
+
 struct getAutoSuggestionShowcase_args {
     2: AutoSuggestionShowcaseRequest autoSuggestionShowcaseRequest;
 }
+
 struct getAutoSuggestionShowcase_result {
     0: AutoSuggestionShowcaseResponse success;
     1: ShopException e;
 }
+
 struct getBalanceSummaryV2_args {
     1: NZ0_C12208u request;
 }
+
 struct getBalanceSummaryV2_result {
     0: GetBalanceSummaryResponseV2 success;
     1: WalletException e;
 }
+
 struct getBalanceSummaryV4WithPayV3_args {
     1: NZ0_C12214w request;
 }
+
 struct getBalanceSummaryV4WithPayV3_result {
     0: GetBalanceSummaryV4WithPayV3Response success;
     1: WalletException e;
 }
+
 struct getBalance_args {
     1: ZQ0_b request;
 }
+
 struct getBalance_result {
     0: GetBalanceResponse success;
     1: PointException e;
 }
+
 struct getBankBranches_args {
     1: string financialCorpId;
     2: string query;
     3: i32 startNum;
     4: i32 count;
 }
+
 struct getBankBranches_result {
     0: list<BankBranchInfo> success;
     1: PaymentException e;
 }
+
 struct getBanners_args {
     1: BannerRequest request;
 }
+
 struct getBanners_result {
     0: BannerResponse success;
 }
+
 struct getBirthdayEffect_args {
     1: Eh_C8933a req;
 }
+
 struct getBirthdayEffect_result {
     0: GetBirthdayEffectResponse success;
     1: Eh_Fg_b e;
 }
+
 struct getBleDevice_args {
     1: GetBleDeviceRequest request;
 }
+
 struct getBleDevice_result {
     0: ThingsDevice success;
     1: ThingsException e;
 }
+
 struct getBleProducts_result {
     0: list<BleProduct> success;
     1: ThingsException e;
 }
+
 struct getBlockedContactIds_args {
     1: Pb1_V7 syncReason;
 }
+
 struct getBlockedContactIds_result {
     0: list<string> success;
     1: TalkException e;
 }
+
 struct getBlockedRecommendationIds_args {
     1: Pb1_V7 syncReason;
 }
+
 struct getBlockedRecommendationIds_result {
     0: list<string> success;
     1: TalkException e;
 }
+
 struct getBrowsingHistory_args {
     2: YN0_Ob1_L getBrowsingHistoryRequest;
 }
+
 struct getBrowsingHistory_result {
     0: YN0_Ob1_M success;
     1: ShopException e;
 }
+
 struct getBuddyChatBarV2_args {
     1: GetBuddyChatBarRequest request;
 }
+
 struct getBuddyChatBarV2_result {
     0: BuddyChatBar success;
     1: TalkException e;
 }
+
 struct getBuddyDetailWithPersonal_args {
     1: string buddyMid;
     2: set<Pb1_D0> attributeSet;
 }
+
 struct getBuddyDetailWithPersonal_result {
     0: BuddyDetailWithPersonal success;
     1: TalkException e;
 }
+
 struct getBuddyDetail_args {
     4: string buddyMid;
 }
+
 struct getBuddyDetail_result {
     0: BuddyDetail success;
     1: TalkException e;
 }
+
 struct getBuddyLive_args {
     1: GetBuddyLiveRequest request;
 }
+
 struct getBuddyLive_result {
     0: GetBuddyLiveResponse success;
     1: TalkException e;
 }
+
 struct getBuddyOnAir_args {
     4: string buddyMid;
 }
+
 struct getBuddyOnAir_result {
     0: BuddyOnAir success;
     1: TalkException e;
 }
+
 struct getBuddyStatusBarV2_args {
     1: GetBuddyStatusBarV2Request request;
 }
+
 struct getBuddyStatusBarV2_result {
     0: BuddyStatusBar success;
     1: TalkException e;
 }
+
 struct getCallStatus_args {
     1: GetCallStatusRequest request;
 }
+
 struct getCallStatus_result {
     0: GetCallStatusResponse success;
     1: OaChatException e;
 }
+
 struct getCampaign_args {
     1: GetCampaignRequest request;
 }
+
 struct getCampaign_result {
     0: GetCampaignResponse success;
     1: WalletException e;
 }
+
 struct getChallengeForPaakAuth_args {
     1: GetChallengeForPaakAuthRequest request;
 }
+
 struct getChallengeForPaakAuth_args {
     1: GetChallengeForPaakAuthRequest request;
 }
+
 struct getChallengeForPaakAuth_result {
     0: GetChallengeForPaakAuthResponse success;
     1: ChannelPaakAuthnException cpae;
     2: TokenAuthException tae;
 }
+
 struct getChallengeForPaakAuth_result {
     0: GetChallengeForPaakAuthResponse success;
     1: SecondaryPwlessLoginException e;
 }
+
 struct getChallengeForPrimaryReg_args {
     1: GetChallengeForPrimaryRegRequest request;
 }
+
 struct getChallengeForPrimaryReg_result {
     0: GetChallengeForPrimaryRegResponse success;
     1: PwlessCredentialException e;
 }
+
 struct getChannelContext_args {
     1: GetChannelContextRequest request;
 }
+
 struct getChannelContext_result {
     0: GetChannelContextResponse success;
     1: ChannelPaakAuthnException cpae;
     2: TokenAuthException tae;
 }
+
 struct getChannelInfo_args {
     2: string channelId;
     3: string locale;
 }
+
 struct getChannelInfo_result {
     0: ChannelInfo success;
     1: ChannelException e;
 }
+
 struct getChannelNotificationSettings_args {
     1: string locale;
 }
+
 struct getChannelNotificationSettings_result {
     0: list<ChannelNotificationSetting> success;
     1: ChannelException e;
 }
+
 struct getChannelSettings_result {
     0: ChannelSettings success;
     1: ChannelException e;
 }
+
 struct getChatEffectMetaList_args {
     1: set<Pb1_Q2> categories;
 }
+
 struct getChatEffectMetaList_result {
     0: list<ChatEffectMeta> success;
     1: TalkException e;
 }
+
 struct getChatRoomAnnouncementsBulk_args {
     2: list<string> chatRoomMids;
     3: Pb1_V7 syncReason;
 }
+
 struct getChatRoomAnnouncementsBulk_result {
     0: map<string, list<_any>> success;
     1: TalkException e;
 }
+
 struct getChatRoomAnnouncements_args {
     2: string chatRoomMid;
 }
+
 struct getChatRoomAnnouncements_result {
     0: list<ChatRoomAnnouncement> success;
     1: TalkException e;
 }
+
 struct getChatRoomBGMs_args {
     2: set<string> chatRoomMids;
     3: Pb1_V7 syncReason;
 }
+
 struct getChatRoomBGMs_result {
     0: map<string, ChatRoomBGM> success;
     1: TalkException e;
 }
+
 struct getChatapp_args {
     1: GetChatappRequest request;
 }
+
 struct getChatapp_result {
     0: GetChatappResponse success;
     1: ChatappException e;
 }
+
 struct getChats_args {
     1: GetChatsRequest request;
     2: Pb1_V7 syncReason;
 }
+
 struct getChats_result {
     0: GetChatsResponse success;
     1: TalkException e;
 }
+
 struct getCoinProducts_args {
     1: GetCoinProductsRequest request;
 }
+
 struct getCoinProducts_result {
     0: GetCoinProductsResponse success;
     1: CoinException e;
 }
+
 struct getCoinPurchaseHistory_args {
     1: GetCoinHistoryRequest request;
 }
+
 struct getCoinPurchaseHistory_result {
     0: GetCoinHistoryResponse success;
     1: CoinException e;
 }
+
 struct getCoinUseAndRefundHistory_args {
     1: GetCoinHistoryRequest request;
 }
+
 struct getCoinUseAndRefundHistory_result {
     0: GetCoinHistoryResponse success;
     1: CoinException e;
 }
+
 struct getCommonDomains_args {
     1: i64 lastSynced;
 }
+
 struct getCommonDomains_result {
     0: ChannelDomains success;
     1: ChannelException e;
 }
+
 struct getConfigurations_args {
     2: i64 revision;
     3: string regionOfUsim;
@@ -11880,13 +14110,16 @@ struct getConfigurations_args {
     6: string carrier;
     7: Pb1_V7 syncReason;
 }
+
 struct getConfigurations_result {
     0: Configurations success;
     1: TalkException e;
 }
+
 struct getContactCalendarEvents_args {
     1: GetContactCalendarEventsRequest request;
 }
+
 struct getContactCalendarEvents_result {
     0: GetContactCalendarEventsResponse success;
     1: RejectedException re;
@@ -11894,13 +14127,16 @@ struct getContactCalendarEvents_result {
     3: TalkException te;
     4: ExcessiveRequestItemException ere;
 }
+
 struct getContact_result {
     0: Contact success;
     1: TalkException e;
 }
+
 struct getContactsV3_args {
     1: GetContactsV3Request request;
 }
+
 struct getContactsV3_result {
     0: GetContactsV3Response success;
     1: RejectedException be;
@@ -11908,142 +14144,180 @@ struct getContactsV3_result {
     3: TalkException te;
     4: ExcessiveRequestItemException ere;
 }
+
 struct getContacts_result {
     0: list<Contact> success;
     1: TalkException e;
 }
+
 struct getCountries_args {
     2: Pb1_EnumC13221w3 countryGroup;
 }
+
 struct getCountries_result {
     0: set<string> success;
     1: TalkException e;
 }
+
 struct I80_C26376L {
     1: I80_C26413m request;
 }
+
 struct getCountryInfo_args {
     1: string authSessionId;
     11: SimCard simCard;
 }
+
 struct getCountryInfo_result {
     0: GetCountryInfoResponse success;
     1: AuthException e;
 }
+
 struct I80_C26377M {
     0: I80_C26414n success;
     1: I80_C26390a e;
 }
+
 struct getCountryWithRequestIp_result {
     0: string success;
     1: TalkException e;
 }
+
 struct getDataRetention_args {
     1: fN0_C24473e req;
 }
+
 struct getDataRetention_result {
     0: GetPremiumDataRetentionResponse success;
     1: PremiumException e;
 }
+
 struct getDestinationUrl_args {
     1: DestinationLIFFRequest request;
 }
+
 struct getDestinationUrl_result {
     0: DestinationLIFFResponse success;
     1: LiffException liffException;
 }
+
 struct getDisasterCases_args {
     1: vh_C37633d req;
 }
+
 struct getDisasterCases_result {
     0: GetDisasterCasesResponse success;
     1: vh_Fg_b e;
 }
+
 struct getE2EEGroupSharedKey_args {
     2: i32 keyVersion;
     3: string chatMid;
     4: i32 groupKeyId;
 }
+
 struct getE2EEGroupSharedKey_result {
     0: Pb1_U3 success;
     1: TalkException e;
 }
+
 struct getE2EEKeyBackupCertificates_args {
     2: Pb1_W4 request;
 }
+
 struct getE2EEKeyBackupCertificates_result {
     0: GetE2EEKeyBackupCertificatesResponse success;
     1: E2EEKeyBackupException e;
 }
+
 struct getE2EEKeyBackupInfo_args {
     2: Pb1_Y4 request;
 }
+
 struct getE2EEKeyBackupInfo_result {
     0: GetE2EEKeyBackupInfoResponse success;
     1: E2EEKeyBackupException e;
 }
+
 struct getE2EEPublicKey_args {
     2: string mid;
     3: i32 keyVersion;
     4: i32 keyId;
 }
+
 struct getE2EEPublicKey_result {
     0: Pb1_C13097n4 success;
     1: TalkException e;
 }
+
 struct getE2EEPublicKeys_result {
     0: list<Pb1_C13097n4> success;
     1: TalkException e;
 }
+
 struct getEncryptedIdentityV3_result {
     0: Pb1_C12916a5 success;
     1: TalkException e;
 }
+
 struct getExchangeKey_args {
     1: GetExchangeKeyRequest request;
 }
+
 struct getExchangeKey_result {
     0: GetExchangeKeyResponse success;
     1: SecondaryPwlessLoginException e;
 }
+
 struct getExtendedProfile_args {
     1: Pb1_V7 syncReason;
 }
+
 struct getExtendedProfile_result {
     0: ExtendedProfile success;
     1: TalkException e;
 }
+
 struct getFollowBlacklist_args {
     2: GetFollowBlacklistRequest getFollowBlacklistRequest;
 }
+
 struct getFollowBlacklist_result {
     0: GetFollowBlacklistResponse success;
     1: TalkException e;
 }
+
 struct getFollowers_args {
     2: GetFollowersRequest getFollowersRequest;
 }
+
 struct getFollowers_result {
     0: GetFollowersResponse success;
     1: TalkException e;
 }
+
 struct getFollowings_args {
     2: GetFollowingsRequest getFollowingsRequest;
 }
+
 struct getFollowings_result {
     0: GetFollowingsResponse success;
     1: TalkException e;
 }
+
 struct getFontMetas_args {
     1: GetFontMetasRequest request;
 }
+
 struct getFontMetas_result {
     0: GetFontMetasResponse success;
     1: TalkException e;
 }
+
 struct getFriendDetails_args {
     1: GetFriendDetailsRequest request;
 }
+
 struct getFriendDetails_result {
     0: GetFriendDetailsResponse success;
     1: RejectedException re;
@@ -12051,521 +14325,662 @@ struct getFriendDetails_result {
     3: TalkException te;
     4: ExcessiveRequestItemException ere;
 }
+
 struct getFriendRequests_args {
     1: Pb1_F4 direction;
     2: i64 lastSeenSeqId;
 }
+
 struct getFriendRequests_result {
     0: list<FriendRequest> success;
     1: TalkException e;
 }
+
 struct getGnbBadgeStatus_args {
     1: GetGnbBadgeStatusRequest request;
 }
+
 struct getGnbBadgeStatus_result {
     0: GetGnbBadgeStatusResponse success;
     1: WalletException e;
 }
+
 struct getGroupCallUrlInfo_args {
     2: GetGroupCallUrlInfoRequest request;
 }
+
 struct getGroupCallUrlInfo_result {
     0: GetGroupCallUrlInfoResponse success;
     1: TalkException e;
 }
+
 struct getGroupCallUrls_args {
     2: Pb1_C13042j5 request;
 }
+
 struct getGroupCallUrls_result {
     0: GetGroupCallUrlsResponse success;
     1: TalkException e;
 }
+
 struct getGroupCall_args {
     2: string chatMid;
 }
+
 struct getGroupCall_result {
     0: GroupCall success;
     1: TalkException e;
 }
+
 struct getHomeFlexContent_args {
     1: GetHomeFlexContentRequest request;
 }
+
 struct getHomeFlexContent_result {
     0: GetHomeFlexContentResponse success;
     1: Dg_Fg_b e;
 }
+
 struct getHomeServiceList_args {
     1: Eg_C8928b request;
 }
+
 struct getHomeServiceList_result {
     0: GetHomeServiceListResponse success;
     1: Eg_Fg_b e;
 }
+
 struct getHomeServices_args {
     1: GetHomeServicesRequest request;
 }
+
 struct getHomeServices_result {
     0: GetHomeServicesResponse success;
     1: Eg_Fg_b e;
 }
+
 struct getIncentiveStatus_args {
     1: fN0_C24471c req;
 }
+
 struct getIncentiveStatus_result {
     0: GetIncentiveStatusResponse success;
     1: PremiumException e;
 }
+
 struct getInstantNews_args {
     1: string region;
     2: Location location;
 }
+
 struct getInstantNews_result {
     0: list<InstantNews> success;
     1: TalkException e;
 }
+
 struct getJoinedMembershipByBotMid_args {
     1: GetJoinedMembershipByBotMidRequest request;
 }
+
 struct getJoinedMembershipByBotMid_result {
     0: MemberInfo success;
     1: MembershipException e;
 }
+
 struct getJoinedMembership_args {
     1: GetJoinedMembershipRequest request;
 }
+
 struct getJoinedMembership_result {
     0: MemberInfo success;
     1: MembershipException e;
 }
+
 struct getJoinedMemberships_result {
     0: JoinedMemberships success;
     1: MembershipException e;
 }
+
 struct getKeyBackupCertificatesV2_args {
     2: Pb1_C13070l5 request;
 }
+
 struct getKeyBackupCertificatesV2_result {
     0: GetKeyBackupCertificatesV2Response success;
     1: E2EEKeyBackupException e;
 }
+
 struct getLFLSuggestion_args {
     1: AR0_b request;
 }
+
 struct getLFLSuggestion_result {
     0: GetLFLSuggestionResponse success;
     1: LFLPremiumException e;
 }
+
 struct getLastE2EEGroupSharedKey_args {
     2: i32 keyVersion;
     3: string chatMid;
 }
+
 struct getLastE2EEGroupSharedKey_result {
     0: Pb1_U3 success;
     1: TalkException e;
 }
+
 struct getLastE2EEPublicKeys_args {
     2: string chatMid;
 }
+
 struct getLastE2EEPublicKeys_result {
     0: map<string, Pb1_C13097n4> success;
     1: TalkException e;
 }
+
 struct getLastOpRevision_result {
     0: i64 success;
     1: TalkException e;
 }
+
 struct getLiffViewWithoutUserContext_args {
     1: LiffViewWithoutUserContextRequest request;
 }
+
 struct getLiffViewWithoutUserContext_result {
     0: LiffViewResponse success;
     1: LiffException liffException;
     2: TalkException talkException;
 }
+
 struct getLineCardIssueForm_args {
     1: r80_EnumC34372l resolutionType;
 }
+
 struct getLineCardIssueForm_result {
     0: PaymentLineCardIssueForm success;
     1: PaymentException e;
 }
+
 struct getLinkedDevices_result {
     0: list<UserDevice> success;
     1: ThingsException e;
 }
+
 struct getLoginActorContext_args {
     1: GetLoginActorContextRequest request;
 }
+
 struct getLoginActorContext_args {
     1: GetLoginActorContextRequest request;
 }
+
 struct getLoginActorContext_result {
     0: GetLoginActorContextResponse success;
     1: SecondaryPwlessLoginException e;
 }
+
 struct getLoginActorContext_result {
     0: GetLoginActorContextResponse success;
     1: SecondaryQrCodeException e;
 }
+
 struct getMappedProfileIds_args {
     1: GetMappedProfileIdsRequest request;
 }
+
 struct getMappedProfileIds_result {
     0: GetMappedProfileIdsResponse success;
     1: TalkException e;
 }
+
 struct I80_C26378N {
     1: I80_C26415o request;
 }
+
 struct getMaskedEmail_args {
     1: string authSessionId;
     2: AccountIdentifier accountIdentifier;
 }
+
 struct getMaskedEmail_result {
     0: GetMaskedEmailResponse success;
     1: AuthException e;
 }
+
 struct I80_C26379O {
     0: I80_C26416p success;
     1: I80_C26390a e;
 }
+
 struct getMessageBoxes_args {
     2: MessageBoxListRequest messageBoxListRequest;
     3: Pb1_V7 syncReason;
 }
+
 struct getMessageBoxes_result {
     0: MessageBoxList success;
     1: TalkException e;
 }
+
 struct getMessageReadRange_args {
     2: list<string> chatIds;
     3: Pb1_V7 syncReason;
 }
+
 struct getMessageReadRange_result {
     0: list<TMessageReadRange> success;
     1: TalkException e;
 }
+
 struct getModuleLayoutV4_args {
     1: GetModuleLayoutV4Request request;
 }
+
 struct getModuleLayoutV4_result {
     0: NZ0_D success;
     1: WalletException e;
 }
+
 struct getModuleWithStatus_args {
     1: NZ0_G request;
 }
+
 struct getModuleWithStatus_result {
     0: NZ0_H success;
     1: WalletException e;
 }
+
 struct getModule_args {
     1: NZ0_E request;
 }
+
 struct getModule_result {
     0: NZ0_F success;
     1: WalletException e;
 }
+
 struct getModulesV2_args {
     1: GetModulesRequestV2 request;
 }
+
 struct getModulesV2_result {
     0: NZ0_K success;
     1: WalletException e;
 }
+
 struct getModulesV3_args {
     1: GetModulesRequestV3 request;
 }
+
 struct getModulesV3_result {
     0: NZ0_K success;
     1: WalletException e;
 }
+
 struct getModulesV4WithStatus_args {
     1: GetModulesV4WithStatusRequest request;
 }
+
 struct getModulesV4WithStatus_result {
     0: NZ0_M success;
     1: WalletException e;
 }
+
 struct getMusicSubscriptionStatus_args {
     2: YN0_Ob1_N request;
 }
+
 struct getMusicSubscriptionStatus_result {
     0: YN0_Ob1_O success;
     1: ShopException e;
 }
+
 struct getMyAssetInformationV2_args {
     1: GetMyAssetInformationV2Request request;
 }
+
 struct getMyAssetInformationV2_result {
     0: GetMyAssetInformationV2Response success;
     1: WalletException e;
 }
+
 struct getMyChatapps_args {
     1: GetMyChatappsRequest request;
 }
+
 struct getMyChatapps_result {
     0: GetMyChatappsResponse success;
     1: ChatappException e;
 }
+
 struct getMyDashboard_args {
     1: GetMyDashboardRequest request;
 }
+
 struct getMyDashboard_result {
     0: GetMyDashboardResponse success;
     1: WalletException e;
 }
+
 struct getNewlyReleasedBuddyIds_args {
     3: string country;
 }
+
 struct getNewlyReleasedBuddyIds_result {
     0: map<string, i64> success;
     1: TalkException e;
 }
+
 struct getNotificationSettings_args {
     1: GetNotificationSettingsRequest request;
 }
+
 struct getNotificationSettings_result {
     0: GetNotificationSettingsResponse success;
     1: TalkException e;
 }
+
 struct getOwnedProductSummaries_args {
     2: string shopId;
     3: i32 offset;
     4: i32 limit;
     5: Locale locale;
 }
+
 struct getOwnedProductSummaries_result {
     0: YN0_Ob1_N0 success;
     1: ShopException e;
 }
+
 struct getPasswordHashingParameter_args {
     1: GetPasswordHashingParametersRequest request;
 }
+
 struct getPasswordHashingParameter_result {
     0: GetPasswordHashingParametersResponse success;
     1: PasswordUpdateException pue;
     2: TokenAuthException tae;
 }
+
 struct getPasswordHashingParametersForPwdReg_args {
     1: GetPasswordHashingParametersForPwdRegRequest request;
 }
+
 struct I80_C26380P {
     1: I80_C26417q request;
 }
+
 struct getPasswordHashingParametersForPwdReg_result {
     0: GetPasswordHashingParametersForPwdRegResponse success;
     1: AuthException e;
 }
+
 struct I80_C26381Q {
     0: I80_C26418r success;
     1: I80_C26390a e;
 }
+
 struct getPasswordHashingParametersForPwdVerif_args {
     1: GetPasswordHashingParametersForPwdVerifRequest request;
 }
+
 struct I80_C26382S {
     1: I80_C26419s request;
 }
+
 struct getPasswordHashingParametersForPwdVerif_result {
     0: GetPasswordHashingParametersForPwdVerifResponse success;
     1: AuthException e;
 }
+
 struct I80_C26383T {
     0: I80_C26420t success;
     1: I80_C26390a e;
 }
+
 struct getPaymentUrlByKey_args {
     1: string key;
 }
+
 struct getPaymentUrlByKey_result {
     0: string success;
     1: PaymentException e;
 }
+
 struct getPendingAgreements_result {
     0: PendingAgreementsResponse success;
     1: TalkException e;
 }
+
 struct getPhoneVerifMethodForRegistration_args {
     1: GetPhoneVerifMethodForRegistrationRequest request;
 }
+
 struct getPhoneVerifMethodForRegistration_result {
     0: GetPhoneVerifMethodForRegistrationResponse success;
     1: AuthException e;
 }
+
 struct getPhoneVerifMethodV2_args {
     1: GetPhoneVerifMethodV2Request request;
 }
+
 struct I80_C26384U {
     1: I80_C26421u request;
 }
+
 struct getPhoneVerifMethodV2_result {
     0: GetPhoneVerifMethodV2Response success;
     1: AuthException e;
 }
+
 struct I80_C26385V {
     0: I80_C26422v success;
     1: I80_C26390a e;
 }
+
 struct getPhotoboothBalance_args {
     2: Pb1_C13126p5 request;
 }
+
 struct getPhotoboothBalance_result {
     0: GetPhotoboothBalanceResponse success;
     1: TalkException e;
 }
+
 struct getPredefinedScenarioSets_args {
     1: GetPredefinedScenarioSetsRequest request;
 }
+
 struct getPredefinedScenarioSets_result {
     0: GetPredefinedScenarioSetsResponse success;
     1: ThingsException e;
 }
+
 struct getPrefetchableBanners_args {
     1: BannerRequest request;
 }
+
 struct getPrefetchableBanners_result {
     0: BannerResponse success;
 }
+
 struct getPremiumStatusForUpgrade_args {
     1: fN0_C24475g req;
 }
+
 struct getPremiumStatusForUpgrade_result {
     0: GetPremiumStatusResponse success;
     1: PremiumException e;
 }
+
 struct getPremiumStatus_args {
     1: fN0_C24476h req;
 }
+
 struct getPremiumStatus_result {
     0: GetPremiumStatusResponse success;
     1: PremiumException e;
 }
+
 struct getPreviousMessagesV2WithRequest_args {
     2: GetPreviousMessagesV2Request request;
     3: Pb1_V7 syncReason;
 }
+
 struct getPreviousMessagesV2WithRequest_result {
     0: list<Message> success;
     1: TalkException e;
 }
+
 struct getProductByVersion_args {
     2: string shopId;
     3: string productId;
     4: i64 productVersion;
     5: Locale locale;
 }
+
 struct getProductByVersion_result {
     0: YN0_Ob1_E0 success;
     1: ShopException e;
 }
+
 struct getProductLatestVersionForUser_args {
     2: YN0_Ob1_P request;
 }
+
 struct getProductLatestVersionForUser_result {
     0: YN0_Ob1_Q success;
     1: ShopException e;
 }
+
 struct getProductSummariesInSubscriptionSlots_args {
     2: YN0_Ob1_U req;
 }
+
 struct getProductSummariesInSubscriptionSlots_result {
     0: YN0_Ob1_V success;
     1: ShopException e;
 }
+
 struct getProductV2_args {
     2: YN0_Ob1_S request;
 }
+
 struct getProductV2_result {
     0: YN0_Ob1_T success;
     1: ShopException e;
 }
+
 struct getProductValidationScheme_args {
     2: string shopId;
     3: string productId;
     4: i64 productVersion;
 }
+
 struct getProductValidationScheme_result {
     0: YN0_Ob1_S0 success;
     1: ShopException e;
 }
+
 struct getProductsByAuthor_args {
     2: YN0_Ob1_G0 productListByAuthorRequest;
 }
+
 struct getProductsByAuthor_result {
     0: YN0_Ob1_F0 success;
     1: ShopException e;
 }
+
 struct getProfile_args {
     1: Pb1_V7 syncReason;
 }
+
 struct getProfile_result {
     0: Profile success;
     1: TalkException e;
 }
+
 struct getPromotedBuddyContacts_args {
     2: string language;
     3: string country;
 }
+
 struct getPromotedBuddyContacts_result {
     0: list<Contact> success;
     1: TalkException e;
 }
+
 struct getPublishedMemberships_args {
     1: GetPublishedMembershipsRequest request;
 }
+
 struct getPublishedMemberships_result {
     0: list<Membership> success;
     1: MembershipException e;
 }
+
 struct getPurchaseEnabledStatus_args {
     1: PurchaseEnabledRequest request;
 }
+
 struct getPurchaseEnabledStatus_result {
     0: og_I success;
     1: MembershipException e;
 }
+
 struct getPurchasedProducts_args {
     2: string shopId;
     3: i32 offset;
     4: i32 limit;
     5: Locale locale;
 }
+
 struct getPurchasedProducts_result {
     0: PurchaseRecordList success;
     1: ShopException e;
 }
+
 struct getQuickMenu_args {
     1: NZ0_S request;
 }
+
 struct getQuickMenu_result {
     0: GetQuickMenuResponse success;
     1: WalletException e;
 }
+
 struct getRSAKeyInfo_result {
     0: RSAKey success;
     1: TalkException e;
 }
+
 struct getReceivedPresents_args {
     2: string shopId;
     3: i32 offset;
     4: i32 limit;
     5: Locale locale;
 }
+
 struct getReceivedPresents_result {
     0: PurchaseRecordList success;
     1: ShopException e;
 }
+
 struct getRecentFriendRequests_args {
     1: Pb1_V7 syncReason;
 }
+
 struct getRecentFriendRequests_result {
     0: FriendRequestsInfo success;
     1: TalkException e;
 }
+
 struct getRecommendationDetails_args {
     1: GetRecommendationDetailsRequest request;
 }
+
 struct getRecommendationDetails_result {
     0: GetRecommendationDetailsResponse success;
     1: RejectedException re;
@@ -12573,223 +14988,284 @@ struct getRecommendationDetails_result {
     3: TalkException te;
     4: ExcessiveRequestItemException ere;
 }
+
 struct getRecommendationIds_args {
     1: Pb1_V7 syncReason;
 }
+
 struct getRecommendationIds_result {
     0: list<string> success;
     1: TalkException e;
 }
+
 struct getRecommendationList_args {
     1: zR0_C40576a request;
 }
+
 struct getRecommendationList_args {
     2: YN0_Ob1_W getRecommendationRequest;
 }
+
 struct getRecommendationList_result {
     0: YN0_Ob1_X success;
     1: ShopException e;
 }
+
 struct getRecommendationList_result {
     0: GetSuggestTrialRecommendationResponse success;
     1: SuggestTrialException e;
 }
+
 struct getRepairElements_args {
     1: GetRepairElementsRequest request;
 }
+
 struct getRepairElements_result {
     0: GetRepairElementsResponse success;
     1: TalkException e;
 }
+
 struct getRequiredAgreements_result {
     0: PaymentRequiredAgreementsInfo success;
     1: PaymentException e;
 }
+
 struct getResourceFile_args {
     2: YN0_Ob1_Z req;
 }
+
 struct getResourceFile_result {
     0: YN0_Ob1_Y success;
     1: ShopException e;
 }
+
 struct getResponseStatus_args {
     1: GetResponseStatusRequest request;
 }
+
 struct getResponseStatus_result {
     0: GetResponseStatusResponse success;
     1: OaChatException e;
 }
+
 struct getReturnUrlWithRequestTokenForAutoLogin_args {
     2: WebLoginRequest webLoginRequest;
 }
+
 struct getReturnUrlWithRequestTokenForAutoLogin_result {
     0: WebLoginResponse success;
     1: ChannelException e;
 }
+
 struct getReturnUrlWithRequestTokenForMultiLiffLogin_args {
     1: LiffWebLoginRequest request;
 }
+
 struct getReturnUrlWithRequestTokenForMultiLiffLogin_result {
     0: LiffWebLoginResponse success;
     1: LiffException liffException;
     2: LiffChannelException channelException;
     3: TalkException talkException;
 }
+
 struct getRingbackTone_result {
     0: RingbackTone success;
     1: TalkException e;
 }
+
 struct getRingtone_result {
     0: Ringtone success;
     1: TalkException e;
 }
+
 struct getRoomsV2_args {
     2: list<string> roomIds;
 }
+
 struct getRoomsV2_result {
     0: list<Room> success;
     1: TalkException e;
 }
+
 struct getSCC_args {
     1: GetSCCRequest request;
 }
+
 struct getSCC_result {
     0: SCC success;
     1: MembershipException e;
 }
+
 struct I80_C26386W {
     1: I80_C26423w request;
 }
+
 struct I80_C26387X {
     0: I80_C26424x success;
     1: I80_C26390a e;
 }
+
 struct getSeasonalEffects_args {
     1: Eh_C8935c req;
 }
+
 struct getSeasonalEffects_result {
     0: GetSeasonalEffectsResponse success;
     1: Eh_Fg_b e;
 }
+
 struct getSecondAuthMethod_args {
     1: string authSessionId;
 }
+
 struct getSecondAuthMethod_result {
     0: GetSecondAuthMethodResponse success;
     1: AuthException e;
 }
+
 struct getSentPresents_args {
     2: string shopId;
     3: i32 offset;
     4: i32 limit;
     5: Locale locale;
 }
+
 struct getSentPresents_result {
     0: PurchaseRecordList success;
     1: ShopException e;
 }
+
 struct getServerTime_result {
     0: i64 success;
     1: TalkException e;
 }
+
 struct getServiceShortcutMenu_args {
     1: NZ0_U request;
 }
+
 struct getServiceShortcutMenu_result {
     0: GetServiceShortcutMenuResponse success;
     1: WalletException e;
 }
+
 struct getSessionContentBeforeMigCompletion_args {
     1: string authSessionId;
 }
+
 struct getSessionContentBeforeMigCompletion_result {
     0: GetSessionContentBeforeMigCompletionResponse success;
     1: AuthException e;
 }
+
 struct getSettingsAttributes2_args {
     2: set<SettingsAttributeEx> attributesToRetrieve;
 }
+
 struct getSettingsAttributes2_result {
     0: Settings success;
     1: TalkException e;
 }
+
 struct getSettingsAttributes_result {
     0: Settings success;
     1: TalkException e;
 }
+
 struct getSettings_args {
     1: Pb1_V7 syncReason;
 }
+
 struct getSettings_result {
     0: Settings success;
     1: TalkException e;
 }
+
 struct getSmartChannelRecommendations_args {
     1: GetSmartChannelRecommendationsRequest request;
 }
+
 struct getSmartChannelRecommendations_result {
     0: GetSmartChannelRecommendationsResponse success;
     1: WalletException e;
 }
+
 struct getSquareBot_args {
     1: GetSquareBotRequest req;
 }
+
 struct getSquareBot_result {
     0: GetSquareBotResponse success;
     1: BotException e;
 }
+
 struct getStudentInformation_args {
     2: Ob1_C12606a0 req;
 }
+
 struct getStudentInformation_result {
     0: GetStudentInformationResponse success;
     1: ShopException e;
 }
+
 struct getSubscriptionPlans_args {
     2: GetSubscriptionPlansRequest req;
 }
+
 struct getSubscriptionPlans_result {
     0: GetSubscriptionPlansResponse success;
     1: ShopException e;
 }
+
 struct getSubscriptionSlotHistory_args {
     2: Ob1_C12618e0 req;
 }
+
 struct getSubscriptionSlotHistory_result {
     0: Ob1_C12621f0 success;
     1: ShopException e;
 }
+
 struct getSubscriptionStatus_args {
     2: GetSubscriptionStatusRequest req;
 }
+
 struct getSubscriptionStatus_result {
     0: GetSubscriptionStatusResponse success;
     1: ShopException e;
 }
+
 struct getSuggestDictionarySetting_args {
     2: Ob1_C12630i0 req;
 }
+
 struct getSuggestDictionarySetting_result {
     0: GetSuggestDictionarySettingResponse success;
     1: ShopException e;
 }
+
 struct getSuggestResourcesV2_args {
     2: GetSuggestResourcesV2Request req;
 }
+
 struct getSuggestResourcesV2_result {
     0: GetSuggestResourcesV2Response success;
     1: ShopException e;
 }
+
 struct getTaiwanBankBalance_args {
     1: GetTaiwanBankBalanceRequest request;
 }
+
 struct getTaiwanBankBalance_result {
     0: GetTaiwanBankBalanceResponse success;
     1: WalletException e;
 }
+
 struct getTargetProfiles_args {
     1: GetTargetProfilesRequest request;
 }
+
 struct getTargetProfiles_result {
     0: GetTargetProfilesResponse success;
     1: RejectedException re;
@@ -12797,515 +15273,660 @@ struct getTargetProfiles_result {
     3: TalkException te;
     4: ExcessiveRequestItemException ere;
 }
+
 struct getTargetingPopup_args {
     1: NZ0_C12150a0 request;
 }
+
 struct getTargetingPopup_result {
     0: GetTargetingPopupResponse success;
     1: WalletException e;
 }
+
 struct getThaiBankBalance_args {
     1: GetThaiBankBalanceRequest request;
 }
+
 struct getThaiBankBalance_result {
     0: GetThaiBankBalanceResponse success;
     1: WalletException e;
 }
+
 struct getTotalCoinBalance_args {
     1: GetTotalCoinBalanceRequest request;
 }
+
 struct getTotalCoinBalance_result {
     0: GetTotalCoinBalanceResponse success;
     1: CoinException e;
 }
+
 struct getUpdatedChannelIds_args {
     1: list<ChannelIdWithLastUpdated> channelIds;
 }
+
 struct getUpdatedChannelIds_result {
     0: list<string> success;
     1: ChannelException e;
 }
+
 struct getUserCollections_args {
     1: GetUserCollectionsRequest request;
 }
+
 struct getUserCollections_result {
     0: GetUserCollectionsResponse success;
     1: CollectionException e;
 }
+
 struct getUserProfile_args {
     1: string authSessionId;
     2: AccountIdentifier accountIdentifier;
 }
+
 struct getUserProfile_result {
     0: GetUserProfileResponse success;
     1: AuthException e;
 }
+
 struct getUserVector_args {
     1: GetUserVectorRequest request;
 }
+
 struct getUserVector_result {
     0: GetUserVectorResponse success;
     1: LFLPremiumException e;
 }
+
 struct getUsersMappedByProfile_args {
     1: GetUsersMappedByProfileRequest request;
 }
+
 struct getUsersMappedByProfile_result {
     0: GetUsersMappedByProfileResponse success;
     1: TalkException e;
 }
+
 struct getWebLoginDisallowedUrlForMultiLiffLogin_args {
     1: LiffWebLoginRequest request;
 }
+
 struct getWebLoginDisallowedUrlForMultiLiffLogin_result {
     0: LiffWebLoginResponse success;
     1: LiffException liffException;
     2: LiffChannelException channelException;
     3: TalkException talkException;
 }
+
 struct getWebLoginDisallowedUrl_args {
     2: WebLoginRequest webLoginRequest;
 }
+
 struct getWebLoginDisallowedUrl_result {
     0: WebLoginResponse success;
     1: ChannelException e;
 }
+
 struct h80_C25643c {
     
 }
+
 struct h80_t {
     1: string newDevicePublicKey;
     2: string encryptedQrIdentifier;
 }
+
 struct h80_v {
     
 }
+
 struct I80_A0 {
     
 }
+
 struct I80_C26398e {
     
 }
+
 struct I80_C26404h {
     
 }
+
 struct I80_F0 {
     
 }
+
 struct I80_r0 {
     
 }
+
 struct I80_v0 {
     
 }
+
 struct inviteFriends_args {
     1: InviteFriendsRequest request;
 }
+
 struct inviteFriends_result {
     0: InviteFriendsResponse success;
     1: PremiumException e;
 }
+
 struct inviteIntoChat_args {
     1: InviteIntoChatRequest request;
 }
+
 struct inviteIntoChat_result {
     0: Pb1_J5 success;
     1: TalkException e;
 }
+
 struct inviteIntoGroupCall_args {
     2: string chatMid;
     3: list<string> memberMids;
     4: Pb1_EnumC13237x5 mediaType;
 }
+
 struct inviteIntoGroupCall_result {
     1: TalkException e;
 }
+
 struct inviteIntoRoom_args {
     1: i32 reqSeq;
     2: string roomId;
     3: list<string> contactIds;
 }
+
 struct inviteIntoRoom_result {
     1: TalkException e;
 }
+
 struct isProductForCollections_args {
     1: IsProductForCollectionsRequest request;
 }
+
 struct isProductForCollections_result {
     0: IsProductForCollectionsResponse success;
     1: CollectionException e;
 }
+
 struct isStickerAvailableForCombinationSticker_args {
     2: IsStickerAvailableForCombinationStickerRequest request;
 }
+
 struct isStickerAvailableForCombinationSticker_result {
     0: IsStickerAvailableForCombinationStickerResponse success;
     1: ShopException e;
 }
+
 struct isUseridAvailable_args {
     2: string searchId;
 }
+
 struct isUseridAvailable_result {
     0: bool success;
     1: TalkException e;
 }
+
 struct issueChannelToken_args {
     1: string channelId;
 }
+
 struct issueChannelToken_result {
     0: ChannelToken success;
     1: ChannelException e;
 }
+
 struct issueLiffView_args {
     1: LiffViewRequest request;
 }
+
 struct issueLiffView_result {
     0: LiffViewResponse success;
     1: LiffException liffException;
     2: TalkException talkException;
 }
+
 struct issueNonce_result {
     0: string success;
     1: PaymentException e;
 }
+
 struct issueRequestTokenWithAuthScheme_args {
     1: string channelId;
     2: string otpId;
     3: list<string> authScheme;
     4: string returnUrl;
 }
+
 struct issueRequestTokenWithAuthScheme_result {
     0: RequestTokenResponse success;
     1: ChannelException e;
 }
+
 struct issueSubLiffView_args {
     1: LiffViewRequest request;
 }
+
 struct issueSubLiffView_result {
     0: LiffViewResponse success;
     1: LiffException liffException;
     2: TalkException talkException;
 }
+
 struct issueTokenForAccountMigrationSettings_args {
     2: bool enforce;
 }
+
 struct issueTokenForAccountMigrationSettings_result {
     0: SecurityCenterResult success;
     1: TalkException e;
 }
+
 struct issueToken_args {
     1: IssueBirthdayGiftTokenRequest request;
 }
+
 struct issueToken_result {
     0: IssueBirthdayGiftTokenResponse success;
     1: Cg_Fg_b e;
 }
+
 struct issueV3TokenForPrimary_args {
     1: IssueV3TokenForPrimaryRequest request;
 }
+
 struct issueV3TokenForPrimary_result {
     0: IssueV3TokenForPrimaryResponse success;
     1: TalkException e;
 }
+
 struct issueWebAuthDetailsForSecondAuth_args {
     1: string authSessionId;
 }
+
 struct issueWebAuthDetailsForSecondAuth_result {
     0: IssueWebAuthDetailsForSecondAuthResponse success;
     1: AuthException e;
 }
+
 struct joinChatByCallUrl_args {
     2: JoinChatByCallUrlRequest request;
 }
+
 struct joinChatByCallUrl_result {
     0: JoinChatByCallUrlResponse success;
     1: TalkException e;
 }
+
 struct jp_naver_line_shop_protocol_thrift_ProductProperty {
     
 }
+
 struct kf_i {
     
 }
+
 struct kf_k {
     
 }
+
 struct kf_m {
-    1: kf_RichmenuEvent richmenu;
-    2: kf_TalkroomEvent talkroom;
+    1: RichmenuEvent richmenu;
+    2: TalkroomEvent talkroom;
 }
+
 struct kf_w {
-    1: kf_ProfileRefererContent profileRefererContent;
+    1: _any profileRefererContent;
 }
+
 struct kickoutFromGroupCall_args {
     2: KickoutFromGroupCallRequest kickoutFromGroupCallRequest;
 }
+
 struct kickoutFromGroupCall_result {
     0: Pb1_S5 success;
     1: TalkException e;
 }
+
 struct leaveRoom_args {
     1: i32 reqSeq;
     2: string roomId;
 }
+
 struct leaveRoom_result {
     1: TalkException e;
 }
+
 struct linkDevice_args {
     1: DeviceLinkRequest request;
 }
+
 struct linkDevice_result {
     0: DeviceLinkResponse success;
     1: ThingsException e;
 }
+
 struct logoutV2_result {
     1: TalkException e;
 }
+
 struct lookupAvailableEap_args {
     1: LookupAvailableEapRequest request;
 }
+
 struct lookupAvailableEap_result {
     0: LookupAvailableEapResponse success;
     1: AuthException e;
 }
+
 struct lookupPaidCall_args {
     2: string dialedNumber;
     3: string language;
     4: string referer;
 }
+
 struct lookupPaidCall_result {
     0: PaidCallResponse success;
     1: TalkException e;
 }
+
 struct m80_l {
     
 }
+
 struct m80_n {
     
 }
+
 struct m80_q {
     
 }
+
 struct m80_s {
     
 }
+
 struct mapProfileToUsers_args {
     1: MapProfileToUsersRequest request;
 }
+
 struct mapProfileToUsers_result {
     0: MapProfileToUsersResponse success;
     1: TalkException e;
 }
+
 struct migratePrimaryUsingEapAccountWithTokenV3_args {
     1: string authSessionId;
 }
+
 struct migratePrimaryUsingEapAccountWithTokenV3_result {
     0: MigratePrimaryWithTokenV3Response success;
     1: AuthException e;
 }
+
 struct migratePrimaryUsingPhoneWithTokenV3_args {
     1: string authSessionId;
 }
+
 struct migratePrimaryUsingPhoneWithTokenV3_result {
     0: MigratePrimaryWithTokenV3Response success;
     1: AuthException e;
 }
+
 struct migratePrimaryUsingQrCode_args {
     1: MigratePrimaryUsingQrCodeRequest request;
 }
+
 struct migratePrimaryUsingQrCode_result {
     0: MigratePrimaryUsingQrCodeResponse success;
     1: PrimaryQrCodeMigrationException e;
 }
+
 struct n80_C31222b {
     
 }
+
 struct n80_d {
     
 }
+
 struct negotiateE2EEPublicKey_args {
     2: string mid;
 }
+
 struct negotiateE2EEPublicKey_result {
     0: E2EENegotiationResult success;
     1: TalkException e;
 }
+
 struct noop_result {
     1: TalkException e;
 }
+
 struct notifyBannerShowing_result {
     1: TalkException e;
 }
+
 struct notifyBannerTapped_result {
     1: TalkException e;
 }
+
 struct notifyBeaconDetected_result {
     1: TalkException e;
 }
+
 struct notifyChatAdEntry_args {
     1: NotifyChatAdEntryRequest request;
 }
+
 struct notifyChatAdEntry_result {
     0: kf_i success;
     1: BotExternalException e;
 }
+
 struct notifyDeviceConnection_args {
     1: NotifyDeviceConnectionRequest request;
 }
+
 struct notifyDeviceConnection_result {
     0: NotifyDeviceConnectionResponse success;
     1: ThingsException e;
 }
+
 struct notifyDeviceDisconnection_args {
     1: NotifyDeviceDisconnectionRequest request;
 }
+
 struct notifyDeviceDisconnection_result {
     0: do0_C23165x success;
     1: ThingsException e;
 }
+
 struct notifyInstalled_args {
     2: string udidHash;
     3: string applicationTypeWithExtensions;
 }
+
 struct notifyInstalled_result {
     1: TalkException e;
 }
+
 struct notifyOATalkroomEvents_args {
     1: NotifyOATalkroomEventsRequest request;
 }
+
 struct notifyOATalkroomEvents_result {
     0: kf_k success;
     1: BotExternalException e;
 }
+
 struct notifyProductEvent_args {
     2: string shopId;
     3: string productId;
     4: i64 productVersion;
     5: i64 productEvent;
 }
+
 struct notifyProductEvent_result {
     1: ShopException e;
 }
+
 struct notifyRegistrationComplete_args {
     2: string udidHash;
     3: string applicationTypeWithExtensions;
 }
+
 struct notifyRegistrationComplete_result {
     1: TalkException e;
 }
+
 struct notifyScenarioExecuted_args {
     1: NotifyScenarioExecutedRequest request;
 }
+
 struct notifyScenarioExecuted_result {
     0: do0_C23167z success;
     1: ThingsException e;
 }
+
 struct notifySleep_result {
     1: TalkException e;
 }
+
 struct notifyUpdated_args {
     2: i64 lastRev;
     3: DeviceInfo deviceInfo;
     4: string udidHash;
     5: string oldUdidHash;
 }
+
 struct notifyUpdated_result {
     1: TalkException e;
 }
+
 struct o80_C32273b {
     
 }
+
 struct o80_d {
     
 }
+
 struct o80_m {
     
 }
+
 struct og_u {
     
 }
+
 struct openAuthSession_args {
     2: AuthSessionRequest request;
 }
+
 struct openAuthSession_result {
     0: string success;
     1: TalkException e;
 }
+
 struct openProximityMatch_result {
     0: string success;
     1: TalkException e;
 }
+
 struct openSession_args {
     1: OpenSessionRequest request;
 }
+
 struct openSession_args {
     1: OpenSessionRequest request;
 }
+
 struct openSession_result {
     0: OpenSessionResponse success;
     1: AccountEapConnectException e;
 }
+
 struct openSession_result {
     0: string success;
     1: AuthException e;
 }
+
 struct permitLogin_args {
     1: PermitLoginRequest request;
 }
+
 struct permitLogin_result {
     0: PermitLoginResponse success;
     1: SeamlessLoginException sle;
     2: TokenAuthException tae;
 }
+
 struct placePurchaseOrderForFreeProduct_args {
     2: PurchaseOrder purchaseOrder;
 }
+
 struct placePurchaseOrderForFreeProduct_result {
     0: PurchaseOrderResponse success;
     1: ShopException e;
 }
+
 struct placePurchaseOrderWithLineCoin_args {
     2: PurchaseOrder purchaseOrder;
 }
+
 struct placePurchaseOrderWithLineCoin_result {
     0: PurchaseOrderResponse success;
     1: ShopException e;
 }
+
 struct postPopupButtonEvents_args {
     1: string buttonId;
     2: map<string, bool> checkboxes;
 }
+
 struct postPopupButtonEvents_result {
     1: PaymentException e;
 }
+
 struct purchaseSubscription_args {
     2: PurchaseSubscriptionRequest req;
 }
+
 struct purchaseSubscription_result {
     0: PurchaseSubscriptionResponse success;
     1: ShopException e;
 }
+
 struct putE2eeKey_args {
     1: PutE2eeKeyRequest request;
 }
+
 struct putE2eeKey_result {
     0: o80_m success;
     1: SecondaryPwlessLoginException e;
 }
+
 struct q80_C33650b {
     
 }
+
 struct q80_q {
     
 }
+
 struct q80_s {
     
 }
+
 struct qm_C34110c {
     1: string inFriends;
     2: string notInFriends;
     3: bool termsAgreed;
 }
+
 struct qm_C34115h {
     1: string hwid;
     2: string secureMessage;
@@ -13317,6 +15938,7 @@ struct qm_C34115h {
     8: i64 bannerStartedAt;
     9: i64 bannerShownFor;
 }
+
 struct qm_j {
     1: string hwid;
     2: string secureMessage;
@@ -13328,6 +15950,7 @@ struct qm_j {
     8: i64 bannerTappedAt;
     9: bool beaconTermAgreed;
 }
+
 struct qm_l {
     1: string hwid;
     2: string secureMessage;
@@ -13337,51 +15960,64 @@ struct qm_l {
     6: string region;
     7: string modelName;
 }
+
 struct qm_o {
     1: string hwid;
     2: string secureMessage;
     3: qm_EnumC34112e notificationType;
     4: Rssi rssi;
 }
+
 struct queryBeaconActions_result {
     0: BeaconQueryResponse success;
     1: TalkException e;
 }
+
 struct r80_C34358N {
     
 }
+
 struct r80_C34360P {
     
 }
+
 struct react_args {
     1: ReactRequest reactRequest;
 }
+
 struct react_result {
     1: TalkException e;
 }
+
 struct refresh_args {
     1: RefreshAccessTokenRequest request;
 }
+
 struct refresh_result {
     0: RefreshAccessTokenResponse success;
     1: AccessTokenRefreshException accessTokenRefreshException;
 }
+
 struct registerBarcodeAsync_args {
     1: string requestToken;
     2: string barcodeRequestId;
     3: string barcode;
     4: RSAEncryptedPassword password;
 }
+
 struct registerBarcodeAsync_result {
     1: PaymentException e;
 }
+
 struct registerCampaignReward_args {
     1: RegisterCampaignRewardRequest request;
 }
+
 struct registerCampaignReward_result {
     0: RegisterCampaignRewardResponse success;
     1: WalletException e;
 }
+
 struct registerE2EEGroupKey_args {
     2: i32 keyVersion;
     3: string chatMid;
@@ -13389,148 +16025,189 @@ struct registerE2EEGroupKey_args {
     5: list<i32> keyIds;
     6: list<string> encryptedSharedKeys;
 }
+
 struct registerE2EEGroupKey_result {
     0: Pb1_U3 success;
     1: TalkException e;
 }
+
 struct registerE2EEPublicKeyV2_args {
     1: Pb1_W6 request;
 }
+
 struct registerE2EEPublicKeyV2_result {
     0: RegisterE2EEPublicKeyV2Response success;
     1: TalkException e;
 }
+
 struct registerE2EEPublicKey_args {
     1: i32 reqSeq;
     2: Pb1_C13097n4 publicKey;
 }
+
 struct registerE2EEPublicKey_result {
     0: Pb1_C13097n4 success;
     1: TalkException e;
 }
+
 struct registerPrimaryCredential_args {
     1: RegisterPrimaryCredentialRequest request;
 }
+
 struct registerPrimaryCredential_result {
     0: R70_t success;
     1: PwlessCredentialException e;
 }
+
 struct registerPrimaryUsingEapAccount_args {
     1: string authSessionId;
 }
+
 struct registerPrimaryUsingEapAccount_result {
     0: RegisterPrimaryWithTokenV3Response success;
     1: AuthException e;
 }
+
 struct registerPrimaryUsingPhoneWithTokenV3_args {
     2: string authSessionId;
 }
+
 struct registerPrimaryUsingPhoneWithTokenV3_result {
     0: RegisterPrimaryWithTokenV3Response success;
     1: AuthException e;
 }
+
 struct I80_C26367C {
     1: I80_q0 request;
 }
+
 struct I80_C26368D {
     0: I80_r0 success;
     1: I80_C26390a e;
     2: TokenAuthException tae;
 }
+
 struct registerUserid_args {
     1: i32 reqSeq;
     2: string searchId;
 }
+
 struct registerUserid_result {
     0: bool success;
     1: TalkException e;
 }
+
 struct reissueChatTicket_args {
     1: ReissueChatTicketRequest request;
 }
+
 struct reissueChatTicket_result {
     0: ReissueChatTicketResponse success;
     1: TalkException e;
 }
+
 struct rejectChatInvitation_args {
     1: RejectChatInvitationRequest request;
 }
+
 struct rejectChatInvitation_result {
     0: Pb1_C12946c7 success;
     1: TalkException e;
 }
+
 struct removeAllMessages_result {
     1: TalkException e;
 }
+
 struct removeChatRoomAnnouncement_args {
     1: i32 reqSeq;
     2: string chatRoomMid;
     3: i64 announcementSeq;
 }
+
 struct removeChatRoomAnnouncement_result {
     1: TalkException e;
 }
+
 struct removeFollower_args {
     2: RemoveFollowerRequest removeFollowerRequest;
 }
+
 struct removeFollower_result {
     1: TalkException e;
 }
+
 struct removeFriendRequest_args {
     1: Pb1_F4 direction;
     2: string midOrEMid;
 }
+
 struct removeFriendRequest_result {
     1: TalkException e;
 }
+
 struct removeFromFollowBlacklist_args {
     2: RemoveFromFollowBlacklistRequest removeFromFollowBlacklistRequest;
 }
+
 struct removeFromFollowBlacklist_result {
     1: TalkException e;
 }
+
 struct removeIdentifier_args {
     2: string authSessionId;
     3: IdentityCredentialRequest request;
 }
+
 struct removeIdentifier_result {
     0: IdentityCredentialResponse success;
     1: TalkException e;
 }
+
 struct removeItemFromCollection_args {
     1: RemoveItemFromCollectionRequest request;
 }
+
 struct removeItemFromCollection_result {
     0: Ob1_C12637k1 success;
     1: CollectionException e;
 }
+
 struct removeLinePayAccount_args {
     1: string accountId;
 }
+
 struct removeLinePayAccount_result {
     1: PaymentException e;
 }
+
 struct removeProductFromSubscriptionSlot_args {
     2: RemoveProductFromSubscriptionSlotRequest req;
 }
+
 struct removeProductFromSubscriptionSlot_result {
     0: RemoveProductFromSubscriptionSlotResponse success;
     1: ShopException e;
 }
+
 struct reportAbuseEx_args {
     2: ReportAbuseExRequest request;
 }
+
 struct reportAbuseEx_result {
     0: Pb1_C13114o7 success;
     1: TalkException e;
 }
+
 struct reportDeviceState_args {
     2: map<i32, bool> booleanState;
     3: map<i32, string> stringState;
 }
+
 struct reportDeviceState_result {
     1: TalkException e;
 }
+
 struct reportLocation_args {
     1: Geolocation location;
     2: Pb1_EnumC12917a6 trigger;
@@ -13539,288 +16216,366 @@ struct reportLocation_args {
     6: i64 clientCurrentTimestamp;
     7: LocationDebugInfo debugInfo;
 }
+
 struct reportLocation_result {
     1: TalkException e;
 }
+
 struct reportNetworkStatus_args {
     1: Pb1_EnumC12917a6 trigger;
     2: ClientNetworkStatus networkStatus;
     3: i64 measuredAt;
     4: i64 scanCompletionTimestamp;
 }
+
 struct reportNetworkStatus_result {
     1: TalkException e;
 }
+
 struct reportProfile_args {
     2: i64 syncOpRevision;
     3: Profile profile;
 }
+
 struct reportProfile_result {
     1: TalkException e;
 }
+
 struct reportPushRecvReports_args {
     1: i32 reqSeq;
     2: list<PushRecvReport> pushRecvReports;
 }
+
 struct reportPushRecvReports_result {
     1: TalkException e;
 }
+
 struct reportRefreshedAccessToken_args {
     1: ReportRefreshedAccessTokenRequest request;
 }
+
 struct reportRefreshedAccessToken_result {
     0: P70_k success;
     1: AccessTokenRefreshException accessTokenRefreshException;
 }
+
 struct reportSettings_args {
     2: i64 syncOpRevision;
     3: Settings settings;
 }
+
 struct reportSettings_result {
     1: TalkException e;
 }
+
 struct requestCleanupUserProvidedData_args {
     1: set<Pb1_od> dataTypes;
 }
+
 struct requestCleanupUserProvidedData_result {
     1: TalkException e;
 }
+
 struct I80_C26388Y {
     1: I80_u0 request;
 }
+
 struct requestToSendPasswordSetVerificationEmail_args {
     1: string authSessionId;
     2: string email;
     3: AccountIdentifier accountIdentifier;
 }
+
 struct requestToSendPasswordSetVerificationEmail_result {
     0: RequestToSendPasswordSetVerificationEmailResponse success;
     1: AuthException e;
 }
+
 struct I80_C26389Z {
     0: I80_v0 success;
     1: I80_C26390a e;
 }
+
 struct requestToSendPhonePinCode_args {
     1: ReqToSendPhonePinCodeRequest request;
 }
+
 struct I80_C26391a0 {
     1: I80_s0 request;
 }
+
 struct requestToSendPhonePinCode_result {
     0: ReqToSendPhonePinCodeResponse success;
     1: AuthException e;
 }
+
 struct I80_C26393b0 {
     0: I80_t0 success;
     1: I80_C26390a e;
 }
+
 struct requestTradeNumber_args {
     1: string requestToken;
     2: r80_g0 requestType;
     3: string amount;
     4: string name;
 }
+
 struct requestTradeNumber_result {
     0: PaymentTradeInfo success;
     1: PaymentException e;
 }
+
 struct resendIdentifierConfirmation_args {
     2: string authSessionId;
     3: IdentityCredentialRequest request;
 }
+
 struct resendIdentifierConfirmation_result {
     0: IdentityCredentialResponse success;
     1: TalkException e;
 }
+
 struct resendPinCode_args {
     2: string sessionId;
 }
+
 struct resendPinCode_result {
     1: TalkException e;
 }
+
 struct reserveCoinPurchase_args {
     1: CoinPurchaseReservation request;
 }
+
 struct reserveCoinPurchase_result {
     0: PaymentReservationResult success;
     1: CoinException e;
 }
+
 struct reserveSubscriptionPurchase_args {
     1: ReserveSubscriptionPurchaseRequest request;
 }
+
 struct reserveSubscriptionPurchase_result {
     0: ReserveSubscriptionPurchaseResponse success;
     1: PremiumException e;
 }
+
 struct reserve_args {
     1: ReserveRequest request;
 }
+
 struct reserve_result {
     0: ReserveInfo success;
     1: MembershipException e;
 }
+
 struct respondE2EEKeyExchange_result {
     1: TalkException e;
 }
+
 struct respondE2EELoginRequest_result {
     1: TalkException e;
 }
+
 struct restoreE2EEKeyBackup_args {
     2: Pb1_C13155r7 request;
 }
+
 struct restoreE2EEKeyBackup_result {
     0: Pb1_C13169s7 success;
     1: E2EEKeyBackupException e;
 }
+
 struct I80_C26395c0 {
     1: I80_w0 request;
 }
+
 struct I80_C26397d0 {
     0: I80_x0 success;
     1: I80_C26390a e;
 }
+
 struct I80_C26399e0 {
     1: I80_w0 request;
 }
+
 struct I80_C26401f0 {
     0: I80_x0 success;
     1: I80_C26390a e;
 }
+
 struct retrieveRequestTokenWithDocomoV2_args {
     1: Pb1_C13183t7 request;
 }
+
 struct retrieveRequestTokenWithDocomoV2_result {
     0: RetrieveRequestTokenWithDocomoV2Response success;
     1: TalkException e;
 }
+
 struct retrieveRequestToken_args {
     2: CarrierCode carrier;
 }
+
 struct retrieveRequestToken_result {
     0: AgeCheckRequestResult success;
     1: TalkException e;
 }
+
 struct revokeTokens_args {
     1: RevokeTokensRequest request;
 }
+
 struct revokeTokens_result {
     1: LiffException liffException;
     2: TalkException talkException;
 }
+
 struct saveStudentInformation_args {
     2: SaveStudentInformationRequest req;
 }
+
 struct saveStudentInformation_result {
     0: Ob1_C12649o1 success;
     1: ShopException e;
 }
+
 struct sendChatChecked_args {
     1: i32 seq;
     2: string chatMid;
     3: string lastMessageId;
     4: byte sessionId;
 }
+
 struct sendChatChecked_result {
     1: TalkException e;
 }
+
 struct sendChatRemoved_args {
     1: i32 seq;
     2: string chatMid;
     3: string lastMessageId;
     4: byte sessionId;
 }
+
 struct sendChatRemoved_result {
     1: TalkException e;
 }
+
 struct sendEncryptedE2EEKey_args {
     1: SendEncryptedE2EEKeyRequest request;
 }
+
 struct sendEncryptedE2EEKey_result {
     0: h80_v success;
     1: PrimaryQrCodeMigrationException pqme;
     2: TokenAuthException tae;
 }
+
 struct sendMessage_args {
     1: i32 seq;
     2: Message message;
 }
+
 struct sendMessage_result {
     0: Message success;
     1: TalkException e;
 }
+
 struct sendPostback_args {
     2: SendPostbackRequest request;
 }
+
 struct sendPostback_result {
     1: TalkException e;
 }
+
 struct setChatHiddenStatus_args {
     1: SetChatHiddenStatusRequest setChatHiddenStatusRequest;
 }
+
 struct setChatHiddenStatus_result {
     1: TalkException e;
 }
+
 struct setHashedPassword_args {
     1: SetHashedPasswordRequest request;
 }
+
 struct I80_C26403g0 {
     1: I80_z0 request;
 }
+
 struct setHashedPassword_result {
     0: T70_g1 success;
     1: AuthException e;
 }
+
 struct I80_C26405h0 {
     0: I80_A0 success;
     1: I80_C26390a e;
 }
+
 struct setIdentifier_args {
     2: string authSessionId;
     3: IdentityCredentialRequest request;
 }
+
 struct setIdentifier_result {
     0: IdentityCredentialResponse success;
     1: TalkException e;
 }
+
 struct setNotificationsEnabled_args {
     1: i32 reqSeq;
     2: MIDType type;
     3: string target;
     4: bool enablement;
 }
+
 struct setNotificationsEnabled_result {
     1: TalkException e;
 }
+
 struct setPassword_args {
     1: SetPasswordRequest request;
 }
+
 struct setPassword_result {
     0: U70_t success;
     1: PasswordUpdateException pue;
     2: TokenAuthException tae;
 }
+
 struct shouldShowWelcomeStickerBanner_args {
     2: Ob1_C12660s1 request;
 }
+
 struct shouldShowWelcomeStickerBanner_result {
     0: ShouldShowWelcomeStickerBannerResponse success;
     1: ShopException e;
 }
+
 struct startPhotobooth_args {
     2: StartPhotoboothRequest request;
 }
+
 struct startPhotobooth_result {
     0: StartPhotoboothResponse success;
     1: TalkException e;
 }
+
 struct I80_C26407i0 {
     1: I80_C0 request;
 }
+
 struct I80_C26409j0 {
     0: I80_D0 success;
     1: I80_C26390a e;
 }
+
 struct startUpdateVerification_args {
     2: string region;
     3: CarrierCode carrier;
@@ -13831,54 +16586,68 @@ struct startUpdateVerification_args {
     8: string locale;
     9: SIMInfo simInfo;
 }
+
 struct startUpdateVerification_result {
     0: VerificationSessionData success;
     1: TalkException e;
 }
+
 struct stopBundleSubscription_args {
     2: StopBundleSubscriptionRequest request;
 }
+
 struct stopBundleSubscription_result {
     0: StopBundleSubscriptionResponse success;
     1: ShopException e;
 }
+
 struct storeShareTargetPickerResult_args {
     1: ShareTargetPickerResultRequest request;
 }
+
 struct storeShareTargetPickerResult_result {
     1: LiffException liffException;
     2: TalkException talkException;
 }
+
 struct storeSubWindowResult_args {
     1: SubWindowResultRequest request;
 }
+
 struct storeSubWindowResult_result {
     1: LiffException liffException;
     2: TalkException talkException;
 }
+
 struct syncContacts_args {
     1: i32 reqSeq;
     2: list<ContactModification> localContacts;
 }
+
 struct syncContacts_result {
     0: map<string, ContactRegistration> success;
     1: TalkException e;
 }
+
 struct sync_args {
     1: SyncRequest request;
 }
+
 struct sync_result {
     0: Pb1_X7 success;
     1: TalkException e;
 }
+
 struct t80_g {
-    1: t80_GetResponse response;
-    2: t80_SettingsException error;
+    1: GetResponse response;
+    2: SettingsException error;
 }
+
 struct t80_l {
-    1: t80_SetResponse response;
-    2: t80_SettingsException error;
+    1: SetResponse response;
+    2: SettingsException error;
 }
+
 struct t80_p {
     1: bool booleanValue;
     2: i64 i64Value;
@@ -13894,53 +16663,67 @@ struct t80_p {
     12: list<_any> i16ListValue;
     13: list<_any> i32ListValue;
 }
+
 struct tryFriendRequest_args {
     1: string midOrEMid;
     2: Pb1_G4 method;
     3: string friendRequestParams;
 }
+
 struct tryFriendRequest_result {
     1: TalkException e;
 }
+
 struct unblockContact_args {
     1: i32 reqSeq;
     2: string id;
     3: string reference;
 }
+
 struct unblockContact_result {
     1: TalkException e;
 }
+
 struct unblockRecommendation_args {
     1: i32 reqSeq;
     2: string targetMid;
 }
+
 struct unblockRecommendation_result {
     1: TalkException e;
 }
+
 struct unfollow_args {
     2: UnfollowRequest unfollowRequest;
 }
+
 struct unfollow_result {
     1: TalkException e;
 }
+
 struct unlinkDevice_args {
     1: DeviceUnlinkRequest request;
 }
+
 struct unlinkDevice_result {
     0: do0_C23152j success;
     1: ThingsException e;
 }
+
 struct unregisterUserAndDevice_result {
     0: string success;
     1: TalkException e;
 }
+
 struct unsendMessage_args {
     1: i32 seq;
     2: string messageId;
 }
+
 struct unsendMessage_result {
     1: TalkException e;
 }
+
 struct updateAndGetNearby_args {
     2: double latitude;
     3: double longitude;
@@ -13952,218 +16735,276 @@ struct updateAndGetNearby_args {
     9: i64 measuredAtTimestamp;
     10: i64 clientCurrentTimestamp;
 }
+
 struct updateAndGetNearby_result {
     0: list<NearbyEntry> success;
     1: TalkException e;
 }
+
 struct updateChannelNotificationSetting_args {
     1: list<ChannelNotificationSetting> setting;
 }
+
 struct updateChannelNotificationSetting_result {
     1: ChannelException e;
 }
+
 struct updateChannelSettings_args {
     1: ChannelSettings channelSettings;
 }
+
 struct updateChannelSettings_result {
     0: bool success;
     1: ChannelException e;
 }
+
 struct updateChatRoomBGM_args {
     1: i32 reqSeq;
     2: string chatRoomMid;
     3: string chatRoomBGMInfo;
 }
+
 struct updateChatRoomBGM_result {
     0: ChatRoomBGM success;
     1: TalkException e;
 }
+
 struct updateChat_args {
     1: UpdateChatRequest request;
 }
+
 struct updateChat_result {
     0: Pb1_Zc success;
     1: TalkException e;
 }
+
 struct updateContactSetting_args {
     1: i32 reqSeq;
     2: string mid;
     3: ContactSetting flag;
     4: string value;
 }
+
 struct updateContactSetting_result {
     1: TalkException e;
 }
+
 struct updateExtendedProfileAttribute_args {
     1: i32 reqSeq;
     2: Pb1_EnumC13180t4 attr;
     3: ExtendedProfile extendedProfile;
 }
+
 struct updateExtendedProfileAttribute_result {
     1: TalkException e;
 }
+
 struct updateGroupCallUrl_args {
     2: UpdateGroupCallUrlRequest request;
 }
+
 struct updateGroupCallUrl_result {
     0: Pb1_cd success;
     1: TalkException e;
 }
+
 struct updateIdentifier_args {
     2: string authSessionId;
     3: IdentityCredentialRequest request;
 }
+
 struct updateIdentifier_result {
     0: IdentityCredentialResponse success;
     1: TalkException e;
 }
+
 struct updateNotificationToken_args {
     2: string token;
     3: NotificationType type;
 }
+
 struct updateNotificationToken_result {
     1: TalkException e;
 }
+
 struct updatePassword_args {
     1: UpdatePasswordRequest request;
 }
+
 struct updatePassword_result {
     0: U70_v success;
     1: PasswordUpdateException pue;
     2: TokenAuthException tae;
 }
+
 struct updateProfileAttribute_result {
     1: TalkException e;
 }
+
 struct updateProfileAttributes_args {
     1: UpdateProfileAttributesRequest request;
 }
+
 struct updateProfileAttributes_args {
     1: i32 reqSeq;
     2: UpdateProfileAttributesRequest request;
 }
+
 struct updateProfileAttributes_result {
     0: gN0_C25143G success;
     1: TalkException e;
 }
+
 struct updateProfileAttributes_result {
     1: TalkException e;
 }
+
 struct updateSafetyStatus_args {
     1: UpdateSafetyStatusRequest req;
 }
+
 struct updateSafetyStatus_result {
     1: vh_Fg_b e;
 }
+
 struct updateSettingsAttribute_result {
     1: TalkException e;
 }
+
 struct updateSettingsAttributes2_args {
     1: i32 reqSeq;
     3: Settings settings;
     4: set<SettingsAttributeEx> attributesToUpdate;
 }
+
 struct updateSettingsAttributes2_result {
     0: set<i32> success;
     1: TalkException e;
 }
+
 struct updateUserGeneralSettings_args {
     1: map<i32, string> settings;
 }
+
 struct updateUserGeneralSettings_result {
     1: PaymentException e;
 }
+
 struct usePhotoboothTicket_args {
     2: UsePhotoboothTicketRequest request;
 }
+
 struct usePhotoboothTicket_result {
     0: UsePhotoboothTicketResponse success;
     1: TalkException e;
 }
+
 struct validateEligibleFriends_args {
     1: list<string> friends;
     2: r80_EnumC34376p type;
 }
+
 struct validateEligibleFriends_result {
     0: list<PaymentEligibleFriendStatus> success;
     1: PaymentException e;
 }
+
 struct validateProduct_args {
     2: string shopId;
     3: string productId;
     4: i64 productVersion;
     5: YN0_Ob1_Q0 validationReq;
 }
+
 struct validateProduct_result {
     0: YN0_Ob1_R0 success;
     1: ShopException e;
 }
+
 struct validateProfile_args {
     1: string authSessionId;
     2: string displayName;
 }
+
 struct validateProfile_result {
     0: T70_o1 success;
     1: AuthException e;
 }
+
 struct verifyAccountUsingHashedPwd_args {
     1: VerifyAccountUsingHashedPwdRequest request;
 }
+
 struct I80_C26411k0 {
     1: I80_E0 request;
 }
+
 struct verifyAccountUsingHashedPwd_result {
     0: VerifyAccountUsingHashedPwdResponse success;
     1: AuthException e;
 }
+
 struct I80_l0 {
     0: I80_F0 success;
     1: I80_C26390a e;
 }
+
 struct verifyAssertion_args {
     1: VerifyAssertionRequest request;
 }
+
 struct verifyAssertion_result {
     0: m80_q success;
     1: m80_b deviceAttestationException;
 }
+
 struct verifyAttestation_args {
     1: VerifyAttestationRequest request;
 }
+
 struct verifyAttestation_result {
     0: m80_s success;
     1: m80_b deviceAttestationException;
 }
+
 struct verifyBirthdayGiftAssociationToken_args {
     2: BirthdayGiftAssociationVerifyRequest req;
 }
+
 struct verifyBirthdayGiftAssociationToken_result {
     0: BirthdayGiftAssociationVerifyResponse success;
     1: ShopException e;
 }
+
 struct verifyEapAccountForRegistration_args {
     1: string authSessionId;
     2: Device device;
     3: SocialLogin socialLogin;
 }
+
 struct verifyEapAccountForRegistration_result {
     0: T70_s1 success;
     1: AuthException e;
 }
+
 struct verifyEapLogin_args {
     1: VerifyEapLoginRequest request;
 }
+
 struct I80_m0 {
     1: I80_G0 request;
 }
+
 struct verifyEapLogin_result {
     0: VerifyEapLoginResponse success;
     1: AccountEapConnectException e;
 }
+
 struct I80_n0 {
     0: I80_H0 success;
     1: I80_C26390a e;
 }
+
 struct verifyPhoneNumber_args {
     2: string sessionId;
     3: string pinCode;
@@ -14171,91 +17012,138 @@ struct verifyPhoneNumber_args {
     5: string migrationPincodeSessionId;
     6: string oldUdidHash;
 }
+
 struct verifyPhoneNumber_result {
     0: PhoneVerificationResult success;
     1: TalkException e;
 }
+
 struct verifyPhonePinCode_args {
     1: VerifyPhonePinCodeRequest request;
 }
+
 struct I80_o0 {
     1: I80_I0 request;
 }
+
 struct verifyPhonePinCode_result {
     0: VerifyPhonePinCodeResponse success;
     1: AuthException e;
 }
+
 struct I80_p0 {
     0: I80_J0 success;
     1: I80_C26390a e;
 }
+
 struct verifyPinCode_args {
     1: VerifyPinCodeRequest request;
 }
+
 struct verifyPinCode_args {
     1: VerifyPinCodeRequest request;
 }
+
 struct verifyPinCode_result {
     0: S70_k success;
     1: SecondAuthFactorPinCodeException e;
 }
+
 struct verifyPinCode_result {
     0: q80_q success;
     1: SecondaryQrCodeException e;
 }
+
 struct verifyQrCode_args {
     1: VerifyQrCodeRequest request;
 }
+
 struct verifyQrCode_result {
     0: q80_s success;
     1: SecondaryQrCodeException e;
 }
+
 struct verifyQrcodeWithE2EE_result {
     0: string success;
     1: TalkException e;
 }
+
 struct verifyQrcode_args {
     2: string verifier;
     3: string pinCode;
 }
+
 struct verifyQrcode_result {
     0: string success;
     1: TalkException e;
 }
+
 struct verifySocialLogin_args {
     1: string authSessionId;
     2: Device device;
     3: SocialLogin socialLogin;
 }
+
 struct verifySocialLogin_result {
     0: VerifySocialLoginResponse success;
     1: AuthException e;
 }
+
 struct vh_C37633d {
     
 }
+
 struct wakeUpLongPolling_args {
     2: i64 clientRevision;
 }
+
 struct wakeUpLongPolling_result {
     0: bool success;
     1: TalkException e;
 }
+
 struct zR0_C40576a {
     
 }
+
 struct zR0_C40580e {
-    1: zR0_Sticker sticker;
+    1: _any sticker;
 }
 
 struct GetContactsV2Response {
     1: map<string, ContactEntry> contacts;
 }
+
 struct ContactEntry {
     1: UserStatus userStatus;
     2: i64 snapshotTimeMillis;
     3: Contact contact;
     4: ContactCalendarEvents calendarEvents;
+}
+
+enum LoginResultType {
+    SUCCESS = 1;
+    REQUIRE_QRCODE = 2;
+    REQUIRE_DEVICE_CONFIRM = 3;
+    REQUIRE_SMS_CONFIRM = 4;
+}
+
+enum VerificationMethod {
+    NO_AVAILABLE    = 0,
+    PIN_VIA_SMS     = 1,
+    CALLERID_INDIGO = 2,
+    PIN_VIA_TTS     = 4,
+    SKIP            = 10,
+}
+
+struct VerificationSessionData {
+    1: string sessionId;
+    2: VerificationMethod method;
+    3: string callback;
+    4: string normalizedPhone;
+    5: string countryCode;
+    6: string nationalSignificantNumber;
+    7: list<VerificationMethod> availableVerificationMethods;
 }
 
 struct LoginResult {
@@ -14267,30 +17155,4 @@ struct LoginResult {
     6: i64 lastPrimaryBindTime;
     7: string displayMessage;
     8: VerificationSessionData sessionForSMSConfirm;
-}
-
-enum LoginResultType {
-    SUCCESS = 1;
-    REQUIRE_QRCODE = 2;
-    REQUIRE_DEVICE_CONFIRM = 3;
-    REQUIRE_SMS_CONFIRM = 4;
-}
-
-struct VerificationSessionData {
-    1: string sessionId;
-    2: VerificationMethod method;
-    3: string callback;
-    4: string normalizedPhone;
-    5: string countryCode;
-    6: string nationalSignificantNumber;
-    7: list<VerificationMethod> availableVerificationMethods;
-    8: string callerIdMask;
-}
-
-enum VerificationMethod {
-    NO_AVAILABLE = 0;
-    PIN_VIA_SMS = 1;
-    CALLERID_INDIGO = 2;
-    PIN_VIA_TTS = 4;
-    SKIP = 10;
 }

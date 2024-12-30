@@ -128,11 +128,11 @@ function writeValue(
 			break;
 
 		case Thrift.Type.BOOL:
-			if (typeof val !== "boolean") {
+			if (typeof val !== "boolean" && typeof val !== "number") {
 				throw new TypeError(`ftype=${ftype}: value is not boolean`);
 			}
 			output.writeFieldBegin("", Thrift.Type.BOOL, fid);
-			output.writeBool(val);
+			output.writeBool(Boolean(val));
 			output.writeFieldEnd();
 			break;
 

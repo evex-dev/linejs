@@ -15,6 +15,9 @@ interface RequestClientInit extends ClientInitBase {
 	 */
 	endpoint?: string;
 }
+
+const square = ["/SQ1", "/SQLV1"];
+
 /**
  * Request Client
  */
@@ -165,7 +168,7 @@ export class RequestClient {
 			);
 		}
 		if (parse === true) {
-			this.client.thrift.rename_data(res);
+			this.client.thrift.rename_data(res, square.includes(path));
 		} else if (typeof parse === "string") {
 			res.data.success = this.client.thrift.rename_thrift(
 				parse,

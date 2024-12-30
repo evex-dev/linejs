@@ -604,7 +604,12 @@ export class E2EE {
 				messageObj.contentType === LINETypes.enums.ContentType.NONE) &&
 			messageObj.chunks
 		) {
-			messageObj.text = await this.decryptE2EETextMessage(messageObj);
+			const [text, meta] = await this.decryptE2EETextMessage(messageObj);
+			messageObj.text = text;
+			messageObj.contentMetadata = {
+				...messageObj.contentMetadata,
+				...meta,
+			};
 		} else if (
 			(messageObj.contentType === "LOCATION" ||
 				messageObj.contentType ===
@@ -623,7 +628,7 @@ export class E2EE {
 	public async decryptE2EETextMessage(
 		messageObj: Message,
 		isSelf = false,
-	): Promise<string> {
+	): Promise<[string, Record<string, string>]> {
 		const _from = messageObj.from;
 		const to = messageObj.to;
 		if (_from === this.client.profile?.mid) {
@@ -676,8 +681,22 @@ export class E2EE {
 		} else {
 			decrypted = this.decryptE2EEMessageV1(chunks, privK, pubK);
 		}
-
-		return decrypted.text || "";
+		const text = decrypted.text || "";
+		const meta: Record<string, string> = {};
+		for (const key in decrypted) {
+			if (key === "text") {
+				continue;
+			}
+			if (Object.prototype.hasOwnProperty.call(decrypted, key)) {
+				const val = decrypted[key];
+				if (typeof val === "string") {
+					meta[key] = val;
+				} else {
+					meta[key] = JSON.stringify(val);
+				}
+			}
+		}
+		return [text, meta];
 	}
 
 	public async decryptE2EELocationMessage(

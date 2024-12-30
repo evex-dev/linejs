@@ -105,6 +105,7 @@ export class SquareService implements BaseService {
 	async fetchMyEvents(
 		options: {
 			syncToken?: string;
+			continuationToken?: string;
 			limit?: number;
 		},
 	): Promise<LINETypes.SquareService_fetchMyEvents_result["success"]> {
@@ -127,6 +128,7 @@ export class SquareService implements BaseService {
 		threadMid?: string;
 		syncToken?: string;
 		limit?: number;
+		direction?: LINETypes.FetchDirection;
 	}): Promise<
 		LINETypes.SquareService_fetchSquareChatEvents_result["success"]
 	> {
@@ -843,7 +845,7 @@ export class SquareService implements BaseService {
 							announcementSeq: 0,
 							contents: {
 								textMessageAnnouncementContents: {
-									senderMid: options.senderMid,
+									senderSquareMemberMid: options.senderMid,
 									messageId: options.messageId,
 									text: options.text,
 								},
