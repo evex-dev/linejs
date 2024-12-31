@@ -50,7 +50,6 @@ MessageType, etc.) are provided.
   - BaseStorage - LINE Client Base Storage
   - MemoryStorage - LINE Client Memory Storage
   - FileStorage - LINE Client File Storage
-  - DenoKvStorage - LINE Client `Deno.Kv` Storage
 - types - (@evex/linejs-types)
   - All Types for LINE
 

@@ -1,2 +1,0 @@
-# Talk Methods
-Coming soon

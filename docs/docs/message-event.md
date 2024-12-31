@@ -16,6 +16,9 @@ To receive messages, do the following.
 client.on("message", (message) => {
     ...
 });
+
+await client.login({...})
+client.polling(["square","talk"])
 ```
 
 This is all that is needed to receive the message.\
