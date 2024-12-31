@@ -18,7 +18,6 @@ function sleep(time: number) {
 
 export class Polling {
 	#sync: SyncData = { talk: {} };
-	polling_delay = 1000;
 
 	client: Client;
 	constructor(client: Client) {
@@ -31,6 +30,7 @@ export class Polling {
 	async *listenSquareEvents(
 		abortController?: AbortController,
 		onError?: (error: unknown) => void,
+		pollingInterval: number = 1000,
 	): AsyncGenerator<SquareEvent, void, unknown> {
 		let continuationToken: string | undefined;
 		while (true) {
@@ -48,7 +48,7 @@ export class Polling {
 			} catch (error) {
 				onError?.(error);
 			}
-			await sleep(this.polling_delay);
+			await sleep(pollingInterval);
 			if (abortController?.signal.aborted) {
 				break;
 			}
@@ -58,6 +58,7 @@ export class Polling {
 	async *listenTalkEvents(
 		abortController?: AbortController,
 		onError?: (error: unknown) => void,
+		pollingInterval: number = 1000,
 	): AsyncGenerator<Pb1_C13154r6, void, unknown> {
 		while (true) {
 			try {
@@ -96,7 +97,7 @@ export class Polling {
 			} catch (error) {
 				onError?.(error);
 			}
-			await sleep(this.polling_delay);
+			await sleep(pollingInterval);
 			if (abortController?.signal.aborted) {
 				break;
 			}
