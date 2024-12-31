@@ -23,6 +23,6 @@
 	},
 	"tasks": {
 		"dev": "deno run -A --watch sandbox/main.ts",
-		"thrift": "deno run --allow-read --allow-write tools/thrift/tool.ts"
+		"thrift": "deno run --allow-read --allow-write scripts/thrift/tool.ts"
 	}
 }
