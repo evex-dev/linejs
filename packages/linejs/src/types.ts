@@ -16,10 +16,3 @@ export type Fetch = (
 	info: RequestInfo | URL,
 	init?: RequestInit,
 ) => Promise<Response>;
-
-/**
- * A value that give client to each modules.
- */
-export interface ModuleInitBase {
-	client: Client;
-}

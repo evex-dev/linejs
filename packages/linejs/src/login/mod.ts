@@ -1,4 +1,3 @@
-import type { ModuleInitBase } from "../types.ts";
 import { getRSACrypto } from "./rsa-verify.ts";
 import { EMAIL_REGEX, PASSWORD_REGEX } from "./regex.ts";
 import { type Device, isV3Support } from "../core/utils/devices.ts";
@@ -60,8 +59,8 @@ export class Login {
 	readonly client: Client;
 	cert: string | null;
 	qrCert: string | null;
-	constructor(init: ModuleInitBase) {
-		this.client = init.client;
+	constructor(client: Client) {
+		this.client = client;
 		this.qrCert = null;
 		this.cert = null;
 	}

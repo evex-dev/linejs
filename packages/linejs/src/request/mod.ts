@@ -4,18 +4,7 @@ import {
 	type ProtocolKey,
 	Protocols,
 } from "../thrift/mod.ts";
-import type { Client, DeviceDetails } from "../core/mod.ts";
-import type { ModuleInitBase } from "../types.ts";
-
-interface RequestClientInit extends ModuleInitBase {
-	deviceDetails: DeviceDetails;
-
-	/**
-	 * API Endpoint
-	 * @default gw.line.naver.jp
-	 */
-	endpoint?: string;
-}
+import type { Client } from "../core/mod.ts";
 
 const square = ["/SQ1", "/SQLV1"];
 
@@ -40,13 +29,13 @@ export class RequestClient {
 		"/api/v3/TalkService.do": "TalkException",
 	};
 
-	constructor(init: RequestClientInit) {
-		const deviceDetails = init.deviceDetails;
-		this.endpoint = init.endpoint ?? "gw.line.naver.jp";
+	constructor(client: Client) {
+		const deviceDetails = client.deviceDetails;
+		this.endpoint = client.endpoint ?? "gw.line.naver.jp";
 		this.systemType =
 			`${deviceDetails.device}\t${deviceDetails.appVersion}\t${deviceDetails.systemName}\t${deviceDetails.systemVersion}`;
 		this.userAgent = `Line/${deviceDetails.appVersion}`;
-		this.client = init.client;
+		this.client = client;
 	}
 
 	/**

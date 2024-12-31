@@ -5,7 +5,6 @@ import type { Location, Message } from "@evex/linejs-types";
 import nacl from "tweetnacl";
 import { InternalError } from "../core/utils/error.ts";
 import * as LINETypes from "@evex/linejs-types";
-import type { ModuleInitBase } from "../types.ts";
 import type { Client } from "../core/mod.ts";
 
 interface GroupKey {
@@ -15,8 +14,8 @@ interface GroupKey {
 
 export class E2EE {
 	readonly client: Client;
-	constructor(param: ModuleInitBase) {
-		this.client = param.client;
+	constructor(client: Client) {
+		this.client = client;
 	}
 	public async getE2EESelfKeyData(mid: string): Promise<any> {
 		try {

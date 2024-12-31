@@ -23,8 +23,8 @@ export class Polling {
 	polling_delay = 1000;
 
 	client: Client;
-	constructor(init: { client: Client }) {
-		this.client = init.client;
+	constructor(client: Client) {
+		this.client = client;
 	}
 	async square(): Promise<void> {
 		if (this.polling_square) {

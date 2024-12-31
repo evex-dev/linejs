@@ -1,5 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
-import type { Client } from "../core/mod.ts";
+import type { Client } from "../mod.ts";
+
 export type TimelineResponse<T = any> = {
 	code: number;
 	message: string;
@@ -10,8 +11,8 @@ export class Timeline {
 	protected timelineToken: string | undefined;
 	public timelineHeaders: Record<string, string | undefined> = {};
 	client: Client;
-	constructor(init: { client: Client }) {
-		this.client = init.client;
+	constructor(client: Client) {
+		this.client = client;
 	}
 
 	public async initTimeline() {

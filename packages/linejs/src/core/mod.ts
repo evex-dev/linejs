@@ -124,44 +124,40 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	readonly livetalk: SquareLiveTalkService;
 	readonly square: SquareService;
 	readonly talk: TalkService;
-	fetch: Fetch;
+	#customFetch?: FetchLike;
 	profile?: LINETypes.Profile;
 	config: Config;
+	readonly deviceDetails: DeviceDetails;
+	readonly endpoint: string;
 	constructor(init: ClientInit) {
 		super();
 		const deviceDetails = getDeviceDetails(init.device, init.version);
 		if (!deviceDetails) {
 			throw new Error(`Unsupported device: ${init.device}.`);
 		}
-
-		this.storage = init.storage ?? new MemoryStorage();
-		this.request = new RequestClient({
-			endpoint: init.endpoint ?? "legy.line-apps.com",
-			client: this,
-			deviceDetails,
-		});
-		this.loginProcess = new Login({ client: this });
-		this.thrift = new Thrift();
-		this.e2ee = new E2EE({ client: this });
-		this.obs = new LineObs({ client: this });
-		this.timeline = new Timeline({ client: this });
-		this.pollingProcess = new Polling({ client: this });
-
-		this.thrift.def = def;
-		this.device = init.device;
-		this.fetch = init.fetch
-			? (async (info: RequestInfo | URL, reqInit?: RequestInit) => {
-				const res = await (init.fetch as FetchLike)(new Request(info, reqInit));
-				return res;
-			})
-			: globalThis.fetch.bind(globalThis);
-
+		if (init.fetch) {
+			this.#customFetch = init.fetch;
+		}
+		this.deviceDetails = deviceDetails;
+		this.endpoint = init.endpoint ?? "legy.line-apps.com";
 		this.config = {
 			timeout: 30_000,
 			longTimeout: 180_000,
 		};
+		this.device = init.device;
+
+		this.storage = init.storage ?? new MemoryStorage();
+		this.request = new RequestClient(this);
+		this.loginProcess = new Login(this);
+		this.thrift = new Thrift();
+		this.thrift.def = def;
+		this.e2ee = new E2EE(this);
+		this.obs = new LineObs(this);
+		this.timeline = new Timeline(this);
+		this.pollingProcess = new Polling(this);
+
 		this.auth = new AuthService(this);
-		this.call = new CallService({ client: this });
+		this.call = new CallService(this);
 		this.channel = new ChannelService(this);
 		this.liff = new LiffService(this);
 		this.livetalk = new SquareLiveTalkService(this);
@@ -231,5 +227,14 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	}
 	getSquareMember(squareMemberMid: string): Promise<SquareMember> {
 		return SquareMember.from(squareMemberMid, this);
+	}
+
+	async fetch(info: RequestInfo | URL, init?: RequestInit): Promise<Response> {
+		const req = new Request(info, init);
+		const res =
+			await (this.#customFetch
+				? this.#customFetch(req)
+				: globalThis.fetch(req));
+		return res;
 	}
 }

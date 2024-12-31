@@ -2,7 +2,6 @@
 
 import { LINEStruct, type ProtocolKey } from "../../thrift/mod.ts";
 import type * as LINETypes from "@evex/linejs-types";
-import type { ModuleInitBase } from "../../types.ts";
 import type { Client } from "../../core/mod.ts";
 import type { BaseService } from "../types.ts";
 
@@ -11,8 +10,8 @@ export class CallService implements BaseService {
 	protocolType: ProtocolKey = 4;
 	requestPath = "/V4";
 	errorName = "CallServiceError";
-	constructor(init: ModuleInitBase) {
-		this.client = init.client;
+	constructor(client: Client) {
+		this.client = client;
 	}
 	async acquireCallRoute(
 		...param: Parameters<typeof LINEStruct.acquireCallRoute_args>

@@ -13,6 +13,9 @@ import { writeThrift } from "./readwrite/write.ts";
  * Thrift Client
  */
 export class Thrift extends ThriftRenameParser {
+	constructor() {
+		super();
+	}
 	readThrift(
 		...params: Parameters<typeof readThrift>
 	): ReturnType<typeof readThrift> {
