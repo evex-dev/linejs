@@ -5,7 +5,3 @@ export interface ClientInitBase {
 	 */
 	client: Client;
 }
-export type fetchLike = (
-	input: URL | string,
-	init?: RequestInit,
-) => Promise<Response>;

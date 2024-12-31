@@ -12,7 +12,7 @@ import type { ClientEvents, Log } from "./utils/events.ts";
 import { InternalError } from "./utils/error.ts";
 import { type Continuable, continueRequest } from "./utils/continue.ts";
 
-import type { ClientInitBase, fetchLike } from "./types.ts";
+import type { ClientInitBase } from "./types.ts";
 import {
 	Group,
 	Square,
@@ -25,7 +25,6 @@ export type {
 	Continuable,
 	Device,
 	DeviceDetails,
-	fetchLike,
 	Log,
 };
 export { continueRequest, InternalError };
@@ -51,6 +50,7 @@ import { Polling } from "../polling/mod.ts";
 
 import { Thrift as def } from "@evex/linejs-types/thrift";
 import type * as LINETypes from "@evex/linejs-types";
+import type { Fetch, FetchLike } from "../types.ts";
 
 export interface LoginOption {
 	email?: string;
@@ -88,10 +88,10 @@ export interface ClientInit {
 	storage?: BaseStorage;
 
 	/**
-	 * Proxy
-	 * @default fetch
+	 * Custom function to connect network.
+	 * @default `globalThis.fetch`
 	 */
-	fetch?: fetchLike;
+	fetch?: FetchLike
 }
 
 export interface Config {
@@ -108,6 +108,9 @@ export interface Config {
 	longTimeout: number;
 }
 
+/**
+ * LINE.js client, which is entry point.
+ */
 export class Client extends TypedEventEmitter<ClientEvents> {
 	authToken?: string;
 	readonly device: Device;
@@ -128,7 +131,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	readonly livetalk: SquareLiveTalkService;
 	readonly square: SquareService;
 	readonly talk: TalkService;
-	fetch: fetchLike;
+	fetch: Fetch;
 	profile?: LINETypes.Profile;
 	config: Config;
 	constructor(init: ClientInit) {
@@ -153,7 +156,11 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 		this.thrift.def = def;
 		this.device = init.device;
-		this.fetch = init.fetch ?? fetch;
+		this.fetch = init.fetch ? (async (info: RequestInfo | URL, reqInit?: RequestInit) => {
+		  const res = await (init.fetch as FetchLike)(new Request(info, reqInit))
+		  return res
+		}) : globalThis.fetch.bind(globalThis);
+
 		this.config = {
 			timeout: 30_000,
 			longTimeout: 180_000,
