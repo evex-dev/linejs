@@ -120,7 +120,8 @@ export class Timeline {
 			longitude: number;
 			name: string;
 		}[] = [];
-		const medias: { objectId: string; type: string; obsFace: string }[] = [];
+		const medias: { objectId: string; type: string; obsFace: string }[] =
+			[];
 		stickerIds.forEach((stickerId, stickerIndex) => {
 			stickers.push({
 				id: stickerId,
@@ -171,7 +172,6 @@ export class Timeline {
 		const headers = {
 			...this.timelineHeaders,
 			"x-lhm": "POST",
-			"Content-type": "application/json",
 		};
 		return await this.client.fetch(
 			`https://${this.client.request.endpoint}/${
@@ -190,7 +190,6 @@ export class Timeline {
 		const headers = {
 			...this.timelineHeaders,
 			"x-lhm": "POST",
-			"Content-type": "application/json",
 		};
 		const params = new URLSearchParams({
 			homeId,
@@ -213,7 +212,6 @@ export class Timeline {
 		const headers = {
 			...this.timelineHeaders,
 			"x-lhm": "GET",
-			"Content-type": "application/json",
 		};
 		const params = new URLSearchParams({
 			homeId,
@@ -275,7 +273,6 @@ export class Timeline {
 		const headers = {
 			...this.timelineHeaders,
 			"x-lhm": "POST",
-			"Content-type": "application/json",
 		};
 		return await this.client.fetch(
 			`https://${this.client.request.endpoint}/${
