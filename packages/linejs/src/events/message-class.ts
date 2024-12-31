@@ -5,7 +5,7 @@
  */
 import * as LINETypes from "@evex/linejs-types";
 import { parseEnum } from "@evex/linejs-types/thrift";
-import { type Client, InternalError } from "../../core/mod.ts";
+import { type Client, InternalError } from "../core/mod.ts";
 import { Group, User } from "./talk-class.ts";
 import { Square, SquareChat, SquareMember } from "./square-class.ts";
 
@@ -182,7 +182,8 @@ export class Message {
 
 	constructor(options: {
 		operation?: LINETypes.Operation;
-		squareEventNotificationMessage?: LINETypes.SquareEventNotificationMessage;
+		squareEventNotificationMessage?:
+			LINETypes.SquareEventNotificationMessage;
 		squareEventReceiveMessage?: LINETypes.SquareEventReceiveMessage;
 		squareEventSendMessage?: LINETypes.SquareEventSendMessage;
 		message?: LINETypes.Message;
@@ -211,14 +212,16 @@ export class Message {
 			this.sourceType = 0;
 		} else if (squareEventNotificationMessage) {
 			this.rawSource = squareEventNotificationMessage;
-			this.rawMessage = squareEventNotificationMessage.squareMessage.message;
+			this.rawMessage =
+				squareEventNotificationMessage.squareMessage.message;
 			this._senderDisplayName =
 				squareEventNotificationMessage.senderDisplayName;
 			this.sourceType = 1;
 		} else if (squareEventReceiveMessage) {
 			this.rawSource = squareEventReceiveMessage;
 			this.rawMessage = squareEventReceiveMessage.squareMessage.message;
-			this._senderDisplayName = squareEventReceiveMessage.senderDisplayName;
+			this._senderDisplayName =
+				squareEventReceiveMessage.senderDisplayName;
 			this.sourceType = 2;
 		} else if (squareEventSendMessage) {
 			this.rawSource = squareEventSendMessage;
@@ -547,7 +550,8 @@ export class ClientMessage extends Message {
 	constructor(
 		options: {
 			operation?: LINETypes.Operation;
-			squareEventNotificationMessage?: LINETypes.SquareEventNotificationMessage;
+			squareEventNotificationMessage?:
+				LINETypes.SquareEventNotificationMessage;
 			squareEventReceiveMessage?: LINETypes.SquareEventReceiveMessage;
 			squareEventSendMessage?: LINETypes.SquareEventSendMessage;
 			message?: LINETypes.Message;
@@ -740,7 +744,8 @@ export class TalkMessage extends ClientMessage {
 			type: "MESSAGE",
 			contents: {
 				text: this.text,
-				link: `line://nv/chatMsg?chatId=${this.to}&messageId=${this.id}`,
+				link:
+					`line://nv/chatMsg?chatId=${this.to}&messageId=${this.id}`,
 			},
 		});
 	}
@@ -764,7 +769,8 @@ export class TalkMessage extends ClientMessage {
 export class SquareMessage extends ClientMessage {
 	constructor(
 		options: {
-			squareEventNotificationMessage?: LINETypes.SquareEventNotificationMessage;
+			squareEventNotificationMessage?:
+				LINETypes.SquareEventNotificationMessage;
 			squareEventReceiveMessage?: LINETypes.SquareEventReceiveMessage;
 			squareEventSendMessage?: LINETypes.SquareEventSendMessage;
 			message?: LINETypes.Message;

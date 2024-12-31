@@ -1,6 +1,6 @@
+import type { Pb1_C13154r6, SquareEvent } from "../../../types/line_types.ts";
 import type { Client } from "../core/mod.ts";
-import { Operation, SquareMessage } from "./events/mod.ts";
-export * from "./events/mod.ts";
+export * from "../events/mod.ts";
 export interface SyncData {
 	square?: string;
 	talk: {
@@ -26,7 +26,7 @@ export class Polling {
 	constructor(client: Client) {
 		this.client = client;
 	}
-	async square(): Promise<void> {
+	async *square(): AsyncGenerator<SquareEvent, void, unknown> {
 		if (this.polling_square) {
 			return;
 		}
@@ -42,22 +42,7 @@ export class Polling {
 				this.sync.square = response.syncToken;
 				continuationToken = response.continuationToken;
 				for (const event of response.events) {
-					this.client.emit("square:event", event);
-					if (
-						event.type === "NOTIFICATION_MESSAGE" &&
-						event.payload.notificationMessage
-					) {
-						this.client.emit(
-							"square:message",
-							new SquareMessage(
-								{
-									squareEventNotificationMessage:
-										event.payload.notificationMessage,
-								},
-								this.client,
-							),
-						);
-					}
+					yield event;
 				}
 			} catch (_e) {
 				this.client.log("squarePollingError", { error: _e });
@@ -66,7 +51,7 @@ export class Polling {
 		}
 	}
 
-	async talk(): Promise<void> {
+	async *talk(): AsyncGenerator<Pb1_C13154r6, void, unknown> {
 		if (this.polling_talk) {
 			return;
 		}
@@ -81,7 +66,8 @@ export class Polling {
 					response.fullSyncResponse &&
 					response.fullSyncResponse.nextRevision
 				) {
-					this.sync.talk.revision = response.fullSyncResponse.nextRevision;
+					this.sync.talk.revision =
+						response.fullSyncResponse.nextRevision;
 					continue;
 				}
 				if (
@@ -103,23 +89,7 @@ export class Polling {
 					continue;
 				}
 				for (const event of response.operationResponse.operations) {
-					this.sync.talk.revision = event.revision;
-					if (event.message) {
-						event.message = await this.client.e2ee
-							.decryptE2EEMessage(event.message);
-					}
-					const operation = new Operation(event, this.client);
-					this.client.emit("event", operation);
-					if (
-						(operation.type === "SEND_MESSAGE" ||
-							operation.type === "RECEIVE_MESSAGE") &&
-						operation.message
-					) {
-						this.client.emit(
-							"message",
-							operation.message,
-						);
-					}
+					yield event;
 				}
 			} catch (_e) {
 				this.client.log("talkPollingError", { error: _e });

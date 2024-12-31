@@ -5,11 +5,11 @@
  */
 import type * as LINETypes from "@evex/linejs-types";
 import { parseEnum } from "@evex/linejs-types/thrift";
-import type { Client } from "../../core/mod.ts";
+import type { Client } from "../core/mod.ts";
 import type { Buffer } from "node:buffer";
-import { TypedEventEmitter } from "../../core/typed-event-emitter/index.ts";
+import { TypedEventEmitter } from "../core/typed-event-emitter/index.ts";
 import { Message, TalkMessage } from "./message-class.ts";
-import type { TimelineResponse } from "../../timeline/mod.ts";
+import type { TimelineResponse } from "../timeline/mod.ts";
 
 type GroupEvents = {
 	message: (message: TalkMessage) => void;
@@ -226,7 +226,8 @@ export class User extends TypedEventEmitter<UserEvents> {
 		this.friendRequestStatus = contact.friendRequestStatus;
 		this.musicProfile = contact.musicProfile;
 		this.videoProfile = contact.videoProfile;
-		this.statusMessageContentMetadata = contact.statusMessageContentMetadata;
+		this.statusMessageContentMetadata =
+			contact.statusMessageContentMetadata;
 		this.avatarProfile = contact.avatarProfile;
 		this.friendRingtone = contact.friendRingtone;
 		this.friendRingbackTone = contact.friendRingbackTone;

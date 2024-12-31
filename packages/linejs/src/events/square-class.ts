@@ -4,8 +4,8 @@
  * for square
  */
 import * as LINETypes from "@evex/linejs-types";
-import { type Client, Continuable, continueRequest } from "../../core/mod.ts";
-import { TypedEventEmitter } from "../../core/typed-event-emitter/index.ts";
+import { type Client, Continuable, continueRequest } from "../core/mod.ts";
+import { TypedEventEmitter } from "../core/typed-event-emitter/index.ts";
 import { SquareMessage } from "./message-class.ts";
 import { Note } from "./talk-class.ts";
 
@@ -130,7 +130,8 @@ export class Square extends TypedEventEmitter<SquareEvents> {
 					event.payload.notifiedUpdateSquareStatus.squareMid ===
 						this.mid
 				) {
-					this.status = event.payload.notifiedUpdateSquareStatus.squareStatus;
+					this.status =
+						event.payload.notifiedUpdateSquareStatus.squareStatus;
 					this.emit("update", this);
 					this.emit("update:status", this.status);
 				} else if (
@@ -281,7 +282,8 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 					event.payload.notifiedUpdateSquareChat.squareChatMid ===
 						this.mid
 				) {
-					const { squareChat } = event.payload.notifiedUpdateSquareChat;
+					const { squareChat } =
+						event.payload.notifiedUpdateSquareChat;
 					this.mid = squareChat.squareChatMid;
 					this.squareMid = squareChat.squareMid;
 					this.type = squareChat.type;
@@ -402,7 +404,8 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 					) {
 						const message = new SquareMessage(
 							{
-								squareEventSendMessage: event.payload.sendMessage,
+								squareEventSendMessage:
+									event.payload.sendMessage,
 							},
 							this.client,
 						);
@@ -413,7 +416,8 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 					) {
 						const message = new SquareMessage(
 							{
-								squareEventReceiveMessage: event.payload.receiveMessage,
+								squareEventReceiveMessage:
+									event.payload.receiveMessage,
 							},
 							this.client,
 						);

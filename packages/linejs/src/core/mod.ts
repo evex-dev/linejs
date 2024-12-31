@@ -205,10 +205,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	polling(options: PollingOption[]): Promise<void[]> {
 		const promise: Promise<void>[] = [];
 		if (options.includes("talk")) {
-			promise.push(this.pollingProcess.talk());
+			// promise.push(this.pollingProcess.talk());
 		}
 		if (options.includes("square")) {
-			promise.push(this.pollingProcess.square());
+			// promise.push(this.pollingProcess.square());
 		}
 		return Promise.all(promise);
 	}
@@ -229,7 +229,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		return SquareMember.from(squareMemberMid, this);
 	}
 
-	async fetch(info: RequestInfo | URL, init?: RequestInit): Promise<Response> {
+	async fetch(
+		info: RequestInfo | URL,
+		init?: RequestInit,
+	): Promise<Response> {
 		const req = new Request(info, init);
 		const res =
 			await (this.#customFetch
