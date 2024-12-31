@@ -17,7 +17,7 @@ function sleep(time: number) {
 }
 
 export class Polling {
-	#sync: SyncData = { talk: {} };
+	sync: SyncData = { talk: {} };
 
 	client: Client;
 	constructor(client: Client) {
@@ -27,26 +27,32 @@ export class Polling {
 	/**
 	 * Listen OpenChat events as a async generator.
 	 */
-	async *listenSquareEvents(
-		abortController?: AbortController,
-		onError?: (error: unknown) => void,
-		pollingInterval: number = 1000,
-	): AsyncGenerator<SquareEvent, void, unknown> {
+	async *listenSquareEvents(options: {
+		abortController?: AbortController;
+		onError?: (error: unknown) => void;
+		pollingInterval?: number;
+	}): AsyncGenerator<SquareEvent, void, unknown> {
+		const { abortController, onError, pollingInterval } = {
+			pollingInterval: 1000,
+			...options,
+		};
 		let continuationToken: string | undefined;
 		while (true) {
 			try {
 				const response = await this.client.square.fetchMyEvents({
-					syncToken: this.#sync.square,
+					syncToken: this.sync.square,
 					continuationToken,
 					limit: 100,
 				});
-				this.#sync.square = response.syncToken;
+				this.sync.square = response.syncToken;
 				continuationToken = response.continuationToken;
 				for (const event of response.events) {
 					yield event;
 				}
 			} catch (error) {
-				onError?.(error);
+				if (onError) {
+					onError(error);
+				}
 			}
 			await sleep(pollingInterval);
 			if (abortController?.signal.aborted) {
@@ -55,36 +61,41 @@ export class Polling {
 		}
 	}
 
-	async *listenTalkEvents(
-		abortController?: AbortController,
-		onError?: (error: unknown) => void,
-		pollingInterval: number = 1000,
-	): AsyncGenerator<Pb1_C13154r6, void, unknown> {
+	async *listenTalkEvents(options: {
+		abortController?: AbortController;
+		onError?: (error: unknown) => void;
+		pollingInterval?: number;
+	}): AsyncGenerator<Pb1_C13154r6, void, unknown> {
+		const { abortController, onError, pollingInterval } = {
+			pollingInterval: 1000,
+			...options,
+		};
 		while (true) {
 			try {
 				const response = await this.client.talk.sync({
-					...this.#sync.talk,
+					...this.sync.talk,
 					limit: 100,
 				});
 				if (
 					response.fullSyncResponse &&
 					response.fullSyncResponse.nextRevision
 				) {
-					this.#sync.talk.revision = response.fullSyncResponse.nextRevision;
+					this.sync.talk.revision =
+						response.fullSyncResponse.nextRevision;
 					continue;
 				}
 				if (
 					response.operationResponse.globalEvents &&
 					response.operationResponse.globalEvents.lastRevision
 				) {
-					this.#sync.talk.globalRev =
+					this.sync.talk.globalRev =
 						response.operationResponse.globalEvents.lastRevision;
 				}
 				if (
 					response.operationResponse.individualEvents &&
 					response.operationResponse.individualEvents.lastRevision
 				) {
-					this.#sync.talk.individualRev =
+					this.sync.talk.individualRev =
 						response.operationResponse.individualEvents
 							.lastRevision;
 				}
@@ -95,7 +106,9 @@ export class Polling {
 					yield event;
 				}
 			} catch (error) {
-				onError?.(error);
+				if (onError) {
+					onError(error);
+				}
 			}
 			await sleep(pollingInterval);
 			if (abortController?.signal.aborted) {
