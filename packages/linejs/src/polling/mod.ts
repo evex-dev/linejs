@@ -17,71 +17,74 @@ function sleep(time: number) {
 }
 
 export class Polling {
-	sync: SyncData = { talk: {} };
-	polling_talk = false;
-	polling_square = false;
-	polling_delay = 1000;
+	#sync: SyncData = { talk: {} };
 
 	client: Client;
 	constructor(client: Client) {
 		this.client = client;
 	}
-	async *square(): AsyncGenerator<SquareEvent, void, unknown> {
-		if (this.polling_square) {
-			return;
-		}
-		this.polling_square = true;
+
+	/**
+	 * Listen OpenChat events as a async generator.
+	 */
+	async *listenSquareEvents(
+		abortController?: AbortController,
+		onError?: (error: unknown) => void,
+		pollingInterval: number = 1000,
+	): AsyncGenerator<SquareEvent, void, unknown> {
 		let continuationToken: string | undefined;
-		while (this.polling_square) {
+		while (true) {
 			try {
 				const response = await this.client.square.fetchMyEvents({
-					syncToken: this.sync.square,
+					syncToken: this.#sync.square,
 					continuationToken,
 					limit: 100,
 				});
-				this.sync.square = response.syncToken;
+				this.#sync.square = response.syncToken;
 				continuationToken = response.continuationToken;
 				for (const event of response.events) {
 					yield event;
 				}
-			} catch (_e) {
-				this.client.log("squarePollingError", { error: _e });
+			} catch (error) {
+				onError?.(error);
 			}
-			await sleep(this.polling_delay);
+			await sleep(pollingInterval);
+			if (abortController?.signal.aborted) {
+				break;
+			}
 		}
 	}
 
-	async *talk(): AsyncGenerator<Pb1_C13154r6, void, unknown> {
-		if (this.polling_talk) {
-			return;
-		}
-		this.polling_talk = true;
-		while (this.polling_talk) {
+	async *listenTalkEvents(
+		abortController?: AbortController,
+		onError?: (error: unknown) => void,
+		pollingInterval: number = 1000,
+	): AsyncGenerator<Pb1_C13154r6, void, unknown> {
+		while (true) {
 			try {
 				const response = await this.client.talk.sync({
-					...this.sync.talk,
+					...this.#sync.talk,
 					limit: 100,
 				});
 				if (
 					response.fullSyncResponse &&
 					response.fullSyncResponse.nextRevision
 				) {
-					this.sync.talk.revision =
-						response.fullSyncResponse.nextRevision;
+					this.#sync.talk.revision = response.fullSyncResponse.nextRevision;
 					continue;
 				}
 				if (
 					response.operationResponse.globalEvents &&
 					response.operationResponse.globalEvents.lastRevision
 				) {
-					this.sync.talk.globalRev =
+					this.#sync.talk.globalRev =
 						response.operationResponse.globalEvents.lastRevision;
 				}
 				if (
 					response.operationResponse.individualEvents &&
 					response.operationResponse.individualEvents.lastRevision
 				) {
-					this.sync.talk.individualRev =
+					this.#sync.talk.individualRev =
 						response.operationResponse.individualEvents
 							.lastRevision;
 				}
@@ -91,10 +94,13 @@ export class Polling {
 				for (const event of response.operationResponse.operations) {
 					yield event;
 				}
-			} catch (_e) {
-				this.client.log("talkPollingError", { error: _e });
+			} catch (error) {
+				onError?.(error);
 			}
-			await sleep(this.polling_delay);
+			await sleep(pollingInterval);
+			if (abortController?.signal.aborted) {
+				break;
+			}
 		}
 	}
 }
