@@ -1,9 +1,5 @@
 import type * as LINETypes from "@evex/linejs-types";
-import type {
-	Operation,
-	SquareMessage,
-	TalkMessage,
-} from "../../events/mod.ts";
+import type { Operation, SquareMessage, TalkMessage } from "../../event/mod.ts";
 type LogType = "login" | "request" | "response" | (string & {});
 
 export interface Log {

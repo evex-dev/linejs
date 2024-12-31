@@ -14,11 +14,12 @@ import { type Continuable, continueRequest } from "./utils/continue.ts";
 
 import {
 	Group,
+	LineEvent,
 	Square,
 	SquareChat,
 	SquareMember,
 	User,
-} from "../polling/mod.ts";
+} from "../event/mod.ts";
 export type { Continuable, Device, DeviceDetails, Log };
 export { continueRequest, InternalError };
 
@@ -55,7 +56,7 @@ export interface LoginOption {
 	v3?: boolean;
 }
 
-type PollingOption = "talk" | "square";
+type ListenOption = "talk" | "square";
 
 export interface ClientInit {
 	/**
@@ -114,7 +115,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	readonly e2ee: E2EE;
 	readonly obs: LineObs;
 	readonly timeline: Timeline;
-	readonly pollingProcess: Polling;
+	readonly polling: Polling;
+	readonly event: LineEvent;
 
 	readonly auth: AuthService;
 	readonly call: CallService;
@@ -154,7 +156,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		this.e2ee = new E2EE(this);
 		this.obs = new LineObs(this);
 		this.timeline = new Timeline(this);
-		this.pollingProcess = new Polling(this);
+		this.polling = new Polling(this);
+		this.event = new LineEvent(this);
 
 		this.auth = new AuthService(this);
 		this.call = new CallService(this);
@@ -202,15 +205,16 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	): Promise<void> {
 		return await this.loginProcess.login(options as any);
 	}
-	polling(options: PollingOption[]): Promise<void[]> {
-		const promise: Promise<void>[] = [];
+
+	listen(options: ListenOption[]): Promise<void[]> {
+		const promises: Promise<void>[] = [];
 		if (options.includes("talk")) {
-			// promise.push(this.pollingProcess.talk());
+			promises.push(this.event.talk());
 		}
 		if (options.includes("square")) {
-			// promise.push(this.pollingProcess.square());
+			promises.push(this.event.square());
 		}
-		return Promise.all(promise);
+		return Promise.all(promises);
 	}
 
 	getUser(userMid: string): Promise<User> {

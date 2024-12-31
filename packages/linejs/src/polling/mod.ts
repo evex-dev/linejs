@@ -1,6 +1,6 @@
 import type { Pb1_C13154r6, SquareEvent } from "../../../types/line_types.ts";
 import type { Client } from "../core/mod.ts";
-export * from "../events/mod.ts";
+
 export interface SyncData {
 	square?: string;
 	talk: {
