@@ -30,7 +30,7 @@ export class Polling {
 	 */
 	async *listenSquareEvents(
 		abortController?: AbortController,
-		onError?: (error: unknown) => void
+		onError?: (error: unknown) => void,
 	): AsyncGenerator<SquareEvent, void, unknown> {
 		let continuationToken: string | undefined;
 		while (true) {
@@ -46,18 +46,18 @@ export class Polling {
 					yield event;
 				}
 			} catch (error) {
-				onError?.(error)
+				onError?.(error);
 			}
 			await sleep(this.polling_delay);
 			if (abortController?.signal.aborted) {
-				break
+				break;
 			}
 		}
 	}
 
 	async *listenTalkEvents(
 		abortController?: AbortController,
-		onError?: (error: unknown) => void
+		onError?: (error: unknown) => void,
 	): AsyncGenerator<Pb1_C13154r6, void, unknown> {
 		while (true) {
 			try {
@@ -69,8 +69,7 @@ export class Polling {
 					response.fullSyncResponse &&
 					response.fullSyncResponse.nextRevision
 				) {
-					this.#sync.talk.revision =
-						response.fullSyncResponse.nextRevision;
+					this.#sync.talk.revision = response.fullSyncResponse.nextRevision;
 					continue;
 				}
 				if (
@@ -95,11 +94,11 @@ export class Polling {
 					yield event;
 				}
 			} catch (error) {
-				onError?.(error)
+				onError?.(error);
 			}
 			await sleep(this.polling_delay);
 			if (abortController?.signal.aborted) {
-				break
+				break;
 			}
 		}
 	}

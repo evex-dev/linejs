@@ -226,8 +226,7 @@ export class User extends TypedEventEmitter<UserEvents> {
 		this.friendRequestStatus = contact.friendRequestStatus;
 		this.musicProfile = contact.musicProfile;
 		this.videoProfile = contact.videoProfile;
-		this.statusMessageContentMetadata =
-			contact.statusMessageContentMetadata;
+		this.statusMessageContentMetadata = contact.statusMessageContentMetadata;
 		this.avatarProfile = contact.avatarProfile;
 		this.friendRingtone = contact.friendRingtone;
 		this.friendRingbackTone = contact.friendRingbackTone;
