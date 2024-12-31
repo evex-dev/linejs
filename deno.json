@@ -1,5 +1,5 @@
 {
-	"workspace": ["./packages/linejs", "./packages/types"],
+	"workspace": ["./packages/linejs", "./packages/types", "./docs"],
 	"fmt": {
 		"singleQuote": false,
 		"useTabs": true,
@@ -23,6 +23,10 @@
 	},
 	"tasks": {
 		"dev": "deno run -A --watch sandbox/main.ts",
-		"thrift": "deno run --allow-read --allow-write scripts/thrift/tool.ts"
-	}
+		"thrift": "deno run --allow-read --allow-write scripts/thrift/tool.ts",
+		"docs:dev": "cd docs && deno task dev"
+	},
+	"unstable": [
+		"byonm"
+	]
 }
