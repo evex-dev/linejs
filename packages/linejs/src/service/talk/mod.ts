@@ -77,7 +77,6 @@ export class TalkService implements BaseService {
 		} = {
 			contentType: "NONE" as LINETypes.ContentType,
 			contentMetadata: {},
-			e2ee: true,
 			...options,
 		};
 		if ((e2ee && !chunks && location) || (e2ee && !chunks && text)) {

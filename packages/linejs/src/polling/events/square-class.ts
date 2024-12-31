@@ -231,7 +231,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 	public status: LINETypes.SquareChatStatusWithoutMessage;
 	public syncToken?: string;
 	public note: Note;
-	public polling_delay = 1000;
+	public polling_delay = 2000;
 	constructor(
 		public rawSouce: LINETypes.GetSquareChatResponse,
 		private client: Client,
@@ -344,7 +344,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 	/**
 	 * @description Send msg to square.
 	 */
-	public send(
+	public async send(
 		options:
 			| string
 			| {
@@ -356,11 +356,11 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 			},
 	): Promise<LINETypes.SendMessageResponse> {
 		if (typeof options === "string") {
-			return this.send({ text: options });
+			return await this.send({ text: options });
 		} else {
 			const _options: any = options;
 			_options.squareChatMid = this.mid;
-			return this.client.square.sendMessage(_options);
+			return await this.client.square.sendMessage(_options);
 		}
 	}
 	public IS_POLLING: boolean = false;
@@ -429,7 +429,9 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 				);
 			} catch (error) {
 				this.client.log("SquareChatPollingError", { error });
-				await new Promise<void>((resolve) => setTimeout(resolve, 2000));
+				await new Promise<void>((resolve) =>
+					setTimeout(resolve, this.polling_delay)
+				);
 			}
 		}
 	}

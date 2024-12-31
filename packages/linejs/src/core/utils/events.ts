@@ -3,7 +3,7 @@ import type {
 	Operation,
 	SquareMessage,
 	TalkMessage,
-} from "../../polling/events/class.ts";
+} from "../../polling/events/mod.ts";
 type LogType = "login" | "request" | "response" | (string & {});
 
 export interface Log {

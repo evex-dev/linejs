@@ -13,7 +13,13 @@ import { InternalError } from "./utils/error.ts";
 import { type Continuable, continueRequest } from "./utils/continue.ts";
 
 import type { ClientInitBase, fetchLike } from "./types.ts";
-
+import {
+	Group,
+	Square,
+	SquareChat,
+	SquareMember,
+	User,
+} from "../polling/mod.ts";
 export type {
 	ClientInitBase,
 	Continuable,
@@ -207,5 +213,21 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			promise.push(this.pollingProcess.square());
 		}
 		return Promise.all(promise);
+	}
+
+	getUser(userMid: string): Promise<User> {
+		return User.from(userMid, this);
+	}
+	getGroup(chatMid: string): Promise<Group> {
+		return Group.from(chatMid, this);
+	}
+	getSquare(squareMid: string): Promise<Square> {
+		return Square.from(squareMid, this);
+	}
+	getSquareChat(squareChatMid: string): Promise<SquareChat> {
+		return SquareChat.from(squareChatMid, this);
+	}
+	getSquareMember(squareMemberMid: string): Promise<SquareMember> {
+		return SquareMember.from(squareMemberMid, this);
 	}
 }

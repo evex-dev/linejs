@@ -1,6 +1,6 @@
 import type { Client } from "../core/mod.ts";
-import { Operation, SquareMessage } from "./events/class.ts";
-
+import { Operation, SquareMessage } from "./events/mod.ts";
+export * from "./events/mod.ts";
 export interface SyncData {
     square?: string;
     talk: {

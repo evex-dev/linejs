@@ -36,6 +36,8 @@ deno add @evex/linejs
 
 For now, please use "https://esm.sh/jsr/@evex/linejs".
 
+Example is [here](./example/browser).
+
 ## LINEJS Types
 
 Please see [@evex/linejs-types](https://jsr.io/@evex/linejs-types).\
@@ -59,3 +61,13 @@ MessageType, etc.) are provided.
 - Developer: [EdamAme-x](https://github.com/EdamAme-x)
 - Developer: [MocA-Love](https://github.com/MocA-Love)
 - Developer: [Hafusun](https://github.com/hafusun)
+
+## References
+
+- [DeachSword/CHRLINE](https://github.com/DeachSword/CHRLINE)
+
+- [DeachSword/CHRLINE-Thrift](https://github.com/DeachSword/CHRLINE-Thrift/)
+
+- [WEDeach/CHRLINE-Patch](https://github.com/WEDeach/CHRLINE-Patch)
+
+- [discordjs/collection](https://www.npmjs.com/package/@discordjs/collection)
