@@ -3,11 +3,23 @@
  * @module
  */
 
+import type { Client } from "./core/mod.ts";
+
 /**
  * Fetch function used by linejs.
  * You can set custom network connection if you create an API which follows FetchLike.
  */
 export interface FetchLike {
-  (req: Request): Response | Promise<Response>
+	(req: Request): Response | Promise<Response>;
 }
-export type Fetch = (info: RequestInfo | URL, init?: RequestInit) => Promise<Response>
+export type Fetch = (
+	info: RequestInfo | URL,
+	init?: RequestInit,
+) => Promise<Response>;
+
+/**
+ * A value that give client to each modules.
+ */
+export interface ModuleInitBase {
+	client: Client;
+}

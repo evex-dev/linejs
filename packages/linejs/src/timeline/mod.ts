@@ -120,8 +120,7 @@ export class Timeline {
 			longitude: number;
 			name: string;
 		}[] = [];
-		const medias: { objectId: string; type: string; obsFace: string }[] =
-			[];
+		const medias: { objectId: string; type: string; obsFace: string }[] = [];
 		stickerIds.forEach((stickerId, stickerIndex) => {
 			stickers.push({
 				id: stickerId,

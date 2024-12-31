@@ -1,6 +1,6 @@
 (function () {
-    const script = document.createElement("script");
-    script.innerHTML = `
+	const script = document.createElement("script");
+	script.innerHTML = `
    import * as LINEJS from "https://esm.sh/v135/@jsr/evex__linejs@2.0.0-rc1/es2022/evex__linejs.mjs";
    
    document.body.innerHTML = "";
@@ -85,6 +85,6 @@
    }
    globalThis.client = client;
 `;
-    script.type = "module";
-    document.body.appendChild(script);
-})()
+	script.type = "module";
+	document.body.appendChild(script);
+})();

@@ -4,9 +4,10 @@ import {
 	type ProtocolKey,
 	Protocols,
 } from "../thrift/mod.ts";
-import type { Client, ClientInitBase, DeviceDetails } from "../core/mod.ts";
+import type { Client, DeviceDetails } from "../core/mod.ts";
+import type { ModuleInitBase } from "../types.ts";
 
-interface RequestClientInit extends ClientInitBase {
+interface RequestClientInit extends ModuleInitBase {
 	deviceDetails: DeviceDetails;
 
 	/**

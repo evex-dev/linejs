@@ -2,7 +2,7 @@
 
 import { LINEStruct, type ProtocolKey } from "../../thrift/mod.ts";
 import type * as LINETypes from "@evex/linejs-types";
-import type { ClientInitBase } from "../../core/types.ts";
+import type { ModuleInitBase } from "../../types.ts";
 import { type Client, InternalError } from "../../core/mod.ts";
 import type { BaseService } from "../types.ts";
 

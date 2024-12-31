@@ -1,15 +1,12 @@
 import { Buffer } from "node:buffer";
-import {
-	type Client,
-	type ClientInitBase,
-	InternalError,
-} from "../core/mod.ts";
+import { type Client, InternalError } from "../core/mod.ts";
 import { MimeType } from "./mime.ts";
+import type { ModuleInitBase } from "../types.ts";
 
 export class LineObs {
 	client: Client;
 	prefix = "https://obs.line-apps.com/";
-	constructor(init: ClientInitBase) {
+	constructor(init: ModuleInitBase) {
 		this.client = init.client;
 	}
 

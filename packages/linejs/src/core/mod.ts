@@ -12,7 +12,6 @@ import type { ClientEvents, Log } from "./utils/events.ts";
 import { InternalError } from "./utils/error.ts";
 import { type Continuable, continueRequest } from "./utils/continue.ts";
 
-import type { ClientInitBase } from "./types.ts";
 import {
 	Group,
 	Square,
@@ -20,13 +19,7 @@ import {
 	SquareMember,
 	User,
 } from "../polling/mod.ts";
-export type {
-	ClientInitBase,
-	Continuable,
-	Device,
-	DeviceDetails,
-	Log,
-};
+export type { Continuable, Device, DeviceDetails, Log };
 export { continueRequest, InternalError };
 
 import {
@@ -91,7 +84,7 @@ export interface ClientInit {
 	 * Custom function to connect network.
 	 * @default `globalThis.fetch`
 	 */
-	fetch?: FetchLike
+	fetch?: FetchLike;
 }
 
 export interface Config {
@@ -156,17 +149,19 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 
 		this.thrift.def = def;
 		this.device = init.device;
-		this.fetch = init.fetch ? (async (info: RequestInfo | URL, reqInit?: RequestInit) => {
-		  const res = await (init.fetch as FetchLike)(new Request(info, reqInit))
-		  return res
-		}) : globalThis.fetch.bind(globalThis);
+		this.fetch = init.fetch
+			? (async (info: RequestInfo | URL, reqInit?: RequestInit) => {
+				const res = await (init.fetch as FetchLike)(new Request(info, reqInit));
+				return res;
+			})
+			: globalThis.fetch.bind(globalThis);
 
 		this.config = {
 			timeout: 30_000,
 			longTimeout: 180_000,
 		};
 		this.auth = new AuthService(this);
-		this.call = new CallService(this);
+		this.call = new CallService({ client: this });
 		this.channel = new ChannelService(this);
 		this.liff = new LiffService(this);
 		this.livetalk = new SquareLiveTalkService(this);
