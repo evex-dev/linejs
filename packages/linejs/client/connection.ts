@@ -1,15 +1,14 @@
-import { MessageTransformer, type Message } from "./message/mod.ts";
+import { MessageLINEEvent } from "./events/message.ts";
+import type { LINEEvent } from "./events/shared.ts";
+import { UnknownLINEEvent } from "./events/unknown.ts";
 import type { Client } from "./mod.ts";
 import type { Operation, SquareEvent } from '@evex/linejs-types'
 
 export interface Connection {
-  getReadableTalk(): ReadableStream<Operation> | null
-  getReadableSquare(): ReadableStream<SquareEvent> | null
-  getReadable(): ReadableStream<SquareEvent | Operation>
-  listen(): AsyncGenerator<SquareEvent | Operation>
-
-  getReadableMessages(): ReadableStream<Message>
-  listenMessages(): AsyncGenerator<Message>
+  _getReadableTalk(): ReadableStream<Operation> | null
+  _getReadableSquare(): ReadableStream<SquareEvent> | null
+  _getReadable(): ReadableStream<SquareEvent | Operation>
+  listen(): AsyncGenerator<LINEEvent>
 }
 export interface ConnectOptions {
   talk?: boolean
@@ -35,7 +34,7 @@ export const connect = (client: Client, opts: ConnectOptions): Connection => {
   })
 
   return {
-    getReadableTalk() {
+    _getReadableTalk() {
       if (!talkReadable) {
         return null
       }
@@ -43,7 +42,7 @@ export const connect = (client: Client, opts: ConnectOptions): Connection => {
       talkReadable = a
       return b
     },
-    getReadableSquare() {
+    _getReadableSquare() {
       if (!squareReadable) {
         return null
       }
@@ -51,9 +50,9 @@ export const connect = (client: Client, opts: ConnectOptions): Connection => {
       squareReadable = a
       return b
     },
-    getReadable() {
-      const talk = this.getReadableTalk()?.getReader()
-      const square = this.getReadableSquare()?.getReader()
+    _getReadable() {
+      const talk = this._getReadableTalk()?.getReader()
+      const square = this._getReadableSquare()?.getReader()
       return new ReadableStream({
         start: async (controller) => {
           const queue = async (reader: typeof talk | typeof square) => {
@@ -78,26 +77,20 @@ export const connect = (client: Client, opts: ConnectOptions): Connection => {
       })
     },
     async * listen() {
-      const reader = this.getReadable().getReader()
+      const reader = this._getReadable().getReader()
       while (true) {
         const { done, value } = await reader.read()
         if (value) {
-          yield value
-        }
-        if (done) {
-          return
-        }
-      }
-    },
-    getReadableMessages() {
-      return this.getReadable().pipeThrough(new MessageTransformer(client))
-    },
-    async * listenMessages() {
-      const reader = this.getReadableMessages().getReader()
-      while (true) {
-        const { done, value } = await reader.read()
-        if (value) {
-          yield value
+          let event: LINEEvent
+          switch (value.type) {
+            case 'RECEIVE_MESSAGE':
+              event = new MessageLINEEvent(value, client)
+              break
+            default:
+              event  = new UnknownLINEEvent(value)
+              break
+          }
+          yield event
         }
         if (done) {
           return
