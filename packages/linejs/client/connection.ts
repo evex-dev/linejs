@@ -1,9 +1,15 @@
+import { MessageTransformer, type Message } from "./message/mod.ts";
 import type { Client } from "./mod.ts";
 import type { Operation, SquareEvent } from '@evex/linejs-types'
 
 export interface Connection {
-  getReadableTalk(): ReadableStream<Operation>
-  getReadableSquare(): ReadableStream<SquareEvent>
+  getReadableTalk(): ReadableStream<Operation> | null
+  getReadableSquare(): ReadableStream<SquareEvent> | null
+  getReadable(): ReadableStream<SquareEvent | Operation>
+  listen(): AsyncGenerator<SquareEvent | Operation>
+
+  getReadableMessages(): ReadableStream<Message>
+  listenMessages(): AsyncGenerator<Message>
 }
 export interface ConnectOptions {
   talk?: boolean
@@ -31,7 +37,7 @@ export const connect = (client: Client, opts: ConnectOptions): Connection => {
   return {
     getReadableTalk() {
       if (!talkReadable) {
-        throw new Error('Connection doesn\'t include talk.')
+        return null
       }
       const [a, b] = talkReadable.tee()
       talkReadable = a
@@ -39,11 +45,64 @@ export const connect = (client: Client, opts: ConnectOptions): Connection => {
     },
     getReadableSquare() {
       if (!squareReadable) {
-        throw new Error('Connection doesn\'t include square.')
+        return null
       }
       const [a, b] = squareReadable.tee()
       squareReadable = a
       return b
+    },
+    getReadable() {
+      const talk = this.getReadableTalk()?.getReader()
+      const square = this.getReadableSquare()?.getReader()
+      return new ReadableStream({
+        start: async (controller) => {
+          const queue = async (reader: typeof talk | typeof square) => {
+            if (!reader) {
+              return
+            }
+            while (true) {
+              const { done, value } = await reader.read()
+              if (value) {
+                controller.enqueue(value)
+              }
+              if (done) {
+                break
+              }
+            }
+          }
+          await Promise.all([
+            queue(talk),
+            queue(square)
+          ])
+        }
+      })
+    },
+    async * listen() {
+      const reader = this.getReadable().getReader()
+      while (true) {
+        const { done, value } = await reader.read()
+        if (value) {
+          yield value
+        }
+        if (done) {
+          return
+        }
+      }
+    },
+    getReadableMessages() {
+      return this.getReadable().pipeThrough(new MessageTransformer(client))
+    },
+    async * listenMessages() {
+      const reader = this.getReadableMessages().getReader()
+      while (true) {
+        const { done, value } = await reader.read()
+        if (value) {
+          yield value
+        }
+        if (done) {
+          return
+        }
+      }
     },
   }
 }
