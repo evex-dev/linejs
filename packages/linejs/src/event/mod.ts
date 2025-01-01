@@ -13,7 +13,7 @@ export class LineEvent {
 		this.client = client;
 	}
 	async talk() {
-		for await (const event of this.client.polling.talk()) {
+		for await (const event of this.client.polling.listenTalkEvents()) {
 			if (
 				event.type === "SEND_MESSAGE" ||
 				event.type === "RECEIVE_MESSAGE"
@@ -30,7 +30,7 @@ export class LineEvent {
 		}
 	}
 	async square() {
-		for await (const event of this.client.polling.square()) {
+		for await (const event of this.client.polling.listenSquareEvents()) {
 			if (
 				event.payload.notificationMessage &&
 				event.type === "NOTIFICATION_MESSAGE"

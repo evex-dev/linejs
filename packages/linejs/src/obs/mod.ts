@@ -2,6 +2,7 @@ import { Buffer } from "node:buffer";
 import { type Client, InternalError } from "../core/mod.ts";
 import { MimeType } from "./mime.ts";
 import crypto from "node:crypto";
+import type { Message } from "@evex/linejs-types";
 
 export type ObjType = "image" | "gif" | "video" | "audio" | "file";
 export interface ObsMetadata {
@@ -288,7 +289,7 @@ export class LineObs {
 		oType: ObjType;
 		to: string;
 		filename?: string;
-	}) {
+	}): Promise<Message> {
 		const { data, oType, to, filename } = options;
 		const typeSet: {
 			image: [string, 1];

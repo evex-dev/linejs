@@ -3215,7 +3215,7 @@ export const Thrift: Record<string, Record<string, string> | any[]> = {
 		{
 			"fid": 1,
 			"name": "code",
-			"struct": "qm_s",
+			"struct": "ErrorCode",
 		},
 		{
 			"fid": 2,

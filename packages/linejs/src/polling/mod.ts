@@ -1,4 +1,4 @@
-import type { Pb1_C13154r6, SquareEvent } from "../../../types/line_types.ts";
+import type { Pb1_C13154r6, SquareEvent } from "@evex/linejs-types";
 import type { Client } from "../core/mod.ts";
 
 export interface SyncData {
@@ -31,7 +31,7 @@ export class Polling {
 		abortController?: AbortController;
 		onError?: (error: unknown) => void;
 		pollingInterval?: number;
-	}): AsyncGenerator<SquareEvent, void, unknown> {
+	} = {}): AsyncGenerator<SquareEvent, void, unknown> {
 		const { abortController, onError, pollingInterval } = {
 			pollingInterval: 1000,
 			...options,
@@ -65,7 +65,7 @@ export class Polling {
 		abortController?: AbortController;
 		onError?: (error: unknown) => void;
 		pollingInterval?: number;
-	}): AsyncGenerator<Pb1_C13154r6, void, unknown> {
+	} = {}): AsyncGenerator<Pb1_C13154r6, void, unknown> {
 		const { abortController, onError, pollingInterval } = {
 			pollingInterval: 1000,
 			...options,
