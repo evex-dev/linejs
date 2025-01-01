@@ -1,5 +1,5 @@
-import { Client } from "@evex/linejs";
-import { FileStorage } from "@evex/linejs/storage";
+import { Client } from "../../packages/linejs/base/mod.ts";
+import { FileStorage } from "../../packages/linejs/base/storage/mod.ts";
 
 const client = new Client({
 	device: "IOSIPAD",

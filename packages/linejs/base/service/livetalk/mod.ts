@@ -1,0 +1,388 @@
+// For SquareLiveTalk (live, etc)
+
+import { LINEStruct, type ProtocolKey } from "../../thrift/mod.ts";
+import type * as LINETypes from "@evex/linejs-types";
+import type { BaseClient } from "../../core/mod.ts";
+import type { BaseService } from "../types.ts";
+export class SquareLiveTalkService implements BaseService {
+	client: BaseClient;
+	protocolType: ProtocolKey = 4;
+	requestPath = "/SQLV1";
+	errorName = "SquareLiveTalkServiceError";
+	constructor(client: BaseClient) {
+		this.client = client;
+	}
+	async acceptSpeakers(
+		...param: Parameters<
+			typeof LINEStruct.SquareService_acceptSpeakers_args
+		>
+	): Promise<LINETypes.SquareService_acceptSpeakers_result["success"]> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_acceptSpeakers_args(...param),
+			"acceptSpeakers",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async acceptToChangeRole(
+		...param: Parameters<
+			typeof LINEStruct.SquareService_acceptToChangeRole_args
+		>
+	): Promise<LINETypes.SquareService_acceptToChangeRole_result["success"]> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_acceptToChangeRole_args(...param),
+			"acceptToChangeRole",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async acceptToListen(
+		...param: Parameters<
+			typeof LINEStruct.SquareService_acceptToListen_args
+		>
+	): Promise<LINETypes.SquareService_acceptToListen_result["success"]> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_acceptToListen_args(...param),
+			"acceptToListen",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async acceptToSpeak(
+		...param: Parameters<typeof LINEStruct.SquareService_acceptToSpeak_args>
+	): Promise<LINETypes.SquareService_acceptToSpeak_result["success"]> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_acceptToSpeak_args(...param),
+			"acceptToSpeak",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async cancelToSpeak(
+		...param: Parameters<typeof LINEStruct.SquareService_cancelToSpeak_args>
+	): Promise<LINETypes.SquareService_cancelToSpeak_result["success"]> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_cancelToSpeak_args(...param),
+			"cancelToSpeak",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async fetchLiveTalkEvents(
+		...param: Parameters<
+			typeof LINEStruct.SquareService_fetchLiveTalkEvents_args
+		>
+	): Promise<LINETypes.SquareService_fetchLiveTalkEvents_result["success"]> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_fetchLiveTalkEvents_args(...param),
+			"fetchLiveTalkEvents",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async findLiveTalkByInvitationTicket(
+		...param: Parameters<
+			typeof LINEStruct.SquareService_findLiveTalkByInvitationTicket_args
+		>
+	): Promise<
+		LINETypes.SquareService_findLiveTalkByInvitationTicket_result["success"]
+	> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_findLiveTalkByInvitationTicket_args(
+				...param,
+			),
+			"findLiveTalkByInvitationTicket",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async forceEndLiveTalk(
+		...param: Parameters<
+			typeof LINEStruct.SquareService_forceEndLiveTalk_args
+		>
+	): Promise<LINETypes.SquareService_forceEndLiveTalk_result["success"]> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_forceEndLiveTalk_args(...param),
+			"forceEndLiveTalk",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async getLiveTalkInfoForNonMember(
+		...param: Parameters<
+			typeof LINEStruct.SquareService_getLiveTalkInfoForNonMember_args
+		>
+	): Promise<
+		LINETypes.SquareService_getLiveTalkInfoForNonMember_result["success"]
+	> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_getLiveTalkInfoForNonMember_args(...param),
+			"getLiveTalkInfoForNonMember",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async getLiveTalkInvitationUrl(
+		...param: Parameters<
+			typeof LINEStruct.SquareService_getLiveTalkInvitationUrl_args
+		>
+	): Promise<
+		LINETypes.SquareService_getLiveTalkInvitationUrl_result["success"]
+	> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_getLiveTalkInvitationUrl_args(...param),
+			"getLiveTalkInvitationUrl",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async getLiveTalkSpeakersForNonMember(
+		...param: Parameters<
+			typeof LINEStruct.SquareService_getLiveTalkSpeakersForNonMember_args
+		>
+	): Promise<
+		LINETypes.SquareService_getLiveTalkSpeakersForNonMember_result[
+			"success"
+		]
+	> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_getLiveTalkSpeakersForNonMember_args(
+				...param,
+			),
+			"getLiveTalkSpeakersForNonMember",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async getSquareInfoByChatMid(
+		...param: Parameters<
+			typeof LINEStruct.SquareService_getSquareInfoByChatMid_args
+		>
+	): Promise<
+		LINETypes.SquareService_getSquareInfoByChatMid_result["success"]
+	> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_getSquareInfoByChatMid_args(...param),
+			"getSquareInfoByChatMid",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async inviteToChangeRole(
+		...param: Parameters<
+			typeof LINEStruct.SquareService_inviteToChangeRole_args
+		>
+	): Promise<LINETypes.SquareService_inviteToChangeRole_result["success"]> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_inviteToChangeRole_args(...param),
+			"inviteToChangeRole",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async inviteToListen(
+		...param: Parameters<
+			typeof LINEStruct.SquareService_inviteToListen_args
+		>
+	): Promise<LINETypes.SquareService_inviteToListen_result["success"]> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_inviteToListen_args(...param),
+			"inviteToListen",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async inviteToLiveTalk(
+		...param: Parameters<
+			typeof LINEStruct.SquareService_inviteToLiveTalk_args
+		>
+	): Promise<LINETypes.SquareService_inviteToLiveTalk_result["success"]> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_inviteToLiveTalk_args(...param),
+			"inviteToLiveTalk",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async inviteToSpeak(
+		...param: Parameters<typeof LINEStruct.SquareService_inviteToSpeak_args>
+	): Promise<LINETypes.SquareService_inviteToSpeak_result["success"]> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_inviteToSpeak_args(...param),
+			"inviteToSpeak",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async joinLiveTalk(
+		...param: Parameters<typeof LINEStruct.SquareService_joinLiveTalk_args>
+	): Promise<LINETypes.SquareService_joinLiveTalk_result["success"]> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_joinLiveTalk_args(...param),
+			"joinLiveTalk",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async kickOutLiveTalkParticipants(
+		...param: Parameters<
+			typeof LINEStruct.SquareService_kickOutLiveTalkParticipants_args
+		>
+	): Promise<
+		LINETypes.SquareService_kickOutLiveTalkParticipants_result["success"]
+	> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_kickOutLiveTalkParticipants_args(...param),
+			"kickOutLiveTalkParticipants",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async rejectSpeakers(
+		...param: Parameters<
+			typeof LINEStruct.SquareService_rejectSpeakers_args
+		>
+	): Promise<LINETypes.SquareService_rejectSpeakers_result["success"]> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_rejectSpeakers_args(...param),
+			"rejectSpeakers",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async rejectToSpeak(
+		...param: Parameters<typeof LINEStruct.SquareService_rejectToSpeak_args>
+	): Promise<LINETypes.SquareService_rejectToSpeak_result["success"]> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_rejectToSpeak_args(...param),
+			"rejectToSpeak",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async reportLiveTalk(
+		...param: Parameters<
+			typeof LINEStruct.SquareService_reportLiveTalk_args
+		>
+	): Promise<LINETypes.SquareService_reportLiveTalk_result["success"]> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_reportLiveTalk_args(...param),
+			"reportLiveTalk",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async reportLiveTalkSpeaker(
+		...param: Parameters<
+			typeof LINEStruct.SquareService_reportLiveTalkSpeaker_args
+		>
+	): Promise<
+		LINETypes.SquareService_reportLiveTalkSpeaker_result["success"]
+	> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_reportLiveTalkSpeaker_args(...param),
+			"reportLiveTalkSpeaker",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async requestToListen(
+		...param: Parameters<
+			typeof LINEStruct.SquareService_requestToListen_args
+		>
+	): Promise<LINETypes.SquareService_requestToListen_result["success"]> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_requestToListen_args(...param),
+			"requestToListen",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async requestToSpeak(
+		...param: Parameters<
+			typeof LINEStruct.SquareService_requestToSpeak_args
+		>
+	): Promise<LINETypes.SquareService_requestToSpeak_result["success"]> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_requestToSpeak_args(...param),
+			"requestToSpeak",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async updateLiveTalkAttrs(
+		...param: Parameters<
+			typeof LINEStruct.SquareService_updateLiveTalkAttrs_args
+		>
+	): Promise<LINETypes.SquareService_updateLiveTalkAttrs_result["success"]> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_updateLiveTalkAttrs_args(...param),
+			"updateLiveTalkAttrs",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	async acquireLiveTalk(
+		...param: Parameters<
+			typeof LINEStruct.SquareService_acquireLiveTalk_args
+		>
+	): Promise<LINETypes.SquareService_acquireLiveTalk_result["success"]> {
+		return await this.client.request.request(
+			LINEStruct.SquareService_acquireLiveTalk_args(...param),
+			"acquireLiveTalk",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+}
