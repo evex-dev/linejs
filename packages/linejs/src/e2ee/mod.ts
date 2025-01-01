@@ -1,11 +1,12 @@
-import * as curve25519 from "curve25519-js";
-import * as crypto from "node:crypto";
+import curve25519 from "curve25519-js";
+import crypto from "node:crypto";
 import { Buffer } from "node:buffer";
 import type { Location, Message } from "@evex/linejs-types";
 import nacl from "tweetnacl";
 import { InternalError } from "../core/utils/error.ts";
 import * as LINETypes from "@evex/linejs-types";
 import type { Client } from "../core/mod.ts";
+import { ContentType } from "../thrift/readwrite/struct.ts";
 
 interface GroupKey {
 	privKey: string;
@@ -437,16 +438,17 @@ export class E2EE {
 
 	public async encryptE2EEMessage(
 		to: string,
-		text: string | Location,
+		data: string | Location | Record<string, any>,
 		contentType: LINETypes.ContentType = 0,
 		specVersion = 2,
 	): Promise<Buffer[]> {
+		contentType = ContentType(contentType) ?? 0;
 		const _from = this.client.profile?.mid as string;
 		const selfKeyData = await this.getE2EESelfKeyData(_from);
 
 		if (
 			to.length === 0 ||
-			![0, 1, 2].includes(this.client.getToType(to) as number)
+			![0, 1, 2].includes(this.client.getToType(to) ?? -1)
 		) {
 			throw new InternalError("Invalid mid", to);
 		}
@@ -482,27 +484,38 @@ export class E2EE {
 			keyData = this.generateSharedSecret(privK, pubK);
 		}
 		if (
-			contentType === "LOCATION" ||
-			contentType === LINETypes.enums.ContentType.LOCATION
+			contentType === LINETypes.enums.ContentType.LOCATION &&
+			typeof data === "object"
 		) {
 			return this.encryptE2EELocationMessage(
 				senderKeyId,
 				receiverKeyId,
 				Buffer.from(keyData),
 				specVersion,
-				text as Location,
+				data as Location,
 				to,
 				_from,
 			);
-		} else {
+		} else if (typeof data === "string") {
 			return this.encryptE2EETextMessage(
 				senderKeyId,
 				receiverKeyId,
 				Buffer.from(keyData),
 				specVersion,
-				text as string,
+				data,
 				to,
 				_from,
+			);
+		} else {
+			return this.encryptE2EEMessageByData(
+				senderKeyId,
+				receiverKeyId,
+				Buffer.from(keyData),
+				specVersion,
+				data as Record<string, any>,
+				to,
+				_from,
+				contentType,
 			);
 		}
 	}
@@ -539,6 +552,45 @@ export class E2EE {
 		);
 		this.e2eeLog(
 			"encryptE2EETextMessageReceiverKeyId",
+			`${receiverKeyId} (${bReceiverKeyId.toString("hex")})`,
+		);
+
+		return [salt, encData, sign, bSenderKeyId, bReceiverKeyId];
+	}
+
+	public encryptE2EEMessageByData(
+		senderKeyId: number,
+		receiverKeyId: number,
+		keyData: Buffer,
+		specVersion: number,
+		rawdata: Record<string, any>,
+		to: string,
+		_from: string,
+		contentType: number,
+	): Buffer[] {
+		const salt = crypto.randomBytes(16);
+		const gcmKey = this.getSHA256Sum(keyData, salt, Buffer.from("Key"));
+		const aad = this.generateAAD(
+			to,
+			_from,
+			senderKeyId,
+			receiverKeyId,
+			specVersion,
+			contentType,
+		);
+		const sign = crypto.randomBytes(12);
+		const data = Buffer.from(JSON.stringify(rawdata));
+		const encData = this.encryptE2EEMessageV2(data, gcmKey, sign, aad);
+
+		const bSenderKeyId = Buffer.from(this.getIntBytes(senderKeyId));
+		const bReceiverKeyId = Buffer.from(this.getIntBytes(receiverKeyId));
+
+		this.e2eeLog(
+			"encryptE2EEDataMessageSenderKeyId",
+			`${senderKeyId} (${bSenderKeyId.toString("hex")})`,
+		);
+		this.e2eeLog(
+			"encryptE2EEDataMessageReceiverKeyId",
 			`${receiverKeyId} (${bReceiverKeyId.toString("hex")})`,
 		);
 
@@ -879,7 +931,80 @@ export class E2EE {
 			`?secret=${secret}&e2eeVersion=${version}`,
 		];
 	}
+
+	// for e2ee next
+
+	_encryptAESCTR(aesKey: Buffer, nonce: Buffer, data: Buffer): Buffer {
+		const cipher = crypto.createCipheriv("aes-256-ctr", aesKey, nonce);
+		const encrypted = Buffer.concat([cipher.update(data), cipher.final()]);
+		return encrypted;
+	}
+
+	_decryptAESCTR(aesKey: Buffer, nonce: Buffer, data: Buffer): Buffer {
+		const decipher = crypto.createDecipheriv("aes-256-ctr", aesKey, nonce);
+		const decrypted = Buffer.concat([
+			decipher.update(data),
+			decipher.final(),
+		]);
+		return decrypted;
+	}
+
+	signData(data: Buffer, key: Buffer): Buffer {
+		const hmac = crypto.createHmac("sha256", key);
+		hmac.update(data);
+		return hmac.digest();
+	}
+
+	deriveKeyMaterial(keyMaterial: Buffer): {
+		encKey: Buffer;
+		macKey: Buffer;
+		nonce: Buffer;
+	} {
+		const hkdf = crypto.createHmac("sha256", keyMaterial);
+		const info = Buffer.from("FileEncryption");
+		hkdf.update(info);
+
+		const derived = hkdf.digest();
+
+		return {
+			encKey: derived.slice(0, 32),
+			macKey: derived.slice(32, 64),
+			nonce: derived.slice(64, 76),
+		};
+	}
+
+	encryptByKeyMaterial(rawData: Buffer, keyMaterial?: Buffer): {
+		keyMaterial: string;
+		encryptedData: Buffer;
+	} {
+		// Encrypt file for E2EE Next
+		if (!keyMaterial) {
+			keyMaterial = crypto.randomBytes(32);
+		}
+		const keys = this.deriveKeyMaterial(keyMaterial);
+		const encData = this._encryptAESCTR(keys.encKey, keys.nonce, rawData);
+		const sign = this.signData(encData, keys.macKey);
+
+		return {
+			keyMaterial: keyMaterial.toString("base64"),
+			encryptedData: Buffer.concat([encData, sign]),
+		};
+	}
+
+	decryptByKeyMaterial(
+		rawData: Buffer,
+		keyMaterial: Buffer | string,
+	): Buffer {
+		// Decrypt file for E2EE Next
+		if (typeof keyMaterial === "string") {
+			keyMaterial = Buffer.from(keyMaterial, "base64");
+		}
+		const keys = this.deriveKeyMaterial(keyMaterial);
+		return this._decryptAESCTR(keys.encKey, keys.nonce, rawData);
+	}
 }
+
+export default E2EE;
 
 function byte2int(t: Buffer) {
 	let e = 0;
