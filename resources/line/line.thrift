@@ -3355,12 +3355,6 @@ exception TalkException {
     3: map<string, string> parameterMap;
 }
 
-exception TalkException {
-    1: qm_s code;
-    2: string reason;
-    3: map<string, string> parameterMap;
-}
-
 exception ThingsException {
     1: do0_M code;
     2: string reason;
