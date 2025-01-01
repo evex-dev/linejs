@@ -1,7 +1,7 @@
 import {
 	BaseStorage,
 	type Storage,
-} from "../../packages/linejs/src/storage/base.ts";
+} from "../../packages/linejs/base/storage/base.ts";
 import { type Kv, openKv } from "npm:@deno/kv";
 
 /**

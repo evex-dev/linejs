@@ -3,7 +3,7 @@
 import type {
 	BaseStorage,
 	Storage,
-} from "../../packages/linejs/src/storage/base.ts";
+} from "../../packages/linejs/base/storage/base.ts";
 export class LocalStorage implements BaseStorage {
 	prefix = "linejs:";
 	constructor() {

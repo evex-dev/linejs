@@ -3,10 +3,11 @@
 	"version": "0.0.0",
 	"license": "MIT",
 	"exports": {
-		".": "./src/mod.ts",
-		"./storage": "./src/storage/mod.ts",
-		"./thrift": "./src/thrift/mod.ts",
-		"./events": "./src/events/mod.ts"
+		"./client": "./client/mod.ts",
+		"./base": "./base/mod.ts",
+		"./storage": "./base/storage/mod.ts",
+		"./thrift": "./base/thrift/mod.ts",
+		"./events": "./base/events/mod.ts"
 	},
 	"imports": {
 		"node-int64": "npm:node-int64@^0.4.0",
