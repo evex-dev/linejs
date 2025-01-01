@@ -1,6 +1,6 @@
 ## /docs
 
-ドキュメント
+ドキュメントサイト: https://linejs.evex.land
 
 ## /packages
 
