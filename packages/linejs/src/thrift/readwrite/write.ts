@@ -60,7 +60,7 @@ function writeStruct(
 }
 
 function writeValue(
-	output: thrift.TCompactProtocol | thrift.TCompactProtocol,
+	output: thrift.TCompactProtocol | thrift.TBinaryProtocol,
 	ftype: number,
 	fid: number,
 	val:
@@ -140,6 +140,9 @@ function writeValue(
 			if (!Array.isArray(val)) {
 				throw new TypeError(`ftype=${ftype}: value is not struct`);
 			}
+			if (!val.length) {
+				return;
+			}
 			output.writeFieldBegin("", Thrift.Type.STRUCT, fid);
 			writeStruct(output, val as NestedArray);
 			output.writeFieldEnd();
@@ -147,10 +150,6 @@ function writeValue(
 
 		case Thrift.Type.MAP:
 			val = val as [number, number, object];
-			if (typeof val[2] !== "object") {
-				//throw new TypeError(`ftype=${ftype}: value is not map`);
-				return;
-			}
 			output.writeFieldBegin("", Thrift.Type.MAP, fid);
 			output.writeMapBegin(val[0], val[1], Thrift.objectLength(val[2]));
 			for (const kiter in val[2]) {
@@ -165,9 +164,9 @@ function writeValue(
 			break;
 
 		case Thrift.Type.LIST:
+			console.log(val);
 			val = val as [number, Array<any>];
-			if (!Array.isArray(val[1])) {
-				//throw new TypeError(`ftype=${ftype}: value is not list`);
+			if (!val[1]) {
 				return;
 			}
 			output.writeFieldBegin("", Thrift.Type.LIST, fid);
@@ -175,9 +174,9 @@ function writeValue(
 				val[0],
 				(val[1] as NonNullable<NestedArray>).length,
 			);
-			for (const iter in val[1] as NestedArray) {
+			for (const iter in val[1] as any[]) {
 				if (Object.prototype.hasOwnProperty.call(val[1], iter)) {
-					writeValue_(output, val[0], (val as any)[1][iter]);
+					writeValue_(output, val[0], val[1][iter]);
 				}
 			}
 			output.writeListEnd();
@@ -185,8 +184,7 @@ function writeValue(
 			break;
 		case Thrift.Type.SET:
 			val = val as [number, Array<any>];
-			if (!Array.isArray(val[1])) {
-				//throw new TypeError(`ftype=${ftype}: value is not set`);
+			if (!val[1]) {
 				return;
 			}
 			output.writeFieldBegin("", Thrift.Type.SET, fid);
@@ -196,7 +194,7 @@ function writeValue(
 			);
 			for (const iter in val[1] as NestedArray) {
 				if (Object.prototype.hasOwnProperty.call(val[1], iter)) {
-					writeValue_(output, val[0], (val as any)[1][iter]);
+					writeValue_(output, val[0], val[1][iter]);
 				}
 			}
 			output.writeSetEnd();

@@ -30,4 +30,4 @@ await client.login({
 	password: "pass",
 });
 
-client.polling(["square"]); // polling square
+client.listen(["square"]); // polling square

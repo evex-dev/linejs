@@ -81,7 +81,6 @@ export class Polling {
 					response.fullSyncResponse.nextRevision
 				) {
 					this.sync.talk.revision = response.fullSyncResponse.nextRevision;
-					continue;
 				}
 				if (
 					response.operationResponse.globalEvents &&
@@ -102,6 +101,7 @@ export class Polling {
 					continue;
 				}
 				for (const event of response.operationResponse.operations) {
+					this.sync.talk.revision = event.revision;
 					yield event;
 				}
 			} catch (error) {

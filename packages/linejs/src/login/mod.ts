@@ -152,10 +152,7 @@ export class Login {
 	}
 
 	public async requestSQR(): Promise<string> {
-		const _tmp = await this.createSession();
-		console.log(_tmp);
-
-		const { 1: sqr } = _tmp;
+		const { 1: sqr } = await this.createSession();
 		let { 1: url } = await this.createQrCode(sqr);
 		const [secret, secretUrl] = this.client.e2ee.createSqrSecret();
 		url = url + secretUrl;
@@ -441,7 +438,6 @@ export class Login {
 		});
 
 		const rsaKey = await this.getRSAKeyInfo();
-		console.log(rsaKey);
 		const { keynm, sessionKey } = rsaKey;
 
 		const message = String.fromCharCode(sessionKey.length) +

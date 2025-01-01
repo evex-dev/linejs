@@ -318,7 +318,7 @@ export class LineObs {
 		if (!(to[0] === "u" || to[0] === "c")) {
 			throw new InternalError("ObsError", "Invalid mid");
 		}
-		const { keyMaterial, encryptedData } = this.client.e2ee
+		const { keyMaterial, encryptedData } = await this.client.e2ee
 			.encryptByKeyMaterial(
 				Buffer.from(await data.arrayBuffer()),
 			);
@@ -330,16 +330,21 @@ export class LineObs {
 			obsPath: `${serviceName}/${obsNamespace}/${tempId}`,
 			params,
 		});
-
-		const { objId: objId2 } = await this.uploadObjectForService({
-			data: edata,
-			oType: "file",
-			obsPath: `${serviceName}/${obsNamespace}/${tempId}__ud-preview`,
-			params,
-		});
-		if (objId !== objId2) {
-			throw new InternalError("ObsError", "objId not match");
+		if (oType === "image" || oType === "gif" || oType === "video") {
+			const { objId: objId2, headers } = await this
+				.uploadObjectForService({
+					data: edata,
+					oType: "file",
+					obsPath: `${serviceName}/${obsNamespace}/${tempId}__ud-preview`,
+					params,
+				});
+			if (objId !== objId2) {
+				throw new InternalError("ObsError", "objId not match", {
+					headers,
+				});
+			}
 		}
+
 		const chunks = await this.client.e2ee.encryptE2EEMessage(
 			to,
 			{ keyMaterial, fileName: filename || "linejs." + ext },
@@ -355,14 +360,18 @@ export class LineObs {
 				OID: objId,
 				FILE_SIZE: edata.size.toString(),
 				e2eeVersion: "2",
-				MEDIA_CONTENT_INFO: JSON.stringify(
-					{
-						category: "original",
-						fileSize: edata.size,
-						extension: ext,
-						animated: oType == "gif",
-					},
-				),
+				...(oType === "image" || oType === "gif" || oType === "video")
+					? {
+						MEDIA_CONTENT_INFO: JSON.stringify(
+							{
+								category: "original",
+								fileSize: edata.size,
+								extension: ext,
+								animated: oType == "gif",
+							},
+						),
+					}
+					: {},
 			},
 		});
 	}

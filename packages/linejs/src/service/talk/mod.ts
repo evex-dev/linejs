@@ -4,6 +4,7 @@ import type { BaseService } from "../types.ts";
 import type * as LINETypes from "@evex/linejs-types";
 import { LINEStruct } from "../../thrift/mod.ts";
 import type { Buffer } from "node:buffer";
+import { ContentType } from "../../thrift/readwrite/struct.ts";
 
 export class TalkService implements BaseService {
 	client: Client;
@@ -80,7 +81,7 @@ export class TalkService implements BaseService {
 			...options,
 		};
 		if ((e2ee && !chunks && location) || (e2ee && !chunks && text)) {
-			const chunk = await this.client.e2ee.encryptE2EEMessage(
+			const chunks = await this.client.e2ee.encryptE2EEMessage(
 				to,
 				text || location || "invalid",
 				contentType,
@@ -89,7 +90,7 @@ export class TalkService implements BaseService {
 				...contentMetadata,
 				...{
 					e2eeVersion: "2",
-					contentType: contentType.toString(),
+					contentType: (ContentType(contentType) || 0).toString(),
 					e2eeMark: "2",
 				},
 			};
@@ -99,7 +100,7 @@ export class TalkService implements BaseService {
 				contentMetadata: _contentMetadata,
 				relatedMessageId,
 				e2ee,
-				chunk,
+				chunks,
 			};
 			return this.sendMessage(options);
 		}
@@ -107,6 +108,7 @@ export class TalkService implements BaseService {
 		const message = LINEStruct.sendMessage_args({
 			seq: await this.client.getReqseq(),
 			message: {
+				reactions: undefined,
 				to,
 				createdTime: 0,
 				deliveredTime: 0,

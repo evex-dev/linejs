@@ -512,7 +512,7 @@ export class E2EE {
 				receiverKeyId,
 				Buffer.from(keyData),
 				specVersion,
-				data as Record<string, any>,
+				data,
 				to,
 				_from,
 				contentType,
@@ -933,11 +933,37 @@ export class E2EE {
 	}
 
 	// for e2ee next
-
+	/*
 	_encryptAESCTR(aesKey: Buffer, nonce: Buffer, data: Buffer): Buffer {
 		const cipher = crypto.createCipheriv("aes-256-ctr", aesKey, nonce);
 		const encrypted = Buffer.concat([cipher.update(data), cipher.final()]);
 		return encrypted;
+	}
+	*/
+
+	// f**k
+	async _encryptAESCTR(
+		aesKey: Buffer,
+		nonce: Buffer,
+		data: Buffer,
+	): Promise<Buffer> {
+		return Buffer.from(
+			await globalThis.crypto.subtle.encrypt(
+				{
+					name: "AES-CTR",
+					counter: nonce,
+					length: 64,
+				},
+				await globalThis.crypto.subtle.importKey(
+					"raw",
+					aesKey,
+					"AES-CTR",
+					false,
+					["encrypt", "decrypt"],
+				),
+				data,
+			),
+		);
 	}
 
 	_decryptAESCTR(aesKey: Buffer, nonce: Buffer, data: Buffer): Buffer {
@@ -955,34 +981,46 @@ export class E2EE {
 		return hmac.digest();
 	}
 
-	deriveKeyMaterial(keyMaterial: Buffer): {
-		encKey: Buffer;
-		macKey: Buffer;
-		nonce: Buffer;
-	} {
-		const hkdf = crypto.createHmac("sha256", keyMaterial);
-		const info = Buffer.from("FileEncryption");
-		hkdf.update(info);
-
-		const derived = hkdf.digest();
-
+	async deriveKeyMaterial(
+		keyMaterial: Buffer,
+	): Promise<{ encKey: Buffer; macKey: Buffer; nonce: Buffer }> {
+		const derived = await new Promise<Buffer>((resolve, reject) => {
+			// f**k
+			crypto.hkdf(
+				"sha256",
+				keyMaterial,
+				"",
+				"FileEncryption",
+				76,
+				(err, derivedKey) => {
+					if (err) {
+						reject(err);
+					}
+					resolve(Buffer.from(derivedKey));
+				},
+			);
+		});
 		return {
 			encKey: derived.slice(0, 32),
 			macKey: derived.slice(32, 64),
-			nonce: derived.slice(64, 76),
+			nonce: Buffer.concat([derived.slice(64, 76), new Uint8Array(4)]),
 		};
 	}
 
-	encryptByKeyMaterial(rawData: Buffer, keyMaterial?: Buffer): {
-		keyMaterial: string;
-		encryptedData: Buffer;
-	} {
+	async encryptByKeyMaterial(
+		rawData: Buffer,
+		keyMaterial?: Buffer,
+	): Promise<{ keyMaterial: string; encryptedData: Buffer }> {
 		// Encrypt file for E2EE Next
 		if (!keyMaterial) {
 			keyMaterial = crypto.randomBytes(32);
 		}
-		const keys = this.deriveKeyMaterial(keyMaterial);
-		const encData = this._encryptAESCTR(keys.encKey, keys.nonce, rawData);
+		const keys = await this.deriveKeyMaterial(keyMaterial);
+		const encData = await this._encryptAESCTR(
+			keys.encKey,
+			keys.nonce,
+			rawData,
+		);
 		const sign = this.signData(encData, keys.macKey);
 
 		return {
@@ -991,15 +1029,15 @@ export class E2EE {
 		};
 	}
 
-	decryptByKeyMaterial(
+	async decryptByKeyMaterial(
 		rawData: Buffer,
 		keyMaterial: Buffer | string,
-	): Buffer {
+	): Promise<Buffer> {
 		// Decrypt file for E2EE Next
 		if (typeof keyMaterial === "string") {
 			keyMaterial = Buffer.from(keyMaterial, "base64");
 		}
-		const keys = this.deriveKeyMaterial(keyMaterial);
+		const keys = await this.deriveKeyMaterial(keyMaterial);
 		return this._decryptAESCTR(keys.encKey, keys.nonce, rawData);
 	}
 }

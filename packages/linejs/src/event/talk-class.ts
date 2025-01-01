@@ -203,7 +203,6 @@ export class User extends TypedEventEmitter<UserEvents> {
 
 		const { contact } = contactEntry;
 		this.rawSource = contact;
-		console.log(contactEntry);
 		this.mid = contact.mid;
 		this.createdTime = new Date((contact.createdTime as number) * 1000);
 		this.type = contact.type;
@@ -891,7 +890,7 @@ export class SendReaction {
 		this.chatMid = data.chatMid;
 		this.chatType = getMidType(this.chatMid) as any;
 		this.reactionType = parseEnum(
-			"PredefinedReactionType",
+			"MessageReactionType",
 			data.curr.predefinedReactionType,
 		) as LINETypes.MessageReactionType;
 	}
@@ -924,7 +923,7 @@ export class NotifiedSendReaction {
 		this.chatMid = data.chatMid;
 		this.chatType = getMidType(this.chatMid) as any;
 		this.reactionType = parseEnum(
-			"PredefinedReactionType",
+			"MessageReactionType",
 			data.curr.predefinedReactionType,
 		) as LINETypes.MessageReactionType;
 	}
