@@ -1,6 +1,7 @@
 import type { BaseClient } from "../base/mod.ts";
 import { type LINEEvent, type SourceEvent, wrapEvents } from "./events/mod.ts";
 import { Square } from "./features/square/mod.ts";
+import { continueRequest } from "../base/mod.ts";
 
 export interface ListenOptions {
 	/**
@@ -96,7 +97,10 @@ export class Client {
 	 * Fetches all squares the user joined.
 	 */
 	async fetchJoinedSquares() {
-		const joined = await this.base.square.getJoinedSquares({});
+		const joined = await continueRequest({
+			handler: (arg) => this.base.square.getJoinedSquares(arg),
+			arg: { limit: 100 },
+		});
 		return joined.squares.map((raw) => Square.fromRaw(raw, this));
 	}
 }

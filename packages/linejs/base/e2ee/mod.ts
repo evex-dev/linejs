@@ -988,7 +988,7 @@ export class E2EE {
 			crypto.hkdf(
 				"sha256",
 				keyMaterial,
-				"",
+				new Uint8Array(0),
 				"FileEncryption",
 				76,
 				(err, derivedKey) => {
