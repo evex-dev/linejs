@@ -5,6 +5,7 @@ import { Message } from "../features/message/mod.ts";
 
 export class MessageLINEEvent extends LINEEventBase {
 	#client: Client;
+	readonly type: "message" = "message";
 	readonly message: Message;
 	constructor(source: SourceEvent, client: Client) {
 		super(source);
@@ -18,6 +19,8 @@ export class MessageLINEEvent extends LINEEventBase {
 						source.event.payload.notificationMessage.squareMessage.message.from,
 					id: source.event.payload.notificationMessage.squareMessage.message.id,
 					to: source.event.payload.notificationMessage.squareMessage.message.to,
+					text:
+						source.event.payload.notificationMessage.squareMessage.message.text,
 				}
 				: {
 					isSquare: false,
@@ -26,6 +29,7 @@ export class MessageLINEEvent extends LINEEventBase {
 					id: source.event.message.id,
 					to: source.event.message.to,
 					toType: source.event.message.toType,
+					text: source.event.message.text,
 				},
 		);
 	}

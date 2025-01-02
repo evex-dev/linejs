@@ -31,7 +31,7 @@ export class Client {
 	 * @param opts Options
 	 * @returns Async generator
 	 */
-	async *listen(opts: ListenOptions): AsyncGenerator<LINEEvent> {
+	async *listen(opts: ListenOptions = {}): AsyncGenerator<LINEEvent> {
 		const polling = this.base.createPolling();
 		const stream = new ReadableStream<SourceEvent>({
 			start(controller) {

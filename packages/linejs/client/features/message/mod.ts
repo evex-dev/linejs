@@ -8,6 +8,7 @@ export type MessageInit =
 		from: string;
 		to: string;
 		isSquare: boolean;
+		text?: string;
 	}
 	& ({
 		isSquare: true;
@@ -28,6 +29,8 @@ export class Message {
 	readonly to: string;
 	/** From */
 	readonly from: string;
+	/** Text */
+	readonly text?: string;
 
 	constructor(init: MessageInit) {
 		this.#client = init.client;
@@ -36,6 +39,7 @@ export class Message {
 		this.from = init.from;
 		this.to = init.to;
 		this.#toType = init.toType;
+		this.text = init.text;
 	}
 
 	async reply(text: string) {
