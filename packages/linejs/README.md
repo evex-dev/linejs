@@ -27,7 +27,7 @@ Supports all runtimes (Node.js, Deno, and Bun) and Typescript.
 ```llvm
 npx jsr add @evex/linejs
 bunx --bun jsr add @evex/linejs
-deno add @evex/linejs
+deno add jsr:@evex/linejs
 ```
 
 ##### Documentation is [https://linejs.evex.land](https://linejs.evex.land/)
