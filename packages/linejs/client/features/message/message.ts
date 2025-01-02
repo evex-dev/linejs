@@ -14,7 +14,7 @@ import type {
 	MentionMeta,
 	StickerMetadata,
 } from "./internal-types.ts";
-import type { DecorationsData, MentionTarget } from "./types.ts";
+import type { DecorationsData, From, MentionTarget, To } from "./types.ts";
 
 export type MessageInit =
 	& {
@@ -355,7 +355,7 @@ export class Message {
 		};
 	}
 
-	get isMyMessage() {
+	get isMyMessage(): boolean {
 		return this.#client.base.profile?.mid === this.from.id;
 	}
 	get isSquare(): boolean {
@@ -367,14 +367,14 @@ export class Message {
 	get #rawMessage(): TalkMessage {
 		return this.#raw.isSquare ? this.#raw.raw.message : this.#raw.raw;
 	}
-	get to() {
+	get to(): To {
 		const message = this.#rawMessage;
 		return {
 			type: message.toType,
 			id: message.to,
 		};
 	}
-	get from() {
+	get from(): From {
 		const message = this.#rawMessage;
 		return {
 			type: message.toType,
@@ -387,7 +387,7 @@ export class Message {
 			metadata: this.#rawMessage.contentMetadata,
 		};
 	}
-	get text() {
+	get text(): string {
 		return this.#rawMessage.text;
 	}
 

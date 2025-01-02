@@ -1,3 +1,5 @@
+import type { MIDType } from "@evex/linejs-types";
+
 export type MentionTarget = {
 	all: true;
 } | {
@@ -23,3 +25,11 @@ export type DecorationsData = {
 			all: boolean;
 		};
 };
+export interface From {
+	id: string
+	type: MIDType
+}
+export interface To {
+	id: string
+	type: MIDType
+}

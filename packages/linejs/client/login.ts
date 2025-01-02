@@ -63,7 +63,7 @@ export const loginWithPassword = async (
 export const loginWithAuthToken = async (
 	authToken: string,
 	init: InitOptions,
-) => {
+): Promise<Client> => {
 	const base = createBaseClient(init);
 	base.authToken = authToken;
 	await base.loginProcess.ready();

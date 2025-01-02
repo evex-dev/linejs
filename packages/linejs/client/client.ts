@@ -96,7 +96,7 @@ export class Client {
 	/**
 	 * Fetches all squares the user joined.
 	 */
-	async fetchJoinedSquares() {
+	async fetchJoinedSquares(): Promise<Square[]> {
 		const joined = await continueRequest({
 			handler: (arg) => this.base.square.getJoinedSquares(arg),
 			arg: { limit: 100 },
