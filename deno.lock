@@ -10,6 +10,7 @@
     "npm:@types/node@latest": "22.9.0",
     "npm:@types/thrift@*": "0.10.17",
     "npm:@types/thrift@~0.10.17": "0.10.17",
+    "npm:crypto-js@*": "4.2.0",
     "npm:curve25519-js@^0.0.4": "0.0.4",
     "npm:discord.js@*": "14.16.3",
     "npm:jsdom@25.0.0": "25.0.0",
@@ -770,6 +771,9 @@
       "dependencies": [
         "is-what"
       ]
+    },
+    "crypto-js@4.2.0": {
+      "integrity": "sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q=="
     },
     "cssstyle@4.1.0": {
       "integrity": "sha512-h66W1URKpBS5YMI/V8PyXvTMFT8SupJ1IzoIV8IeBC/ji8WVmrO8dGlTi+2dh6whmdk6BiKJLD/ZBkhWbcg6nA==",

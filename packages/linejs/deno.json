@@ -12,6 +12,6 @@
 		"node-int64": "npm:node-int64@^0.4.0",
 		"thrift": "npm:thrift@^0.21.0",
 		"thrift-types": "npm:@types/thrift@^0.10.17",
-		"@deno/kv": "npm:@deno/kv@^0.8.4"
+		"crypto-js": "npm:crypto-js@^4.2.0"
 	}
 }

@@ -335,7 +335,8 @@ export class LineObs {
 				.uploadObjectForService({
 					data: edata,
 					oType: "file",
-					obsPath: `${serviceName}/${obsNamespace}/${tempId}__ud-preview`,
+					obsPath:
+						`${serviceName}/${obsNamespace}/${tempId}__ud-preview`,
 					params,
 				});
 			if (objId !== objId2) {
@@ -348,7 +349,7 @@ export class LineObs {
 		const chunks = await this.client.e2ee.encryptE2EEMessage(
 			to,
 			{ keyMaterial, fileName: filename || "linejs." + ext },
-			1,
+			contentType,
 		);
 
 		return await this.client.talk.sendMessage({

@@ -7,6 +7,7 @@ import { InternalError } from "../core/utils/error.ts";
 import * as LINETypes from "@evex/linejs-types";
 import type { BaseClient } from "../core/mod.ts";
 import { ContentType } from "../thrift/readwrite/struct.ts";
+import CryptoJS from "crypto-js";
 
 interface GroupKey {
 	privKey: string;
@@ -935,12 +936,12 @@ export class E2EE {
 	// for e2ee next
 
 	_encryptAESCTR(aesKey: Buffer, nonce: Buffer, data: Buffer): Buffer {
+		// deno not support ctr !
 		const cipher = crypto.createCipheriv("aes-256-ctr", aesKey, nonce);
 		const encrypted = Buffer.concat([cipher.update(data), cipher.final()]);
 		return encrypted;
 	}
 
-	// f**k
 	async __encryptAESCTR(
 		aesKey: Buffer,
 		nonce: Buffer,
@@ -965,6 +966,28 @@ export class E2EE {
 		);
 	}
 
+	___encryptAESCTR(aesKey: Buffer, nonce: Buffer, data: Buffer): Buffer {
+		// Convert Buffer to WordArray
+		const key = CryptoJS.lib.WordArray.create(aesKey);
+		const iv = CryptoJS.lib.WordArray.create(nonce);
+		const plaintext = CryptoJS.lib.WordArray.create(data);
+
+		// Encrypt using AES-CTR
+		const encrypted = CryptoJS.AES.encrypt(plaintext, key, {
+			iv: iv,
+			mode: CryptoJS.mode.CTR,
+			padding: CryptoJS.pad.NoPadding, // No padding for AES-CTR
+		});
+
+		// Convert WordArray ciphertext back to Buffer
+		const ciphertext = Buffer.from(
+			encrypted.ciphertext.toString(CryptoJS.enc.Hex),
+			"hex",
+		);
+
+		return ciphertext;
+	}
+
 	_decryptAESCTR(aesKey: Buffer, nonce: Buffer, data: Buffer): Buffer {
 		const decipher = crypto.createDecipheriv("aes-256-ctr", aesKey, nonce);
 		const decrypted = Buffer.concat([
@@ -972,6 +995,27 @@ export class E2EE {
 			decipher.final(),
 		]);
 		return decrypted;
+	}
+
+	__decryptAESCTR(aesKey: Buffer, nonce: Buffer, data: Buffer): Buffer {
+		const keyWordArray = CryptoJS.lib.WordArray.create(aesKey);
+		const nonceWordArray = CryptoJS.lib.WordArray.create(nonce);
+
+		const encryptedData = CryptoJS.lib.WordArray.create(data);
+
+		const decrypted = CryptoJS.AES.decrypt(
+			{
+				ciphertext: encryptedData,
+			},
+			keyWordArray,
+			{
+				mode: CryptoJS.mode.CTR,
+				iv: nonceWordArray,
+				padding: CryptoJS.pad.NoPadding, // No padding
+			},
+		);
+
+		return Buffer.from(decrypted.toString(CryptoJS.enc.Hex), "hex");
 	}
 
 	signData(data: Buffer, key: Buffer): Buffer {
@@ -984,7 +1028,7 @@ export class E2EE {
 		keyMaterial: Buffer,
 	): Promise<{ encKey: Buffer; macKey: Buffer; nonce: Buffer }> {
 		const derived = await new Promise<Buffer>((resolve, reject) => {
-			// f**k
+			// ???
 			crypto.hkdf(
 				"sha256",
 				keyMaterial,
@@ -1002,6 +1046,7 @@ export class E2EE {
 		return {
 			encKey: derived.slice(0, 32),
 			macKey: derived.slice(32, 64),
+			// ???
 			nonce: Buffer.concat([derived.slice(64, 76), new Uint8Array(4)]),
 		};
 	}
@@ -1015,7 +1060,7 @@ export class E2EE {
 			keyMaterial = crypto.randomBytes(32);
 		}
 		const keys = await this.deriveKeyMaterial(keyMaterial);
-		const encData = await this._encryptAESCTR(
+		const encData = await this.___encryptAESCTR(
 			keys.encKey,
 			keys.nonce,
 			rawData,
@@ -1037,7 +1082,7 @@ export class E2EE {
 			keyMaterial = Buffer.from(keyMaterial, "base64");
 		}
 		const keys = await this.deriveKeyMaterial(keyMaterial);
-		return this._decryptAESCTR(keys.encKey, keys.nonce, rawData);
+		return this.__decryptAESCTR(keys.encKey, keys.nonce, rawData);
 	}
 }
 
