@@ -12,14 +12,6 @@ import type { ClientEvents, Log } from "./utils/events.ts";
 import { InternalError } from "./utils/error.ts";
 import { type Continuable, continueRequest } from "./utils/continue.ts";
 
-import {
-	Group,
-	LineEvent,
-	Square,
-	SquareChat,
-	SquareMember,
-	User,
-} from "../event/mod.ts";
 export type { Continuable, Device, DeviceDetails, Log };
 export { continueRequest, InternalError };
 
@@ -115,8 +107,6 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	readonly e2ee: E2EE;
 	readonly obs: LineObs;
 	readonly timeline: Timeline;
-	readonly polling: Polling;
-	readonly event: LineEvent;
 
 	readonly auth: AuthService;
 	readonly call: CallService;
@@ -156,8 +146,6 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.e2ee = new E2EE(this);
 		this.obs = new LineObs(this);
 		this.timeline = new Timeline(this);
-		this.polling = new Polling(this);
-		this.event = new LineEvent(this);
 
 		this.auth = new AuthService(this);
 		this.call = new CallService(this);
@@ -201,15 +189,24 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		return seq;
 	}
 
-	async fetch(
+	// NOTE: use allow function.
+	// `const { fetch } = base` is not working if you change to function decorations.
+	readonly fetch: Fetch = async (
 		info: RequestInfo | URL,
 		init?: RequestInit,
-	): Promise<Response> {
+	): Promise<Response> => {
 		const req = new Request(info, init);
 		const res =
 			await (this.#customFetch
 				? this.#customFetch(req)
 				: globalThis.fetch(req));
 		return res;
+	};
+
+	/**
+	 * Creates polling client.
+	 */
+	createPolling(): Polling {
+		return new Polling(this);
 	}
 }

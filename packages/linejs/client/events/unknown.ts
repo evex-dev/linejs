@@ -1,10 +1,9 @@
-import { Operation, SquareEvent } from "@evex/linejs-types";
-import { LINEEvent } from "./shared.ts";
+import { LINEEventBase } from "./shared.ts";
+import type { SourceEvent } from "./mod.ts";
 
-export class UnknownLINEEvent extends LINEEvent {
-  readonly raw: Operation | SquareEvent
-  constructor(evt: Operation | SquareEvent) {
-    super()
-    this.raw = evt
-  }
+export class UnknownLINEEvent extends LINEEventBase {
+	readonly type: "unknown" = "unknown";
+	constructor(source: SourceEvent) {
+		super(source);
+	}
 }
