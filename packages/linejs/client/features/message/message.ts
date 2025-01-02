@@ -387,6 +387,9 @@ export class Message {
 			metadata: this.#rawMessage.contentMetadata,
 		};
 	}
+	get text() {
+		return this.#rawMessage.text
+	}
 
 	static fromSource(source: SourceEvent, client: Client): Message {
 		if (source.type === "square") {
