@@ -150,6 +150,9 @@ function writeValue(
 
 		case Thrift.Type.MAP:
 			val = val as [number, number, object];
+			if (!val[2]) {
+				return;
+			}
 			output.writeFieldBegin("", Thrift.Type.MAP, fid);
 			output.writeMapBegin(val[0], val[1], Thrift.objectLength(val[2]));
 			for (const kiter in val[2]) {
@@ -164,7 +167,6 @@ function writeValue(
 			break;
 
 		case Thrift.Type.LIST:
-			console.log(val);
 			val = val as [number, Array<any>];
 			if (!val[1]) {
 				return;
