@@ -37,7 +37,7 @@ export class Square {
 		return this.#raw.name;
 	}
 
-	static fromRaw(raw: SquareRaw, client: Client) {
+	static fromRaw(raw: SquareRaw, client: Client): Square {
 		return new Square({ raw, client });
 	}
 }

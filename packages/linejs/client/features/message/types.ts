@@ -26,10 +26,10 @@ export type DecorationsData = {
 		};
 };
 export interface From {
-	id: string
-	type: MIDType
+	id: string;
+	type: MIDType;
 }
 export interface To {
-	id: string
-	type: MIDType
+	id: string;
+	type: MIDType;
 }
