@@ -3,6 +3,6 @@
  * @module
  */
 
-export * from './login.ts'
-export type { Connection } from './connection.ts'
-export type { Client } from './client.ts'
+export * from "./login.ts";
+export type { Connection } from "./connection.ts";
+export { Client } from "./client.ts";

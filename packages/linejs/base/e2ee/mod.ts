@@ -933,16 +933,15 @@ export class E2EE {
 	}
 
 	// for e2ee next
-	/*
+
 	_encryptAESCTR(aesKey: Buffer, nonce: Buffer, data: Buffer): Buffer {
 		const cipher = crypto.createCipheriv("aes-256-ctr", aesKey, nonce);
 		const encrypted = Buffer.concat([cipher.update(data), cipher.final()]);
 		return encrypted;
 	}
-	*/
 
 	// f**k
-	async _encryptAESCTR(
+	async __encryptAESCTR(
 		aesKey: Buffer,
 		nonce: Buffer,
 		data: Buffer,
