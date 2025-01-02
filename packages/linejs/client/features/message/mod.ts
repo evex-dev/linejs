@@ -1,64 +1,58 @@
-import type { MIDType } from "@evex/linejs-types";
+import type { SquareMessage, Message as TalkMessage } from "@evex/linejs-types";
 import type { Client } from "../../client.ts";
+import type { SourceEvent } from "../../events/mod.ts";
 
 export type MessageInit =
 	& {
 		client: Client;
-		id: string;
-		from: string;
-		to: string;
-		isSquare: boolean;
-		text?: string;
 	}
 	& ({
 		isSquare: true;
-		toType?: undefined;
+		raw: SquareMessage
 	} | {
 		isSquare: false;
-		toType: MIDType;
+		raw: TalkMessage
 	});
 
 export class Message {
 	#client: Client;
-	#isSquare: boolean;
-	#toType?: MIDType;
 
-	/** Message ID */
-	readonly id: string;
-	/** To */
-	readonly to: string;
-	/** From */
-	readonly from: string;
-	/** Text */
-	readonly text?: string;
+    #raw: {
+      isSquare: true
+      raw: SquareMessage
+    } | {
+      isSquare: false
+      raw: TalkMessage
+    }
 
 	constructor(init: MessageInit) {
 		this.#client = init.client;
-		this.id = init.id;
-		this.#isSquare = init.isSquare;
-		this.from = init.from;
-		this.to = init.to;
-		this.#toType = init.toType;
-		this.text = init.text;
+        this.#raw = init.isSquare ? {
+            isSquare: true,
+            raw: init.raw
+        } : {
+            isSquare: false,
+            raw: init.raw
+        }
 	}
 
 	async reply(text: string) {
-		if (this.#isSquare) {
+		if (this.#raw.isSquare) {
 			await this.#client.base.square.sendMessage({
-				relatedMessageId: this.id,
-				squareChatMid: this.to,
+				relatedMessageId: this.#rawMessage.id,
+				squareChatMid: this.#rawMessage.to,
 				text,
 			});
 		} else {
 			let to: string;
-			if (this.#toType === "GROUP" || this.#toType === "ROOM") {
-				to = this.to; // this.to means it is group.
+			if (this.to.type === "GROUP" || this.to.type === "ROOM") {
+				to = this.to.id; // this.to means it is group.
 			} else {
 				// Personal chats
-				to = this.isMyMessage ? this.to : this.from;
+				to = this.isMyMessage ? this.to.id : this.from.id;
 			}
 			await this.#client.base.talk.sendMessage({
-				relatedMessageId: this.id,
+				relatedMessageId: this.#rawMessage.id,
 				text,
 				to,
 			});
@@ -66,6 +60,45 @@ export class Message {
 	}
 
 	get isMyMessage() {
-		return this.#client.base.profile?.mid === this.from;
+		return this.#client.base.profile?.mid === this.from.id;
 	}
+    get isSquare() {
+        return this.#raw.isSquare
+    }
+    get isTalk() {
+        return !this.#raw.isSquare
+    }
+    get #rawMessage(): TalkMessage {
+        return this.#raw.isSquare ? this.#raw.raw.message : this.#raw.raw
+    }
+    get to() {
+        const message = this.#rawMessage
+        return {
+            type: message.toType,
+            id: message.to
+        }
+    }
+    get from() {
+        const message = this.#rawMessage
+        return {
+            type: message.toType,
+            id: message.to
+        }
+    }
+
+    static fromSource(source: SourceEvent, client: Client): Message {
+        if (source.type === 'square') {
+            return new Message({
+                isSquare: true,
+                client,
+                raw: source.event.payload.notificationMessage.squareMessage
+            })
+        } else {
+            return new Message({
+                isSquare: false,
+                client,
+                raw: source.event.message
+            })
+        }
+    }
 }
