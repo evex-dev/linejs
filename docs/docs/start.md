@@ -1,15 +1,16 @@
 # Getting Started
 
-<b>LINEJS</b> is always by your side
+<b>LINEJS</b> is always by your side.
 
 <b>Thank you for choosing this library!</b>
 
 ## Installation
 
+LINEJS is published on JSR, not a npm. You can install LINEJS with npm, yarn, pnpm, Bun, and Deno.
 ```bash
-npx jsr add @evex/linejs
-bunx --bun jsr add @evex/linejs
-deno add @evex/linejs
+npx jsr add @evex/linejs # If you use npm
+bunx --bun jsr add @evex/linejs # If you use Bun
+deno add @evex/linejs # If you use Deno
 ```
 
 After execution, you should have the library available.
@@ -18,74 +19,28 @@ After execution, you should have the library available.
 
 Next, let's create a script that just retrieves your profile!
 
+To making client, you can use `loginWithPassword`.
 ```ts
-import { Client } from "@evex/linejs";
+import { loginWithPassword } from "@evex/linejs";
 
-const client = new Client({ device: "IOSIPAD" });
-
-client.on("pincall", (pincode) => {
-	console.log(`pincode: ${pincode}`);
-});
-
-client.on("ready", (user) => {
-	console.log(`Logged in as ${user.displayName} (${user.mid});`);
-});
-
-await client.login({
-	email: "YOUR_EMAIL",
-	password: "YOUR_PASSWORD",
-}); // (If you're using Node.js, please wrap async IIFE)
+const client = loginWithPassword({
+  email: 'you@example.com', // e-mail address
+  password: 'password', // Password
+  onPincodeRequest(pincode) {
+    console.log('Enter this pincode to your LINE app:', pincode)
+  }
+})
 ```
 
-First, log in using your _email_. We will explain each code later.\
-(LINEJS supports login by **AuthToken**, **QR** and **Pincode**.)
+Authentication is complicated process, so you should read [here](./auth.md).
 
-:::warning\
-Please enable email login in your settings. :::
+After created client, you can do various things!
 
-The method of execution depends on the runtime.
-
-```bash
-node ./index.js
-npx tsx ./index.ts
-bun run ./index.js
-deno run -A ./index.ts
-```
-
-Thereafter, please use what suits you best.
-
-Then, you will see the following output.
-
-```console
-pincode: 114514
-```
-
-You will then receive a login request on the LINE app for the account you wish
-to log in to, and enter the pin code displayed.
-
-By the way, `114514` is Japanese slang. If you don't like it or think it's
-messy, you can change it by doing the following.
-
+For instance, you can get one of chat informations you joined:
 ```ts
-await client.login({
-	...,
-    pincode: "810810"
-});
+const chats = await client.fetchChats()
+console.log(chats[0].name)
 ```
-
-The output will then be as follows.
-
-```console
-Logged in as EdamAmex (u********************************)
-```
-
-Now, you have obtained a `displayName` and `mid`!\
-On successful login, `ready` is called and the user object is passed.
-
-There you will find your complete profile. Of course, there is another way to
-get it from the method.
-
-Let's try that next!
 
 ---
 
