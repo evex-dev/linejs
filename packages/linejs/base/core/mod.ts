@@ -12,9 +12,7 @@ import type { ClientEvents, Log } from "./utils/events.ts";
 import { InternalError } from "./utils/error.ts";
 import { type Continuable, continueRequest } from "./utils/continue.ts";
 
-import {
-	LineEvent,
-} from "../event/mod.ts";
+import { LineEvent } from "../event/mod.ts";
 export type { Continuable, Device, DeviceDetails, Log };
 export { continueRequest, InternalError };
 
@@ -196,22 +194,22 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 
 	// NOTE: use allow function.
 	// `const { fetch } = base` is not working if you change to function decorations.
-	readonly fetch: Fetch = async(
+	readonly fetch: Fetch = async (
 		info: RequestInfo | URL,
 		init?: RequestInit,
-	): Promise<Response> =>  {
+	): Promise<Response> => {
 		const req = new Request(info, init);
 		const res =
 			await (this.#customFetch
 				? this.#customFetch(req)
 				: globalThis.fetch(req));
 		return res;
-	}
+	};
 
 	/**
 	 * Creates polling client.
 	 */
 	createPolling(): Polling {
-		return new Polling(this)
+		return new Polling(this);
 	}
 }
