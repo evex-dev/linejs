@@ -338,8 +338,7 @@ export class LineObs {
 				.uploadObjectForService({
 					data: edata,
 					oType: "file",
-					obsPath:
-						`${serviceName}/${obsNamespace}/${tempId}__ud-preview`,
+					obsPath: `${serviceName}/${obsNamespace}/${tempId}__ud-preview`,
 					params,
 				});
 			if (objId !== objId2) {

@@ -15,6 +15,7 @@ export const wrapEvents = (source: SourceEvent, client: Client): LINEEvent => {
 	if (source.type === "talk") {
 		switch (source.event.type) {
 			case "RECEIVE_MESSAGE":
+			case "SEND_MESSAGE":
 				return new MessageLINEEvent(source, client);
 		}
 	} else {
