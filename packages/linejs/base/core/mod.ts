@@ -12,7 +12,6 @@ import type { ClientEvents, Log } from "./utils/events.ts";
 import { InternalError } from "./utils/error.ts";
 import { type Continuable, continueRequest } from "./utils/continue.ts";
 
-import { LineEvent } from "../event/mod.ts";
 export type { Continuable, Device, DeviceDetails, Log };
 export { continueRequest, InternalError };
 
