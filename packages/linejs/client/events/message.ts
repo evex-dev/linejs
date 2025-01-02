@@ -8,6 +8,6 @@ export class MessageLINEEvent extends LINEEventBase {
 	readonly message: Message;
 	constructor(source: SourceEvent, client: Client) {
 		super(source);
-		this.message = Message.fromSource(source, client)
+		this.message = Message.fromSource(source, client);
 	}
 }

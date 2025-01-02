@@ -108,7 +108,6 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	readonly e2ee: E2EE;
 	readonly obs: LineObs;
 	readonly timeline: Timeline;
-	readonly event: LineEvent;
 
 	readonly auth: AuthService;
 	readonly call: CallService;
@@ -148,7 +147,6 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.e2ee = new E2EE(this);
 		this.obs = new LineObs(this);
 		this.timeline = new Timeline(this);
-		this.event = new LineEvent(this);
 
 		this.auth = new AuthService(this);
 		this.call = new CallService(this);
