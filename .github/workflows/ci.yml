@@ -1,4 +1,4 @@
-name: pull_request
+name: ci
 on:
   pull_request:
     branches: ["*"]
@@ -8,6 +8,7 @@ on:
       - "README.md"
       - ".gitignore"
       - "LICENSE"
+  push:
 
 jobs:
   jsr-dry-run:
