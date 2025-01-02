@@ -80,9 +80,11 @@ export class Polling {
 					response.fullSyncResponse &&
 					response.fullSyncResponse.nextRevision
 				) {
-					this.sync.talk.revision = response.fullSyncResponse.nextRevision;
+					this.sync.talk.revision =
+						response.fullSyncResponse.nextRevision;
 				}
 				if (
+					response.operationResponse &&
 					response.operationResponse.globalEvents &&
 					response.operationResponse.globalEvents.lastRevision
 				) {
@@ -90,6 +92,7 @@ export class Polling {
 						response.operationResponse.globalEvents.lastRevision;
 				}
 				if (
+					response.operationResponse &&
 					response.operationResponse.individualEvents &&
 					response.operationResponse.individualEvents.lastRevision
 				) {
@@ -97,7 +100,10 @@ export class Polling {
 						response.operationResponse.individualEvents
 							.lastRevision;
 				}
-				if (!response.operationResponse.operations) {
+				if (
+					!(response.operationResponse &&
+						response.operationResponse.operations)
+				) {
 					continue;
 				}
 				for (const event of response.operationResponse.operations) {
