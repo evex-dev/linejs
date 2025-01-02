@@ -28,11 +28,11 @@ export class Polling {
 	 * Listen OpenChat events as a async generator.
 	 */
 	async *listenSquareEvents(options: {
-		abortController?: AbortController;
+		signal?: AbortSignal;
 		onError?: (error: unknown) => void;
 		pollingInterval?: number;
 	} = {}): AsyncGenerator<SquareEvent, void, unknown> {
-		const { abortController, onError, pollingInterval } = {
+		const { signal, onError, pollingInterval } = {
 			pollingInterval: 1000,
 			...options,
 		};
@@ -55,18 +55,18 @@ export class Polling {
 				}
 			}
 			await sleep(pollingInterval);
-			if (abortController?.signal.aborted) {
+			if (signal?.aborted) {
 				break;
 			}
 		}
 	}
 
 	async *listenTalkEvents(options: {
-		abortController?: AbortController;
+		signal?: AbortSignal;
 		onError?: (error: unknown) => void;
 		pollingInterval?: number;
 	} = {}): AsyncGenerator<Operation, void, unknown> {
-		const { abortController, onError, pollingInterval } = {
+		const { signal, onError, pollingInterval } = {
 			pollingInterval: 1000,
 			...options,
 		};
@@ -110,7 +110,7 @@ export class Polling {
 				}
 			}
 			await sleep(pollingInterval);
-			if (abortController?.signal.aborted) {
+			if (signal?.aborted) {
 				break;
 			}
 		}

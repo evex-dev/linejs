@@ -1,13 +1,11 @@
-import type { Operation, SquareEvent } from "@evex/linejs-types";
 import type { Client } from "../mod.ts"
-import { LINEEvent } from "./shared.ts"
+import { LINEEventBase } from "./shared.ts"
+import type { SourceEvent } from "./mod.ts";
 
-export class MessageLINEEvent extends LINEEvent {
-  readonly raw: Operation | SquareEvent
+export class MessageLINEEvent extends LINEEventBase {
   #client: Client
-  constructor(event: Operation | SquareEvent, client: Client) {
-    super()
-    this.raw = event
+  constructor(source: SourceEvent, client: Client) {
+    super(source)
     this.#client = client
   }
   reply() {
