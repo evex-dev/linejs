@@ -18,7 +18,7 @@ const createBaseClient = (init: InitOptions) =>
 	new BaseClient({
 		fetch: init.fetch,
 		device: init.device,
-		storage: init.storage
+		storage: init.storage,
 	});
 
 export interface WithQROptions {
@@ -60,9 +60,12 @@ export const loginWithPassword = async (
 	return new Client(base);
 };
 
-export const loginWithAuthToken = async (authToken: string, init: InitOptions) => {
-	const base = createBaseClient(init)
-	base.authToken = authToken
-	await base.loginProcess.ready()
-	return new Client(base)
-}
+export const loginWithAuthToken = async (
+	authToken: string,
+	init: InitOptions,
+) => {
+	const base = createBaseClient(init);
+	base.authToken = authToken;
+	await base.loginProcess.ready();
+	return new Client(base);
+};

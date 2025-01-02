@@ -388,7 +388,7 @@ export class Message {
 		};
 	}
 	get text() {
-		return this.#rawMessage.text
+		return this.#rawMessage.text;
 	}
 
 	static fromSource(source: SourceEvent, client: Client): Message {
