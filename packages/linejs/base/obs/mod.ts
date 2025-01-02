@@ -379,13 +379,13 @@ export class LineObs {
 		});
 	}
 
-	public async downloadMediaByE2EE(message: Message) {
+	public async downloadMediaByE2EE(message: Message): Promise<File | null> {
 		if (!(message.to[0] === "u" || message.to[0] === "c")) {
 			throw new InternalError("ObsError", "Invalid mid");
 		}
 		const { id, contentMetadata, chunks } = message;
 		if (!chunks || !chunks.length) {
-			return;
+			return null;
 		}
 		const { keyMaterial, fileName } = await this.client.e2ee
 			.decryptE2EEDataMessage(message);
@@ -402,12 +402,12 @@ export class LineObs {
 			obsPath: "talk/" + contentMetadata.SID,
 			addHeaders: { "X-Talk-Meta": talkMeta },
 		});
-		const fileData = new Blob([
+		const fileData = new File([
 			await this.client.e2ee.decryptByKeyMaterial(
 				Buffer.from(await data.arrayBuffer()),
 				keyMaterial,
 			),
-		]);
+		], fileName);
 		return fileData;
 	}
 }
