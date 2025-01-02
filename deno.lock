@@ -5,12 +5,12 @@
     "jsr:@std/internal@^1.0.4": "1.0.4",
     "npm:@biomejs/biome@*": "1.9.3",
     "npm:@deno/kv@*": "0.8.4",
-    "npm:@deno/kv@~0.8.4": "0.8.4",
     "npm:@types/node@*": "22.5.4",
     "npm:@types/node@latest": "22.9.0",
     "npm:@types/thrift@*": "0.10.17",
     "npm:@types/thrift@~0.10.17": "0.10.17",
     "npm:crypto-js@*": "4.2.0",
+    "npm:crypto-js@^4.2.0": "4.2.0",
     "npm:curve25519-js@^0.0.4": "0.0.4",
     "npm:discord.js@*": "14.16.3",
     "npm:jsdom@25.0.0": "25.0.0",
@@ -1541,8 +1541,8 @@
     "members": {
       "packages/linejs": {
         "dependencies": [
-          "npm:@deno/kv@~0.8.4",
           "npm:@types/thrift@~0.10.17",
+          "npm:crypto-js@^4.2.0",
           "npm:node-int64@0.4",
           "npm:thrift@0.21"
         ]

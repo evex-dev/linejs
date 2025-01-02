@@ -750,7 +750,6 @@ export class E2EE {
 		}
 		return [text, meta];
 	}
-
 	public async decryptE2EELocationMessage(
 		messageObj: Message,
 		isSelf = true,
@@ -809,6 +808,65 @@ export class E2EE {
 		}
 
 		return decrypted.location || undefined;
+	}
+	public async decryptE2EEDataMessage(
+		messageObj: Message,
+		isSelf = true,
+	): Promise<Record<string, any>> {
+		const _from = messageObj.from;
+		const to = messageObj.to;
+		const toType = messageObj.toType;
+		const metadata = messageObj.contentMetadata;
+		const specVersion = metadata.e2eeVersion || "2";
+		const contentType = messageObj.contentType;
+		const chunks = messageObj.chunks.map((chunk) =>
+			typeof chunk === "string" ? Buffer.from(chunk, "utf-8") : chunk
+		);
+
+		const senderKeyId = byte2int(chunks[3]);
+		const receiverKeyId = byte2int(chunks[4]);
+		this.e2eeLog("decryptE2EELocationMessageSenderKeyId", senderKeyId);
+		this.e2eeLog("decryptE2EELocationMessageReceiverKeyId", receiverKeyId);
+
+		const selfKey = await this.getE2EESelfKeyData(
+			this.client.profile?.mid as string,
+		);
+		let privK = Buffer.from(selfKey.privKey, "base64");
+		let pubK: any;
+
+		if (toType === LINETypes.enums.MIDType.USER || toType === "USER") {
+			pubK = await this.getE2EELocalPublicKey(
+				to,
+				isSelf ? receiverKeyId : senderKeyId,
+			);
+		} else {
+			const groupK = await this.getE2EELocalPublicKey(
+				to,
+				receiverKeyId,
+			) as GroupKey;
+			privK = Buffer.from(groupK.privKey, "base64");
+			pubK = Buffer.from(selfKey.pubKey, "base64");
+			if (_from !== this.client.profile?.mid) {
+				pubK = await this.getE2EELocalPublicKey(_from, senderKeyId);
+			}
+		}
+
+		let decrypted;
+		if (specVersion === "2") {
+			decrypted = this.decryptE2EEMessageV2(
+				to,
+				_from,
+				chunks,
+				privK,
+				pubK,
+				parseInt(specVersion),
+				contentType as number,
+			);
+		} else {
+			decrypted = this.decryptE2EEMessageV1(chunks, privK, pubK);
+		}
+
+		return decrypted || {};
 	}
 
 	public decryptE2EEMessageV1(
@@ -891,8 +949,18 @@ export class E2EE {
 		decipher.setAAD(aad);
 		let decrypted;
 		try {
-			decrypted = decipher.update(ciphertext);
-			decrypted = Buffer.concat([decrypted, decipher.final()]);
+			try {
+				decrypted = Buffer.concat([
+					decipher.update(ciphertext),
+					decipher.final(),
+				]);
+			} catch {
+				decipher.setAutoPadding(false);
+				decrypted = Buffer.concat([
+					decipher.update(ciphertext),
+					decipher.final(),
+				]);
+			}
 		} catch (error) {
 			if (error instanceof Error) {
 				this.e2eeLog(
@@ -1082,7 +1150,10 @@ export class E2EE {
 			keyMaterial = Buffer.from(keyMaterial, "base64");
 		}
 		const keys = await this.deriveKeyMaterial(keyMaterial);
-		return this.__decryptAESCTR(keys.encKey, keys.nonce, rawData);
+		return this.__decryptAESCTR(keys.encKey, keys.nonce, rawData).slice(
+			0,
+			-32,
+		);
 	}
 }
 

@@ -24,7 +24,7 @@ export function writeThrift(
 		},
 	);
 	const myprot = new Protocol(buftra);
-	writeStruct(myprot, value);
+	_writeStruct(myprot, value);
 	myprot.flush();
 	buftra.flush();
 	if (myBuf.length === 1 && myBuf[0] === 0) {
@@ -37,8 +37,29 @@ export function writeThrift(
 	]);
 	return writedBinary;
 }
+export function writeStruct(
+	value: NestedArray,
+	Protocol: (typeof Protocols)[ProtocolKey],
+): Uint8Array {
+	let myBuf: Buffer = Buffer.from([]);
+	const buftra = new thrift.TBufferedTransport(
+		myBuf,
+		function (outBuf?: Buffer) {
+			if (!outBuf) return;
+			myBuf = Buffer.concat([myBuf, outBuf]);
+		},
+	);
+	const myprot = new Protocol(buftra);
+	_writeStruct(myprot, value);
+	myprot.flush();
+	buftra.flush();
+	if (myBuf.length === 1 && myBuf[0] === 0) {
+		myBuf = Buffer.from([]);
+	}
+	return myBuf;
+}
 
-function writeStruct(
+function _writeStruct(
 	output: thrift.TCompactProtocol | thrift.TCompactProtocol,
 	value: NestedArray = [],
 ): void {
@@ -144,7 +165,7 @@ function writeValue(
 				return;
 			}
 			output.writeFieldBegin("", Thrift.Type.STRUCT, fid);
-			writeStruct(output, val as NestedArray);
+			_writeStruct(output, val as NestedArray);
 			output.writeFieldEnd();
 			break;
 
@@ -269,7 +290,7 @@ function writeValue_(
 			if (!Array.isArray(val)) {
 				throw new TypeError(`ftype=${ftype}: value is not struct`);
 			}
-			writeStruct(output, val as NestedArray);
+			_writeStruct(output, val as NestedArray);
 			break;
 
 		default:

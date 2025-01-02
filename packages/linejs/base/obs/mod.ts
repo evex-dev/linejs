@@ -3,6 +3,9 @@ import { type BaseClient, InternalError } from "../core/mod.ts";
 import { MimeType } from "./mime.ts";
 import crypto from "node:crypto";
 import type { Message } from "@evex/linejs-types";
+import { writeStruct } from "../thrift/readwrite/write.ts";
+// @ts-types="thrift-types"
+import * as thrift from "thrift";
 
 export type ObjType = "image" | "gif" | "video" | "audio" | "file";
 export interface ObsMetadata {
@@ -375,5 +378,37 @@ export class LineObs {
 					: {},
 			},
 		});
+	}
+
+	public async downloadMediaByE2EE(message: Message) {
+		if (!(message.to[0] === "u" || message.to[0] === "c")) {
+			throw new InternalError("ObsError", "Invalid mid");
+		}
+		const { id, contentMetadata, chunks } = message;
+		if (!chunks || !chunks.length) {
+			return;
+		}
+		const { keyMaterial, fileName } = await this.client.e2ee
+			.decryptE2EEDataMessage(message);
+		const talkMeta = Buffer.from(JSON.stringify({
+			message: Buffer.from(
+				writeStruct(
+					[[11, 4, id], [15, 27, [12, []]]],
+					thrift.TBinaryProtocol,
+				),
+			).toString("base64"),
+		})).toString("base64");
+		const data = await this.downloadObjectForService({
+			oid: contentMetadata.OID,
+			obsPath: "talk/" + contentMetadata.SID,
+			addHeaders: { "X-Talk-Meta": talkMeta },
+		});
+		const fileData = new Blob([
+			await this.client.e2ee.decryptByKeyMaterial(
+				Buffer.from(await data.arrayBuffer()),
+				keyMaterial,
+			),
+		]);
+		return fileData;
 	}
 }
