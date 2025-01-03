@@ -78,11 +78,11 @@ function toBit(num: number): number[] {
 
 export class Note {
 	constructor(
-		public mid: string,
+		mid: string,
 		private client: BaseClient,
 	) {}
 
-	public createPost(options: {
+	createPost(options: {
 		text?: string;
 		sharedPostId?: string;
 		textSizeMode?: "AUTO" | "NORMAL";
@@ -103,14 +103,14 @@ export class Note {
 		(options as any).homeId = this.mid;
 		return this.client.timeline.createPost(options as any);
 	}
-	public deletePost(options: {
+	deletePost(options: {
 		postId: string;
 	}): Promise<TimelineResponse> {
 		(options as any).homeId = this.mid;
 		return this.client.timeline.deletePost(options as any);
 	}
 
-	public listPost(
+	listPost(
 		options: {
 			homeId?: string;
 			postId?: string;
@@ -122,13 +122,13 @@ export class Note {
 		return this.client.timeline.listPost(options as any);
 	}
 
-	public getPost(options: {
+	getPost(options: {
 		postId: string;
 	}): Promise<TimelineResponse> {
 		(options as any).homeId = this.mid;
 		return this.client.timeline.getPost(options as any);
 	}
-	public sharePost(options: {
+	sharePost(options: {
 		postId: string;
 		chatMid: string;
 	}): Promise<TimelineResponse> {
@@ -141,36 +141,36 @@ export class Note {
  * @description LINE user (contact) utils
  */
 export class User extends TypedEventEmitter<UserEvents> {
-	public rawSource: LINETypes.Contact;
-	public mid: string;
-	public createdTime: Date;
-	public type: LINETypes.ContactType;
-	public status: LINETypes.ContactStatus;
-	public relation: LINETypes.ContactRelation;
-	public displayName: string;
-	public phoneticName: string;
-	public pictureStatus: string;
-	public thumbnailUrl: string;
-	public statusMessage: string;
-	public displayNameOverridden: string;
-	public favoriteTime: Date;
-	public capableVoiceCall: boolean;
-	public capableVideoCall: boolean;
-	public capableMyhome: boolean;
-	public capableBuddy: boolean;
-	public attributes: number;
-	public picturePath: string;
-	public recommendParams: string;
-	public friendRequestStatus: LINETypes.FriendRequestStatus;
-	public musicProfile: string;
-	public videoProfile: string;
-	public statusMessageContentMetadata: { [k: string]: string };
-	public avatarProfile: LINETypes.AvatarProfile;
-	public friendRingtone: string;
-	public friendRingbackTone: string;
-	public nftProfile: boolean;
-	public pictureSource: LINETypes.Pb1_N6;
-	public groupStatus: Record<string, any> & {
+	rawSource: LINETypes.Contact;
+	mid: string;
+	createdTime: Date;
+	type: LINETypes.ContactType;
+	status: LINETypes.ContactStatus;
+	relation: LINETypes.ContactRelation;
+	displayName: string;
+	phoneticName: string;
+	pictureStatus: string;
+	thumbnailUrl: string;
+	statusMessage: string;
+	displayNameOverridden: string;
+	favoriteTime: Date;
+	capableVoiceCall: boolean;
+	capableVideoCall: boolean;
+	capableMyhome: boolean;
+	capableBuddy: boolean;
+	attributes: number;
+	picturePath: string;
+	recommendParams: string;
+	friendRequestStatus: LINETypes.FriendRequestStatus;
+	musicProfile: string;
+	videoProfile: string;
+	statusMessageContentMetadata: { [k: string]: string };
+	avatarProfile: LINETypes.AvatarProfile;
+	friendRingtone: string;
+	friendRingbackTone: string;
+	nftProfile: boolean;
+	pictureSource: LINETypes.Pb1_N6;
+	groupStatus: Record<string, any> & {
 		joinedAt?: Date;
 		invitedAt?: Date;
 	} = {};
@@ -225,7 +225,8 @@ export class User extends TypedEventEmitter<UserEvents> {
 		this.friendRequestStatus = contact.friendRequestStatus;
 		this.musicProfile = contact.musicProfile;
 		this.videoProfile = contact.videoProfile;
-		this.statusMessageContentMetadata = contact.statusMessageContentMetadata;
+		this.statusMessageContentMetadata =
+			contact.statusMessageContentMetadata;
 		this.avatarProfile = contact.avatarProfile;
 		this.friendRingtone = contact.friendRingtone;
 		this.friendRingbackTone = contact.friendRingbackTone;
@@ -236,7 +237,7 @@ export class User extends TypedEventEmitter<UserEvents> {
 	/**
 	 * @description Send msg to user.
 	 */
-	public send(
+	send(
 		options:
 			| string
 			| {
@@ -261,7 +262,7 @@ export class User extends TypedEventEmitter<UserEvents> {
 	/**
 	 * @description Kickout from group.
 	 */
-	public kick(
+	kick(
 		chatMid: string,
 	): Promise<LINETypes.Pb1_M3> {
 		return this.client.talk.deleteOtherFromChat({
@@ -275,7 +276,7 @@ export class User extends TypedEventEmitter<UserEvents> {
 	/**
 	 * @description Invite to group.
 	 */
-	public async invite(chatMid: string): Promise<void> {
+	async invite(chatMid: string): Promise<void> {
 		await this.client.talk.inviteIntoChat({
 			chatMid,
 			targetUserMids: [this.mid],
@@ -285,11 +286,11 @@ export class User extends TypedEventEmitter<UserEvents> {
 	/**
 	 * @description Add to friend.
 	 */
-	public async addFriend(): Promise<any> {
+	async addFriend(): Promise<any> {
 		return await this.client.relation.addFriendByMid({ mid: this.mid });
 	}
 
-	public isMe(): boolean {
+	isMe(): boolean {
 		return this.client.profile?.mid === this.mid;
 	}
 }
@@ -298,15 +299,15 @@ export class User extends TypedEventEmitter<UserEvents> {
  * @description LINE group (chat) utils
  */
 export class Group extends TypedEventEmitter<GroupEvents> {
-	public rawSource: LINETypes.Chat;
-	public mid: string;
-	public createdTime: Date;
-	public name: string;
-	public picturePath: string;
-	public preventedJoinByTicket: boolean;
-	public invitationTicket: string;
-	public notificationDisabled: boolean;
-	public note: Note;
+	rawSource: LINETypes.Chat;
+	mid: string;
+	createdTime: Date;
+	name: string;
+	picturePath: string;
+	preventedJoinByTicket: boolean;
+	invitationTicket: string;
+	notificationDisabled: boolean;
+	note: Note;
 
 	/**
 	 * @description Generate from groupMid or {Chat}.
@@ -377,9 +378,9 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 	constructor(
 		chat: LINETypes.Chat,
 		private client: BaseClient,
-		public creator: User,
-		public members: User[],
-		public invitee: User[],
+		creator: User,
+		members: User[],
+		invitee: User[],
 	) {
 		super();
 
@@ -399,7 +400,7 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 	/**
 	 * @description Send msg to group.
 	 */
-	public async send(
+	async send(
 		options:
 			| string
 			| {
@@ -424,7 +425,7 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 	/**
 	 * @description Update group status.
 	 */
-	public async set(options: {
+	async set(options: {
 		chatSet: Partial<LINETypes.Chat>;
 		updatedAttribute: LINETypes.Pb1_O2;
 	}): Promise<LINETypes.Pb1_Zc> {
@@ -436,7 +437,7 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 	/**
 	 * @description Update group name.
 	 */
-	public async setName(name: string): Promise<LINETypes.Pb1_Zc> {
+	async setName(name: string): Promise<LINETypes.Pb1_Zc> {
 		return await this.set({
 			chatSet: { chatName: name },
 			updatedAttribute: "NAME",
@@ -446,7 +447,7 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 	/**
 	 * @description Invite user.
 	 */
-	public async invite(
+	async invite(
 		mids: string[],
 	): Promise<LINETypes.Pb1_J5> {
 		return await this.client.talk.inviteIntoChat({
@@ -458,7 +459,7 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 	/**
 	 * @description Kickout user.
 	 */
-	public kick(mid: string): Promise<LINETypes.Pb1_M3> {
+	kick(mid: string): Promise<LINETypes.Pb1_M3> {
 		return this.client.talk.deleteOtherFromChat({
 			request: {
 				targetUserMids: [mid],
@@ -472,17 +473,17 @@ export class Group extends TypedEventEmitter<GroupEvents> {
  * @description LINE talk event utils
  */
 export class Operation {
-	public rawSource: LINETypes.Operation;
+	rawSource: LINETypes.Operation;
 	protected client?: BaseClient;
-	public message?: TalkMessage;
-	public revision: number;
-	public createdTime: Date;
-	public type: LINETypes.OpType;
-	public reqSeq: number = 0;
-	public checksum?: string;
-	public status?: "ALERT_DISABLED" | LINETypes.Pb1_EnumC13127p6;
-	public param: { 1?: string; 2?: string; 3?: string } = {};
-	public event?:
+	message?: TalkMessage;
+	revision: number;
+	createdTime: Date;
+	type: LINETypes.OpType;
+	reqSeq: number = 0;
+	checksum?: string;
+	status?: "ALERT_DISABLED" | LINETypes.Pb1_EnumC13127p6;
+	param: { 1?: string; 2?: string; 3?: string } = {};
+	event?:
 		| SendChatRemoved
 		| SendChatChecked
 		| NotifiedReadMessage
@@ -571,9 +572,9 @@ export class Operation {
  * @description you unsend the message
  */
 export class DestroyMessage {
-	public readonly name: string = "DestroyMessage";
-	public messageId: string;
-	public chatMid: string;
+	readonly type: string = "DestroyMessage";
+	messageId: string;
+	chatMid: string;
 
 	constructor(op: Operation) {
 		if (op.type !== "DESTROY_MESSAGE") {
@@ -594,9 +595,9 @@ export class DestroyMessage {
  * @description the user unsend the message
  */
 export class NotifiedDestroyMessage {
-	public readonly name: string = "NotifiedDestroyMessage";
-	public messageId: string;
-	public chatMid: string;
+	readonly type: string = "NotifiedDestroyMessage";
+	messageId: string;
+	chatMid: string;
 
 	constructor(op: Operation) {
 		if (op.type !== "NOTIFIED_DESTROY_MESSAGE") {
@@ -617,9 +618,9 @@ export class NotifiedDestroyMessage {
  * @description the user joined the chat
  */
 export class NotifiedJoinChat {
-	public readonly name: string = "NotifiedJoinChat";
-	public userMid: string;
-	public chatMid: string;
+	readonly type: string = "NotifiedJoinChat";
+	userMid: string;
+	chatMid: string;
 
 	constructor(op: Operation) {
 		if (op.type !== "NOTIFIED_JOIN_CHAT") {
@@ -640,9 +641,9 @@ export class NotifiedJoinChat {
  * @description the user accepted the chat invitation
  */
 export class NotifiedAcceptChatInvitation {
-	public readonly name: string = "NotifiedAcceptChatInvitation";
-	public userMid: string;
-	public chatMid: string;
+	readonly type: string = "NotifiedAcceptChatInvitation";
+	userMid: string;
+	chatMid: string;
 
 	constructor(op: Operation) {
 		if (op.type !== "NOTIFIED_ACCEPT_CHAT_INVITATION") {
@@ -663,9 +664,9 @@ export class NotifiedAcceptChatInvitation {
  * @description the user was invited into chat by you
  */
 export class InviteIntoChat {
-	public readonly name: string = "InviteIntoChat";
-	public userMid: string;
-	public chatMid: string;
+	readonly type: string = "InviteIntoChat";
+	userMid: string;
+	chatMid: string;
 
 	constructor(op: Operation) {
 		if (op.type !== "INVITE_INTO_CHAT") {
@@ -686,8 +687,8 @@ export class InviteIntoChat {
  * @description you left the chat
  */
 export class DeleteSelfFromChat {
-	public readonly name: string = "DeleteSelfFromChat";
-	public chatMid: string;
+	readonly type: string = "DeleteSelfFromChat";
+	chatMid: string;
 
 	constructor(op: Operation) {
 		if (op.type !== "DELETE_SELF_FROM_CHAT") {
@@ -704,9 +705,9 @@ export class DeleteSelfFromChat {
  * @description the user left (kicked) the chat
  */
 export class NotifiedLeaveChat {
-	public readonly name: string = "NotifiedLeaveChat";
-	public userMid: string;
-	public chatMid: string;
+	readonly type: string = "NotifiedLeaveChat";
+	userMid: string;
+	chatMid: string;
 
 	constructor(op: Operation) {
 		if (op.type !== "NOTIFIED_LEAVE_CHAT") {
@@ -727,9 +728,9 @@ export class NotifiedLeaveChat {
  * @description the other user was kicked from chat by you
  */
 export class DeleteOtherFromChat {
-	public readonly name: string = "DeleteOtherFromChat";
-	public userMid: string;
-	public chatMid: string;
+	readonly type: string = "DeleteOtherFromChat";
+	userMid: string;
+	chatMid: string;
 
 	constructor(op: Operation) {
 		if (op.type !== "DELETE_OTHER_FROM_CHAT") {
@@ -750,9 +751,9 @@ export class DeleteOtherFromChat {
  * @description the profile content was updated by user
  */
 export class NotifiedUpdateProfileContent {
-	public readonly name: string = "NotifiedUpdateProfileContent";
-	public userMid: string;
-	public profileAttributes: (LINETypes.Pb1_K6 | null)[] = [];
+	readonly type: string = "NotifiedUpdateProfileContent";
+	userMid: string;
+	profileAttributes: (LINETypes.Pb1_K6 | null)[] = [];
 
 	constructor(op: Operation) {
 		if (op.type !== "NOTIFIED_UPDATE_PROFILE_CONTENT") {
@@ -789,10 +790,10 @@ export class NotifiedUpdateProfileContent {
  * @description the profile was updated by user
  */
 export class NotifiedUpdateProfile {
-	public readonly name: string = "NotifiedUpdateProfile";
-	public userMid: string;
-	public profileAttributes: (LINETypes.Pb1_K6 | null)[] = [];
-	public info: Record<string, any> = {};
+	readonly type: string = "NotifiedUpdateProfile";
+	userMid: string;
+	profileAttributes: (LINETypes.Pb1_K6 | null)[] = [];
+	info: Record<string, any> = {};
 
 	constructor(op: Operation) {
 		if (op.type !== "NOTIFIED_UPDATE_PROFILE") {
@@ -831,9 +832,9 @@ export class NotifiedUpdateProfile {
  * @description the profile was updated by you
  */
 export class UpdateProfile {
-	public readonly name: string = "UpdateProfile";
-	public profileAttributes: (LINETypes.Pb1_K6 | null)[] = [];
-	public info: Record<string, any> = {};
+	readonly type: string = "UpdateProfile";
+	profileAttributes: (LINETypes.Pb1_K6 | null)[] = [];
+	info: Record<string, any> = {};
 
 	constructor(op: Operation) {
 		if (op.type !== "UPDATE_PROFILE") {
@@ -870,11 +871,11 @@ export class UpdateProfile {
  * @description the message was reacted by ypu
  */
 export class SendReaction {
-	public readonly name: string = "SendReaction";
-	public chatMid: string;
-	public chatType: LINETypes.MIDType;
-	public messageId: string;
-	public reactionType: LINETypes.MessageReactionType;
+	readonly type: string = "SendReaction";
+	chatMid: string;
+	chatType: LINETypes.MIDType;
+	messageId: string;
+	reactionType: LINETypes.MessageReactionType;
 	constructor(op: Operation) {
 		if (op.type !== "SEND_REACTION") {
 			throw new TypeError("Wrong operation type");
@@ -900,12 +901,12 @@ export class SendReaction {
  * @description the message was reacted by user
  */
 export class NotifiedSendReaction {
-	public readonly name: string = "NotifiedSendReaction";
-	public chatMid: string;
-	public chatType: LINETypes.MIDType;
-	public messageId: string;
-	public userMid: string;
-	public reactionType: LINETypes.MessageReactionType;
+	readonly type: string = "NotifiedSendReaction";
+	chatMid: string;
+	chatType: LINETypes.MIDType;
+	messageId: string;
+	userMid: string;
+	reactionType: LINETypes.MessageReactionType;
 	constructor(op: Operation) {
 		if (op.type !== "NOTIFIED_SEND_REACTION") {
 			throw new TypeError("Wrong operation type");
@@ -933,11 +934,11 @@ export class NotifiedSendReaction {
  * @description the message was read by user
  */
 export class NotifiedReadMessage {
-	public readonly name: string = "NotifiedReadMessage";
-	public chatMid: string;
-	public chatType: LINETypes.MIDType;
-	public messageId: string;
-	public userMid: string;
+	readonly type: string = "NotifiedReadMessage";
+	chatMid: string;
+	chatType: LINETypes.MIDType;
+	messageId: string;
+	userMid: string;
 
 	constructor(op: Operation) {
 		if (op.type !== "NOTIFIED_READ_MESSAGE") {
@@ -961,10 +962,10 @@ export class NotifiedReadMessage {
  * @description the message was read by you
  */
 export class SendChatChecked {
-	public readonly name: string = "SendChatChecked";
-	public chatMid: string;
-	public chatType: LINETypes.MIDType;
-	public messageId: string;
+	readonly type: string = "SendChatChecked";
+	chatMid: string;
+	chatType: LINETypes.MIDType;
+	messageId: string;
 
 	constructor(op: Operation) {
 		if (op.type !== "SEND_CHAT_CHECKED") {
@@ -986,10 +987,10 @@ export class SendChatChecked {
  * @description the chatroom history was removed by you
  */
 export class SendChatRemoved {
-	public readonly name: string = "SendChatRemoved";
-	public chatMid: string;
-	public chatType: LINETypes.MIDType | null;
-	public messageId: string;
+	readonly type: string = "SendChatRemoved";
+	chatMid: string;
+	chatType: LINETypes.MIDType | null;
+	messageId: string;
 
 	constructor(op: Operation) {
 		if (op.type !== "SEND_CHAT_REMOVED") {
