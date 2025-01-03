@@ -344,13 +344,13 @@ export class TalkMessage {
 	static fromSource(
 		source: SourceEvent & { type: "talk" },
 		client: Client,
-	): TalkMessage {
-		return new TalkMessage({
-			client,
-			raw: source.event.message,
-		});
+	): Promise<TalkMessage> {
+		return this.fromRawTalk(source.event.message, client);
 	}
-	static fromRawTalk(raw: Message, client: Client): TalkMessage {
+	static async fromRawTalk(raw: Message, client: Client): Promise<TalkMessage> {
+		if (raw.contentMetadata.e2eeVersion) {
+			raw = await client.base.e2ee.decryptE2EEMessage(raw)
+		}
 		return new TalkMessage({
 			client,
 			raw,
