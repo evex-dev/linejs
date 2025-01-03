@@ -129,11 +129,11 @@ export class Client {
 	async fetchUser(mid: string) {
 		const res = await this.base.relation.getContactsV3({
 			mids: [mid],
-		})
-		const profile = res.responses[0]
+		});
+		const profile = res.responses[0];
 		return new User({
 			mid,
-			isBot: profile.userType === 'BOT' || profile.userType === 2,
-		})
+			isBot: profile.userType === "BOT" || profile.userType === 2,
+		});
 	}
 }

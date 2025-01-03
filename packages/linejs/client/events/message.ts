@@ -21,15 +21,21 @@ export class MessageTalkLINEEvent extends LINEEventBase {
 	override readonly isSquare = false;
 	override readonly isTalk = true;
 	message: TalkMessage;
-	constructor(source: SourceEvent & { type: "talk" }, client: Client, decryptedMessage: TalkMessage) {
+	constructor(
+		source: SourceEvent & { type: "talk" },
+		client: Client,
+		decryptedMessage: TalkMessage,
+	) {
 		super(source);
-		this.message = decryptedMessage
+		this.message = decryptedMessage;
 	}
-	static async fromSource(source: SourceEvent & { type: 'talk' }, client: Client): Promise<MessageTalkLINEEvent> {
+	static async fromSource(
+		source: SourceEvent & { type: "talk" },
+		client: Client,
+	): Promise<MessageTalkLINEEvent> {
 		const message = await TalkMessage.fromSource(source, client);
 		return new MessageTalkLINEEvent(source, client, message);
 	}
 }
 
 export type MessageLINEEvent = MessageSquareLINEEvent | MessageTalkLINEEvent;
-

@@ -22,7 +22,7 @@ export class Square {
 	async sendMessage(
 		input: string | {
 			text?: string;
-		}
+		},
 	): Promise<void> {
 		if (typeof input === "string") {
 			return this.sendMessage({ text: input });
@@ -30,7 +30,7 @@ export class Square {
 		await this.#client.base.square.sendMessage({
 			text: input.text,
 			squareChatMid: this.#raw.mid,
-		})
+		});
 	}
 
 	/** OpenChat mid */

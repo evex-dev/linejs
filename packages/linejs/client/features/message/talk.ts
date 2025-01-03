@@ -349,7 +349,7 @@ export class TalkMessage {
 	}
 	static async fromRawTalk(raw: Message, client: Client): Promise<TalkMessage> {
 		if (raw.contentMetadata.e2eeVersion) {
-			raw = await client.base.e2ee.decryptE2EEMessage(raw)
+			raw = await client.base.e2ee.decryptE2EEMessage(raw);
 		}
 		return new TalkMessage({
 			client,
