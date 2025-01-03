@@ -11,7 +11,7 @@ interface ChatInit {
 }
 
 /**
- * Talk chat class (not a OpenChat)
+ * Talk chat(group) class (not a OpenChat)
  */
 export class Chat {
 	#client: Client;
@@ -26,7 +26,7 @@ export class Chat {
 	}
 
 	/**
-	 * Sends message to the chat.
+	 * Sends message to the chat(group).
 	 */
 	async sendMessage(
 		input: string | {
@@ -64,6 +64,56 @@ export class Chat {
 			...sent,
 			to: this.mid,
 		}, this.#client);
+	}
+
+	/**
+	 * @description Update chat(group) status.
+	 */
+	public async set(options: {
+		chat: Partial<line.Chat>;
+		updatedAttribute: line.Pb1_O2;
+	}): Promise<line.Pb1_Zc> {
+		return await this.#client.base.talk.updateChat({
+			request: {
+				updatedAttribute: options.updatedAttribute,
+				chat: options.chat,
+				reqSeq: await this.#client.base.getReqseq(),
+			},
+		});
+	}
+
+	/**
+	 * @description Update chat(group) name.
+	 */
+	public async setName(name: string): Promise<line.Pb1_Zc> {
+		return await this.set({
+			chat: { chatName: name },
+			updatedAttribute: "NAME",
+		});
+	}
+
+	/**
+	 * @description Invite user.
+	 */
+	public async invite(
+		mids: string[],
+	): Promise<line.Pb1_J5> {
+		return await this.#client.base.talk.inviteIntoChat({
+			targetUserMids: mids,
+			chatMid: this.mid,
+		});
+	}
+
+	/**
+	 * @description Kickout user.
+	 */
+	public kick(mid: string): Promise<line.Pb1_M3> {
+		return this.#client.base.talk.deleteOtherFromChat({
+			request: {
+				targetUserMids: [mid],
+				chatMid: this.mid,
+			},
+		});
 	}
 
 	/**
