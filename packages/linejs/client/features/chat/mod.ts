@@ -1,6 +1,6 @@
 import type { Client } from "../../mod.ts";
 import type * as line from "@evex/linejs-types";
-import { Message } from "../message/message.ts";
+import { TalkMessage } from "../message/talk.ts";
 
 interface ChatInit {
 	client: Client;
@@ -46,7 +46,7 @@ export class Chat {
 			location?: line.Location;
 			chunk?: string[];
 		},
-	): Promise<Message> {
+	): Promise<TalkMessage> {
 		if (typeof input === "string") {
 			return this.sendMessage({ text: input });
 		}
@@ -60,7 +60,7 @@ export class Chat {
 			relatedMessageId: input.relatedMessageId,
 			location: input.location,
 		});
-		return Message.fromRawTalk({
+		return TalkMessage.fromRawTalk({
 			...sent,
 			to: this.mid,
 		}, this.#client);
