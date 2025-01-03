@@ -24,7 +24,8 @@
 	"tasks": {
 		"dev": "deno run -A --watch sandbox/main.ts",
 		"thrift": "deno run --allow-read --allow-write scripts/thrift/tool.ts",
-		"docs:dev": "cd docs && deno task dev"
+		"docs:dev": "cd docs && deno task dev",
+		"docs:build": "cd docs && deno task build"
 	},
 	"unstable": [
 		"byonm"
