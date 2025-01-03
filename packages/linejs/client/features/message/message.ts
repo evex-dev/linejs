@@ -54,14 +54,24 @@ export class Message {
 
 	/**
 	 * Replys to message.
-	 * @param text text to reply
 	 */
-	async reply(text: string) {
+	async reply(
+		input: string | {
+			e2ee?: boolean;
+			text?: string;
+		},
+	): Promise<void> {
+		if (typeof input === "string") {
+			return this.reply({
+				text: input,
+			});
+		}
+
 		if (this.#raw.isSquare) {
 			await this.#client.base.square.sendMessage({
 				relatedMessageId: this.#rawMessage.id,
 				squareChatMid: this.#rawMessage.to,
-				text,
+				text: input.text,
 			});
 		} else {
 			let to: string;
@@ -73,8 +83,9 @@ export class Message {
 			}
 			await this.#client.base.talk.sendMessage({
 				relatedMessageId: this.#rawMessage.id,
-				text,
+				text: input.text,
 				to,
+				e2ee: input.e2ee !== false,
 			});
 		}
 	}
@@ -405,6 +416,13 @@ export class Message {
 				raw: source.event.message,
 			});
 		}
+	}
+	static fromRawTalk(raw: TalkMessage, client: Client): Message {
+		return new Message({
+			isSquare: false,
+			client,
+			raw,
+		});
 	}
 }
 

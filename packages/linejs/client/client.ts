@@ -2,6 +2,7 @@ import type { BaseClient } from "../base/mod.ts";
 import { type LINEEvent, type SourceEvent, wrapEvents } from "./events/mod.ts";
 import { Square } from "./features/square/mod.ts";
 import { continueRequest } from "../base/mod.ts";
+import { Chat } from "./features/chat/mod.ts";
 
 export interface ListenOptions {
 	/**
@@ -91,6 +92,21 @@ export class Client {
 	get authToken(): string {
 		// NOTE: client is constructed when logined, so authToken is not undefined.
 		return this.base.authToken as string;
+	}
+
+	/**
+	 * Fetches all chat rooms the user joined.
+	 */
+	async fetchJoinedChats() {
+		const joined = await this.base.talk.getAllChatMids({
+			request: {
+				withMemberChats: true,
+			},
+		});
+		const { chats } = await this.base.talk.getChats({
+			chatMids: joined.memberChatMids,
+		});
+		return chats.map((chat) => Chat.fromRaw(chat, this));
 	}
 
 	/**

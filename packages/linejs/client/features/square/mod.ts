@@ -18,15 +18,6 @@ export class Square {
 			(await this.#client.base.square.getSquare({ squareMid: this.#raw.mid }))
 				.square;
 	}
-	async fetchHistory() {
-		console.log(0);
-		const history = await this.#client.base.square.fetchSquareChatEvents({
-			squareChatMid: this.mid,
-			direction: "BACKWARD",
-			limit: 100,
-		});
-		console.log(history);
-	}
 
 	/** OpenChat mid */
 	get mid(): string {

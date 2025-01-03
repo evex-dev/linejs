@@ -30,7 +30,7 @@ export class E2EE {
 		const keys = await this.client.talk.getE2EEPublicKeys();
 		for (let i = 0; i < keys.length; i++) {
 			const key = keys[i];
-			const { keyId } = key;
+			const keyId = key.keyId ?? (key as unknown as { "2"?: string })[2];
 			const _keyData = await this.getE2EESelfKeyDataByKeyId(keyId);
 			if (_keyData) {
 				await this.saveE2EESelfKeyData(_keyData);
