@@ -40,3 +40,7 @@ const client = loginWithQR({
 
 The function gives an url to read on mobile. You have to create QR with yourself if you want to show QR code, this is because of LINEJS doesn't support creating QR code.
 
+## With authToken
+
+There is a possibility to banned your account if you tried login many times, so you should use authToken to get authenticated.
+
