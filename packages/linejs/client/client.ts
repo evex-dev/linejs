@@ -3,6 +3,7 @@ import { type LINEEvent, type SourceEvent, wrapEvents } from "./events/mod.ts";
 import { Square } from "./features/square/mod.ts";
 import { continueRequest } from "../base/mod.ts";
 import { Chat } from "./features/chat/mod.ts";
+import { User } from "./features/user/mod.ts";
 
 export interface ListenOptions {
 	/**
@@ -118,5 +119,21 @@ export class Client {
 			arg: { limit: 100 },
 		});
 		return joined.squares.map((raw) => Square.fromRaw(raw, this));
+	}
+
+	/**
+	 * Fetches user by mid.
+	 * @param mid User mid
+	 * @returns User
+	 */
+	async fetchUser(mid: string) {
+		const res = await this.base.relation.getContactsV3({
+			mids: [mid],
+		})
+		const profile = res.responses[0]
+		return new User({
+			mid,
+			isBot: profile.userType === 'BOT' || profile.userType === 2,
+		})
 	}
 }
