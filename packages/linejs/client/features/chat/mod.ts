@@ -117,6 +117,34 @@ export class Chat {
 	}
 
 	/**
+	 * Fetches messages from the chat(group).
+	 * 
+	 * @param limit The number of messages to fetch. Defaults to 10.
+	 * @returns A promise that resolves to an array of TalkMessage instances.
+	 */
+	async fetchMessages (limit: number = 10) {
+		const boxes = await this.#client.base.talk.getMessageBoxes({
+			messageBoxListRequest: {}
+		})
+		const box = boxes.messageBoxes.find(box => box.id === this.mid)
+		if (!box) {
+			throw new Error('Message box not found.')
+		}
+		const messages = await this.#client.base.talk.getPreviousMessagesV2WithRequest({
+			request: {
+				messageBoxId: box.id,
+				endMessageId: {
+					messageId: box.lastDeliveredMessageId.messageId,
+					deliveredTime: box.lastDeliveredMessageId.deliveredTime
+				},
+				messagesCount: limit,
+			}
+		})
+
+		return await Promise.all(messages.map(message => TalkMessage.fromRawTalk(message, this.#client)))
+	}
+
+	/**
 	 * Create a Chat instance from raw message.
 	 * @param raw Raw message
 	 * @param client client

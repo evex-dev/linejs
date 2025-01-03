@@ -80,7 +80,7 @@ export class Client {
 		while (true) {
 			const { done, value } = await reader.read();
 			if (value) {
-				yield wrapEvents(value, this);
+				yield await wrapEvents(value, this);
 			}
 			if (done) {
 				return;
