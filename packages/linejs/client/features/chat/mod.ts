@@ -69,7 +69,7 @@ export class Chat {
 	/**
 	 * @description Update chat(group) status.
 	 */
-	public async set(options: {
+	async setStatus(options: {
 		chat: Partial<line.Chat>;
 		updatedAttribute: line.Pb1_O2;
 	}): Promise<line.Pb1_Zc> {
@@ -86,7 +86,7 @@ export class Chat {
 	 * @description Update chat(group) name.
 	 */
 	public async setName(name: string): Promise<line.Pb1_Zc> {
-		return await this.set({
+		return await this.setStatus({
 			chat: { chatName: name },
 			updatedAttribute: "NAME",
 		});
