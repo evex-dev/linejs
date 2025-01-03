@@ -2,6 +2,7 @@
   "version": "4",
   "specifiers": {
     "jsr:@std/assert@^1.0.2": "1.0.6",
+    "jsr:@std/dotenv@*": "0.225.3",
     "jsr:@std/internal@^1.0.4": "1.0.4",
     "npm:@biomejs/biome@*": "1.9.3",
     "npm:@deno/kv@*": "0.8.4",
@@ -28,6 +29,9 @@
       "dependencies": [
         "jsr:@std/internal"
       ]
+    },
+    "@std/dotenv@0.225.3": {
+      "integrity": "a95e5b812c27b0854c52acbae215856d9cce9d4bbf774d938c51d212711e8d4a"
     },
     "@std/internal@1.0.4": {
       "integrity": "62e8e4911527e5e4f307741a795c0b0a9e6958d0b3790716ae71ce085f755422"
