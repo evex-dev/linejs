@@ -1,5 +1,9 @@
 import type { Operation, SquareEvent } from "@evex/linejs-types";
-import { MessageSquareLINEEvent, MessageTalkLINEEvent, type MessageLINEEvent } from "./message.ts";
+import {
+	type MessageLINEEvent,
+	MessageSquareLINEEvent,
+	MessageTalkLINEEvent,
+} from "./message.ts";
 import { UnknownLINEEvent } from "./unknown.ts";
 import type { Client } from "../client.ts";
 import { ReadMessageLINEEvent } from "./read-message.ts";
@@ -12,7 +16,10 @@ export type SourceEvent = {
 	event: Operation;
 };
 
-export const wrapEvents = async (source: SourceEvent, client: Client): Promise<LINEEvent> => {
+export const wrapEvents = async (
+	source: SourceEvent,
+	client: Client,
+): Promise<LINEEvent> => {
 	if (source.type === "talk") {
 		switch (source.event.type) {
 			case "RECEIVE_MESSAGE":
@@ -23,6 +30,7 @@ export const wrapEvents = async (source: SourceEvent, client: Client): Promise<L
 		}
 	} else {
 		switch (source.event.type) {
+			case "SEND_MESSAGE":
 			case "RECEIVE_MESSAGE":
 			case "NOTIFICATION_MESSAGE":
 				return new MessageSquareLINEEvent(source, client);
@@ -31,5 +39,7 @@ export const wrapEvents = async (source: SourceEvent, client: Client): Promise<L
 	return new UnknownLINEEvent(source);
 };
 
-export type LINEEvent = MessageLINEEvent | UnknownLINEEvent | ReadMessageLINEEvent;
-
+export type LINEEvent =
+	| MessageLINEEvent
+	| UnknownLINEEvent
+	| ReadMessageLINEEvent;
