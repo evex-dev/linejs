@@ -662,6 +662,7 @@ export class E2EE {
 				...messageObj.contentMetadata,
 				...meta,
 			};
+			if (messageObj.chunks) messageObj.chunks = undefined as any;
 		} else if (
 			(messageObj.contentType === "LOCATION" ||
 				messageObj.contentType ===
@@ -671,8 +672,8 @@ export class E2EE {
 			messageObj.location = await this.decryptE2EELocationMessage(
 				messageObj,
 			);
+			if (messageObj.chunks) messageObj.chunks = undefined as any;
 		}
-		if (messageObj.chunks) messageObj.chunks = undefined as any;
 
 		return messageObj;
 	}

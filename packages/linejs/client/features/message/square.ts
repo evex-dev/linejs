@@ -13,7 +13,9 @@ import type {
 	StickerMetadata,
 } from "./internal-types.ts";
 import type { DecorationsData, From, MentionTarget, To } from "./types.ts";
+import { InternalError } from "../../../base/core/mod.ts";
 
+const hasContents = ["IMAGE", "VIDEO", "AUDIO", "FILE"];
 export interface SquareMessageInit {
 	client: Client;
 	raw: Message;
@@ -28,6 +30,7 @@ export class SquareMessage {
 
 	readonly isSquare = true;
 	readonly isTalk = false;
+	#authorIsMe?: boolean;
 
 	constructor(init: SquareMessageInit) {
 		this.#client = init.client;
@@ -97,7 +100,9 @@ export class SquareMessage {
 	 */
 	async unsend() {
 		if (!this.isMyMessage) {
-			throw new TypeError("Cannot unsend the message which is not yours.");
+			throw new TypeError(
+				"Cannot unsend the message which is not yours.",
+			);
 		}
 		await this.#client.base.square.unsendMessage({
 			messageId: this.#raw.message.id,
@@ -141,7 +146,8 @@ export class SquareMessage {
 			throw new TypeError("The message is not text message.");
 		}
 		const emojiUrls: string[] = [];
-		const emojiData = this.#raw.message.contentMetadata as unknown as EmojiMeta;
+		const emojiData = this.#raw.message
+			.contentMetadata as unknown as EmojiMeta;
 		const emojiResources = emojiData?.REPLACE?.sticon?.resources ?? [];
 		for (const emoji of emojiResources) {
 			emojiUrls.push(
@@ -303,8 +309,42 @@ export class SquareMessage {
 		};
 	}
 
-	get isMyMessage(): boolean {
-		return this.#client.base.profile?.mid === this.from.id;
+	/**
+	 * @return {Blob} message data
+	 */
+	async getData(preview?: boolean): Promise<Blob> {
+		if (!hasContents.includes(this.#raw.message.contentType as string)) {
+			throw new TypeError(
+				"message have no contents",
+			);
+		}
+		if (this.#raw.message.contentMetadata.DOWNLOAD_URL) {
+			if (preview) {
+				const r = await this.#client.base
+					.fetch(this.#raw.message.contentMetadata.PREVIEW_URL);
+				return await r.blob();
+			} else {
+				const r_1 = await this.#client.base
+					.fetch(this.#raw.message.contentMetadata.DOWNLOAD_URL);
+				return await r_1.blob();
+			}
+		}
+		return this.#client.base.obs.getMessageObsData({
+			messageId: this.#raw.message.id,
+			isPreview: preview,
+			isSquare: true,
+		});
+	}
+
+	public async isMyMessage(): Promise<boolean> {
+		if (typeof this.#authorIsMe === "boolean") {
+			return this.#authorIsMe;
+		}
+		this.#authorIsMe = this.from.id ===
+			(await this.#client.base.square.getSquareChat({
+				squareChatMid: this.to.id,
+			})).squareChatMember.squareMemberMid;
+		return this.#authorIsMe;
 	}
 
 	get to(): To {

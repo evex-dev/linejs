@@ -14,11 +14,14 @@ import type {
 	StickerMetadata,
 } from "./internal-types.ts";
 import type { DecorationsData, From, MentionTarget, To } from "./types.ts";
+import { InternalError } from "../../../base/core/mod.ts";
 
 export interface TalkMessageInit {
 	client: Client;
 	raw: Message;
 }
+
+const hasContents = ["IMAGE", "VIDEO", "AUDIO", "FILE"];
 
 export class TalkMessage {
 	#client: Client;
@@ -107,7 +110,9 @@ export class TalkMessage {
 	 */
 	async unsend() {
 		if (!this.isMyMessage) {
-			throw new TypeError("Cannot unsend the message which is not yours.");
+			throw new TypeError(
+				"Cannot unsend the message which is not yours.",
+			);
 		}
 		await this.#client.base.talk.unsendMessage({
 			messageId: this.#raw.id,
@@ -247,7 +252,9 @@ export class TalkMessage {
 	 */
 	getSharedContact(): ContactMeta {
 		if (this.#content.type !== "CONTACT") {
-			throw new TypeError("The message does not share contact infomation.");
+			throw new TypeError(
+				"The message does not share contact infomation.",
+			);
 		}
 		const contactData = this.#content.metadata as unknown as ContactMeta;
 		return { mid: contactData.mid, displayName: contactData.displayName };
@@ -313,6 +320,42 @@ export class TalkMessage {
 		};
 	}
 
+	/**
+	 * @return {Blob} message data
+	 */
+	async getData(preview?: boolean): Promise<Blob> {
+		if (!hasContents.includes(this.#content.type as string)) {
+			throw new TypeError(
+				"message have no contents",
+			);
+		}
+		if (this.#raw.contentMetadata.DOWNLOAD_URL) {
+			if (preview) {
+				const r = await this.#client.base
+					.fetch(this.#raw.contentMetadata.PREVIEW_URL);
+				return await r.blob();
+			} else {
+				const r = await this.#client.base
+					.fetch(this.#raw.contentMetadata.DOWNLOAD_URL);
+				return await r.blob();
+			}
+		}
+		if (this.#raw.chunks) {
+			const file = await this.#client.base.obs.downloadMediaByE2EE(
+				this.#raw,
+			);
+			if (!file) {
+				throw new InternalError("ObsError", "Download failed");
+			}
+			return file;
+		} else {
+			return await this.#client.base.obs.getMessageObsData({
+				messageId: this.#raw.id,
+				isPreview: preview,
+				isSquare: false,
+			});
+		}
+	}
 	get isMyMessage(): boolean {
 		return this.#client.base.profile?.mid === this.from.id;
 	}
@@ -347,7 +390,10 @@ export class TalkMessage {
 	): Promise<TalkMessage> {
 		return this.fromRawTalk(source.event.message, client);
 	}
-	static async fromRawTalk(raw: Message, client: Client): Promise<TalkMessage> {
+	static async fromRawTalk(
+		raw: Message,
+		client: Client,
+	): Promise<TalkMessage> {
 		if (raw.contentMetadata.e2eeVersion) {
 			raw = await client.base.e2ee.decryptE2EEMessage(raw);
 		}
