@@ -6,7 +6,21 @@ import {
 } from "./message.ts";
 import { UnknownLINEEvent } from "./unknown.ts";
 import type { Client } from "../client.ts";
-import * as TalkEvent from "./talk-events.ts";
+import {
+	UnsendMessageLINEEvent,
+	ReadMessageLINEEvent,
+	SendChatCheckedLINEEvent,
+	SendReactionLINEEvent,
+	NotifiedSendReactionLINEEvent,
+	NotifiedUpdateProfileLINEEvent,
+	NotifiedUpdateProfileContentLINEEvent,
+	NotifiedJoinChatLINEEvent,
+	NotifiedAcceptChatInvitationLINEEvent,
+	InviteIntoChatLINEEvent,
+	DeleteSelfFromChatLINEEvent,
+	NotifiedLeaveChatLINEEvent,
+	DeleteOtherFromChatLINEEvent
+} from "./talk-events/mod.ts";
 
 export type SourceEvent = {
 	type: "square";
@@ -24,37 +38,36 @@ export const wrapEvents = async (
 		switch (source.event.type) {
 			case "RECEIVE_MESSAGE":
 			case "SEND_MESSAGE":
-				return await MessageTalkLINEEvent.fromSource(source, client);
-			case "SEND_CHAT_REMOVED":
-				return new TalkEvent.SendChatRemoved(source);
-			case "SEND_CHAT_CHECKED":
-				return new TalkEvent.SendChatChecked(source);
+				return await MessageTalkLINEEvent.fromSource(source, client)
 			case "NOTIFIED_READ_MESSAGE":
-				return new TalkEvent.NotifiedReadMessage(source);
-			case "SEND_REACTION":
-				return new TalkEvent.SendReaction(source);
-			case "NOTIFIED_SEND_REACTION":
-				return new TalkEvent.NotifiedSendReaction(source);
-			case "NOTIFIED_UPDATE_PROFILE":
-				return new TalkEvent.NotifiedUpdateProfile(source);
-			case "NOTIFIED_UPDATE_PROFILE_CONTENT":
-				return new TalkEvent.NotifiedUpdateProfileContent(source);
+				return new ReadMessageLINEEvent(source);
 			case "DESTROY_MESSAGE":
-				return new TalkEvent.DestroyMessage(source);
 			case "NOTIFIED_DESTROY_MESSAGE":
-				return new TalkEvent.NotifiedDestroyMessage(source);
+				return new UnsendMessageLINEEvent(source);
+			case "SEND_CHAT_REMOVED":
+				return new UnsendMessageLINEEvent(source);
+			case "SEND_CHAT_CHECKED":
+				return new SendChatCheckedLINEEvent(source);
+			case "SEND_REACTION":
+				return new SendReactionLINEEvent(source);
+			case "NOTIFIED_SEND_REACTION":
+				return new NotifiedSendReactionLINEEvent(source);
+			case "NOTIFIED_UPDATE_PROFILE":
+				return new NotifiedUpdateProfileLINEEvent(source);
+			case "NOTIFIED_UPDATE_PROFILE_CONTENT":
+				return new NotifiedUpdateProfileContentLINEEvent(source);
 			case "NOTIFIED_JOIN_CHAT":
-				return new TalkEvent.NotifiedJoinChat(source);
+				return new NotifiedJoinChatLINEEvent(source);
 			case "NOTIFIED_ACCEPT_CHAT_INVITATION":
-				return new TalkEvent.NotifiedAcceptChatInvitation(source);
+				return new NotifiedAcceptChatInvitationLINEEvent(source);
 			case "INVITE_INTO_CHAT":
-				return new TalkEvent.InviteIntoChat(source);
+				return new InviteIntoChatLINEEvent(source);
 			case "DELETE_SELF_FROM_CHAT":
-				return new TalkEvent.DeleteSelfFromChat(source);
+				return new DeleteSelfFromChatLINEEvent(source);
 			case "NOTIFIED_LEAVE_CHAT":
-				return new TalkEvent.NotifiedLeaveChat(source);
+				return new NotifiedLeaveChatLINEEvent(source);
 			case "DELETE_OTHER_FROM_CHAT":
-				return new TalkEvent.DeleteOtherFromChat(source);
+				return new DeleteOtherFromChatLINEEvent(source);
 		}
 	} else {
 		switch (source.event.type) {
@@ -68,20 +81,20 @@ export const wrapEvents = async (
 };
 
 export type LINEEvent =
-	| MessageLINEEvent
-	| UnknownLINEEvent
-	| TalkEvent.SendChatRemoved
-	| TalkEvent.SendChatChecked
-	| TalkEvent.NotifiedReadMessage
-	| TalkEvent.SendReaction
-	| TalkEvent.NotifiedSendReaction
-	| TalkEvent.NotifiedUpdateProfile
-	| TalkEvent.NotifiedUpdateProfileContent
-	| TalkEvent.DestroyMessage
-	| TalkEvent.NotifiedDestroyMessage
-	| TalkEvent.NotifiedJoinChat
-	| TalkEvent.NotifiedAcceptChatInvitation
-	| TalkEvent.InviteIntoChat
-	| TalkEvent.DeleteSelfFromChat
-	| TalkEvent.NotifiedLeaveChat
-	| TalkEvent.DeleteOtherFromChat;
+	MessageLINEEvent |
+	UnsendMessageLINEEvent |
+	ReadMessageLINEEvent |
+	SendChatCheckedLINEEvent |
+	SendReactionLINEEvent |
+	NotifiedSendReactionLINEEvent |
+	NotifiedUpdateProfileLINEEvent |
+	NotifiedUpdateProfileContentLINEEvent |
+	NotifiedJoinChatLINEEvent |
+	NotifiedAcceptChatInvitationLINEEvent |
+	InviteIntoChatLINEEvent |
+	DeleteSelfFromChatLINEEvent |
+	NotifiedLeaveChatLINEEvent |
+	DeleteOtherFromChatLINEEvent |
+	MessageSquareLINEEvent |
+	UnknownLINEEvent |
+	MessageTalkLINEEvent
