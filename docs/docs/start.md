@@ -9,7 +9,7 @@
 ```bash
 npx jsr add @evex/linejs
 bunx --bun jsr add @evex/linejs
-deno add @evex/linejs
+deno add jsr:@evex/linejs
 ```
 
 After execution, you should have the library available.
