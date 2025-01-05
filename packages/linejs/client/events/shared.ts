@@ -5,8 +5,8 @@ export abstract class LINEEventBase {
 	readonly eventType: SourceEvent["event"]["type"];
 	abstract readonly type: string;
 
-	readonly isSquare;
-	readonly isTalk;
+	readonly isSquare: boolean;
+	readonly isTalk: boolean;
 
 	constructor(source: SourceEvent) {
 		this.source = source;

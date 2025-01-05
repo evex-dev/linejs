@@ -1,25 +1,6 @@
 import type { Operation, SquareEvent } from "@evex/linejs-types";
-import {
-	type MessageLINEEvent,
-	MessageSquareLINEEvent,
-	MessageTalkLINEEvent,
-} from "./message.ts";
-import { UnknownLINEEvent } from "./unknown.ts";
 import type { Client } from "../client.ts";
-import {
-	DeleteOtherFromChatLINEEvent,
-	DeleteSelfFromChatLINEEvent,
-	InviteIntoChatLINEEvent,
-	NotifiedAcceptChatInvitationLINEEvent,
-	NotifiedJoinChatLINEEvent,
-	NotifiedLeaveChatLINEEvent,
-	NotifiedSendReactionLINEEvent,
-	NotifiedUpdateProfileContentLINEEvent,
-	NotifiedUpdateProfileLINEEvent,
-	ReadMessageLINEEvent,
-	SendReactionLINEEvent,
-	UnsendMessageLINEEvent,
-} from "./talk-events/mod.ts";
+import * as events from "./events.ts";
 
 export type SourceEvent = {
 	type: "square";
@@ -37,61 +18,48 @@ export const wrapEvents = async (
 		switch (source.event.type) {
 			case "RECEIVE_MESSAGE":
 			case "SEND_MESSAGE":
-				return await MessageTalkLINEEvent.fromSource(source, client);
+				return await events.MessageTalkLINEEvent.fromSource(source, client);
 			case "NOTIFIED_READ_MESSAGE":
 			case "SEND_CHAT_CHECKED":
-				return new ReadMessageLINEEvent(source);
+				return new events.ReadMessageLINEEvent(source);
 			case "DESTROY_MESSAGE":
 			case "NOTIFIED_DESTROY_MESSAGE":
-				return new UnsendMessageLINEEvent(source);
-			case "SEND_CHAT_REMOVED":
-				return new UnsendMessageLINEEvent(source);
+				return new events.UnsendMessageLINEEvent(source);
 			case "SEND_REACTION":
-				return new SendReactionLINEEvent(source);
-			case "NOTIFIED_SEND_REACTION":
-				return new NotifiedSendReactionLINEEvent(source);
+				return new events.SendReactionLINEEvent(source);
 			case "NOTIFIED_UPDATE_PROFILE":
-				return new NotifiedUpdateProfileLINEEvent(source);
+				return new events.UpdateProfileLINEEvent(source);
 			case "NOTIFIED_UPDATE_PROFILE_CONTENT":
-				return new NotifiedUpdateProfileContentLINEEvent(source);
+				return new events.UpdateProfileLINEEvent(source);
 			case "NOTIFIED_JOIN_CHAT":
-				return new NotifiedJoinChatLINEEvent(source);
+				return new events.JoinChatLINEEvent(source);
 			case "NOTIFIED_ACCEPT_CHAT_INVITATION":
-				return new NotifiedAcceptChatInvitationLINEEvent(source);
+				return new events.AcceptInviteLINEEvent(source);
 			case "INVITE_INTO_CHAT":
-				return new InviteIntoChatLINEEvent(source);
+				return new events.InviteLINEEvent(source);
 			case "DELETE_SELF_FROM_CHAT":
-				return new DeleteSelfFromChatLINEEvent(source);
-			case "NOTIFIED_LEAVE_CHAT":
-				return new NotifiedLeaveChatLINEEvent(source);
-			case "DELETE_OTHER_FROM_CHAT":
-				return new DeleteOtherFromChatLINEEvent(source);
+				return new events.LeaveChatLINEEvent(source);
 		}
 	} else {
 		switch (source.event.type) {
 			case "SEND_MESSAGE":
 			case "RECEIVE_MESSAGE":
 			case "NOTIFICATION_MESSAGE":
-				return new MessageSquareLINEEvent(source, client);
+				return new events.MessageSquareLINEEvent(source, client);
 		}
 	}
-	return new UnknownLINEEvent(source);
+	return new events.UnknownLINEEvent(source);
 };
 
-export type LINEEvent =
-	| MessageLINEEvent
-	| UnsendMessageLINEEvent
-	| ReadMessageLINEEvent
-	| SendReactionLINEEvent
-	| NotifiedSendReactionLINEEvent
-	| NotifiedUpdateProfileLINEEvent
-	| NotifiedUpdateProfileContentLINEEvent
-	| NotifiedJoinChatLINEEvent
-	| NotifiedAcceptChatInvitationLINEEvent
-	| InviteIntoChatLINEEvent
-	| DeleteSelfFromChatLINEEvent
-	| NotifiedLeaveChatLINEEvent
-	| DeleteOtherFromChatLINEEvent
-	| MessageSquareLINEEvent
-	| UnknownLINEEvent
-	| MessageTalkLINEEvent;
+export type LINEEvent = 
+	| events.AcceptInviteLINEEvent
+	| events.InviteLINEEvent
+	| events.JoinChatLINEEvent
+	| events.LeaveChatLINEEvent
+	| events.MessageSquareLINEEvent
+	| events.MessageTalkLINEEvent
+	| events.ReadMessageLINEEvent
+	| events.SendReactionLINEEvent
+	| events.UnsendMessageLINEEvent
+	| events.UpdateProfileLINEEvent
+	| events.UnknownLINEEvent;
