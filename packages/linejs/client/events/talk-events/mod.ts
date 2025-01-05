@@ -302,31 +302,6 @@ export class NotifiedSendReactionLINEEvent extends LINEEventBase {
 }
 
 /**
- * @description the message was read by you
- */
-export class SendChatCheckedLINEEvent extends LINEEventBase {
-	readonly type: "SEND_CHAT_CHECKED" = "SEND_CHAT_CHECKED";
-	chatMid: string;
-	messageId: string;
-
-	constructor(source: SourceEvent & { type: "talk" }) {
-		super(source);
-		const op = source.event;
-		if (op.type !== "SEND_CHAT_CHECKED") {
-			throw new TypeError("Wrong operation type");
-		}
-		if (
-			typeof op.param1 === "undefined" ||
-			typeof op.param2 === "undefined"
-		) {
-			throw new TypeError("Wrong param");
-		}
-		this.chatMid = op.param1;
-		this.messageId = op.param2;
-	}
-}
-
-/**
  * @description the chatroom history was removed by you
  */
 export class SendChatRemovedLINEEvent extends LINEEventBase {

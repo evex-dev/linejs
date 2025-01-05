@@ -13,6 +13,12 @@ export class UnsendMessageLINEEvent extends LINEEventBase {
 		super(source);
 		const op = source.event;
 		if (
+			op.type !== "DESTROY_MESSAGE" &&
+			op.type !== "NOTIFIED_DESTROY_MESSAGE"
+		) {
+			throw new TypeError("Wrong operation type");
+		}
+		if (
 			typeof op.param1 === "undefined" ||
 			typeof op.param1 === "undefined"
 		) {
