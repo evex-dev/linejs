@@ -1,20 +1,17 @@
-import {
-	BaseStorage,
-	type Storage,
-} from "../../packages/linejs/base/storage/base.ts";
+import type { BaseStorage, Storage } from "@evex/linejs/storage";
+
 import { type Kv, openKv } from "npm:@deno/kv";
 
 /**
  * @lassdesc Deno.Kv Storage for LINE Client
  * @constructor
  */
-export class DenoKvStorage extends BaseStorage {
+export class DenoKvStorage implements BaseStorage {
 	useDeno = true;
 	kv?: Deno.Kv | Kv;
 	path?: string;
 	kvPrefix = "LINEJS_Storage";
 	constructor(path?: string) {
-		super();
 		if (typeof globalThis.Deno === "undefined") {
 			this.useDeno = false;
 		} else if (typeof Deno.openKv === "undefined") {

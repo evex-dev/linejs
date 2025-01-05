@@ -1,9 +1,6 @@
 /// <reference lib="dom"/>
 
-import type {
-	BaseStorage,
-	Storage,
-} from "../../packages/linejs/base/storage/base.ts";
+import type { BaseStorage, Storage } from "@evex/linejs/storage";
 export class LocalStorage implements BaseStorage {
 	prefix = "linejs:";
 	constructor() {
