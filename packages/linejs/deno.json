@@ -9,9 +9,15 @@
 		"./thrift": "./base/thrift/mod.ts"
 	},
 	"imports": {
-		"node-int64": "npm:node-int64@^0.4.0",
-		"thrift": "npm:thrift@^0.21.0",
 		"thrift-types": "npm:@types/thrift@^0.10.17",
-		"crypto-js": "npm:crypto-js@^4.2.0"
+		"jsdom-types": "npm:@types/jsdom",
+		"crypto-js": "npm:crypto-js@^4.2.0",
+		"curve25519-js": "npm:curve25519-js@^0.0.4",
+		"node-bignumber": "npm:node-bignumber@^1.2.2",
+		"thrift": "npm:thrift@^0.20.0",
+		"tweetnacl": "npm:tweetnacl@^1.0.3",
+		"jsdom": "npm:jsdom@25.0.0",
+		"node-types": "npm:@types/node@latest",
+		"node-int64": "npm:node-int64@^0.4.0"
 	}
 }

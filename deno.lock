@@ -6,6 +6,7 @@
     "jsr:@std/internal@^1.0.4": "1.0.4",
     "npm:@biomejs/biome@*": "1.9.3",
     "npm:@deno/kv@*": "0.8.4",
+    "npm:@types/jsdom@*": "21.1.7",
     "npm:@types/node@*": "22.5.4",
     "npm:@types/node@latest": "22.9.0",
     "npm:@types/thrift@*": "0.10.17",
@@ -19,7 +20,6 @@
     "npm:node-bignumber@^1.2.2": "1.2.2",
     "npm:node-int64@0.4": "0.4.0",
     "npm:thrift@0.20": "0.20.0_ws@5.2.4",
-    "npm:thrift@0.21": "0.21.0_ws@5.2.4",
     "npm:tweetnacl@^1.0.3": "1.0.3",
     "npm:vitepress@*": "1.5.0_vite@5.4.11__@types+node@22.5.4_vue@3.5.13_focus-trap@7.6.2_@types+node@22.5.4",
     "npm:werift-rtp@*": "0.8.2"
@@ -536,6 +536,14 @@
         "@types/unist"
       ]
     },
+    "@types/jsdom@21.1.7": {
+      "integrity": "sha512-yOriVnggzrnQ3a9OKOCxaVuSug3w3/SbOj5i7VwXWZEyUNl3bLF9V3MfxGbZKuwqJOQyRfqXyROBB1CoZLFWzA==",
+      "dependencies": [
+        "@types/node@22.5.4",
+        "@types/tough-cookie",
+        "parse5"
+      ]
+    },
     "@types/linkify-it@5.0.0": {
       "integrity": "sha512-sVDA58zAw4eWAffKOaQH5/5j3XeayukzDk+ewSsnv3p4yJEZHCCzMDiZM8e0OUrRvmpGZ85jf4yDHkHsgBNr9Q=="
     },
@@ -583,6 +591,9 @@
         "@types/node-int64",
         "@types/q"
       ]
+    },
+    "@types/tough-cookie@4.0.5": {
+      "integrity": "sha512-/Ad8+nIOV7Rl++6f1BdKxFSMgmoqEoYbHRpPcx3JEfv8VRsQe9Z4mCXeJBzxs7mbHY/XOZZuXlRNfhpVPbs6ZA=="
     },
     "@types/unist@3.0.3": {
       "integrity": "sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q=="
@@ -1299,16 +1310,6 @@
         "ws@5.2.4"
       ]
     },
-    "thrift@0.21.0_ws@5.2.4": {
-      "integrity": "sha512-AW8rwHYjeqXisS8B1iwko2gkNMFwSRJ+bO/W0xTGqRspTD3lGHwZx438+pHdOJ3GwpRAnK7TKbjqPOrHAa7ZwQ==",
-      "dependencies": [
-        "browser-or-node",
-        "isomorphic-ws",
-        "node-int64",
-        "q",
-        "ws@5.2.4"
-      ]
-    },
     "tough-cookie@4.1.4": {
       "integrity": "sha512-Loo5UUvLD9ScZ6jh8beX1T6sO1w2/MpCRpEP7V280GKMVUQ0Jzar2U3UJPsrdbziLEMMhu3Ujnq//rhiFuIeag==",
       "dependencies": [
@@ -1616,10 +1617,16 @@
     "members": {
       "packages/linejs": {
         "dependencies": [
+          "npm:@types/jsdom@*",
+          "npm:@types/node@latest",
           "npm:@types/thrift@~0.10.17",
           "npm:crypto-js@^4.2.0",
+          "npm:curve25519-js@^0.0.4",
+          "npm:jsdom@25.0.0",
+          "npm:node-bignumber@^1.2.2",
           "npm:node-int64@0.4",
-          "npm:thrift@0.21"
+          "npm:thrift@0.20",
+          "npm:tweetnacl@^1.0.3"
         ]
       }
     }

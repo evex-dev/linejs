@@ -8,6 +8,7 @@ import type * as LINETypes from "@evex/linejs-types";
 import { InternalError } from "../../core/utils/error.ts";
 import type { BaseClient } from "../../core/mod.ts";
 import type { BaseService } from "../types.ts";
+
 export class LiffService implements BaseService {
 	static readonly LINE_LIFF_ENDPOINT = "https://api.line.me/message/v3/share";
 	static readonly CONSENT_API_URL =
@@ -18,7 +19,9 @@ export class LiffService implements BaseService {
 	requestPath = "/LIFF1";
 	protocolType: ProtocolKey = 4;
 	errorName = "LiffServiceError";
-	liffId = "1562242036-RW04okm";
+	liffId = "2006747340-AoraPvdD";
+	csrfRegExp =
+		/<input type="hidden" name="__csrf" id="__csrf" value="(.*?)">/;
 
 	client: BaseClient;
 
@@ -52,11 +55,11 @@ export class LiffService implements BaseService {
 			context = [12, chaLINETypes, [chat]];
 		}
 		return await this.client.request.request<LINETypes.LiffViewResponse>(
-			[
+			[[12, 1, [
 				[11, 1, liffId],
 				[12, 2, [context]],
 				[11, 3, lang],
-			],
+			]]],
 			"issueLiffView",
 			this.protocolType,
 			true,
@@ -109,25 +112,31 @@ export class LiffService implements BaseService {
 				lang,
 			});
 			return liff.accessToken;
-		} catch (error) {
-			if (error instanceof InternalError) {
+		} catch (e) {
+			if ((e as InternalError).data) {
+				const error = e as InternalError;
+
 				this.client.log("liff-error", { ...error.data });
-				if (error.data.code === 3 && tryConsent) {
+				if (
+					(error.data.liffException as LINETypes.LiffException)
+							.code ===
+						"CONSENT_REQUIRED" &&
+					tryConsent
+				) {
 					const data = error
-						.data as LINETypes.LiffException;
+						.data.liffException as LINETypes.LiffException;
 					const payload = data.payload;
-					const consentRequired = payload.consentRequired;
-					const channelId = consentRequired.channelId;
-					const consentUrl = consentRequired.consentUrl;
+					const { channelId, consentUrl } = payload.consentRequired;
 					const toType = chatMid && this.client.getToType(chatMid);
 					let hasConsent = false;
-
 					if (channelId && consentUrl) {
 						if (
-							toType === 4 || this.client.device === "DESKTOPWIN"
+							toType === 4 ||
+							this.client.device.startsWith("DESKTOP")
 						) {
 							hasConsent = await this.tryConsentAuthorize(
 								consentUrl,
+								channelId,
 							);
 						} else {
 							hasConsent = await this.tryConsentLiff(channelId);
@@ -141,7 +150,9 @@ export class LiffService implements BaseService {
 			}
 			throw new InternalError(
 				this.errorName,
-				`Failed to get LiffToken: ${liffId}${chatMid ? "@" + chatMid : ""}`,
+				`Failed to get LiffToken: ${liffId}${
+					chatMid ? "@" + chatMid : ""
+				}`,
 			);
 		}
 	}
@@ -231,8 +242,9 @@ export class LiffService implements BaseService {
 
 	private async tryConsentAuthorize(
 		consentUrl: string,
-		allPermission: string[] = ["P", "CM"],
-		approvedPermission: string[] = ["P", "CM"],
+		channelId: string,
+		allPermission: string[] = ["P", "CM", "OC"],
+		approvedPermission: string[] = ["P", "CM", "OC"],
 	): Promise<boolean> {
 		const headers: Record<string, string> = {
 			"X-Line-Access": this.client?.authToken as string,
@@ -244,42 +256,35 @@ export class LiffService implements BaseService {
 			method: "GET",
 			headers,
 		});
+
 		if (response.ok) {
+			const cookies: string[] = [];
+			response.headers.forEach((v, k) => {
+				if (k === "set-cookie") {
+					cookies.push(v.split(";")[0]);
+				}
+			});
 			const text = await response.text();
-			const consentResponse = "DOMParser" in window
-				? new (window as any).DOMParser().parseFromString(
-					text,
-					"text/html",
-				)
-				: new (await import("jsdom"))(text).dom.window.document;
-			const channelId = consentResponse
-				.querySelector('meta[name="channelId"]')
-				?.getAttribute("content") ?? null;
-			const csrfToken = consentResponse
-				.querySelector('meta[name="csrfToken"]')
-				?.getAttribute("content") ?? null;
 
+			const csrfToken = (this.csrfRegExp.exec(text) || [null, null])[1];
 			if (channelId && csrfToken) {
-				const payload = new URLSearchParams({
-					allPermission: JSON.stringify(allPermission),
-					approvedPermission: JSON.stringify(approvedPermission),
-					channelId,
-					__csrf: csrfToken,
-					__WLS: "",
-					addFriendMode: "ALREADY_FRIENDED_MODE",
-					addFriend: "true",
-					allow: "true",
-				});
-
+				headers["cookie"] = cookies.join("; ");
+				headers["referer"] = consentUrl;
 				const authResponse = await this.client.fetch(
 					LiffService.AUTH_CONSENT_URL,
 					{
 						method: "POST",
-						body: payload.toString(),
+						body: `${
+							allPermission.map((e) => "allPermission=" + e)
+								.join("&")
+						}&${
+							approvedPermission.map((e) =>
+								"approvedPermission=" + e
+							).join("&")
+						}&__WLS=&channelId=2006747340&__csrf=${csrfToken}&allow=true`,
 						headers,
 					},
 				);
-
 				return authResponse.ok;
 			}
 		}

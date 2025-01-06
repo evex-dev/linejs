@@ -4,7 +4,7 @@ import {
 	type ProtocolKey,
 	Protocols,
 } from "../thrift/mod.ts";
-import type { BaseClient } from "../core/mod.ts";
+import { type BaseClient, InternalError } from "../core/mod.ts";
 
 const square = ["/SQ1", "/SQLV1"];
 
@@ -148,6 +148,7 @@ export class RequestClient {
 			methodName,
 		});
 		let res: ParsedThrift;
+		let hasError = false;
 		try {
 			res = this.client.thrift.readThrift(parsedBody, protocol);
 		} catch {
@@ -156,6 +157,9 @@ export class RequestClient {
 					[...parsedBody].map((e) => e.toString(16)).join(" ")
 				}>`,
 			);
+		}
+		if (!res.data[0]) {
+			hasError = true;
 		}
 		if (parse === true) {
 			this.client.thrift.rename_data(res, square.includes(path));
@@ -207,9 +211,19 @@ export class RequestClient {
 		);
 
 		if (res.data.e && !isRefresh) {
-			throw new Error(
+			throw new InternalError(
+				"RequestError",
 				`Request internal failed, ${methodName}(${path}) -> ` +
 					JSON.stringify(res.data.e),
+				res.data.e,
+			);
+		}
+		if (hasError) {
+			throw new InternalError(
+				"RequestError",
+				`Request internal failed, ${methodName}(${path}) -> ` +
+					JSON.stringify(res.data),
+				res.data,
 			);
 		}
 
