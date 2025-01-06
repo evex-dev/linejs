@@ -29,6 +29,7 @@ function completeToPromise<T extends IDBTransaction>(
 
 export class IndexedDBStorage implements BaseStorage {
 	onclose?: () => void;
+	onblocked?: () => void;
 	dbName: string;
 	storeName: string;
 	#db?: IDBDatabase;
@@ -39,15 +40,25 @@ export class IndexedDBStorage implements BaseStorage {
 		this.dbName = dbName;
 		this.storeName = storeName;
 	}
+	addhandler(db: IDBDatabase) {
+		db.onversionchange = () => {
+			db.close();
+			this.onclose && this.onclose();
+		};
+	}
 	async open(): Promise<IDBDatabase> {
 		if (!this.#db) {
 			const request = indexedDB.open(this.dbName);
+			request.onblocked = () => {
+				this.onblocked && this.onblocked();
+			};
 			request.onupgradeneeded = () => {
 				const db = request.result;
 
 				db.createObjectStore(this.storeName, { keyPath: "key" });
 			};
 			this.#db = await successToPromise(request);
+			this.addhandler(this.#db);
 		}
 		return this.#db;
 	}
@@ -74,7 +85,7 @@ export class IndexedDBStorage implements BaseStorage {
 			transaction.objectStore(this.storeName).get(key),
 		);
 		await complete;
-		return value.value;
+		return value && value.value;
 	}
 	public async delete(key: Storage["Key"]): Promise<void> {
 		const db = await this.open();
@@ -91,16 +102,16 @@ export class IndexedDBStorage implements BaseStorage {
 		const version = db.version;
 		db.close();
 		const request = indexedDB.open(this.dbName, version + 1);
+		request.onblocked = () => {
+			this.onblocked && this.onblocked();
+		};
 		request.onupgradeneeded = () => {
 			const db = request.result;
 			db.deleteObjectStore(this.storeName);
 			db.createObjectStore(this.storeName, { keyPath: "key" });
-			db.onversionchange = () => {
-				db.close();
-				this.onclose && this.onclose();
-			};
 		};
 		this.#db = await successToPromise(request);
+		this.addhandler(this.#db);
 	}
 	public async migrate(storage: BaseStorage): Promise<void> {
 		const db = await this.open();
