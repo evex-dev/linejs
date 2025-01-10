@@ -1,13 +1,13 @@
-# Utils of LINEJS
+# ユーティリティ
 
-LINEJS is not only a self-bot.  
-From building internal URIs to building OBS, open chat search, regex for picking emid, ticket, and more.  
-I will explain one by one.  
+LINEJSは単なるself-bot用ライブラリではありません。  
+内部URIの構築からOBSの構築、オープンチャット検索、emid、チケットを取得するための正規表現など、多岐にわたります。  
+一つずつ説明していきます。  
 
 ## LINE_OBS
 
-Utils to retrieve images and videos from obs hash.  
-You can retrieve them as follows  
+obsハッシュから画像や動画を取得するためのユーティリティ。  
+以下のように取得できます。  
 
 ```ts
 import { LINE_OBS } from "@evex/linejs/utils";
@@ -16,18 +16,18 @@ const OBS = new LINE_OBS(); // endpoint is optional
 
 const OBS_IMAGE_URI = OBS.getURI("0hy28TkoGoJh0FLTatCdtZSjt7ezN-Xj8PeFUrfHAvey8pHDUcMEppKXR-eisuFGJObRhheCh6KngqGzY"); // obs hash
 
-const OBS_PROFILE_IAMGE_URI = OBS.getProfileImage("u**********"); // member id (mid)
+const OBS_PROFILE_IAMGE_URI = OBS.getProfileImage("u**********"); // メンバーID (mid)
 
-const OBS_SQUARE_PROFILE_IAMGE_URI = OBS.getSquareMemberImage("p**********"); // square member id (pid)
+const OBS_SQUARE_PROFILE_IAMGE_URI = OBS.getSquareMemberImage("p**********"); // squareメンバーID (pid)
 
-// and more
+// その他メソッド
 ```
 
-All methods can be viewed [here](https://github.com/evex-dev/linejs/blob/main/packages/linejs/utils/obs/index.ts)
+すべてのメソッドは[こちら](https://github.com/evex-dev/linejs/blob/main/packages/linejs/utils/obs/index.ts)で確認できます。
 
 ## LINE_SCHEME
 
-Utils for constructing a scheme URI for LINE
+LINEのスキームURIを構築するためのユーティリティ
 
 ```ts
 import { LINE_SCHEME } from "@evex/linejs/utils";
@@ -38,15 +38,14 @@ const SCHEME_HOME_URI = SCHEME.getHome();
 
 const SCHEME_PROFILE_POPUP_URI = SCHEME.getProfilePopup("u**********");
 
-// and more
+// その他メソッド
 ```
 
-All methods can be viewed [here](https://github.com/evex-dev/linejs/blob/main/packages/linejs/utils/scheme/index.ts)
-
+すべてのメソッドは[こちら](https://github.com/evex-dev/linejs/blob/main/packages/linejs/utils/scheme/index.ts)で確認できます。
 
 ## LINE_REGEX
 
-Utils for extracting tickets and emids from URLs.
+URLからチケットやemidを抽出するためのユーティリティ。
 
 ```ts
 import { LINE_REGEX } from "@evex/linejs/utils";
@@ -58,11 +57,11 @@ console.log(REGEX.getTicket("Square Invitation https://line.me/ti/g2/***********
 console.log(REGEX.getEmid(".../emid=*************")); // *************
 ```
 
-All methods can be viewed [here](https://github.com/evex-dev/linejs/blob/main/packages/linejs/utils/regex/index.ts)
+すべてのメソッドは[こちら](https://github.com/evex-dev/linejs/blob/main/packages/linejs/utils/regex/index.ts)で確認できます。
 
 ## LINE_FUNCTIONS
 
-Utils for connecting to external APIs related to LINE
+LINEに関連する外部APIに接続するためのユーティリティ
 
 ```ts
 import Utils from '@evex/linejs/utils';
@@ -78,6 +77,6 @@ if (squareList.error === null) {
 }
 ```
 
-All methods can be viewed [here](https://github.com/evex-dev/linejs/blob/main/packages/linejs/utils/functions/index.ts)
+すべてのメソッドは[こちら](https://github.com/evex-dev/linejs/blob/main/packages/linejs/utils/functions/index.ts)で確認できます。
 
-The next sections will introduce the various methods.
+次のセクションでは、さまざまなメソッドを紹介します。
