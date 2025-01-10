@@ -8,6 +8,8 @@ LINEJSには2つのログイン方法があります。
 
 ### `loginWithPassword`
 
+メアドとパスワードが必要です。
+
 例:
 ```ts
 import { loginWithPassword } from "@evex/linejs";
@@ -21,12 +23,13 @@ const client = loginWithPassword({
 })
 ```
 
-メアドとパスワードが必要です。初回ログイン時、スマホ版のLINEでPinを入力し、e2eeを有効にする必要があります。
-`onPincodeRequest`はPinを受け取ることができます。
+
+`onPincodeRequest`はPinを受け取ることができます。\
+初回ログイン時、スマホ版のLINEでPinを入力し、e2eeを有効にする必要があります。
 
 ### `loginWithQR`
 
-この方法では、メアドとパスワードは不要です。
+メアドとパスワードは必要ありません。
 
 ```ts
 import { loginWithQR } from '@evex/linejs'
@@ -38,7 +41,8 @@ const client = loginWithQR({
 })
 ```
 
-この関数はスマホ版LINEで読み込む為のURLを表示します。QRコードを表示したい場合は、自分でQRコードを作成する必要があります。これはLINEJSがQRコードの作成をサポートしていないためです。
+この関数はスマホ版LINEで読み込む為のURLを表示します。\
+LINEJSではQRコードの作成をサポートしていないため、画像として表示したい場合は自分で作成する必要があります。
 
 ## With authToken
 
