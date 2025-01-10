@@ -1,13 +1,14 @@
 # ユーティリティ
 
 LINEJSは単なるself-bot用ライブラリではありません。\
-内部URIの構築からOBSの構築、オープンチャット検索、emid、チケットを取得するための正規表現など、多岐にわたります。
-一つずつ説明していきます。
+内部URIの構築からOBSの構築やオープンチャット検索、emid、チケットを取得するための正規表現など、多岐にわたります。
+順番に説明していきます。
 
 ## LINE_OBS
 
-obsハッシュから画像や動画を取得するためのユーティリティ。
-以下のように取得できます。
+obsハッシュから画像や動画を取得するためのもの。
+以下のように取得できます。\
+すべてのメソッドは[こちら](https://github.com/evex-dev/linejs/blob/main/packages/linejs/utils/obs/index.ts)
 
 ```ts
 import { LINE_OBS } from "@evex/linejs/utils";
@@ -23,11 +24,12 @@ const OBS_SQUARE_PROFILE_IAMGE_URI = OBS.getSquareMemberImage("p**********"); //
 // その他メソッド
 ```
 
-すべてのメソッドは[こちら](https://github.com/evex-dev/linejs/blob/main/packages/linejs/utils/obs/index.ts)で確認できます。
+
 
 ## LINE_SCHEME
 
-LINEのスキームURIを構築するためのユーティリティ
+LINEのスキームURIを構築するためのもの。\
+すべてのメソッドは[こちら](https://github.com/evex-dev/linejs/blob/main/packages/linejs/utils/scheme/index.ts)
 
 ```ts
 import { LINE_SCHEME } from "@evex/linejs/utils";
@@ -41,11 +43,12 @@ const SCHEME_PROFILE_POPUP_URI = SCHEME.getProfilePopup("u**********");
 // その他メソッド
 ```
 
-すべてのメソッドは[こちら](https://github.com/evex-dev/linejs/blob/main/packages/linejs/utils/scheme/index.ts)で確認できます。
+
 
 ## LINE_REGEX
 
-URLからチケットやemidを抽出するためのユーティリティ。
+URLからチケットやemidを抽出するためのもの。\
+すべてのメソッドは[こちら](https://github.com/evex-dev/linejs/blob/main/packages/linejs/utils/regex/index.ts)
 
 ```ts
 import { LINE_REGEX } from "@evex/linejs/utils";
@@ -57,11 +60,12 @@ console.log(REGEX.getTicket("Square Invitation https://line.me/ti/g2/***********
 console.log(REGEX.getEmid(".../emid=*************")); // *************
 ```
 
-すべてのメソッドは[こちら](https://github.com/evex-dev/linejs/blob/main/packages/linejs/utils/regex/index.ts)で確認できます。
+
 
 ## LINE_FUNCTIONS
 
-LINEに関連する外部APIに接続するためのユーティリティ
+LINEに関連する外部APIに接続するためのもの。\
+すべてのメソッドは[こちら](https://github.com/evex-dev/linejs/blob/main/packages/linejs/utils/functions/index.ts)
 
 ```ts
 import Utils from '@evex/linejs/utils';
@@ -77,6 +81,4 @@ if (squareList.error === null) {
 }
 ```
 
-すべてのメソッドは[こちら](https://github.com/evex-dev/linejs/blob/main/packages/linejs/utils/functions/index.ts)で確認できます。
-
-次のセクションでは、さまざまなメソッドを紹介します。
+次のセクションでは、他のさまざまなメソッドを紹介します。
