@@ -3,7 +3,8 @@
 The next step is to finally receive the message.\
 The atmosphere is becoming more and more like a bot!
 
-:::warning Note, however, that to receive the group's message, the decrypt key
+:::warning
+however, that to receive the group's message, the decrypt key
 in `FileStorage` or so on, as described in [Start 2](/docs/start-2). 
 :::
 
@@ -105,6 +106,7 @@ There are many more features!
 
 Stay tuned for our next journey.
 
-:::tip If you encounter problems, please refer to [Question](/docs/question),
+:::tip
+If you encounter problems, please refer to [Question](/docs/question),
 not only here.
 :::

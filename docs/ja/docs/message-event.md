@@ -1,17 +1,18 @@
-# Receive Message Event
+# メッセージイベントの受信
 
-The next step is to finally receive the message.\
-The atmosphere is becoming more and more like a bot!
+次のステップは、ついにメッセージを受信することです。\
+ますますボットらしくなってきましたね！
 
-:::warning Note, however, that to receive the group's message, the decrypt key
-in `FileStorage` or so on, as described in [Start 2](/docs/start-2). 
+:::warning
+ただし、グループのメッセージを受信するには、`FileStorage`などにある復号キーが必要です。
+詳細は[スタート2](/docs/start-2)を参照してください。
 :::
 
-First, let's create a bot that only receives “!ping” and returns “pong!”.
+まず、「!ping」を受信して「pong!」と返すだけのボットを作成しましょう。
 
 ## Chat
 
-To receive messages, do the following.
+メッセージを受信するには、次のようにします。
 
 ```ts
 client.on("message", (message) => {
@@ -22,10 +23,9 @@ await client.login({...})
 client.polling(["square","talk"])
 ```
 
-This is all that is needed to receive the message.\
-Easy, isn't it?
+これだけでメッセージを受信できます。簡単でしょ?
 
-So first, let's retrieve the messages sent.
+ではまず、送信されたメッセージを取得してみましょう。
 
 ```ts
 client.on("message", (message) => {
@@ -35,14 +35,14 @@ client.on("message", (message) => {
 });
 ```
 
-Your console should now show the message that was sent to you!
+コンソールに送信されたメッセージが表示されるはずです！
 
 ```console
-Hello EdamAmex
+Hello MaguRo
 I love you! :D
 ```
 
-Next, let's check if the message is “!ping”.
+次に、メッセージが「!ping」かどうかを確認しましょう。
 
 ```ts
 client.on("message", (message) => {
@@ -54,10 +54,9 @@ client.on("message", (message) => {
 });
 ```
 
-This is perfect. Next time I need to reply.
+完璧です。次はリプライをさせてみましょう。
 
-To reply, you can call a method that sends a `messageId` with a
-`relatedMessageId`, but there is a more convenient way.
+リプライをするには、`messageId`と`relatedMessageId`を使用することもできますが、もっと便利な方法があります。
 
 ```ts
 client.on("message", (message) => {
@@ -69,8 +68,7 @@ client.on("message", (message) => {
 });
 ```
 
-What a beautiful code! It's too easy. However, in this case, it is more
-beautiful to enclose it in an asynchronous function.
+なんて美しいコードでしょう！とても簡単です。しかし、非同期関数で囲む方がもっと美しいです。
 
 ```ts
 client.on("message", async (message) => {
@@ -82,13 +80,13 @@ client.on("message", async (message) => {
 });
 ```
 
-That's all!\
-There are also `send`, `reaction`, etc.\
-Let me explain all the methods in other chapters.
+これで完了です！\
+他にも`send`や`reaction`などのメソッドがあります。\
+他の章でこれらのメソッドについて説明します。
 
 ## Square
 
-So what should we do with Square (OpenChat)? Basically the same thing.
+では、Square（オープンチャット）ではどうすればいいでしょうか？基本的には同じことです。
 
 ```ts
 client.on("square:message", async (message) => {
@@ -100,11 +98,11 @@ client.on("square:message", async (message) => {
 });
 ```
 
-With this alone you can create a basic bot.\
-There are many more features!
+これだけで基本的なBOTを作成できます。\
+他にもたくさんの機能があります！
 
-Stay tuned for our next journey.
+次の体験をお楽しみに。
 
-:::tip If you encounter problems, please refer to [Question](/docs/question),
-not only here. 
+:::tip
+問題が発生した場合は、[質問](/docs/question)も参照してください。
 :::
