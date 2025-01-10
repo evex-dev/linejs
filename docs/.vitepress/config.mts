@@ -22,29 +22,53 @@ export default defineConfig({
 			{
 				text: "Examples",
 				link: "https://github.com/evex-dev/linejs/tree/main/examples",
-			},
+				},
+			{ text: "English", link: "/docs/start" },
+			{ text: "日本語", link: "/docs/ja/start" },
 		],
 
-		sidebar: [
-			{
-				text: "Docs",
-				items: [
-					{ text: "Getting Started", link: "/docs/start" },
-					{ text: "Next Steps", link: "/docs/start-2" },
-					{ text: "Message Event", link: "/docs/message-event" },
-					{ text: "Client Options", link: "/docs/client-options" },
-					// { text: "Utils", link: "/docs/utils" },
-					{ text: "Client Methods", link: "/docs/methods" },
-				],
-			},
-			{
-				text: "Guides",
-				items: [
-					{ text: "Authors", link: "/docs/authors" },
-					{ text: "Question", link: "/docs/question" },
-				],
-			},
-		],
+		sidebar: {
+			"/docs/": [
+				{
+					text: "Docs",
+					items: [
+						{ text: "Getting Started", link: "/docs/start" },
+						{ text: "Next Steps", link: "/docs/start-2" },
+						{ text: "Message Event", link: "/docs/message-event" },
+						{ text: "Client Options", link: "/docs/client-options" },
+						// { text: "Utils", link: "/docs/utils" },
+						{ text: "Client Methods", link: "/docs/methods" },
+					],
+				},
+				{
+					text: "Guides",
+					items: [
+						{ text: "Authors", link: "/docs/authors" },
+						{ text: "Question", link: "/docs/question" },
+					],
+				},
+			],
+			"/docs/ja/": [
+				{
+					text: "ドキュメント",
+					items: [
+						{ text: "はじめに", link: "/docs/ja/start" },
+						{ text: "次のステップ", link: "/docs/ja/start-2" },
+						{ text: "メッセージイベント", link: "/docs/ja/message-event" },
+						{ text: "オプション", link: "/docs/ja/client-options" },
+						// { text: "ユーティリティ", link: "/docs/ja/utils" },
+						{ text: "メソッド", link: "/docs/ja/methods" },
+					],
+				},
+				{
+					text: "ガイド",
+					items: [
+						{ text: "作成者", link: "/docs/ja/authors" },
+						{ text: "質問", link: "/docs/ja/question" },
+					],
+				},
+			],
+		},
 
 		editLink: {
 			pattern: "https://github.com/evex-dev/linejs/edit/main/docs/:path",
