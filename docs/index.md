@@ -1,7 +1,6 @@
 ---
 # https://vitepress.dev/reference/default-theme-home-page
 layout: home
-
 hero:
   image: /favicon.png
   name: "LINEJS Documentation"
@@ -13,7 +12,6 @@ hero:
     - theme: alt
       text: Examples
       link: https://github.com/evex-dev/linejs/tree/main/examples
-
 features:
   - title: Works on All Platforms
     icon: 🌎

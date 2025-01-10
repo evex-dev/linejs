@@ -4,7 +4,7 @@ layout: home
 
 hero:
   image: /favicon.png
-  name: "LINEJS ドキュメント"
+  name: "LINEJS \nドキュメント"
   tagline: LINEJSはLINE SelfBotのための画期的なJSライブラリ
   actions:
     - theme: brand

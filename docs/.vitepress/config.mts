@@ -14,11 +14,43 @@ export default defineConfig({
 			label: "English",
 			lang: "en",
 			link: "/",
+			themeConfig: {
+				nav: [
+					{ text: "Home", link: "/" },
+					{ text: "Docs", link: "/docs/start" },
+					{
+						text: "Examples",
+						link: "https://github.com/evex-dev/linejs/tree/main/examples",
+					},
+				],
+			},
 		},
 		ja: {
 			label: "日本語",
 			lang: "ja",
 			link: "/ja",
+			themeConfig: {
+				nav: [
+					{ text: "ホーム", link: "/ja/" },
+					{ text: "ドキュメント", link: "/ja/docs/start" },
+					{
+						text: "サンプル",
+						link: "https://github.com/evex-dev/linejs/tree/main/examples",
+					},
+				],
+				docFooter: {
+					prev: "前のページ",
+					next: "次のページ",
+				},
+				darkModeSwitchLabel: "切り替え",
+				lightModeSwitchTitle: "ライトモードにする",
+				darkModeSwitchTitle: "ダークモードにする",
+				sidebarMenuLabel: "メニュー",
+				returnToTopLabel: "トップに戻る",
+				langMenuLabel: "言語を選択",
+				skipToContentLabel: "コンテンツをスキップ",
+				outlineTitle: "ページ内",
+			},
 		},
 	},
 	themeConfig: {
@@ -26,17 +58,34 @@ export default defineConfig({
 		siteTitle: "LINEJS Docs",
 		search: {
 			provider: "local",
-		},
-
-		nav: [
-			{ text: "Home", link: "/" },
-			{ text: "Docs", link: "/docs/start" },
-			{
-				text: "Examples",
-				link: "https://github.com/evex-dev/linejs/tree/main/examples",
+			options: {
+				locales: {
+					ja: {
+						translations: {
+							button: {
+								buttonText: "検索",
+								buttonAriaLabel: "検索",
+							},
+							modal: {
+								displayDetails: "詳細を表示",
+								resetButtonTitle: "検索をリセット",
+								backButtonTitle: "検索を閉じる",
+								noResultsText: "結果が見つかりません",
+								footer: {
+									selectText: "決定",
+									selectKeyAriaLabel: "入力",
+									navigateText: "移動",
+									navigateUpKeyAriaLabel: "上矢印",
+									navigateDownKeyAriaLabel: "下矢印",
+									closeText: "閉じる",
+									closeKeyAriaLabel: "esc",
+								},
+							},
+						},
+					},
+				},
 			},
-		],
-
+		},
 		sidebar: {
 			"/docs/": [
 				{
