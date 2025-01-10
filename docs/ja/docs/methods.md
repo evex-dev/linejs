@@ -1,6 +1,6 @@
 # メソッド
 
-## Talkメソッド
+## Talk Method
 
 TalkServiceのすべての関数は`client.talk`にあります。
 
@@ -16,7 +16,7 @@ await client.talk.sendMessage({
 
 上記はテキストメッセージをe2eeで暗号化してユーザーに送信する例です。
 
-## Squareメソッド
+## Square Method
 
 SquareServiceのすべての関数は`client.square`にあります。
 
