@@ -1,42 +1,41 @@
-# Getting Started
+# はじめに
 
-<b>LINEJS</b> is always by your side.
 
-<b>Thank you for choosing this library!</b>
+<b>このライブラリを選んでくれてありがとう！</b>
 
-## Installation
+## インストール
 
-LINEJS is published on JSR, not a npm. You can install LINEJS with npm, yarn, pnpm, Bun, and Deno.
+LINEJSはJSRに公開されています。npmではありません。npm、yarn、pnpm、Bun、DenoでLINEJSをインストールできます。
 ```bash
-npx jsr add @evex/linejs # If you use npm
-bunx --bun jsr add @evex/linejs # If you use Bun
-deno add @evex/linejs # If you use Deno
+npx jsr add @evex/linejs # npmを使う場合
+bunx --bun jsr add @evex/linejs # Bunを使う場合
+deno add @evex/linejs # Denoを使う場合
 ```
 
-After execution, you should have the library available.
+実行後、ライブラリが利用可能になります。
 
-## Usage
+## 使い方
 
-Next, let's create a script that just retrieves your profile!
+次に、自分のプロフィールを取得するだけのスクリプトを作成しましょう！
 
-To making client, you can use `loginWithPassword`.
+クライアントを作成するには、`loginWithPassword`を使用します。
 ```ts
 import { loginWithPassword } from "@evex/linejs";
 
 const client = loginWithPassword({
-  email: 'you@example.com', // e-mail address
-  password: 'password', // Password
+  email: 'you@example.com', // メアド
+  password: 'password', // パスワード
   onPincodeRequest(pincode) {
     console.log('Enter this pincode to your LINE app:', pincode)
   }
 })
 ```
 
-Authentication is complicated process, so you should read [here](./auth.md).
+認証は複雑なプロセスなので、[こちら](./auth.md)を読んでください。
 
-After created client, you can do various things!
+クライアント作成後、色々なことができます！
 
-For instance, you can get one of chat informations you joined:
+例えば、参加しているチャットの情報を取得：
 ```ts
 const chats = await client.fetchChats()
 console.log(chats[0].name)
@@ -44,6 +43,6 @@ console.log(chats[0].name)
 
 ---
 
-This library is still in its infancy!\
-If you find <i>any bugs</i> or <i>missing parts</i>, please let us know on our
-server! (Roles will be given to those who suggest bugs and features!)
+このライブラリはまだ初期段階です！\
+<i>バグ</i>や<i>不足している部分</i>を見つけた場合は、Discordサーバーでお知らせください！
+（バグや機能を提案してくれた方にはロールが付与されるかも！）
