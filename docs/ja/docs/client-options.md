@@ -1,7 +1,7 @@
-# Client Options
+# Clientオプション
 
-Next, we will talk about the Client.\
-The Client has several options.
+次に、クライアントについて説明します。\
+クライアントにはいくつかのオプションがあります。
 
 ```ts
 const client = new Client({
@@ -10,38 +10,34 @@ const client = new Client({
 });
 ```
 
-For example, **storage for the data** we discussed before, **OBS Endpoint**,
-**Endpoint** for communication, **customFetch** for cors and proxies,
-**RateLimitter** for rate limiting, etc.
+例えば、前述のデータの**storage for the data**、**OBS Endpoint**、通信のための**Endpoint**、CORSやプロキシのための**customFetch**、レート制限のための**RateLimitter**などがあります。
 
-I'll explain it to you one by one.
+これらを一つずつ説明します。
 
 ## Storage
 
-This is storage for internal needs such as decryption keys and caches. 　 By
-default, `MemoryStorage` is used, and once you stop the program, you must log in
-from the beginning.
+これは復号キーやキャッシュなどの内部のニーズのためのストレージです。\
+デフォルトでは`MemoryStorage`が使用され、プログラム停止時は最初からログインする必要があります。
 
-You can use `FileStorage` there.
+ここで`FileStorage`を使用することができます。
 
 ```ts
 import { FileStorage } from "@evex/linejs/storage";
 
 const client = new Client({
     device: "IOSIPAD",
-    storage: new FileStorage("./storage.json"), // path to storage file (This is secret file)
+    storage: new FileStorage("./storage.json"), // ストレージファイルへのパス（秘密ファイル）
 });
 ```
 
-If you want to store in your cloud or storages with your data storage API, you
-can extend `BaseStorage` to create something of your liking.\
-I'd like to give you more details on our server.
+クラウドやデータストレージAPIを使用してストレージに保存したい場合は、`BaseStorage`を拡張して自分の好みに作成できます。\
+サーバーについての詳細をお伝えしたいと思います。
 
 ## Endpoint
 
-The endpoints of communication.\
-There is no need to change this point.\
-If you want to try out a proxied server, use it.
+通信のエンドポイントです。\
+このポイントを変更する必要はありません。\
+プロキシサーバーを試したい場合は、使用してください。
 
 ```ts
 const client = new Client({
@@ -51,7 +47,7 @@ const client = new Client({
 
 ## Custom Fetch
 
-This is for cors avoidance or proxy. You define a function that replaces fetch.
+これはCORS回避やプロキシのためのものです。fetchを置き換える関数を定義します。
 
 ```ts
 ...
@@ -66,5 +62,5 @@ const client = new Client({
 });
 ```
 
-This concludes the explanation of options!\
-The next sections will introduce the various methods.
+これでオプションの説明は終了です！\
+次のセクションでは、さまざまなメソッドを紹介します。

@@ -1,6 +1,6 @@
 # Authors
 
-Maintainers of **LINEJS**
+**LINEJS**の主要な開発者
 
 ## Maintainers
 
