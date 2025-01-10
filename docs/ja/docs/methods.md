@@ -1,10 +1,10 @@
-# Methods
+# メソッド
 
-## Talk Methods
+## Talkメソッド
 
-All the functions for TalkService are in `client.talk`.
+TalkServiceのすべての関数は`client.talk`にあります。
 
-For example:
+例：
 
 ```js
 await client.talk.sendMessage({
@@ -14,14 +14,13 @@ await client.talk.sendMessage({
 });
 ```
 
-This is an example of encrypting a text message with e2ee and sending it to a
-user.
+上記はテキストメッセージをe2eeで暗号化してユーザーに送信する例です。
 
-## Square Methods
+## Squareメソッド
 
-All the functions for SquareService are in `client.square`.
+SquareServiceのすべての関数は`client.square`にあります。
 
-For example:
+例：
 
 ```js
 await client.square.findSquareByInvitationTicket({
@@ -31,4 +30,4 @@ await client.square.findSquareByInvitationTicket({
 });
 ```
 
-This is an example of getting square from invitation code.
+上記は招待コードからスクエアを取得する例です。

@@ -1,5 +1,5 @@
-# Question
+# 質問
 
-This is our server. Feel free to ask questions!
+私たちのサーバーです。気軽に質問してください！
 
 [https://discord.gg/evex](https://discord.gg/evex)
