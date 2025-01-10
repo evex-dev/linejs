@@ -1,10 +1,8 @@
-# How to use the methods of client
+# クライアントメソッドの使い方
 
-Next, How to use the methods of client?
+次に、クライアントのメソッドの使い方を説明します。
 
-It's easy. 　
-
-All you have to do is call the client's method as follows.
+次のように呼び出すだけです。簡単です。
 
 ```ts
 import { Client } from "@evex/linejs";
@@ -26,13 +24,13 @@ await client.login({
 	password: "YOUR_PASSWORD",
 });
 
-// or, you can log in using the QR code.
+// または、QRコードを使用してログインできます。
 await client.login({
 	qr: true,
 });
 ```
 
-The output will be as follows.
+出力は次のようになります。
 
 ```console
 {
@@ -43,26 +41,23 @@ The output will be as follows.
 }
 ```
 
-I will tell you one thing here.\
-When you log in, you can use a better choice.
+ここで一つ追記、ログインには別の選択肢があります。
 
-Logging in repeatedly with _email_ may be regarded as fraudulent login\
-and your account may be temporarily restricted (though only for a few days), and
-above all, It is very cumbersome.
+メアドでのログインを繰り返すと、不正ログインと見なされる可能性があり、\
+アカウントが一時的にBANされることがあります（数日間だけですが...）\
 
-It is therefore a good idea to use an **AuthToken**.
+**AuthToken**を使用するのが良い方法です。
 
-A temporary token is used for email login.\
-Therefore, after a few days, it will expire and the client will stop running.\
-So, if you want to run the client permanently, you must use v1.
+メアドログインには期限のある一時的なトークンが使用されます。\
+期限が切れると動作を停止します。\
+永久に動作させたい場合は、v1トークンを使用する必要があります。
 
-It would be a good idea to use v2 during development.\
-Repeating the email login multiple times is highly discouraged.
+開発時はv2トークンを使用するのが良いでしょう。\
+メアドログインを何度も繰り返すことはおすすめしません。
 
-Now, let's look at how to get token.
+では、トークンを取得する方法を見てみましょう。
 
-Simply write the following.\
-It's easy.
+次のように書くだけです。
 
 ```ts
 client.on("update:authtoken", (authtoken) => {
@@ -70,13 +65,13 @@ client.on("update:authtoken", (authtoken) => {
 });
 ```
 
-The output will be as follows.
+出力は次のようになります。
 
 ```console
 AuthToken **********.********
 ```
 
-This is the v2 token. It can be used as follows
+これはv2トークンです。次のように使用できます。
 
 ```ts
 await client.login({
@@ -84,46 +79,42 @@ await client.login({
 });
 ```
 
-## Important notice
+## 重要な注意点
 
-However, this login method has pitfalls. LINE uses _e2ee_ for encryption, but
-the key to decrypt it can only be obtained with an email login with pincode, or
-QR login.
+このログイン方法には落とし穴があります。LINEは_e2ee_を使用して暗号化していますが、\
+これを解読するキーはPin付きのメアドログインまたはQRログインでしか取得できません。
 
-Therefore, if you login only with an authToken, you will not be able to retrieve
-group talk events.\
-(Square (OpenChat) is possible.)
+したがって、authTokenだけでログインすると、グループトークイベントを取得できません。\
+（Square（オープンチャット）は可能です。）
 
-So how can we do this?　　 It's easy, too.
+解決策は簡単です。
 
-We just need to make the internal storage permanent and log in with email first
-only once.
+内部ストレージを使って、最初の一回だけメアドでログインすれば良いのです。
 
-LINEJS has internal storage for storing and caching.\
-By default, it is `MemoryStorage`, and it all disappears after one execution.
+LINEJSには内部ストレージがあり、キャッシュを保存します。\
+デフォルトでは`MemoryStorage`で、一度の実行後にすべて消えます。
 
-This can be `FileStorage`. As follows.
+次のように`FileStorage`にすることもできます。
 
 ```ts
 import { FileStorage } from "@evex/linejs/storage";
 
 const client = new Client({
 	device: "IOSIPAD",
-	storage: new FileStorage("./storage.json"), // path to storage file (This is secret file)
+	storage: new FileStorage("./storage.json"), // ストレージファイルへのパス（秘密ファイル）
 });
 ```
 
-You only need to log in once first with your email and then use your authToken.
+最初の一回だけメールでログインし、その後はauthTokenを使用すれば良いのです。
 
-This concludes our first trip.\
-But there is still a journey left to be made.\
-Enjoy.
+これで最初の体験は終わりです。\
+しかし、まだ続きます。\
+楽しんでください。
 
 :::tip\
-If you want to create your own storage such as connecting to the cloud api,\
-import `BaseStorage` and extend it to create your own storage. (Please ask for
-details.) :::
+クラウドAPIに接続するなど、自分のストレージを作成したい場合は、\
+`BaseStorage`をインポートし、それを拡張して自分のストレージを作成してください。（詳細はお問い合わせください。） :::
 
 :::info\
-If you want to use v1, please ask for details at
-[discord.gg/evex](https://discord.gg/evex). :::
+v1トークンを使用したい場合は、\
+[discord.gg/evex](https://discord.gg/evex)で詳細をお問い合わせください。 :::
