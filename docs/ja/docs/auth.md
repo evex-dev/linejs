@@ -1,32 +1,32 @@
-# Authentication
+# 認証
 
-You can get authenticated with multiple ways.
+いくつかの方法で認証を受けることができます。
 
 ## Login
 
-Login is a simple way to get authenticated. LINEJS has 2 ways to login.
+LINEJSには2つのログイン方法があります。
 
 ### `loginWithPassword`
 
-Here is an example:
+例:
 ```ts
 import { loginWithPassword } from "@evex/linejs";
 
 const client = loginWithPassword({
-  email: 'you@example.com', // e-mail address
-  password: 'password', // Password
+  email: 'you@example.com', // メアド
+  password: 'password', // パスワード
   onPincodeRequest(pincode) {
     console.log('Enter this pincode to your LINE app:', pincode)
   }
 })
 ```
 
-email, password is required. On first login, you have to enter pincode on mobile app for enable e2ee.
-`onPincodeRequest` can receive a pincode and you can output it with that method to tell users pincode.
+メアドとパスワードが必要です。初回ログイン時、スマホ版のLINEでPinを入力し、e2eeを有効にする必要があります。
+`onPincodeRequest`はPinを受け取ることができます。
 
 ### `loginWithQR`
 
-In this way, email and password is not needed.
+この方法では、メアドとパスワードは不要です。
 
 ```ts
 import { loginWithQR } from '@evex/linejs'
@@ -38,9 +38,9 @@ const client = loginWithQR({
 })
 ```
 
-The function gives an url to read on mobile. You have to create QR with yourself if you want to show QR code, this is because of LINEJS doesn't support creating QR code.
+この関数はスマホ版LINEで読み込む為のURLを表示します。QRコードを表示したい場合は、自分でQRコードを作成する必要があります。これはLINEJSがQRコードの作成をサポートしていないためです。
 
 ## With authToken
 
-There is a possibility to banned your account if you tried login many times, so you should use authToken to get authenticated.
+短時間に何度もログインを試みるとアカウントがBANされる可能性があるため、認証にはauthTokenを使用することをおすすめします。
 
