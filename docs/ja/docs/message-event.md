@@ -49,7 +49,7 @@ client.on("message", (message) => {
     const text = message.text;
 
     if (text === "!ping") {
-        ...     
+        ...
     }
 });
 ```
