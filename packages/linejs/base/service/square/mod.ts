@@ -163,8 +163,8 @@ export class SquareService implements BaseService {
 						message: {
 							to: options.squareChatMid,
 							text: options.text,
-							contentType: options.contentType,
-							contentMetadata: options.contentMetadata,
+							contentType: options.contentType ?? 0,
+							contentMetadata: options.contentMetadata ?? {},
 							location: options.location,
 							...options.relatedMessageId
 								? {

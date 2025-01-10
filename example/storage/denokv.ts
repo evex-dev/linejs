@@ -3,7 +3,7 @@ import type { BaseStorage, Storage } from "@evex/linejs/storage";
 import { type Kv, openKv } from "npm:@deno/kv";
 
 /**
- * @lassdesc Deno.Kv Storage for LINE Client
+ * @classdesc Deno.Kv Storage for LINE Client
  * @constructor
  */
 export class DenoKvStorage implements BaseStorage {
