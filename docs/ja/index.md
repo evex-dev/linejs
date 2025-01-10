@@ -12,7 +12,7 @@ hero:
       link: /ja/docs/start
     - theme: alt
       text: 例を見る
-      link: https://github.com/evex-dev/linejs
+      link: https://github.com/evex-dev/linejs/tree/main/examples
 
 features:
   - title: 様々なプラットフォームで動作
@@ -21,7 +21,7 @@ features:
   - title: 強固な型付け
     icon: 🧩
     details: TypeScriptをサポート
-  - title: セーフティ
+  - title: セーフティロック
     icon: 🔒
-    details: レートリミットなど
+    details: デフォルトでレートリミットなどを実装
 ---
