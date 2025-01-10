@@ -1,18 +1,18 @@
 # メッセージイベントの受信
 
-次のステップは、ついにメッセージを受信することです。\
+次のステップは、メッセージを受信してみましょう。\
 ますますボットらしくなってきましたね！
 
 :::warning
-ただし、グループのメッセージを受信するには、`FileStorage`などにある復号キーが必要です。
-詳細は[スタート2](/docs/start-2)を参照してください。
+グループのメッセージを受信するには、`FileStorage`などにある復号キーが必要です。\
+詳細は[こちら](/ja/docs/start-2)を参照してください。
 :::
 
-まず、「!ping」を受信して「pong!」と返すだけのボットを作成しましょう。
+「!ping」を受信し「pong!」と返すだけのボットを作成してみましょう。
 
 ## Chat
 
-メッセージを受信するには、次のようにします。
+まずは、メッセージを受信してみましょう。
 
 ```ts
 client.on("message", (message) => {
@@ -23,9 +23,7 @@ await client.login({...})
 client.polling(["square","talk"])
 ```
 
-これだけでメッセージを受信できます。簡単でしょ?
-
-ではまず、送信されたメッセージを取得してみましょう。
+メッセージを受信し、表示してみます。
 
 ```ts
 client.on("message", (message) => {
@@ -54,9 +52,9 @@ client.on("message", (message) => {
 });
 ```
 
-完璧です。次はリプライをさせてみましょう。
+完璧ですね！今度はリプライをさせてみましょう。
 
-リプライをするには、`messageId`と`relatedMessageId`を使用することもできますが、もっと便利な方法があります。
+リプライをするには`messageId`と`relatedMessageId`を使用しますが、もっと便利な方法があります。
 
 ```ts
 client.on("message", (message) => {
@@ -68,7 +66,8 @@ client.on("message", (message) => {
 });
 ```
 
-なんて美しいコードでしょう！とても簡単です。しかし、非同期関数で囲む方がもっと美しいです。
+美しいシンプルなコードの完成です！\
+非同期関数で囲むことで、さらに美しくすることが可能です。
 
 ```ts
 client.on("message", async (message) => {
@@ -86,7 +85,8 @@ client.on("message", async (message) => {
 
 ## Square
 
-では、Square（オープンチャット）ではどうすればいいでしょうか？基本的には同じことです。
+さて、Square（オープンチャット）ではどうすればいいのでしょうか?\
+基本的には同じことです。
 
 ```ts
 client.on("square:message", async (message) => {
@@ -104,5 +104,5 @@ client.on("square:message", async (message) => {
 次の体験をお楽しみに。
 
 :::tip
-問題が発生した場合は、[質問](/docs/question)も参照してください。
+問題が発生した場合は、[お問い合わせ](/ja/docs/question)を参照してください。
 :::
