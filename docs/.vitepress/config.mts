@@ -114,7 +114,7 @@ export default defineConfig({
 						{ text: "はじめに", link: "/ja/docs/start" },
 						{ text: "次のステップ", link: "/ja/docs/start-2" },
 						{ text: "メッセージイベント", link: "/ja/docs/message-event" },
-						{ text: "オプション", link: "/ja/docs/client-options" },
+						{ text: "クライアントのオプション", link: "/ja/docs/client-options" },
 						// { text: "ユーティリティ", link: "/ja/docs/utils" },
 						{ text: "メソッド", link: "/ja/docs/methods" },
 					],
@@ -123,7 +123,7 @@ export default defineConfig({
 					text: "ガイド",
 					items: [
 						{ text: "作成者", link: "/ja/docs/authors" },
-						{ text: "質問", link: "/ja/docs/question" },
+						{ text: "お問い合わせ", link: "/ja/docs/question" },
 					],
 				},
 			],

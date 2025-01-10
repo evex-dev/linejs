@@ -4,7 +4,7 @@
 
 TalkServiceのすべての関数は`client.talk`にあります。
 
-例：
+例:
 
 ```js
 await client.talk.sendMessage({
@@ -20,7 +20,7 @@ await client.talk.sendMessage({
 
 SquareServiceのすべての関数は`client.square`にあります。
 
-例：
+例:
 
 ```js
 await client.square.findSquareByInvitationTicket({
