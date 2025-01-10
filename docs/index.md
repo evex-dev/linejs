@@ -24,10 +24,4 @@ features:
   - title: Safety Locked
     icon: 🔒
     details: Defaults to safety locked (RateLimit and others).
-
-nav:
-  - text: English
-    link: /docs/start
-  - text: 日本語
-    link: /docs/ja/start
 ---

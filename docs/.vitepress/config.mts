@@ -9,6 +9,18 @@ export default defineConfig({
 	sitemap: {
 		hostname: "https://linejs.evex.land",
 	},
+    locales: {
+		root: {
+			label: 'English',
+			lang: 'en',
+			link: '/'
+		},
+		ja: {
+			label: '日本語',
+			lang: 'ja',
+			link: '/ja'
+		}
+    },
 	themeConfig: {
 		// https://vitepress.dev/reference/default-theme-config
 		siteTitle: "LINEJS Docs",
@@ -22,9 +34,7 @@ export default defineConfig({
 			{
 				text: "Examples",
 				link: "https://github.com/evex-dev/linejs/tree/main/examples",
-				},
-			{ text: "English", link: "/docs/start" },
-			{ text: "日本語", link: "/docs/ja/start" },
+			}
 		],
 
 		sidebar: {
@@ -48,23 +58,23 @@ export default defineConfig({
 					],
 				},
 			],
-			"/docs/ja/": [
+			"/ja/docs/": [
 				{
 					text: "ドキュメント",
 					items: [
-						{ text: "はじめに", link: "/docs/ja/start" },
-						{ text: "次のステップ", link: "/docs/ja/start-2" },
-						{ text: "メッセージイベント", link: "/docs/ja/message-event" },
-						{ text: "オプション", link: "/docs/ja/client-options" },
-						// { text: "ユーティリティ", link: "/docs/ja/utils" },
-						{ text: "メソッド", link: "/docs/ja/methods" },
+						{ text: "はじめに", link: "/ja/docs/start" },
+						{ text: "次のステップ", link: "/ja/docs/start-2" },
+						{ text: "メッセージイベント", link: "/ja/docs/message-event" },
+						{ text: "オプション", link: "/ja/docs/client-options" },
+						// { text: "ユーティリティ", link: "/ja/docs/utils" },
+						{ text: "メソッド", link: "/ja/docs/methods" },
 					],
 				},
 				{
 					text: "ガイド",
 					items: [
-						{ text: "作成者", link: "/docs/ja/authors" },
-						{ text: "質問", link: "/docs/ja/question" },
+						{ text: "作成者", link: "/ja/docs/authors" },
+						{ text: "質問", link: "/ja/docs/question" },
 					],
 				},
 			],
