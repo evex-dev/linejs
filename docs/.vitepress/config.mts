@@ -9,18 +9,18 @@ export default defineConfig({
 	sitemap: {
 		hostname: "https://linejs.evex.land",
 	},
-    locales: {
+	locales: {
 		root: {
-			label: 'English',
-			lang: 'en',
-			link: '/'
+			label: "English",
+			lang: "en",
+			link: "/",
 		},
 		ja: {
-			label: '日本語',
-			lang: 'ja',
-			link: '/ja'
-		}
-    },
+			label: "日本語",
+			lang: "ja",
+			link: "/ja",
+		},
+	},
 	themeConfig: {
 		// https://vitepress.dev/reference/default-theme-config
 		siteTitle: "LINEJS Docs",
@@ -34,7 +34,7 @@ export default defineConfig({
 			{
 				text: "Examples",
 				link: "https://github.com/evex-dev/linejs/tree/main/examples",
-			}
+			},
 		],
 
 		sidebar: {
