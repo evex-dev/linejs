@@ -1,6 +1,6 @@
 /// <reference lib="dom"/>
 
-import type { BaseStorage, Storage } from "@evex/linejs/storage";
+import type { BaseStorage } from "@evex/linejs/storage";
 
 function successToPromise<T extends IDBRequest>(
 	request: T,
@@ -63,8 +63,8 @@ export class IndexedDBStorage implements BaseStorage {
 		return this.#db;
 	}
 	public async set(
-		key: Storage["Key"],
-		value: Storage["Value"],
+		key: string,
+		value: any,
 	): Promise<void> {
 		const db = await this.open();
 		const transaction = db.transaction(this.storeName, "readwrite");
@@ -76,8 +76,8 @@ export class IndexedDBStorage implements BaseStorage {
 		await complete;
 	}
 	public async get(
-		key: Storage["Key"],
-	): Promise<Storage["Value"] | undefined> {
+		key: string,
+	): Promise<any | undefined> {
 		const db = await this.open();
 		const transaction = db.transaction(this.storeName);
 		const complete = completeToPromise(transaction);
@@ -87,7 +87,7 @@ export class IndexedDBStorage implements BaseStorage {
 		await complete;
 		return value && value.value;
 	}
-	public async delete(key: Storage["Key"]): Promise<void> {
+	public async delete(key: string): Promise<void> {
 		const db = await this.open();
 		const transaction = db.transaction(this.storeName, "readwrite");
 		const success = successToPromise(
