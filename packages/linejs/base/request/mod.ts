@@ -218,7 +218,7 @@ export class RequestClient {
 				res.data.e,
 			);
 		}
-		if (hasError) {
+		if (hasError && !isRefresh) {
 			throw new InternalError(
 				"RequestError",
 				`Request internal failed, ${methodName}(${path}) -> ` +
