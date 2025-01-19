@@ -98,7 +98,7 @@ export class Client {
 	/**
 	 * Fetches all chat rooms the user joined.
 	 */
-	async fetchJoinedChats() {
+	async fetchJoinedChats(): Promise<Chat[]> {
 		const joined = await this.base.talk.getAllChatMids({
 			request: {
 				withMemberChats: true,
@@ -126,7 +126,7 @@ export class Client {
 	 * @param mid User mid
 	 * @returns User
 	 */
-	async fetchUser(mid: string) {
+	async fetchUser(mid: string): Promise<User> {
 		const res = await this.base.relation.getContactsV3({
 			mids: [mid],
 		});
