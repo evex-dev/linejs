@@ -23,6 +23,7 @@ const createBaseClient = (init: InitOptions) =>
 
 export interface WithQROptions {
 	onReceiveQRUrl(url: string): Promise<void> | void;
+	onPincodeRequest(pin: string): void | Promise<void>;
 }
 export const loginWithQR = async (
 	opts: WithQROptions,
@@ -30,9 +31,9 @@ export const loginWithQR = async (
 ): Promise<Client> => {
 	const base = createBaseClient(init);
 	base.loginProcess.withQrCode({});
-	const [qrURL] = await base.waitFor("qrcall");
-	await opts.onReceiveQRUrl(qrURL);
-	await base.waitFor("update:authtoken");
+	base.on("qrcall", opts.onReceiveQRUrl);
+	base.on("pincall", opts.onPincodeRequest);
+	await base.waitFor("ready");
 	return new Client(base);
 };
 
@@ -54,9 +55,8 @@ export const loginWithPassword = async (
 		password: opts.password,
 		pincode: opts.pincode,
 	});
-	const [pin] = await base.waitFor("pincall");
-	await opts.onPincodeRequest(pin);
-	await base.waitFor("update:authtoken");
+	base.on("pincall", opts.onPincodeRequest);
+	await base.waitFor("ready");
 	return new Client(base);
 };
 

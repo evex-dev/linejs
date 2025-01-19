@@ -1,5 +1,4 @@
 import type { BaseClient } from "../base/mod.ts";
-import { type LINEEvent, type SourceEvent, wrapEvents } from "./events/mod.ts";
 import { Square } from "./features/square/mod.ts";
 import { continueRequest } from "../base/mod.ts";
 import { Chat } from "./features/chat/mod.ts";
@@ -34,7 +33,7 @@ export class Client {
 	 * Listens events.
 	 * @param opts Options
 	 * @returns Async generator
-	 */
+	 *
 	async *listen(opts: ListenOptions = {}): AsyncGenerator<LINEEvent> {
 		const polling = this.base.createPolling();
 		const stream = new ReadableStream<SourceEvent>({
@@ -88,6 +87,7 @@ export class Client {
 			}
 		}
 	}
+	*/
 
 	/** Gets auth token for LINE. */
 	get authToken(): string {

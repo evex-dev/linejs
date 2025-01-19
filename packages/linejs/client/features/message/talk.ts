@@ -4,7 +4,7 @@ import {
 	type MessageReactionType,
 } from "@evex/linejs-types";
 import type { Client } from "../../client.ts";
-import type { SourceEvent } from "../../events/mod.ts";
+
 import type {
 	ContactMeta,
 	EmojiMeta,
@@ -383,13 +383,14 @@ export class TalkMessage {
 	get text(): string {
 		return this.#raw.text;
 	}
-
+	/*
 	static fromSource(
 		source: SourceEvent & { type: "talk" },
 		client: Client,
 	): Promise<TalkMessage> {
 		return this.fromRawTalk(source.event.message, client);
 	}
+	*/
 	static async fromRawTalk(
 		raw: Message,
 		client: Client,
