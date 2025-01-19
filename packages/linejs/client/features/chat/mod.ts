@@ -1,7 +1,7 @@
 import type { Client } from "../../mod.ts";
 import type * as line from "@evex/linejs-types";
 import { TalkMessage } from "../message/talk.ts";
-import { createMessageFetcher, type MessageFetcher } from './fetcher.ts'
+import { createMessageFetcher, type MessageFetcher } from "./fetcher.ts";
 
 interface ChatInit {
 	client: Client;
@@ -123,7 +123,7 @@ export class Chat {
 	 * @param limit The number of messages to fetch. Defaults to 10.
 	 * @returns A promise that resolves to an array of TalkMessage instances.
 	 */
-	async fetchMessages(limit: number = 10) {
+	async fetchMessages(limit: number = 10): Promise<TalkMessage[]> {
 		const boxes = await this.#client.base.talk.getMessageBoxes({
 			messageBoxListRequest: {},
 		});
@@ -144,12 +144,14 @@ export class Chat {
 			});
 
 		return await Promise.all(
-			messages.map((message) => TalkMessage.fromRawTalk(message, this.#client)),
+			messages.map((message) =>
+				TalkMessage.fromRawTalk(message, this.#client)
+			),
 		);
 	}
 
 	messageFetcher(): Promise<MessageFetcher> {
-		return createMessageFetcher(this.#client, this)
+		return createMessageFetcher(this.#client, this);
 	}
 
 	/**
@@ -158,7 +160,7 @@ export class Chat {
 	 * @param client client
 	 * @returns Chat
 	 */
-	static fromRaw(raw: line.Chat, client: Client) {
+	static fromRaw(raw: line.Chat, client: Client): Chat {
 		return new Chat({
 			client,
 
