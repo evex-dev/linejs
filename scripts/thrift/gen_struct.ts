@@ -71,14 +71,14 @@ export function main(
 			return `[15, ${data.fid}, [${data.list}, param.${data.name}]]`;
 		} else if (typeof data.list === "string" && isExist(data.list)) {
 			return isStruct(data.list)
-				? `[15, ${data.fid}, [12, (param.${data.name}??[]).map(e=>${data.list}(e))]]`
-				: `[15, ${data.fid}, [8, (param.${data.name}??[]).map(e=>${data.list}(e))]]`;
+				? `[15, ${data.fid}, [12, param.${data.name}&&(param.${data.name}).map(e=>${data.list}(e))]]`
+				: `[15, ${data.fid}, [8, param.${data.name}&&(param.${data.name}).map(e=>${data.list}(e))]]`;
 		} else if (typeof data.set === "number") {
 			return `[14, ${data.fid}, [${data.set}, param.${data.name}]]`;
 		} else if (typeof data.set === "string" && isExist(data.set)) {
 			return isStruct(data.set)
-				? `[14, ${data.fid}, [12, (param.${data.name}??[]).map(e=>${data.set}(e))]]`
-				: `[14, ${data.fid}, [8, (param.${data.name}??[]).map(e=>${data.set}(e))]]`;
+				? `[14, ${data.fid}, [12, param.${data.name}&&(param.${data.name}).map(e=>${data.set}(e))]]`
+				: `[14, ${data.fid}, [8, param.${data.name}&&(param.${data.name}).map(e=>${data.set}(e))]]`;
 		} else if (
 			typeof data.map === "number" && typeof data.key === "number"
 		) {
@@ -118,7 +118,7 @@ export function main(
 
 	Deno.writeTextFileSync(
 		path || path_.fromFileUrl(import.meta.resolve(
-			"../../packages/linejs/src/thrift/readwrite/struct.ts",
+			"../../packages/linejs/base/thrift/readwrite/struct.ts",
 		)),
 		result.join("") + args.join(""),
 	);

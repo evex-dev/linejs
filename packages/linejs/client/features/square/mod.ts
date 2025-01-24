@@ -8,6 +8,10 @@ export interface SquareInit {
 	raw: SquareRaw;
 	client: Client;
 }
+
+/**
+ * Square(Openchat) (not a SquareChat)
+ */
 export class Square {
 	#raw: SquareRaw;
 	#client: Client;
@@ -57,6 +61,7 @@ export interface SquareChatInit {
 	raw: SquareChatRaw;
 	client: Client;
 }
+
 export class SquareChat {
 	#raw: SquareChatRaw;
 	#client: Client;
