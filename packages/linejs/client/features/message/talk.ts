@@ -61,7 +61,7 @@ export class TalkMessage {
 			relatedMessageId: this.#raw.id,
 			text: input.text,
 			to,
-			e2ee: input.e2ee !== false,
+			e2ee: input.e2ee,
 		});
 	}
 

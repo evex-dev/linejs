@@ -109,6 +109,33 @@ export class Login {
 		this.client.emit("ready", this.client.profile);
 	}
 
+	/**
+	 * Logs in the user using the provided options.
+	 * 
+	 * Depending on the options provided, this method will:
+	 * - Use QR code authentication if no options are provided or if `options.qr` is true.
+	 * - Use an authentication token if `options.authToken` is provided.
+	 * - Use email and password authentication if `options.email` is provided.
+	 * 
+	 * @param {LoginOption} [options] - The login options.
+	 * @param {boolean} [options.qr] - Whether to use QR code authentication.
+	 * @param {boolean} [options.v3] - Whether to use version 3 of QR code authentication.
+	 * @param {string} [options.authToken] - The authentication token.
+	 * @param {string} [options.email] - The user's email.
+	 * @param {string} [options.password] - The user's password.
+	 * 
+	 * @example
+	 * // Login with QR code
+	 * await login();
+	 * 
+	 * @example
+	 * // Login with authentication token
+	 * await login({ authToken: 'your-auth-token' });
+	 * 
+	 * @example
+	 * // Login with email and password
+	 * await login({ email: 'user@example.com', password: 'your-password' });
+	 */
 	async login(
 		options?: LoginOption,
 	) {

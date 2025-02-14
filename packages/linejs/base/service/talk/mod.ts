@@ -16,7 +16,15 @@ export class TalkService implements BaseService {
 	}
 
 	/**
-	 * @description Get line events.
+	 * Retrieves LINE events from the server.
+	 *
+	 * @param options - Optional parameters for retrieving events.
+	 * @param options.limit - The maximum number of events to retrieve. Default is 100.
+	 * @param options.revision - The last known revision number. Default is 0.
+	 * @param options.globalRev - The last known global revision number. Default is 0.
+	 * @param options.individualRev - The last known individual revision number. Default is 0.
+	 * @param options.timeout - The timeout for the request in milliseconds. Default is the client's long timeout configuration.
+	 * @returns A promise that resolves to the success result of the event retrieval.
 	 */
 	async sync(
 		options: {
@@ -54,7 +62,19 @@ export class TalkService implements BaseService {
 	}
 
 	/**
-	 * @description Send message to talk.
+	 * Sends a message to a specified recipient with various options.
+	 *
+	 * @param options - The options for sending the message.
+	 * @param options.to - The recipient's ID.
+	 * @param options.text - The text content of the message (optional).
+	 * @param options.contentType - The type of content being sent (optional).
+	 * @param options.contentMetadata - Additional metadata for the content (optional).
+	 * @param options.relatedMessageId - The ID of a related message, if any (optional).
+	 * @param options.location - The location information to be sent (optional).
+	 * @param options.chunks - The message content in chunks, either as strings or buffers (optional).
+	 * @param options.e2ee - Flag indicating whether to use end-to-end encryption (optional).
+	 * @returns A promise that resolves to the sent message.
+	 * @throws Will throw an error if the message sending fails.
 	 */
 	async sendMessage(options: {
 		to: string;

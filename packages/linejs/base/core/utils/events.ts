@@ -17,5 +17,4 @@ export type ClientEvents = {
 	"update:cert": (cert: string) => void;
 	"update:qrcert": (qrCert: string) => void;
 	log: (data: Log) => void;
-	// TODO: Add more as square
 };

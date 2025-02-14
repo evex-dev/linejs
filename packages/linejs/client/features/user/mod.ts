@@ -1,13 +1,14 @@
+import type { GetContactV3Response } from "../../../../types/line_types.ts";
+
 export interface UserInit {
-	mid: string;
-	isBot: boolean;
+	raw: GetContactV3Response;
 }
 
 export class User {
 	readonly mid: string;
-	readonly isBot: boolean = false;
+	readonly raw: GetContactV3Response;
 	constructor(init: UserInit) {
-		this.mid = init.mid;
-		this.isBot = init.isBot;
+		this.mid = init.raw.targetUserMid;
+		this.raw = init.raw;
 	}
 }

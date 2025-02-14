@@ -5,10 +5,7 @@ import { createMessageFetcher, type MessageFetcher } from "./fetcher.ts";
 
 interface ChatInit {
 	client: Client;
-
-	mid: string;
-	name: string;
-	created: Date;
+	raw: line.Chat;
 }
 
 /**
@@ -16,14 +13,14 @@ interface ChatInit {
  */
 export class Chat {
 	#client: Client;
+	raw: line.Chat;
 	readonly mid: string;
 	name: string;
-	created: Date;
 	constructor(init: ChatInit) {
 		this.#client = init.client;
-		this.mid = init.mid;
-		this.name = init.name;
-		this.created = init.created;
+		this.mid = init.raw.chatMid;
+		this.name = init.raw.chatName;
+		this.raw = init.raw;
 	}
 
 	/**
@@ -70,7 +67,7 @@ export class Chat {
 	/**
 	 * @description Update chat(group) status.
 	 */
-	async setStatus(options: {
+	async updateChat(options: {
 		chat: Partial<line.Chat>;
 		updatedAttribute: line.Pb1_O2;
 	}): Promise<line.Pb1_Zc> {
@@ -86,8 +83,8 @@ export class Chat {
 	/**
 	 * @description Update chat(group) name.
 	 */
-	public async setName(name: string): Promise<line.Pb1_Zc> {
-		return await this.setStatus({
+	public async updateName(name: string): Promise<line.Pb1_Zc> {
+		return await this.updateChat({
 			chat: { chatName: name },
 			updatedAttribute: "NAME",
 		});
@@ -112,6 +109,16 @@ export class Chat {
 		return this.#client.base.talk.deleteOtherFromChat({
 			request: {
 				targetUserMids: [mid],
+				chatMid: this.mid,
+			},
+		});
+	}
+	/**
+	 * @description Leave chat.
+	 */
+	public leave(): Promise<line.Pb1_M3> {
+		return this.#client.base.talk.deleteSelfFromChat({
+			request: {
 				chatMid: this.mid,
 			},
 		});
@@ -152,21 +159,5 @@ export class Chat {
 
 	messageFetcher(): Promise<MessageFetcher> {
 		return createMessageFetcher(this.#client, this);
-	}
-
-	/**
-	 * Create a Chat instance from raw message.
-	 * @param raw Raw message
-	 * @param client client
-	 * @returns Chat
-	 */
-	static fromRaw(raw: line.Chat, client: Client): Chat {
-		return new Chat({
-			client,
-
-			mid: raw.chatMid,
-			name: raw.chatName,
-			created: new Date(Number(raw.createdTime)),
-		});
 	}
 }

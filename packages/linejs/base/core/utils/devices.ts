@@ -50,7 +50,7 @@ export function getDeviceDetails(
 			systemName = "Android OS";
 			break;
 		case "IOS":
-			appVersion = appVersion = version || "13.3.0";
+			appVersion = version || "13.3.0";
 			systemName = "iOS";
 			break;
 		case "IOSIPAD":

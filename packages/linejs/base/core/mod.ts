@@ -48,8 +48,6 @@ export interface LoginOption {
 	v3?: boolean;
 }
 
-type ListenOption = "talk" | "square";
-
 export interface ClientInit {
 	/**
 	 * version which LINE App to emurating
@@ -121,6 +119,29 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	config: Config;
 	readonly deviceDetails: DeviceDetails;
 	readonly endpoint: string;
+	/**
+	 * Initializes a new instance of the class.
+	 * 
+	 * @param init - The initialization parameters.
+	 * @param init.device - The device type.
+	 * @param init.version - The version of the device.
+	 * @param init.fetch - Optional custom fetch function.
+	 * @param init.endpoint - Optional endpoint URL.
+	 * @param init.storage - Optional storage mechanism.
+	 * 
+	 * @throws {Error} If the device is unsupported.
+	 * 
+	 * @example
+	 * ```typescript
+	 * const client = new Client({
+	 *   device: 'iOS',
+	 *   version: '10.0',
+	 *   fetch: customFetchFunction,
+	 *   endpoint: 'custom-endpoint.com',
+	 *   storage: new FileStorage("./storage.json"),
+	 * });
+	 * ```
+	 */
 	constructor(init: ClientInit) {
 		super();
 		const deviceDetails = getDeviceDetails(init.device, init.version);
