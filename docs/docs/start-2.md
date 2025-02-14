@@ -93,8 +93,8 @@ This can be `FileStorage`. As follows.
 import { FileStorage } from "@evex/linejs/storage";
 
 const client = await loginWithAuthToken(authtoken, {
-	device: "IOSIPAD",
-	storage: new FileStorage("./storage.json"), // path to storage file (This is secret file)
+	  device: "IOSIPAD",
+	  storage: new FileStorage("./storage.json"), // path to storage file (This is secret file)
 });
 
 ```

@@ -29,8 +29,8 @@ So first, let's retrieve the messages sent.
 ```ts
 const event = client.listen();
 event.on("message", (message) => {
-	const text = message.text;
-	console.log(text);
+    const text = message.text;
+    console.log(text);
 });
 
 ```

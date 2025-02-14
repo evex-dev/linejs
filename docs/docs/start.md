@@ -24,11 +24,11 @@ To making client, you can use `loginWithPassword`.
 import { loginWithPassword } from "@evex/linejs";
 
 const client = await loginWithPassword({
-  email: 'you@example.com', // e-mail address
-  password: 'password', // Password
-  onPincodeRequest(pincode) {
-    console.log('Enter this pincode to your LINE app:', pincode)
-  }
+    email: 'you@example.com', // e-mail address
+    password: 'password', // Password
+    onPincodeRequest(pincode) {
+        console.log('Enter this pincode to your LINE app:', pincode)
+    }
 }, { device: "IOSIPAD" })
 ```
 

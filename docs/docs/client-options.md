@@ -5,17 +5,17 @@ The Client has several options.
 
 ```ts
 const client = await loginWithPassword({
-	email: "",
-	password: "",
-	onPincodeRequest(pin) {
-		console.log(pin);
-	},
+    email: "",
+    password: "",
+    onPincodeRequest(pin) {
+        console.log(pin);
+    },
 }, {
-	device: "IOSIPAD",
+    device: "IOSIPAD",
     version: "14.0.1",
     endpoint: "example.com",
     fetch: (req) => fetch(req),
-	storage: new FileStorage("./storage.json"),
+    storage: new FileStorage("./storage.json"),
 });
 ```
 
@@ -36,14 +36,14 @@ You can use `FileStorage` there.
 import { FileStorage } from "@evex/linejs/storage";
 
 const client = await loginWithPassword({
-	email: "",
-	password: "",
-	onPincodeRequest(pin) {
-		console.log(pin);
-	},
+    email: "",
+    password: "",
+    onPincodeRequest(pin) {
+        console.log(pin);
+    },
 }, {
-	device: "IOSIPAD",
-	storage: new FileStorage("./storage.json"),
+    device: "IOSIPAD",
+    storage: new FileStorage("./storage.json"),
 });
 ```
 
@@ -59,13 +59,13 @@ If you want to try out a proxied server, use it.
 
 ```ts
 const client = await loginWithPassword({
-	email: "",
-	password: "",
-	onPincodeRequest(pin) {
-		console.log(pin);
-	},
+    email: "",
+    password: "",
+    onPincodeRequest(pin) {
+        console.log(pin);
+    },
 }, {
-	device: "IOSIPAD",
+    device: "IOSIPAD",
     endpoint: "example.com",
 });
 ```
@@ -77,13 +77,13 @@ This is for cors avoidance or proxy. You define a function that replaces fetch.
 ```ts
 ...
 const client = await loginWithPassword({
-	email: "",
-	password: "",
-	onPincodeRequest(pin) {
-		console.log(pin);
-	},
+    email: "",
+    password: "",
+    onPincodeRequest(pin) {
+        console.log(pin);
+    },
 }, {
-	device: "IOSIPAD",
+    device: "IOSIPAD",
     fetch: (req) => myfetch(req),
 });
 ```
