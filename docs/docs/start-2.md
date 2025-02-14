@@ -2,34 +2,21 @@
 
 Next, How to use the methods of client?
 
-It's easy. 　
+It's easy.
 
 All you have to do is call the client's method as follows.
-
 ```ts
-import { Client } from "@evex/linejs";
+import { loginWithPassword } from "@evex/linejs";
 
-const client = new Client({ device: "IOSIPAD" });
+const client = await loginWithPassword({
+  email: 'you@example.com', // e-mail address
+  password: 'password', // Password
+  onPincodeRequest(pincode) {
+    console.log('Enter this pincode to your LINE app:', pincode)
+  }
+}, { device: "IOSIPAD" })
 
-client.on("pincall", (pincode) => {
-	console.log(`pincode: ${pincode}`);
-});
-
-client.on("ready", async (user) => {
-	console.log(`Logged in as ${user.displayName} (${user.mid});`);
-
-	console.log(await client.getProfile());
-});
-
-await client.login({
-	email: "YOUR_EMAIL",
-	password: "YOUR_PASSWORD",
-});
-
-// or, you can log in using the QR code.
-await client.login({
-	qr: true,
-});
+console.log(await client.base.talk.getProfile());
 ```
 
 The output will be as follows.
@@ -54,9 +41,8 @@ It is therefore a good idea to use an **AuthToken**.
 
 A temporary token is used for email login.\
 Therefore, after a few days, it will expire and the client will stop running.\
-So, if you want to run the client permanently, you must use v1.
+So, if you want to run the client permanently, you must use v3.
 
-It would be a good idea to use v2 during development.\
 Repeating the email login multiple times is highly discouraged.
 
 Now, let's look at how to get token.
@@ -65,7 +51,7 @@ Simply write the following.\
 It's easy.
 
 ```ts
-client.on("update:authtoken", (authtoken) => {
+client.base.on("update:authtoken", (authtoken) => {
 	console.log("AuthToken", authtoken);
 });
 ```
@@ -76,12 +62,11 @@ The output will be as follows.
 AuthToken **********.********
 ```
 
-This is the v2 token. It can be used as follows
+This is the auth token. It can be used as follows
 
 ```ts
-await client.login({
-	authToken: "YOUR_AUTH_TOKEN",
-});
+import { loginWithAuthToken } from "@evex/linejs";
+const client = await loginWithAuthToken(authtoken, { device: "IOSIPAD" });
 ```
 
 ## Important notice
@@ -107,10 +92,11 @@ This can be `FileStorage`. As follows.
 ```ts
 import { FileStorage } from "@evex/linejs/storage";
 
-const client = new Client({
+const client = await loginWithAuthToken(authtoken, {
 	device: "IOSIPAD",
 	storage: new FileStorage("./storage.json"), // path to storage file (This is secret file)
 });
+
 ```
 
 You only need to log in once first with your email and then use your authToken.

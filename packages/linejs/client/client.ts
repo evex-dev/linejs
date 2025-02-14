@@ -43,7 +43,9 @@ export class Client {
 	 * @param opts Options
 	 * @returns Async generator
 	 */
-	listen(opts: ListenOptions = {}): TypedEventEmitter<ClientEvents> {
+	listen(
+		opts: ListenOptions = { talk: true, square: true },
+	): TypedEventEmitter<ClientEvents> {
 		const polling = this.base.createPolling();
 		const eventTarget = new TypedEventEmitter<ClientEvents>();
 		if (opts.talk) {
@@ -61,7 +63,9 @@ export class Client {
 						eventTarget.emit(
 							"message",
 							new TalkMessage({
-								raw: event.message,
+								raw: await this.base.e2ee.decryptE2EEMessage(
+									event.message,
+								),
 								client: this,
 							}),
 						);

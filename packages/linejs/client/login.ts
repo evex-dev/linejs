@@ -10,10 +10,35 @@ import type { BaseStorage } from "../base/storage/mod.ts";
 import { Client } from "./client.ts";
 
 export interface InitOptions {
-	fetch?: FetchLike;
+	/**
+	 * version which LINE App to emurating
+	 */
+	version?: string;
+
+	/**
+	 * API Endpoint
+	 * @default "legy.line-apps.com"
+	 */
+	endpoint?: string;
+
+	/**
+	 * Device
+	 */
 	device: Device;
+
+	/**
+	 * Storage
+	 * @default MemoryStorage
+	 */
 	storage?: BaseStorage;
+
+	/**
+	 * Custom function to connect network.
+	 * @default `globalThis.fetch`
+	 */
+	fetch?: FetchLike;
 }
+
 const createBaseClient = (init: InitOptions) =>
 	new BaseClient({
 		fetch: init.fetch,

@@ -12,3 +12,4 @@ export {
     TalkMessage,
     User,
 } from "./client.ts";
+export * from "./login.ts";
