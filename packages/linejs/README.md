@@ -48,6 +48,10 @@ MessageType, etc.) are provided.
 
 - client - (@evex/linejs) or (@evex/linejs/client)
   - Client - LINE SelfBot Client
+- base - (@evex/linejs/base)
+  - BaseClient - LINE SelfBot API Client
+- thrift - (@evex/linejs/thrift)
+  - Thrift - Thrift read/write
 - storage - (@evex/linejs/storage)
   - BaseStorage - LINE Client Base Storage
   - MemoryStorage - LINE Client Memory Storage
