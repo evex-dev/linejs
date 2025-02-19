@@ -105,8 +105,7 @@ export class TalkMessage {
 			type: "MESSAGE",
 			contents: {
 				text: this.raw.text,
-				link:
-					`line://nv/chatMsg?chatId=${this.to.id}&messageId=${this.raw.id}`,
+				link: `line://nv/chatMsg?chatId=${this.to.id}&messageId=${this.raw.id}`,
 			},
 		});
 	}

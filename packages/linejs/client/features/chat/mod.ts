@@ -151,9 +151,7 @@ export class Chat {
 			});
 
 		return await Promise.all(
-			messages.map((message) =>
-				TalkMessage.fromRawTalk(message, this.#client)
-			),
+			messages.map((message) => TalkMessage.fromRawTalk(message, this.#client)),
 		);
 	}
 

@@ -114,7 +114,10 @@ export default defineConfig({
 						{ text: "はじめに", link: "/ja/docs/start" },
 						{ text: "次のステップ", link: "/ja/docs/start-2" },
 						{ text: "メッセージイベント", link: "/ja/docs/message-event" },
-						{ text: "クライアントのオプション", link: "/ja/docs/client-options" },
+						{
+							text: "クライアントのオプション",
+							link: "/ja/docs/client-options",
+						},
 						// { text: "ユーティリティ", link: "/ja/docs/utils" },
 						{ text: "メソッド", link: "/ja/docs/methods" },
 					],

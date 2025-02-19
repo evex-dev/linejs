@@ -14,13 +14,13 @@ const square = ["/SQ1", "/SQLV1"];
 /**
  * @class RequestClient
  * @description A client for making requests to the LINE API.
- * 
+ *
  * @property {BaseClient} client - The base client instance.
  * @property {string} endpoint - The endpoint for the API requests.
  * @property {string} userAgent - The user agent string for the requests.
  * @property {string} systemType - The system type string for the requests.
  * @property {Record<string, string | undefined>} EXCEPTION_TYPES - A static record of exception types based on request paths.
- * 
+ *
  * @constructor
  * @param {BaseClient} client - The base client instance.
  */
@@ -166,7 +166,8 @@ export class RequestClient {
 			res = this.client.thrift.readThrift(parsedBody, protocol);
 		} catch {
 			throw new Error(
-				`Request internal failed: Invalid response buffer <${[...parsedBody].map((e) => e.toString(16)).join(" ")
+				`Request internal failed: Invalid response buffer <${
+					[...parsedBody].map((e) => e.toString(16)).join(" ")
 				}>`,
 			);
 		}
@@ -218,15 +219,15 @@ export class RequestClient {
 
 		const isRefresh = Boolean(
 			res.data.e &&
-			res.data.e["code"] === "MUST_REFRESH_V3_TOKEN" &&
-			await this.client.storage.get("refreshToken"),
+				res.data.e["code"] === "MUST_REFRESH_V3_TOKEN" &&
+				await this.client.storage.get("refreshToken"),
 		);
 
 		if (res.data.e && !isRefresh) {
 			throw new InternalError(
 				"RequestError",
 				`Request internal failed, ${methodName}(${path}) -> ` +
-				JSON.stringify(res.data.e),
+					JSON.stringify(res.data.e),
 				res.data.e,
 			);
 		}
@@ -234,7 +235,7 @@ export class RequestClient {
 			throw new InternalError(
 				"RequestError",
 				`Request internal failed, ${methodName}(${path}) -> ` +
-				JSON.stringify(res.data),
+					JSON.stringify(res.data),
 				res.data,
 			);
 		}
