@@ -85,11 +85,11 @@ export class LineObs {
 	/**
 	 * @description Gets the message's data from LINE Obs.
 	 */
-	public async getMessageObsData(options: {
+	public async downloadMessageData(options: {
 		messageId: string;
 		isPreview?: boolean;
 		isSquare?: boolean;
-	}): Promise<Blob> {
+	}): Promise<File> {
 		if (!this.client.authToken) {
 			throw new InternalError(
 				"Not setup yet",
@@ -101,7 +101,7 @@ export class LineObs {
 			isSquare: false,
 			...options,
 		};
-		const r = await this.client.fetch(
+		const blob = await (await this.client.fetch(
 			this.getMessageDataUrl(messageId, isPreview, isSquare),
 			{
 				headers: {
@@ -110,8 +110,12 @@ export class LineObs {
 					"x-Line-access": this.client.authToken,
 				},
 			},
-		);
-		return r.blob();
+		)).blob();
+		const fileInfo = await this.getMessageObsMetadata({
+			messageId,
+			isSquare,
+		});
+		return new File([blob], fileInfo.name, { type: blob.type });
 	}
 
 	/**

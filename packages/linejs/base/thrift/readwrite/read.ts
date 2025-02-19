@@ -99,11 +99,13 @@ function readValue(
 }
 
 function _readThrift(
-	data: Uint8Array,
+	data: Uint8Array | Buffer,
 	Protocol: typeof thrift.TCompactProtocol | typeof thrift.TBinaryProtocol =
 		thrift.TCompactProtocol,
 ): ParsedThrift {
-	const bufTrans = new thrift.TFramedTransport(Buffer.from(data));
+	const bufTrans = new thrift.TFramedTransport(
+		data instanceof Buffer ? data : Buffer.from(data),
+	);
 	const proto = new Protocol(bufTrans);
 	const msg_info = proto.readMessageBegin();
 	const tdata = readStruct(proto);
@@ -112,7 +114,7 @@ function _readThrift(
 }
 
 export function readThrift(
-	data: Uint8Array,
+	data: Uint8Array | Buffer,
 	Protocol: typeof thrift.TCompactProtocol | typeof thrift.TBinaryProtocol =
 		thrift.TCompactProtocol,
 ): ParsedThrift {
@@ -120,11 +122,13 @@ export function readThrift(
 }
 
 export function readThriftStruct(
-	data: Uint8Array,
+	data: Uint8Array | Buffer,
 	Protocol: typeof thrift.TCompactProtocol | typeof thrift.TBinaryProtocol =
 		thrift.TCompactProtocol,
 ): any {
-	const bufTrans = new thrift.TFramedTransport(Buffer.from(data));
+	const bufTrans = new thrift.TFramedTransport(
+		data instanceof Buffer ? data : Buffer.from(data),
+	);
 	const proto = new Protocol(bufTrans);
 	return readStruct(proto);
 }

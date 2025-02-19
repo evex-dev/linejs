@@ -49,7 +49,7 @@ export class TalkMessage {
 			relatedMessageId?: string;
 			location?: Location;
 		},
-	): Promise<void> {
+	): Promise<Message> {
 		if (typeof input === "string") {
 			return this.reply({
 				text: input,
@@ -63,7 +63,7 @@ export class TalkMessage {
 			// Personal chats
 			to = this.isMyMessage ? this.to.id : this.from.id;
 		}
-		await this.#client.base.talk.sendMessage({
+		return await this.#client.base.talk.sendMessage({
 			relatedMessageId: this.raw.id,
 			text: input.text,
 			to,
@@ -307,26 +307,6 @@ export class TalkMessage {
 	}
 
 	/**
-	 * Get file info.
-	 */
-	getFileInfo(): {
-		size: number;
-		expire: Date;
-		name: string;
-	} {
-		const content = this.#content;
-		if (content.type !== "FILE") {
-			throw new TypeError("The message does not provide any files.");
-		}
-		const fileData = content.metadata as unknown as FileMeta;
-		return {
-			size: parseInt(fileData.FILE_SIZE),
-			expire: new Date(parseInt(fileData.FILE_EXPIRE_TIMESTAMP) * 1000),
-			name: fileData.FILE_NAME,
-		};
-	}
-
-	/**
 	 * @return {Blob} message data
 	 */
 	async getData(preview?: boolean): Promise<Blob> {
@@ -355,7 +335,7 @@ export class TalkMessage {
 			}
 			return file;
 		} else {
-			return await this.#client.base.obs.getMessageObsData({
+			return await this.#client.base.obs.downloadMessageData({
 				messageId: this.raw.id,
 				isPreview: preview,
 				isSquare: false,

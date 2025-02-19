@@ -334,7 +334,7 @@ export class SquareMessage {
 				return await r_1.blob();
 			}
 		}
-		return this.#client.base.obs.getMessageObsData({
+		return this.#client.base.obs.downloadMessageData({
 			messageId: this.raw.message.id,
 			isPreview: preview,
 			isSquare: true,

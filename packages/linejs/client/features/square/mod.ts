@@ -150,7 +150,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 			signal?: AbortSignal;
 			syncToken?: string;
 			onError?: (error: unknown) => void;
-		},
+		} = {},
 	): Promise<void> {
 		if (this.#isPolling) {
 			throw new Error("Polling has already started");
