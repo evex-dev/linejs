@@ -331,7 +331,7 @@ export class LineObs {
 				Buffer.from(await data.arrayBuffer()),
 			);
 		const tempId = "reqid-" + crypto.randomUUID();
-		const edata = new Blob([encryptedData.buffer]);
+		const edata = new Blob([encryptedData]);
 		const { objId } = await this.uploadObjectForService({
 			data: edata,
 			oType: "file",
