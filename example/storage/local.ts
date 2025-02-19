@@ -31,7 +31,7 @@ export class LocalStorage implements BaseStorage {
 		for (let index = 0; index < localStorage.length; index++) {
 			const k = localStorage.key(index);
 			if (k) {
-				storage.set(
+				await storage.set(
 					k.replace(this.prefix, ""),
 					localStorage.getItem(k),
 				);

@@ -1,6 +1,8 @@
 {
   "version": "4",
   "specifiers": {
+    "jsr:@evex/linejs-types@^1.9.1": "1.9.1",
+    "jsr:@evex/linejs@1.9.1": "1.9.1",
     "jsr:@std/assert@^1.0.2": "1.0.6",
     "jsr:@std/dotenv@*": "0.225.3",
     "jsr:@std/internal@^1.0.4": "1.0.4",
@@ -25,6 +27,21 @@
     "npm:werift-rtp@*": "0.8.2"
   },
   "jsr": {
+    "@evex/linejs@1.9.1": {
+      "integrity": "49a09f8483ecbad45d83ffe52b15aaa9c0d9ad472706ed20adec3647040cfce4",
+      "dependencies": [
+        "jsr:@evex/linejs-types",
+        "npm:curve25519-js",
+        "npm:jsdom",
+        "npm:node-bignumber",
+        "npm:node-int64",
+        "npm:thrift",
+        "npm:tweetnacl"
+      ]
+    },
+    "@evex/linejs-types@1.9.1": {
+      "integrity": "9a00093bdf17c43cdf601d7ba0348daa7c00a902ebc714a0575332b8e2ad420d"
+    },
     "@std/assert@1.0.6": {
       "integrity": "1904c05806a25d94fe791d6d883b685c9e2dcd60e4f9fc30f4fc5cf010c72207",
       "dependencies": [

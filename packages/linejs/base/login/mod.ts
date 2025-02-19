@@ -70,8 +70,8 @@ export class Login {
 	 *
 	 * @param {string | null} cert - The certificate to register. If null, the certificate will be cleared.
 	 */
-	public async registerCert(cert: string): Promise<void> {
-		await this.client.storage.set("cert", cert);
+	public async registerCert(cert: string, email: string): Promise<void> {
+		await this.client.storage.set("cert:" + email, cert);
 	}
 
 	/**
@@ -79,8 +79,8 @@ export class Login {
 	 *
 	 * @return {Promise<string | undefined>} The certificate, or undefined if it does not exist or an error occurred.
 	 */
-	public async getCert(): Promise<string | undefined> {
-		return await this.client.storage.get("cert") as string;
+	public async getCert(email: string): Promise<string | undefined> {
+		return await this.client.storage.get("cert:" + email) as string;
 	}
 
 	/**
@@ -109,6 +109,33 @@ export class Login {
 		this.client.emit("ready", this.client.profile);
 	}
 
+	/**
+	 * Logs in the user using the provided options.
+	 * 
+	 * Depending on the options provided, this method will:
+	 * - Use QR code authentication if no options are provided or if `options.qr` is true.
+	 * - Use an authentication token if `options.authToken` is provided.
+	 * - Use email and password authentication if `options.email` is provided.
+	 * 
+	 * @param {LoginOption} [options] - The login options.
+	 * @param {boolean} [options.qr] - Whether to use QR code authentication.
+	 * @param {boolean} [options.v3] - Whether to use version 3 of QR code authentication.
+	 * @param {string} [options.authToken] - The authentication token.
+	 * @param {string} [options.email] - The user's email.
+	 * @param {string} [options.password] - The user's password.
+	 * 
+	 * @example
+	 * // Login with QR code
+	 * await login();
+	 * 
+	 * @example
+	 * // Login with authentication token
+	 * await login({ authToken: 'your-auth-token' });
+	 * 
+	 * @example
+	 * // Login with email and password
+	 * await login({ email: 'user@example.com', password: 'your-password' });
+	 */
 	async login(
 		options?: LoginOption,
 	) {
@@ -172,7 +199,10 @@ export class Login {
 				await this.registerQrCert(pem);
 			}
 			if (e2eeInfo) {
-				this.client.e2ee.decodeE2EEKeyV1(e2eeInfo, Buffer.from(secret));
+				await this.client.e2ee.decodeE2EEKeyV1(
+					e2eeInfo,
+					Buffer.from(secret),
+				);
 			}
 			return authToken;
 		}
@@ -203,10 +233,16 @@ export class Login {
 				await this.registerQrCert(pem);
 			}
 			if (e2eeInfo) {
-				this.client.e2ee.decodeE2EEKeyV1(e2eeInfo, Buffer.from(secret));
+				await this.client.e2ee.decodeE2EEKeyV1(
+					e2eeInfo,
+					Buffer.from(secret),
+				);
 			}
-			this.client.storage.set("refreshToken", tokenInfo[2]);
-			this.client.storage.set("expire", tokenInfo[3] + tokenInfo[6]);
+			await this.client.storage.set("refreshToken", tokenInfo[2]);
+			await this.client.storage.set(
+				"expire",
+				tokenInfo[3] + tokenInfo[6],
+			);
 			return tokenInfo[1];
 		}
 		throw new InternalError(
@@ -326,7 +362,7 @@ export class Login {
 
 		const encryptedMessage = getRSACrypto(message, rsaKey).credentials;
 
-		const cert = await this.getCert() || undefined;
+		const cert = await this.getCert(email) || undefined;
 
 		let response = await this.loginV2(
 			keynm,
@@ -360,7 +396,7 @@ export class Login {
 					).then((res) => res.json())
 				).result;
 				this.client.log("response", e2eeInfo);
-				this.client.e2ee.decodeE2EEKeyV1(
+				await this.client.e2ee.decodeE2EEKeyV1(
 					e2eeInfo.metadata,
 					Buffer.from(secret),
 				);
@@ -413,7 +449,7 @@ export class Login {
 		}
 		if (response.certificate) {
 			this.client.emit("update:cert", response.certificate);
-			this.registerCert(response.certificate);
+			this.registerCert(response.certificate, email);
 		}
 		return response.authToken;
 	}
@@ -455,7 +491,7 @@ export class Login {
 
 		const encryptedMessage = getRSACrypto(message, rsaKey).credentials;
 
-		const cert = await this.getCert() || undefined;
+		const cert = await this.getCert(email) || undefined;
 
 		let response = await this.loginV2(
 			keynm,
@@ -488,7 +524,7 @@ export class Login {
 				).then((res) => res.json())
 			).result;
 			this.client.log("response", e2eeInfo);
-			this.client.e2ee.decodeE2EEKeyV1(
+			await this.client.e2ee.decodeE2EEKeyV1(
 				e2eeInfo.metadata,
 				Buffer.from(secret),
 			);
@@ -513,10 +549,13 @@ export class Login {
 		}
 		if (response[2]) {
 			this.client.emit("update:cert", response[2]);
-			this.registerCert(response[2]);
+			this.registerCert(response[2], email);
 		}
-		this.client.storage.set("refreshToken", response[9][2]);
-		this.client.storage.set("expire", response[9][3] + response[9][6]);
+		await this.client.storage.set("refreshToken", response[9][2]);
+		await this.client.storage.set(
+			"expire",
+			response[9][3] + response[9][6],
+		);
 		return response[9][1];
 	}
 

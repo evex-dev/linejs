@@ -1,10 +1,12 @@
 import {
+	ContentType,
 	enums,
+	Location,
 	type Message,
 	type MessageReactionType,
 } from "@evex/linejs-types";
 import type { Client } from "../../client.ts";
-import type { SourceEvent } from "../../events/mod.ts";
+
 import type {
 	ContactMeta,
 	EmojiMeta,
@@ -25,14 +27,14 @@ const hasContents = ["IMAGE", "VIDEO", "AUDIO", "FILE"];
 
 export class TalkMessage {
 	#client: Client;
-	#raw: Message;
+	raw: Message;
 
 	readonly isSquare = false;
 	readonly isTalk = true;
 
 	constructor(init: TalkMessageInit) {
 		this.#client = init.client;
-		this.#raw = init.raw;
+		this.raw = init.raw;
 	}
 
 	/**
@@ -42,6 +44,10 @@ export class TalkMessage {
 		input: string | {
 			e2ee?: boolean;
 			text?: string;
+			contentType?: ContentType;
+			contentMetadata?: Record<string, string>;
+			relatedMessageId?: string;
+			location?: Location;
 		},
 	): Promise<void> {
 		if (typeof input === "string") {
@@ -58,10 +64,10 @@ export class TalkMessage {
 			to = this.isMyMessage ? this.to.id : this.from.id;
 		}
 		await this.#client.base.talk.sendMessage({
-			relatedMessageId: this.#raw.id,
+			relatedMessageId: this.raw.id,
 			text: input.text,
 			to,
-			e2ee: input.e2ee !== false,
+			e2ee: input.e2ee,
 		});
 	}
 
@@ -78,7 +84,7 @@ export class TalkMessage {
 			request: {
 				reqSeq: 0,
 				reactionType: type,
-				messageId: this.#raw.id,
+				messageId: this.raw.id,
 				squareChatMid: this.to.id,
 			},
 		});
@@ -88,7 +94,7 @@ export class TalkMessage {
 	 * Pins the message.
 	 */
 	async announce() {
-		if (!this.#raw.text) {
+		if (!this.raw.text) {
 			throw new TypeError("The message is not text message.");
 		}
 		if (this.to.type !== "ROOM" && this.to.type !== "GROUP") {
@@ -98,9 +104,9 @@ export class TalkMessage {
 			chatRoomMid: this.to.id,
 			type: "MESSAGE",
 			contents: {
-				text: this.#raw.text,
+				text: this.raw.text,
 				link:
-					`line://nv/chatMsg?chatId=${this.to.id}&messageId=${this.#raw.id}`,
+					`line://nv/chatMsg?chatId=${this.to.id}&messageId=${this.raw.id}`,
 			},
 		});
 	}
@@ -115,7 +121,7 @@ export class TalkMessage {
 			);
 		}
 		await this.#client.base.talk.unsendMessage({
-			messageId: this.#raw.id,
+			messageId: this.raw.id,
 		});
 	}
 
@@ -124,10 +130,10 @@ export class TalkMessage {
 	 * @returns Stamp URL
 	 */
 	getStickerURL(): string {
-		if (this.#raw.contentType !== "STICKER") {
+		if (this.raw.contentType !== "STICKER") {
 			throw new TypeError("The message is not sticker.");
 		}
-		const stickerMetadata = this.#raw
+		const stickerMetadata = this.raw
 			.contentMetadata as unknown as StickerMetadata;
 		if (stickerMetadata.STKOPT === "A") {
 			return `https://stickershop.line-scdn.net/stickershop/v1/sticker/${stickerMetadata.STKID}/android/sticker.png`;
@@ -141,11 +147,11 @@ export class TalkMessage {
 	 * @returns URLs of emoji
 	 */
 	collectEmojiURLs(): string[] {
-		if (this.#raw.contentType !== "NONE") {
+		if (this.raw.contentType !== "NONE") {
 			throw new TypeError("The message is not text message.");
 		}
 		const emojiUrls: string[] = [];
-		const emojiData = this.#raw.contentMetadata as unknown as EmojiMeta;
+		const emojiData = this.raw.contentMetadata as unknown as EmojiMeta;
 		const emojiResources = emojiData?.REPLACE?.sticon?.resources ?? [];
 		for (const emoji of emojiResources) {
 			emojiUrls.push(
@@ -215,14 +221,14 @@ export class TalkMessage {
 			.forEach((e) => {
 				if (lastSplit - e.start) {
 					texts.push({
-						text: this.#raw.text?.substring(
+						text: this.raw.text?.substring(
 							lastSplit,
 							e.start,
 						) as string,
 					});
 				}
 				const content: DecorationsData = {
-					text: this.#raw.text?.substring(e.start, e.end),
+					text: this.raw.text?.substring(e.start, e.end),
 				};
 				if (typeof e.emoji === "number") {
 					const emoji = emojiData.REPLACE.sticon.resources[e.emoji];
@@ -242,7 +248,7 @@ export class TalkMessage {
 				lastSplit = e.end;
 			});
 		texts.push({
-			text: this.#raw.text?.substring(lastSplit) as string,
+			text: this.raw.text?.substring(lastSplit) as string,
 		});
 		return texts;
 	}
@@ -288,12 +294,12 @@ export class TalkMessage {
 	 */
 	getReplyTarget(): UnresolvedTalkMessage | null {
 		if (
-			this.#raw.relatedMessageId &&
-			(this.#raw.messageRelationType === 3 ||
-				this.#raw.messageRelationType === "REPLY")
+			this.raw.relatedMessageId &&
+			(this.raw.messageRelationType === 3 ||
+				this.raw.messageRelationType === "REPLY")
 		) {
 			return new UnresolvedTalkMessage(
-				this.#raw.relatedMessageId,
+				this.raw.relatedMessageId,
 				this.#client,
 			);
 		}
@@ -329,20 +335,20 @@ export class TalkMessage {
 				"message have no contents",
 			);
 		}
-		if (this.#raw.contentMetadata.DOWNLOAD_URL) {
+		if (this.raw.contentMetadata.DOWNLOAD_URL) {
 			if (preview) {
 				const r = await this.#client.base
-					.fetch(this.#raw.contentMetadata.PREVIEW_URL);
+					.fetch(this.raw.contentMetadata.PREVIEW_URL);
 				return await r.blob();
 			} else {
 				const r = await this.#client.base
-					.fetch(this.#raw.contentMetadata.DOWNLOAD_URL);
+					.fetch(this.raw.contentMetadata.DOWNLOAD_URL);
 				return await r.blob();
 			}
 		}
-		if (this.#raw.chunks) {
+		if (this.raw.chunks) {
 			const file = await this.#client.base.obs.downloadMediaByE2EE(
-				this.#raw,
+				this.raw,
 			);
 			if (!file) {
 				throw new InternalError("ObsError", "Download failed");
@@ -350,7 +356,7 @@ export class TalkMessage {
 			return file;
 		} else {
 			return await this.#client.base.obs.getMessageObsData({
-				messageId: this.#raw.id,
+				messageId: this.raw.id,
 				isPreview: preview,
 				isSquare: false,
 			});
@@ -361,14 +367,14 @@ export class TalkMessage {
 	}
 
 	get to(): To {
-		const message = this.#raw;
+		const message = this.raw;
 		return {
 			type: message.toType,
 			id: message.to,
 		};
 	}
 	get from(): From {
-		const message = this.#raw;
+		const message = this.raw;
 		return {
 			type: message.toType,
 			id: message.to,
@@ -376,20 +382,21 @@ export class TalkMessage {
 	}
 	get #content() {
 		return {
-			type: this.#raw.contentType,
-			metadata: this.#raw.contentMetadata,
+			type: this.raw.contentType,
+			metadata: this.raw.contentMetadata,
 		};
 	}
 	get text(): string {
-		return this.#raw.text;
+		return this.raw.text;
 	}
-
+	/*
 	static fromSource(
 		source: SourceEvent & { type: "talk" },
 		client: Client,
 	): Promise<TalkMessage> {
 		return this.fromRawTalk(source.event.message, client);
 	}
+	*/
 	static async fromRawTalk(
 		raw: Message,
 		client: Client,

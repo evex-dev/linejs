@@ -196,7 +196,7 @@ export class E2EE {
 					keyId: groupKeyId,
 				};
 				key = JSON.stringify(data);
-				this.client.storage.set(`e2eeGroupKeys:${mid}`, key);
+				await this.client.storage.set(`e2eeGroupKeys:${mid}`, key);
 				return data;
 			}
 			return JSON.parse(key);
@@ -300,17 +300,13 @@ export class E2EE {
 		return Buffer.concat([cipher.update(plainData), cipher.final()]);
 	}
 
-	public decodeE2EEKeyV1(
+	public async decodeE2EEKeyV1(
 		data: any,
 		secret: Buffer,
-	):
-		| {
-			keyId: any;
-			privKey: Buffer;
-			pubKey: Buffer;
-			e2eeVersion: any;
-		}
-		| undefined {
+	): Promise<
+		| { keyId: any; privKey: Buffer; pubKey: Buffer; e2eeVersion: any }
+		| undefined
+	> {
 		if (data.encryptedKeyChain) {
 			const encryptedKeyChain = Buffer.from(
 				data.encryptedKeyChain,
@@ -332,7 +328,7 @@ export class E2EE {
 					e2eeVersion,
 				},
 			});
-			this.client.storage.set(
+			await this.client.storage.set(
 				"e2eeKeys:" + keyId,
 				JSON.stringify({
 					keyId,

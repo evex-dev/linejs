@@ -25,7 +25,14 @@ export class Polling {
 	}
 
 	/**
-	 * Listen OpenChat events as a async generator.
+	 * Listens to square events and yields them as they are received.
+	 * 
+	 * @param options - Configuration options for listening to square events.
+	 * @param options.signal - An AbortSignal to cancel the polling.
+	 * @param options.onError - A callback function to handle errors.
+	 * @param options.pollingInterval - The interval in milliseconds between polling requests. Defaults to 1000ms.
+	 * 
+	 * @yields {SquareEvent} - The events received from the square.
 	 */
 	async *listenSquareEvents(options: {
 		signal?: AbortSignal;
@@ -61,6 +68,18 @@ export class Polling {
 		}
 	}
 
+	/**
+	 * Listens for talk events by polling the server at a specified interval.
+	 * 
+	 * @param {Object} [options] - Configuration options for the polling.
+	 * @param {AbortSignal} [options.signal] - An AbortSignal to cancel the polling.
+	 * @param {(error: unknown) => void} [options.onError] - A callback function to handle errors.
+	 * @param {number} [options.pollingInterval=1000] - The interval in milliseconds between each poll.
+	 * 
+	 * @yields {Operation} - Yields each operation event received from the server.
+	 * 
+	 * @returns {AsyncGenerator<Operation, void, unknown>} - An async generator that yields operation events.
+	 */
 	async *listenTalkEvents(options: {
 		signal?: AbortSignal;
 		onError?: (error: unknown) => void;

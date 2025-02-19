@@ -6,6 +6,7 @@ Maintainers of **LINEJS**
 
 - Owner & Developer [Piloking](https://github.com/piloking)
 - Developer [EdamAme-x](https://github.com/EdamAme-x)
+- Developer [nakasyou](https://github.com/nakasyou)
 
 ## Sub-maintainers
 

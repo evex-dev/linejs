@@ -1,5 +1,7 @@
 import {
+	ContentType,
 	enums,
+	Location,
 	type MessageReactionType,
 	type SquareEvent,
 	type SquareMessage as Message,
@@ -26,7 +28,7 @@ export interface SquareMessageInit {
  */
 export class SquareMessage {
 	#client: Client;
-	#raw: Message;
+	raw: Message;
 
 	readonly isSquare = true;
 	readonly isTalk = false;
@@ -34,7 +36,7 @@ export class SquareMessage {
 
 	constructor(init: SquareMessageInit) {
 		this.#client = init.client;
-		this.#raw = init.raw;
+		this.raw = init.raw;
 	}
 
 	/**
@@ -42,8 +44,11 @@ export class SquareMessage {
 	 */
 	async reply(
 		input: string | {
-			e2ee?: boolean;
 			text?: string;
+			contentType?: ContentType;
+			contentMetadata?: Record<string, string>;
+			relatedMessageId?: string;
+			location?: Location;
 		},
 	): Promise<void> {
 		if (typeof input === "string") {
@@ -53,8 +58,8 @@ export class SquareMessage {
 		}
 
 		await this.#client.base.square.sendMessage({
-			relatedMessageId: this.#raw.message.to,
-			squareChatMid: this.#raw.message.to,
+			relatedMessageId: this.raw.message.to,
+			squareChatMid: this.raw.message.to,
 			text: input.text,
 		});
 	}
@@ -73,7 +78,7 @@ export class SquareMessage {
 			request: {
 				reqSeq: 0,
 				reactionType: type,
-				messageId: this.#raw.message.id,
+				messageId: this.raw.message.id,
 				squareChatMid: this.to.id,
 			},
 		});
@@ -83,15 +88,15 @@ export class SquareMessage {
 	 * Pins the message.
 	 */
 	async announce() {
-		if (!this.#raw.message.text) {
+		if (!this.raw.message.text) {
 			throw new TypeError("The message is not text message.");
 		}
 		await this.#client.base.square.createSquareChatAnnouncement({
 			squareChatMid: this.to.id,
 			senderMid: this.from.id,
-			messageId: this.#raw.message.id,
-			text: this.#raw.message.text,
-			createdAt: this.#raw.message.createdTime,
+			messageId: this.raw.message.id,
+			text: this.raw.message.text,
+			createdAt: this.raw.message.createdTime,
 		});
 	}
 
@@ -105,7 +110,7 @@ export class SquareMessage {
 			);
 		}
 		await this.#client.base.square.unsendMessage({
-			messageId: this.#raw.message.id,
+			messageId: this.raw.message.id,
 			squareChatMid: this.to.id,
 		});
 	}
@@ -115,7 +120,7 @@ export class SquareMessage {
 	 */
 	async delete() {
 		await this.#client.base.square.destroyMessage({
-			messageId: this.#raw.message.id,
+			messageId: this.raw.message.id,
 			squareChatMid: this.to.id,
 		});
 	}
@@ -125,10 +130,10 @@ export class SquareMessage {
 	 * @returns Stamp URL
 	 */
 	getStickerURL(): string {
-		if (this.#raw.message.contentType !== "STICKER") {
+		if (this.raw.message.contentType !== "STICKER") {
 			throw new TypeError("The message is not sticker.");
 		}
-		const stickerMetadata = this.#raw.message
+		const stickerMetadata = this.raw.message
 			.contentMetadata as unknown as StickerMetadata;
 		if (stickerMetadata.STKOPT === "A") {
 			return `https://stickershop.line-scdn.net/stickershop/v1/sticker/${stickerMetadata.STKID}/android/sticker.png`;
@@ -142,11 +147,11 @@ export class SquareMessage {
 	 * @returns URLs of emoji
 	 */
 	collectEmojiURLs(): string[] {
-		if (this.#raw.message.contentType !== "NONE") {
+		if (this.raw.message.contentType !== "NONE") {
 			throw new TypeError("The message is not text message.");
 		}
 		const emojiUrls: string[] = [];
-		const emojiData = this.#raw.message
+		const emojiData = this.raw.message
 			.contentMetadata as unknown as EmojiMeta;
 		const emojiResources = emojiData?.REPLACE?.sticon?.resources ?? [];
 		for (const emoji of emojiResources) {
@@ -217,14 +222,14 @@ export class SquareMessage {
 			.forEach((e) => {
 				if (lastSplit - e.start) {
 					texts.push({
-						text: this.#raw.message.text?.substring(
+						text: this.raw.message.text?.substring(
 							lastSplit,
 							e.start,
 						) as string,
 					});
 				}
 				const content: DecorationsData = {
-					text: this.#raw.message.text?.substring(e.start, e.end),
+					text: this.raw.message.text?.substring(e.start, e.end),
 				};
 				if (typeof e.emoji === "number") {
 					const emoji = emojiData.REPLACE.sticon.resources[e.emoji];
@@ -244,7 +249,7 @@ export class SquareMessage {
 				lastSplit = e.end;
 			});
 		texts.push({
-			text: this.#raw.message.text?.substring(lastSplit) as string,
+			text: this.raw.message.text?.substring(lastSplit) as string,
 		});
 		return texts;
 	}
@@ -277,12 +282,12 @@ export class SquareMessage {
 	 */
 	getReplyTarget(): UnresolvedMessage | null {
 		if (
-			this.#raw.message.relatedMessageId &&
-			(this.#raw.message.messageRelationType === 3 ||
-				this.#raw.message.messageRelationType === "REPLY")
+			this.raw.message.relatedMessageId &&
+			(this.raw.message.messageRelationType === 3 ||
+				this.raw.message.messageRelationType === "REPLY")
 		) {
 			return new UnresolvedMessage(
-				this.#raw.message.relatedMessageId,
+				this.raw.message.relatedMessageId,
 				this.#client,
 			);
 		}
@@ -313,24 +318,24 @@ export class SquareMessage {
 	 * @return {Blob} message data
 	 */
 	async getData(preview?: boolean): Promise<Blob> {
-		if (!hasContents.includes(this.#raw.message.contentType as string)) {
+		if (!hasContents.includes(this.raw.message.contentType as string)) {
 			throw new TypeError(
 				"message have no contents",
 			);
 		}
-		if (this.#raw.message.contentMetadata.DOWNLOAD_URL) {
+		if (this.raw.message.contentMetadata.DOWNLOAD_URL) {
 			if (preview) {
 				const r = await this.#client.base
-					.fetch(this.#raw.message.contentMetadata.PREVIEW_URL);
+					.fetch(this.raw.message.contentMetadata.PREVIEW_URL);
 				return await r.blob();
 			} else {
 				const r_1 = await this.#client.base
-					.fetch(this.#raw.message.contentMetadata.DOWNLOAD_URL);
+					.fetch(this.raw.message.contentMetadata.DOWNLOAD_URL);
 				return await r_1.blob();
 			}
 		}
 		return this.#client.base.obs.getMessageObsData({
-			messageId: this.#raw.message.id,
+			messageId: this.raw.message.id,
 			isPreview: preview,
 			isSquare: true,
 		});
@@ -348,14 +353,14 @@ export class SquareMessage {
 	}
 
 	get to(): To {
-		const { message } = this.#raw;
+		const { message } = this.raw;
 		return {
 			type: message.toType,
 			id: message.to,
 		};
 	}
 	get from(): From {
-		const message = this.#raw.message;
+		const message = this.raw.message;
 		return {
 			type: message.toType,
 			id: message.to,
@@ -363,12 +368,12 @@ export class SquareMessage {
 	}
 	get #content() {
 		return {
-			type: this.#raw.message.contentType,
-			metadata: this.#raw.message.contentMetadata,
+			type: this.raw.message.contentType,
+			metadata: this.raw.message.contentMetadata,
 		};
 	}
 	get text(): string {
-		return this.#raw.message.text;
+		return this.raw.message.text;
 	}
 
 	static fromSource(source: SquareEvent, client: Client): SquareMessage {

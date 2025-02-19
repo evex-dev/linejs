@@ -1,18 +1,26 @@
 # Client Options
 
-Next, we will talk about the Client.\
+Next, we will talk about the ClientInit.\
 The Client has several options.
 
 ```ts
-const client = new Client({
-    device: "...",
-    ...
+const client = await loginWithPassword({
+    email: "",
+    password: "",
+    onPincodeRequest(pin) {
+        console.log(pin);
+    },
+}, {
+    device: "IOSIPAD",
+    version: "14.0.1",
+    endpoint: "example.com",
+    fetch: (req) => fetch(req),
+    storage: new FileStorage("./storage.json"),
 });
 ```
 
-For example, **storage for the data** we discussed before, **OBS Endpoint**,
-**Endpoint** for communication, **customFetch** for cors and proxies,
-**RateLimitter** for rate limiting, etc.
+For example, **storage for the data** we discussed before,
+**Endpoint** for communication, **custom fetch** for cors and proxies,etc.
 
 I'll explain it to you one by one.
 
@@ -27,9 +35,15 @@ You can use `FileStorage` there.
 ```ts
 import { FileStorage } from "@evex/linejs/storage";
 
-const client = new Client({
+const client = await loginWithPassword({
+    email: "",
+    password: "",
+    onPincodeRequest(pin) {
+        console.log(pin);
+    },
+}, {
     device: "IOSIPAD",
-    storage: new FileStorage("./storage.json"), // path to storage file (This is secret file)
+    storage: new FileStorage("./storage.json"),
 });
 ```
 
@@ -44,8 +58,15 @@ There is no need to change this point.\
 If you want to try out a proxied server, use it.
 
 ```ts
-const client = new Client({
-    endpoint: "legy-jp.line-apps.com",
+const client = await loginWithPassword({
+    email: "",
+    password: "",
+    onPincodeRequest(pin) {
+        console.log(pin);
+    },
+}, {
+    device: "IOSIPAD",
+    endpoint: "example.com",
 });
 ```
 
@@ -55,14 +76,15 @@ This is for cors avoidance or proxy. You define a function that replaces fetch.
 
 ```ts
 ...
-
-const client = new Client({
-    fetch: async (url, options) => {
-        return await fetch(url, {
-            ...options,
-            ...proxyAgent
-        });
-    }
+const client = await loginWithPassword({
+    email: "",
+    password: "",
+    onPincodeRequest(pin) {
+        console.log(pin);
+    },
+}, {
+    device: "IOSIPAD",
+    fetch: (req) => myfetch(req),
 });
 ```
 

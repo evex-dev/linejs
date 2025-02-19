@@ -10,10 +10,35 @@ import type { BaseStorage } from "../base/storage/mod.ts";
 import { Client } from "./client.ts";
 
 export interface InitOptions {
-	fetch?: FetchLike;
+	/**
+	 * version which LINE App to emurating
+	 */
+	version?: string;
+
+	/**
+	 * API Endpoint
+	 * @default "legy.line-apps.com"
+	 */
+	endpoint?: string;
+
+	/**
+	 * Device
+	 */
 	device: Device;
+
+	/**
+	 * Storage
+	 * @default MemoryStorage
+	 */
 	storage?: BaseStorage;
+
+	/**
+	 * Custom function to connect network.
+	 * @default `globalThis.fetch`
+	 */
+	fetch?: FetchLike;
 }
+
 const createBaseClient = (init: InitOptions) =>
 	new BaseClient({
 		fetch: init.fetch,
@@ -23,16 +48,17 @@ const createBaseClient = (init: InitOptions) =>
 
 export interface WithQROptions {
 	onReceiveQRUrl(url: string): Promise<void> | void;
+	onPincodeRequest(pin: string): void | Promise<void>;
 }
 export const loginWithQR = async (
 	opts: WithQROptions,
 	init: InitOptions,
 ): Promise<Client> => {
 	const base = createBaseClient(init);
+	base.on("qrcall", opts.onReceiveQRUrl);
+	base.on("pincall", opts.onPincodeRequest);
 	base.loginProcess.withQrCode({});
-	const [qrURL] = await base.waitFor("qrcall");
-	await opts.onReceiveQRUrl(qrURL);
-	await base.waitFor("update:authtoken");
+	await base.waitFor("ready");
 	return new Client(base);
 };
 
@@ -54,9 +80,8 @@ export const loginWithPassword = async (
 		password: opts.password,
 		pincode: opts.pincode,
 	});
-	const [pin] = await base.waitFor("pincall");
-	await opts.onPincodeRequest(pin);
-	await base.waitFor("update:authtoken");
+	await base.waitFor("ready");
+	base.on("pincall", opts.onPincodeRequest);
 	return new Client(base);
 };
 

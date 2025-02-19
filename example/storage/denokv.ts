@@ -1,4 +1,4 @@
-import type { BaseStorage, Storage } from "@evex/linejs/storage";
+import type { BaseStorage } from "@evex/linejs/storage";
 
 import { type Kv, openKv } from "npm:@deno/kv";
 
@@ -23,8 +23,8 @@ export class DenoKvStorage implements BaseStorage {
 		this.path = path;
 	}
 	public async set(
-		key: Storage["Key"],
-		value: Storage["Value"],
+		key: string,
+		value: any,
 	): Promise<void> {
 		if (!this.kv) {
 			if (this.useDeno) {
@@ -36,8 +36,8 @@ export class DenoKvStorage implements BaseStorage {
 		await this.kv.set([this.kvPrefix, key], value);
 	}
 	public async get(
-		key: Storage["Key"],
-	): Promise<Storage["Value"] | undefined> {
+		key: string,
+	): Promise<any | undefined> {
 		if (!this.kv) {
 			if (this.useDeno) {
 				this.kv = await Deno.openKv(this.path);
@@ -47,7 +47,7 @@ export class DenoKvStorage implements BaseStorage {
 		}
 		return (await this.kv.get([this.kvPrefix, key])).value as any;
 	}
-	public async delete(key: Storage["Key"]): Promise<void> {
+	public async delete(key: string): Promise<void> {
 		if (!this.kv) {
 			if (this.useDeno) {
 				this.kv = await Deno.openKv(this.path);
@@ -82,7 +82,7 @@ export class DenoKvStorage implements BaseStorage {
 		for await (const entry of entries) {
 			const key = (entry.key.at(1) || "").toString();
 			if (key) {
-				storage.set(
+				await storage.set(
 					key,
 					(await this.kv.get(entry.key as any)).value as any,
 				);
