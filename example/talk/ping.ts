@@ -6,12 +6,15 @@ import {
 import { FileStorage } from "@evex/linejs/storage";
 
 const client = await loginWithPassword({
-	password: "",
 	email: "",
+	password: "",
 	onPincodeRequest(pin) {
 		console.log(pin);
 	},
-}, { device: "DESKTOPWIN", storage: new FileStorage("./storage.json") });
+}, {
+	device: "DESKTOPWIN",
+	storage: new FileStorage("./storage.json"),
+});
 
 client.on("message", async (message) => {
 	console.log(message.text);

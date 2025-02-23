@@ -75,18 +75,9 @@ export class TalkMessage {
 	 * Reacts to message.
 	 */
 	async react(type: MessageReactionType): Promise<void> {
-		if (typeof type === "string") {
-			type = enums.MessageReactionType[
-				type
-			] as MessageReactionType & number;
-		}
-		await this.#client.base.square.reactToMessage({
-			request: {
-				reqSeq: 0,
-				reactionType: type,
-				messageId: this.raw.id,
-				squareChatMid: this.to.id,
-			},
+		await this.#client.base.talk.react({
+			id: BigInt(this.raw.id),
+			reaction: type,
 		});
 	}
 

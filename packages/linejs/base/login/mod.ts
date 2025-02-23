@@ -111,27 +111,27 @@ export class Login {
 
 	/**
 	 * Logs in the user using the provided options.
-	 * 
+	 *
 	 * Depending on the options provided, this method will:
 	 * - Use QR code authentication if no options are provided or if `options.qr` is true.
 	 * - Use an authentication token if `options.authToken` is provided.
 	 * - Use email and password authentication if `options.email` is provided.
-	 * 
+	 *
 	 * @param {LoginOption} [options] - The login options.
 	 * @param {boolean} [options.qr] - Whether to use QR code authentication.
 	 * @param {boolean} [options.v3] - Whether to use version 3 of QR code authentication.
 	 * @param {string} [options.authToken] - The authentication token.
 	 * @param {string} [options.email] - The user's email.
 	 * @param {string} [options.password] - The user's password.
-	 * 
+	 *
 	 * @example
 	 * // Login with QR code
 	 * await login();
-	 * 
+	 *
 	 * @example
 	 * // Login with authentication token
 	 * await login({ authToken: 'your-auth-token' });
-	 * 
+	 *
 	 * @example
 	 * // Login with email and password
 	 * await login({ email: 'user@example.com', password: 'your-password' });
@@ -449,7 +449,7 @@ export class Login {
 		}
 		if (response.certificate) {
 			this.client.emit("update:cert", response.certificate);
-			this.registerCert(response.certificate, email);
+			await this.registerCert(response.certificate, email);
 		}
 		return response.authToken;
 	}
@@ -549,7 +549,7 @@ export class Login {
 		}
 		if (response[2]) {
 			this.client.emit("update:cert", response[2]);
-			this.registerCert(response[2], email);
+			await this.registerCert(response[2], email);
 		}
 		await this.client.storage.set("refreshToken", response[9][2]);
 		await this.client.storage.set(
