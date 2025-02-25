@@ -57,8 +57,7 @@ export const loginWithQR = async (
 	const base = createBaseClient(init);
 	base.on("qrcall", opts.onReceiveQRUrl);
 	base.on("pincall", opts.onPincodeRequest);
-	base.loginProcess.withQrCode({});
-	await base.waitFor("ready");
+	await base.loginProcess.withQrCode({});
 	return new Client(base);
 };
 
@@ -75,13 +74,12 @@ export const loginWithPassword = async (
 	init: InitOptions,
 ): Promise<Client> => {
 	const base = createBaseClient(init);
-	base.loginProcess.withPassword({
+	base.on("pincall", opts.onPincodeRequest);
+	await base.loginProcess.withPassword({
 		email: opts.email,
 		password: opts.password,
 		pincode: opts.pincode,
 	});
-	await base.waitFor("ready");
-	base.on("pincall", opts.onPincodeRequest);
 	return new Client(base);
 };
 

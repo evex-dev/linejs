@@ -32,35 +32,36 @@ export type ClientEvents = {
 	"square:event": (event: LINETypes.SquareEvent) => void;
 };
 
-export class Client {
+export class Client extends TypedEventEmitter<ClientEvents> {
 	readonly base: BaseClient;
 	constructor(base: BaseClient) {
+		super();
 		this.base = base;
 	}
 
 	/**
 	 * Listens events.
 	 * @param opts Options
-	 * @returns Async generator
+	 * @returns TypedEventEmitter
 	 */
 	listen(
 		opts: ListenOptions = { talk: true, square: true },
-	): TypedEventEmitter<ClientEvents> {
+	): void {
 		const polling = this.base.createPolling();
-		const eventTarget = new TypedEventEmitter<ClientEvents>();
+		const signal = opts.signal;
 		if (opts.talk) {
 			(async () => {
 				for await (
 					const event of polling.listenTalkEvents({
-						signal: opts.signal,
+						signal,
 					})
 				) {
-					eventTarget.emit("event", event);
+					this.emit("event", event);
 					if (
 						event.type === "SEND_MESSAGE" ||
 						event.type === "RECEIVE_MESSAGE"
 					) {
-						eventTarget.emit(
+						this.emit(
 							"message",
 							new TalkMessage({
 								raw: await this.base.e2ee.decryptE2EEMessage(
@@ -77,12 +78,12 @@ export class Client {
 			(async () => {
 				for await (
 					const event of polling.listenSquareEvents({
-						signal: opts.signal,
+						signal,
 					})
 				) {
-					eventTarget.emit("square:event", event);
+					this.emit("square:event", event);
 					if (event.type === "NOTIFICATION_MESSAGE") {
-						eventTarget.emit(
+						this.emit(
 							"square:message",
 							new SquareMessage({
 								raw: event.payload.notificationMessage
@@ -94,7 +95,6 @@ export class Client {
 				}
 			})();
 		}
-		return eventTarget;
 	}
 
 	/** Gets auth token for LINE. */
@@ -111,6 +111,7 @@ export class Client {
 			request: {
 				withMemberChats: true,
 			},
+			syncReason: "INTERNAL",
 		});
 		const { chats } = await this.base.talk.getChats({
 			chatMids: joined.memberChatMids,

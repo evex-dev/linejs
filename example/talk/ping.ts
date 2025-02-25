@@ -1,22 +1,27 @@
-import { loginWithPassword } from "@evex/linejs";
+import {
+	loginWithAuthToken,
+	loginWithPassword,
+	loginWithQR,
+} from "@evex/linejs";
+import { FileStorage } from "@evex/linejs/storage";
 
 const client = await loginWithPassword({
-	email: "example@example.com",
-	password: "passw0rd",
-	pincode: "123456",
+	email: "",
+	password: "",
 	onPincodeRequest(pin) {
-		console.log("Enter PIN:", pin);
+		console.log(pin);
 	},
 }, {
-	device: "ANDROID",
+	device: "DESKTOPWIN",
+	storage: new FileStorage("./storage.json"),
 });
 
-for await (const event of client.listen()) {
-	if (event.type === "message") {
-		// Handle Message
-		const message = event.message; // Get message
-		if (message.text === "!ping") {
-			message.reply("pong!");
-		}
+client.on("message", async (message) => {
+	console.log(message.text);
+	if (message.text === "!ping") {
+		await message.react("NICE");
+		await message.reply("pong!");
 	}
-}
+});
+
+client.listen({ talk: true });

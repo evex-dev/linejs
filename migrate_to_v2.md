@@ -2,7 +2,7 @@
 
 ### Client
 
-**old**
+#### old
 
 ```js
 const client = new Client({ storage: ~ });
@@ -54,43 +54,27 @@ await client.login({
 });
 ```
 
-**new**
+#### new
 
 ```js
-const client = new Client({
-    device: "DESKTOPWIN",
-    storage: ~,
-});
-
-await client.storage.set("time", Date.now())
-
-client.on("pincall", (p) => console.log(p));
-
-client.on("qrcall", (q) => console.log(q));
-
-client.on("update:authtoken", (a) => console.log("AuthToken:", a));
-
-client.on("ready", (user) => {
-    console.log(`Logged in as ${user.displayName} (${user.mid})`);
-
-    await client.talk.sendMessage({ to: "u...", text: "Hello, World!" });
-
-	await client.square.sendMessage({ squareChatMid: "m...", text: "Hello, World!" });
-});
+import {
+	loginWithAuthToken,
+	loginWithPassword,
+	loginWithQR,
+} from "@evex/linejs";
 
 // login with email
-await client.login({
+const client = await loginWithPassword({
     email: "linejs@evex.dev",
     password: "password",
-    pincode: "123456"
-});
+	onPincodeRequest(pin) {
+		console.log(pin);
+	},
+}, { device: "DESKTOPWIN", storage: ~ });
 
-// login with qrcode
-await client.login({ qr: true });
+await client.base.storage.set("time", Date.now());
 
-// login with authToken
-await client.login({ authToken: ... });
+await client.talk.sendMessage({ to: "u...", text: "Hello, World!" });
 
-// start polling
-client.polling(["talk", "square"]);
+await client.square.sendMessage({ squareChatMid: "m...", text: "Hello, World!" });
 ```

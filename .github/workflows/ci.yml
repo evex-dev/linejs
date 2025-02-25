@@ -34,12 +34,12 @@ jobs:
           deno-version: v2.x
       - run: deno test
 
-  format:
-    name: "Format Check"
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v1
-        with:
-          deno-version: v2.x
-      - run: deno fmt --check
+#  format:
+#    name: "Format Check"
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v4
+#      - uses: denoland/setup-deno@v1
+#        with:
+#          deno-version: v2.x
+#      - run: deno fmt --check

@@ -1,32 +1,26 @@
-import { Client } from "../../packages/linejs/base/mod.ts";
-import { FileStorage } from "../../packages/linejs/base/storage/mod.ts";
+import {
+	loginWithAuthToken,
+	loginWithPassword,
+	loginWithQR,
+} from "@evex/linejs";
+import { FileStorage } from "@evex/linejs/storage";
 
-const client = new Client({
-	device: "IOSIPAD",
-	storage: new FileStorage("storage.json"),
-});
+const client = await loginWithPassword({
+	password: "",
+	email: "",
+	onPincodeRequest(pin) {
+		console.log(pin);
+	},
+}, { device: "DESKTOPWIN", storage: new FileStorage("./storage.json") });
 
-client.on("log", (d) => {
-	try {
-		// console.log(d.type, d.data); // for debug
-	} catch {}
-});
-client.on("pincall", (p) => console.log("enter pincode:", p));
-client.on("qrcall", (q) => console.log("qrcode:", q));
-client.on("update:authtoken", (a) => console.log("AuthToken:", a));
-client.on("ready", (user) => {
-	console.log(`Logged in as ${user.displayName} (${user.mid})`);
-});
-
-await client.login({
-	email: "email",
-	password: "pass",
-});
-
-const chat = await client.getSquareChat("m..."); // your squareChatMid
+const chat = await client.getSquareChat("m..."); // your squareChat mid
 
 chat.on("message", async (message) => {
-	await message.react("NICE");
+	console.log(message.text);
+	if (message.text === "!ping") {
+		await message.react("NICE");
+		await message.reply("pong!");
+	}
 });
 
-chat.polling();
+chat.listen();

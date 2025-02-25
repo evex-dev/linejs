@@ -1,4 +1,4 @@
-# Receive Message Event
+# Receive Message client
 
 The next step is to finally receive the message.\
 The atmosphere is becoming more and more like a bot!
@@ -18,9 +18,6 @@ To receive messages, do the following.
 client.on("message", (message) => {
     ...
 });
-
-await client.login({...})
-client.polling(["square","talk"])
 ```
 
 This is all that is needed to receive the message.\
@@ -29,12 +26,11 @@ Easy, isn't it?
 So first, let's retrieve the messages sent.
 
 ```ts
-const event = client.listen();
-event.on("message", (message) => {
+client.on("message", (message) => {
     const text = message.text;
     console.log(text);
 });
-
+client.listen();
 ```
 
 Your console should now show the message that was sent to you!
@@ -47,7 +43,7 @@ I love you! :D
 Next, let's check if the message is “!ping”.
 
 ```ts
-event.on("message", (message) => {
+client.on("message", (message) => {
     const text = message.text;
 
     if (text === "!ping") {
@@ -62,7 +58,7 @@ To reply, you can call a method that sends a `messageId` with a
 `relatedMessageId`, but there is a more convenient way.
 
 ```ts
-event.on("message", (message) => {
+client.on("message", (message) => {
     const text = message.text;
 
     if (text === "!ping") {
@@ -75,7 +71,7 @@ What a beautiful code! It's too easy. However, in this case, it is more
 beautiful to enclose it in an asynchronous function.
 
 ```ts
-event.on("message", async (message) => {
+client.on("message", async (message) => {
     const text = message.text;
 
     if (text === "!ping") {
@@ -93,7 +89,7 @@ Let me explain all the methods in other chapters.
 So what should we do with Square (OpenChat)? Basically the same thing.
 
 ```ts
-event.on("square:message", async (message) => {
+client.on("square:message", async (message) => {
     const text = message.text;
 
     if (text === "!ping") {

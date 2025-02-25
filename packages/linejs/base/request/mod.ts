@@ -171,7 +171,7 @@ export class RequestClient {
 				}>`,
 			);
 		}
-		if (!res.data[0]) {
+		if (!res.data[0] && Object.keys(res.data).length) {
 			hasError = true;
 		}
 		if (parse === true) {

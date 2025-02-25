@@ -449,7 +449,7 @@ export class Login {
 		}
 		if (response.certificate) {
 			this.client.emit("update:cert", response.certificate);
-			this.registerCert(response.certificate, email);
+			await this.registerCert(response.certificate, email);
 		}
 		return response.authToken;
 	}
@@ -549,7 +549,7 @@ export class Login {
 		}
 		if (response[2]) {
 			this.client.emit("update:cert", response[2]);
-			this.registerCert(response[2], email);
+			await this.registerCert(response[2], email);
 		}
 		await this.client.storage.set("refreshToken", response[9][2]);
 		await this.client.storage.set(
