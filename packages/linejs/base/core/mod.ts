@@ -121,16 +121,16 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	readonly endpoint: string;
 	/**
 	 * Initializes a new instance of the class.
-	 * 
+	 *
 	 * @param init - The initialization parameters.
 	 * @param init.device - The device type.
 	 * @param init.version - The version of the device.
 	 * @param init.fetch - Optional custom fetch function.
 	 * @param init.endpoint - Optional endpoint URL.
 	 * @param init.storage - Optional storage mechanism.
-	 * 
+	 *
 	 * @throws {Error} If the device is unsupported.
-	 * 
+	 *
 	 * @example
 	 * ```typescript
 	 * const client = new Client({
