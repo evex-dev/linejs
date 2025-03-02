@@ -74,7 +74,7 @@ const client = await loginWithPassword({
 
 await client.base.storage.set("time", Date.now());
 
-await client.talk.sendMessage({ to: "u...", text: "Hello, World!" });
+await client.base.talk.sendMessage({ to: "u...", text: "Hello, World!" });
 
-await client.square.sendMessage({ squareChatMid: "m...", text: "Hello, World!" });
+await client.base.square.sendMessage({ squareChatMid: "m...", text: "Hello, World!" });
 ```

@@ -7,6 +7,7 @@ export interface SyncData {
 		revision?: number | bigint;
 		globalRev?: number | bigint;
 		individualRev?: number | bigint;
+		timeout?: number;
 	};
 }
 
@@ -26,12 +27,12 @@ export class Polling {
 
 	/**
 	 * Listens to square events and yields them as they are received.
-	 * 
+	 *
 	 * @param options - Configuration options for listening to square events.
 	 * @param options.signal - An AbortSignal to cancel the polling.
 	 * @param options.onError - A callback function to handle errors.
 	 * @param options.pollingInterval - The interval in milliseconds between polling requests. Defaults to 1000ms.
-	 * 
+	 *
 	 * @yields {SquareEvent} - The events received from the square.
 	 */
 	async *listenSquareEvents(options: {
@@ -70,14 +71,14 @@ export class Polling {
 
 	/**
 	 * Listens for talk events by polling the server at a specified interval.
-	 * 
+	 *
 	 * @param {Object} [options] - Configuration options for the polling.
 	 * @param {AbortSignal} [options.signal] - An AbortSignal to cancel the polling.
 	 * @param {(error: unknown) => void} [options.onError] - A callback function to handle errors.
 	 * @param {number} [options.pollingInterval=1000] - The interval in milliseconds between each poll.
-	 * 
+	 *
 	 * @yields {Operation} - Yields each operation event received from the server.
-	 * 
+	 *
 	 * @returns {AsyncGenerator<Operation, void, unknown>} - An async generator that yields operation events.
 	 */
 	async *listenTalkEvents(options: {
@@ -99,7 +100,8 @@ export class Polling {
 					response.fullSyncResponse &&
 					response.fullSyncResponse.nextRevision
 				) {
-					this.sync.talk.revision = response.fullSyncResponse.nextRevision;
+					this.sync.talk.revision =
+						response.fullSyncResponse.nextRevision;
 				}
 				if (
 					response.operationResponse &&
