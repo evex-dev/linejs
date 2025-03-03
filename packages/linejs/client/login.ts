@@ -58,6 +58,7 @@ export const loginWithQR = async (
 	base.on("qrcall", opts.onReceiveQRUrl);
 	base.on("pincall", opts.onPincodeRequest);
 	await base.loginProcess.withQrCode({});
+	await base.loginProcess.ready();
 	return new Client(base);
 };
 
@@ -80,6 +81,7 @@ export const loginWithPassword = async (
 		password: opts.password,
 		pincode: opts.pincode,
 	});
+	await base.loginProcess.ready();
 	return new Client(base);
 };
 
