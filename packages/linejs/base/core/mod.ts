@@ -121,16 +121,16 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	readonly endpoint: string;
 	/**
 	 * Initializes a new instance of the class.
-	 * 
+	 *
 	 * @param init - The initialization parameters.
 	 * @param init.device - The device type.
 	 * @param init.version - The version of the device.
 	 * @param init.fetch - Optional custom fetch function.
 	 * @param init.endpoint - Optional endpoint URL.
 	 * @param init.storage - Optional storage mechanism.
-	 * 
+	 *
 	 * @throws {Error} If the device is unsupported.
-	 * 
+	 *
 	 * @example
 	 * ```typescript
 	 * const client = new Client({
@@ -229,5 +229,96 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 */
 	createPolling(): Polling {
 		return new Polling(this);
+	}
+
+	/**
+	 * JSON replacer to remove mid and authToken, parse bigint to number
+	 *
+	 * ```
+	 * JSON.stringify(data, client.jsonReplacer);
+	 * ```
+	 */
+	jsonReplacer: (k: any, v: any) => any = (k: any, v: any) => {
+		if (typeof v === "bigint") {
+			return Number(v);
+		}
+		if (typeof v === "string") {
+			if (this.authToken) {
+				v = v.replaceAll(this.authToken, "[AuthToken]");
+			}
+			if (this.profile?.mid) {
+				v = v.replaceAll(this.profile.mid, "[MY mid]");
+			}
+			if (this.profile?.displayName) {
+				v = v.replaceAll(this.profile?.displayName, "[MY name]");
+			}
+
+			const midType = v.match(/(.)[0123456789abcdef]{32}/);
+			if (midType && midType[1]) {
+				return `[${midType[1].toUpperCase()} mid]`;
+			}
+		}
+		if (typeof v === "object") {
+			const newObj: any = {};
+			let midCount = 0;
+			for (const key in v) {
+				if (Object.prototype.hasOwnProperty.call(v, key)) {
+					const value = v[key];
+					const midType = key.match(/(.)[0123456789abcdef]{32}/);
+					if (midType && midType[1]) {
+						midCount++;
+						newObj[
+							`[${midType[1].toUpperCase()} mid ${midCount}]`
+						] = value;
+					} else {
+						newObj[key] = value;
+					}
+				}
+			}
+			return newObj;
+		}
+		return v;
+	};
+
+	/**
+	 * JSON replacer to remove mid and authToken, parse bigint to number
+	 *
+	 * ```
+	 * JSON.stringify(data, BaseClient.jsonReplacer);
+	 * ```
+	 */
+	static jsonReplacer(k: any, v: any): any {
+		if (typeof v === "bigint") {
+			return Number(v);
+		}
+		if (typeof v === "string") {
+			const midType = v.match(/(.)[0123456789abcdef]{32}/);
+			if (midType && midType[1]) {
+				return `[${midType[1].toUpperCase()} mid]`;
+			}
+			if (k === "x-line-access") {
+				return `[AuthToken]`;
+			}
+		}
+		if (typeof v === "object") {
+			const newObj: any = {};
+			let midCount = 0;
+			for (const key in v) {
+				if (Object.prototype.hasOwnProperty.call(v, key)) {
+					const value = v[key];
+					const midType = key.match(/(.)[0123456789abcdef]{32}/);
+					if (midType && midType[1]) {
+						midCount++;
+						newObj[
+							`[${midType[1].toUpperCase()} mid ${midCount}]`
+						] = value;
+					} else {
+						newObj[key] = value;
+					}
+				}
+			}
+			return newObj;
+		}
+		return v;
 	}
 }
