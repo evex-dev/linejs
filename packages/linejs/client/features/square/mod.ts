@@ -133,8 +133,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 
 	async getMembers(): Promise<LINETypes.SquareMember[]> {
 		const res = await continueRequest({
-			handler: (arg) =>
-				this.#client.base.square.getSquareChatMembers(arg),
+			handler: (arg) => this.#client.base.square.getSquareChatMembers(arg),
 			arg: {
 				squareChatMid: this.raw.squareChatMid,
 			},
