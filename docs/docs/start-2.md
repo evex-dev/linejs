@@ -107,9 +107,5 @@ Enjoy.
 
 :::tip\
 If you want to create your own storage such as connecting to the cloud api,\
-import `BaseStorage` and extend it to create your own storage. (Please ask for
-details.) :::
-
-:::info\
-If you want to use v1, please ask for details at
-[discord.gg/evex](https://discord.gg/evex). :::
+import `BaseStorage` and extend it to create your own storage. (An example can be found [here](https://github.com/evex-dev/linejs/tree/main/example/storage)) 
+:::

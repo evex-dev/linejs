@@ -12,7 +12,7 @@ hero:
       link: /docs/start
     - theme: alt
       text: Examples
-      link: https://github.com/evex-dev/linejs
+      link: https://github.com/evex-dev/linejs/tree/main/example
 
 features:
   - title: Works on All Platforms
