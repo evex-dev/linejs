@@ -15,7 +15,7 @@ import type {
 	MentionMeta,
 	StickerMetadata,
 } from "./internal-types.ts";
-import type { DecorationsData, From, MentionTarget, To } from "./types.ts";
+import type { DecorationsData, MentionTarget, Mid } from "./types.ts";
 import { InternalError } from "../../../base/core/mod.ts";
 
 export interface TalkMessageInit {
@@ -72,12 +72,56 @@ export class TalkMessage {
 	}
 
 	/**
+	 * Sends to message.
+	 */
+	async send(
+		input: string | {
+			e2ee?: boolean;
+			text?: string;
+			contentType?: ContentType;
+			contentMetadata?: Record<string, string>;
+			relatedMessageId?: string;
+			location?: Location;
+		},
+	): Promise<Message> {
+		if (typeof input === "string") {
+			return this.reply({
+				text: input,
+			});
+		}
+
+		let to: string;
+		if (this.to.type === "GROUP" || this.to.type === "ROOM") {
+			to = this.to.id; // this.to means it is group.
+		} else {
+			// Personal chats
+			to = this.isMyMessage ? this.to.id : this.from.id;
+		}
+		return await this.#client.base.talk.sendMessage({
+			text: input.text,
+			to,
+			e2ee: input.e2ee,
+		});
+	}
+
+	/**
 	 * Reacts to message.
 	 */
 	async react(type: MessageReactionType): Promise<void> {
 		await this.#client.base.talk.react({
 			id: BigInt(this.raw.id),
 			reaction: type,
+		});
+	}
+
+	/**
+	 * Read the message.
+	 */
+	async read(): Promise<void> {
+		await this.#client.base.talk.sendChatChecked({
+			chatMid: this.isMyMessage ? this.to.id : this.from.id,
+			lastMessageId: this.raw.id,
+			seq: await this.#client.base.getReqseq(),
 		});
 	}
 
@@ -337,14 +381,14 @@ export class TalkMessage {
 		return this.#client.base.profile?.mid === this.from.id;
 	}
 
-	get to(): To {
+	get to(): Mid {
 		const message = this.raw;
 		return {
 			type: message.toType,
 			id: message.to,
 		};
 	}
-	get from(): From {
+	get from(): Mid {
 		const message = this.raw;
 		return {
 			type: message.toType,

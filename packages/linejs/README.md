@@ -30,6 +30,14 @@ bunx --bun jsr add @evex/linejs
 deno add @evex/linejs
 ```
 
+You can use `git clone` to download the latest development version and use it in Deno.
+
+```llvm
+git clone https://github.com/evex-dev/linejs.git
+cd linejs
+touch main.js
+deno run main.js
+```
 ##### Documentation is [https://linejs.evex.land](https://linejs.evex.land/)
 
 ## Browser Support
@@ -53,7 +61,7 @@ MessageType, etc.) are provided.
 - thrift - (@evex/linejs/thrift)
   - Thrift - Thrift read/write
 - storage - (@evex/linejs/storage)
-  - BaseStorage - LINE Client Base Storage
+  - BaseStorage - LINE Client Storage Type
   - MemoryStorage - LINE Client Memory Storage
   - FileStorage - LINE Client File Storage
 - types - (@evex/linejs-types)

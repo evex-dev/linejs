@@ -14,7 +14,7 @@ import type {
 	MentionMeta,
 	StickerMetadata,
 } from "./internal-types.ts";
-import type { DecorationsData, From, MentionTarget, To } from "./types.ts";
+import type { DecorationsData, MentionTarget, Mid } from "./types.ts";
 import { InternalError } from "../../../base/core/mod.ts";
 
 const hasContents = ["IMAGE", "VIDEO", "AUDIO", "FILE"];
@@ -65,6 +65,30 @@ export class SquareMessage {
 	}
 
 	/**
+	 * Sends to message.
+	 */
+	async send(
+		input: string | {
+			text?: string;
+			contentType?: ContentType;
+			contentMetadata?: Record<string, string>;
+			relatedMessageId?: string;
+			location?: Location;
+		},
+	): Promise<void> {
+		if (typeof input === "string") {
+			return this.reply({
+				text: input,
+			});
+		}
+
+		await this.#client.base.square.sendMessage({
+			relatedMessageId: this.raw.message.to,
+			squareChatMid: this.raw.message.to,
+			text: input.text,
+		});
+	}
+	/**
 	 * Reacts to message.
 	 * @param type Reaction type
 	 */
@@ -78,6 +102,18 @@ export class SquareMessage {
 			request: {
 				reqSeq: 0,
 				reactionType: type,
+				messageId: this.raw.message.id,
+				squareChatMid: this.to.id,
+			},
+		});
+	}
+
+	/**
+	 * Read the message.
+	 */
+	async read(): Promise<void> {
+		await this.#client.base.square.markAsRead({
+			request: {
 				messageId: this.raw.message.id,
 				squareChatMid: this.to.id,
 			},
@@ -352,14 +388,14 @@ export class SquareMessage {
 		return this.#authorIsMe;
 	}
 
-	get to(): To {
+	get to(): Mid {
 		const { message } = this.raw;
 		return {
 			type: message.toType,
 			id: message.to,
 		};
 	}
-	get from(): From {
+	get from(): Mid {
 		const message = this.raw.message;
 		return {
 			type: message.toType,

@@ -25,11 +25,7 @@ export type DecorationsData = {
 			all: boolean;
 		};
 };
-export interface From {
-	id: string;
-	type: MIDType;
-}
-export interface To {
+export interface Mid {
 	id: string;
 	type: MIDType;
 }
