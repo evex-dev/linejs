@@ -105,7 +105,7 @@ This concludes our first trip.\
 But there is still a journey left to be made.\
 Enjoy.
 
-:::tip\
+:::tip
 If you want to create your own storage such as connecting to the cloud api,\
 import `BaseStorage` and extend it to create your own storage. (An example can be found [here](https://github.com/evex-dev/linejs/tree/main/example/storage)) 
 :::
