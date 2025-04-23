@@ -1,4 +1,4 @@
-import curve25519 from "curve25519-js";
+import {sharedKey} from "curve25519-js";
 import crypto from "node:crypto";
 import { Buffer } from "node:buffer";
 import type { Location, Message } from "@evex/linejs-types";
@@ -264,7 +264,7 @@ export class E2EE {
 			privateKey: privateKey.length,
 			publicKey: publicKey.length,
 		});
-		return curve25519.sharedKey(
+		return sharedKey(
 			Uint8Array.from(privateKey),
 			Uint8Array.from(publicKey),
 		);
