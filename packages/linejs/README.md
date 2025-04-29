@@ -18,6 +18,8 @@
 
 ##### <center>📚 Documentation: [Check out the full documentation](https://linejs.evex.land)</center>
 
+#### <center>🤖 AI Generated Documentation: [https://deepwiki.com/evex-dev/linejs](https://deepwiki.com/evex-dev/linejs)
+
 ---
 
 ## Installation
