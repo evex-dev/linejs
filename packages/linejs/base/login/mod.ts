@@ -226,7 +226,7 @@ export class Login {
 				this.client.emit("pincall", pincode);
 				await this.checkPinCodeVerified(sqr);
 			}
-			const response = await this.qrCodeLogin(sqr);
+			const response = await this.qrCodeLoginV2(sqr);
 			const { 1: pem, 3: tokenInfo, 4: _mid, 10: e2eeInfo } = response;
 			if (pem) {
 				this.client.emit("update:qrcert", pem);
@@ -243,6 +243,7 @@ export class Login {
 				"expire",
 				tokenInfo[3] + tokenInfo[6],
 			);
+			console.log(tokenInfo);
 			return tokenInfo[1];
 		}
 		throw new InternalError(
@@ -722,8 +723,8 @@ export class Login {
 
 	public async qrCodeLoginV2(
 		authSessionId: string,
-		modelName: string = "evex",
-		systemName: string = "linejs",
+		modelName: string = "evex-device",
+		systemName: string = "linejs-v2",
 		autoLoginIsRequired: boolean = true,
 	): Promise<any> {
 		return await this.client.request.request(
