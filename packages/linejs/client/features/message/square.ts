@@ -58,7 +58,7 @@ export class SquareMessage {
 		}
 
 		await this.#client.base.square.sendMessage({
-			relatedMessageId: this.raw.message.to,
+			relatedMessageId: this.raw.message.id,
 			squareChatMid: this.raw.message.to,
 			text: input.text,
 		});
