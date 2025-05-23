@@ -399,7 +399,7 @@ export class SquareMessage {
 		const message = this.raw.message;
 		return {
 			type: message.toType,
-			id: message.to,
+			id: message.from,
 		};
 	}
 	get #content() {

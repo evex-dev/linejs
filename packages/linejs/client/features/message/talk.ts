@@ -392,7 +392,7 @@ export class TalkMessage {
 		const message = this.raw;
 		return {
 			type: message.toType,
-			id: message.to,
+			id: message.from,
 		};
 	}
 	get #content() {
