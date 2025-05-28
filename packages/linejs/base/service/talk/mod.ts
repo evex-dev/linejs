@@ -177,7 +177,7 @@ export class TalkService implements BaseService {
 			LINEStruct.getProfile_args(...param),
 			"getProfile",
 			this.protocolType,
-			true,
+			"Profile",
 			this.requestPath,
 		);
 	}

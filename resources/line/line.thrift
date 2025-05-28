@@ -6072,14 +6072,6 @@ struct GetProductResponse {
     1: ProductDetail productDetail;
 }
 
-struct GetProfileRequest {
-    1: string profileId;
-}
-
-struct GetProfileResponse {
-    1: Profile profile;
-}
-
 struct GetProfilesRequest {
     1: Pb1_V7 syncReason;
 }

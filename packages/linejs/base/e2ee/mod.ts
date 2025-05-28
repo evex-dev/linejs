@@ -1,4 +1,4 @@
-import {sharedKey} from "curve25519-js";
+import { sharedKey } from "curve25519-js";
 import crypto from "node:crypto";
 import { Buffer } from "node:buffer";
 import type { Location, Message } from "@evex/linejs-types";
@@ -21,9 +21,10 @@ export class E2EE {
 	}
 	public async getE2EESelfKeyData(mid: string): Promise<any> {
 		try {
-			return JSON.parse(
+			const keyData = JSON.parse(
 				await this.client.storage.get("e2eeKeys:" + mid) as string,
 			);
+			if (keyData && keyData.privKey && keyData.pubKey) return keyData;
 		} catch (_e) {
 			/* Do Nothing */
 		}

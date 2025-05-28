@@ -379,7 +379,6 @@ export class Login {
 			this.client.emit("pincall", response.pinCode || constantPincode);
 			if (enableE2EE && secret) {
 				const headers = {
-					accept: "application/x-thrift",
 					"user-agent": this.client.request.userAgent,
 					"x-line-application": this.client.request.systemType,
 					"x-line-access": response.verifier,

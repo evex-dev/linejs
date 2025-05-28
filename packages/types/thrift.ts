@@ -10742,20 +10742,6 @@ export const Thrift: Record<string, Record<string, string> | any[]> = {
       "struct": "ProductDetail"
     }
   ],
-  "GetProfileRequest": [
-    {
-      "fid": 1,
-      "name": "profileId",
-      "type": 11
-    }
-  ],
-  "GetProfileResponse": [
-    {
-      "fid": 1,
-      "name": "profile",
-      "struct": "Profile"
-    }
-  ],
   "GetProfilesRequest": [
     {
       "fid": 1,
