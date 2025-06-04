@@ -189,7 +189,7 @@ export class Timeline {
 		const { homeId, postId } = { ...options };
 		const headers = {
 			...this.timelineHeaders,
-			"x-lhm": "POST",
+			"x-lhm": "GET",
 		};
 		const params = new URLSearchParams({
 			homeId,
@@ -199,7 +199,7 @@ export class Timeline {
 			`https://${this.client.request.endpoint}/${
 				homeId[0] == "s" ? "sn" : "mh"
 			}/api/v57/post/delete.json?${params}`,
-			{ headers, method: "GET" },
+			{ headers, method: "POST" },
 		).then((r) => r.json());
 	}
 
