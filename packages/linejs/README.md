@@ -1,87 +1,149 @@
 # LINEJS
 
-[![JSR](https://jsr.io/badges/@evex/linejs)](https://jsr.io/@evex/linejs)
-[![JSR Score](https://jsr.io/badges/@evex/linejs/score)](https://jsr.io/@evex/linejs)
-[![JSR Scope](https://jsr.io/badges/@evex)](https://jsr.io/@evex)
-![release workflow](https://github.com/evex-dev/linejs/actions/workflows/release.yml/badge.svg)\
-[![](https://dcbadge.limes.pink/api/server/evex)](https://discord.gg/evex)
+> A powerful and modular JavaScript library for creating LINE SelfBots across
+> Node.js, Deno, and Bun. https://linejs.evex.land/
 
-<center>
-  <img src="https://raw.githubusercontent.com/evex-dev/linejs/main/.github/assets/icon.png" width="150" height="150" alt="LINEJS" />
-</center>
+<table align="center">
+  <tr>
+    <td align="center">
+      <a href="https://discord.gg/evex">
+        <img src="https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/66e3d80db9971f10a9757c99_Symbol.svg" width="128" height="128" alt="Discord Logo" /><br />
+        Discord
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://linejs.evex.land">
+        <img src="https://raw.githubusercontent.com/evex-dev/linejs/main/.github/assets/icon.png" width="128" height="128" alt="LINEJS Logo" />
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://deepwiki.com/evex-dev/linejs">
+        <img src="https://devin.ai/icon.png" width="128" height="128" alt="DeepWiki Logo" /><br />
+        DeepWiki
+      </a>
+    </td>
+  </tr>
+</table>
 
-<center> <b>LINEJS</b> is a JavaScript library for creating a LINE SelfBot. </center>
+<p align="center">
+  <a href="https://jsr.io/@evex/linejs">
+    <img src="https://jsr.io/badges/@evex/linejs" alt="JSR">
+  </a>
+  <a href="https://jsr.io/@evex/linejs/score">
+    <img src="https://jsr.io/badges/@evex/linejs/score" alt="JSR Score">
+  </a>
+  <a href="https://jsr.io/@evex">
+    <img src="https://jsr.io/badges/@evex" alt="JSR Scope">
+  </a>
+  <img src="https://github.com/evex-dev/linejs/actions/workflows/release.yml/badge.svg" alt="Release Status">
+  <a href="https://discord.gg/evex">
+    <img src="https://dcbadge.limes.pink/api/server/evex" alt="Discord">
+  </a>
+</p>
 
 ---
 
-##### <center>❓ Question: Join our [Discord community](https://discord.gg/evex)</center>
+## ℹ️ Information
 
-##### <center>📚 Documentation: [Check out the full documentation](https://linejs.evex.land)</center>
+- ❓ Question: Join our [Discord community](https://discord.gg/evex)
+- 📚 Documentation: [Check out the full documentation](https://linejs.evex.land)
+- 🤖 AI Generated Documentation:
+  [DeepWiki - LINEJS](https://deepwiki.com/evex-dev/linejs)
 
-##### <center>🤖 AI Generated Documentation: [DeepWiki - LINEJS](https://deepwiki.com/evex-dev/linejs)
+## ✨ Features
+
+- 🔁 LINE SelfBot functionality
+- 🔌 Cross-runtime support: Node.js, Deno, Bun
+- 💡 TypeScript-first with official typings
+- 🧩 Modular packages for full control
 
 ---
 
-## Installation
+## 📦 Installation
 
-Supports all runtimes (Node.js, Deno, and Bun) and Typescript.
+Supports **Node.js**, **Deno**, **Bun**, and **TypeScript** out of the box.
 
-```llvm
+```sh
+# Node.js
 npx jsr add @evex/linejs
+
+# Bun
 bunx --bun jsr add @evex/linejs
+
+# Deno
 deno add @evex/linejs
 ```
 
-You can use `git clone` to download the latest development version and use it in Deno.
+Want to test the development version?
 
-```llvm
+```sh
 git clone https://github.com/evex-dev/linejs.git
 cd linejs
 touch main.js
 deno run main.js
 ```
-##### Documentation is [https://linejs.evex.land](https://linejs.evex.land/)
 
-## Browser Support
+📚 Full documentation: [https://linejs.evex.land](https://linejs.evex.land)
 
-For now, please use "https://esm.sh/jsr/@evex/linejs".
+---
 
-Example is [here](./example/browser).
+## 🌐 Browser Support
 
-## LINEJS Types
+Use the following import for browser environments:
 
-Please see [@evex/linejs-types](https://jsr.io/@evex/linejs-types).\
-In short, TypeScript types and enums (such as ReactionType (0, 1, 2, 3),
-MessageType, etc.) are provided.
+```ts
+import { Client } from "https://esm.sh/jsr/@evex/linejs";
+```
 
-## Provided Packages
+See the [browser example](../../example/browser/) for more details.
 
-- client - (@evex/linejs) or (@evex/linejs/client)
-  - Client - LINE SelfBot Client
-- base - (@evex/linejs/base)
-  - BaseClient - LINE SelfBot API Client
-- thrift - (@evex/linejs/thrift)
-  - Thrift - Thrift read/write
-- storage - (@evex/linejs/storage)
-  - BaseStorage - LINE Client Storage Type
-  - MemoryStorage - LINE Client Memory Storage
-  - FileStorage - LINE Client File Storage
-- types - (@evex/linejs-types)
-  - All Types for LINE
+---
 
-## Authors
+## 📘 Types
 
-- Owner & Developer: [Piloking](https://github.com/piloking)
-- Developer: [EdamAme-x](https://github.com/EdamAme-x)
-- Developer: [MocA-Love](https://github.com/MocA-Love)
-- Developer: [Hafusun](https://github.com/hafusun)
+TypeScript types and enums like `ReactionType`, `MessageType`, etc., are
+available in:
 
-## References
+🔗 [`@evex/linejs-types`](https://jsr.io/@evex/linejs-types)
+
+---
+
+## 🧩 Provided Packages
+
+| Package                | Description                           |
+| ---------------------- | ------------------------------------- |
+| `@evex/linejs`         | LINE SelfBot Client                   |
+| `@evex/linejs/base`    | Base LINE API Client                  |
+| `@evex/linejs/thrift`  | Thrift serializer/deserializer        |
+| `@evex/linejs/storage` | Memory & File-based storage for LINE  |
+| `@evex/linejs-types`   | Complete TypeScript typings and enums |
+
+---
+
+## 🧠 Learn More
+
+- 🤖 AI Documentation: [DeepWiki - LINEJS](https://deepwiki.com/evex-dev/linejs)
+- ❓ Questions? [Join our Discord](https://discord.gg/evex)
+
+---
+
+## 👨‍💻 Authors
+
+- **Owner & Lead Dev**: [Piloking](https://github.com/piloking)
+- **Core Developers**:
+  - [EdamAme-x](https://github.com/EdamAme-x)
+  - [MocA-Love](https://github.com/MocA-Love)
+  - [Hafusun](https://github.com/hafusun)
+
+---
+
+## 📚 References & Inspirations
 
 - [DeachSword/CHRLINE](https://github.com/DeachSword/CHRLINE)
+- [CHRLINE-Thrift](https://github.com/DeachSword/CHRLINE-Thrift/)
+- [CHRLINE-Patch](https://github.com/WEDeach/CHRLINE-Patch)
+- [@discordjs/collection](https://www.npmjs.com/package/@discordjs/collection)
 
-- [DeachSword/CHRLINE-Thrift](https://github.com/DeachSword/CHRLINE-Thrift/)
+---
 
-- [WEDeach/CHRLINE-Patch](https://github.com/WEDeach/CHRLINE-Patch)
-
-- [discordjs/collection](https://www.npmjs.com/package/@discordjs/collection)
+> Built with ❤️ by the Evex team
