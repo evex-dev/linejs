@@ -140,8 +140,7 @@ export class TalkMessage {
 			type: "MESSAGE",
 			contents: {
 				text: this.raw.text,
-				link:
-					`line://nv/chatMsg?chatId=${this.to.id}&messageId=${this.raw.id}`,
+				link: `line://nv/chatMsg?chatId=${this.to.id}&messageId=${this.raw.id}`,
 			},
 		});
 	}
@@ -186,8 +185,11 @@ export class TalkMessage {
 			throw new TypeError("The message is not text message.");
 		}
 		const emojiUrls: string[] = [];
-		const emojiData = this.raw.contentMetadata as unknown as EmojiMeta;
-		const emojiResources = emojiData?.REPLACE?.sticon?.resources ?? [];
+		const emojiData = this.raw.contentMetadata;
+		const replace = emojiData?.REPLACE
+			? JSON.parse(emojiData?.REPLACE) as EmojiMeta["REPLACE"]
+			: undefined;
+		const emojiResources = replace?.sticon?.resources ?? [];
 		for (const emoji of emojiResources) {
 			emojiUrls.push(
 				`https://stickershop.line-scdn.net/sticonshop/v1/sticon/${emoji.productId}/android/${emoji.sticonId}.png`,
@@ -205,8 +207,11 @@ export class TalkMessage {
 			throw new TypeError("Message has no text.");
 		}
 		const mentionees: MentionTarget[] = [];
-		const mentionData = content.metadata as unknown as MentionMeta;
-		const mentions = mentionData?.MENTION?.MENTIONEES ?? [];
+		const mentionData = content.metadata;
+		const mention = mentionData?.MENTION
+			? JSON.parse(mentionData.MENTION) as MentionMeta["MENTION"]
+			: undefined;
+		const mentions = mention?.MENTIONEES ?? [];
 		for (const mention of mentions) {
 			mentionees.push(
 				mention.A
@@ -238,16 +243,24 @@ export class TalkMessage {
 			mention?: number;
 			emoji?: number;
 		}[] = [];
-		const mentionData = content.metadata as unknown as MentionMeta;
-		const emojiData = content.metadata as unknown as EmojiMeta;
-		(mentionData?.MENTION?.MENTIONEES || []).forEach((e, i) => {
+		const mentionData = content.metadata;
+		const emojiData = content.metadata;
+		const mention = mentionData?.MENTION
+			? JSON.parse(mentionData.MENTION) as MentionMeta["MENTION"]
+			: undefined;
+		const mentions = mention?.MENTIONEES ?? [];
+		mentions.forEach((e, i) => {
 			splits.push({
 				start: parseInt(e.S),
 				end: parseInt(e.E),
 				mention: i,
 			});
 		});
-		(emojiData?.REPLACE?.sticon?.resources || []).forEach((e, i) => {
+		const replace = emojiData?.REPLACE
+			? JSON.parse(emojiData?.REPLACE) as EmojiMeta["REPLACE"]
+			: undefined;
+		const emojiResources = replace?.sticon?.resources ?? [];
+		emojiResources.forEach((e, i) => {
 			splits.push({ start: e.S, end: e.E, emoji: i });
 		});
 		let lastSplit = 0;
@@ -266,7 +279,7 @@ export class TalkMessage {
 					text: this.raw.text?.substring(e.start, e.end),
 				};
 				if (typeof e.emoji === "number") {
-					const emoji = emojiData.REPLACE.sticon.resources[e.emoji];
+					const emoji = emojiResources[e.emoji];
 					const url =
 						`https://stickershop.line-scdn.net/sticonshop/v1/sticon/${emoji.productId}/android/${emoji.sticonId}.png`;
 					content.emoji = {
@@ -274,7 +287,11 @@ export class TalkMessage {
 						url,
 					};
 				} else if (typeof e.mention === "number") {
-					const mention = mentionData.MENTION.MENTIONEES[e.mention];
+					const _mention = mentionData?.MENTION
+						? JSON.parse(mentionData.MENTION) as MentionMeta["MENTION"]
+						: undefined;
+					const mentions = _mention?.MENTIONEES ?? [];
+					const mention = mentions[e.mention];
 					content.mention = mention.M
 						? { mid: mention.M }
 						: { all: !!mention.A };

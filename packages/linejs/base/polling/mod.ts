@@ -100,8 +100,7 @@ export class Polling {
 					response.fullSyncResponse &&
 					response.fullSyncResponse.nextRevision
 				) {
-					this.sync.talk.revision =
-						response.fullSyncResponse.nextRevision;
+					this.sync.talk.revision = response.fullSyncResponse.nextRevision;
 				}
 				if (
 					response.operationResponse &&

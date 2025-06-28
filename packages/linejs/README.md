@@ -32,7 +32,8 @@ bunx --bun jsr add @evex/linejs
 deno add @evex/linejs
 ```
 
-You can use `git clone` to download the latest development version and use it in Deno.
+You can use `git clone` to download the latest development version and use it in
+Deno.
 
 ```llvm
 git clone https://github.com/evex-dev/linejs.git
@@ -40,6 +41,7 @@ cd linejs
 touch main.js
 deno run main.js
 ```
+
 ##### Documentation is [https://linejs.evex.land](https://linejs.evex.land/)
 
 ## Browser Support

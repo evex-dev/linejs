@@ -6,8 +6,8 @@ import * as thrift from "thrift";
 
 const thriftClient = new Thrift();
 console.log(
-    thriftClient.readThrift(
-        Deno.readFileSync("./http-body.bin"),
-        thrift.TCompactProtocol,
-    ),
+	thriftClient.readThrift(
+		Deno.readFileSync("./http-body.bin"),
+		thrift.TCompactProtocol,
+	),
 );
