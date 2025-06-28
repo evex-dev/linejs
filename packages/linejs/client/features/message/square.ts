@@ -172,9 +172,9 @@ export class SquareMessage {
 		const stickerMetadata = this.raw.message
 			.contentMetadata as unknown as StickerMetadata;
 		if (stickerMetadata.STKOPT === "A") {
-			return `https://stickershop.line-scdn.net/stickershop/v1/sticker/${stickerMetadata.STKID}/android/sticker.png`;
-		} else {
 			return `https://stickershop.line-scdn.net/stickershop/v1/sticker/${stickerMetadata.STKID}/android/sticker_animation.png`;
+		} else {
+			return `https://stickershop.line-scdn.net/stickershop/v1/sticker/${stickerMetadata.STKID}/android/sticker.png`;
 		}
 	}
 
