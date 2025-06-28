@@ -15,16 +15,16 @@ export const buildTextDecorations = (decorationText: DecorationsData[]): [
 	let text = "";
 	let hasMention = false;
 	let hasEmoji = false;
-	const _contentMetadata: Partial<EmojiMeta & MentionMeta> = {
-		REPLACE: {
+	const _contentMetadata = {
+		REPLACE: `{
 			sticon: {
 				resources: [],
 			},
-		},
-		STICON_OWNERSHIP: [],
-		MENTION: {
+		}`,
+		STICON_OWNERSHIP: `[]`,
+		MENTION: `{
 			MENTIONEES: [],
-		},
+		}`,
 	};
 	decorationText.forEach((e) => {
 		if (e.emoji) {
@@ -32,7 +32,10 @@ export const buildTextDecorations = (decorationText: DecorationsData[]): [
 				e.text = "(linejs)";
 			}
 			hasEmoji = true;
-			_contentMetadata.REPLACE!.sticon.resources.push({
+			const replace = JSON.parse(
+				_contentMetadata.REPLACE!,
+			) as EmojiMeta["REPLACE"];
+			replace.sticon.resources.push({
 				S: text.length,
 				E: text.length + e.text.length,
 				productId: e.emoji.productId,
@@ -40,30 +43,49 @@ export const buildTextDecorations = (decorationText: DecorationsData[]): [
 				version: e.emoji.version || 1,
 				resourceType: e.emoji.resourceType || "STATIC",
 			});
+			_contentMetadata.REPLACE = JSON.stringify(replace);
+			const sticon = JSON.parse(
+				_contentMetadata.STICON_OWNERSHIP!,
+			) as EmojiMeta["STICON_OWNERSHIP"];
 			if (
-				!_contentMetadata.STICON_OWNERSHIP?.includes(
+				!sticon.includes(
 					e.emoji.productId,
 				)
 			) {
-				_contentMetadata.STICON_OWNERSHIP!.push(e.emoji.productId);
+				sticon!.push(e.emoji.productId);
 			}
+			_contentMetadata.STICON_OWNERSHIP = JSON.stringify(sticon);
 		} else if (e.mention) {
 			if (!e.text) {
 				e.text = "@unknown";
 			}
 			hasMention = true;
 			if (e.mention.all) {
-				_contentMetadata.MENTION!.MENTIONEES.push({
+				const mention = JSON.parse(
+					_contentMetadata.MENTION!,
+				) as MentionMeta["MENTION"];
+
+				mention.MENTIONEES ??= [];
+				mention.MENTIONEES.push({
 					S: text.length.toString(),
 					E: (text.length + e.text.length).toString(),
 					A: "1",
 				});
+
+				_contentMetadata.MENTION = JSON.stringify(mention);
 			} else {
-				_contentMetadata.MENTION!.MENTIONEES.push({
+				const mention = JSON.parse(
+					_contentMetadata.MENTION!,
+				) as MentionMeta["MENTION"];
+
+				mention.MENTIONEES ??= [];
+				mention.MENTIONEES.push({
 					S: text.length.toString(),
 					E: (text.length + e.text.length).toString(),
 					M: e.mention.mid,
 				});
+
+				_contentMetadata.MENTION = JSON.stringify(mention);
 			}
 		}
 		text += e.text || "";
@@ -73,9 +95,9 @@ export const buildTextDecorations = (decorationText: DecorationsData[]): [
 		STICON_OWNERSHIP?: string;
 		MENTION?: string;
 	} = {
-		REPLACE: JSON.stringify(_contentMetadata.REPLACE),
-		STICON_OWNERSHIP: JSON.stringify(_contentMetadata.STICON_OWNERSHIP),
-		MENTION: JSON.stringify(_contentMetadata.MENTION),
+		REPLACE: _contentMetadata.REPLACE,
+		STICON_OWNERSHIP: _contentMetadata.STICON_OWNERSHIP,
+		MENTION: _contentMetadata.MENTION,
 	};
 	if (!hasEmoji) {
 		delete contentMetadata.REPLACE;
