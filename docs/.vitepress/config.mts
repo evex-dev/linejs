@@ -21,7 +21,7 @@ export default defineConfig({
 			{ text: "Docs", link: "/docs/start" },
 			{
 				text: "Examples",
-				link: "https://github.com/evex-dev/linejs/tree/main/examples",
+				link: "https://github.com/evex-dev/linejs/tree/main/example",
 			},
 		],
 
