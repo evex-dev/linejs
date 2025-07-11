@@ -50,7 +50,7 @@ export class RelationService implements BaseService {
 	}
 
 	async getContactsV3(
-		options: { mids: string[], checkUserStatusStrictly: boolean },
+		options: { mids: string[], checkUserStatusStrictly?: boolean },
 	): Promise<LINETypes.getContactsV3_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.getContactsV3_args({
