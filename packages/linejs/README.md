@@ -1,8 +1,8 @@
 # LINEJS
 
-[![JSR](https://jsr.io/badges/@evex/linejs)](https://jsr.io/@evex/linejs)
-[![JSR Score](https://jsr.io/badges/@evex/linejs/score)](https://jsr.io/@evex/linejs)
-[![JSR Scope](https://jsr.io/badges/@evex)](https://jsr.io/@evex)
+[![JSR](https://jsr.io/badges/@evex/linejs?from=github)](https://jsr.io/@evex/linejs)
+[![JSR Score](https://jsr.io/badges/@evex/linejs/score?from=github)](https://jsr.io/@evex/linejs)
+[![JSR Scope](https://jsr.io/badges/@evex?from=github)](https://jsr.io/@evex)
 ![release workflow](https://github.com/evex-dev/linejs/actions/workflows/release.yml/badge.svg)\
 [![](https://dcbadge.limes.pink/api/server/evex)](https://discord.gg/evex)
 
