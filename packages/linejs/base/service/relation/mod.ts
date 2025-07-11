@@ -50,7 +50,7 @@ export class RelationService implements BaseService {
 	}
 
 	async getContactsV3(
-		options: { mids: string[] },
+		options: { mids: string[], checkUserStatusStrictly: boolean },
 	): Promise<LINETypes.getContactsV3_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.getContactsV3_args({
@@ -59,6 +59,7 @@ export class RelationService implements BaseService {
 						targetUserMid: m,
 					})),
 					syncReason: "UNKNOWN",
+					checkUserStatusStrictly: options.checkUserStatusStrictly || false
 				},
 			}),
 			"getContactsV3",
