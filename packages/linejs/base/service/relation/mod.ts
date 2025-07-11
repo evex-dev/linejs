@@ -58,8 +58,8 @@ export class RelationService implements BaseService {
 					targetUsers: options.mids.map((m) => ({
 						targetUserMid: m,
 					})),
-					syncReason: "UNKNOWN",
-					checkUserStatusStrictly: options.checkUserStatusStrictly || false
+					syncReason: "AUTO_REPAIR",
+					checkUserStatusStrictly: options.checkUserStatusStrictly
 				},
 			}),
 			"getContactsV3",
