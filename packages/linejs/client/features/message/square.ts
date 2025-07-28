@@ -80,7 +80,7 @@ export class SquareMessage {
 		},
 	): Promise<void> {
 		if (typeof input === "string") {
-			return this.reply({
+			return this.send({
 				text: input,
 			});
 		}

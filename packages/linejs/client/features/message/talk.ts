@@ -88,7 +88,7 @@ export class TalkMessage {
 		},
 	): Promise<Message> {
 		if (typeof input === "string") {
-			return this.reply({
+			return this.send({
 				text: input,
 			});
 		}
