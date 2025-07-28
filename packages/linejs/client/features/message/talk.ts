@@ -64,10 +64,13 @@ export class TalkMessage {
 			to = this.isMyMessage ? this.to.id : this.from.id;
 		}
 		return await this.#client.base.talk.sendMessage({
-			relatedMessageId: this.raw.id,
+			relatedMessageId: input.relatedMessageId ?? this.raw.id,
 			text: input.text,
 			to,
 			e2ee: input.e2ee,
+			contentType: input.contentType,
+			contentMetadata: input.contentMetadata,
+			location: input.location,
 		});
 	}
 
@@ -85,7 +88,7 @@ export class TalkMessage {
 		},
 	): Promise<Message> {
 		if (typeof input === "string") {
-			return this.reply({
+			return this.send({
 				text: input,
 			});
 		}
@@ -98,9 +101,13 @@ export class TalkMessage {
 			to = this.isMyMessage ? this.to.id : this.from.id;
 		}
 		return await this.#client.base.talk.sendMessage({
+			relatedMessageId: input.relatedMessageId,
 			text: input.text,
 			to,
 			e2ee: input.e2ee,
+			contentType: input.contentType,
+			contentMetadata: input.contentMetadata,
+			location: input.location,
 		});
 	}
 

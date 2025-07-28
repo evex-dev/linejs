@@ -58,9 +58,12 @@ export class SquareMessage {
 		}
 
 		await this.#client.base.square.sendMessage({
-			relatedMessageId: this.raw.message.id,
+			relatedMessageId: input.relatedMessageId ?? this.raw.message.id,
 			squareChatMid: this.raw.message.to,
 			text: input.text,
+			contentType: input.contentType,
+			contentMetadata: input.contentMetadata,
+			location: input.location,
 		});
 	}
 
@@ -77,15 +80,18 @@ export class SquareMessage {
 		},
 	): Promise<void> {
 		if (typeof input === "string") {
-			return this.reply({
+			return this.send({
 				text: input,
 			});
 		}
 
 		await this.#client.base.square.sendMessage({
-			relatedMessageId: this.raw.message.to,
+			relatedMessageId: input.relatedMessageId,
 			squareChatMid: this.raw.message.to,
 			text: input.text,
+			contentMetadata: input.contentMetadata,
+			contentType: input.contentType,
+			location: input.location,
 		});
 	}
 	/**
