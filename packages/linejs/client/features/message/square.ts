@@ -21,7 +21,7 @@ import { InternalError } from "../../../base/core/mod.ts";
 const hasContents = ["IMAGE", "VIDEO", "AUDIO", "FILE"];
 export interface SquareThreadMessageInit {
 	client: Client;
-	raw: NotificationThreadMessage;
+	raw: SquareEventNotificationThreadMessage;
 }
 
 export interface SquareMessageInit {
