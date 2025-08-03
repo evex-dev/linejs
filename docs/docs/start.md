@@ -38,7 +38,7 @@ After created client, you can do various things!
 
 For instance, you can get one of chat informations you joined:
 ```ts
-const chats = await client.fetchChats()
+const chats = await client.fetchJoinedChats()
 console.log(chats[0].name)
 ```
 
