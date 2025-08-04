@@ -1,4 +1,4 @@
-import type { GetContactV3Response } from "../../../../types/line_types.ts";
+import type { GetContactV3Response } from "@evex/linejs-types";
 
 export interface UserInit {
 	raw: GetContactV3Response;
