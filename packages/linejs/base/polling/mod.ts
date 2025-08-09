@@ -87,7 +87,7 @@ export class Polling {
 		pollingInterval?: number;
 	} = {}): AsyncGenerator<Operation, void, unknown> {
 		const { signal, onError, pollingInterval } = {
-			pollingInterval: 1000,
+			pollingInterval: 100,
 			...options,
 		};
 		while (true) {
