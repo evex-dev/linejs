@@ -888,24 +888,34 @@ export class E2EE {
 			aes_iv,
 			message,
 		});
-		const decipher = crypto.createDecipheriv(
-			"aes-256-cbc",
-			aes_key,
-			aes_iv,
-		);
+
 		let decrypted: Buffer | undefined;
+
+		// 最初の試行
 		try {
+			const decipher = crypto.createDecipheriv(
+				"aes-256-cbc",
+				aes_key,
+				aes_iv,
+			);
 			decrypted = Buffer.concat([
 				decipher.update(message),
 				decipher.final(),
 			]);
-		} catch {
-			decipher.setAutoPadding(false);
+		} catch (error) {
+			// エラー時は新しい decipher オブジェクトを作成
+			const decipher2 = crypto.createDecipheriv(
+				"aes-256-cbc",
+				aes_key,
+				aes_iv,
+			);
+			decipher2.setAutoPadding(false);
 			decrypted = Buffer.concat([
-				decipher.update(message),
-				decipher.final(),
+				decipher2.update(message),
+				decipher2.final(),
 			]);
 		}
+
 		this.e2eeLog(
 			"decryptE2EEMessageV1DecryptedMessage",
 			decrypted.toString("utf-8"),
@@ -940,32 +950,45 @@ export class E2EE {
 			contentType,
 		);
 
-		const decipher = crypto.createDecipheriv("aes-256-gcm", gcmKey, sign);
-		decipher.setAuthTag(tag);
-		decipher.setAAD(aad);
 		let decrypted;
-		try {
-			try {
-				decrypted = Buffer.concat([
-					decipher.update(ciphertext),
-					decipher.final(),
-				]);
-			} catch {
-				decipher.setAutoPadding(false);
-				decrypted = Buffer.concat([
-					decipher.update(ciphertext),
-					decipher.final(),
-				]);
-			}
-		} catch (error) {
-			if (error instanceof Error) {
-				this.e2eeLog(
-					"decryptE2EEMessageV2DecryptionFailed",
-					error.message,
-				);
-			}
 
-			throw error;
+		// 最初の試行
+		try {
+			const decipher = crypto.createDecipheriv(
+				"aes-256-gcm",
+				gcmKey,
+				sign,
+			);
+			decipher.setAuthTag(tag);
+			decipher.setAAD(aad);
+			decrypted = Buffer.concat([
+				decipher.update(ciphertext),
+				decipher.final(),
+			]);
+		} catch (error) {
+			// エラー時は新しい decipher オブジェクトを作成
+			try {
+				const decipher2 = crypto.createDecipheriv(
+					"aes-256-gcm",
+					gcmKey,
+					sign,
+				);
+				decipher2.setAuthTag(tag);
+				decipher2.setAAD(aad);
+				decipher2.setAutoPadding(false);
+				decrypted = Buffer.concat([
+					decipher2.update(ciphertext),
+					decipher2.final(),
+				]);
+			} catch (retryError) {
+				if (retryError instanceof Error) {
+					this.e2eeLog(
+						"decryptE2EEMessageV2DecryptionFailed",
+						retryError.message,
+					);
+				}
+				throw retryError;
+			}
 		}
 
 		this.e2eeLog("decryptE2EEMessageV2DecryptedMessage", decrypted);
