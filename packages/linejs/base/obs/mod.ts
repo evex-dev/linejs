@@ -185,7 +185,7 @@ export class LineObs {
 			...oid ? { oid: oid } : {
 				oid: "reqseq",
 				tomid: to,
-				reqseq: this.client.getReqseq("talk").toString(),
+				reqseq: (await this.client.getReqseq("talk")).toString(),
 			},
 		};
 		if (type === "image") {
@@ -202,7 +202,7 @@ export class LineObs {
 		return await this.uploadObjectForService({
 			data,
 			oType: type,
-			obsPath: toType + "/m/" + oid || "reqseq",
+			obsPath: `${toType}/m/${oid ?? "reqseq"}`,
 			filename: param.name,
 			params: param,
 		});
@@ -241,13 +241,13 @@ export class LineObs {
 		};
 
 		params = { ...baseParams, ...(params || {}) };
-
+		
 		if (!data || data.size === 0) {
 			throw new InternalError("ObsError", "No data to send.");
 		}
 		let headers: Record<string, string> = this.client.request
 			.getHeader("POST");
-		headers["Content-Type"] = "application/octet-stream";
+		headers["content-type"] = "application/octet-stream";
 		headers["X-Obs-Params"] = Buffer.from(JSON.stringify(params)).toString(
 			"base64",
 		);
