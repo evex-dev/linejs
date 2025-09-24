@@ -146,7 +146,7 @@ export class RequestClient {
 				method: overrideMethod,
 				headers,
 				signal: AbortSignal.timeout(timeout),
-				body: Trequest,
+				body: new Uint8Array(Trequest.buffer, Trequest.byteOffset, Trequest.byteLength),
 			},
 		);
 		const nextToken = response.headers.get("x-line-next-access");

@@ -1038,17 +1038,17 @@ export class E2EE {
 			await globalThis.crypto.subtle.encrypt(
 				{
 					name: "AES-CTR",
-					counter: nonce,
+					counter: new Uint8Array(nonce.buffer, nonce.byteOffset, nonce.byteLength),
 					length: 64,
 				},
 				await globalThis.crypto.subtle.importKey(
 					"raw",
-					aesKey,
+					new Uint8Array(aesKey.buffer, aesKey.byteOffset, aesKey.byteLength),
 					"AES-CTR",
 					false,
 					["encrypt", "decrypt"],
 				),
-				data,
+				new Uint8Array(data.buffer, data.byteOffset, data.byteLength),
 			),
 		);
 	}

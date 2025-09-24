@@ -331,7 +331,7 @@ export class LineObs {
 				Buffer.from(await data.arrayBuffer()),
 			);
 		const tempId = "reqid-" + crypto.randomUUID();
-		const edata = new Blob([encryptedData]);
+		const edata = new Blob([new Uint8Array(encryptedData.buffer, encryptedData.byteOffset, encryptedData.byteLength)]);
 		const { objId } = await this.uploadObjectForService({
 			data: edata,
 			oType: "file",
@@ -407,11 +407,12 @@ export class LineObs {
 			obsPath: "talk/" + contentMetadata.SID,
 			addHeaders: { "X-Talk-Meta": talkMeta },
 		});
+		const decryptedBuffer = await this.client.e2ee.decryptByKeyMaterial(
+			Buffer.from(await data.arrayBuffer()),
+			keyMaterial,
+		);
 		const fileData = new File([
-			await this.client.e2ee.decryptByKeyMaterial(
-				Buffer.from(await data.arrayBuffer()),
-				keyMaterial,
-			),
+			new Uint8Array(decryptedBuffer.buffer, decryptedBuffer.byteOffset, decryptedBuffer.byteLength),
 		], fileName);
 		return fileData;
 	}
