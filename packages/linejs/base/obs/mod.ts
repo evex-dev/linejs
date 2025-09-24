@@ -331,7 +331,8 @@ export class LineObs {
 				Buffer.from(await data.arrayBuffer()),
 			);
 		const tempId = "reqid-" + crypto.randomUUID();
-		const edata = new Blob([new Uint8Array(encryptedData.buffer, encryptedData.byteOffset, encryptedData.byteLength)]);
+		const encryptedArrayBuffer = encryptedData.buffer.slice(encryptedData.byteOffset, encryptedData.byteOffset + encryptedData.byteLength);
+		const edata = new Blob([new Uint8Array(encryptedArrayBuffer as ArrayBuffer)]);
 		const { objId } = await this.uploadObjectForService({
 			data: edata,
 			oType: "file",
@@ -411,8 +412,9 @@ export class LineObs {
 			Buffer.from(await data.arrayBuffer()),
 			keyMaterial,
 		);
+		const decryptedArrayBuffer = decryptedBuffer.buffer.slice(decryptedBuffer.byteOffset, decryptedBuffer.byteOffset + decryptedBuffer.byteLength);
 		const fileData = new File([
-			new Uint8Array(decryptedBuffer.buffer, decryptedBuffer.byteOffset, decryptedBuffer.byteLength),
+			new Uint8Array(decryptedArrayBuffer as ArrayBuffer),
 		], fileName);
 		return fileData;
 	}

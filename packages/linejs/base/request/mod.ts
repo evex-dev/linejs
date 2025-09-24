@@ -140,13 +140,14 @@ export class RequestClient {
 			body: Trequest,
 		});
 
+		const requestArrayBuffer = Trequest.buffer.slice(Trequest.byteOffset, Trequest.byteOffset + Trequest.byteLength);
 		const response = await this.client.fetch(
 			`https://${this.endpoint}${path}`,
 			{
 				method: overrideMethod,
 				headers,
 				signal: AbortSignal.timeout(timeout),
-				body: new Uint8Array(Trequest.buffer, Trequest.byteOffset, Trequest.byteLength),
+				body: new Uint8Array(requestArrayBuffer as ArrayBuffer),
 			},
 		);
 		const nextToken = response.headers.get("x-line-next-access");
