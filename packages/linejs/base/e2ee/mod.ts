@@ -1034,21 +1034,26 @@ export class E2EE {
 		nonce: Buffer,
 		data: Buffer,
 	): Promise<Buffer> {
+		// Convert ArrayBufferLike to ArrayBuffer
+		const nonceArrayBuffer = nonce.buffer.slice(nonce.byteOffset, nonce.byteOffset + nonce.byteLength);
+		const aesKeyArrayBuffer = aesKey.buffer.slice(aesKey.byteOffset, aesKey.byteOffset + aesKey.byteLength);
+		const dataArrayBuffer = data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength);
+		
 		return Buffer.from(
 			await globalThis.crypto.subtle.encrypt(
 				{
 					name: "AES-CTR",
-					counter: nonce,
+					counter: new Uint8Array(nonceArrayBuffer as ArrayBuffer),
 					length: 64,
 				},
 				await globalThis.crypto.subtle.importKey(
 					"raw",
-					aesKey,
+					new Uint8Array(aesKeyArrayBuffer as ArrayBuffer),
 					"AES-CTR",
 					false,
 					["encrypt", "decrypt"],
 				),
-				data,
+				new Uint8Array(dataArrayBuffer as ArrayBuffer),
 			),
 		);
 	}
