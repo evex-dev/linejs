@@ -1038,9 +1038,11 @@ export class E2EE {
 			await globalThis.crypto.subtle.encrypt(
 				{
 					name: "AES-CTR",
+					// @ts-expect-error: will fix cuz typescript version change
 					counter: nonce,
 					length: 64,
 				},
+				// @ts-expect-error: will fix cuz typescript version change
 				await globalThis.crypto.subtle.importKey(
 					"raw",
 					aesKey,

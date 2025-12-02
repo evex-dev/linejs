@@ -331,6 +331,7 @@ export class LineObs {
 				Buffer.from(await data.arrayBuffer()),
 			);
 		const tempId = "reqid-" + crypto.randomUUID();
+		// @ts-expect-error: will fix cuz typescript version change
 		const edata = new Blob([encryptedData]);
 		const { objId } = await this.uploadObjectForService({
 			data: edata,
@@ -408,6 +409,7 @@ export class LineObs {
 			addHeaders: { "X-Talk-Meta": talkMeta },
 		});
 		const fileData = new File([
+			// @ts-expect-error: will fix cuz typescript version change
 			await this.client.e2ee.decryptByKeyMaterial(
 				Buffer.from(await data.arrayBuffer()),
 				keyMaterial,

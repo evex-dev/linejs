@@ -146,6 +146,7 @@ export class RequestClient {
 				method: overrideMethod,
 				headers,
 				signal: AbortSignal.timeout(timeout),
+				// @ts-expect-error: will fix cuz typescript version change
 				body: Trequest,
 			},
 		);
