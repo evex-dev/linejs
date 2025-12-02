@@ -50,15 +50,15 @@ export function getDeviceDetails(
 			systemName = "Android OS";
 			break;
 		case "IOS":
-			appVersion = version || "13.3.0";
+			appVersion = version || "15.19.0";
 			systemName = "iOS";
 			break;
 		case "IOSIPAD":
-			appVersion = version || "13.3.0";
+			appVersion = version || "15.19.0";
 			systemName = "iOS";
 			break;
 		case "WATCHOS":
-			appVersion = version || "13.3.0";
+			appVersion = version || "15.19.0";
 			systemName = "Watch OS";
 			break;
 		case "WEAROS":
