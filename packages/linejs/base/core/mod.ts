@@ -243,7 +243,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			return Number(v);
 		}
 		if (typeof v === "string") {
-			const midType = v.match(/(.)[0123456789abcdef]{32}/);
+			const midType = v.match(/([ucrmst])[0123456789abcdef]{32}/);
 			if (midType && midType[1]) {
 				return `[${midType[1].toUpperCase()} mid]`;
 			}
@@ -252,6 +252,18 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			}
 		}
 		if (typeof v === "object") {
+			if (Array.isArray(v)) {
+				return v.map((item) => BaseClient.jsonReplacer("", item));
+			}
+			if (v instanceof Uint8Array) {
+				return `Uint8Array[${v.length}]<${
+					Array.from(v).map((e) => e.toString(16)).join(" ")
+				}>`;
+			}
+			if (v instanceof Blob) {
+				return `Blob[${v.size}]@${v.type}`;
+			}
+
 			const newObj: any = {};
 			let midCount = 0;
 			for (const key in v) {

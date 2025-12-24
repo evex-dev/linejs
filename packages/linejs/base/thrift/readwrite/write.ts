@@ -9,50 +9,57 @@ import {
 } from "./declares.ts";
 import Int64 from "node-int64";
 const Thrift = thrift.Thrift;
-
 export function writeThrift(
 	value: NestedArray,
 	name: string,
 	Protocol: (typeof Protocols)[ProtocolKey],
 ): Uint8Array {
-	let myBuf: Buffer = Buffer.from([]);
+	const chunks: Buffer[] = [];
+	// 初期バッファは空にして、コールバックでチャンクを集める
 	const buftra = new thrift.TBufferedTransport(
-		myBuf,
+		Buffer.from([]),
 		function (outBuf?: Buffer) {
 			if (!outBuf) return;
-			myBuf = Buffer.concat([myBuf, outBuf]);
+			chunks.push(outBuf);
 		},
 	);
 	const myprot = new Protocol(buftra);
 	_writeStruct(myprot, value);
 	myprot.flush();
 	buftra.flush();
+
+	let myBuf = chunks.length ? Buffer.concat(chunks) : Buffer.from([]);
 	if (myBuf.length === 1 && myBuf[0] === 0) {
 		myBuf = Buffer.from([]);
 	}
-	const writedBinary = new Uint8Array([
-		...genHeader[Protocol == thrift.TBinaryProtocol ? 3 : 4](name),
-		...myBuf,
-		0,
-	]);
+
+	// header と myBuf を効率よく結合して Uint8Array を作る（スプレッド禁止）
+	const header = genHeader[Protocol == thrift.TBinaryProtocol ? 3 : 4](name);
+	const totalLen = header.length + myBuf.length + 1;
+	const writedBinary = new Uint8Array(totalLen);
+	writedBinary.set(header, 0);
+	writedBinary.set(myBuf, header.length);
+	writedBinary[totalLen - 1] = 0;
 	return writedBinary;
 }
+
 export function writeStruct(
 	value: NestedArray,
 	Protocol: (typeof Protocols)[ProtocolKey],
 ): Uint8Array {
-	let myBuf: Buffer = Buffer.from([]);
+	const chunks: Buffer[] = [];
 	const buftra = new thrift.TBufferedTransport(
-		myBuf,
+		Buffer.from([]),
 		function (outBuf?: Buffer) {
 			if (!outBuf) return;
-			myBuf = Buffer.concat([myBuf, outBuf]);
+			chunks.push(outBuf);
 		},
 	);
 	const myprot = new Protocol(buftra);
 	_writeStruct(myprot, value);
 	myprot.flush();
 	buftra.flush();
+	let myBuf = chunks.length ? Buffer.concat(chunks) : Buffer.from([]);
 	if (myBuf.length === 1 && myBuf[0] === 0) {
 		myBuf = Buffer.from([]);
 	}
@@ -68,12 +75,13 @@ function _writeStruct(
 	}
 	output.writeStructBegin("");
 
-	value.forEach((e: NestedArray[0]) => {
+	for (let i = 0, L = value.length; i < L; i++) {
+		const e = value[i];
 		if (e === null || e === undefined) {
-			return;
+			continue;
 		}
 		writeValue(output, e[0], e[1], e[2]);
-	});
+	}
 
 	output.writeFieldStop();
 	output.writeStructEnd();
@@ -127,7 +135,7 @@ function writeValue(
 		case Thrift.Type.I64:
 			if (typeof val === "bigint") {
 				output.writeFieldBegin("", Thrift.Type.I64, fid);
-				output.writeI64(new Int64(val.toString(16)));
+				output.writeI64(new Int64(val));
 				output.writeFieldEnd();
 			} else if (typeof val !== "number") {
 				throw new TypeError(`ftype=${ftype}: value is not number`);
@@ -175,15 +183,18 @@ function writeValue(
 				return;
 			}
 			output.writeFieldBegin("", Thrift.Type.MAP, fid);
-			output.writeMapBegin(val[0], val[1], Thrift.objectLength(val[2]));
-			for (const kiter in val[2]) {
-				if (Object.prototype.hasOwnProperty.call(val[2], kiter)) {
-					const viter = (val as any)[2][kiter];
+			{
+				const obj = val[2] as Record<string, any>;
+				const keys = Object.keys(obj);
+				output.writeMapBegin(val[0], val[1], keys.length);
+				for (let i = 0; i < keys.length; i++) {
+					const kiter = keys[i];
+					const viter = obj[kiter];
 					writeValue_(output, val[0], kiter);
 					writeValue_(output, val[1], viter);
 				}
+				output.writeMapEnd();
 			}
-			output.writeMapEnd();
 			output.writeFieldEnd();
 			break;
 
@@ -193,16 +204,14 @@ function writeValue(
 				return;
 			}
 			output.writeFieldBegin("", Thrift.Type.LIST, fid);
-			output.writeListBegin(
-				val[0],
-				(val[1] as NonNullable<NestedArray>).length,
-			);
-			for (const iter in val[1] as any[]) {
-				if (Object.prototype.hasOwnProperty.call(val[1], iter)) {
-					writeValue_(output, val[0], val[1][iter]);
-				}
-			}
-			output.writeListEnd();
+			{
+                const arr = val[1] as any[];
+                output.writeListBegin(val[0], arr.length);
+                for (let i = 0, L = arr.length; i < L; i++) {
+                    writeValue_(output, val[0], arr[i]);
+                }
+                output.writeListEnd();
+            }
 			output.writeFieldEnd();
 			break;
 		case Thrift.Type.SET:
@@ -211,16 +220,14 @@ function writeValue(
 				return;
 			}
 			output.writeFieldBegin("", Thrift.Type.SET, fid);
-			output.writeSetBegin(
-				val[0],
-				(val[1] as NonNullable<NestedArray>).length,
-			);
-			for (const iter in val[1] as NestedArray) {
-				if (Object.prototype.hasOwnProperty.call(val[1], iter)) {
-					writeValue_(output, val[0], val[1][iter]);
-				}
-			}
-			output.writeSetEnd();
+			{
+                const arr = val[1] as any[];
+                output.writeSetBegin(val[0], arr.length);
+                for (let i = 0, L = arr.length; i < L; i++) {
+                    writeValue_(output, val[0], arr[i]);
+                }
+                output.writeSetEnd();
+            }
 			output.writeFieldEnd();
 			break;
 		default:

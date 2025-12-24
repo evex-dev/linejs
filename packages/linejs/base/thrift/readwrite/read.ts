@@ -27,21 +27,21 @@ function readStruct(
 }
 
 function isBinary(bin: Buffer) {
-	const str = bin.toString();
-	if (JSON.stringify(str).includes("\\u")) {
-		return true;
-	}
-	const bin2 = Buffer.from(str);
-	return bin.toString("base64") !== bin2.toString("base64");
+    try {
+        new TextDecoder("utf-8", { fatal: true }).decode(bin);
+        return false;
+    } catch {
+        return true;
+    }
 }
 
 function bigInt(bin: Buffer): number | bigint {
-	const str = bin.toString("hex");
-	const num = parseInt(str, 16);
-	if (Number.MAX_SAFE_INTEGER < num) {
-		return BigInt("0x" + str);
-	}
-	return num;
+    const hex = bin.toString("hex");
+    const value = BigInt("0x" + hex);
+    if (value <= BigInt(Number.MAX_SAFE_INTEGER)) {
+        return Number(value);
+    }
+    return value;
 }
 
 function readValue(

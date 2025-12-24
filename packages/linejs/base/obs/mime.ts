@@ -1,4 +1,4 @@
-export const MimeType = {
+export const MimeType: Record<string, string> = {
 	"audio/x-mpeg": "mpega",
 	"application/postscript": "ps",
 	"audio/x-aiff": "aiff",
