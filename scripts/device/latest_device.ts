@@ -25,12 +25,7 @@ export async function getLatestMobile() {
 		}).then((r) => r.text()),
 	);
 	const document = dom.window.document;
-	const apple = JSON.parse(
-		document.querySelector("#shoebox-media-api-cache-apps").textContent,
-	);
-	const line = JSON.parse(Object.values(apple)[0] as string);
-	return line.d[0].attributes.platformAttributes.ios.versionHistory[0]
-		.versionDisplay as string;
+	return document.querySelector("#mostRecentVersion > div > dialog > div > div.content-container.svelte-1ih6d3u > ul > li:nth-child(1) > article > div > div > h4")!.textContent
 }
 export async function getLatestDesktop() {
 	const dom = new JSDOM(
@@ -60,10 +55,5 @@ export async function getLatestDesktop() {
 		).then((r) => r.text()),
 	);
 	const document = dom.window.document;
-	const apple = JSON.parse(
-		document.querySelector("#shoebox-media-api-cache-apps").textContent,
-	);
-	const line = JSON.parse(Object.values(apple)[0] as string);
-	return line.d[0].attributes.platformAttributes.osx.versionHistory[0]
-		.versionDisplay as string;
+	return document.querySelector("#mostRecentVersion > div > dialog > div > div.content-container.svelte-1ih6d3u > ul > li:nth-child(1) > article > div > div > h4")!.textContent
 }
