@@ -4,9 +4,10 @@ import {
 	Location,
 	type MessageReactionType,
 	type SquareEvent,
-	type SquareMessage as Message,
 	type SquareEventNotificationThreadMessage,
+	type SquareMessage as Message,
 } from "@evex/linejs-types";
+import { Thrift } from "@evex/linejs-types/thrift";
 import type { Client } from "../../client.ts";
 import type {
 	EmojiMeta,
@@ -420,9 +421,9 @@ export class SquareMessage {
 		};
 	}
 	get from(): Mid {
-		const message = this.raw.message;
+		const { message } = this.raw;
 		return {
-			type: message.toType,
+			type: this.raw.fromType,
 			id: message.from,
 		};
 	}
@@ -479,10 +480,11 @@ export class SquareThreadMessage {
 				text: input,
 			});
 		}
-		
+
 		await this.#sendSquareThreadMessage({
 			...input,
-			relatedMessageId: input.relatedMessageId ?? this.raw.squareMessage.message.id,
+			relatedMessageId: input.relatedMessageId ??
+				this.raw.squareMessage.message.id,
 		});
 	}
 
@@ -527,15 +529,15 @@ export class SquareThreadMessage {
 						contentType: "NONE",
 						toType: "SQUARE_THREAD",
 						...input.relatedMessageId
-								? {
-									relatedMessageId: input.relatedMessageId,
-									relatedMessageServiceCode: "SQUARE",
-									messageRelationType: "REPLY",
-								}
-								: {},
-					}
-				}
-			}
+							? {
+								relatedMessageId: input.relatedMessageId,
+								relatedMessageServiceCode: "SQUARE",
+								messageRelationType: "REPLY",
+							}
+							: {},
+					},
+				},
+			},
 		});
 	}
 
@@ -802,7 +804,6 @@ export class SquareThreadMessage {
 		return null;
 	}
 
-
 	/**
 	 * Get file info.
 	 */
@@ -826,7 +827,11 @@ export class SquareThreadMessage {
 	 * @return {Blob} message data
 	 */
 	async getData(preview?: boolean): Promise<Blob> {
-		if (!hasContents.includes(this.raw.squareMessage.message.contentType as string)) {
+		if (
+			!hasContents.includes(
+				this.raw.squareMessage.message.contentType as string,
+			)
+		) {
 			throw new TypeError(
 				"message have no contents",
 			);
@@ -888,7 +893,10 @@ export class SquareThreadMessage {
 			raw: source.payload.notificationThreadMessage,
 		});
 	}
-	static fromRawTalk(raw: SquareEventNotificationThreadMessage, client: Client): SquareThreadMessage {
+	static fromRawTalk(
+		raw: SquareEventNotificationThreadMessage,
+		client: Client,
+	): SquareThreadMessage {
 		return new SquareThreadMessage({
 			client,
 			raw,

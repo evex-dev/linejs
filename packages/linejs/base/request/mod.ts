@@ -28,6 +28,9 @@ export class RequestClient {
 	readonly client: BaseClient;
 	endpoint: string;
 	userAgent: string;
+	/**
+	 * x-line-application
+	 */
 	systemType: string;
 	static readonly EXCEPTION_TYPES: Record<string, string | undefined> = {
 		"/S3": "TalkException",
@@ -220,7 +223,7 @@ export class RequestClient {
 
 		const isRefresh = Boolean(
 			res.data.e &&
-				res.data.e["code"] === "MUST_REFRESH_V3_TOKEN" &&
+				res.data.e.code === "MUST_REFRESH_V3_TOKEN" &&
 				await this.client.storage.get("refreshToken"),
 		);
 
@@ -233,6 +236,10 @@ export class RequestClient {
 			);
 		}
 		if (hasError && !isRefresh) {
+			if (res.data.e.code === "NOT_AUTHORIZED_DEVICE") {
+				delete this.client.authToken;
+				this.client.emit("end", this.client.profile!);
+			}
 			throw new InternalError(
 				"RequestError",
 				`Request internal failed, ${methodName}(${path}) -> ` +
@@ -261,7 +268,6 @@ export class RequestClient {
 	 * Get HTTP headers for a request.
 	 * @param {string} [overrideMethod="POST"] The HTTP method to use in the `x-lhm` header.
 	 * @returns {Record<string, string>} An object with the headers as key-value pairs.
-	 * @throws {InternalError} If the client has not been setup yet.
 	 */
 	public getHeader(
 		overrideMethod: string = "POST",

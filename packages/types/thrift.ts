@@ -1,4 +1,4 @@
-export const Thrift: Record<string, Record<string, string> | any[]> = {
+export const Thrift: any = {
 	"AR0_g": {
 		"16641": "ILLEGAL_ARGUMENT",
 		"16642": "MAJOR_VERSION_NOT_SUPPORTED",

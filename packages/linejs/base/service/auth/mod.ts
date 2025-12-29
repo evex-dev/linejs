@@ -29,7 +29,7 @@ export class AuthService implements BaseService {
 				(RATR.durationUntilRefreshInSec as number) as number,
 			);
 		} else {
-			throw new InternalError("refreshError", "refreshToken not found");
+			throw new InternalError("RefreshError", "refreshToken not found");
 		}
 	}
 

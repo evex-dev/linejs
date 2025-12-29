@@ -7,7 +7,6 @@ export interface SyncData {
 		revision?: number | bigint;
 		globalRev?: number | bigint;
 		individualRev?: number | bigint;
-		timeout?: number;
 	};
 }
 
@@ -18,9 +17,10 @@ function sleep(time: number) {
 }
 
 export class Polling {
-	sync: SyncData = { talk: {} };
+	sync: SyncData = { talk: { revision: 0, globalRev: 0, individualRev: 0 } };
 
 	client: BaseClient;
+	islisten: boolean = false;
 	constructor(client: BaseClient) {
 		this.client = client;
 	}
@@ -34,8 +34,10 @@ export class Polling {
 	 * @param options.pollingInterval - The interval in milliseconds between polling requests. Defaults to 1000ms.
 	 *
 	 * @yields {SquareEvent} - The events received from the square.
+	 *
+	 * @deprecated
 	 */
-	async *listenSquareEvents(options: {
+	async *_listenSquareEvents(options: {
 		signal?: AbortSignal;
 		onError?: (error: unknown) => void;
 		pollingInterval?: number;
@@ -80,8 +82,10 @@ export class Polling {
 	 * @yields {Operation} - Yields each operation event received from the server.
 	 *
 	 * @returns {AsyncGenerator<Operation, void, unknown>} - An async generator that yields operation events.
+	 *
+	 * @deprecated
 	 */
-	async *listenTalkEvents(options: {
+	async *_listenTalkEvents(options: {
 		signal?: AbortSignal;
 		onError?: (error: unknown) => void;
 		pollingInterval?: number;
@@ -139,5 +143,49 @@ export class Polling {
 				break;
 			}
 		}
+	}
+
+	async initLegyPusher(cb?: () => void) {
+		if (this.islisten) {
+			cb && cb();
+			return;
+		}
+		while (this.client.authToken) {
+			try {
+				this.islisten = true;
+				await this.client.conn.initializeConn(1, [3, 8]);
+				cb && cb();
+				await this.client.conn.InitAndRead([3, 8]);
+				await sleep(4);
+			} catch (err) {
+				this.client.log("LegyPusherError", { err });
+				await sleep(4);
+			}
+		}
+		this.islisten = false;
+	}
+
+	listenSquareEvents(options: {
+		signal?: AbortSignal;
+	} = {}): ReadableStream<SquareEvent> {
+		this.initLegyPusher(() => {
+			options.signal && options.signal.addEventListener(
+				"abort",
+				() => this.client.conn.conns[0]?.reqStream?.abort.abort(),
+			);
+		});
+		return this.client.conn.sqStream.stream;
+	}
+
+	listenTalkEvents(options: {
+		signal?: AbortSignal;
+	} = {}): ReadableStream<Operation> {
+		this.initLegyPusher(() => {
+			options.signal && options.signal.addEventListener(
+				"abort",
+				() => this.client.conn.conns[0]?.reqStream?.abort.abort(),
+			);
+		});
+		return this.client.conn.opStream.stream;
 	}
 }

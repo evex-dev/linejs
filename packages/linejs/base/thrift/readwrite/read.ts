@@ -27,21 +27,21 @@ function readStruct(
 }
 
 function isBinary(bin: Buffer) {
-    try {
-        new TextDecoder("utf-8", { fatal: true }).decode(bin);
-        return false;
-    } catch {
-        return true;
-    }
+	try {
+		new TextDecoder("utf-8", { fatal: true }).decode(bin);
+		return false;
+	} catch {
+		return true;
+	}
 }
 
 function bigInt(bin: Buffer): number | bigint {
-    const hex = bin.toString("hex");
-    const value = BigInt("0x" + hex);
-    if (value <= BigInt(Number.MAX_SAFE_INTEGER)) {
-        return Number(value);
-    }
-    return value;
+	const hex = bin.toString("hex");
+	const value = BigInt("0x" + hex);
+	if (value <= BigInt(Number.MAX_SAFE_INTEGER)) {
+		return Number(value);
+	}
+	return value;
 }
 
 function readValue(
@@ -92,6 +92,12 @@ function readValue(
 		return input.readBool();
 	} else if (ftype == Thrift.Type.DOUBLE) {
 		return input.readDouble();
+	} else if (ftype == 16) {
+		// @ts-expect-error
+		return input.readIString();
+	} else if (ftype == 17) {
+		// @ts-expect-error
+		return input.readLineMid();
 	} else {
 		input.skip(ftype);
 		return;

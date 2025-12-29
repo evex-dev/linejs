@@ -33,10 +33,14 @@ import { E2EE } from "../e2ee/mod.ts";
 import { LineObs } from "../obs/mod.ts";
 import { Timeline } from "../timeline/mod.ts";
 import { Polling } from "../polling/mod.ts";
+import { ConnManager } from "../push/mod.ts";
 
 import { Thrift as def } from "@evex/linejs-types/thrift";
+
 import type * as LINETypes from "@evex/linejs-types";
 import type { Fetch, FetchLike } from "../types.ts";
+
+import { Buffer } from "node:buffer";
 
 export interface LoginOption {
 	email?: string;
@@ -105,6 +109,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	readonly e2ee: E2EE;
 	readonly obs: LineObs;
 	readonly timeline: Timeline;
+	readonly poll: Polling;
+	readonly conn: ConnManager;
 
 	readonly auth: AuthService;
 	readonly call: CallService;
@@ -167,6 +173,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.e2ee = new E2EE(this);
 		this.obs = new LineObs(this);
 		this.timeline = new Timeline(this);
+		this.poll = new Polling(this);
+		this.conn = new ConnManager(this);
 
 		this.auth = new AuthService(this);
 		this.call = new CallService(this);
@@ -225,10 +233,10 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	};
 
 	/**
-	 * Creates polling client.
+	 * returns polling client.
 	 */
 	createPolling(): Polling {
-		return new Polling(this);
+		return this.poll;
 	}
 
 	/**
@@ -243,7 +251,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			return Number(v);
 		}
 		if (typeof v === "string") {
-			const midType = v.match(/([ucrmst])[0123456789abcdef]{32}/);
+			const midType = v.match(/([ucrpmst])[0123456789abcdef]{32}/);
 			if (midType && midType[1]) {
 				return `[${midType[1].toUpperCase()} mid]`;
 			}
@@ -255,9 +263,9 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			if (Array.isArray(v)) {
 				return v.map((item) => BaseClient.jsonReplacer("", item));
 			}
-			if (v instanceof Uint8Array) {
+			if (v instanceof Uint8Array || v instanceof Buffer) {
 				return `Uint8Array[${v.length}]<${
-					Array.from(v).map((e) => e.toString(16)).join(" ")
+					Array.from(v).map((e) => e.toString(16).padStart(2,"0")).join(" ")
 				}>`;
 			}
 			if (v instanceof Blob) {
