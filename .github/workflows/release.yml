@@ -21,7 +21,7 @@ jobs:
         uses: denoland/setup-deno@v1
         with:
           deno-version: v2.x
-
+      - run: deno approve-scripts
       - name: Publish linejs-types to JSR
         run: |
           cd packages/types
