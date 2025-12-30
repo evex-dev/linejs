@@ -20,6 +20,7 @@ jobs:
         with:
           deno-version: v2.x
       - run: deno approve-scripts
+        working-directory: ./packages
       - run: deno publish --dry-run
         working-directory: ./packages/linejs
       - run: deno publish --dry-run
