@@ -169,6 +169,7 @@ export class LineObs {
 			);
 		}
 		const ext = MimeType[data.type as keyof typeof MimeType];
+		const reqseqValue = await this.client.getReqseq("talk");
 		const param: {
 			oid: string;
 			reqseq?: string;
@@ -185,7 +186,7 @@ export class LineObs {
 			...oid ? { oid: oid } : {
 				oid: "reqseq",
 				tomid: to,
-				reqseq: this.client.getReqseq("talk").toString(),
+				reqseq: reqseqValue.toString(),
 			},
 		};
 		if (type === "image") {
