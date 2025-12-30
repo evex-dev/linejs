@@ -1,0 +1,16 @@
+services:
+  linejs:
+    build: .
+    container_name: linejs
+    volumes:
+      - ../:/linejs
+    networks:
+      - linejs
+    command: bash
+    stdin_open: true
+    tty: true
+    restart: 'no'
+
+networks:
+  linejs:
+    driver: bridge
