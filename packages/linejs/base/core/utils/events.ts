@@ -1,4 +1,5 @@
 import type * as LINETypes from "@evex/linejs-types";
+import { SyncData } from "../../polling/mod.ts";
 // import type { Operation, SquareMessage, TalkMessage } from "../../event/mod.ts";
 type LogType = "login" | "request" | "response" | (string & {});
 
@@ -16,5 +17,6 @@ export type ClientEvents = {
 	"update:profile": (profile: LINETypes.Profile) => void;
 	"update:cert": (cert: string) => void;
 	"update:qrcert": (qrCert: string) => void;
+	"update:syncdata": (sync: SyncData) => void;
 	log: (data: Log) => void;
 };

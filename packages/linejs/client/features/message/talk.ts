@@ -408,7 +408,7 @@ export class TalkMessage {
 	get from(): Mid {
 		const message = this.raw;
 		return {
-			type: message.toType,
+			type: "USER",
 			id: message.from,
 		};
 	}

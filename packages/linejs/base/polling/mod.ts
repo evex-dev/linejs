@@ -153,39 +153,30 @@ export class Polling {
 		while (this.client.authToken) {
 			try {
 				this.islisten = true;
-				await this.client.conn.initializeConn(1, [3, 8]);
+				try {
+					await this.client.conn.initializeConn(1, [3, 8]);
+				} catch (error) {
+					this.client.log("LegyPusherError_cannot_init", { error });
+					break;
+				}
 				cb && cb();
 				await this.client.conn.InitAndRead([3, 8]);
 				await sleep(4);
-			} catch (err) {
-				this.client.log("LegyPusherError", { err });
+			} catch (error) {
+				this.client.log("LegyPusherError", { error });
 				await sleep(4);
 			}
 		}
 		this.islisten = false;
 	}
 
-	listenSquareEvents(options: {
-		signal?: AbortSignal;
-	} = {}): ReadableStream<SquareEvent> {
-		this.initLegyPusher(() => {
-			options.signal && options.signal.addEventListener(
-				"abort",
-				() => this.client.conn.conns[0]?.reqStream?.abort.abort(),
-			);
-		});
+	listenSquareEvents(): ReadableStream<SquareEvent> {
+		this.initLegyPusher();
 		return this.client.conn.sqStream.stream;
 	}
 
-	listenTalkEvents(options: {
-		signal?: AbortSignal;
-	} = {}): ReadableStream<Operation> {
-		this.initLegyPusher(() => {
-			options.signal && options.signal.addEventListener(
-				"abort",
-				() => this.client.conn.conns[0]?.reqStream?.abort.abort(),
-			);
-		});
+	listenTalkEvents(): ReadableStream<Operation> {
+		this.initLegyPusher();
 		return this.client.conn.opStream.stream;
 	}
 }

@@ -30,6 +30,13 @@ function gen_m(ss = [1, 3, 5, 6, 8, 9, 10]) {
 	return i;
 }
 
+export interface ReadableStreamWriter<T> {
+	stream: ReadableStream<T>;
+	enqueue(chunk: T): void;
+	close(): void;
+	error(err: any): void;
+	renew(): void;
+}
 export class ConnManager {
 	client: BaseClient;
 	conns: Conn[] = [];
@@ -45,18 +52,8 @@ export class ConnManager {
 	authToken: string | null = null;
 	subscriptionId: number = 0;
 
-	opStream: {
-		stream: ReadableStream<Operation>;
-		enqueue(chunk: Operation): void;
-		close(): void;
-		error(err: any): void;
-	};
-	sqStream: {
-		stream: ReadableStream<SquareEvent>;
-		enqueue(chunk: SquareEvent): void;
-		close(): void;
-		error(err: any): void;
-	};
+	opStream: ReadableStreamWriter<Operation>;
+	sqStream: ReadableStreamWriter<SquareEvent>;
 
 	constructor(base: BaseClient) {
 		this.client = base;
@@ -71,12 +68,7 @@ export class ConnManager {
 		this.client.log("[LEGY/PUSH] " + text, data ?? "");
 	}
 
-	createAsyncReadableStream<T>(): {
-		stream: ReadableStream<T>;
-		enqueue(chunk: T): void;
-		close(): void;
-		error(err: any): void;
-	} {
+	createAsyncReadableStream<T>(): ReadableStreamWriter<T> {
 		let controller: ReadableStreamDefaultController<T> | null = null;
 
 		const chunks: T[] = [];
@@ -91,10 +83,16 @@ export class ConnManager {
 			},
 			cancel() {
 				controller = null;
+				writer.renew();
+			},
+		}, {
+			highWaterMark: 200,
+			size() {
+				return 1;
 			},
 		});
 
-		return {
+		const writer = {
 			stream,
 			enqueue(chunk: T) {
 				const data = chunk;
@@ -107,12 +105,35 @@ export class ConnManager {
 			close() {
 				controller?.close();
 				controller = null;
+				this.renew();
 			},
 			error(err: any) {
 				controller?.error(err);
 				controller = null;
+				this.renew();
+			},
+			renew() {
+				new ReadableStream<T>({
+					start(c) {
+						controller = c;
+					},
+					pull(c) {
+						if (chunks.length) {
+							c.enqueue(chunks.shift()!);
+						}
+					},
+					cancel() {
+						controller = null;
+					},
+				}, {
+					highWaterMark: 200,
+					size() {
+						return 1;
+					},
+				});
 			},
 		};
+		return writer;
 	}
 
 	async initializeConn(state = 1, initServices = [3, 6, 8, 9, 10]) {
@@ -250,6 +271,7 @@ export class ConnManager {
 				}
 
 				this.client.poll.sync.square = syncToken;
+				this.client.emit("update:syncdata", this.client.poll.sync);
 				this.subscriptionId = subscriptionId;
 
 				if (!this._eventSynced) {
@@ -304,7 +326,8 @@ export class ConnManager {
 						response.fullSyncResponse &&
 						response.fullSyncResponse.nextRevision
 					) {
-						this.client.poll.sync.talk.revision = response.fullSyncResponse.nextRevision;
+						this.client.poll.sync.talk.revision =
+							response.fullSyncResponse.nextRevision;
 					}
 					if (
 						response.operationResponse &&
@@ -319,8 +342,9 @@ export class ConnManager {
 						response.operationResponse.individualEvents &&
 						response.operationResponse.individualEvents.lastRevision
 					) {
-						this.client.poll.sync.talk.individualRev = response.operationResponse.individualEvents
-							.lastRevision;
+						this.client.poll.sync.talk.individualRev =
+							response.operationResponse.individualEvents
+								.lastRevision;
 					}
 					if (
 						(response.operationResponse &&
@@ -331,6 +355,8 @@ export class ConnManager {
 							this.opStream.enqueue(event);
 						}
 					}
+
+					this.client.emit("update:syncdata", this.client.poll.sync);
 
 					const ex_val: PartialDeep<sync_args> = {
 						request: {
@@ -422,6 +448,8 @@ export class ConnManager {
 				this.sqStream.enqueue(ev);
 			}
 			this.client.poll.sync.square = syncToken;
+			this.client.emit("update:syncdata", this.client.poll.sync);
+
 			this.subscriptionId = Number(subscription.subscriptionId);
 
 			this.log("SQ_fetchMyEvents", {

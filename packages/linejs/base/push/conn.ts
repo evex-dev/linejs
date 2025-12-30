@@ -1,3 +1,4 @@
+import { BaseClient } from "../core/mod.ts";
 import {
 	LegyH2PingFrame,
 	LegyH2PingFrameType,
@@ -5,7 +6,7 @@ import {
 	LegyH2PushFrameType,
 	LegyH2SignOnResponseFrame,
 } from "./connData.ts";
-import type { ConnManager } from "./connManager.ts";
+import type { ConnManager, ReadableStreamWriter } from "./connManager.ts";
 
 export class Conn {
 	manager: ConnManager;
@@ -14,13 +15,7 @@ export class Conn {
 	isNotFinished = false;
 	cacheData = new Uint8Array(0);
 	notFinPayloads: Record<number, Uint8Array> = {};
-	reqStream?: {
-		stream: ReadableStream<Uint8Array>;
-		enqueue(chunk: string | Uint8Array): void;
-		close(): void;
-		error(err: any): void;
-		abort: AbortController;
-	};
+	reqStream?: ReadableStreamWriter<Uint8Array> & { abort: AbortController };
 	resStream?: ReadableStream<Uint8Array>;
 	private _lastSendTime = 0;
 	private _closed = false;
@@ -29,49 +24,80 @@ export class Conn {
 		this.manager = manager;
 	}
 
-	get client() {
+	get client(): BaseClient {
 		return this.manager.client;
 	}
 
-	createAsyncReadableStream() {
-    let controller: ReadableStreamDefaultController<Uint8Array> | null = null;
+	createAsyncReadableStream(): {
+		stream: ReadableStream<Uint8Array<ArrayBufferLike>>;
+		enqueue(chunk: string | Uint8Array): void;
+		close(): void;
+		error(err: any): void;
+		renew(): void;
+	} {
+		let controller: ReadableStreamDefaultController<Uint8Array> | null = null;
 
-    const chunks: Uint8Array[] = [];
-    const encoder = new TextEncoder();
-    const stream = new ReadableStream<Uint8Array>({
-        start(c) {
-            controller = c;
-        },
-        pull(c) {
-            if (chunks.length) {
-                c.enqueue(chunks.shift()!);
-            }
-        },
-        cancel() {
-            controller = null;
-        },
-    });
+		const chunks: Uint8Array[] = [];
+		const encoder = new TextEncoder();
+		const stream = new ReadableStream<Uint8Array>({
+			start(c) {
+				controller = c;
+			},
+			pull(c) {
+				if (chunks.length) {
+					c.enqueue(chunks.shift()!);
+				}
+			},
+			cancel() {
+				controller = null;
+			},
+		}, {
+			highWaterMark: 200,
+			size() {
+				return 1;
+			},
+		});
 
-    return {
-        stream,
-        enqueue(chunk: string | Uint8Array) {
-            const data = typeof chunk === "string" ? encoder.encode(chunk) : chunk;
-            if (controller && (controller.desiredSize ?? 0) > 0) {
-                controller.enqueue(data);
-            } else {
-                chunks.push(data);
-            }
-        },
-        close() {
-            controller?.close();
-            controller = null;
-        },
-        error(err: any) {
-            controller?.error(err);
-            controller = null;
-        },
-    };
-}
+		return {
+			stream,
+			enqueue(chunk: string | Uint8Array) {
+				const data = typeof chunk === "string" ? encoder.encode(chunk) : chunk;
+				if (controller && (controller.desiredSize ?? 0) > 0) {
+					controller.enqueue(data);
+				} else {
+					chunks.push(data);
+				}
+			},
+			close() {
+				controller?.close();
+				controller = null;
+			},
+			error(err: any) {
+				controller?.error(err);
+				controller = null;
+			},
+			renew() {
+				new ReadableStream<Uint8Array>({
+					start(c) {
+						controller = c;
+					},
+					pull(c) {
+						if (chunks.length) {
+							c.enqueue(chunks.shift()!);
+						}
+					},
+					cancel() {
+						controller = null;
+					},
+				}, {
+					highWaterMark: 200,
+					size() {
+						return 1;
+					},
+				});
+			},
+		};
+	}
 
 	async new(
 		host: string,
@@ -129,7 +155,7 @@ export class Conn {
 	): { dt: number; dd: Uint8Array; dl: number } {
 		const dl = (data[0] << 8) | data[1];
 		const dt = data[2];
-		const dd = data.subarray(3);// WHAT:
+		const dd = data.subarray(3); // WHAT:
 		return { dt, dd, dl };
 	}
 

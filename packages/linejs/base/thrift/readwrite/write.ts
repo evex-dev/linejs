@@ -135,7 +135,7 @@ function writeValue(
 		case Thrift.Type.I64:
 			if (typeof val === "bigint") {
 				output.writeFieldBegin("", Thrift.Type.I64, fid);
-				output.writeI64(new Int64(val));
+				output.writeI64(new Int64(val.toString()));
 				output.writeFieldEnd();
 			} else if (typeof val !== "number") {
 				throw new TypeError(`ftype=${ftype}: value is not number`);

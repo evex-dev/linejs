@@ -49,12 +49,14 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	): void {
 		const polling = this.base.createPolling();
 		const signal = opts.signal;
+		signal && signal.addEventListener("abort", () => {
+			this.base.conn.opStream.close();
+			this.base.conn.sqStream.close();
+		});
 		if (opts.talk) {
 			(async () => {
 				for await (
-					const event of polling.listenTalkEvents({
-						signal,
-					})
+					const event of polling.listenTalkEvents()
 				) {
 					this.emit("event", event);
 					if (
@@ -77,9 +79,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		if (opts.square) {
 			(async () => {
 				for await (
-					const event of polling.listenSquareEvents({
-						signal,
-					})
+					const event of polling.listenSquareEvents()
 				) {
 					this.emit("square:event", event);
 					if (event.type === "NOTIFICATION_MESSAGE") {

@@ -17,7 +17,7 @@ export interface DeviceDetails {
 export function isV3Support(
 	device: Device,
 ): device is "DESKTOPWIN" | "DESKTOPMAC" {
-	return ["DESKTOPWIN", "DESKTOPMAC"].includes(device);
+	return ["DESKTOPWIN", "DESKTOPMAC", "IOS", "ANDROID"].includes(device);
 }
 export function getDeviceDetails(
 	device: Device,
