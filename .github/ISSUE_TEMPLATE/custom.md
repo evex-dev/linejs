@@ -1,9 +1,9 @@
 ---
 name: Custom
 about: Custom
-title: ''
-labels: ''
-assignees: 'EdamAme-x'
+title: ""
+labels: ""
+assignees: "EdamAme-x"
 ---
 
 Hello

@@ -180,24 +180,45 @@ export class Login {
 
 	public async requestSQR(): Promise<string> {
 		const { 1: sqr } = await this.createSession();
-		let { 1: url } = await this.createQrCode(sqr);
+		let {
+			1: url,
+			2: longPollingMaxCount,
+			3: longPollingIntervalSec,
+			4: nonce,
+		} = await this.createQrCodeForSecure(sqr);
 		const [secret, secretUrl] = this.client.e2ee.createSqrSecret();
 		url = url + secretUrl;
 		this.client.emit("qrcall", url);
-		if (await this.checkQrCodeVerified(sqr)) {
+		if (
+			await this.checkQrCodeVerified(
+				sqr,
+				longPollingMaxCount,
+				longPollingIntervalSec,
+			)
+		) {
 			try {
 				await this.verifyCertificate(sqr, await this.getQrCert());
 			} catch (_e) {
 				const { 1: pincode } = await this.createPinCode(sqr);
 				this.client.emit("pincall", pincode);
-				await this.checkPinCodeVerified(sqr);
+				await this.checkPinCodeVerified(
+					sqr,
+					longPollingMaxCount,
+					longPollingIntervalSec,
+				);
 			}
-			const response = await this.qrCodeLogin(sqr);
-			const { 1: pem, 2: authToken, 4: e2eeInfo, 5: _mid } = response;
+			const response = await this.qrCodeLoginForSecure(sqr, nonce);
+			const { 1: pem, 2: authToken, 4: metaData } = response;
+			const mid = response[5]; // Legacy? or check metadata
+			if (mid && !this.client.profile) {
+				this.client.profile = { mid } as any;
+			}
 			if (pem) {
 				this.client.emit("update:qrcert", pem);
 				await this.registerQrCert(pem);
 			}
+			// MetaData contains E2EE info in some versions
+			const e2eeInfo = metaData?.["e2eeInfo"];
 			if (e2eeInfo) {
 				await this.client.e2ee.decodeE2EEKeyV1(
 					e2eeInfo,
@@ -214,24 +235,47 @@ export class Login {
 
 	public async requestSQR2(): Promise<string> {
 		const { 1: sqr } = await this.createSession();
-		let { 1: url } = await this.createQrCode(sqr);
+		let {
+			1: url,
+			2: longPollingMaxCount,
+			3: longPollingIntervalSec,
+			4: nonce,
+		} = await this.createQrCodeForSecure(sqr);
 		const [secret, secretUrl] = this.client.e2ee.createSqrSecret();
 		url = url + secretUrl;
 		this.client.emit("qrcall", url);
-		if (await this.checkQrCodeVerified(sqr)) {
+		if (
+			await this.checkQrCodeVerified(
+				sqr,
+				longPollingMaxCount,
+				longPollingIntervalSec,
+			)
+		) {
 			try {
 				await this.verifyCertificate(sqr, await this.getQrCert());
 			} catch (_e) {
 				const { 1: pincode } = await this.createPinCode(sqr);
 				this.client.emit("pincall", pincode);
-				await this.checkPinCodeVerified(sqr);
+				await this.checkPinCodeVerified(
+					sqr,
+					longPollingMaxCount,
+					longPollingIntervalSec,
+				);
 			}
-			const response = await this.qrCodeLoginV2(sqr);
-			const { 1: pem, 3: tokenInfo, 4: _mid, 10: e2eeInfo } = response;
+			const response = await this.qrCodeLoginV2ForSecure(sqr, nonce);
+			const { 1: pem, 3: tokenInfo, 4: mid, 10: _metaData } = response;
+
+			if (mid) {
+				this.client.profile = { mid } as any;
+			}
+
 			if (pem) {
 				this.client.emit("update:qrcert", pem);
 				await this.registerQrCert(pem);
 			}
+
+			// In V2, E2EE info might be elsewhere or in metaData
+			const e2eeInfo = _metaData?.[11]; // Just in case field 11 is e2ee
 			if (e2eeInfo) {
 				await this.client.e2ee.decodeE2EEKeyV1(
 					e2eeInfo,
@@ -243,7 +287,6 @@ export class Login {
 				"expire",
 				tokenInfo[3] + tokenInfo[6],
 			);
-			console.log(tokenInfo);
 			return tokenInfo[1];
 		}
 		throw new InternalError(
@@ -640,24 +683,37 @@ export class Login {
 		);
 	}
 
-	public async checkQrCodeVerified(qrcode: string): Promise<boolean> {
-		try {
-			await this.client.request.request(
-				[[12, 1, [[11, 1, qrcode]]]],
-				"checkQrCodeVerified",
-				4,
-				false,
-				"/acct/lp/lgn/sq/v1",
-				{
-					"x-lst": "180000",
-					"x-line-access": qrcode,
-				},
-				this.client.config.longTimeout,
-			);
-			return true;
-		} catch (error) {
-			throw error;
+	public async checkQrCodeVerified(
+		qrcode: string,
+		maxCount: number = 1,
+		interval: number = 30,
+	): Promise<boolean> {
+		for (let i = 0; i < maxCount; i++) {
+			try {
+				await this.client.request.request(
+					[[12, 1, [[11, 1, qrcode]]]],
+					"checkQrCodeVerified",
+					4,
+					false,
+					"/acct/lp/lgn/sq/v1",
+					{
+						"x-lst": (interval * 1000).toString(),
+						"x-line-access": qrcode,
+					},
+					interval * 1000 + 5000,
+				);
+				return true;
+			} catch (error) {
+				if (
+					error instanceof InternalError &&
+					error.message.includes("Timeout")
+				) {
+					continue;
+				}
+				throw error;
+			}
 		}
+		return false;
 	}
 
 	public async verifyCertificate(
@@ -683,24 +739,37 @@ export class Login {
 		);
 	}
 
-	public async checkPinCodeVerified(qrcode: string): Promise<boolean> {
-		try {
-			await this.client.request.request(
-				[[12, 1, [[11, 1, qrcode]]]],
-				"checkPinCodeVerified",
-				4,
-				false,
-				"/acct/lp/lgn/sq/v1",
-				{
-					"x-lst": "180000",
-					"x-line-access": qrcode,
-				},
-				this.client.config.longTimeout,
-			);
-			return true;
-		} catch (error) {
-			throw error;
+	public async checkPinCodeVerified(
+		qrcode: string,
+		maxCount: number = 1,
+		interval: number = 30,
+	): Promise<boolean> {
+		for (let i = 0; i < maxCount; i++) {
+			try {
+				await this.client.request.request(
+					[[12, 1, [[11, 1, qrcode]]]],
+					"checkPinCodeVerified",
+					4,
+					false,
+					"/acct/lp/lgn/sq/v1",
+					{
+						"x-lst": (interval * 1000).toString(),
+						"x-line-access": qrcode,
+					},
+					interval * 1000 + 5000,
+				);
+				return true;
+			} catch (error) {
+				if (
+					error instanceof InternalError &&
+					error.message.includes("Timeout")
+				) {
+					continue;
+				}
+				throw error;
+			}
 		}
+		return false;
 	}
 
 	public async qrCodeLogin(
@@ -734,6 +803,58 @@ export class Login {
 				[2, 4, autoLoginIsRequired],
 			]]],
 			"qrCodeLoginV2",
+			4,
+			false,
+			"/acct/lgn/sq/v1",
+		);
+	}
+
+	public async createQrCodeForSecure(authSessionId: string): Promise<any> {
+		return await this.client.request.request(
+			[[12, 1, [[11, 1, authSessionId]]]],
+			"createQrCodeForSecure",
+			4,
+			false,
+			"/acct/lgn/sq/v1",
+		);
+	}
+
+	public async qrCodeLoginV2ForSecure(
+		authSessionId: string,
+		nonce: string,
+		systemName: string = "linejs-v2",
+		modelName: string = "evex-device",
+		autoLoginIsRequired: boolean = true,
+	): Promise<any> {
+		return await this.client.request.request(
+			[[12, 1, [
+				[11, 1, authSessionId],
+				[11, 2, systemName],
+				[11, 3, modelName],
+				[2, 4, autoLoginIsRequired],
+				[11, 5, nonce],
+			]]],
+			"qrCodeLoginV2ForSecure",
+			4,
+			false,
+			"/acct/lgn/sq/v1",
+		);
+	}
+
+	public async qrCodeLoginForSecure(
+		authSessionId: string,
+		nonce: string,
+		systemName: string = "linejs-v2",
+		autoLoginIsRequired: boolean = true,
+	): Promise<any> {
+		return await this.client.request.request(
+			[[12, 1, [
+				[11, 1, authSessionId],
+				[11, 2, systemName],
+				[2, 3, autoLoginIsRequired],
+				[11, 4, nonce],
+			]]],
+			"qrCodeLoginForSecure",
 			4,
 			false,
 			"/acct/lgn/sq/v1",

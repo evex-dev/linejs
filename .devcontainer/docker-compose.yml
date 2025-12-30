@@ -9,7 +9,7 @@ services:
     command: bash
     stdin_open: true
     tty: true
-    restart: 'no'
+    restart: "no"
 
 networks:
   linejs:

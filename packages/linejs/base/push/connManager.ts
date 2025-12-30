@@ -25,8 +25,6 @@ import {
 import { ParsedThrift } from "@evex/linejs/thrift";
 import { Buffer } from "node:buffer";
 
-
-
 export interface ReadableStreamWriter<T> {
 	stream: ReadableStream<T>;
 	enqueue(chunk: T): void;
@@ -42,7 +40,11 @@ export class ConnManager {
 	SignOnRequests: Record<number, any[]> = {};
 	OnPingCallback: (id: number) => void;
 	OnSignReqResp: Record<number, any> = {};
-	OnSignOnResponse: (reqId: number, isFin: boolean, data: Uint8Array<ArrayBufferLike>) => void;
+	OnSignOnResponse: (
+		reqId: number,
+		isFin: boolean,
+		data: Uint8Array<ArrayBufferLike>,
+	) => void;
 	OnPushResponse: (frame: LegyH2PushFrame) => void;
 	_eventSynced = false;
 	_pingInterval = 30;
@@ -153,8 +155,6 @@ export class ConnManager {
 		await (_conn.new(host, port, `/PUSH/1/subs?m=${m}`, tosendHeaders));
 		return _conn;
 	}
-
-
 
 	async buildAndSendSignOnRequest(
 		conn: Conn,
@@ -416,7 +416,6 @@ export class ConnManager {
 			}
 		} catch (e) {
 			return;
-
 		}
 	}
 

@@ -12,8 +12,8 @@ export class TypedEventEmitter<
 		}
 
 		for (const listener of listeners) {
-			if(!(listener instanceof Function)){
-				throw new TypeError("listeners is not function")
+			if (!(listener instanceof Function)) {
+				throw new TypeError("listeners is not function");
 			}
 			this.listeners.get(event)?.push(listener);
 		}

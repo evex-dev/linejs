@@ -205,13 +205,13 @@ function writeValue(
 			}
 			output.writeFieldBegin("", Thrift.Type.LIST, fid);
 			{
-                const arr = val[1] as any[];
-                output.writeListBegin(val[0], arr.length);
-                for (let i = 0, L = arr.length; i < L; i++) {
-                    writeValue_(output, val[0], arr[i]);
-                }
-                output.writeListEnd();
-            }
+				const arr = val[1] as any[];
+				output.writeListBegin(val[0], arr.length);
+				for (let i = 0, L = arr.length; i < L; i++) {
+					writeValue_(output, val[0], arr[i]);
+				}
+				output.writeListEnd();
+			}
 			output.writeFieldEnd();
 			break;
 		case Thrift.Type.SET:
@@ -221,13 +221,13 @@ function writeValue(
 			}
 			output.writeFieldBegin("", Thrift.Type.SET, fid);
 			{
-                const arr = val[1] as any[];
-                output.writeSetBegin(val[0], arr.length);
-                for (let i = 0, L = arr.length; i < L; i++) {
-                    writeValue_(output, val[0], arr[i]);
-                }
-                output.writeSetEnd();
-            }
+				const arr = val[1] as any[];
+				output.writeSetBegin(val[0], arr.length);
+				for (let i = 0, L = arr.length; i < L; i++) {
+					writeValue_(output, val[0], arr[i]);
+				}
+				output.writeSetEnd();
+			}
 			output.writeFieldEnd();
 			break;
 		default:

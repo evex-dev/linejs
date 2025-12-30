@@ -265,7 +265,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			}
 			if (v instanceof Uint8Array || v instanceof Buffer) {
 				return `Uint8Array[${v.length}]<${
-					Array.from(v).map((e) => e.toString(16).padStart(2,"0")).join(" ")
+					Array.from(v).map((e) => e.toString(16).padStart(2, "0")).join(" ")
 				}>`;
 			}
 			if (v instanceof Blob) {

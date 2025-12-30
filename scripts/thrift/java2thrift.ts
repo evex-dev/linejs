@@ -96,26 +96,27 @@ const replaces: Record<string, string> = {
 	"val{STResultCode.LIVE_COLOR_HACK_LIGHT_CAPTCHA_SAMPLE_FAILED}": "1105",
 	"val{STResultCode.LIVE_COLOR_HACK_WEAK_LIGHT}": "1107",
 	"val{NetworkManager.TYPE_NONE}": "none",
-	"val{VosWrapper.DES3}":"400",
-	"val{QueryBuffer.BUFFER_SIZE_512}":"512",
-	"val{C17980g.HOME_ACTIVITY_MANUAL_FIELD_NUMBER}":"102",
-	"val{C17980g.HOME_ACTIVITY_NOTI_SUMMARY_FIELD_NUMBER}":"103",
-	"val{STResultCode.SYSTEM_ERROR}":"106",
-	"val{QueryBuffer.BUFFER_SIZE_1024}":"1024",
-	"val{RsaOaepCipher.KEY_SIZE_2048}":"2048",
-	"val{YukiFaceTriggerType.FaceTriggerConstants.kExclusiveEyeBlink}":"8192",
-	"val{YukiFaceTriggerType.FaceTriggerConstants.kFaceDetect}":"16384",
-	"val{YukiFaceTriggerType.FaceTriggerConstants.kTwoMoreFaceDetect}":"32768",
-	"val{YukiFaceTriggerType.FaceTriggerConstants.kAlways}":"65536",
-	"val{YukiFaceTriggerType.FaceTriggerConstants.kExclusiveFaceDetect}":"131072",
-	"val{GravityCompat.RELATIVE_LAYOUT_DIRECTION}":"8388608",
-	"val{VosWrapper.Callback.DEBUGGER_CHECK_ID};":"16777216",
-	"val{C31891z.f233279e}":"group",
-	"val{C31891z.f233281g}":"location",
-	"val{C31891z.f233283i}":"device",
-	"val{EnumC8395A.STATUS_STARTED}":"start",
-	"val{b.DATA_KEY_ERROR_MESSAGE}":"errorMessage",
-	"val{pg1.m.SCREEN}":"screen",
+	"val{VosWrapper.DES3}": "400",
+	"val{QueryBuffer.BUFFER_SIZE_512}": "512",
+	"val{C17980g.HOME_ACTIVITY_MANUAL_FIELD_NUMBER}": "102",
+	"val{C17980g.HOME_ACTIVITY_NOTI_SUMMARY_FIELD_NUMBER}": "103",
+	"val{STResultCode.SYSTEM_ERROR}": "106",
+	"val{QueryBuffer.BUFFER_SIZE_1024}": "1024",
+	"val{RsaOaepCipher.KEY_SIZE_2048}": "2048",
+	"val{YukiFaceTriggerType.FaceTriggerConstants.kExclusiveEyeBlink}": "8192",
+	"val{YukiFaceTriggerType.FaceTriggerConstants.kFaceDetect}": "16384",
+	"val{YukiFaceTriggerType.FaceTriggerConstants.kTwoMoreFaceDetect}": "32768",
+	"val{YukiFaceTriggerType.FaceTriggerConstants.kAlways}": "65536",
+	"val{YukiFaceTriggerType.FaceTriggerConstants.kExclusiveFaceDetect}":
+		"131072",
+	"val{GravityCompat.RELATIVE_LAYOUT_DIRECTION}": "8388608",
+	"val{VosWrapper.Callback.DEBUGGER_CHECK_ID};": "16777216",
+	"val{C31891z.f233279e}": "group",
+	"val{C31891z.f233281g}": "location",
+	"val{C31891z.f233283i}": "device",
+	"val{EnumC8395A.STATUS_STARTED}": "start",
+	"val{b.DATA_KEY_ERROR_MESSAGE}": "errorMessage",
+	"val{pg1.m.SCREEN}": "screen",
 	"com_linecorp_square_protocol_thrift_common_": "",
 	"com_linecorp_square_protocol_thrift_": "",
 	" list ": " list<_any> ",
@@ -432,7 +433,7 @@ ${this.type} ${this.package.replaceAll(".", "_")}_${this.name} {
 			struct.realname = struct_name.groups.name;
 		}
 		while (true) {
-			const fields = fieldReg.exec(input)??fieldReg2.exec(input);
+			const fields = fieldReg.exec(input) ?? fieldReg2.exec(input);
 
 			if ((fields && fields.groups)) {
 				const fname = fields.groups.prop;
@@ -547,7 +548,7 @@ ${this.type} ${this.package.replaceAll(".", "_")}_${this.name} {
 			struct.realname = struct_name.groups.name;
 		}
 		while (true) {
-			const fields = fieldReg.exec(classinput)??fieldReg2.exec(classinput);
+			const fields = fieldReg.exec(classinput) ?? fieldReg2.exec(classinput);
 			if ((fields && fields.groups)) {
 				const fname = fields.groups.prop;
 				let type: string | number = parseInt(fields.groups.type);

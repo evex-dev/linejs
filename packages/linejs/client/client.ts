@@ -103,6 +103,11 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		return this.base.authToken as string;
 	}
 
+	/** Gets profile. */
+	get profile(): LINETypes.Profile | undefined {
+		return this.base.profile;
+	}
+
 	/**
 	 * Fetches all chat rooms the user joined.
 	 */
@@ -126,15 +131,28 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		const mids = await this.base.talk.getAllContactIds({
 			syncReason: "INTERNAL",
 		});
-		const res = await this.base.relation.getContactsV3({
-			mids,
-		});
-		const contacts = res.responses;
-		return contacts.map((raw) =>
-			new User({
-				raw,
-			})
-		);
+		try {
+			const res = await this.base.relation.getContactsV3({
+				mids,
+			});
+			return res.responses.map((raw) =>
+				new User({
+					raw,
+				})
+			);
+		} catch (e) {
+			const contacts = await this.base.talk.getContacts({
+				mids,
+			});
+			return contacts.map((raw) =>
+				new User({
+					raw: {
+						targetUserMid: raw.mid,
+						contact: raw,
+					} as any,
+				})
+			);
+		}
 	}
 
 	/**
