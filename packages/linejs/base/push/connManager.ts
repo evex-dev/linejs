@@ -1,7 +1,7 @@
 import { LegyH2PushFrame } from "./connData.ts";
 import { Conn } from "./conn.ts";
 import { BaseClient } from "@evex/linejs/base";
-import { TCompactProtocol } from "thrift";
+import { TCompactProtocol } from "npm:thrift";
 
 import { TMoreCompactProtocol } from "../thrift/readwrite/tmc.ts";
 
