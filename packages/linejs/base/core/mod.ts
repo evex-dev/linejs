@@ -54,7 +54,7 @@ export interface LoginOption {
 
 export interface ClientInit {
 	/**
-	 * version which LINE App to emurating
+	 * version which LINE App to emulating
 	 */
 	version?: string;
 

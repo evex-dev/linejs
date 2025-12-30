@@ -437,7 +437,7 @@ export class ConnManager {
 			}
 		} catch (e) {
 			return;
-			throw new Error(`[PUSH] response handler error: ${e}`);
+
 		}
 	}
 

@@ -11,7 +11,7 @@ import { Client } from "./client.ts";
 
 export interface InitOptions {
 	/**
-	 * version which LINE App to emurating
+	 * version which LINE App to emulating
 	 */
 	version?: string;
 
