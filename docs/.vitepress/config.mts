@@ -23,6 +23,10 @@ export default defineConfig({
 				text: "Examples",
 				link: "https://github.com/evex-dev/linejs/tree/main/example",
 			},
+			{
+				text: "Ask AI",
+				link: "https://deepwiki.com/evex-dev/linejs",
+			},
 		],
 
 		sidebar: [
