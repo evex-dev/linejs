@@ -1,35 +1,5 @@
-import { LegyH2PushFrame } from "./connData.ts";
-import { Conn } from "./conn.ts";
-import { BaseClient } from "@evex/linejs/base";
-// TODO: fix this
-import { TCompactProtocol } from "npm:thrift@^0.20.0";
+import { PushProtocol } from "./protocol.ts";
 
-import { TMoreCompactProtocol } from "../thrift/readwrite/tmc.ts";
-
-// GOMI:
-import {
-	PartialDeep,
-	SquareService_fetchMyEvents_args as gen_SquareService_fetchMyEvents_args,
-	sync_args as gen_sync_args,
-} from "../thrift/readwrite/struct.ts";
-
-import {
-	Operation,
-	SquareEvent,
-	SquareService_fetchMyEvents_args,
-	SquareService_fetchMyEvents_result,
-	sync_args,
-	sync_result,
-} from "@evex/linejs-types";
-
-import { ParsedThrift } from "@evex/linejs/thrift";
-import { Buffer } from "node:buffer";
-
-function gen_m(ss = [1, 3, 5, 6, 8, 9, 10]) {
-	let i = 0;
-	for (const s of ss) i |= 1 << (s - 1);
-	return i;
-}
 
 export interface ReadableStreamWriter<T> {
 	stream: ReadableStream<T>;
@@ -150,22 +120,12 @@ export class ConnManager {
 			.getHeader();
 		tosendHeaders["content-type"] = "application/octet-stream";
 		tosendHeaders["accept"] = "application/octet-stream";
-		const m = gen_m(initServices);
+		const m = PushProtocol.genServiceBitmask(initServices);
 		this.log(`Using \`m=${m}\` on \`/PUSH\``);
 		const host = this.client.request.endpoint;
 		const port = 443;
 		await (_conn.new(host, port, `/PUSH/1/subs?m=${m}`, tosendHeaders));
 		return _conn;
-	}
-
-	buildRequest(service: number, data: Uint8Array): Uint8Array {
-		const len = data.length;
-		const out = new Uint8Array(2 + 1 + len);
-		out[0] = (len >> 8) & 0xff;
-		out[1] = len & 0xff;
-		out[2] = service & 0xff;
-		out.set(data, 3);
-		return out;
 	}
 
 	async buildAndSendSignOnRequest(
@@ -203,12 +163,7 @@ export class ConnManager {
 			);
 			methodName = "sync";
 		}
-		const header = new Uint8Array(2 + 1 + 1 + 2 + req.length);
-		header.set(idBuf, 0);
-		header[2] = serviceType & 0xff;
-		header[3] = 0;
-		header[4] = (req.length >> 8) & 0xff;
-		header[5] = req.length & 0xff;
+		const header = PushProtocol.buildSignOnHeader(id, serviceType, req.length);
 		header.set(req, 6);
 		this.SignOnRequests[id] = [serviceType, methodName, null];
 		this.log(
