@@ -1,4 +1,35 @@
 import { PushProtocol } from "./protocol.ts";
+import { LegyH2PushFrame } from "./connData.ts";
+import { Conn } from "./conn.ts";
+import { BaseClient } from "@evex/linejs/base";
+// TODO: fix this
+import { TCompactProtocol } from "npm:thrift@^0.20.0";
+
+import { TMoreCompactProtocol } from "../thrift/readwrite/tmc.ts";
+
+import {
+	PartialDeep,
+	SquareService_fetchMyEvents_args as gen_SquareService_fetchMyEvents_args,
+	sync_args as gen_sync_args,
+} from "../thrift/readwrite/struct.ts";
+
+import {
+	Operation,
+	SquareEvent,
+	SquareService_fetchMyEvents_args,
+	SquareService_fetchMyEvents_result,
+	sync_args,
+	sync_result,
+} from "@evex/linejs-types";
+
+import { ParsedThrift } from "@evex/linejs/thrift";
+import { Buffer } from "node:buffer";
+
+function gen_m(ss = [1, 3, 5, 6, 8, 9, 10]) {
+	let i = 0;
+	for (const s of ss) i |= 1 << (s - 1);
+	return i;
+}
 
 
 export interface ReadableStreamWriter<T> {
