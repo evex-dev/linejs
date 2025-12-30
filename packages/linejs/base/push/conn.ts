@@ -1,3 +1,4 @@
+import { PushProtocol } from "./protocol.ts";
 import { BaseClient } from "../core/mod.ts";
 import {
 	LegyH2PingFrame,
@@ -16,7 +17,7 @@ export class Conn {
 	cacheData: Uint8Array = new Uint8Array(0);
 	notFinPayloads: Record<number, Uint8Array> = {};
 	reqStream?: ReadableStreamWriter<Uint8Array> & { abort: AbortController };
-	resStream?: ReadableStream<Uint8Array>;
+	resStream?: ReadableStream<Uint8Array<ArrayBufferLike>>;
 	private _lastSendTime = 0;
 	private _closed = false;
 
@@ -39,7 +40,7 @@ export class Conn {
 
 		const chunks: Uint8Array[] = [];
 		const encoder = new TextEncoder();
-		const stream = new ReadableStream<Uint8Array>({
+		const stream = new ReadableStream<Uint8Array<ArrayBufferLike>>({
 			start(c) {
 				controller = c;
 			},
@@ -129,7 +130,7 @@ export class Conn {
 	}
 
 	async writeRequest(requestType: number, data: Uint8Array) {
-		const d = this.manager.buildRequest(requestType, data);
+		const d = PushProtocol.buildRequest(requestType, data);
 		await this.writeByte(d);
 	}
 
