@@ -13,7 +13,7 @@ export class Conn {
 
 	h2Headers: Array<[string, string]> = [];
 	isNotFinished = false;
-	cacheData = new Uint8Array(0);
+	cacheData: Uint8Array = new Uint8Array(0);
 	notFinPayloads: Record<number, Uint8Array> = {};
 	reqStream?: ReadableStreamWriter<Uint8Array> & { abort: AbortController };
 	resStream?: ReadableStream<Uint8Array>;
@@ -173,7 +173,6 @@ export class Conn {
 		const { dt, dd, dl } = this.readPacketHeader(data);
 		if (dl > dd.length) {
 			this.isNotFinished = true;
-			// @ts-expect-error
 			this.cacheData = data;
 			return;
 		} else {

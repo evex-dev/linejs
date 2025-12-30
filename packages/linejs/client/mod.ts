@@ -1,8 +1,3 @@
-/**
- * linejs entry point.
- * @module
- */
-
 export {
 	Chat,
 	Client,

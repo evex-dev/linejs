@@ -136,7 +136,10 @@ export class ConnManager {
 		return writer;
 	}
 
-	async initializeConn(state = 1, initServices = [3, 6, 8, 9, 10]) {
+	async initializeConn(
+		state = 1,
+		initServices = [3, 6, 8, 9, 10],
+	): Promise<Conn> {
 		const _conn = new Conn(this);
 		if (state === 1) {
 			this.conns[0] = _conn;
@@ -168,7 +171,10 @@ export class ConnManager {
 		conn: Conn,
 		serviceType: number,
 		kwargs: Record<string, any> = {},
-	) {
+	): Promise<{
+		payload: Uint8Array<ArrayBuffer>;
+		id: number;
+	}> {
 		this.log("buildAndSendSignOnRequest", { serviceType, kwargs });
 		const cl = this.client;
 		const id = Object.keys(this.SignOnRequests).length + 1;
@@ -211,7 +217,11 @@ export class ConnManager {
 		return { payload: header, id };
 	}
 
-	async _OnSignOnResponse(reqId: number, isFin: boolean, data: Uint8Array) {
+	async _OnSignOnResponse(
+		reqId: number,
+		isFin: boolean,
+		data: Uint8Array,
+	): Promise<false | undefined> {
 		// data = data.slice(5);
 		const cl = this.client;
 		if (!(reqId in this.SignOnRequests)) {
