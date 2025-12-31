@@ -8905,3 +8905,26 @@ export function wakeUpLongPolling_args(
 		[10, 2, param.clientRevision],
 	];
 }
+
+export function F61_EnumC10204a0(
+	param: LINETypes.F61_EnumC10204a0 | undefined,
+): LINETypes.F61_EnumC10204a0 & number | undefined {
+	return typeof param === "string"
+		? LINETypes.enums.F61_EnumC10204a0[param]
+		: param;
+}
+export function GetUserFriendIdsRequest(
+	param?: PartialDeep<LINETypes.GetUserFriendIdsRequest> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.userPageToken],
+		[8, 2, F61_EnumC10204a0(param.blockStatus)],
+	];
+}
+export function getUserFriendIds_args(
+	param?: PartialDeep<LINETypes.getUserFriendIds_args> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[12, 1, GetUserFriendIdsRequest(param.request)],
+	];
+}

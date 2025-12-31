@@ -203,7 +203,7 @@ export class LineObs {
 		return await this.uploadObjectForService({
 			data,
 			oType: type,
-			obsPath: toType + "/m/" + oid || "reqseq",
+			obsPath: toType + "/m/" + (oid || "reqseq"),
 			filename: param.name,
 			params: param,
 		});

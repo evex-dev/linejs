@@ -569,6 +569,10 @@ export const enums: {
 	zf_EnumC40715c: Record<zf_EnumC40715c & string, zf_EnumC40715c & number>;
 	zf_EnumC40716d: Record<zf_EnumC40716d & string, zf_EnumC40716d & number>;
 	LoginResultType: Record<LoginResultType & string, LoginResultType & number>;
+	F61_EnumC10204a0: Record<
+		F61_EnumC10204a0 & string,
+		F61_EnumC10204a0 & number
+	>;
 } = {
 	"AR0_g": {
 		"ILLEGAL_ARGUMENT": 16641,
@@ -3259,6 +3263,11 @@ export const enums: {
 		"REQUIRE_QRCODE": 2,
 		"REQUIRE_DEVICE_CONFIRM": 3,
 		"REQUIRE_SMS_CONFIRM": 4,
+	},
+	"F61_EnumC10204a0": {
+		"ALL": 0,
+		"BLOCK": 1,
+		"NOT_BLOCK": 2,
 	},
 };
 export type AR0_g =
@@ -20898,4 +20907,27 @@ export interface LoginResult {
 	lastPrimaryBindTime: Int64;
 	displayMessage: string;
 	sessionForSMSConfirm: VerificationSessionData;
+}
+
+export type F61_EnumC10204a0 = 0 | "ALL" | 1 | "BLOCK" | 2 | "NOT_BLOCK";
+
+export interface getUserFriendIds_args {
+	request: GetUserFriendIdsRequest;
+}
+
+export interface getUserFriendIds_result {
+	success: GetUserFriendIdsResponse;
+	re: any;
+	sfe: any;
+	te: any;
+}
+
+export interface GetUserFriendIdsRequest {
+	userPageToken: string;
+	blockStatus: F61_EnumC10204a0;
+}
+
+export interface GetUserFriendIdsResponse {
+	userFriendMids: string[];
+	nextUserPageToken: string;
 }

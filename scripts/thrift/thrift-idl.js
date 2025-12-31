@@ -35,7 +35,7 @@ export default (function () {
 	}
 
 	function SyntaxError(message, expected, found, offset, line, column) {
-		this.message = message;
+		this.message = message + ` ${line}:${column}`;
 		this.expected = expected;
 		this.found = found;
 		this.offset = offset;

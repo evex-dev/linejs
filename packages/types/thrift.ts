@@ -37605,6 +37605,64 @@ export const Thrift: any = {
 			"struct": "VerificationSessionData",
 		},
 	],
+	"F61_EnumC10204a0": {
+		"0": "ALL",
+		"1": "BLOCK",
+		"2": "NOT_BLOCK",
+	},
+	"getUserFriendIds_args": [
+		{
+			"fid": 1,
+			"name": "request",
+			"struct": "GetUserFriendIdsRequest",
+		},
+	],
+	"getUserFriendIds_result": [
+		{
+			"fid": 0,
+			"name": "success",
+			"struct": "GetUserFriendIdsResponse",
+		},
+		{
+			"fid": 1,
+			"name": "re",
+			"struct": "RejectedException",
+		},
+		{
+			"fid": 2,
+			"name": "sfe",
+			"struct": "ServerFailureException",
+		},
+		{
+			"fid": 3,
+			"name": "te",
+			"struct": "TalkException",
+		},
+	],
+	"GetUserFriendIdsRequest": [
+		{
+			"fid": 1,
+			"name": "userPageToken",
+			"type": 11,
+		},
+		{
+			"fid": 2,
+			"name": "blockStatus",
+			"struct": "F61_EnumC10204a0",
+		},
+	],
+	"GetUserFriendIdsResponse": [
+		{
+			"fid": 1,
+			"name": "userFriendMids",
+			"set": 11,
+		},
+		{
+			"fid": 2,
+			"name": "nextUserPageToken",
+			"type": 11,
+		},
+	],
 };
 export function parseEnum(name: string, value: number | string): string | null {
 	return (Thrift as any)[name][value] ?? null;
