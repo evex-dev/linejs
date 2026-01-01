@@ -186,6 +186,7 @@ export class ConnManager {
 		let req = new Uint8Array(0);
 		if (serviceType === 3) {
 			// fetchMyEvents - delegate to client generator
+			// @ts-ignore: will fix
 			req = cl.thrift.writeThrift(
 				gen_SquareService_fetchMyEvents_args(kwargs),
 				"fetchMyEvents",
@@ -193,6 +194,7 @@ export class ConnManager {
 			);
 			methodName = "fetchMyEvents";
 		} else if ([5, 8].includes(serviceType)) {
+			// @ts-ignore: will fix
 			req = cl.thrift.writeThrift(
 				gen_sync_args(kwargs),
 				"sync",
