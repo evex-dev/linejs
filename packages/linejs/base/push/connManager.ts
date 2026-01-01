@@ -1,6 +1,6 @@
 import { LegyH2PushFrame } from "./connData.ts";
 import { Conn } from "./conn.ts";
-import { BaseClient } from "../base/mod.ts";
+import { BaseClient } from "../mod.ts";
 import { TCompactProtocol } from "npm:thrift@^0.20.0";
 
 import { TMoreCompactProtocol } from "../thrift/readwrite/tmc.ts";
@@ -186,7 +186,6 @@ export class ConnManager {
 		let req = new Uint8Array(0);
 		if (serviceType === 3) {
 			// fetchMyEvents - delegate to client generator
-			// @ts-expect-error
 			req = cl.thrift.writeThrift(
 				gen_SquareService_fetchMyEvents_args(kwargs),
 				"fetchMyEvents",
@@ -194,7 +193,6 @@ export class ConnManager {
 			);
 			methodName = "fetchMyEvents";
 		} else if ([5, 8].includes(serviceType)) {
-			// @ts-expect-error
 			req = cl.thrift.writeThrift(
 				gen_sync_args(kwargs),
 				"sync",
