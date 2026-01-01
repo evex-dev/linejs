@@ -8,3 +8,4 @@ export {
 	User,
 } from "./client.ts";
 export * from "./login.ts";
+export * from "../base/thrift/mod.ts";
