@@ -1,7 +1,6 @@
 import { LegyH2PushFrame } from "./connData.ts";
 import { Conn } from "./conn.ts";
 import { BaseClient } from "@evex/linejs/base";
-// TODO: fix this
 import { TCompactProtocol } from "npm:thrift@^0.20.0";
 
 import { TMoreCompactProtocol } from "../thrift/readwrite/tmc.ts";
@@ -22,7 +21,7 @@ import {
 	sync_result,
 } from "@evex/linejs-types";
 
-import { ParsedThrift } from "@evex/linejs/thrift";
+import { ParsedThrift } from "../thrift/mod.ts";
 import { Buffer } from "node:buffer";
 
 function gen_m(ss = [1, 3, 5, 6, 8, 9, 10]) {
