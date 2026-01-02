@@ -96,6 +96,26 @@ const replaces: Record<string, string> = {
 	"val{STResultCode.LIVE_COLOR_HACK_LIGHT_CAPTCHA_SAMPLE_FAILED}": "1105",
 	"val{STResultCode.LIVE_COLOR_HACK_WEAK_LIGHT}": "1107",
 	"val{NetworkManager.TYPE_NONE}": "none",
+	"val{VosWrapper.DES3}":"400",
+	"val{QueryBuffer.BUFFER_SIZE_512}":"512",
+	"val{C17980g.HOME_ACTIVITY_MANUAL_FIELD_NUMBER}":"102",
+	"val{C17980g.HOME_ACTIVITY_NOTI_SUMMARY_FIELD_NUMBER}":"103",
+	"val{STResultCode.SYSTEM_ERROR}":"106",
+	"val{QueryBuffer.BUFFER_SIZE_1024}":"1024",
+	"val{RsaOaepCipher.KEY_SIZE_2048}":"2048",
+	"val{YukiFaceTriggerType.FaceTriggerConstants.kExclusiveEyeBlink}":"8192",
+	"val{YukiFaceTriggerType.FaceTriggerConstants.kFaceDetect}":"16384",
+	"val{YukiFaceTriggerType.FaceTriggerConstants.kTwoMoreFaceDetect}":"32768",
+	"val{YukiFaceTriggerType.FaceTriggerConstants.kAlways}":"65536",
+	"val{YukiFaceTriggerType.FaceTriggerConstants.kExclusiveFaceDetect}":"131072",
+	"val{GravityCompat.RELATIVE_LAYOUT_DIRECTION}":"8388608",
+	"val{VosWrapper.Callback.DEBUGGER_CHECK_ID};":"16777216",
+	"val{C31891z.f233279e}":"group",
+	"val{C31891z.f233281g}":"location",
+	"val{C31891z.f233283i}":"device",
+	"val{EnumC8395A.STATUS_STARTED}":"start",
+	"val{b.DATA_KEY_ERROR_MESSAGE}":"errorMessage",
+	"val{pg1.m.SCREEN}":"screen",
 	"com_linecorp_square_protocol_thrift_common_": "",
 	"com_linecorp_square_protocol_thrift_": "",
 	" list ": " list<_any> ",
@@ -170,19 +190,19 @@ function fieldclass2list(
 	fieldname: string,
 ): [string, string?] | undefined {
 	const x = new RegExp(
-		`gVar\\.x\\(${classname}\\.${fieldname}\\);\\n *gVar\\.C\\(new we1\\.d\\(\\(byte\\) (?<type>.*?), .*\n *Iterator .*\\(\\);\n *while \\(.*hasNext\\(\\)\\) \\{\\n *\\(\\((?<class>.*?)\\) .*next\\(\\)\\)\\.write\\(gVar\\);`,
+		`gVar\\.x\\(${classname}\\.${fieldname}\\);\\n *gVar\\.C\\(new .*d\\(\\(byte\\) (?<type>.*?), .*\n *Iterator .*\\(\\);\n *while \\(.*hasNext\\(\\)\\) \\{\\n *\\(\\((?<class>.*?)\\) .*next\\(\\)\\)\\.write\\(gVar\\);`,
 	);
 	const struct = x.exec(input);
 	if (!struct?.groups?.type) {
 		const x2 = new RegExp(
-			`gVar\\.x\\(${classname}\\.${fieldname}\\);\\n *gVar\\.C\\(new we1\\.d\\(\\(byte\\) (?<type>.*?), .*\n *Iterator<(?<class>.*?)> .*\\(\\);`,
+			`gVar\\.x\\(${classname}\\.${fieldname}\\);\\n *gVar\\.C\\(new .*d\\(\\(byte\\) (?<type>.*?), .*\n *Iterator<(?<class>.*?)> .*\\(\\);`,
 		);
 		const struct = x2.exec(input);
 		if (struct?.groups) {
 			return [struct.groups.type, getImport(input, struct.groups.class)];
 		} else {
 			const x3 = new RegExp(
-				`gVar\\.x\\(${classname}\\.${fieldname}\\);\\n *gVar\\.C\\(new we1\\.d\\(\\(byte\\) (?<type>.*?), `,
+				`gVar\\.x\\(${classname}\\.${fieldname}\\);\\n *gVar\\.C\\(new .*d\\(\\(byte\\) (?<type>.*?), `,
 			);
 			const struct = x3.exec(input);
 			if (struct?.groups?.type) {
@@ -347,8 +367,8 @@ class TStruct {
 		this.memo = this.name = name ||
 			"struct_" + (Math.floor(Math.random())).toString(16);
 		if (
-			this.memo.includes(" extends org.apache.thrift.i") ||
-			this.memo.includes(" extends i")
+			this.memo.includes(" extends org.apache.thrift.l") ||
+			this.memo.includes(" extends l")
 		) {
 			this.type = "exception";
 			this.memo = this.name = this.memo.split(" ")[0];
@@ -383,10 +403,13 @@ ${this.type} ${this.package.replaceAll(".", "_")}_${this.name} {
 		const nameReg =
 			/public.*? class (?<name>.*?) implements .*?, Serializable, Cloneable, Comparable.*?/;
 		const nameReg2 =
-			/public.*? class (?<name>.*?) extends org\.apache\.thrift\.n.*?/;
-		const nameReg3 = /public class (?<name>.*?) extends n</;
+			/public.*? class (?<name>.*?) extends org\.apache\.thrift\.e.*?/;
+		const nameReg3 = /public class (?<name>.*?) extends .*e</;
+		const nameReg4 = /public class (?<name>.*?) extends .*q</;
 		const fieldReg =
-			/public static final C38399c (?<prop>.*?) = new C38399c\((?<name>.*?), \(byte\) (?<type>.*?), (?<id>.*?)\);/g;
+			/public static final jy1.c (?<prop>.*?) = new jy1.c\((?<name>.*?), \(byte\) (?<type>.*?), (?<id>.*?)\);/g;
+		const fieldReg2 =
+			/public static final c (?<prop>.*?) = new c\((?<name>.*?), \(byte\) (?<type>.*?), (?<id>.*?)\);/g;
 		const structReg = /new StringBuilder\("(?<name>.*?)\(.*?"\)/;
 		let name = nameReg.exec(input);
 		if (!(name && name.groups && name.groups.name)) {
@@ -394,7 +417,11 @@ ${this.type} ${this.package.replaceAll(".", "_")}_${this.name} {
 			if (!(name && name.groups && name.groups.name)) {
 				name = nameReg3.exec(input);
 				if (!(name && name.groups && name.groups.name)) {
-					return;
+					name = nameReg4.exec(input);
+					if (!(name && name.groups && name.groups.name)) {
+						// none
+						return;
+					}
 				}
 			}
 		}
@@ -405,7 +432,8 @@ ${this.type} ${this.package.replaceAll(".", "_")}_${this.name} {
 			struct.realname = struct_name.groups.name;
 		}
 		while (true) {
-			const fields = fieldReg.exec(input);
+			const fields = fieldReg.exec(input)??fieldReg2.exec(input);
+
 			if ((fields && fields.groups)) {
 				const fname = fields.groups.prop;
 				let type: string | number = parseInt(fields.groups.type);
@@ -504,7 +532,9 @@ ${this.type} ${this.package.replaceAll(".", "_")}_${this.name} {
 		const nameReg =
 			/public.*? class (?<name>.*?) implements .*?, Serializable, Cloneable, Comparable.*?/;
 		const fieldReg =
-			/public static final C38399c (?<prop>.*?) = new C38399c\((?<name>.*?), \(byte\) (?<type>.*?), (?<id>.*?)\);/g;
+			/public static final jy1.c (?<prop>.*?) = new jy1.c\((?<name>.*?), \(byte\) (?<type>.*?), (?<id>.*?)\);/g;
+		const fieldReg2 =
+			/public static final c (?<prop>.*?) = new c\((?<name>.*?), \(byte\) (?<type>.*?), (?<id>.*?)\);/g;
 		const structReg = /new StringBuilder\("(?<name>.*?)\(.*?"\)/;
 		const name = nameReg.exec(classinput);
 		if (!(name && name.groups && name.groups.name)) {
@@ -517,7 +547,7 @@ ${this.type} ${this.package.replaceAll(".", "_")}_${this.name} {
 			struct.realname = struct_name.groups.name;
 		}
 		while (true) {
-			const fields = fieldReg.exec(classinput);
+			const fields = fieldReg.exec(classinput)??fieldReg2.exec(classinput);
 			if ((fields && fields.groups)) {
 				const fname = fields.groups.prop;
 				let type: string | number = parseInt(fields.groups.type);
@@ -646,7 +676,7 @@ ${this.value.map((e) => `${e.name} = ${e.value};`).join("\n")}
 		}
 	}
 	static load(input: string) {
-		const nameReg = /public enum (?<name>.*?) implements .*?h \{/;
+		const nameReg = /public enum (?<name>.*?) implements .*?k \{/;
 		const valueReg = / *?(?<name>.*?)\((?<value>.*?)\)[,;]/g;
 		const name = nameReg.exec(input);
 		if (!(name && name.groups && name.groups.name)) {

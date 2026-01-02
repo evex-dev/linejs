@@ -3,6 +3,7 @@ export type Device =
 	| "DESKTOPMAC"
 	//| "CHROMEOS"
 	| "ANDROID"
+	| "ANDROIDSECONDARY"
 	| "IOS"
 	| "IOSIPAD"
 	| "WATCHOS"
@@ -16,8 +17,14 @@ export interface DeviceDetails {
 }
 export function isV3Support(
 	device: Device,
-): device is "DESKTOPWIN" | "DESKTOPMAC" {
-	return ["DESKTOPWIN", "DESKTOPMAC"].includes(device);
+): device is
+	| "DESKTOPWIN"
+	| "DESKTOPMAC"
+	| "IOS"
+	| "ANDROID"
+	| "ANDROIDSECONDARY" {
+	return ["DESKTOPWIN", "DESKTOPMAC", "IOS", "ANDROID", "ANDROIDSECONDARY"]
+		.includes(device);
 }
 export function getDeviceDetails(
 	device: Device,
@@ -48,17 +55,23 @@ export function getDeviceDetails(
 		case "ANDROID":
 			appVersion = version || "13.4.1";
 			systemName = "Android OS";
+			systemVersion = "13";
+			break;
+		case "ANDROIDSECONDARY":
+			appVersion = version || "15.21.3";
+			systemName = "Android OS";
+			systemVersion = "14";
 			break;
 		case "IOS":
-			appVersion = version || "13.3.0";
+			appVersion = version || "15.19.0";
 			systemName = "iOS";
 			break;
 		case "IOSIPAD":
-			appVersion = version || "13.3.0";
+			appVersion = version || "15.19.0";
 			systemName = "iOS";
 			break;
 		case "WATCHOS":
-			appVersion = version || "13.3.0";
+			appVersion = version || "15.19.0";
 			systemName = "Watch OS";
 			break;
 		case "WEAROS":

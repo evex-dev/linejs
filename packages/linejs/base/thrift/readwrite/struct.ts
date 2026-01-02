@@ -11,7 +11,7 @@ function map(
 	}
 	return tMap;
 }
-type PartialDeep<T> = {
+export type PartialDeep<T> = {
 	[P in keyof T]?: T[P] extends Array<infer U> ? Array<PartialDeep<U>>
 		: T[P] extends ReadonlyArray<infer UU> ? ReadonlyArray<PartialDeep<UU>>
 		: PartialDeep<T[P]>;
@@ -791,7 +791,6 @@ export function AgreeToTermsRequest(
 	param?: PartialDeep<LINETypes.AgreeToTermsRequest> | undefined,
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
-		,
 		[12, 2, TermsAgreement(param.termsAgreement)],
 	];
 }
@@ -8903,5 +8902,28 @@ export function wakeUpLongPolling_args(
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
 		[10, 2, param.clientRevision],
+	];
+}
+
+export function F61_EnumC10204a0(
+	param: LINETypes.F61_EnumC10204a0 | undefined,
+): LINETypes.F61_EnumC10204a0 & number | undefined {
+	return typeof param === "string"
+		? LINETypes.enums.F61_EnumC10204a0[param]
+		: param;
+}
+export function GetUserFriendIdsRequest(
+	param?: PartialDeep<LINETypes.GetUserFriendIdsRequest> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.userPageToken],
+		[8, 2, F61_EnumC10204a0(param.blockStatus)],
+	];
+}
+export function getUserFriendIds_args(
+	param?: PartialDeep<LINETypes.getUserFriendIds_args> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[12, 1, GetUserFriendIdsRequest(param.request)],
 	];
 }

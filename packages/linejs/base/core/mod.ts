@@ -33,10 +33,14 @@ import { E2EE } from "../e2ee/mod.ts";
 import { LineObs } from "../obs/mod.ts";
 import { Timeline } from "../timeline/mod.ts";
 import { Polling } from "../polling/mod.ts";
+import { ConnManager } from "../push/mod.ts";
 
 import { Thrift as def } from "@evex/linejs-types/thrift";
+
 import type * as LINETypes from "@evex/linejs-types";
 import type { Fetch, FetchLike } from "../types.ts";
+
+import { Buffer } from "node:buffer";
 
 export interface LoginOption {
 	email?: string;
@@ -50,7 +54,7 @@ export interface LoginOption {
 
 export interface ClientInit {
 	/**
-	 * version which LINE App to emurating
+	 * version which LINE App to emulating
 	 */
 	version?: string;
 
@@ -105,6 +109,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	readonly e2ee: E2EE;
 	readonly obs: LineObs;
 	readonly timeline: Timeline;
+	readonly poll: Polling;
+	readonly push: ConnManager;
 
 	readonly auth: AuthService;
 	readonly call: CallService;
@@ -167,6 +173,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.e2ee = new E2EE(this);
 		this.obs = new LineObs(this);
 		this.timeline = new Timeline(this);
+		this.poll = new Polling(this);
+		this.push = new ConnManager(this);
 
 		this.auth = new AuthService(this);
 		this.call = new CallService(this);
@@ -225,10 +233,10 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	};
 
 	/**
-	 * Creates polling client.
+	 * returns polling client.
 	 */
 	createPolling(): Polling {
-		return new Polling(this);
+		return this.poll;
 	}
 
 	/**
@@ -240,10 +248,11 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 */
 	static jsonReplacer(k: any, v: any): any {
 		if (typeof v === "bigint") {
-			return Number(v);
+			//@ts-expect-error https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/JSON/rawJSON
+			return JSON.rawJSON(v.toString());
 		}
 		if (typeof v === "string") {
-			const midType = v.match(/(.)[0123456789abcdef]{32}/);
+			const midType = v.match(/([ucrpmst])[0123456789abcdef]{32}/);
 			if (midType && midType[1]) {
 				return `[${midType[1].toUpperCase()} mid]`;
 			}
@@ -252,6 +261,26 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			}
 		}
 		if (typeof v === "object") {
+			if (Array.isArray(v)) {
+				return v.map((item) => BaseClient.jsonReplacer("", item));
+			}
+			if (v instanceof Uint8Array) {
+				return `Uint8Array[${v.length}]<${
+					Array.from(v).map((e) => e.toString(16).padStart(2, "0")).join(" ")
+				}>`;
+			}
+			if (v.type === "Buffer" && Array.isArray(v.data)) {
+				return `Buffer[${v.data.length}]<${
+					Array.from(v.data).map((e) => Number(e).toString(16).padStart(2, "0"))
+						.join(
+							" ",
+						)
+				}>`;
+			}
+			if (v instanceof Blob) {
+				return `Blob[${v.size}]@${v.type}`;
+			}
+
 			const newObj: any = {};
 			let midCount = 0;
 			for (const key in v) {

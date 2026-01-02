@@ -49,12 +49,14 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	): void {
 		const polling = this.base.createPolling();
 		const signal = opts.signal;
+		signal && signal.addEventListener("abort", () => {
+			this.base.push.opStream.close();
+			this.base.push.sqStream.close();
+		});
 		if (opts.talk) {
 			(async () => {
 				for await (
-					const event of polling.listenTalkEvents({
-						signal,
-					})
+					const event of polling.listenTalkEvents()
 				) {
 					this.emit("event", event);
 					if (
@@ -77,9 +79,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		if (opts.square) {
 			(async () => {
 				for await (
-					const event of polling.listenSquareEvents({
-						signal,
-					})
+					const event of polling.listenSquareEvents()
 				) {
 					this.emit("square:event", event);
 					if (event.type === "NOTIFICATION_MESSAGE") {
@@ -123,11 +123,15 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 * Fetches all friend.
 	 */
 	async fetchUsers(): Promise<User[]> {
-		const mids = await this.base.talk.getAllContactIds({
-			syncReason: "INTERNAL",
+		throw new Error("fetchUsers is not implemented")
+		/*
+		const { userFriendMids } = await this.base.relation.getUserFriendIds({
+			request: {
+				blockStatus: "ALL",
+			},
 		});
-		const res = await this.base.relation.getContactsV3({
-			mids,
+		const res = await this.base.talk.getContactsV2({
+			mids: userFriendMids,
 		});
 		const contacts = res.responses;
 		return contacts.map((raw) =>
@@ -135,6 +139,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 				raw,
 			})
 		);
+		*/
 	}
 
 	/**

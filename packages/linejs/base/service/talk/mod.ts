@@ -1566,4 +1566,14 @@ export class TalkService implements BaseService {
 			this.requestPath,
 		));
 	}
+
+	async noop(): Promise<void> {
+		return await this.client.request.request(
+			[],
+			"noop",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
 }

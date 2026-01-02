@@ -46,10 +46,8 @@ export class TalkMessage {
 			text?: string;
 			contentType?: ContentType;
 			contentMetadata?: Record<string, string>;
-			relatedMessageId?: string;
-			location?: Location;
 		},
-	): Promise<Message> {
+	): Promise<void> {
 		if (typeof input === "string") {
 			return this.reply({
 				text: input,
@@ -63,11 +61,12 @@ export class TalkMessage {
 			// Personal chats
 			to = this.isMyMessage ? this.to.id : this.from.id;
 		}
-		return await this.#client.base.talk.sendMessage({
+		await this.#client.base.talk.sendMessage({
 			relatedMessageId: this.raw.id,
 			text: input.text,
 			to,
-			e2ee: input.e2ee,
+			e2ee: input.e2ee || Boolean(this.raw.chunks),
+			contentMetadata: input.contentMetadata,
 		});
 	}
 
@@ -83,7 +82,7 @@ export class TalkMessage {
 			relatedMessageId?: string;
 			location?: Location;
 		},
-	): Promise<Message> {
+	): Promise<void> {
 		if (typeof input === "string") {
 			return this.reply({
 				text: input,
@@ -97,10 +96,9 @@ export class TalkMessage {
 			// Personal chats
 			to = this.isMyMessage ? this.to.id : this.from.id;
 		}
-		return await this.#client.base.talk.sendMessage({
-			text: input.text,
+		await this.#client.base.talk.sendMessage({
 			to,
-			e2ee: input.e2ee,
+			e2ee: input.e2ee || Boolean(this.raw.chunks),
 		});
 	}
 
@@ -408,7 +406,7 @@ export class TalkMessage {
 	get from(): Mid {
 		const message = this.raw;
 		return {
-			type: message.toType,
+			type: "USER",
 			id: message.from,
 		};
 	}

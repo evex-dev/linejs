@@ -67,12 +67,12 @@ export interface SquareChatInit {
 export type SquareChatEvents = {
 	message: (message: SquareMessage) => void;
 	// TODO:
-	// kick: (event: LINETypes.SquareEvent & { payload: {} }) => void;
-	// leave: (event: LINETypes.SquareEvent & { payload: {} }) => void;
-	// join: (event: LINETypes.SquareEvent & { payload: {} }) => void;
-	// mention: (event: LINETypes.SquareEvent & { payload: {} }) => void;
-	// unsend: (event: LINETypes.SquareEvent & { payload: {} }, message: SquareMessage) => void;
-	// destroy: (event: LINETypes.SquareEvent & { payload: {} }, message: SquareMessage) => void;
+	kick: (event: LINETypes.SquareEventNotifiedKickoutFromSquare) => void;
+	leave: (event: LINETypes.SquareEventNotifiedLeaveSquareChat) => void;
+	join: (event: LINETypes.SquareEventNotifiedJoinSquareChat) => void;
+	mention: (message: SquareMessage) => void;
+	// unsend: (event: LINETypes.SquareEventNotifiedUpdateMessageStatus) => void;
+	destroy: (event: LINETypes.SquareEventNotifiedDestroyMessage) => void;
 	event: (event: LINETypes.SquareEvent) => void;
 	"update:syncToken": (syncToken: string) => void;
 };
@@ -201,6 +201,33 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 							raw: event.payload.receiveMessage.squareMessage,
 						});
 						this.emit("message", message);
+						if (
+							message.getTextDecorations().some((e) =>
+								e.mention && e.mention.mid === this.#client.base.profile?.mid
+							)
+						) {
+							this.emit("mention", message);
+						}
+					} else if (
+						event.type === "NOTIFIED_KICKOUT_FROM_SQUARE" &&
+						event.payload.notifiedKickoutFromSquare
+					) {
+						this.emit("kick", event.payload.notifiedKickoutFromSquare);
+					} else if (
+						event.type === "NOTIFIED_LEAVE_SQUARE_CHAT" &&
+						event.payload.notifiedLeaveSquareChat
+					) {
+						this.emit("leave", event.payload.notifiedLeaveSquareChat);
+					} else if (
+						event.type === "NOTIFIED_JOIN_SQUARE_CHAT" &&
+						event.payload.notifiedJoinSquareChat
+					) {
+						this.emit("join", event.payload.notifiedJoinSquareChat);
+					} else if (
+						event.type === "NOTIFIED_DESTROY_MESSAGE" &&
+						event.payload.notifiedDestroyMessage
+					) {
+						this.emit("destroy", event.payload.notifiedDestroyMessage);
 					}
 				}
 				await new Promise<void>((resolve) => setTimeout(resolve, 1000));

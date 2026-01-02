@@ -107,6 +107,7 @@ export class SquareService implements BaseService {
 			syncToken?: string;
 			continuationToken?: string;
 			limit?: number;
+			subscriptionId?: number;
 		},
 	): Promise<LINETypes.SquareService_fetchMyEvents_result["success"]> {
 		return await this.client.request.request(
@@ -226,7 +227,7 @@ export class SquareService implements BaseService {
 		profileImageObsHash?: string;
 		description?: string;
 		searchable?: boolean;
-		SquareJoinMethodType?: LINETypes.SquareJoinMethodType;
+		squareJoinMethodType?: LINETypes.SquareJoinMethodType;
 	}): Promise<LINETypes.SquareService_createSquare_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.SquareService_createSquare_args({
@@ -242,7 +243,7 @@ export class SquareService implements BaseService {
 						categoryId: 1,
 						revision: 0,
 						ableToUseInvitationTicket: true,
-						joinMethod: { type: options.SquareJoinMethodType },
+						joinMethod: { type: options.squareJoinMethodType },
 						adultOnly: "NONE",
 						svcTags: [],
 					},
@@ -976,7 +977,23 @@ export class SquareService implements BaseService {
 			this.requestPath,
 		);
 	}
-
+	async deleteOtherFromSquare(squareMemberMid: string): Promise<LINETypes.SquareService_updateSquareMember_result["success"]> {  
+		if (typeof squareMemberMid !== 'string' || !squareMemberMid.startsWith('p')) {
+    		throw new Error('Invalid value: squareMemberMid');
+		}
+		const response = await this.getSquareMember({ squareMemberMid });
+		const squareMember = response.squareMember;
+		return await this.updateSquareMember({  
+			request: {
+				updatedAttrs: [5],
+				updatedPreferenceAttrs: [],
+				squareMember: {
+					...squareMember,
+					membershipState: 'KICK_OUT'
+				},
+			}
+		});
+	}
 	async destroyMessages(
 		...param: Parameters<
 			typeof LINEStruct.SquareService_destroyMessages_args

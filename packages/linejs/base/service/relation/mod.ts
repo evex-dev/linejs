@@ -81,6 +81,18 @@ export class RelationService implements BaseService {
 		);
 	}
 
+	async getUserFriendIds(
+		...param: Parameters<typeof LINEStruct.getUserFriendIds_args>
+	): Promise<LINETypes.getUserFriendIds_result["success"]> {
+		return await this.client.request.request(
+			LINEStruct.getUserFriendIds_args(...param),
+			"getUserFriendIds",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
 	/**
 	 * @description Add friend by mid.
 	 */

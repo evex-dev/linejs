@@ -93,7 +93,7 @@ export class E2EE {
 				}
 				const publicKey = receiverKeyData.publicKey;
 				const receiverKeyId = publicKey.keyId;
-				if (receiverKeyId === keyId) {
+				if (receiverKeyId == keyId) {
 					key = Buffer.from(publicKey.keyData).toString("base64");
 					await this.client.storage.set(
 						`e2eePublicKeys:${keyId}`,
@@ -112,7 +112,7 @@ export class E2EE {
 			key = (await this.client.storage.get(
 				`e2eeGroupKeys:${mid}`,
 			)) as string;
-			if (keyId !== undefined && key !== undefined) {
+			if (keyId && key) {
 				const keyData = JSON.parse(key);
 				if (keyId !== keyData["keyId"]) {
 					this.e2eeLog("getE2EELocalPublicKeykeyIdMismatch", mid);
@@ -494,7 +494,7 @@ export class E2EE {
 				to,
 				_from,
 			);
-		} else if (typeof data === "string") {
+		} else if (typeof data === "string" || data instanceof Buffer) {
 			return this.encryptE2EETextMessage(
 				senderKeyId,
 				receiverKeyId,
@@ -523,7 +523,7 @@ export class E2EE {
 		receiverKeyId: number,
 		keyData: Buffer,
 		specVersion: number,
-		text: string,
+		text: string | Buffer,
 		to: string,
 		_from: string,
 	): Buffer[] {
@@ -538,7 +538,7 @@ export class E2EE {
 			0,
 		);
 		const sign = crypto.randomBytes(12);
-		const data = Buffer.from(JSON.stringify({ text: text }));
+		const data = Buffer.from(JSON.stringify({ text: text.toString() }));
 		const encData = this.encryptE2EEMessageV2(data, gcmKey, sign, aad);
 
 		const bSenderKeyId = Buffer.from(this.getIntBytes(senderKeyId));
@@ -814,15 +814,17 @@ export class E2EE {
 		const toType = messageObj.toType;
 		const metadata = messageObj.contentMetadata;
 		const specVersion = metadata.e2eeVersion || "2";
-		const contentType = messageObj.contentType;
+		const contentType = typeof messageObj.contentType === "string"
+			? LINETypes.enums.ContentType[messageObj.contentType]
+			: messageObj.contentType;
 		const chunks = messageObj.chunks.map((chunk) =>
 			typeof chunk === "string" ? Buffer.from(chunk, "utf-8") : chunk
 		);
 
 		const senderKeyId = byte2int(chunks[3]);
 		const receiverKeyId = byte2int(chunks[4]);
-		this.e2eeLog("decryptE2EELocationMessageSenderKeyId", senderKeyId);
-		this.e2eeLog("decryptE2EELocationMessageReceiverKeyId", receiverKeyId);
+		this.e2eeLog("decryptE2EEDataMessageSenderKeyId", senderKeyId);
+		this.e2eeLog("decryptE2EEDataMessageReceiverKeyId", receiverKeyId);
 
 		const selfKey = await this.getE2EESelfKeyData(
 			this.client.profile?.mid as string,
@@ -952,6 +954,14 @@ export class E2EE {
 
 		let decrypted;
 
+		this.e2eeLog("decryptE2EEMessageV2Info", {
+			iv: sign.length,
+			key: gcmKey.length,
+			tag: tag.length,
+			aad: aad.length,
+			encrypted: ciphertext.length,
+		});
+
 		// 最初の試行
 		try {
 			const decipher = crypto.createDecipheriv(
@@ -966,6 +976,12 @@ export class E2EE {
 				decipher.final(),
 			]);
 		} catch (error) {
+			if (error instanceof Error) {
+				this.e2eeLog(
+					"decryptE2EEMessageV2DecryptionFailed",
+					error.message,
+				);
+			}
 			// エラー時は新しい decipher オブジェクトを作成
 			try {
 				const decipher2 = crypto.createDecipheriv(
@@ -1043,15 +1059,17 @@ export class E2EE {
 			await globalThis.crypto.subtle.encrypt(
 				{
 					name: "AES-CTR",
-					counter: new Uint8Array(nonceArrayBuffer as ArrayBuffer),
-					length: 64,
+					// @ts-expect-error: will fix cuz typescript version change
+					counter: nonce,
+					length: 32,
 				},
+				// @ts-expect-error: will fix cuz typescript version change
 				await globalThis.crypto.subtle.importKey(
 					"raw",
 					new Uint8Array(aesKeyArrayBuffer as ArrayBuffer),
 					"AES-CTR",
 					false,
-					["encrypt", "decrypt"],
+					["encrypt"],
 				),
 				new Uint8Array(dataArrayBuffer as ArrayBuffer),
 			),
@@ -1087,6 +1105,32 @@ export class E2EE {
 			decipher.final(),
 		]);
 		return decrypted;
+	}
+
+	async ___decryptAESCTR(
+		aesKey: Buffer,
+		nonce: Buffer,
+		data: Buffer,
+	): Promise<Buffer> {
+		return Buffer.from(
+			await globalThis.crypto.subtle.decrypt(
+				{
+					name: "AES-CTR",
+					// @ts-expect-error: will fix cuz typescript version change
+					counter: nonce,
+					length: 32,
+				},
+				// @ts-expect-error: will fix cuz typescript version change
+				await globalThis.crypto.subtle.importKey(
+					"raw",
+					aesKey,
+					"AES-CTR",
+					false,
+					["decrypt"],
+				),
+				data,
+			),
+		);
 	}
 
 	__decryptAESCTR(aesKey: Buffer, nonce: Buffer, data: Buffer): Buffer {
@@ -1152,7 +1196,7 @@ export class E2EE {
 			keyMaterial = crypto.randomBytes(32);
 		}
 		const keys = await this.deriveKeyMaterial(keyMaterial);
-		const encData = await this.___encryptAESCTR(
+		const encData = await this.__encryptAESCTR(
 			keys.encKey,
 			keys.nonce,
 			rawData,
@@ -1174,10 +1218,11 @@ export class E2EE {
 			keyMaterial = Buffer.from(keyMaterial, "base64");
 		}
 		const keys = await this.deriveKeyMaterial(keyMaterial);
-		return this.__decryptAESCTR(keys.encKey, keys.nonce, rawData).slice(
-			0,
-			-32,
-		);
+		return (await this.___decryptAESCTR(keys.encKey, keys.nonce, rawData))
+			.slice(
+				0,
+				-32,
+			);
 	}
 }
 
