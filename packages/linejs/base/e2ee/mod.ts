@@ -1063,7 +1063,6 @@ export class E2EE {
 					counter: nonce,
 					length: 32,
 				},
-				// @ts-expect-error: will fix cuz typescript version change
 				await globalThis.crypto.subtle.importKey(
 					"raw",
 					new Uint8Array(aesKeyArrayBuffer as ArrayBuffer),
