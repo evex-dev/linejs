@@ -791,7 +791,6 @@ export function AgreeToTermsRequest(
 	param?: PartialDeep<LINETypes.AgreeToTermsRequest> | undefined,
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
-		,
 		[12, 2, TermsAgreement(param.termsAgreement)],
 	];
 }
