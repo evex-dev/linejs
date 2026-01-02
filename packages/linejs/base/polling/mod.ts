@@ -154,13 +154,13 @@ export class Polling {
 			try {
 				this.islisten = true;
 				try {
-					await this.client.conn.initializeConn(1, [3, 8]);
+					await this.client.push.initializeConn(1, [3, 8]);
 				} catch (error) {
 					this.client.log("LegyPusherError_cannot_init", { error });
 					break;
 				}
 				cb && cb();
-				await this.client.conn.InitAndRead([3, 8]);
+				await this.client.push.InitAndRead([3, 8]);
 				await sleep(4);
 			} catch (error) {
 				this.client.log("LegyPusherError", { error });
@@ -171,12 +171,14 @@ export class Polling {
 	}
 
 	listenSquareEvents(): ReadableStream<SquareEvent> {
+		this.client.push.sqStream.renew();
 		this.initLegyPusher();
-		return this.client.conn.sqStream.stream;
+		return this.client.push.sqStream.stream;
 	}
 
 	listenTalkEvents(): ReadableStream<Operation> {
+		this.client.push.opStream.renew();
 		this.initLegyPusher();
-		return this.client.conn.opStream.stream;
+		return this.client.push.opStream.stream;
 	}
 }

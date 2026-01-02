@@ -93,7 +93,7 @@ export class E2EE {
 				}
 				const publicKey = receiverKeyData.publicKey;
 				const receiverKeyId = publicKey.keyId;
-				if (receiverKeyId === keyId) {
+				if (receiverKeyId == keyId) {
 					key = Buffer.from(publicKey.keyData).toString("base64");
 					await this.client.storage.set(
 						`e2eePublicKeys:${keyId}`,
@@ -112,7 +112,7 @@ export class E2EE {
 			key = (await this.client.storage.get(
 				`e2eeGroupKeys:${mid}`,
 			)) as string;
-			if (keyId !== undefined && key !== undefined) {
+			if (keyId && key) {
 				const keyData = JSON.parse(key);
 				if (keyId !== keyData["keyId"]) {
 					this.e2eeLog("getE2EELocalPublicKeykeyIdMismatch", mid);
@@ -494,7 +494,7 @@ export class E2EE {
 				to,
 				_from,
 			);
-		} else if (typeof data === "string") {
+		} else if (typeof data === "string" || data instanceof Buffer) {
 			return this.encryptE2EETextMessage(
 				senderKeyId,
 				receiverKeyId,
@@ -523,7 +523,7 @@ export class E2EE {
 		receiverKeyId: number,
 		keyData: Buffer,
 		specVersion: number,
-		text: string,
+		text: string | Buffer,
 		to: string,
 		_from: string,
 	): Buffer[] {
@@ -538,7 +538,7 @@ export class E2EE {
 			0,
 		);
 		const sign = crypto.randomBytes(12);
-		const data = Buffer.from(JSON.stringify({ text: text }));
+		const data = Buffer.from(JSON.stringify({ text: text.toString() }));
 		const encData = this.encryptE2EEMessageV2(data, gcmKey, sign, aad);
 
 		const bSenderKeyId = Buffer.from(this.getIntBytes(senderKeyId));

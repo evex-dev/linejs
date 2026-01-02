@@ -110,7 +110,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	readonly obs: LineObs;
 	readonly timeline: Timeline;
 	readonly poll: Polling;
-	readonly conn: ConnManager;
+	readonly push: ConnManager;
 
 	readonly auth: AuthService;
 	readonly call: CallService;
@@ -174,7 +174,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.obs = new LineObs(this);
 		this.timeline = new Timeline(this);
 		this.poll = new Polling(this);
-		this.conn = new ConnManager(this);
+		this.push = new ConnManager(this);
 
 		this.auth = new AuthService(this);
 		this.call = new CallService(this);
@@ -263,9 +263,17 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			if (Array.isArray(v)) {
 				return v.map((item) => BaseClient.jsonReplacer("", item));
 			}
-			if (v instanceof Uint8Array || v instanceof Buffer) {
+			if (v instanceof Uint8Array) {
 				return `Uint8Array[${v.length}]<${
-					Array.from(v).map((e) => e.toString(16).padStart(2,"0")).join(" ")
+					Array.from(v).map((e) => e.toString(16).padStart(2, "0")).join(" ")
+				}>`;
+			}
+			if (v.type === "Buffer" && Array.isArray(v.data)) {
+				return `Buffer[${v.data.length}]<${
+					Array.from(v.data).map((e) => Number(e).toString(16).padStart(2, "0"))
+						.join(
+							" ",
+						)
 				}>`;
 			}
 			if (v instanceof Blob) {

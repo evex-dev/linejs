@@ -114,7 +114,7 @@ export class ConnManager {
 				this.renew();
 			},
 			renew() {
-				new ReadableStream<T>({
+				this.stream = new ReadableStream<T>({
 					start(c) {
 						controller = c;
 					},
@@ -437,7 +437,6 @@ export class ConnManager {
 			}
 		} catch (e) {
 			return;
-
 		}
 	}
 

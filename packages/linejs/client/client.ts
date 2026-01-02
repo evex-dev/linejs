@@ -50,8 +50,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		const polling = this.base.createPolling();
 		const signal = opts.signal;
 		signal && signal.addEventListener("abort", () => {
-			this.base.conn.opStream.close();
-			this.base.conn.sqStream.close();
+			this.base.push.opStream.close();
+			this.base.push.sqStream.close();
 		});
 		if (opts.talk) {
 			(async () => {
