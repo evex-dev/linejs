@@ -977,7 +977,23 @@ export class SquareService implements BaseService {
 			this.requestPath,
 		);
 	}
-
+	async deleteOtherFromSquare(squareMemberMid: string): Promise<LINETypes.SquareService_updateSquareMember_result["success"]> {  
+		if (typeof squareMemberMid !== 'string' || !squareMemberMid.startsWith('p')) {
+    		throw new Error('Invalid value: squareMemberMid');
+		}
+		const response = await this.getSquareMember({ squareMemberMid });
+		const squareMember = response.squareMember;
+		return await this.updateSquareMember({  
+			request: {
+				updatedAttrs: [5],
+				updatedPreferenceAttrs: [],
+				squareMember: {
+					...squareMember,
+					membershipState: 'KICK_OUT'
+				},
+			}
+		});
+	}
 	async destroyMessages(
 		...param: Parameters<
 			typeof LINEStruct.SquareService_destroyMessages_args
