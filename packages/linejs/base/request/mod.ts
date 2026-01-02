@@ -113,7 +113,7 @@ export class RequestClient {
 		overrideMethod: string = "POST",
 		parse: boolean | string = true,
 		isReRequest: boolean = false,
-		timeout: number = 1000,
+		timeout: number = this.client.config.timeout,
 	): Promise<ParsedThrift> {
 		const protocol = Protocols[protocolType];
 

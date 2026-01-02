@@ -33,7 +33,6 @@ export function writeThrift(
 		myBuf = Buffer.from([]);
 	}
 
-	// header と myBuf を効率よく結合して Uint8Array を作る（スプレッド禁止）
 	const header = genHeader[Protocol == thrift.TBinaryProtocol ? 3 : 4](name);
 	const totalLen = header.length + myBuf.length + 1;
 	const writedBinary = new Uint8Array(totalLen);

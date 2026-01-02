@@ -123,11 +123,15 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 * Fetches all friend.
 	 */
 	async fetchUsers(): Promise<User[]> {
-		const mids = await this.base.talk.getAllContactIds({
-			syncReason: "INTERNAL",
+		throw new Error("fetchUsers is not implemented")
+		/*
+		const { userFriendMids } = await this.base.relation.getUserFriendIds({
+			request: {
+				blockStatus: "ALL",
+			},
 		});
-		const res = await this.base.relation.getContactsV3({
-			mids,
+		const res = await this.base.talk.getContactsV2({
+			mids: userFriendMids,
 		});
 		const contacts = res.responses;
 		return contacts.map((raw) =>
@@ -135,6 +139,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 				raw,
 			})
 		);
+		*/
 	}
 
 	/**

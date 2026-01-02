@@ -248,7 +248,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 */
 	static jsonReplacer(k: any, v: any): any {
 		if (typeof v === "bigint") {
-			return Number(v);
+			//@ts-expect-error https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/JSON/rawJSON
+			return JSON.rawJSON(v.toString());
 		}
 		if (typeof v === "string") {
 			const midType = v.match(/([ucrpmst])[0123456789abcdef]{32}/);
