@@ -203,7 +203,7 @@ export class LineObs {
 		return await this.uploadObjectForService({
 			data,
 			oType: type,
-			obsPath: toType + "/m/" + (oid || "reqseq"),
+			obsPath: `${toType}/m/${oid ?? "reqseq"}`,
 			filename: param.name,
 			params: param,
 		});
@@ -243,13 +243,13 @@ export class LineObs {
 		};
 
 		params = { ...baseParams, ...(params || {}) };
-
+		
 		if (!data || data.size === 0) {
 			throw new InternalError("ObsError", "No data to send.");
 		}
 		let headers: Record<string, string> = this.client.request
 			.getHeader("POST");
-		headers["Content-Type"] = "application/octet-stream";
+		headers["content-type"] = "application/octet-stream";
 		headers["X-Obs-Params"] = Buffer.from(JSON.stringify(params)).toString(
 			"base64",
 		);
@@ -420,6 +420,11 @@ export class LineObs {
 			obsPath: "talk/" + contentMetadata.SID,
 			addHeaders: { "X-Talk-Meta": talkMeta },
 		});
+		const decryptedBuffer = await this.client.e2ee.decryptByKeyMaterial(
+			Buffer.from(await data.arrayBuffer()),
+			keyMaterial,
+		);
+		const decryptedArrayBuffer = decryptedBuffer.buffer.slice(decryptedBuffer.byteOffset, decryptedBuffer.byteOffset + decryptedBuffer.byteLength);
 		const fileData = new File([
 			// @ts-expect-error: will fix cuz typescript version change
 			await this.client.e2ee.decryptByKeyMaterial(
