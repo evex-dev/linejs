@@ -7,6 +7,6 @@
 		"./thrift": "./thrift.ts"
 	},
 	"imports": {
-		"@evex/loose-types": "jsr:@evex/loose-types"
+		"@evex/loose-types": "jsr:@evex/loose-types@^1.0.1"
 	}
 }
