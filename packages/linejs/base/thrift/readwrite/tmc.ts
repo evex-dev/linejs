@@ -133,6 +133,8 @@ export class TMoreCompactProtocol {
 		let value: unknown = null;
 		let temp: unknown = null;
 		let valData: unknown = null;
+		// deno-lint-ignore no-unused-vars
+		let subType: number[] | null = null;
 
 		if (typeId === 2) {
 			// BOOL

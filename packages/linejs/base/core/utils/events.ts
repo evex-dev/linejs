@@ -2,7 +2,8 @@ import type * as LINETypes from "@evex/linejs-types";
 import type { SyncData } from "../../polling/mod.ts";
 import type { LooseType } from "@evex/loose-types";
 // import type { Operation, SquareMessage, TalkMessage } from "../../event/mod.ts";
-type LogType = "login" | "request" | "response" | (string & Record<PropertyKey, never>);
+// deno-lint-ignore ban-types
+type LogType = "login" | "request" | "response" | (string & {});
 
 export interface Log {
 	type: LogType;
