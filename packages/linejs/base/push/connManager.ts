@@ -1,3 +1,4 @@
+import { PushProtocol } from "./protocol.ts";
 import { LegyH2PushFrame } from "./connData.ts";
 import { Conn } from "./conn.ts";
 import { BaseClient } from "../mod.ts";
@@ -5,7 +6,6 @@ import { TCompactProtocol } from "npm:thrift@^0.20.0";
 
 import { TMoreCompactProtocol } from "../thrift/readwrite/tmc.ts";
 
-// GOMI:
 import {
 	PartialDeep,
 	SquareService_fetchMyEvents_args as gen_SquareService_fetchMyEvents_args,
@@ -24,11 +24,7 @@ import {
 import { ParsedThrift } from "../thrift/mod.ts";
 import { Buffer } from "node:buffer";
 
-function gen_m(ss = [1, 3, 5, 6, 8, 9, 10]) {
-	let i = 0;
-	for (const s of ss) i |= 1 << (s - 1);
-	return i;
-}
+
 
 export interface ReadableStreamWriter<T> {
 	stream: ReadableStream<T>;
@@ -45,7 +41,7 @@ export class ConnManager {
 	SignOnRequests: Record<number, any[]> = {};
 	OnPingCallback: (id: number) => void;
 	OnSignReqResp: Record<number, any> = {};
-	OnSignOnResponse: (reqId: number, isFin: boolean, data: Uint8Array) => void;
+	OnSignOnResponse: (reqId: number, isFin: boolean, data: Uint8Array<ArrayBufferLike>) => void;
 	OnPushResponse: (frame: LegyH2PushFrame) => void;
 	_eventSynced = false;
 	_pingInterval = 30;
@@ -149,7 +145,7 @@ export class ConnManager {
 			.getHeader();
 		tosendHeaders["content-type"] = "application/octet-stream";
 		tosendHeaders["accept"] = "application/octet-stream";
-		const m = gen_m(initServices);
+		const m = PushProtocol.genServiceBitmask(initServices);
 		this.log(`Using \`m=${m}\` on \`/PUSH\``);
 		const host = this.client.request.endpoint;
 		const port = 443;
@@ -157,30 +153,19 @@ export class ConnManager {
 		return _conn;
 	}
 
-	buildRequest(service: number, data: Uint8Array): Uint8Array {
-		const len = data.length;
-		const out = new Uint8Array(2 + 1 + len);
-		out[0] = (len >> 8) & 0xff;
-		out[1] = len & 0xff;
-		out[2] = service & 0xff;
-		out.set(data, 3);
-		return out;
-	}
+
 
 	async buildAndSendSignOnRequest(
 		conn: Conn,
 		serviceType: number,
 		kwargs: Record<string, any> = {},
 	): Promise<{
-		payload: Uint8Array<ArrayBuffer>;
+		payload: Uint8Array<ArrayBufferLike>;
 		id: number;
 	}> {
 		this.log("buildAndSendSignOnRequest", { serviceType, kwargs });
 		const cl = this.client;
 		const id = Object.keys(this.SignOnRequests).length + 1;
-		const idBuf = new Uint8Array(2);
-		idBuf[0] = (id >> 8) & 0xff;
-		idBuf[1] = id & 0xff;
 		let methodName: string | undefined;
 		// build payload body depending on serviceType
 		let req = new Uint8Array(0);
@@ -202,13 +187,7 @@ export class ConnManager {
 			);
 			methodName = "sync";
 		}
-		const header = new Uint8Array(2 + 1 + 1 + 2 + req.length);
-		header.set(idBuf, 0);
-		header[2] = serviceType & 0xff;
-		header[3] = 0;
-		header[4] = (req.length >> 8) & 0xff;
-		header[5] = req.length & 0xff;
-		header.set(req, 6);
+		const header = PushProtocol.buildSignOnRequest(id, serviceType, req);
 		this.SignOnRequests[id] = [serviceType, methodName, null];
 		this.log(
 			`[H2][PUSH] send sign-on-request. requestId:${id}, service:${serviceType}`,
@@ -220,7 +199,7 @@ export class ConnManager {
 	async _OnSignOnResponse(
 		reqId: number,
 		isFin: boolean,
-		data: Uint8Array,
+		data: Uint8Array<ArrayBufferLike>,
 	): Promise<false | undefined> {
 		// data = data.slice(5);
 		const cl = this.client;
