@@ -1,16 +1,14 @@
-import {
+import type {
 	ContentType,
-	enums,
 	Location,
-	type Message,
-	type MessageReactionType,
+	Message,
+	MessageReactionType,
 } from "@evex/linejs-types";
 import type { Client } from "../../client.ts";
 
 import type {
 	ContactMeta,
 	EmojiMeta,
-	FileMeta,
 	FlexMeta,
 	MentionMeta,
 	StickerMetadata,

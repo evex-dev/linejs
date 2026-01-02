@@ -1,6 +1,7 @@
 // @ts-types="thrift-types"
 import * as thrift from "thrift";
 import { Buffer } from "node:buffer";
+import type { LooseType } from "@evex/loose-types";
 
 export const genHeader = {
 	3: (name: string) => {
@@ -73,6 +74,6 @@ export type NestedArray = Array<
 	| [15, number, [number, NestedArray[] | unknown[] | undefined]?]
 >;
 export interface ParsedThrift {
-	data: any;
+	data: LooseType;
 	_info: thrift.TMessage;
 }

@@ -5,5 +5,8 @@
 	"exports": {
 		".": "./line_types.ts",
 		"./thrift": "./thrift.ts"
+	},
+	"imports": {
+		"@evex/loose-types": "jsr:@evex/loose-types"
 	}
 }

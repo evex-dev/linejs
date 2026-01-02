@@ -1,4 +1,6 @@
-export const Thrift: any = {
+import type { LooseType } from "@evex/loose-types";
+
+export const Thrift: LooseType = {
 	"AR0_g": {
 		"16641": "ILLEGAL_ARGUMENT",
 		"16642": "MAJOR_VERSION_NOT_SUPPORTED",
@@ -37665,5 +37667,5 @@ export const Thrift: any = {
 	],
 };
 export function parseEnum(name: string, value: number | string): string | null {
-	return (Thrift as any)[name][value] ?? null;
+	return (Thrift as LooseType)[name][value] ?? null;
 }

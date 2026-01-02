@@ -3,7 +3,6 @@
  * @module
  */
 
-import type { BaseClient } from "./core/mod.ts";
 
 /**
  * Fetch function used by linejs.

@@ -93,10 +93,10 @@ function readValue(
 	} else if (ftype == Thrift.Type.DOUBLE) {
 		return input.readDouble();
 	} else if (ftype == 16) {
-		// @ts-expect-error
+		// @ts-expect-error: TODO
 		return input.readIString();
 	} else if (ftype == 17) {
-		// @ts-expect-error
+		// @ts-expect-error: TODO
 		return input.readLineMid();
 	} else {
 		input.skip(ftype);

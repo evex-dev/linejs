@@ -8,6 +8,7 @@ import * as LINETypes from "@evex/linejs-types";
 import type { BaseClient } from "../core/mod.ts";
 import { ContentType } from "../thrift/readwrite/struct.ts";
 import CryptoJS from "crypto-js";
+import type { LooseType } from "@evex/loose-types";
 
 interface GroupKey {
 	privKey: string;
@@ -19,7 +20,7 @@ export class E2EE {
 	constructor(client: BaseClient) {
 		this.client = client;
 	}
-	public async getE2EESelfKeyData(mid: string): Promise<any> {
+	public async getE2EESelfKeyData(mid: string): Promise<LooseType> {
 		try {
 			const keyData = JSON.parse(
 				await this.client.storage.get("e2eeKeys:" + mid) as string,
@@ -45,7 +46,7 @@ export class E2EE {
 	}
 	public async getE2EESelfKeyDataByKeyId(
 		keyId: string | number,
-	): Promise<any> {
+	): Promise<LooseType> {
 		try {
 			return JSON.parse(
 				await this.client.storage.get("e2eeKeys:" + keyId) as string,
@@ -56,14 +57,14 @@ export class E2EE {
 	}
 	public async saveE2EESelfKeyDataByKeyId(
 		keyId: string | number,
-		value: any,
+		value: LooseType,
 	) {
 		await this.client.storage.set(
 			"e2eeKeys:" + keyId,
 			JSON.stringify(value),
 		);
 	}
-	public async saveE2EESelfKeyData(value: any) {
+	public async saveE2EESelfKeyData(value: LooseType) {
 		await this.client.storage.set(
 			"e2eeKeys:" + this.client.profile?.mid,
 			JSON.stringify(value),
@@ -302,10 +303,10 @@ export class E2EE {
 	}
 
 	public async decodeE2EEKeyV1(
-		data: any,
+		data: LooseType,
 		secret: Buffer,
 	): Promise<
-		| { keyId: any; privKey: Buffer; pubKey: Buffer; e2eeVersion: any }
+		| { keyId: LooseType; privKey: Buffer; pubKey: Buffer; e2eeVersion: LooseType }
 		| undefined
 	> {
 		if (data.encryptedKeyChain) {
@@ -436,7 +437,7 @@ export class E2EE {
 
 	public async encryptE2EEMessage(
 		to: string,
-		data: string | Location | Record<string, any>,
+		data: string | Location | Record<string, LooseType>,
 		contentType: LINETypes.ContentType = 0,
 		specVersion = 2,
 	): Promise<Buffer[]> {
@@ -561,7 +562,7 @@ export class E2EE {
 		receiverKeyId: number,
 		keyData: Buffer,
 		specVersion: number,
-		rawdata: Record<string, any>,
+		rawdata: Record<string, LooseType>,
 		to: string,
 		_from: string,
 		contentType: number,
@@ -696,7 +697,7 @@ export class E2EE {
 
 		const selfKey = await this.getE2EESelfKeyData(this.client.profile!.mid);
 		let privK = Buffer.from(selfKey.privKey, "base64");
-		let pubK: any;
+		let pubK: LooseType;
 
 		if (toType === LINETypes.enums.MIDType.USER || toType === "USER") {
 			pubK = await this.getE2EELocalPublicKey(
@@ -769,7 +770,7 @@ export class E2EE {
 			this.client.profile?.mid as string,
 		);
 		let privK = Buffer.from(selfKey.privKey, "base64");
-		let pubK: any;
+		let pubK: LooseType;
 
 		if (toType === LINETypes.enums.MIDType.USER || toType === "USER") {
 			pubK = await this.getE2EELocalPublicKey(
@@ -808,7 +809,7 @@ export class E2EE {
 	public async decryptE2EEDataMessage(
 		messageObj: Message,
 		isSelf = true,
-	): Promise<Record<string, any>> {
+	): Promise<Record<string, LooseType>> {
 		const _from = messageObj.from;
 		const to = messageObj.to;
 		const toType = messageObj.toType;
@@ -830,7 +831,7 @@ export class E2EE {
 			this.client.profile?.mid as string,
 		);
 		let privK = Buffer.from(selfKey.privKey, "base64");
-		let pubK: any;
+		let pubK: LooseType;
 
 		if (toType === LINETypes.enums.MIDType.USER || toType === "USER") {
 			pubK = await this.getE2EELocalPublicKey(
@@ -871,7 +872,7 @@ export class E2EE {
 		chunks: Buffer[],
 		privK: Buffer,
 		pubK: Buffer,
-	): any {
+	): LooseType {
 		this.e2eeLog("decryptE2EEMessageV1_arg", {
 			chunks,
 			privK,
@@ -904,7 +905,7 @@ export class E2EE {
 				decipher.update(message),
 				decipher.final(),
 			]);
-		} catch (error) {
+		} catch (_error) {
 			// エラー時は新しい decipher オブジェクトを作成
 			const decipher2 = crypto.createDecipheriv(
 				"aes-256-cbc",
@@ -933,7 +934,7 @@ export class E2EE {
 		pubK: Buffer,
 		specVersion = 2,
 		contentType = 0,
-	): any {
+	): LooseType {
 		const salt = chunks[0];
 		const message = chunks[1];
 		const ciphertext = message.subarray(0, -16);
@@ -1011,7 +1012,7 @@ export class E2EE {
 		return JSON.parse(decrypted.toString());
 	}
 
-	private e2eeLog(type: string, message: any) {
+	private e2eeLog(type: string, message: LooseType) {
 		this.client.log("e2ee", { type, message });
 	}
 
@@ -1050,8 +1051,6 @@ export class E2EE {
 		nonce: Buffer,
 		data: Buffer,
 	): Promise<Buffer> {
-		// Convert ArrayBufferLike to ArrayBuffer
-		const nonceArrayBuffer = nonce.buffer.slice(nonce.byteOffset, nonce.byteOffset + nonce.byteLength);
 		const aesKeyArrayBuffer = aesKey.buffer.slice(aesKey.byteOffset, aesKey.byteOffset + aesKey.byteLength);
 		const dataArrayBuffer = data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength);
 		

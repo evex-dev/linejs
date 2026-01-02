@@ -1,10 +1,12 @@
 import * as LINETypes from "@evex/linejs-types";
-import { type NestedArray } from "../mod.ts";
+import type { NestedArray } from "../mod.ts";
+import type { LooseType } from "@evex/loose-types";
+
 function map(
-	call: ((v: any) => NestedArray) | ((v: any) => number),
-	value: any,
-): Record<keyof any, NestedArray | number> {
-	const tMap: Record<keyof any, NestedArray | number> = {};
+	call: ((v: LooseType) => NestedArray) | ((v: LooseType) => number),
+	value: LooseType,
+): Record<keyof LooseType, NestedArray | number> {
+	const tMap: Record<keyof LooseType, NestedArray | number> = {};
 	for (const key in value) {
 		const e = value[key];
 		tMap[key] = call(e);

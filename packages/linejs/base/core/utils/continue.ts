@@ -1,4 +1,6 @@
-export type Continuable = { continuationToken?: string; [k: string]: any };
+import type { LooseType } from "@evex/loose-types";
+
+export type Continuable = { continuationToken?: string; [k: string]: LooseType };
 
 export async function continueRequest<
 	P extends Continuable,
@@ -17,10 +19,10 @@ export async function continueRequest<
 						base[key] = value;
 					} else {
 						if (Array.isArray(value)) {
-							(base[key] as any) = [
+							(base[key] as LooseType) = [
 								...value,
-								...base[key] as any,
-							] as any;
+								...base[key] as LooseType,
+							] as LooseType;
 						} else {
 							base[key] = objectSum(base[key], value);
 						}
@@ -43,7 +45,7 @@ export async function continueRequest<
 			objectSum(responseSum, _response);
 		}
 		if (!_response.continuationToken) {
-			return responseSum as any;
+			return responseSum as LooseType;
 		}
 		continuationToken = _response.continuationToken;
 	}

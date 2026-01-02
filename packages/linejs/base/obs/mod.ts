@@ -420,11 +420,6 @@ export class LineObs {
 			obsPath: "talk/" + contentMetadata.SID,
 			addHeaders: { "X-Talk-Meta": talkMeta },
 		});
-		const decryptedBuffer = await this.client.e2ee.decryptByKeyMaterial(
-			Buffer.from(await data.arrayBuffer()),
-			keyMaterial,
-		);
-		const decryptedArrayBuffer = decryptedBuffer.buffer.slice(decryptedBuffer.byteOffset, decryptedBuffer.byteOffset + decryptedBuffer.byteLength);
 		const fileData = new File([
 			// @ts-expect-error: will fix cuz typescript version change
 			await this.client.e2ee.decryptByKeyMaterial(

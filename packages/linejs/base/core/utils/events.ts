@@ -1,11 +1,12 @@
 import type * as LINETypes from "@evex/linejs-types";
-import { SyncData } from "../../polling/mod.ts";
+import type { SyncData } from "../../polling/mod.ts";
+import type { LooseType } from "@evex/loose-types";
 // import type { Operation, SquareMessage, TalkMessage } from "../../event/mod.ts";
-type LogType = "login" | "request" | "response" | (string & {});
+type LogType = "login" | "request" | "response" | (string & Record<PropertyKey, never>);
 
 export interface Log {
 	type: LogType;
-	data: any;
+	data: LooseType;
 }
 
 export type ClientEvents = {

@@ -1,4 +1,5 @@
-import { Buffer } from "node:buffer";
+import type { Buffer } from "node:buffer";
+import type { LooseType } from "@evex/loose-types";
 
 /**
  * TMoreCompactProtocol - TypeScript implementation
@@ -30,7 +31,7 @@ export class TMoreCompactProtocol {
 	currentPosition: number = 0; // Current position in buffer
 	lastStringId: bigint = 0n; // Last string ID for delta encoding
 	data!: Buffer; // Input data buffer
-	public res: any = null; // Parsed result
+	public res: LooseType = null; // Parsed result
 	public dummyProtocol?: DummyProtocol; // Dummy protocol data
 	baseException: { [key: string]: number };
 	readWith?: string;
@@ -64,7 +65,7 @@ export class TMoreCompactProtocol {
 			result |= BigInt(byte & 127) << BigInt(shift);
 			if ((byte & 128) !== 128) {
 				return (result > Number.MAX_SAFE_INTEGER)
-					? <any> result
+					? <LooseType> result
 					: Number(result);
 			}
 			shift += 7;
@@ -88,7 +89,7 @@ export class TMoreCompactProtocol {
 
 	// Parse message body
 	parseMessageBody(): void {
-		let result: any = {};
+		let result: LooseType = {};
 		const fieldIdBits = this.readVarint();
 
 		if (fieldIdBits === 0) {
@@ -128,11 +129,10 @@ export class TMoreCompactProtocol {
 	readDataByType(
 		typeId: number,
 		fieldId: number | null = null,
-	): [number | null, any] {
+	): [number | null, LooseType] {
 		let value: unknown = null;
 		let temp: unknown = null;
 		let valData: unknown = null;
-		let subType: number[] | null = null;
 
 		if (typeId === 2) {
 			// BOOL
@@ -170,7 +170,7 @@ export class TMoreCompactProtocol {
 					this.getNextType(),
 					fid,
 				);
-				(<any> valData)[fid] = fieldValue;
+				(<LooseType> valData)[fid] = fieldValue;
 			}
 		} else if (typeId === 13) {
 			// MAP
@@ -187,7 +187,7 @@ export class TMoreCompactProtocol {
 				for (let i = 0; i < mapSize; i++) {
 					const [, kVal] = this.readDataByType(keyType);
 					const [, vVal] = this.readDataByType(valueType);
-					(<any> valData)[kVal] = vVal;
+					(<LooseType> valData)[kVal] = vVal;
 				}
 			}
 		} else if (typeId === 14 || typeId === 15) {
@@ -210,7 +210,7 @@ export class TMoreCompactProtocol {
 				const [, val] = this.readDataByType(
 					this.convertCompactTypeToTType(elementType),
 				);
-				(<Array<any>> valData).push(val);
+				(<Array<LooseType>> valData).push(val);
 			}
 		} else if (typeId === 16) {
 			// STRING (string ID delta)

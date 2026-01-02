@@ -9,6 +9,7 @@
 		"./thrift": "./base/thrift/mod.ts"
 	},
 	"imports": {
+		"@evex/loose-types": "jsr:@evex/loose-types@^1.0.1",
 		"thrift-types": "npm:@types/thrift@^0.10.17",
 		"jsdom-types": "npm:@types/jsdom",
 		"crypto-js": "npm:crypto-js@^4.2.0",

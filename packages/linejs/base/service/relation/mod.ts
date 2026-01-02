@@ -4,6 +4,7 @@ import { LINEStruct, type ProtocolKey } from "../../thrift/mod.ts";
 import type * as LINETypes from "@evex/linejs-types";
 import type { BaseClient } from "../../core/mod.ts";
 import type { BaseService } from "../types.ts";
+import type { LooseType } from "@evex/loose-types";
 
 export class RelationService implements BaseService {
 	client: BaseClient;
@@ -101,7 +102,7 @@ export class RelationService implements BaseService {
 		reference?: string;
 		trackingMetaType?: number;
 		trackingMetaHint?: string;
-	}): Promise<any> {
+	}): Promise<LooseType> {
 		const { mid, reference, trackingMetaType, trackingMetaHint } = {
 			trackingMetaType: 5,
 			...options,

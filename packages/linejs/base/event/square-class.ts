@@ -4,10 +4,11 @@
  * for square
  */
 import * as LINETypes from "@evex/linejs-types";
-import { type BaseClient, Continuable, continueRequest } from "../core/mod.ts";
+import { type BaseClient, continueRequest } from "../core/mod.ts";
 import { TypedEventEmitter } from "../core/typed-event-emitter/index.ts";
 import { SquareMessage } from "./message-class.ts";
 import { Note } from "./talk-class.ts";
+import type { LooseType } from "@evex/loose-types";
 
 type SquareEvents = {
 	"update:feature": (feature: LINETypes.SquareFeatureSet) => void;
@@ -305,7 +306,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 				}
 			});
 			if (polling) {
-				this.on("event", (event) => {});
+				this.on("event", (_event) => {});
 			}
 		}
 	}
@@ -348,7 +349,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 			| {
 				text?: string;
 				contentType?: number;
-				contentMetadata?: any;
+				contentMetadata?: LooseType;
 				relatedMessageId?: string;
 				location?: LINETypes.Location;
 			},
@@ -356,7 +357,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 		if (typeof options === "string") {
 			return await this.send({ text: options });
 		} else {
-			const _options: any = options;
+			const _options: LooseType = options;
 			_options.squareChatMid = this.mid;
 			return await this.client.square.sendMessage(_options);
 		}

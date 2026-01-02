@@ -1,4 +1,6 @@
-type RecordEvent = Record<string, (...args: any[]) => any>;
+import type { LooseType } from "@evex/loose-types";
+
+type RecordEvent = Record<string, (...args: LooseType[]) => LooseType>;
 
 export class TypedEventEmitter<
 	T extends RecordEvent,

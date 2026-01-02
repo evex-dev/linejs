@@ -8,6 +8,8 @@ import {
 	type Protocols,
 } from "./declares.ts";
 import Int64 from "node-int64";
+import type { LooseType } from "@evex/loose-types";
+
 const Thrift = thrift.Thrift;
 export function writeThrift(
 	value: NestedArray,
@@ -100,7 +102,7 @@ function writeValue(
 		| number
 		| bigint
 		| Buffer
-		| [number, Array<any>?]
+		| [number, Array<LooseType>?]
 		| [number, number, object?],
 ): void {
 	if (val === undefined || val === null) {
@@ -183,7 +185,7 @@ function writeValue(
 			}
 			output.writeFieldBegin("", Thrift.Type.MAP, fid);
 			{
-				const obj = val[2] as Record<string, any>;
+				const obj = val[2] as Record<string, LooseType>;
 				const keys = Object.keys(obj);
 				output.writeMapBegin(val[0], val[1], keys.length);
 				for (let i = 0; i < keys.length; i++) {
@@ -198,13 +200,13 @@ function writeValue(
 			break;
 
 		case Thrift.Type.LIST:
-			val = val as [number, Array<any>];
+			val = val as [number, Array<LooseType>];
 			if (!val[1]) {
 				return;
 			}
 			output.writeFieldBegin("", Thrift.Type.LIST, fid);
 			{
-                const arr = val[1] as any[];
+                const arr = val[1] as LooseType[];
                 output.writeListBegin(val[0], arr.length);
                 for (let i = 0, L = arr.length; i < L; i++) {
                     writeValue_(output, val[0], arr[i]);
@@ -214,13 +216,13 @@ function writeValue(
 			output.writeFieldEnd();
 			break;
 		case Thrift.Type.SET:
-			val = val as [number, Array<any>];
+			val = val as [number, Array<LooseType>];
 			if (!val[1]) {
 				return;
 			}
 			output.writeFieldBegin("", Thrift.Type.SET, fid);
 			{
-                const arr = val[1] as any[];
+                const arr = val[1] as LooseType[];
                 output.writeSetBegin(val[0], arr.length);
                 for (let i = 0, L = arr.length; i < L; i++) {
                     writeValue_(output, val[0], arr[i]);
@@ -246,7 +248,7 @@ function writeValue_(
 		| number
 		| bigint
 		| Buffer
-		| [number, Array<any>]
+		| [number, Array<LooseType>]
 		| [number, number, object],
 ): void {
 	if (val === undefined || val === null) {

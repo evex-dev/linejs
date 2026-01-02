@@ -1,20 +1,11 @@
 import {
-	ContentType,
-	CreateSquareChatAnnouncementResponse,
-	DestroyMessageResponse,
+	type ContentType,
 	enums,
-	Location,
-	MarkAsReadResponse,
+	type Location,
 	type MessageReactionType,
-	ReactToMessageResponse,
-	SendMessageResponse,
-	SendSquareThreadMessageResponse,
 	type SquareEvent,
-	type SquareEventNotificationThreadMessage,
 	type SquareMessage as Message,
-	UnsendMessageResponse,
 } from "@evex/linejs-types";
-import { Thrift } from "@evex/linejs-types/thrift";
 import type { Client } from "../../client.ts";
 import type {
 	EmojiMeta,
@@ -24,7 +15,6 @@ import type {
 	StickerMetadata,
 } from "./internal-types.ts";
 import type { DecorationsData, MentionTarget, Mid } from "./types.ts";
-import { InternalError } from "../../../base/core/mod.ts";
 
 const hasContents = ["IMAGE", "VIDEO", "AUDIO", "FILE"];
 export interface SquareThreadMessageInit {
@@ -580,6 +570,7 @@ export class SquareThreadMessage extends SquareMessage {
 	 * Pins the message.
 	 */
 	override async announce() {
+		await 0;
 		throw new Error("Method not implemented.");
 		// if (!this.raw.squareMessage.message.text) {
 		// 	throw new TypeError("The message is not text message.");
@@ -640,7 +631,7 @@ export class SquareThreadMessage extends SquareMessage {
 
 export class UnresolvedMessage {
 	readonly id: string;
-	constructor(id: string, client: Client) {
+	constructor(id: string, _client: Client) {
 		this.id = id;
 	}
 }

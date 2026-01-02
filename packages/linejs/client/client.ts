@@ -123,6 +123,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 * Fetches all friend.
 	 */
 	async fetchUsers(): Promise<User[]> {
+		await 0;
 		throw new Error("fetchUsers is not implemented")
 		/*
 		const { userFriendMids } = await this.base.relation.getUserFriendIds({

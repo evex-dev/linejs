@@ -5,6 +5,7 @@ import type * as LINETypes from "@evex/linejs-types";
 import { LINEStruct } from "../../thrift/mod.ts";
 import type { Buffer } from "node:buffer";
 import { ContentType } from "../../thrift/readwrite/struct.ts";
+import type { LooseType } from "@evex/loose-types";
 
 export class TalkService implements BaseService {
 	client: BaseClient;
@@ -1540,7 +1541,7 @@ export class TalkService implements BaseService {
 		},
 	): Promise<LINETypes.Contact[]> {
 		const { mids } = { ...options };
-		const response = (await this.client.request.request<any[]>(
+		const response = (await this.client.request.request<LooseType[]>(
 			[[15, 2, [11, mids]]],
 			"getContacts",
 			this.protocolType,

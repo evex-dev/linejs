@@ -8,8 +8,9 @@ import { parseEnum } from "@evex/linejs-types/thrift";
 import type { BaseClient } from "../core/mod.ts";
 import type { Buffer } from "node:buffer";
 import { TypedEventEmitter } from "../core/typed-event-emitter/index.ts";
-import { Message, TalkMessage } from "./message-class.ts";
+import { TalkMessage } from "./message-class.ts";
 import type { TimelineResponse } from "../timeline/mod.ts";
+import type { LooseType } from "@evex/loose-types";
 
 type GroupEvents = {
 	message: (message: TalkMessage) => void;
@@ -78,7 +79,7 @@ function toBit(num: number): number[] {
 
 export class Note {
 	constructor(
-		mid: string,
+		_mid: string,
 		private client: BaseClient,
 	) {}
 
@@ -100,14 +101,14 @@ export class Note {
 		mediaObjectTypes?: string[];
 		sourceType?: string;
 	}): Promise<TimelineResponse> {
-		(options as any).homeId = this.mid;
-		return this.client.timeline.createPost(options as any);
+		(options as LooseType).homeId = this.mid;
+		return this.client.timeline.createPost(options as LooseType);
 	}
 	deletePost(options: {
 		postId: string;
 	}): Promise<TimelineResponse> {
-		(options as any).homeId = this.mid;
-		return this.client.timeline.deletePost(options as any);
+		(options as LooseType).homeId = this.mid;
+		return this.client.timeline.deletePost(options as LooseType);
 	}
 
 	listPost(
@@ -118,22 +119,22 @@ export class Note {
 			sourceType?: string;
 		} = {},
 	): Promise<TimelineResponse> {
-		(options as any).homeId = this.mid;
-		return this.client.timeline.listPost(options as any);
+		(options as LooseType).homeId = this.mid;
+		return this.client.timeline.listPost(options as LooseType);
 	}
 
 	getPost(options: {
 		postId: string;
 	}): Promise<TimelineResponse> {
-		(options as any).homeId = this.mid;
-		return this.client.timeline.getPost(options as any);
+		(options as LooseType).homeId = this.mid;
+		return this.client.timeline.getPost(options as LooseType);
 	}
 	sharePost(options: {
 		postId: string;
 		chatMid: string;
 	}): Promise<TimelineResponse> {
-		(options as any).homeId = this.mid;
-		return this.client.timeline.sharePost(options as any);
+		(options as LooseType).homeId = this.mid;
+		return this.client.timeline.sharePost(options as LooseType);
 	}
 }
 
@@ -170,7 +171,7 @@ export class User extends TypedEventEmitter<UserEvents> {
 	friendRingbackTone: string;
 	nftProfile: boolean;
 	pictureSource: LINETypes.Pb1_N6;
-	groupStatus: Record<string, any> & {
+	groupStatus: Record<string, LooseType> & {
 		joinedAt?: Date;
 		invitedAt?: Date;
 	} = {};
@@ -242,7 +243,7 @@ export class User extends TypedEventEmitter<UserEvents> {
 			| {
 				text?: string;
 				contentType?: number;
-				contentMetadata?: any;
+				contentMetadata?: LooseType;
 				relatedMessageId?: string;
 				location?: LINETypes.Location;
 				chunk?: string[] | Buffer[];
@@ -252,7 +253,7 @@ export class User extends TypedEventEmitter<UserEvents> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
 		} else {
-			const _options: any = options;
+			const _options: LooseType = options;
 			_options.to = this.mid;
 			return this.client.talk.sendMessage(_options);
 		}
@@ -285,7 +286,7 @@ export class User extends TypedEventEmitter<UserEvents> {
 	/**
 	 * @description Add to friend.
 	 */
-	async addFriend(): Promise<any> {
+	async addFriend(): Promise<LooseType> {
 		return await this.client.relation.addFriendByMid({ mid: this.mid });
 	}
 
@@ -377,9 +378,9 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 	constructor(
 		chat: LINETypes.Chat,
 		private client: BaseClient,
-		creator: User,
-		members: User[],
-		invitee: User[],
+		_creator: User,
+		_members: User[],
+		_invitee: User[],
 	) {
 		super();
 
@@ -405,7 +406,7 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 			| {
 				text?: string;
 				contentType?: number;
-				contentMetadata?: any;
+				contentMetadata?: LooseType;
 				relatedMessageId?: string;
 				location?: LINETypes.Location;
 				chunk?: string[] | Buffer[];
@@ -415,7 +416,7 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 		if (typeof options === "string") {
 			return await this.send({ text: options });
 		} else {
-			const _options: any = options;
+			const _options: LooseType = options;
 			_options.to = this.mid;
 			return await this.client.talk.sendMessage(_options);
 		}
@@ -428,7 +429,7 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 		chatSet: Partial<LINETypes.Chat>;
 		updatedAttribute: LINETypes.Pb1_O2;
 	}): Promise<LINETypes.Pb1_Zc> {
-		const _options: any = options;
+		const _options: LooseType = options;
 		_options.chatMid = this.mid;
 		return await this.client.talk.updateChat(_options);
 	}
@@ -767,7 +768,7 @@ export class NotifiedUpdateProfileContent {
 		this.userMid = op.param[1];
 		const attr = parseEnum("ProfileAttribute", op.param[2]);
 		if (attr !== null) {
-			this.profileAttributes[0] = attr as any as LINETypes.Pb1_K6;
+			this.profileAttributes[0] = attr as LooseType as LINETypes.Pb1_K6;
 		} else {
 			const arr: LINETypes.Pb1_K6[] = [];
 			toBit(parseInt(op.param[2])).forEach((e, i) => {
@@ -776,7 +777,7 @@ export class NotifiedUpdateProfileContent {
 						parseEnum(
 							"ProfileAttribute",
 							2 ** i,
-						) as any as LINETypes.Pb1_K6,
+						) as LooseType as LINETypes.Pb1_K6,
 					);
 				}
 			});
@@ -792,7 +793,7 @@ export class NotifiedUpdateProfile {
 	readonly type: string = "NotifiedUpdateProfile";
 	userMid: string;
 	profileAttributes: (LINETypes.Pb1_K6 | null)[] = [];
-	info: Record<string, any> = {};
+	info: Record<string, LooseType> = {};
 
 	constructor(op: Operation) {
 		if (op.type !== "NOTIFIED_UPDATE_PROFILE") {
@@ -808,7 +809,7 @@ export class NotifiedUpdateProfile {
 		this.userMid = op.param[1];
 		const attr = parseEnum("ProfileAttribute", op.param[2]);
 		if (attr !== null) {
-			this.profileAttributes[0] = attr as any as LINETypes.Pb1_K6;
+			this.profileAttributes[0] = attr as LooseType as LINETypes.Pb1_K6;
 		} else {
 			const arr: LINETypes.Pb1_K6[] = [];
 			toBit(parseInt(op.param[2])).forEach((e, i) => {
@@ -817,7 +818,7 @@ export class NotifiedUpdateProfile {
 						parseEnum(
 							"ProfileAttribute",
 							2 ** i,
-						) as any as LINETypes.Pb1_K6,
+						) as LooseType as LINETypes.Pb1_K6,
 					);
 				}
 			});
@@ -833,7 +834,7 @@ export class NotifiedUpdateProfile {
 export class UpdateProfile {
 	readonly type: string = "UpdateProfile";
 	profileAttributes: (LINETypes.Pb1_K6 | null)[] = [];
-	info: Record<string, any> = {};
+	info: Record<string, LooseType> = {};
 
 	constructor(op: Operation) {
 		if (op.type !== "UPDATE_PROFILE") {
@@ -847,7 +848,7 @@ export class UpdateProfile {
 		}
 		const attr = parseEnum("ProfileAttribute", op.param[1]);
 		if (attr !== null) {
-			this.profileAttributes[0] = attr as any as LINETypes.Pb1_K6;
+			this.profileAttributes[0] = attr as LooseType as LINETypes.Pb1_K6;
 		} else {
 			const arr: LINETypes.Pb1_K6[] = [];
 			toBit(parseInt(op.param[1])).forEach((e, i) => {
@@ -856,7 +857,7 @@ export class UpdateProfile {
 						parseEnum(
 							"ProfileAttribute",
 							2 ** i,
-						) as any as LINETypes.Pb1_K6,
+						) as LooseType as LINETypes.Pb1_K6,
 					);
 				}
 			});
@@ -888,7 +889,7 @@ export class SendReaction {
 		this.messageId = op.param[1];
 		const data = JSON.parse(op.param[2]);
 		this.chatMid = data.chatMid;
-		this.chatType = getMidType(this.chatMid) as any;
+		this.chatType = getMidType(this.chatMid) as LooseType;
 		this.reactionType = parseEnum(
 			"MessageReactionType",
 			data.curr.predefinedReactionType,
@@ -921,7 +922,7 @@ export class NotifiedSendReaction {
 		this.userMid = op.param[3];
 		const data = JSON.parse(op.param[2]);
 		this.chatMid = data.chatMid;
-		this.chatType = getMidType(this.chatMid) as any;
+		this.chatType = getMidType(this.chatMid) as LooseType;
 		this.reactionType = parseEnum(
 			"MessageReactionType",
 			data.curr.predefinedReactionType,
@@ -953,7 +954,7 @@ export class NotifiedReadMessage {
 		this.chatMid = op.param[1];
 		this.userMid = op.param[2];
 		this.messageId = op.param[3];
-		this.chatType = getMidType(op.param[1]) as any;
+		this.chatType = getMidType(op.param[1]) as LooseType;
 	}
 }
 
@@ -978,7 +979,7 @@ export class SendChatChecked {
 		}
 		this.chatMid = op.param[1];
 		this.messageId = op.param[2];
-		this.chatType = getMidType(op.param[1]) as any;
+		this.chatType = getMidType(op.param[1]) as LooseType;
 	}
 }
 

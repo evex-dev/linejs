@@ -1,6 +1,8 @@
+import type { LooseType } from "@evex/loose-types";
+
 export interface Storage {
 	Key: string;
-	Value: string | number | boolean | null | Record<string | number, any>;
+	Value: string | number | boolean | null | Record<string | number, LooseType>;
 }
 
 /**

@@ -1,4 +1,4 @@
-import { BaseClient } from "../core/mod.ts";
+import type { BaseClient } from "../core/mod.ts";
 import {
 	LegyH2PingFrame,
 	LegyH2PingFrameType,
@@ -7,6 +7,7 @@ import {
 	LegyH2SignOnResponseFrame,
 } from "./connData.ts";
 import type { ConnManager, ReadableStreamWriter } from "./connManager.ts";
+import type { LooseType } from "@evex/loose-types";
 
 export class Conn {
 	manager: ConnManager;
@@ -32,7 +33,7 @@ export class Conn {
 		stream: ReadableStream<Uint8Array<ArrayBufferLike>>;
 		enqueue(chunk: string | Uint8Array): void;
 		close(): void;
-		error(err: any): void;
+		error(err: LooseType): void;
 		renew(): void;
 	} {
 		let controller: ReadableStreamDefaultController<Uint8Array> | null = null;
@@ -72,7 +73,7 @@ export class Conn {
 				controller?.close();
 				controller = null;
 			},
-			error(err: any) {
+			error(err: LooseType) {
 				controller?.error(err);
 				controller = null;
 			},
@@ -101,7 +102,7 @@ export class Conn {
 
 	async new(
 		host: string,
-		port: number,
+		_port: number,
 		path: string,
 		headers: Record<string, string> = {},
 	) {
@@ -282,11 +283,12 @@ export class Conn {
 	}
 
 	async close() {
+		await 0;
 		this._closed = true;
 		try {
 			this.reqStream?.close();
 			this.reqStream?.abort.abort();
-		} catch (e) {
+		} catch (_e) {
 			// ignore
 		}
 	}

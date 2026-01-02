@@ -8,6 +8,7 @@ import type * as LINETypes from "@evex/linejs-types";
 import { InternalError } from "../../core/utils/error.ts";
 import type { BaseClient } from "../../core/mod.ts";
 import type { BaseService } from "../types.ts";
+import type { LooseType } from "@evex/loose-types";
 
 export class LiffService implements BaseService {
 	static readonly LINE_LIFF_ENDPOINT = "https://api.line.me/message/v3/share";
@@ -162,7 +163,7 @@ export class LiffService implements BaseService {
 		messages: { type: string; text?: string }[];
 		tryConsent?: boolean;
 		forceIssue?: boolean;
-	}): Promise<any> {
+	}): Promise<LooseType> {
 		let token: string;
 		const {
 			to,

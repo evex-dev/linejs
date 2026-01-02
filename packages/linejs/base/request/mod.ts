@@ -143,7 +143,6 @@ export class RequestClient {
 			body: Trequest,
 		});
 
-		const requestArrayBuffer = Trequest.buffer.slice(Trequest.byteOffset, Trequest.byteOffset + Trequest.byteLength);
 		const response = await this.client.fetch(
 			`https://${this.endpoint}${path}`,
 			{

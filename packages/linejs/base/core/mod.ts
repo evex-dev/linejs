@@ -39,8 +39,7 @@ import { Thrift as def } from "@evex/linejs-types/thrift";
 
 import type * as LINETypes from "@evex/linejs-types";
 import type { Fetch, FetchLike } from "../types.ts";
-
-import { Buffer } from "node:buffer";
+import type { LooseType } from "@evex/loose-types";
 
 export interface LoginOption {
 	email?: string;
@@ -186,7 +185,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.talk = new TalkService(this);
 	}
 
-	log(type: string, data: Record<string, any>) {
+	log(type: string, data: Record<string, LooseType>) {
 		this.emit("log", { type, data });
 	}
 	getToType(mid: string): number | null {
@@ -246,7 +245,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	 * JSON.stringify(data, BaseClient.jsonReplacer);
 	 * ```
 	 */
-	static jsonReplacer(k: any, v: any): any {
+	static jsonReplacer(k: LooseType, v: LooseType): LooseType {
 		if (typeof v === "bigint") {
 			//@ts-expect-error https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/JSON/rawJSON
 			return JSON.rawJSON(v.toString());
@@ -281,7 +280,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				return `Blob[${v.size}]@${v.type}`;
 			}
 
-			const newObj: any = {};
+			const newObj: LooseType = {};
 			let midCount = 0;
 			for (const key in v) {
 				if (Object.prototype.hasOwnProperty.call(v, key)) {

@@ -23,20 +23,24 @@ export class MemoryStorage extends BaseStorage {
 		key: Storage["Key"],
 		value: Storage["Value"],
 	): Promise<void> {
+		await 0;
 		this.data.set(key, value);
 	}
 
 	public async get(
 		key: Storage["Key"],
 	): Promise<Storage["Value"] | undefined> {
+		await 0;
 		return this.data.get(key);
 	}
 
 	public async delete(key: Storage["Key"]): Promise<void> {
+		await 0;
 		this.data.delete(key);
 	}
 
 	public async clear(): Promise<void> {
+		await 0;
 		this.data.clear();
 	}
 

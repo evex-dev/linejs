@@ -1,32 +1,33 @@
 // deno-lint-ignore-file no-explicit-any
 import type { ParsedThrift } from "../readwrite/declares.ts";
 
-const TYPE: Record<string, number> = {
-	STOP: 0,
-	VOID: 1,
-	BOOL: 2,
-	BYTE: 3,
-	I08: 3,
-	DOUBLE: 4,
-	I16: 6,
-	I32: 8,
-	I64: 10,
-	STRING: 11,
-	UTF7: 11,
-	STRUCT: 12,
-	MAP: 13,
-	SET: 14,
-	LIST: 15,
-	UTF8: 16,
-	UTF16: 17,
-};
-function getType(obj: any) {
-	if (obj.type === "BaseType") {
-		return TYPE[obj.baseType.toUpperCase()];
-	} else if (obj.type === "Identifier") {
-		return obj.name;
-	}
-}
+// const TYPE: Record<string, number> = {
+// 	STOP: 0,
+// 	VOID: 1,
+// 	BOOL: 2,
+// 	BYTE: 3,
+// 	I08: 3,
+// 	DOUBLE: 4,
+// 	I16: 6,
+// 	I32: 8,
+// 	I64: 10,
+// 	STRING: 11,
+// 	UTF7: 11,
+// 	STRUCT: 12,
+// 	MAP: 13,
+// 	SET: 14,
+// 	LIST: 15,
+// 	UTF8: 16,
+// 	UTF16: 17,
+// };
+
+// function getType(obj: any) {
+// 	if (obj.type === "BaseType") {
+// 		return TYPE[obj.baseType.toUpperCase()];
+// 	} else if (obj.type === "Identifier") {
+// 		return obj.name;
+// 	}
+// }
 
 function isStruct(obj: any): obj is any[] {
 	return obj && Array.isArray(obj);

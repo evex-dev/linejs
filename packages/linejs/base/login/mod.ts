@@ -6,6 +6,7 @@ import type * as LINETypes from "@evex/linejs-types";
 import { Buffer } from "node:buffer";
 import { LINEStruct } from "../thrift/mod.ts";
 import type { BaseClient } from "../core/mod.ts";
+import type { LooseType } from "@evex/loose-types";
 
 export type LoginOption = PasswordLoginOption | QrCodeLoginOption | {
 	authToken: string;
@@ -14,7 +15,7 @@ export type LoginOption = PasswordLoginOption | QrCodeLoginOption | {
 };
 
 interface LoginVer {
-	loginV2: any;
+	loginV2: LooseType;
 	loginZ: LINETypes.LoginResult;
 }
 
@@ -620,7 +621,7 @@ export class Login {
 		);
 	}
 
-	public async createSession(): Promise<any> {
+	public async createSession(): Promise<LooseType> {
 		return await this.client.request.request(
 			[],
 			"createSession",
@@ -630,7 +631,7 @@ export class Login {
 		);
 	}
 
-	public async createQrCode(qrcode: string): Promise<any> {
+	public async createQrCode(qrcode: string): Promise<LooseType> {
 		return await this.client.request.request(
 			[[12, 1, [[11, 1, qrcode]]]],
 			"createQrCode",
@@ -663,7 +664,7 @@ export class Login {
 	public async verifyCertificate(
 		qrcode: string,
 		cert?: string | undefined,
-	): Promise<any> {
+	): Promise<LooseType> {
 		return await this.client.request.request(
 			[[12, 1, [[11, 1, qrcode], [11, 2, cert]]]],
 			"verifyCertificate",
@@ -673,7 +674,7 @@ export class Login {
 		);
 	}
 
-	public async createPinCode(qrcode: string): Promise<any> {
+	public async createPinCode(qrcode: string): Promise<LooseType> {
 		return await this.client.request.request(
 			[[12, 1, [[11, 1, qrcode]]]],
 			"createPinCode",
@@ -706,7 +707,7 @@ export class Login {
 	public async qrCodeLogin(
 		authSessionId: string,
 		autoLoginIsRequired: boolean = true,
-	): Promise<any> {
+	): Promise<LooseType> {
 		return await this.client.request.request(
 			[[12, 1, [
 				[11, 1, authSessionId],
@@ -725,7 +726,7 @@ export class Login {
 		modelName: string = "evex-device",
 		systemName: string = "linejs-v2",
 		autoLoginIsRequired: boolean = true,
-	): Promise<any> {
+	): Promise<LooseType> {
 		return await this.client.request.request(
 			[[12, 1, [
 				[11, 1, authSessionId],
@@ -743,7 +744,7 @@ export class Login {
 	public async confirmE2EELogin(
 		verifier: string,
 		deviceSecret: Buffer,
-	): Promise<any> {
+	): Promise<LooseType> {
 		return await this.client.request.request(
 			[
 				[11, 1, verifier],

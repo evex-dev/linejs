@@ -1,18 +1,18 @@
-import { LegyH2PushFrame } from "./connData.ts";
+import type { LegyH2PushFrame } from "./connData.ts";
 import { Conn } from "./conn.ts";
-import { BaseClient } from "../mod.ts";
-import { TCompactProtocol } from "npm:thrift@^0.20.0";
+import type { BaseClient } from "../mod.ts";
+import { TCompactProtocol } from "thrift";
 
 import { TMoreCompactProtocol } from "../thrift/readwrite/tmc.ts";
 
 // GOMI:
 import {
-	PartialDeep,
+	type PartialDeep,
 	SquareService_fetchMyEvents_args as gen_SquareService_fetchMyEvents_args,
 	sync_args as gen_sync_args,
 } from "../thrift/readwrite/struct.ts";
 
-import {
+import type {
 	Operation,
 	SquareEvent,
 	SquareService_fetchMyEvents_args,
@@ -21,8 +21,9 @@ import {
 	sync_result,
 } from "@evex/linejs-types";
 
-import { ParsedThrift } from "../thrift/mod.ts";
+import type { ParsedThrift } from "../thrift/mod.ts";
 import { Buffer } from "node:buffer";
+import type { LooseType } from "@evex/loose-types";
 
 function gen_m(ss = [1, 3, 5, 6, 8, 9, 10]) {
 	let i = 0;
@@ -34,7 +35,7 @@ export interface ReadableStreamWriter<T> {
 	stream: ReadableStream<T>;
 	enqueue(chunk: T): void;
 	close(): void;
-	error(err: any): void;
+	error(err: LooseType): void;
 	renew(): void;
 }
 export class ConnManager {
@@ -42,9 +43,9 @@ export class ConnManager {
 	conns: Conn[] = [];
 	currPingId = 0;
 	subscriptionIds: Record<number, number> = {};
-	SignOnRequests: Record<number, any[]> = {};
+	SignOnRequests: Record<number, LooseType[]> = {};
 	OnPingCallback: (id: number) => void;
-	OnSignReqResp: Record<number, any> = {};
+	OnSignReqResp: Record<number, LooseType> = {};
 	OnSignOnResponse: (reqId: number, isFin: boolean, data: Uint8Array) => void;
 	OnPushResponse: (frame: LegyH2PushFrame) => void;
 	_eventSynced = false;
@@ -64,7 +65,7 @@ export class ConnManager {
 		this.sqStream = this.createAsyncReadableStream<SquareEvent>();
 	}
 
-	log(text: string, data?: any) {
+	log(text: string, data?: LooseType) {
 		this.client.log("[LEGY/PUSH] " + text, data ?? "");
 	}
 
@@ -107,7 +108,7 @@ export class ConnManager {
 				controller = null;
 				this.renew();
 			},
-			error(err: any) {
+			error(err: LooseType) {
 				controller?.error(err);
 				controller = null;
 				this.renew();
@@ -170,7 +171,7 @@ export class ConnManager {
 	async buildAndSendSignOnRequest(
 		conn: Conn,
 		serviceType: number,
-		kwargs: Record<string, any> = {},
+		kwargs: Record<string, LooseType> = {},
 	): Promise<{
 		payload: Uint8Array<ArrayBuffer>;
 		id: number;
@@ -231,7 +232,6 @@ export class ConnManager {
 		const entry = this.SignOnRequests[reqId];
 		const serviceType: number = entry[0];
 		const methodName: string | undefined = entry[1];
-		const callback = entry[2];
 
 		this.log(
 			`receives sign-on-response frame. requestId:${reqId}, service:${serviceType}, isFin:${isFin}, payload:${data.length}`,
@@ -299,7 +299,7 @@ export class ConnManager {
 				let detectedMethod = methodName;
 				try {
 					const proto = new TMoreCompactProtocol(Buffer.from(data));
-					parsed = <any> {
+					parsed = <LooseType> {
 						data: proto.res,
 						_info: {
 							fname: detectedMethod,
@@ -434,7 +434,7 @@ export class ConnManager {
 					`[PUSH] receives invalid sign-on-response frame. requestId:${reqId}, service:${serviceType}`,
 				);
 			}
-		} catch (e) {
+		} catch (_e) {
 			return;
 		}
 	}
@@ -500,7 +500,6 @@ export class ConnManager {
 		if (!this.conns || this.conns.length === 0) {
 			throw new Error("No valid connections found.");
 		}
-		const cl = this.client;
 		const _conn = this.conns[0];
 
 		const FLAG = 0;
