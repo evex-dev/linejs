@@ -400,6 +400,39 @@ export class Timeline {
 			{ headers, body: JSON.stringify(data), method: "POST" },
 		).then((r) => r.json());
 	}
+
+	public async likePost(options: {
+		contentId: string; // postId
+		homeId: string;
+		likeType?: "1003" | "1001" | "1002" | "1004" | "1006" | "1005"; // 1003: GOOD, 1001: LOVE, 1002: FUNNY, 1004: AMAZING, 1006: SAD, 1005: SURPRISED
+		sourceType?: string;
+	}): Promise<TimelineResponse> {
+		await this.initTimeline();
+		const { contentId, homeId, likeType, sourceType } = {
+			likeType: "1003",
+			sourceType: "TIMELINE",
+			...options,
+		};
+		const params = new URLSearchParams({
+			homeId,
+		});
+		const headers = {
+			...this.timelineHeaders,
+			"x-lhm": "POST",
+		};
+		return await this.client.fetch(
+			`https://${this.client.request.endpoint}/ext/note/nt/api/v57/like/create.json?${params}`,
+			{
+				headers,
+				method: "POST",
+				body: JSON.stringify({
+					sourceType,
+					likeType,
+					contentId,
+				}),
+			},
+		).then((r) => r.json());
+	}
 	
 	public async sharePost(options: {
 		postId: string;
