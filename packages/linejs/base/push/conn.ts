@@ -149,7 +149,12 @@ export class Conn {
 
 	async read() {
 		if (!this.resStream) {
-			throw new Error("no resStream");
+			await new Promise<void>((resolve) => {
+				setTimeout(resolve, 500);
+			});
+			if (!this.resStream) {
+				throw new Error("no resStream");
+			}
 		}
 		for await (const chunk of this.resStream) {
 			this.manager.log("readByte", chunk);
