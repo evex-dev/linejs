@@ -260,7 +260,147 @@ export class Timeline {
 			{ headers },
 		).then((r) => r.json());
 	}
-
+	
+	public async updatePost(options: {
+		homeId: string;
+		postId: string;
+		text?: string;
+		sharedPostId?: string;
+		textSizeMode?: "AUTO" | "NORMAL";
+		backgroundColor?: string;
+		textAnimation?: "NONE" | "SLIDE" | "ZOOM" | "BUZZ" | "BOUNCE" | "BLINK";
+		holdingTime?: number;
+		stickerIds?: string[];
+		stickerPackageIds?: string[];
+		locationLatitudes?: number[];
+		locationLongitudes?: number[];
+		locationNames?: string[];
+		mediaObjectIds?: string[];
+		mediaObjectTypes?: string[];
+	}): Promise<TimelineResponse> {
+		await this.initTimeline();
+		const {
+			homeId,
+			postId,
+			text,
+			sharedPostId,
+			textSizeMode,
+			backgroundColor,
+			textAnimation,
+			holdingTime,
+			stickerIds,
+			stickerPackageIds,
+			locationLatitudes,
+			locationLongitudes,
+			locationNames,
+			mediaObjectIds,
+			mediaObjectTypes,
+		} = {
+			textSizeMode: "NORMAL",
+			backgroundColor: "#FFFFFF",
+			textAnimation: "NONE",
+			stickerIds: [],
+			stickerPackageIds: [],
+			locationLatitudes: [],
+			locationLongitudes: [],
+			locationNames: [],
+			mediaObjectIds: [],
+			mediaObjectTypes: [],
+			...options,
+		};
+		if (!homeId) {
+			throw new Error("homeId is required");
+		}
+		if (!postId) {
+			throw new Error("postId is required");
+		}
+		const postInfo: any = {
+			postId: postId,
+			editableContents: ["ALL"],
+			readPermission: {
+				homeID: homeId,
+			},
+		};
+		const stickers: {
+			id: string;
+			packageId: string;
+			packageVersion: number;
+			hasAnimation: boolean;
+			hasSound: boolean;
+			stickerResourceType: string;
+		}[] = [];
+		const locations: {
+			latitude: number;
+			longitude: number;
+			name: string;
+		}[] = [];
+		const medias: { objectId: string; type: string; obsFace: string }[] = [];
+		stickerIds.forEach((stickerId, stickerIndex) => {
+			stickers.push({
+				id: stickerId,
+				packageId: stickerPackageIds[stickerIndex],
+				packageVersion: 1,
+				hasAnimation: true,
+				hasSound: true,
+				stickerResourceType: "ANIMATION",
+			});
+		});
+		locationLatitudes.forEach((locationLatitude, locatioIndex) => {
+			locations.push({
+				latitude: locationLatitude,
+				longitude: locationLongitudes[locatioIndex],
+				name: locationNames[locatioIndex],
+			});
+		});
+		mediaObjectIds.forEach((mediaObjectId, mediaIndex) => {
+			medias.push({
+				objectId: mediaObjectId,
+				type: mediaObjectTypes[mediaIndex],
+				obsFace: "[]",
+			});
+		});
+		const contents: any = {
+			sticonMetas: [],
+			contentsStyle: {
+				textStyle: textSizeMode || textAnimation ? {
+					textSizeMode: textSizeMode,
+					textAnimation: textAnimation,
+				} : {},
+				stickerStyle: backgroundColor ? {
+					backgroundColor: backgroundColor,
+				} : {},
+				mediaStyle: {},
+			},
+			stickers: stickers,
+			textMeta: [],
+			locations: locations,
+			media: medias,
+		};
+		if (typeof holdingTime !== "undefined") {
+			postInfo.holdingTime = holdingTime;
+		}
+		if (typeof text !== "undefined") {
+			contents.text = text;
+		}
+		if (typeof sharedPostId !== "undefined") {
+			contents.sharedPostId = sharedPostId;
+		}
+		const data = { postInfo: postInfo, contents: contents };
+		const params = new URLSearchParams({
+			homeId: homeId,
+		});
+		const headers = {
+			...this.timelineHeaders,
+			"x-lhm": "POST",
+		};
+		return await this.client.fetch(
+			`https://${this.client.request.endpoint}/${
+				homeId[0] == "s" ? "sn" : "mh"
+			}/api/v57/post/update.json?${params}`,
+			{ headers, body: JSON.stringify(data), method: "POST" },
+		).then((r) => r.json());
+	}
+	
 	public async sharePost(options: {
 		postId: string;
 		chatMid: string;
