@@ -440,7 +440,7 @@ export class Timeline {
 		commentText: string;
 		homeId: string;
 		sourceType?: string;
-		contentsList?: any[];
+		contentsList?: LooseType[];
 	}): Promise<TimelineResponse> {
 		await this.initTimeline();
 		const { contentId, commentText, homeId, sourceType, contentsList } = {
