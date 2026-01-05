@@ -168,14 +168,11 @@ export class ConnManager {
 		return out;
 	}
 
-	buildAndSendSignOnRequest(
+	async buildAndSendSignOnRequest(
 		conn: Conn,
 		serviceType: number,
 		kwargs: Record<string, LooseType> = {},
-	): {
-		payload: Uint8Array<ArrayBuffer>;
-		id: number;
-	} {
+	): Promise<{ payload: Uint8Array<ArrayBuffer>; id: number; }> {
 		this.log("buildAndSendSignOnRequest", { serviceType, kwargs });
 		const cl = this.client;
 		const id = Object.keys(this.SignOnRequests).length + 1;
@@ -214,7 +211,7 @@ export class ConnManager {
 		this.log(
 			`[H2][PUSH] send sign-on-request. requestId:${id}, service:${serviceType}`,
 		);
-		conn.writeRequest(2, header);
+		await conn.writeRequest(2, header);
 		return { payload: header, id };
 	}
 
@@ -378,7 +375,7 @@ export class ConnManager {
 					};
 
 					this.log(`request talk fetcher:`, ex_val);
-					this.buildAndSendSignOnRequest(_conn, serviceType, ex_val);
+					await this.buildAndSendSignOnRequest(_conn, serviceType, ex_val);
 					return;
 				} /*else if (detectedMethod === "fetchOps") {
 					// handle fetchOps response
@@ -423,7 +420,7 @@ export class ConnManager {
 					}
 					// LOOP: request next fetch
 					const fetch_req_data = { revision: cl.revision };
-					this.buildAndSendSignOnRequest(_conn, serviceType, fetch_req_data);
+					await this.buildAndSendSignOnRequest(_conn, serviceType, fetch_req_data);
 					return;
 				} */ else {
 					this.log("unknown:", parsed);
@@ -504,7 +501,7 @@ export class ConnManager {
 
 		const FLAG = 0;
 		const statusPayload = new Uint8Array([0, FLAG, this._pingInterval]);
-		_conn.writeRequest(0, statusPayload);
+		await _conn.writeRequest(0, statusPayload);
 		this.log(`send status frame. flag:${FLAG}, pi:${this._pingInterval}`);
 
 		for (const service of initServices) {
@@ -524,7 +521,7 @@ export class ConnManager {
 				);
 				// clear tracked subscriptions
 				this.subscriptionIds = {};
-				this.buildAndSendSignOnRequest(_conn, service, ex_val);
+				await this.buildAndSendSignOnRequest(_conn, service, ex_val);
 			} else if ([5, 8].includes(service)) {
 				const ex_val: PartialDeep<sync_args> = {
 					request: {
@@ -535,9 +532,9 @@ export class ConnManager {
 					},
 				};
 				this.log(`request talk fetcher: ${JSON.stringify(ex_val)}`);
-				this.buildAndSendSignOnRequest(_conn, service, ex_val);
+				await this.buildAndSendSignOnRequest(_conn, service, ex_val);
 			} else {
-				this.buildAndSendSignOnRequest(_conn, service, {});
+				await this.buildAndSendSignOnRequest(_conn, service, {});
 			}
 		}
 

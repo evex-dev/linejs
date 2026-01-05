@@ -129,27 +129,27 @@ export class Conn {
 		this.reqStream = { ...bodystream, abort };
 	}
 
-	writeByte(data: Uint8Array) {
+	async writeByte(data: Uint8Array) {
 		if (!this.reqStream) {
-			throw new Error("no reqStream");
+			await new Promise<void>((resolve) => {
+				setTimeout(resolve, 500);
+			});
+			if (!this.reqStream) {
+				throw new Error("no reqStream");
+			}
 		}
 		this.manager.log("writeByte", data);
 		this.reqStream.enqueue(data);
 	}
 
-	writeRequest(requestType: number, data: Uint8Array) {
+	async writeRequest(requestType: number, data: Uint8Array) {
 		const d = this.manager.buildRequest(requestType, data);
-		this.writeByte(d);
+		await this.writeByte(d);
 	}
 
 	async read() {
 		if (!this.resStream) {
-			await new Promise<void>((resolve) => {
-				setTimeout(resolve, 200);
-			});
-			if (!this.resStream) {
-				throw new Error("no resStream");
-			}
+			throw new Error("no resStream");
 		}
 		for await (const chunk of this.resStream) {
 			this.manager.log("readByte", chunk);
