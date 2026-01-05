@@ -168,14 +168,14 @@ export class ConnManager {
 		return out;
 	}
 
-	async buildAndSendSignOnRequest(
+	buildAndSendSignOnRequest(
 		conn: Conn,
 		serviceType: number,
 		kwargs: Record<string, LooseType> = {},
-	): Promise<{
+	): {
 		payload: Uint8Array<ArrayBuffer>;
 		id: number;
-	}> {
+	} {
 		this.log("buildAndSendSignOnRequest", { serviceType, kwargs });
 		const cl = this.client;
 		const id = Object.keys(this.SignOnRequests).length + 1;
@@ -214,7 +214,7 @@ export class ConnManager {
 		this.log(
 			`[H2][PUSH] send sign-on-request. requestId:${id}, service:${serviceType}`,
 		);
-		await conn.writeRequest(2, header);
+		conn.writeRequest(2, header);
 		return { payload: header, id };
 	}
 
@@ -299,7 +299,7 @@ export class ConnManager {
 				let detectedMethod = methodName;
 				try {
 					const proto = new TMoreCompactProtocol(Buffer.from(data));
-					parsed = <LooseType> {
+					parsed = <LooseType>{
 						data: proto.res,
 						_info: {
 							fname: detectedMethod,
@@ -378,7 +378,7 @@ export class ConnManager {
 					};
 
 					this.log(`request talk fetcher:`, ex_val);
-					await this.buildAndSendSignOnRequest(_conn, serviceType, ex_val);
+					this.buildAndSendSignOnRequest(_conn, serviceType, ex_val);
 					return;
 				} /*else if (detectedMethod === "fetchOps") {
 					// handle fetchOps response
@@ -524,7 +524,7 @@ export class ConnManager {
 				);
 				// clear tracked subscriptions
 				this.subscriptionIds = {};
-				await this.buildAndSendSignOnRequest(_conn, service, ex_val);
+				this.buildAndSendSignOnRequest(_conn, service, ex_val);
 			} else if ([5, 8].includes(service)) {
 				const ex_val: PartialDeep<sync_args> = {
 					request: {
@@ -535,9 +535,9 @@ export class ConnManager {
 					},
 				};
 				this.log(`request talk fetcher: ${JSON.stringify(ex_val)}`);
-				await this.buildAndSendSignOnRequest(_conn, service, ex_val);
+				this.buildAndSendSignOnRequest(_conn, service, ex_val);
 			} else {
-				await this.buildAndSendSignOnRequest(_conn, service, {});
+				this.buildAndSendSignOnRequest(_conn, service, {});
 			}
 		}
 

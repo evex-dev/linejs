@@ -18,9 +18,10 @@ function sleep(time: number) {
 
 export class Polling {
 	sync: SyncData = { talk: { revision: 0, globalRev: 0, individualRev: 0 } };
-
 	client: BaseClient;
 	islisten: boolean = false;
+	listenTarget: number[] = [3, 8];
+
 	constructor(client: BaseClient) {
 		this.client = client;
 	}
@@ -151,16 +152,16 @@ export class Polling {
 			return;
 		}
 		while (this.client.authToken) {
+			this.islisten = true;
 			try {
-				this.islisten = true;
-				try {
-					await this.client.push.initializeConn(1, [3, 8]);
-				} catch (error) {
-					this.client.log("LegyPusherError_cannot_init", { error });
-					break;
-				}
+				await this.client.push.initializeConn(1, this.listenTarget);
+			} catch (error) {
+				this.client.log("LegyPusherError_cannot_init", { error });
+				throw error;
+			}
+			try {
 				cb && cb();
-				await this.client.push.InitAndRead([3, 8]);
+				await this.client.push.InitAndRead(this.listenTarget);
 				await sleep(4);
 			} catch (error) {
 				this.client.log("LegyPusherError", { error });

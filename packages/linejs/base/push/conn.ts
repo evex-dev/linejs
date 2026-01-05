@@ -108,18 +108,24 @@ export class Conn {
 	) {
 		const bodystream = this.createAsyncReadableStream();
 		const abort = new AbortController();
-		const socket = await this.client.fetch(`https://${host}${path}`, {
-			method: "POST",
-			headers,
-			body: bodystream.stream,
-			signal: abort.signal,
-			// @ts-expect-error: https://github.com/evex-dev/linejs/issues/109
-			duplex: "half"
+		await new Promise<void>((resolve) => {
+			(async () => {
+				const socket = await this.client.fetch(`https://${host}${path}`, {
+					method: "POST",
+					headers,
+					body: bodystream.stream,
+					signal: abort.signal,
+					// @ts-expect-error: https://github.com/evex-dev/linejs/issues/109
+					duplex: "half"
+				});
+				if (!socket.body) {
+					throw new Error("no body");
+				}
+				this.resStream = socket.body;
+				resolve();
+			})();
+			setTimeout(resolve, 300);
 		});
-		if (!socket.body) {
-			throw new Error("no body");
-		}
-		this.resStream = socket.body;
 		this.reqStream = { ...bodystream, abort };
 	}
 
@@ -131,14 +137,19 @@ export class Conn {
 		this.reqStream.enqueue(data);
 	}
 
-	async writeRequest(requestType: number, data: Uint8Array) {
+	writeRequest(requestType: number, data: Uint8Array) {
 		const d = this.manager.buildRequest(requestType, data);
-		await this.writeByte(d);
+		this.writeByte(d);
 	}
 
 	async read() {
 		if (!this.resStream) {
-			throw new Error("no resStream");
+			await new Promise<void>((resolve) => {
+				setTimeout(resolve, 200);
+			});
+			if (!this.resStream) {
+				throw new Error("no resStream");
+			}
 		}
 		for await (const chunk of this.resStream) {
 			this.manager.log("readByte", chunk);
@@ -277,8 +288,7 @@ export class Conn {
 			}
 		} else {
 			throw new Error(
-				`PUSH not Implemented: type:${dt}, payloads:${
-					bytesToHex(dd).slice(0, 30)
+				`PUSH not Implemented: type:${dt}, payloads:${bytesToHex(dd).slice(0, 30)
 				}, len:${dd.length}`,
 			);
 		}
