@@ -1,7 +1,8 @@
 // deno-lint-ignore-file no-explicit-any
 import type { BaseClient } from "../mod.ts";
+import type { LooseType } from "@evex/loose-types";
 
-export type TimelineResponse<T = any> = {
+export type TimelineResponse<T = LooseType> = {
 	code: number;
 	message: string;
 	result: T;
@@ -102,7 +103,7 @@ export class Timeline {
 			homeId: homeId,
 			sourceType: sourceType,
 		});
-		const postInfo: any = {
+		const postInfo: LooseType = {
 			readPermission: {
 				type: readPermissionType,
 				gids: readPermissionGids,
@@ -146,7 +147,7 @@ export class Timeline {
 				obsFace: "[]",
 			});
 		});
-		const contents: any = {
+		const contents: LooseType = {
 			contentsStyle: {
 				textStyle: {
 					textSizeMode: textSizeMode,
@@ -314,7 +315,7 @@ export class Timeline {
 		if (!postId) {
 			throw new Error("postId is required");
 		}
-		const postInfo: any = {
+		const postInfo: LooseType = {
 			postId: postId,
 			editableContents: ["ALL"],
 			readPermission: {
@@ -359,7 +360,7 @@ export class Timeline {
 				obsFace: "[]",
 			});
 		});
-		const contents: any = {
+		const contents: LooseType = {
 			sticonMetas: [],
 			contentsStyle: {
 				textStyle: textSizeMode || textAnimation ? {
@@ -430,6 +431,42 @@ export class Timeline {
 					likeType,
 					contentId,
 				}),
+			},
+		).then((r) => r.json());
+	}
+
+	public async createComment(options: {
+		contentId: string; // postId
+		commentText: string;
+		homeId: string;
+		sourceType?: string;
+		contentsList?: LooseType[];
+	}): Promise<TimelineResponse> {
+		await this.initTimeline();
+		const { contentId, commentText, homeId, sourceType, contentsList } = {
+			sourceType: "TIMELINE",
+			contentsList: [],
+			...options,
+		};
+		const params = new URLSearchParams({
+			sourceType,
+			homeId,
+		});
+		const headers = {
+			...this.timelineHeaders,
+			"x-lhm": "POST",
+		};
+		const body = {
+			commentText,
+			contentId,
+			contentsList,
+		};
+		return await this.client.fetch(
+			`https://${this.client.request.endpoint}/ext/note/nt/api/v57/comment/create.json?${params}`,
+			{
+				headers,
+				method: "POST",
+				body: JSON.stringify(body),
 			},
 		).then((r) => r.json());
 	}
