@@ -433,6 +433,42 @@ export class Timeline {
 			},
 		).then((r) => r.json());
 	}
+
+	public async createComment(options: {
+		contentId: string; // postId
+		commentText: string;
+		homeId: string;
+		sourceType?: string;
+		contentsList?: any[];
+	}): Promise<TimelineResponse> {
+		await this.initTimeline();
+		const { contentId, commentText, homeId, sourceType, contentsList } = {
+			sourceType: "TIMELINE",
+			contentsList: [],
+			...options,
+		};
+		const params = new URLSearchParams({
+			sourceType,
+			homeId,
+		});
+		const headers = {
+			...this.timelineHeaders,
+			"x-lhm": "POST",
+		};
+		const body = {
+			commentText,
+			contentId,
+			contentsList,
+		};
+		return await this.client.fetch(
+			`https://${this.client.request.endpoint}/ext/note/nt/api/v57/comment/create.json?${params}`,
+			{
+				headers,
+				method: "POST",
+				body: JSON.stringify(body),
+			},
+		).then((r) => r.json());
+	}
 	
 	public async sharePost(options: {
 		postId: string;
