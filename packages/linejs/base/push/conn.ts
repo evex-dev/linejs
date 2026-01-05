@@ -113,7 +113,7 @@ export class Conn {
 			headers,
 			body: bodystream.stream,
 			signal: abort.signal,
-			// https://github.com/evex-dev/linejs/issues/109
+			// @ts-expect-error: https://github.com/evex-dev/linejs/issues/109
 			duplex: "half"
 		});
 		if (!socket.body) {
