@@ -437,7 +437,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 /**
  * @description LINE squareMember (Openchat user) utils
  */
-export class SquareMember extends TypedEventEmitter<SquareMemberEvents> {
+export class SquareMember extends TypedEventEmitter<SquareMemberEvents> implements LINETypes.SquareMember {
 	public mid: string;
 	public squareMid: string;
 	public displayName: string;
@@ -447,7 +447,7 @@ export class SquareMember extends TypedEventEmitter<SquareMemberEvents> {
 	public role: LINETypes.SquareMemberRole;
 	public revision: number;
 	public preference: LINETypes.SquarePreference;
-	public joinMessage?: string;
+	public joinMessage: string;
 	constructor(
 		public rawMember: LINETypes.SquareMember,
 		private client: BaseClient,

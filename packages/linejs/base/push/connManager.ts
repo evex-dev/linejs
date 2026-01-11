@@ -535,7 +535,7 @@ export class ConnManager {
 				this.log(`request talk fetcher: ${JSON.stringify(ex_val)}`);
 				await this.buildAndSendSignOnRequest(_conn, service, ex_val);
 			} else {
-				await this.buildAndSendSignOnRequest(_conn, service, {});
+				// await this.buildAndSendSignOnRequest(_conn, service, {});
 			}
 		}
 

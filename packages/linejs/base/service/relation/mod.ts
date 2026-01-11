@@ -116,7 +116,7 @@ export class RelationService implements BaseService {
 					3,
 					[
 						[11, 1, reference],
-						[12, 2, [[12, trackingMetaType, [[
+						[12, 3, [[12, trackingMetaType, [[
 							11,
 							1,
 							trackingMetaHint,
