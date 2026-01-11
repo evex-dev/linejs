@@ -17142,3 +17142,32 @@ struct LoginResult {
     7: string displayMessage;
     8: VerificationSessionData sessionForSMSConfirm;
 }
+
+enum F61_EnumC10204a0 {
+    ALL = 0;
+    BLOCK = 1;
+    NOT_BLOCK = 2;
+}
+
+
+struct getUserFriendIds_args {
+    1: GetUserFriendIdsRequest request;
+}
+
+struct getUserFriendIds_result {
+    0: GetUserFriendIdsResponse success;
+    1: RejectedException re;
+    2: ServerFailureException sfe;
+    3: TalkException te;
+}
+
+
+struct GetUserFriendIdsRequest {
+    1: string userPageToken;
+    2: F61_EnumC10204a0 blockStatus;
+}
+
+struct GetUserFriendIdsResponse {
+    1: set<string> userFriendMids;
+    2: string nextUserPageToken;
+}

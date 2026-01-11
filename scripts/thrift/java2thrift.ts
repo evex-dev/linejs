@@ -37,10 +37,11 @@ const replaces: Record<string, string> = {
 	"val{VGuardBroadcastReceiver.VGUARD_ALERT_MESSAGE}": "alertMessage",
 	"val{C24208z.f167991g}": "location",
 	"val{KeepContentDTO.COLUMN_TOTAL_SIZE}": "totalSize",
-	"val{EnumC23791p.STATUS_STARTED}": "start",
+	"val{LineUserSettingsLogConstants$BackupTask.STATUS_STARTED}": "start",
 	"val{JwsHeader.ALGORITHM}": "alg",
 	"val{C24208z.e}": "group",
 	"val{YW0.l.SCREEN}": "screen",
+	"val{FreeCallUtsScreen.SCREEN}": "screen",
 	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_BODY_DETECT_INTERVAL}":
 		"201",
 	"val{STMobileModelType.ST_MOBILE_MODEL_TYPE_NAIL}": "501",
@@ -96,31 +97,41 @@ const replaces: Record<string, string> = {
 	"val{STResultCode.LIVE_COLOR_HACK_LIGHT_CAPTCHA_SAMPLE_FAILED}": "1105",
 	"val{STResultCode.LIVE_COLOR_HACK_WEAK_LIGHT}": "1107",
 	"val{NetworkManager.TYPE_NONE}": "none",
-	"val{VosWrapper.DES3}":"400",
-	"val{QueryBuffer.BUFFER_SIZE_512}":"512",
-	"val{C17980g.HOME_ACTIVITY_MANUAL_FIELD_NUMBER}":"102",
-	"val{C17980g.HOME_ACTIVITY_NOTI_SUMMARY_FIELD_NUMBER}":"103",
-	"val{STResultCode.SYSTEM_ERROR}":"106",
-	"val{QueryBuffer.BUFFER_SIZE_1024}":"1024",
-	"val{RsaOaepCipher.KEY_SIZE_2048}":"2048",
-	"val{YukiFaceTriggerType.FaceTriggerConstants.kExclusiveEyeBlink}":"8192",
-	"val{YukiFaceTriggerType.FaceTriggerConstants.kFaceDetect}":"16384",
-	"val{YukiFaceTriggerType.FaceTriggerConstants.kTwoMoreFaceDetect}":"32768",
-	"val{YukiFaceTriggerType.FaceTriggerConstants.kAlways}":"65536",
-	"val{YukiFaceTriggerType.FaceTriggerConstants.kExclusiveFaceDetect}":"131072",
-	"val{GravityCompat.RELATIVE_LAYOUT_DIRECTION}":"8388608",
-	"val{VosWrapper.Callback.DEBUGGER_CHECK_ID};":"16777216",
-	"val{C31891z.f233279e}":"group",
-	"val{C31891z.f233281g}":"location",
-	"val{C31891z.f233283i}":"device",
-	"val{EnumC8395A.STATUS_STARTED}":"start",
-	"val{b.DATA_KEY_ERROR_MESSAGE}":"errorMessage",
-	"val{pg1.m.SCREEN}":"screen",
+	"val{VosWrapper.DES3}": "400",
+	"val{tv.b.BUFFER_SIZE_512}": "512",
+	"val{pp3.h.HOME_ACTIVITY_MANUAL_FIELD_NUMBER}": "102",
+	"val{h.HOME_ACTIVITY_MANUAL_FIELD_NUMBER}": "102",
+	"val{pp3.h.HOME_ACTIVITY_NOTI_SUMMARY_FIELD_NUMBER}": "103",
+	"val{STResultCode.SYSTEM_ERROR}": "106",
+	"val{tv.b.BUFFER_SIZE_1024}": "1024",
+	"val{RsaOaepCipher.KEY_SIZE_2048}": "2048",
+	"val{YukiFaceTriggerType.FaceTriggerConstants.kExclusiveEyeBlink}": "8192",
+	"val{YukiFaceTriggerType.FaceTriggerConstants.kFaceDetect}": "16384",
+	"val{YukiFaceTriggerType.FaceTriggerConstants.kTwoMoreFaceDetect}": "32768",
+	"val{YukiFaceTriggerType.FaceTriggerConstants.kAlways}": "65536",
+	"val{YukiFaceTriggerType.FaceTriggerConstants.kExclusiveFaceDetect}": "131072",
+	"val{GravityCompat.RELATIVE_LAYOUT_DIRECTION}": "8388608",
+	"val{VosWrapper.Callback.DEBUGGER_CHECK_ID};": "16777216",
+	"val{VosWrapper.Callback.APP_SIGNER_CHECK_ID}": "33554432",
+	"val{C31891z.f233279e}": "group",
+	"val{z.f180756e}": "group",
+	"val{C31891z.f233281g}": "location",
+	"val{C31891z.f233283i}": "device",
+	"val{EnumC8395A.STATUS_STARTED}": "start",
+	"val{b.DATA_KEY_ERROR_MESSAGE}": "errorMessage",
+	"val{LineUserSettingsLogConstants$AlbumsScreen.SETTINGS}": "settings",
+	"val{pg1.m.SCREEN}": "screen",
+	"val{RichMessage.Action.DEPRECATED_ACTION_TYPE_APP}": "app",
+	"val{ezvcard.property.z.f180758g}": "location",
+	"val{ezvcard.property.z.f180760i}": "device",
+	"val{z.f180760i}": "device",
+	"val{RichMessage.Action.ACTION_TYPE_SEND_MESSAGE}": "sendMessage",
+	"val{ReactionTypeData.PaidReaction.PAID_REACTION_JSON_KEY}": "paidReactionType",
 	"com_linecorp_square_protocol_thrift_common_": "",
 	"com_linecorp_square_protocol_thrift_": "",
 	" list ": " list<_any> ",
 	"list> ": "list<_any>> ",
-	" list<map> ": "list<_any>",
+	" list<map> ": " list<_any> ",
 	" set ": " set<_any> ",
 	" map ": " map<_anykey,_any> ",
 	" struct ": " _any ",
@@ -344,10 +355,12 @@ function fieldclass2struct4(input: string, fieldid: number) {
 
 class TField {
 	type: string;
+	isStructOrEnum: boolean;
 	id: number;
 	name: string;
 	constructor(type: number | string, id: number, name?: string) {
 		this.id = id;
+		this.isStructOrEnum = typeof type !== "number";
 		this.type = typeof type === "number" ? ttype[type] : type;
 		this.name = name || "val_" + id.toString();
 	}
@@ -375,6 +388,39 @@ class TStruct {
 		}
 	}
 
+	searchAndRename(input: string) {
+		if (this.fields.length < 5) {
+			return;
+		}
+		try {
+			const re = new RegExp(
+				`struct (?<name>.*?) {
+ *${this.fields[0].id}: ${this.fields[0].isStructOrEnum ? ".*?" : this.fields[0].type} ${this.fields[0].name};
+ *${this.fields[1].id}: ${this.fields[1].isStructOrEnum ? ".*?" : this.fields[1].type} ${this.fields[1].name};
+ *${this.fields[2].id}: ${this.fields[2].isStructOrEnum ? ".*?" : this.fields[2].type} ${this.fields[2].name};
+ *${this.fields[3].id}: ${this.fields[3].isStructOrEnum ? ".*?" : this.fields[3].type} ${this.fields[3].name};
+ *${this.fields[4].id}: ${this.fields[4].isStructOrEnum ? ".*?" : this.fields[4].type} ${this.fields[4].name};
+ `, "g"
+			);
+			const results: string[] = [];
+			while (true) {
+				const result = re.exec(input);
+				if (result && result?.groups?.name) {
+					results.push(result?.groups?.name)
+				} else {
+					break;
+				}
+			}
+			if (results.length && !(this.realname && results.includes(this.realname))) {
+				console.warn(this.realname || `${this.package.replaceAll(".", "_")}_${this.name}`, ">", results[0]);
+				this.realname = results[0];
+			}
+
+		} catch (_e) {
+			_e;
+		}
+	}
+
 	toString() {
 		this.fields.sort((a, b) => {
 			return parseInt(a.toString().split(":")[0]) -
@@ -392,22 +438,21 @@ ${this.type} ${this.package.replaceAll(".", "_")}_${this.name} {
     ${this.fields.join("\n    ")}
 }`;
 		}
-		return `${this.type} ${
-			this.realname || `${this.package.replaceAll(".", "_")}_${this.name}`
-		} {
+		return `${this.type} ${this.realname || `${this.package.replaceAll(".", "_")}_${this.name}`
+			} {
     ${this.fields.join("\n    ")}
 }`;
 	}
 
 	static load(input: string) {
 		const nameReg =
-			/public.*? class (?<name>.*?) implements .*?, Serializable, Cloneable, Comparable.*?/;
+			/public.*? class (?<name>.*?) implements .*? Serializable, Cloneable, Comparable.*?/;
 		const nameReg2 =
 			/public.*? class (?<name>.*?) extends org\.apache\.thrift\.e.*?/;
 		const nameReg3 = /public class (?<name>.*?) extends .*e</;
 		const nameReg4 = /public class (?<name>.*?) extends .*q</;
 		const fieldReg =
-			/public static final jy1.c (?<prop>.*?) = new jy1.c\((?<name>.*?), \(byte\) (?<type>.*?), (?<id>.*?)\);/g;
+			/public static final un7.c (?<prop>.*?) = new un7.c\((?<name>.*?), \(byte\) (?<type>.*?), (?<id>.*?)\);/g;
 		const fieldReg2 =
 			/public static final c (?<prop>.*?) = new c\((?<name>.*?), \(byte\) (?<type>.*?), (?<id>.*?)\);/g;
 		const structReg = /new StringBuilder\("(?<name>.*?)\(.*?"\)/;
@@ -432,7 +477,7 @@ ${this.type} ${this.package.replaceAll(".", "_")}_${this.name} {
 			struct.realname = struct_name.groups.name;
 		}
 		while (true) {
-			const fields = fieldReg.exec(input)??fieldReg2.exec(input);
+			const fields = fieldReg.exec(input) ?? fieldReg2.exec(input);
 
 			if ((fields && fields.groups)) {
 				const fname = fields.groups.prop;
@@ -505,6 +550,14 @@ ${this.type} ${this.package.replaceAll(".", "_")}_${this.name} {
 				break;
 			}
 		}
+		if (struct.fields.length === 0) {
+			const realnameReg = /public final String toString\(\) \{\n *return "(?<name>.*?)\(\)";/
+			const name = realnameReg.exec(input);
+			if ((name && name.groups && name.groups.name)) {
+				struct.realname = name.groups.name;
+			}
+
+		}
 		return struct;
 	}
 	static loadSquareServices(input: string) {
@@ -532,7 +585,7 @@ ${this.type} ${this.package.replaceAll(".", "_")}_${this.name} {
 		const nameReg =
 			/public.*? class (?<name>.*?) implements .*?, Serializable, Cloneable, Comparable.*?/;
 		const fieldReg =
-			/public static final jy1.c (?<prop>.*?) = new jy1.c\((?<name>.*?), \(byte\) (?<type>.*?), (?<id>.*?)\);/g;
+			/public static final un7.c (?<prop>.*?) = new un7.c\((?<name>.*?), \(byte\) (?<type>.*?), (?<id>.*?)\);/g;
 		const fieldReg2 =
 			/public static final c (?<prop>.*?) = new c\((?<name>.*?), \(byte\) (?<type>.*?), (?<id>.*?)\);/g;
 		const structReg = /new StringBuilder\("(?<name>.*?)\(.*?"\)/;
@@ -547,7 +600,7 @@ ${this.type} ${this.package.replaceAll(".", "_")}_${this.name} {
 			struct.realname = struct_name.groups.name;
 		}
 		while (true) {
-			const fields = fieldReg.exec(classinput)??fieldReg2.exec(classinput);
+			const fields = fieldReg.exec(classinput) ?? fieldReg2.exec(classinput);
 			if ((fields && fields.groups)) {
 				const fname = fields.groups.prop;
 				let type: string | number = parseInt(fields.groups.type);
@@ -633,10 +686,9 @@ class TEnum {
 
 	toString() {
 		if (!includeComment) {
-			return `enum ${
-				this.realname ||
+			return `enum ${this.realname ||
 				(this.package.replaceAll(".", "_") + "_" + this.name)
-			} {
+				} {
                 ${this.value.map((e) => `${e.name} = ${e.value};`).join("\n")}
                 }`;
 		}
@@ -659,12 +711,9 @@ ${this.value.map((e) => `${e.name} = ${e.value};`).join("\n")}
 	searchAndRename(input: string) {
 		try {
 			const re = new RegExp(
-				`enum (?<name>.*?) {\n${this.value[0].name} = ${
-					this.value[0].value
-				};\n${this.value[1].name} = ${this.value[1].value};\n${
-					this.value[2].name
-				} = ${this.value[2].value};\n${this.value[3].name} = ${
-					this.value[3].value
+				`enum (?<name>.*?) {\n${this.value[0].name} = ${this.value[0].value
+				};\n${this.value[1].name} = ${this.value[1].value};\n${this.value[2].name
+				} = ${this.value[2].value};\n${this.value[3].name} = ${this.value[3].value
 				};`,
 			);
 			const result = re.exec(input);
@@ -703,6 +752,8 @@ ${this.value.map((e) => `${e.name} = ${e.value};`).join("\n")}
 
 const _line = await Deno.readTextFile("./_line.thrift");
 
+const exists: string[] = [];
+
 const thrift: (TEnum | TStruct)[] = [];
 for (const fpath of (await Deno.readTextFile("./memo.txt")).split("\n")) {
 	try {
@@ -713,19 +764,23 @@ for (const fpath of (await Deno.readTextFile("./memo.txt")).split("\n")) {
 				e.memo += " @" + fpath;
 			});
 			thrift.push(...structs);
+			exists.push(fpath);
 			continue;
 		}
 		const f = await Deno.readTextFile(fpath);
 		const struct = TStruct.load(f);
 		if (struct) {
 			struct.memo += " @" + fpath;
+			struct.searchAndRename(_line);
 			thrift.push(struct);
+			exists.push(fpath);
 		} else {
 			const tenum = TEnum.load(f);
 			if (tenum) {
 				tenum.memo += fpath;
 				tenum.searchAndRename(_line);
 				thrift.push(tenum);
+				exists.push(fpath);
 			} else {
 				console.error("none", fpath);
 			}
@@ -740,3 +795,5 @@ thrift.sort();
 includeComment = true;
 
 console.log(replace(thrift.join("\n\n")));
+
+//console.log((exists.join("\n")));

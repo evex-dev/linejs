@@ -162,10 +162,10 @@ export class Polling {
 			try {
 				cb && cb();
 				await this.client.push.InitAndRead(this.listenTarget);
-				await sleep(4);
+				await sleep(4000);
 			} catch (error) {
 				this.client.log("LegyPusherError", { error });
-				await sleep(4);
+				await sleep(4000);
 			}
 		}
 		this.islisten = false;

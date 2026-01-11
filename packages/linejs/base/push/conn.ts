@@ -222,7 +222,7 @@ export class Conn {
 			if (packet.pingType === LegyH2PingFrameType.ACK_REQUIRED) {
 				this.writeByte(packet.ackPacket());
 				this.manager.log(`[PUSH] send ping ack. pingId:${pingId}`, debugOnly);
-				this.manager.OnPingCallback(pingId);
+				this.manager.onPingCallback(pingId);
 			} else {
 				throw new Error(`ping type not Implemented: ${pingType}`);
 			}
@@ -245,7 +245,7 @@ export class Conn {
 					responsePayload = newPayload;
 					delete this.notFinPayloads[requestId];
 				}
-				this.manager.OnSignOnResponse(requestId, isFin, responsePayload);
+				this.manager.onSignOnResponse(requestId, isFin, responsePayload);
 			} else {
 				this.manager.log(
 					`[PUSH] receives long data. requestId: ${requestId}, req=${req}`,
@@ -287,7 +287,7 @@ export class Conn {
 						debugOnly,
 					);
 				}
-				this.manager.OnPushResponse(packet);
+				this.manager.onPushResponse(packet);
 			} else {
 				throw new Error(`push type not Implemented: ${pushType}`);
 			}

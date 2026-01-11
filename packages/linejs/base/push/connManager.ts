@@ -43,11 +43,11 @@ export class ConnManager {
 	conns: Conn[] = [];
 	currPingId = 0;
 	subscriptionIds: Record<number, number> = {};
-	SignOnRequests: Record<number, LooseType[]> = {};
-	OnPingCallback: (id: number) => void;
-	OnSignReqResp: Record<number, LooseType> = {};
-	OnSignOnResponse: (reqId: number, isFin: boolean, data: Uint8Array) => void;
-	OnPushResponse: (frame: LegyH2PushFrame) => void;
+	signOnRequests: Record<number, LooseType[]> = {};
+	onPingCallback: (id: number) => void;
+	onSignReqResp: Record<number, LooseType> = {};
+	onSignOnResponse: (reqId: number, isFin: boolean, data: Uint8Array) => void;
+	onPushResponse: (frame: LegyH2PushFrame) => void;
 	_eventSynced = false;
 	_pingInterval = 30;
 	authToken: string | null = null;
@@ -58,9 +58,9 @@ export class ConnManager {
 
 	constructor(base: BaseClient) {
 		this.client = base;
-		this.OnPingCallback = this._OnPingCallback.bind(this);
-		this.OnSignOnResponse = this._OnSignOnResponse.bind(this);
-		this.OnPushResponse = this._OnPushResponse.bind(this);
+		this.onPingCallback = this._OnPingCallback.bind(this);
+		this.onSignOnResponse = this._OnSignOnResponse.bind(this);
+		this.onPushResponse = this._OnPushResponse.bind(this);
 		this.opStream = this.createAsyncReadableStream<Operation>();
 		this.sqStream = this.createAsyncReadableStream<SquareEvent>();
 	}
@@ -142,6 +142,7 @@ export class ConnManager {
 		initServices = [3, 6, 8, 9, 10],
 	): Promise<Conn> {
 		const _conn = new Conn(this);
+		this.signOnRequests = {};
 		if (state === 1) {
 			this.conns[0] = _conn;
 			this.authToken = this.client.authToken!;
@@ -175,7 +176,7 @@ export class ConnManager {
 	): Promise<{ payload: Uint8Array<ArrayBuffer>; id: number; }> {
 		this.log("buildAndSendSignOnRequest", { serviceType, kwargs });
 		const cl = this.client;
-		const id = Object.keys(this.SignOnRequests).length + 1;
+		const id = Object.keys(this.signOnRequests).length + 1;
 		const idBuf = new Uint8Array(2);
 		idBuf[0] = (id >> 8) & 0xff;
 		idBuf[1] = id & 0xff;
@@ -207,7 +208,7 @@ export class ConnManager {
 		header[4] = (req.length >> 8) & 0xff;
 		header[5] = req.length & 0xff;
 		header.set(req, 6);
-		this.SignOnRequests[id] = [serviceType, methodName, null];
+		this.signOnRequests[id] = [serviceType, methodName, null];
 		this.log(
 			`[H2][PUSH] send sign-on-request. requestId:${id}, service:${serviceType}`,
 		);
@@ -222,11 +223,11 @@ export class ConnManager {
 	): Promise<false | undefined> {
 		// data = data.slice(5);
 		const cl = this.client;
-		if (!(reqId in this.SignOnRequests)) {
+		if (!(reqId in this.signOnRequests)) {
 			this.log(`[PUSH] unknown sign-on-response requestId:${reqId}`);
 			return;
 		}
-		const entry = this.SignOnRequests[reqId];
+		const entry = this.signOnRequests[reqId];
 		const serviceType: number = entry[0];
 		const methodName: string | undefined = entry[1];
 
