@@ -36,10 +36,8 @@ function isAlreadyToken(value) {
 
 function resolveToken(value) {
   if (isAlreadyToken(value)) {
-    console.log("PrimaryToken");
     return value;
   }
-  console.log("authKey to PrimaryToken");
   return createToken(value);
 }
 
