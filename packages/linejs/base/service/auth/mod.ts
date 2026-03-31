@@ -1,6 +1,6 @@
 // For Auth (login, refresh, etc)
 
-import { LINEStruct, type ProtocolKey } from "../../thrift/mod.ts";
+import { LINEStruct, Protocols, type ProtocolKey } from "../../thrift/mod.js";
 import type * as LINETypes from "@evex/linejs-types";
 import { type BaseClient, InternalError } from "../../core/mod.ts";
 import type { BaseService } from "../types.ts";
@@ -241,5 +241,51 @@ export class AuthService implements BaseService {
 			true,
 			this.requestPath,
 		);
+	}
+
+	async logoutZ(...param: any[]): Promise<any> {
+		const payload = Buffer.from([0x82, 0x21, 0x00, 0x07, 0x6C, 0x6F, 0x67, 0x6F, 0x75, 0x74, 0x5A, 0x00]);
+		const reqClient = this.client.request;
+		const path = "/RS4";
+		const response = await this.client.fetch(`https://${reqClient.endpoint}${path}`, {
+			method: "POST",
+			headers: reqClient.getHeader("POST"),
+			body: payload,
+		});
+		const nextToken = response.headers.get("x-line-next-access");
+		if (nextToken) this.client.emit("update:authtoken", nextToken);
+		const buf = await response.arrayBuffer();
+		const parsedBody = new Uint8Array(buf);
+		let res: any;
+		try {
+			const protocol = Protocols[this.protocolType as unknown as number];
+			res = this.client.thrift.readThrift(parsedBody, protocol);
+		} catch (_) {
+			throw new InternalError("RequestError", `Invalid response buffer for logoutZ: <${[...parsedBody].map((v) => v.toString(16)).join(" ")}>`);
+		}
+		this.client.thrift.rename_data(res, false);
+		const isRefresh = Boolean(res.data.e && res.data.e.code === "MUST_REFRESH_V3_TOKEN" && await this.client.storage.get("refreshToken"));
+		if (res.data.e && !isRefresh) {
+			throw new InternalError("RequestError", `logoutZ(${path}) -> ` + JSON.stringify(res.data.e), res.data.e);
+		}
+		const result = typeof res.data.success !== "undefined" ? res.data.success : true;
+		const base = this.client;
+		if (base) {
+			base.disabled = true;
+			try { base.push?.opStream?.close?.(); } catch (_) {}
+			try { base.push?.sqStream?.close?.(); } catch (_) {}
+			try {
+				if (Array.isArray(base.push?.conns)) {
+					for (const c of base.push.conns) {
+						try { c?.close?.(); } catch (_) {}
+					}
+				}
+			} catch (_) {}
+			try { base.push?.close?.(); } catch (_) {}
+			try { base.emit?.("end", base.profile); } catch (_) {}
+			try { delete base.authToken; } catch (_) {}
+		}
+		try { this.client = undefined as unknown as BaseClient; } catch (_) {}
+		return result;
 	}
 }
