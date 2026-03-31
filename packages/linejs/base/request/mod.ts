@@ -75,7 +75,7 @@ export class RequestClient {
 		headers: Record<string, string | undefined> = {},
 		timeout = this.client.config.timeout,
 	): Promise<T> {
-		if ((this.client as any)?.disabled) {
+		if (this.client?.disabled) {
 			throw new InternalError(
 				"ClientClosed",
 				"Request aborted: client has been disabled (logged out)",

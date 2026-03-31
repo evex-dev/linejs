@@ -1,6 +1,7 @@
 // For Auth (login, refresh, etc)
 
-import { LINEStruct, Protocols, type ProtocolKey } from "../../thrift/mod.js";
+import { LINEStruct, Protocols, type ProtocolKey } from "../../thrift/mod.ts";
+import { Buffer } from "node:buffer";
 import type * as LINETypes from "@evex/linejs-types";
 import { type BaseClient, InternalError } from "../../core/mod.ts";
 import type { BaseService } from "../types.ts";
@@ -281,8 +282,7 @@ export class AuthService implements BaseService {
 					}
 				}
 			} catch (_) {}
-			try { base.push?.close?.(); } catch (_) {}
-			try { base.emit?.("end", base.profile); } catch (_) {}
+			try { if (base.profile) base.emit?.("end", base.profile); } catch (_) {}
 			try { delete base.authToken; } catch (_) {}
 		}
 		try { this.client = undefined as unknown as BaseClient; } catch (_) {}

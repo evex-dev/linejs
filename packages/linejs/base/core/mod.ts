@@ -120,6 +120,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	readonly square: SquareService;
 	readonly talk: TalkService;
 	#customFetch?: FetchLike;
+	disabled?: boolean;
 	profile?: LINETypes.Profile;
 	config: Config;
 	readonly deviceDetails: DeviceDetails;
