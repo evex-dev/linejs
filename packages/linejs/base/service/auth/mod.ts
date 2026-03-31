@@ -259,7 +259,7 @@ export class AuthService implements BaseService {
 		const parsedBody = new Uint8Array(buf);
 		let res: any;
 		try {
-			const protocol = Protocols[this.protocolType as unknown as number];
+			const protocol = Protocols[this.protocolType];
 			res = this.client.thrift.readThrift(parsedBody, protocol);
 		} catch (_) {
 			throw new InternalError("RequestError", `Invalid response buffer for logoutZ: <${[...parsedBody].map((v) => v.toString(16)).join(" ")}>`);
