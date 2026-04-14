@@ -6,6 +6,8 @@ import { BaseStorage, type Storage } from "./base.ts";
  * @constructor
  */
 export class FileStorage extends BaseStorage {
+	private writeLock: Promise<void> = Promise.resolve();
+
 	/**
 	 * @description Construct a FileStorage with the given path and data.
 	 *
@@ -29,15 +31,31 @@ export class FileStorage extends BaseStorage {
 		}
 	}
 
+	private async withLock<T>(fn: () => Promise<T>): Promise<T> {
+		let resolve!: () => void;
+		const next = new Promise<void>((r) => {
+			resolve = r;
+		});
+		const prev = this.writeLock;
+		this.writeLock = next;
+		await prev;
+		try {
+			return await fn();
+		} finally {
+			resolve();
+		}
+	}
+
 	public async set(
 		key: Storage["Key"],
 		value: Storage["Value"],
 	): Promise<void> {
-		const data = await this.getAll();
-
-		data[key] = value;
-		await new Promise((resolve) => {
-			fs.writeFile(this.path, JSON.stringify(data), "utf-8", resolve);
+		await this.withLock(async () => {
+			const data = await this.getAll();
+			data[key] = value;
+			await new Promise((resolve) => {
+				fs.writeFile(this.path, JSON.stringify(data), "utf-8", resolve);
+			});
 		});
 	}
 
@@ -49,17 +67,20 @@ export class FileStorage extends BaseStorage {
 	}
 
 	public async delete(key: Storage["Key"]): Promise<void> {
-		const data = await this.getAll();
-
-		delete data[key];
-		await new Promise((resolve) => {
-			fs.writeFile(this.path, JSON.stringify(data), "utf-8", resolve);
+		await this.withLock(async () => {
+			const data = await this.getAll();
+			delete data[key];
+			await new Promise((resolve) => {
+				fs.writeFile(this.path, JSON.stringify(data), "utf-8", resolve);
+			});
 		});
 	}
 
 	public async clear(): Promise<void> {
-		await new Promise((resolve) => {
-			fs.writeFile(this.path, "{}", "utf-8", resolve);
+		await this.withLock(async () => {
+			await new Promise((resolve) => {
+				fs.writeFile(this.path, "{}", "utf-8", resolve);
+			});
 		});
 	}
 
