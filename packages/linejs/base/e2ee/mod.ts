@@ -808,10 +808,13 @@ export class E2EE {
 	}
 	public async decryptE2EEDataMessage(
 		messageObj: Message,
-		isSelf = true,
+		isSelf = false,
 	): Promise<Record<string, LooseType>> {
 		const _from = messageObj.from;
 		const to = messageObj.to;
+		if (_from === this.client.profile?.mid) {
+			isSelf = true;
+		}
 		const toType = messageObj.toType;
 		const metadata = messageObj.contentMetadata;
 		const specVersion = metadata.e2eeVersion || "2";
@@ -835,7 +838,7 @@ export class E2EE {
 
 		if (toType === LINETypes.enums.MIDType.USER || toType === "USER") {
 			pubK = await this.getE2EELocalPublicKey(
-				to,
+				isSelf ? to : _from,
 				isSelf ? receiverKeyId : senderKeyId,
 			);
 		} else {
