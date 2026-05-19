@@ -381,6 +381,9 @@ export const Thrift: LooseType = {
 		"123": "EXCEED_FOLLOWER_LIMIT",
 		"124": "INCOMPATIBLE_APP_TYPE",
 		"125": "NOT_PREMIUM",
+		"126": "BITMAX_ACCOUNT_EXIST",
+		"127": "MESSAGE_NOT_EDITABLE",
+		"128": "MESSAGE_NOT_EDITABLE_TIMELIMIT",
 	},
 	"Fg_a": {
 		"0": "INTERNAL_ERROR",
@@ -540,6 +543,10 @@ export const Thrift: LooseType = {
 		"1048576": "TIMELINE_F2F_COMPLETED",
 		"2097152": "VOOM_LIVE_STATE_CHANGED",
 		"4194304": "VOOM_ACTIVITY_REWARD_ITEM_EXIST",
+		"8388608": "LINE_TODAY_PROFILE_UPDATED",
+		"16777216": "AI_FRIENDS_EVENT_EXIST",
+		"33554432": "CALENDAR_ITEM_EXIST",
+		"67108864": "WALLET_NOTIFICATION_ITEM_EXIST",
 	},
 	"NotificationType": {
 		"1": "APPLE_APNS",
@@ -645,6 +652,8 @@ export const Thrift: LooseType = {
 		"16897": "AUTHENTICATION_FAILED",
 		"20737": "INTERNAL_SERVER_ERROR",
 		"20739": "SERVICE_UNAVAILABLE",
+		"16647": "USER_HAS_NO_VALID_SUBSCRIPTION",
+		"16648": "USER_HAS_NO_PRODUCT_OWNERSHIP",
 	},
 	"Ob1_EnumC12666u1": {
 		"0": "POPULAR",
@@ -756,6 +765,7 @@ export const Thrift: LooseType = {
 		"3": "NOT_ACCEPTED",
 		"4": "NOT_PURCHASED_U2I",
 		"5": "BUDDY",
+		"6": "TREND",
 	},
 	"Ob1_c2": {
 		"1": "STATIC",
@@ -899,6 +909,22 @@ export const Thrift: LooseType = {
 		"150": "UPDATE_PROFILE_MAPPING",
 		"151": "DELETE_PROFILE_MAPPING",
 		"152": "NOTIFIED_DESTROY_NOTICENTER_PUSH",
+		"153": "FORCE_KEY_BACKUP_HEADER_VALIDATION",
+		"154": "NOTIFIED_GCS_REACTION",
+		"155": "UPDATE_MESSAGE_REQUEST_BOX",
+		"156": "NOTIFIED_UPDATE_MESSAGE_REQUEST_BOX",
+		"157": "NOTIFIED_GCS_REFRESH_CONTENT",
+		"158": "EDIT_MESSAGE",
+		"159": "NOTIFIED_EDIT_MESSAGE",
+		"160": "ADD_SCHEDULED_MESSAGE",
+		"161": "UPDATE_SCHEDULED_MESSAGE",
+		"162": "DELETE_SCHEDULED_MESSAGE",
+		"163": "E2EE_REENCRYPT_SCHEDULED_MESSAGE",
+		"164": "SEND_FAILED_SCHEDULED_MESSAGE",
+		"165": "SEND_SUCCEEDED_SCHEDULED_MESSAGE",
+		"166": "UPDATE_SERVICE_CHAT",
+		"167": "MARK_SERVICE_CHAT_AS_READ",
+		"168": "UPDATE_SERVICE_CHAT_NOTIFICATION_TEXT",
 	},
 	"P70_g": {
 		"1000": "INVALID_REQUEST",
@@ -1133,6 +1159,15 @@ export const Thrift: LooseType = {
 		"47": "LYP_FONT",
 		"48": "TIMELINESTORY_OA",
 		"49": "TRAVEL",
+		"50": "PORTALTAB_GNB_DOT",
+		"51": "NEWS_ROW_TAB",
+		"52": "GCS_REFRESH",
+		"53": "GCS_REFRESH_ALL",
+		"54": "ASSET_META_POPUP",
+		"55": "AI_FRIENDS",
+		"56": "COMMERCE_TW_TAB",
+		"57": "PREMIUM_PRODUCT_DEFINITION",
+		"58": "DATAMODE",
 	},
 	"Pb1_EnumC13221w3": {
 		"0": "UNKNOWN",
@@ -1170,6 +1205,9 @@ export const Thrift: LooseType = {
 		"5": "GROUP",
 		"6": "E2EE",
 		"7": "MESSAGE",
+		"8": "MULTI_PROFILE",
+		"9": "MESSAGE_REQUEST_BOX",
+		"10": "SCHEDULED_MESSAGE",
 	},
 	"Pb1_EnumC13260z0": {
 		"0": "ON_AIR",
@@ -1251,6 +1289,7 @@ export const Thrift: LooseType = {
 		"256": "MUSIC_PROFILE",
 		"512": "AVATAR_PROFILE",
 		"2147483647": "ALL",
+		"1024": "HIDDEN_FROM_LIST",
 	},
 	"Pb1_L2": {
 		"0": "SYNC",
@@ -1284,6 +1323,7 @@ export const Thrift: LooseType = {
 		"16": "INVITATION_TICKET",
 		"32": "FAVORITE_TIMESTAMP",
 		"64": "CHAT_TYPE",
+		"128": "PENALTY",
 	},
 	"Pb1_O6": {
 		"1": "DEFAULT",
@@ -1310,6 +1350,8 @@ export const Thrift: LooseType = {
 		"9": "CHAT_FOLDER",
 		"10": "BLUETOOTH_SCAN",
 		"11": "AUTO_SUGGEST_FOLLOW_UP",
+		"12": "PHISHING_SITE_DETECTION",
+		"13": "SMART_STICKER_SUGGEST",
 	},
 	"Pb1_S7": {
 		"1": "NONE",
@@ -1339,6 +1381,7 @@ export const Thrift: LooseType = {
 		"6": "MANUAL_REPAIR",
 		"7": "INTERNAL",
 		"8": "USER_INITIATED",
+		"9": "PREMIUM_BACKUP_RESTORE",
 	},
 	"Pb1_W2": {
 		"0": "ANYONE_IN_CHAT",
@@ -1355,6 +1398,7 @@ export const Thrift: LooseType = {
 		"7": "PERMANENTLY_LOCKED",
 		"8": "INVALID_PASSWORD",
 		"9": "MASTER_KEY_CONFLICT",
+		"10": "KEY_BACKUP_HEADER_MISMATCH",
 	},
 	"Pb1_X1": {
 		"0": "MESSAGE",
@@ -1450,6 +1494,7 @@ export const Thrift: LooseType = {
 		"8": "NO_DESTINATION_URL",
 		"9": "SERVICE_ALREADY_TERMINATED",
 		"100": "SERVER_ERROR",
+		"10": "ID_FEDERATION_REQUIRED",
 	},
 	"Qj_EnumC13604v": {
 		"1": "GEOLOCATION",
@@ -1629,6 +1674,27 @@ export const Thrift: LooseType = {
 		"88": "AGREEMENT_OA_AI_ASSISTANT_VERSION",
 		"89": "AGREEMENT_LYP_PREMIUM_MULTI_PROFILE",
 		"90": "AGREEMENT_LYP_PREMIUM_MULTI_PROFILE_VERSION",
+		"92": "AGREEMENT_PDP",
+		"91": "AGREEMENT_PREMIUM_BACKUP_PREMIUM_TYPE",
+		"93": "AGREEMENT_PREMIUM_ALBUM_PREMIUM_TYPE",
+		"94": "HOME_NOTIFICATION_NOTE_NOTE_LIKE",
+		"95": "HOME_NOTIFICATION_NOTE_COMMENT",
+		"96": "HOME_NOTIFICATION_NOTE_COMMENT_LIKE",
+		"97": "HOME_NOTIFICATION_NOTE_MENTION",
+		"98": "AGREEMENT_IN_APP_PURCHASE",
+		"99": "AGREEMENT_IN_APP_PURCHASE_VERSION",
+		"100": "HOME_NOTIFICATION_ALBUM_LIKE",
+		"101": "AGREEMENT_TRIGGER_MESSAGE",
+		"102": "AGREEMENT_LYP_PREMIUM_UNSEND",
+		"103": "AGREEMENT_LYP_PREMIUM_UNSEND_VERSION",
+		"104": "AGREEMENT_LYP_PREMIUM_MESSAGE_EDIT",
+		"105": "AGREEMENT_LYP_PREMIUM_MESSAGE_EDIT_VERSION",
+		"111": "PHONE_NUMBER_DELETE_ENABLE",
+		"106": "NOTIFICATION_NOTE_REACTION",
+		"107": "NOTIFICATION_NOTE_COMMENT",
+		"108": "NOTIFICATION_NOTE_COMMENT_LIKE",
+		"109": "NOTIFICATION_NOTE_MENTION",
+		"110": "NOTIFICATION_ALBUM_LIKE",
 	},
 	"SnsIdType": {
 		"1": "FACEBOOK",
@@ -1678,6 +1744,10 @@ export const Thrift: LooseType = {
 		"12": "JOIN_METHOD",
 		"13": "CHANNEL_ID",
 		"14": "SVC_TAGS",
+		"15": "BENEFIT_KEYWORDS",
+		"16": "SNEAK_PEEK_CONTENTS",
+		"17": "EXPIRE_AT",
+		"18": "PROVIDER",
 	},
 	"SquareAuthorityAttribute": {
 		"1": "UPDATE_SQUARE_PROFILE",
@@ -1707,6 +1777,8 @@ export const Thrift: LooseType = {
 		"5": "MEMBERSHIP_STATE",
 		"6": "ROLE",
 		"7": "PREFERENCE",
+		"8": "SELF_INTRODUCTION",
+		"9": "SOCIAL_MEDIA_ACCOUNT_URLS",
 	},
 	"SquareMembershipState": {
 		"1": "JOIN_REQUESTED",
@@ -1717,6 +1789,8 @@ export const Thrift: LooseType = {
 		"6": "BANNED",
 		"7": "DELETED",
 		"8": "JOIN_REQUEST_WITHDREW",
+		"9": "JOIN_RESERVED",
+		"10": "JOIN_RESERVATION_EXPIRED",
 	},
 	"StickerResourceType": {
 		"1": "STATIC",
@@ -1739,6 +1813,7 @@ export const Thrift: LooseType = {
 		"7": "ROOM",
 		"8": "NOTIFICATION",
 		"9": "ADDRESS_BOOK",
+		"10": "MULTI_PROFILE",
 	},
 	"T70_C": {
 		"0": "INITIAL_BACKUP_STATE_UNSPECIFIED",
@@ -1932,6 +2007,8 @@ export const Thrift: LooseType = {
 		"58": "NOTIFIED_UPDATE_THREAD_MEMBER",
 		"59": "NOTIFIED_UPDATE_THREAD_ROOT_MESSAGE",
 		"60": "NOTIFIED_UPDATE_THREAD_ROOT_MESSAGE_STATUS",
+		"61": "NOTIFIED_CREATE_SQUARE_SUBSCRIPTION",
+		"62": "NOTIFIED_UPDATE_SQUARE_SUBSCRIPTION",
 	},
 	"AdScreen": {
 		"1": "CHATROOM",
@@ -2026,6 +2103,8 @@ export const Thrift: LooseType = {
 	"SquareChatMembershipState": {
 		"1": "JOINED",
 		"2": "LEFT",
+		"3": "JOIN_RESERVED",
+		"4": "JOIN_RESERVATION_EXPIRED",
 	},
 	"SquareChatState": {
 		"0": "ALIVE",
@@ -2103,6 +2182,8 @@ export const Thrift: LooseType = {
 		"1": "UNKNOWN",
 		"2": "YOUTUBE",
 		"3": "OA_FANSPACE",
+		"0": "NONE",
+		"4": "OA_SHOP",
 	},
 	"SquareState": {
 		"0": "ALIVE",
@@ -3847,7 +3928,7 @@ export const Thrift: LooseType = {
 		{
 			"fid": 1,
 			"name": "termsType",
-			"struct": "TermsType",
+			"type": 8,
 		},
 		{
 			"fid": 2,
@@ -4450,11 +4531,17 @@ export const Thrift: LooseType = {
 		{
 			"fid": 6,
 			"name": "showConditions",
+			"list": 11,
 		},
 		{
 			"fid": 7,
 			"name": "timeToHide",
 			"type": 10,
+		},
+		{
+			"fid": 8,
+			"name": "showAdLabel",
+			"type": 2,
 		},
 	],
 	"BeaconQueryResponse": [
@@ -5461,6 +5548,11 @@ export const Thrift: LooseType = {
 			"name": "stnpk",
 			"type": 11,
 		},
+		{
+			"fid": 21,
+			"name": "capabilities",
+			"list": 11,
+		},
 	],
 	"Callback": [
 		{
@@ -5655,6 +5747,11 @@ export const Thrift: LooseType = {
 		{
 			"fid": 2,
 			"name": "name",
+			"type": 11,
+		},
+		{
+			"fid": 3,
+			"name": "iconObsHash",
 			"type": 11,
 		},
 	],
@@ -6901,6 +6998,16 @@ export const Thrift: LooseType = {
 			"fid": 49,
 			"name": "profileId",
 			"type": 11,
+		},
+		{
+			"fid": 50,
+			"name": "premiumBlocked",
+			"type": 2,
+		},
+		{
+			"fid": 51,
+			"name": "hiddenFromList",
+			"type": 2,
 		},
 	],
 	"ContactCalendarEvent": [
@@ -8297,6 +8404,21 @@ export const Thrift: LooseType = {
 			"name": "noteStatus",
 			"struct": "NoteStatus",
 		},
+		{
+			"fid": 7,
+			"name": "squareSubscriptionProduct",
+			"struct": "SquareSubscriptionProduct",
+		},
+		{
+			"fid": 8,
+			"name": "freeTrialEligible",
+			"type": 2,
+		},
+		{
+			"fid": 9,
+			"name": "paidSquareAdmin",
+			"struct": "SquareMember",
+		},
 	],
 	"FindSquareByInvitationTicketRequest": [
 		{
@@ -8394,6 +8516,21 @@ export const Thrift: LooseType = {
 			"fid": 8,
 			"name": "chatStatus",
 			"struct": "SquareChatStatusWithoutMessage",
+		},
+		{
+			"fid": 9,
+			"name": "squareSubscriptionProduct",
+			"struct": "SquareSubscriptionProduct",
+		},
+		{
+			"fid": 10,
+			"name": "freeTrialEligible",
+			"type": 2,
+		},
+		{
+			"fid": 11,
+			"name": "paidSquareAdmin",
+			"struct": "SquareMember",
 		},
 	],
 	"FollowBuddyDetail": [
@@ -9578,6 +9715,7 @@ export const Thrift: LooseType = {
 		{
 			"fid": 3,
 			"name": "customTargeting",
+			"map": 11,
 			"key": 11,
 		},
 		{
@@ -10690,6 +10828,11 @@ export const Thrift: LooseType = {
 			"name": "receivedOnly",
 			"type": 2,
 		},
+		{
+			"fid": 6,
+			"name": "lastOpRevision",
+			"type": 10,
+		},
 	],
 	"GetProductLatestVersionForUserRequest": [
 		{
@@ -10900,6 +11043,11 @@ export const Thrift: LooseType = {
 			"map": 8,
 			"key": 11,
 		},
+		{
+			"fid": 13,
+			"name": "contactCounts",
+			"struct": "l7",
+		},
 	],
 	"GetRepairElementsResponse": [
 		{
@@ -10956,6 +11104,11 @@ export const Thrift: LooseType = {
 			"fid": 11,
 			"name": "profileMappings",
 			"struct": "RepairTriggerProfileMappingListElement",
+		},
+		{
+			"fid": 12,
+			"name": "contactCounts",
+			"struct": "sf",
 		},
 	],
 	"GetRequest": [
@@ -11539,6 +11692,16 @@ export const Thrift: LooseType = {
 			"fid": 7,
 			"name": "extraInfo",
 			"struct": "SquareExtraInfo",
+		},
+		{
+			"fid": 8,
+			"name": "paidSquareAdmin",
+			"struct": "SquareMember",
+		},
+		{
+			"fid": 9,
+			"name": "squareSubscriptionProduct",
+			"struct": "SquareSubscriptionProduct",
 		},
 	],
 	"GetSquareStatusRequest": [
@@ -12189,6 +12352,11 @@ export const Thrift: LooseType = {
 		{
 			"fid": 8,
 			"name": "autoName",
+			"type": 2,
+		},
+		{
+			"fid": 9,
+			"name": "penalized",
 			"type": 2,
 		},
 	],
@@ -13902,6 +14070,16 @@ export const Thrift: LooseType = {
 			"name": "domain",
 			"type": 11,
 		},
+		{
+			"fid": 8,
+			"name": "interWindowSession",
+			"type": 11,
+		},
+		{
+			"fid": 9,
+			"name": "requestedUrl",
+			"type": 11,
+		},
 	],
 	"LiffViewResponse": [
 		{
@@ -14013,6 +14191,41 @@ export const Thrift: LooseType = {
 		{
 			"fid": 22,
 			"name": "omitLiffReferrer",
+			"type": 2,
+		},
+		{
+			"fid": 23,
+			"name": "providerSessionId",
+			"type": 11,
+		},
+		{
+			"fid": 24,
+			"name": "interWindowSession",
+			"type": 11,
+		},
+		{
+			"fid": 25,
+			"name": "verifiedMiniApp",
+			"type": 2,
+		},
+		{
+			"fid": 26,
+			"name": "inAppPurchaseAllowed",
+			"type": 2,
+		},
+		{
+			"fid": 27,
+			"name": "inappropriateLiffReportUrl",
+			"type": 11,
+		},
+		{
+			"fid": 28,
+			"name": "browserVisibilityNotificationAllowed",
+			"type": 2,
+		},
+		{
+			"fid": 29,
+			"name": "providerSessionIdSendingAllowed",
 			"type": 2,
 		},
 	],
@@ -14834,7 +15047,7 @@ export const Thrift: LooseType = {
 			"type": 11,
 		},
 		{
-			"fid": 4,
+			"fid": 3,
 			"name": "squareMid",
 			"type": 11,
 		},
@@ -14968,6 +15181,11 @@ export const Thrift: LooseType = {
 			"name": "reactions",
 			"list": "Reaction",
 		},
+		{
+			"fid": 28,
+			"name": "updatedTime",
+			"type": 10,
+		},
 	],
 	"MessageBoxList": [
 		{
@@ -15016,6 +15234,11 @@ export const Thrift: LooseType = {
 			"fid": 7,
 			"name": "unreadOnly",
 			"type": 2,
+		},
+		{
+			"fid": 8,
+			"name": "lastOpRevision",
+			"type": 10,
 		},
 	],
 	"MessageBoxV2MessageId": [
@@ -17465,7 +17688,113 @@ export const Thrift: LooseType = {
 			"struct": "Ob1_EnumC12666u1",
 		},
 	],
-	"ProductSearchSummary": [],
+	"ProductSearchSummary": [
+		{
+			"fid": 1,
+			"name": "id",
+			"type": 11,
+		},
+		{
+			"fid": 2,
+			"name": "type",
+			"type": 8,
+		},
+		{
+			"fid": 3,
+			"name": "name",
+			"type": 11,
+		},
+		{
+			"fid": 4,
+			"name": "author",
+			"type": 11,
+		},
+		{
+			"fid": 5,
+			"name": "promotionInfo",
+			"struct": "any",
+		},
+		{
+			"fid": 6,
+			"name": "version",
+			"type": 10,
+		},
+		{
+			"fid": 7,
+			"name": "newFlag",
+			"type": 2,
+		},
+		{
+			"fid": 8,
+			"name": "priceTier",
+			"type": 8,
+		},
+		{
+			"fid": 9,
+			"name": "priceInLineCoin",
+			"type": 11,
+		},
+		{
+			"fid": 10,
+			"name": "property",
+			"struct": "String",
+		},
+		{
+			"fid": 11,
+			"name": "subType",
+			"type": 8,
+		},
+		{
+			"fid": 12,
+			"name": "onSale",
+			"type": 2,
+		},
+		{
+			"fid": 13,
+			"name": "availableForPresent",
+			"type": 2,
+		},
+		{
+			"fid": 14,
+			"name": "availableForPurchase",
+			"type": 2,
+		},
+		{
+			"fid": 15,
+			"name": "validDays",
+			"type": 8,
+		},
+		{
+			"fid": 16,
+			"name": "authorId",
+			"type": 11,
+		},
+		{
+			"fid": 17,
+			"name": "bargainFlag",
+			"type": 2,
+		},
+		{
+			"fid": 18,
+			"name": "copyright",
+			"type": 11,
+		},
+		{
+			"fid": 19,
+			"name": "availability",
+			"type": 8,
+		},
+		{
+			"fid": 20,
+			"name": "interactionEventParameter",
+			"type": 11,
+		},
+		{
+			"fid": 21,
+			"name": "editorsPickIds",
+			"set": 11,
+		},
+	],
 	"ProductSubscriptionProperty": [
 		{
 			"fid": 1,
@@ -17913,6 +18242,11 @@ export const Thrift: LooseType = {
 			"name": "providerPageUrl",
 			"type": 11,
 		},
+		{
+			"fid": 4,
+			"name": "providerType",
+			"type": 8,
+		},
 	],
 	"PublicKeyCredentialCreationOptions": [
 		{
@@ -18177,7 +18511,7 @@ export const Thrift: LooseType = {
 		{
 			"fid": 2,
 			"name": "subscriptionService",
-			"struct": "Ob1_S1",
+			"type": 8,
 		},
 		{
 			"fid": 3,
@@ -18931,7 +19265,7 @@ export const Thrift: LooseType = {
 		{
 			"fid": 3,
 			"name": "subscriptionService",
-			"struct": "Ob1_S1",
+			"type": 8,
 		},
 		{
 			"fid": 4,
@@ -20810,6 +21144,111 @@ export const Thrift: LooseType = {
 			"name": "agreementLypPremiumMultiProfileVersion",
 			"type": 10,
 		},
+		{
+			"fid": 121,
+			"name": "agreementPremiumBackupPremiumType",
+			"type": 11,
+		},
+		{
+			"fid": 122,
+			"name": "agreementPdp",
+			"type": 10,
+		},
+		{
+			"fid": 123,
+			"name": "agreementPremiumAlbumPremiumType",
+			"type": 11,
+		},
+		{
+			"fid": 124,
+			"name": "homeNotificationNoteNoteLike",
+			"type": 2,
+		},
+		{
+			"fid": 125,
+			"name": "homeNotificationNoteComment",
+			"type": 2,
+		},
+		{
+			"fid": 126,
+			"name": "homeNotificationNoteCommentLike",
+			"type": 2,
+		},
+		{
+			"fid": 127,
+			"name": "homeNotificationNoteMention",
+			"type": 2,
+		},
+		{
+			"fid": 128,
+			"name": "agreementInAppPurchase",
+			"type": 10,
+		},
+		{
+			"fid": 129,
+			"name": "agreementInAppPurchaseVersion",
+			"type": 10,
+		},
+		{
+			"fid": 130,
+			"name": "homeNotificationAlbumLike",
+			"type": 2,
+		},
+		{
+			"fid": 131,
+			"name": "agreementTriggerMessage",
+			"type": 10,
+		},
+		{
+			"fid": 132,
+			"name": "agreementLypPremiumUnsend",
+			"type": 10,
+		},
+		{
+			"fid": 133,
+			"name": "agreementLypPremiumUnsendVersion",
+			"type": 10,
+		},
+		{
+			"fid": 134,
+			"name": "agreementLypPremiumMessageEdit",
+			"type": 10,
+		},
+		{
+			"fid": 135,
+			"name": "agreementLypPremiumMessageEditVersion",
+			"type": 10,
+		},
+		{
+			"fid": 136,
+			"name": "notificationNoteReaction",
+			"type": 2,
+		},
+		{
+			"fid": 137,
+			"name": "notificationNoteComment",
+			"type": 2,
+		},
+		{
+			"fid": 138,
+			"name": "notificationNoteCommentLike",
+			"type": 2,
+		},
+		{
+			"fid": 139,
+			"name": "notificationNoteMention",
+			"type": 2,
+		},
+		{
+			"fid": 140,
+			"name": "notificationAlbumLike",
+			"type": 2,
+		},
+		{
+			"fid": 141,
+			"name": "phoneNumberDeleteEnable",
+			"type": 2,
+		},
 	],
 	"ShareTargetPickerResultRequest": [
 		{
@@ -21135,6 +21574,31 @@ export const Thrift: LooseType = {
 			"fid": 17,
 			"name": "createdAt",
 			"type": 10,
+		},
+		{
+			"fid": 18,
+			"name": "paidSquare",
+			"type": 2,
+		},
+		{
+			"fid": 19,
+			"name": "benefitKeywords",
+			"list": 11,
+		},
+		{
+			"fid": 20,
+			"name": "sneakPeekContents",
+			"list": 11,
+		},
+		{
+			"fid": 21,
+			"name": "expireAt",
+			"type": 10,
+		},
+		{
+			"fid": 22,
+			"name": "provider",
+			"struct": "SquareProvider",
 		},
 	],
 	"SquareAuthority": [
@@ -22779,6 +23243,16 @@ export const Thrift: LooseType = {
 			"name": "createdAt",
 			"type": 10,
 		},
+		{
+			"fid": 13,
+			"name": "selfIntroduction",
+			"type": 11,
+		},
+		{
+			"fid": 14,
+			"name": "socialMediaAccountUrls",
+			"list": 11,
+		},
 	],
 	"SquareMemberRelation": [
 		{
@@ -22942,7 +23416,7 @@ export const Thrift: LooseType = {
 		{
 			"fid": 3,
 			"name": "type",
-			"struct": "MessageStatusType",
+			"type": 8,
 		},
 		{
 			"fid": 4,
@@ -23388,6 +23862,11 @@ export const Thrift: LooseType = {
 			"name": "availableForCombinationSticker",
 			"type": 2,
 		},
+		{
+			"fid": 17,
+			"name": "combinationStickerProperty",
+			"struct": "b0",
+		},
 	],
 	"StickerSummary": [
 		{
@@ -23557,6 +24036,11 @@ export const Thrift: LooseType = {
 			"fid": 7,
 			"name": "skipWebRTCPermissionPopupAllowed",
 			"type": 2,
+		},
+		{
+			"fid": 8,
+			"name": "provider",
+			"struct": "w1",
 		},
 	],
 	"SubTab": [
@@ -23980,6 +24464,7 @@ export const Thrift: LooseType = {
 		{
 			"fid": 2,
 			"name": "ranges",
+			"map": "th",
 			"key": 11,
 		},
 	],
@@ -24188,12 +24673,17 @@ export const Thrift: LooseType = {
 			"name": "profileId",
 			"type": 11,
 		},
+		{
+			"fid": 11,
+			"name": "hiddenFromList",
+			"type": 2,
+		},
 	],
 	"TermsAgreementExtraInfo": [
 		{
 			"fid": 1,
 			"name": "termsType",
-			"struct": "TermsType",
+			"type": 8,
 		},
 		{
 			"fid": 2,
@@ -24233,6 +24723,11 @@ export const Thrift: LooseType = {
 			"fid": 4,
 			"name": "createdAt",
 			"type": 10,
+		},
+		{
+			"fid": 5,
+			"name": "senderMid",
+			"type": 11,
 		},
 	],
 	"ThaiBankBalanceInfo": [
@@ -25081,6 +25576,11 @@ export const Thrift: LooseType = {
 			"fid": 7,
 			"name": "availableVerificationMethods",
 			"list": "VerificationMethod",
+		},
+		{
+			"fid": 8,
+			"name": "callerIdMask",
+			"type": 11,
 		},
 	],
 	"VerifyAccountUsingHashedPwdRequest": [
@@ -26070,8 +26570,8 @@ export const Thrift: LooseType = {
 	"acquirePaidCallRoute_args": [
 		{
 			"fid": 2,
-			"name": "paidCallType",
-			"struct": "PaidCallType",
+			"name": "productId",
+			"type": 11,
 		},
 		{
 			"fid": 3,
@@ -26085,7 +26585,7 @@ export const Thrift: LooseType = {
 		},
 		{
 			"fid": 5,
-			"name": "networkCode",
+			"name": "recipientMid",
 			"type": 11,
 		},
 		{
@@ -26102,6 +26602,32 @@ export const Thrift: LooseType = {
 			"fid": 8,
 			"name": "adSessionId",
 			"type": 11,
+		},
+		{
+			"fid": 1,
+			"name": "shopId",
+			"type": 11,
+		},
+		{
+			"fid": 11,
+			"name": "price",
+			"struct": "u2",
+		},
+		{
+			"fid": 12,
+			"name": "enableLinePointAutoExchange",
+			"type": 2,
+		},
+		{
+			"fid": 21,
+			"name": "locale",
+			"struct": "Locale",
+		},
+		{
+			"fid": 31,
+			"name": "presentAttributes",
+			"map": 11,
+			"key": 11,
 		},
 	],
 	"acquirePaidCallRoute_result": [
@@ -26135,6 +26661,11 @@ export const Thrift: LooseType = {
 			"fid": 1,
 			"name": "request",
 			"struct": "AdTypeOptOutClickEventRequest",
+		},
+		{
+			"fid": 2,
+			"name": "kickoutFromGroupCallRequest",
+			"struct": "KickoutFromGroupCallRequest",
 		},
 	],
 	"adTypeOptOutClickEvent_result": [
@@ -26202,6 +26733,21 @@ export const Thrift: LooseType = {
 			"fid": 1,
 			"name": "request",
 			"struct": "NZ0_C12155c",
+		},
+		{
+			"fid": 2,
+			"name": "dialedNumber",
+			"type": 11,
+		},
+		{
+			"fid": 3,
+			"name": "language",
+			"type": 11,
+		},
+		{
+			"fid": 4,
+			"name": "referer",
+			"type": 11,
 		},
 	],
 	"addOaFriend_result": [
@@ -27383,6 +27929,11 @@ export const Thrift: LooseType = {
 			"name": "request",
 			"struct": "FetchMyEventsRequest",
 		},
+		{
+			"fid": 0,
+			"name": "success",
+			"struct": "FetchMyEventsResponse",
+		},
 	],
 	"SquareService_fetchSquareChatEvents_args": [
 		{
@@ -28120,25 +28671,30 @@ export const Thrift: LooseType = {
 		},
 		{
 			"fid": 3,
-			"name": "productId",
-			"type": 11,
+			"name": "consentRequired",
+			"struct": "any",
 		},
 		{
 			"fid": 4,
-			"name": "locale",
-			"struct": "Locale",
+			"name": "permanentLinkInvalidRequest",
+			"struct": "any",
 		},
 		{
 			"fid": 5,
-			"name": "recipientMid",
-			"type": 11,
+			"name": "idFederationRequired",
+			"struct": "any",
 		},
 	],
 	"canReceivePresent_result": [
 		{
 			"fid": 1,
-			"name": "e",
-			"struct": "ShopException",
+			"name": "liffId",
+			"type": 11,
+		},
+		{
+			"fid": 2,
+			"name": "fallbackUrl",
+			"type": 11,
 		},
 	],
 	"cancelChatInvitation_args": [
@@ -28908,6 +29464,16 @@ export const Thrift: LooseType = {
 			"name": "notifiedUpdateThreadRootMessageStatus",
 			"struct": "SquareEventNotifiedUpdateThreadRootMessageStatus",
 		},
+		{
+			"fid": 59,
+			"name": "notifiedCreateSquareSubscription",
+			"struct": "any",
+		},
+		{
+			"fid": 60,
+			"name": "notifiedUpdateSquareSubscription",
+			"struct": "any",
+		},
 	],
 	"UnhideSquareMemberContentsResponse": [],
 	"UpdateLiveTalkAttrsResponse": [],
@@ -29031,6 +29597,16 @@ export const Thrift: LooseType = {
 			"fid": 1,
 			"name": "aiQnABot",
 			"struct": "_any",
+		},
+		{
+			"fid": 2,
+			"name": "paidSquareSubscription",
+			"struct": "any",
+		},
+		{
+			"fid": 3,
+			"name": "paidSquareCreation",
+			"struct": "any",
 		},
 	],
 	"confirmIdentifier_args": [
@@ -29690,8 +30266,8 @@ export const Thrift: LooseType = {
 	"establishE2EESession_args": [
 		{
 			"fid": 1,
-			"name": "request",
-			"struct": "YN0_Ob1_J",
+			"name": "squareBot",
+			"struct": "c",
 		},
 	],
 	"establishE2EESession_result": [
@@ -29702,8 +30278,38 @@ export const Thrift: LooseType = {
 		},
 		{
 			"fid": 1,
-			"name": "e",
-			"struct": "ShopException",
+			"name": "botMid",
+			"type": 11,
+		},
+		{
+			"fid": 2,
+			"name": "active",
+			"type": 2,
+		},
+		{
+			"fid": 3,
+			"name": "displayName",
+			"type": 11,
+		},
+		{
+			"fid": 4,
+			"name": "profileImageObsHash",
+			"type": 11,
+		},
+		{
+			"fid": 5,
+			"name": "iconType",
+			"type": 8,
+		},
+		{
+			"fid": 6,
+			"name": "lastModifiedAt",
+			"type": 10,
+		},
+		{
+			"fid": 7,
+			"name": "expiredIn",
+			"type": 10,
 		},
 	],
 	"existPinCode_args": [
@@ -30284,9 +30890,9 @@ export const Thrift: LooseType = {
 	],
 	"getBalanceSummaryV2_args": [
 		{
-			"fid": 1,
+			"fid": 2,
 			"name": "request",
-			"struct": "NZ0_C12208u",
+			"struct": "aq",
 		},
 	],
 	"getBalanceSummaryV2_result": [
@@ -30304,8 +30910,18 @@ export const Thrift: LooseType = {
 	"getBalanceSummaryV4WithPayV3_args": [
 		{
 			"fid": 1,
-			"name": "request",
-			"struct": "NZ0_C12214w",
+			"name": "reqSeq",
+			"type": 8,
+		},
+		{
+			"fid": 2,
+			"name": "chatMid",
+			"type": 11,
+		},
+		{
+			"fid": 3,
+			"name": "targetUserMids",
+			"set": 11,
 		},
 	],
 	"getBalanceSummaryV4WithPayV3_result": [
@@ -30316,8 +30932,28 @@ export const Thrift: LooseType = {
 		},
 		{
 			"fid": 1,
-			"name": "e",
-			"struct": "WalletException",
+			"name": "width",
+			"type": 4,
+		},
+		{
+			"fid": 2,
+			"name": "height",
+			"type": 4,
+		},
+		{
+			"fid": 3,
+			"name": "rotation",
+			"type": 4,
+		},
+		{
+			"fid": 4,
+			"name": "x",
+			"type": 4,
+		},
+		{
+			"fid": 5,
+			"name": "y",
+			"type": 4,
 		},
 	],
 	"getBalance_args": [
@@ -30578,8 +31214,43 @@ export const Thrift: LooseType = {
 	"getBuddyOnAir_args": [
 		{
 			"fid": 4,
-			"name": "buddyMid",
+			"name": "limit",
+			"type": 8,
+		},
+		{
+			"fid": 1,
+			"name": "productType",
+			"type": 8,
+		},
+		{
+			"fid": 2,
+			"name": "authorId",
 			"type": 11,
+		},
+		{
+			"fid": 3,
+			"name": "offset",
+			"type": 8,
+		},
+		{
+			"fid": 5,
+			"name": "shopFilter",
+			"struct": "acceptChatInvitationByTicket_result",
+		},
+		{
+			"fid": 6,
+			"name": "includeStickerIds",
+			"type": 2,
+		},
+		{
+			"fid": 7,
+			"name": "additionalProductTypes",
+			"list": 11,
+		},
+		{
+			"fid": 8,
+			"name": "showcaseType",
+			"type": 8,
 		},
 	],
 	"getBuddyOnAir_result": [
@@ -30647,8 +31318,13 @@ export const Thrift: LooseType = {
 		},
 		{
 			"fid": 1,
-			"name": "e",
-			"struct": "WalletException",
+			"name": "host",
+			"type": 11,
+		},
+		{
+			"fid": 2,
+			"name": "removed",
+			"type": 2,
 		},
 	],
 	"getChallengeForPaakAuth_args": [
@@ -30740,8 +31416,13 @@ export const Thrift: LooseType = {
 	"getChannelNotificationSettings_args": [
 		{
 			"fid": 1,
-			"name": "locale",
-			"type": 11,
+			"name": "e",
+			"struct": "z4",
+		},
+		{
+			"fid": 0,
+			"name": "success",
+			"list": 11,
 		},
 	],
 	"getChannelNotificationSettings_result": [
@@ -30858,8 +31539,8 @@ export const Thrift: LooseType = {
 	"getChatapp_args": [
 		{
 			"fid": 1,
-			"name": "request",
-			"struct": "GetChatappRequest",
+			"name": "favorite",
+			"type": 2,
 		},
 	],
 	"getChatapp_result": [
@@ -30870,8 +31551,48 @@ export const Thrift: LooseType = {
 		},
 		{
 			"fid": 1,
-			"name": "e",
-			"struct": "ChatappException",
+			"name": "hwid",
+			"type": 11,
+		},
+		{
+			"fid": 2,
+			"name": "secureMessage",
+			"type": 11,
+		},
+		{
+			"fid": 3,
+			"name": "applicationType",
+			"type": 8,
+		},
+		{
+			"fid": 4,
+			"name": "applicationVersion",
+			"type": 11,
+		},
+		{
+			"fid": 5,
+			"name": "userSessionId",
+			"type": 11,
+		},
+		{
+			"fid": 6,
+			"name": "actionId",
+			"type": 10,
+		},
+		{
+			"fid": 7,
+			"name": "screen",
+			"type": 11,
+		},
+		{
+			"fid": 8,
+			"name": "bannerStartedAt",
+			"type": 10,
+		},
+		{
+			"fid": 9,
+			"name": "bannerShownFor",
+			"type": 10,
 		},
 	],
 	"getChats_args": [
@@ -31004,6 +31725,16 @@ export const Thrift: LooseType = {
 			"fid": 7,
 			"name": "syncReason",
 			"struct": "Pb1_V7",
+		},
+		{
+			"fid": 0,
+			"name": "success",
+			"struct": "Configurations",
+		},
+		{
+			"fid": 1,
+			"name": "e",
+			"struct": "ChannelException",
 		},
 	],
 	"getConfigurations_result": [
@@ -31536,8 +32267,13 @@ export const Thrift: LooseType = {
 	"getGnbBadgeStatus_args": [
 		{
 			"fid": 1,
-			"name": "request",
-			"struct": "GetGnbBadgeStatusRequest",
+			"name": "channelDomains",
+			"list": "v1",
+		},
+		{
+			"fid": 2,
+			"name": "revision",
+			"type": 10,
 		},
 	],
 	"getGnbBadgeStatus_result": [
@@ -31550,6 +32286,26 @@ export const Thrift: LooseType = {
 			"fid": 1,
 			"name": "e",
 			"struct": "WalletException",
+		},
+		{
+			"fid": 2,
+			"name": "sticonIds",
+			"list": "l6",
+		},
+		{
+			"fid": 3,
+			"name": "availableForPhotoEdit",
+			"type": 2,
+		},
+		{
+			"fid": 4,
+			"name": "sticonResourceType",
+			"type": 8,
+		},
+		{
+			"fid": 5,
+			"name": "endPageMainImages",
+			"list": 11,
 		},
 	],
 	"getGroupCallUrlInfo_args": [
@@ -31605,8 +32361,8 @@ export const Thrift: LooseType = {
 		},
 		{
 			"fid": 1,
-			"name": "e",
-			"struct": "TalkException",
+			"name": "studentInformation",
+			"struct": "f5",
 		},
 	],
 	"getHomeFlexContent_args": [
@@ -31781,8 +32537,48 @@ export const Thrift: LooseType = {
 	"getLFLSuggestion_args": [
 		{
 			"fid": 1,
-			"name": "request",
-			"struct": "AR0_b",
+			"name": "hwid",
+			"type": 11,
+		},
+		{
+			"fid": 2,
+			"name": "secureMessage",
+			"type": 11,
+		},
+		{
+			"fid": 3,
+			"name": "applicationType",
+			"type": 8,
+		},
+		{
+			"fid": 4,
+			"name": "applicationVersion",
+			"type": 11,
+		},
+		{
+			"fid": 5,
+			"name": "userSessionId",
+			"type": 11,
+		},
+		{
+			"fid": 6,
+			"name": "actionId",
+			"type": 10,
+		},
+		{
+			"fid": 7,
+			"name": "screen",
+			"type": 11,
+		},
+		{
+			"fid": 8,
+			"name": "bannerTappedAt",
+			"type": 10,
+		},
+		{
+			"fid": 9,
+			"name": "beaconTermAgreed",
+			"type": 2,
 		},
 	],
 	"getLFLSuggestion_result": [
@@ -32040,8 +32836,19 @@ export const Thrift: LooseType = {
 	"getModuleLayoutV4_args": [
 		{
 			"fid": 1,
-			"name": "request",
-			"struct": "GetModuleLayoutV4Request",
+			"name": "code",
+			"type": 8,
+		},
+		{
+			"fid": 2,
+			"name": "reason",
+			"type": 11,
+		},
+		{
+			"fid": 3,
+			"name": "parameterMap",
+			"map": 11,
+			"key": 11,
 		},
 	],
 	"getModuleLayoutV4_result": [
@@ -32052,15 +32859,30 @@ export const Thrift: LooseType = {
 		},
 		{
 			"fid": 1,
-			"name": "e",
-			"struct": "WalletException",
+			"name": "suggestVersion",
+			"type": 10,
+		},
+		{
+			"fid": 2,
+			"name": "availableForPhotoEdit",
+			"type": 2,
+		},
+		{
+			"fid": 3,
+			"name": "sticonResourceType",
+			"type": 8,
 		},
 	],
 	"getModuleWithStatus_args": [
 		{
 			"fid": 1,
-			"name": "request",
-			"struct": "NZ0_G",
+			"name": "subscriptionService",
+			"type": 8,
+		},
+		{
+			"fid": 2,
+			"name": "storeCode",
+			"type": 8,
 		},
 	],
 	"getModuleWithStatus_result": [
@@ -32071,8 +32893,78 @@ export const Thrift: LooseType = {
 		},
 		{
 			"fid": 1,
-			"name": "e",
-			"struct": "WalletException",
+			"name": "channelId",
+			"type": 11,
+		},
+		{
+			"fid": 3,
+			"name": "name",
+			"type": 11,
+		},
+		{
+			"fid": 4,
+			"name": "entryPageUrl",
+			"type": 11,
+		},
+		{
+			"fid": 5,
+			"name": "descriptionText",
+			"type": 11,
+		},
+		{
+			"fid": 6,
+			"name": "provider",
+			"struct": "ChannelProvider",
+		},
+		{
+			"fid": 7,
+			"name": "publicType",
+			"type": 8,
+		},
+		{
+			"fid": 8,
+			"name": "iconImage",
+			"type": 11,
+		},
+		{
+			"fid": 9,
+			"name": "permissions",
+			"list": 11,
+		},
+		{
+			"fid": 11,
+			"name": "iconThumbnailImage",
+			"type": 11,
+		},
+		{
+			"fid": 12,
+			"name": "channelConfigurations",
+			"list": 11,
+		},
+		{
+			"fid": 13,
+			"name": "lcsAllApiUsable",
+			"type": 2,
+		},
+		{
+			"fid": 14,
+			"name": "allowedPermissions",
+			"set": 11,
+		},
+		{
+			"fid": 15,
+			"name": "channelDomains",
+			"list": 11,
+		},
+		{
+			"fid": 16,
+			"name": "updatedTimestamp",
+			"type": 10,
+		},
+		{
+			"fid": 17,
+			"name": "featureLicenses",
+			"set": 11,
 		},
 	],
 	"getModule_args": [
@@ -32135,8 +33027,8 @@ export const Thrift: LooseType = {
 	"getModulesV4WithStatus_args": [
 		{
 			"fid": 1,
-			"name": "request",
-			"struct": "GetModulesV4WithStatusRequest",
+			"name": "channelId",
+			"type": 11,
 		},
 	],
 	"getModulesV4WithStatus_result": [
@@ -32192,8 +33084,8 @@ export const Thrift: LooseType = {
 	"getMyChatapps_args": [
 		{
 			"fid": 1,
-			"name": "request",
-			"struct": "GetMyChatappsRequest",
+			"name": "e",
+			"struct": "u",
 		},
 	],
 	"getMyChatapps_result": [
@@ -32213,6 +33105,16 @@ export const Thrift: LooseType = {
 			"fid": 1,
 			"name": "request",
 			"struct": "GetMyDashboardRequest",
+		},
+		{
+			"fid": 2,
+			"name": "channelId",
+			"type": 11,
+		},
+		{
+			"fid": 3,
+			"name": "locale",
+			"type": 11,
 		},
 	],
 	"getMyDashboard_result": [
@@ -32287,6 +33189,11 @@ export const Thrift: LooseType = {
 			"name": "locale",
 			"struct": "Locale",
 		},
+		{
+			"fid": 1,
+			"name": "request",
+			"struct": "LiffViewWithoutUserContextRequest",
+		},
 	],
 	"getOwnedProductSummaries_result": [
 		{
@@ -32296,8 +33203,13 @@ export const Thrift: LooseType = {
 		},
 		{
 			"fid": 1,
-			"name": "e",
-			"struct": "ShopException",
+			"name": "liffException",
+			"struct": "z",
+		},
+		{
+			"fid": 2,
+			"name": "talkException",
+			"struct": "ChannelException",
 		},
 	],
 	"getPasswordHashingParameter_args": [
@@ -32623,6 +33535,11 @@ export const Thrift: LooseType = {
 			"name": "locale",
 			"struct": "Locale",
 		},
+		{
+			"fid": 1,
+			"name": "request",
+			"struct": "h",
+		},
 	],
 	"getProductByVersion_result": [
 		{
@@ -32632,8 +33549,18 @@ export const Thrift: LooseType = {
 		},
 		{
 			"fid": 1,
-			"name": "e",
-			"struct": "ShopException",
+			"name": "miniAppListException",
+			"struct": "s1",
+		},
+		{
+			"fid": 2,
+			"name": "liffException",
+			"struct": "LiffException",
+		},
+		{
+			"fid": 3,
+			"name": "talkException",
+			"struct": "ChannelException",
 		},
 	],
 	"getProductLatestVersionForUser_args": [
@@ -32676,9 +33603,9 @@ export const Thrift: LooseType = {
 	],
 	"getProductV2_args": [
 		{
-			"fid": 2,
+			"fid": 1,
 			"name": "request",
-			"struct": "YN0_Ob1_S",
+			"struct": "o1",
 		},
 	],
 	"getProductV2_result": [
@@ -32689,8 +33616,18 @@ export const Thrift: LooseType = {
 		},
 		{
 			"fid": 1,
-			"name": "e",
-			"struct": "ShopException",
+			"name": "liffException",
+			"struct": "z",
+		},
+		{
+			"fid": 2,
+			"name": "channelException",
+			"struct": "Uf_EnumC14873o",
+		},
+		{
+			"fid": 3,
+			"name": "talkException",
+			"struct": "ChannelException",
 		},
 	],
 	"getProductValidationScheme_args": [
@@ -32771,6 +33708,16 @@ export const Thrift: LooseType = {
 			"name": "country",
 			"type": 11,
 		},
+		{
+			"fid": 0,
+			"name": "success",
+			"list": 11,
+		},
+		{
+			"fid": 1,
+			"name": "e",
+			"struct": "ChannelException",
+		},
 	],
 	"getPromotedBuddyContacts_result": [
 		{
@@ -32843,6 +33790,11 @@ export const Thrift: LooseType = {
 			"name": "locale",
 			"struct": "Locale",
 		},
+		{
+			"fid": 1,
+			"name": "request",
+			"struct": "y1",
+		},
 	],
 	"getPurchasedProducts_result": [
 		{
@@ -32852,15 +33804,20 @@ export const Thrift: LooseType = {
 		},
 		{
 			"fid": 1,
-			"name": "e",
-			"struct": "ShopException",
+			"name": "liffException",
+			"struct": "z",
+		},
+		{
+			"fid": 2,
+			"name": "talkException",
+			"struct": "ChannelException",
 		},
 	],
 	"getQuickMenu_args": [
 		{
 			"fid": 1,
-			"name": "request",
-			"struct": "NZ0_S",
+			"name": "lastSynced",
+			"type": 10,
 		},
 	],
 	"getQuickMenu_result": [
@@ -32908,6 +33865,11 @@ export const Thrift: LooseType = {
 			"name": "locale",
 			"struct": "Locale",
 		},
+		{
+			"fid": 1,
+			"name": "request",
+			"struct": "c2",
+		},
 	],
 	"getReceivedPresents_result": [
 		{
@@ -32917,15 +33879,30 @@ export const Thrift: LooseType = {
 		},
 		{
 			"fid": 1,
-			"name": "e",
-			"struct": "ShopException",
+			"name": "favoriteDataException",
+			"struct": "d0",
+		},
+		{
+			"fid": 2,
+			"name": "liffException",
+			"struct": "LiffException",
+		},
+		{
+			"fid": 3,
+			"name": "talkException",
+			"struct": "ChannelException",
 		},
 	],
 	"getRecentFriendRequests_args": [
 		{
 			"fid": 1,
-			"name": "syncReason",
-			"struct": "Pb1_V7",
+			"name": "e",
+			"struct": "uh",
+		},
+		{
+			"fid": 0,
+			"name": "success",
+			"struct": "FriendRequestsInfo",
 		},
 	],
 	"getRecentFriendRequests_result": [
@@ -32999,6 +33976,11 @@ export const Thrift: LooseType = {
 			"name": "getRecommendationRequest",
 			"struct": "YN0_Ob1_W",
 		},
+		{
+			"fid": 1,
+			"name": "request",
+			"struct": "b2",
+		},
 	],
 	"getRecommendationList_result": [
 		{
@@ -33008,15 +33990,25 @@ export const Thrift: LooseType = {
 		},
 		{
 			"fid": 1,
-			"name": "e",
-			"struct": "SuggestTrialException",
+			"name": "liffException",
+			"struct": "z",
+		},
+		{
+			"fid": 2,
+			"name": "talkException",
+			"struct": "ChannelException",
 		},
 	],
 	"getRepairElements_args": [
 		{
 			"fid": 1,
-			"name": "request",
-			"struct": "GetRepairElementsRequest",
+			"name": "e",
+			"struct": "uh",
+		},
+		{
+			"fid": 0,
+			"name": "success",
+			"struct": "GetRepairElementsResponse",
 		},
 	],
 	"getRepairElements_result": [
@@ -33269,6 +34261,11 @@ export const Thrift: LooseType = {
 			"name": "locale",
 			"struct": "Locale",
 		},
+		{
+			"fid": 1,
+			"name": "squareChatMid",
+			"type": 11,
+		},
 	],
 	"getSentPresents_result": [
 		{
@@ -33278,8 +34275,173 @@ export const Thrift: LooseType = {
 		},
 		{
 			"fid": 1,
-			"name": "e",
-			"struct": "ShopException",
+			"name": "type",
+			"type": 11,
+		},
+		{
+			"fid": 2,
+			"name": "url",
+			"type": 11,
+		},
+		{
+			"fid": 4,
+			"name": "titleTextColor",
+			"type": 8,
+		},
+		{
+			"fid": 5,
+			"name": "titleBackgroundColor",
+			"type": 8,
+		},
+		{
+			"fid": 6,
+			"name": "titleIconUrl",
+			"type": 11,
+		},
+		{
+			"fid": 7,
+			"name": "titleSubtextColor",
+			"type": 8,
+		},
+		{
+			"fid": 8,
+			"name": "titleButtonColor",
+			"type": 8,
+		},
+		{
+			"fid": 9,
+			"name": "progressBarColor",
+			"type": 8,
+		},
+		{
+			"fid": 10,
+			"name": "progressBackgroundColor",
+			"type": 8,
+		},
+		{
+			"fid": 11,
+			"name": "trustedDomain",
+			"type": 2,
+		},
+		{
+			"fid": 12,
+			"name": "suspendable",
+			"type": 2,
+		},
+		{
+			"fid": 13,
+			"name": "maxBrightness",
+			"type": 2,
+		},
+		{
+			"fid": 14,
+			"name": "titleButtonAreaBackgroundColor",
+			"type": 8,
+		},
+		{
+			"fid": 15,
+			"name": "titleButtonAreaBorderColor",
+			"type": 8,
+		},
+		{
+			"fid": 16,
+			"name": "suspendableV2",
+			"type": 2,
+		},
+		{
+			"fid": 17,
+			"name": "menuStyle",
+			"type": 8,
+		},
+		{
+			"fid": 18,
+			"name": "moduleMode",
+			"type": 2,
+		},
+		{
+			"fid": 19,
+			"name": "pinToHomeServiceId",
+			"type": 8,
+		},
+		{
+			"fid": 20,
+			"name": "menuColorSetting",
+			"struct": "any",
+		},
+		{
+			"fid": 21,
+			"name": "showPinInduction",
+			"type": 2,
+		},
+		{
+			"fid": 22,
+			"name": "appName",
+			"type": 11,
+		},
+		{
+			"fid": 23,
+			"name": "adaptableColorSchemes",
+			"set": 11,
+		},
+		{
+			"fid": 24,
+			"name": "provider",
+			"struct": "any",
+		},
+		{
+			"fid": 25,
+			"name": "basicAuthAllowed",
+			"type": 2,
+		},
+		{
+			"fid": 26,
+			"name": "siriDonationAllowed",
+			"type": 2,
+		},
+		{
+			"fid": 27,
+			"name": "transitionToNonLiffWithoutPopupAllowed",
+			"type": 2,
+		},
+		{
+			"fid": 28,
+			"name": "urlHistoryAllowed",
+			"type": 2,
+		},
+		{
+			"fid": 29,
+			"name": "shrinkHeaderDisabled",
+			"type": 2,
+		},
+		{
+			"fid": 30,
+			"name": "skipWebRTCPermissionPopupAllowed",
+			"type": 2,
+		},
+		{
+			"fid": 31,
+			"name": "useGmaSdkAllowed",
+			"type": 2,
+		},
+		{
+			"fid": 32,
+			"name": "useMinimizeButtonAllowed",
+			"type": 2,
+		},
+		{
+			"fid": 33,
+			"name": "singleTabOnly",
+			"type": 2,
+		},
+		{
+			"fid": 34,
+			"name": "useFavoriteAllowed",
+			"type": 2,
+		},
+		{
+			"fid": 35,
+			"name": "discoverMiniAllowed",
+			"type": 2,
 		},
 	],
 	"getServerTime_result": [
@@ -33299,6 +34461,11 @@ export const Thrift: LooseType = {
 			"fid": 1,
 			"name": "request",
 			"struct": "NZ0_U",
+		},
+		{
+			"fid": 2,
+			"name": "webLoginRequest",
+			"struct": "WebLoginRequest",
 		},
 	],
 	"getServiceShortcutMenu_result": [
@@ -33537,15 +34704,15 @@ export const Thrift: LooseType = {
 	"getTaiwanBankBalance_args": [
 		{
 			"fid": 1,
-			"name": "request",
-			"struct": "GetTaiwanBankBalanceRequest",
+			"name": "channelIds",
+			"list": "n3",
 		},
 	],
 	"getTaiwanBankBalance_result": [
 		{
 			"fid": 0,
 			"name": "success",
-			"struct": "GetTaiwanBankBalanceResponse",
+			"list": 11,
 		},
 		{
 			"fid": 1,
@@ -33593,6 +34760,11 @@ export const Thrift: LooseType = {
 			"name": "request",
 			"struct": "NZ0_C12150a0",
 		},
+		{
+			"fid": 2,
+			"name": "webLoginRequest",
+			"struct": "WebLoginRequest",
+		},
 	],
 	"getTargetingPopup_result": [
 		{
@@ -33609,8 +34781,8 @@ export const Thrift: LooseType = {
 	"getThaiBankBalance_args": [
 		{
 			"fid": 1,
-			"name": "request",
-			"struct": "GetThaiBankBalanceRequest",
+			"name": "channelId",
+			"type": 11,
 		},
 	],
 	"getThaiBankBalance_result": [
@@ -33709,8 +34881,38 @@ export const Thrift: LooseType = {
 	"getUserVector_args": [
 		{
 			"fid": 1,
-			"name": "request",
-			"struct": "GetUserVectorRequest",
+			"name": "hwid",
+			"type": 11,
+		},
+		{
+			"fid": 2,
+			"name": "secureMessage",
+			"type": 11,
+		},
+		{
+			"fid": 3,
+			"name": "applicationType",
+			"type": 8,
+		},
+		{
+			"fid": 4,
+			"name": "applicationVersion",
+			"type": 11,
+		},
+		{
+			"fid": 5,
+			"name": "lang",
+			"type": 11,
+		},
+		{
+			"fid": 6,
+			"name": "region",
+			"type": 11,
+		},
+		{
+			"fid": 7,
+			"name": "modelName",
+			"type": 11,
 		},
 	],
 	"getUserVector_result": [
@@ -35050,8 +36252,8 @@ export const Thrift: LooseType = {
 	"registerCampaignReward_args": [
 		{
 			"fid": 1,
-			"name": "request",
-			"struct": "RegisterCampaignRewardRequest",
+			"name": "setting",
+			"list": "m6",
 		},
 	],
 	"registerCampaignReward_result": [
@@ -35127,12 +36329,17 @@ export const Thrift: LooseType = {
 	"registerE2EEPublicKey_args": [
 		{
 			"fid": 1,
-			"name": "reqSeq",
-			"type": 8,
+			"name": "e",
+			"struct": "uh",
 		},
 		{
 			"fid": 2,
 			"name": "publicKey",
+			"struct": "Pb1_C13097n4",
+		},
+		{
+			"fid": 0,
+			"name": "success",
 			"struct": "Pb1_C13097n4",
 		},
 	],
@@ -35515,6 +36722,11 @@ export const Thrift: LooseType = {
 			"fid": 7,
 			"name": "debugInfo",
 			"struct": "LocationDebugInfo",
+		},
+		{
+			"fid": 8,
+			"name": "appState",
+			"type": 8,
 		},
 	],
 	"reportLocation_result": [
@@ -36866,7 +38078,7 @@ export const Thrift: LooseType = {
 		{
 			"fid": 2,
 			"name": "attr",
-			"struct": "Pb1_EnumC13180t4",
+			"type": 8,
 		},
 		{
 			"fid": 3,
@@ -36984,6 +38196,11 @@ export const Thrift: LooseType = {
 			"fid": 2,
 			"name": "request",
 			"struct": "UpdateProfileAttributesRequest",
+		},
+		{
+			"fid": 0,
+			"name": "success",
+			"struct": "k",
 		},
 	],
 	"updateProfileAttributes_result": [
@@ -37606,6 +38823,16 @@ export const Thrift: LooseType = {
 			"name": "sessionForSMSConfirm",
 			"struct": "VerificationSessionData",
 		},
+		{
+			"fid": 9,
+			"name": "tokenV3IssueResult",
+			"struct": "TokenV3IssueResult",
+		},
+		{
+			"fid": 10,
+			"name": "mid",
+			"type": 11,
+		},
 	],
 	"F61_EnumC10204a0": {
 		"0": "ALL",
@@ -37662,6 +38889,338 @@ export const Thrift: LooseType = {
 		{
 			"fid": 2,
 			"name": "nextUserPageToken",
+			"type": 11,
+		},
+	],
+	"ForbiddenWordsGroup": {
+		"1": "SQUARE_NAME",
+		"2": "SQUARE_DESCRIPTION",
+		"3": "MEMBER_NAME",
+	},
+	"LMPCode": {
+		"1": "PR01",
+		"2": "PR02",
+		"3": "PR03",
+		"4": "PR04",
+		"5": "PR05",
+		"6": "PR06",
+		"7": "PR07",
+		"8": "PR08",
+		"12": "PR12",
+		"13": "PR13",
+		"14": "PR14",
+		"15": "PR15",
+		"16": "PR16",
+		"17": "PR17",
+		"18": "PR18",
+		"60": "PR60",
+		"61": "PR61",
+		"88": "PR88",
+		"99": "PR99",
+		"100": "PRAUTO00",
+		"101": "PRAUTO01",
+		"199": "PRAUTO99",
+		"500": "NOT_PENALIZED",
+	},
+	"PaidSquareCreationTermsAgreement": [
+		{
+			"fid": 1,
+			"name": "agreedToAdminPermissionNonTransferable",
+			"type": 2,
+		},
+		{
+			"fid": 2,
+			"name": "agreedToSettlementPolicy",
+			"type": 2,
+		},
+		{
+			"fid": 3,
+			"name": "agreedToPolicyViolationConsequence",
+			"type": 2,
+		},
+	],
+	"PaidSquareForm": [
+		{
+			"fid": 1,
+			"name": "id",
+			"type": 11,
+		},
+		{
+			"fid": 2,
+			"name": "square",
+			"struct": "Square",
+		},
+		{
+			"fid": 3,
+			"name": "adminMember",
+			"struct": "SquareMember",
+		},
+		{
+			"fid": 4,
+			"name": "subscriptionProduct",
+			"struct": "SquareSubscriptionProduct",
+		},
+		{
+			"fid": 5,
+			"name": "state",
+			"type": 8,
+		},
+		{
+			"fid": 6,
+			"name": "revision",
+			"type": 10,
+		},
+		{
+			"fid": 7,
+			"name": "createdAt",
+			"type": 10,
+		},
+		{
+			"fid": 8,
+			"name": "updatedAt",
+			"type": 10,
+		},
+		{
+			"fid": 9,
+			"name": "country",
+			"type": 11,
+		},
+	],
+	"PaidSquareFormState": {
+		"1": "UNDER_REVIEW",
+		"2": "APPROVED",
+		"3": "REJECTED",
+		"4": "REGISTRATION_COMPLETE",
+		"5": "REGISTRATION_FAILED",
+	},
+	"PaidSquareSubscriptionTermsAgreement": [
+		{
+			"fid": 1,
+			"name": "squareMid",
+			"type": 11,
+		},
+		{
+			"fid": 2,
+			"name": "agreedToSubscriptionAndRecurringPayments",
+			"type": 2,
+		},
+		{
+			"fid": 3,
+			"name": "agreedToTermsAndPrecautions",
+			"type": 2,
+		},
+	],
+	"ProductProperty": [
+		{
+			"fid": 1,
+			"name": "stickerProperty",
+			"struct": "any",
+		},
+		{
+			"fid": 2,
+			"name": "themeProperty",
+			"struct": "any",
+		},
+		{
+			"fid": 3,
+			"name": "sticonProperty",
+			"struct": "any",
+		},
+	],
+	"RequestDeletePaidSquareResponse": [
+		{
+			"fid": 1,
+			"name": "square",
+			"struct": "Square",
+		},
+	],
+	"SneakPeekContent": [
+		{
+			"fid": 1,
+			"name": "title",
+			"type": 11,
+		},
+		{
+			"fid": 2,
+			"name": "desc",
+			"type": 11,
+		},
+		{
+			"fid": 3,
+			"name": "imageObsHashes",
+			"list": 11,
+		},
+	],
+	"SquareEventNotifiedCreateSquareSubscription": [
+		{
+			"fid": 1,
+			"name": "squareMid",
+			"type": 11,
+		},
+		{
+			"fid": 2,
+			"name": "squareSubscription",
+			"struct": "SquareSubscription",
+		},
+	],
+	"SquareEventNotifiedUpdateSquareSubscription": [
+		{
+			"fid": 1,
+			"name": "squareMid",
+			"type": 11,
+		},
+		{
+			"fid": 2,
+			"name": "squareSubscription",
+			"struct": "SquareSubscription",
+		},
+	],
+	"SquareOAShopData": [
+		{
+			"fid": 1,
+			"name": "url",
+			"type": 11,
+		},
+		{
+			"fid": 2,
+			"name": "title",
+			"type": 11,
+		},
+	],
+	"SquareProvider": [
+		{
+			"fid": 1,
+			"name": "type",
+			"type": 8,
+		},
+		{
+			"fid": 2,
+			"name": "data",
+			"struct": "SquareProviderData",
+		},
+	],
+	"SquareProviderData": [
+		{
+			"fid": 1,
+			"name": "squareOAShopData",
+			"struct": "any",
+		},
+	],
+	"SquareSubscription": [
+		{
+			"fid": 1,
+			"name": "id",
+			"type": 11,
+		},
+		{
+			"fid": 2,
+			"name": "squareMid",
+			"type": 11,
+		},
+		{
+			"fid": 3,
+			"name": "status",
+			"type": 8,
+		},
+		{
+			"fid": 4,
+			"name": "freeTrial",
+			"type": 2,
+		},
+		{
+			"fid": 5,
+			"name": "startedAt",
+			"type": 10,
+		},
+		{
+			"fid": 6,
+			"name": "expiredAt",
+			"type": 10,
+		},
+		{
+			"fid": 7,
+			"name": "revision",
+			"type": 10,
+		},
+	],
+	"SquareSubscriptionFeeOption": [
+		{
+			"fid": 1,
+			"name": "price",
+			"type": 8,
+		},
+		{
+			"fid": 2,
+			"name": "currency",
+			"type": 11,
+		},
+	],
+	"SquareSubscriptionProduct": [
+		{
+			"fid": 1,
+			"name": "id",
+			"type": 11,
+		},
+		{
+			"fid": 2,
+			"name": "squareMid",
+			"type": 11,
+		},
+		{
+			"fid": 3,
+			"name": "subscriptionFee",
+			"type": 8,
+		},
+		{
+			"fid": 4,
+			"name": "currency",
+			"type": 11,
+		},
+		{
+			"fid": 5,
+			"name": "freeTrial",
+			"type": 2,
+		},
+	],
+	"SquareSubscriptionProductRegistrationStatus": {
+		"1": "IN_REVIEW",
+		"2": "APPROVED",
+		"3": "REJECTED",
+		"4": "PENDING",
+	},
+	"SquareSubscriptionStatus": {
+		"1": "ACTIVE",
+		"2": "CANCELLED",
+		"3": "ON_HOLD",
+		"4": "EXPIRED",
+		"5": "REVOKED",
+	},
+	"TermsType": {
+		"1": "AI_QNA_BOT",
+		"2": "PAID_SQUARE_SUBSCRIPTION",
+		"3": "PAID_SQUARE_CREATION",
+	},
+	"ValidateTextsRequest": [
+		{
+			"fid": 1,
+			"name": "group",
+			"type": 8,
+		},
+		{
+			"fid": 2,
+			"name": "targetTexts",
+			"list": 11,
+		},
+	],
+	"ValidateTextsResponse": [
+		{
+			"fid": 1,
+			"name": "success",
+			"type": 2,
+		},
+		{
+			"fid": 2,
+			"name": "errorMessage",
 			"type": 11,
 		},
 	],
