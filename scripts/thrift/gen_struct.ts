@@ -23,7 +23,7 @@ export function main(
         }
         return tMap
     }
-    type PartialDeep<T> = {
+    export type PartialDeep<T> = {
         [P in keyof T]?: T[P] extends Array<infer U> ? Array<PartialDeep<U>>
             : T[P] extends ReadonlyArray<infer UU> ? ReadonlyArray<PartialDeep<UU>>
             : PartialDeep<T[P]>;

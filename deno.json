@@ -25,6 +25,11 @@
 	"tasks": {
 		"dev": "deno run -A --watch sandbox/main.ts",
 		"thrift": "deno run --allow-read --allow-write scripts/thrift/tool.ts",
+		"thrift:sync-idl": "deno run -A scripts/thrift/sync_thrift.ts",
+		"apk:sync": "deno run -A scripts/apk/sync_from_apk.ts",
+		"apk:decompile": "deno run -A scripts/apk/decompile.ts",
+		"apk:extract-thrift": "deno run -A scripts/apk/extract_thrift.ts",
+		"apk:extract-services": "deno run -A scripts/apk/extract_services.ts",
 		"docs:dev": "cd docs && deno task dev",
 		"docs:build": "cd docs && deno task build"
 	},

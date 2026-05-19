@@ -1,12 +1,10 @@
 import * as LINETypes from "@evex/linejs-types";
-import type { NestedArray } from "../mod.ts";
-import type { LooseType } from "@evex/loose-types";
-
+import { type NestedArray } from "../mod.ts";
 function map(
-	call: ((v: LooseType) => NestedArray) | ((v: LooseType) => number),
-	value: LooseType,
-): Record<keyof LooseType, NestedArray | number> {
-	const tMap: Record<keyof LooseType, NestedArray | number> = {};
+	call: ((v: any) => NestedArray) | ((v: any) => number),
+	value: any,
+): Record<keyof any, NestedArray | number> {
+	const tMap: Record<keyof any, NestedArray | number> = {};
 	for (const key in value) {
 		const e = value[key];
 		tMap[key] = call(e);
@@ -393,12 +391,13 @@ export function AcquireOACallRouteRequest(
 		[11, 3, param.otp],
 	];
 }
-export function PaidCallType(
-	param: LINETypes.PaidCallType | undefined,
-): LINETypes.PaidCallType & number | undefined {
-	return typeof param === "string"
-		? LINETypes.enums.PaidCallType[param]
-		: param;
+export function Locale(
+	param?: PartialDeep<LINETypes.Locale> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.language],
+		[11, 2, param.country],
+	];
 }
 export function og_EnumC32661b(
 	param: LINETypes.og_EnumC32661b | undefined,
@@ -421,6 +420,14 @@ export function AdTypeOptOutClickEventRequest(
 	return typeof param === "undefined" ? [] : [
 		[11, 1, param.moduleAdId],
 		[11, 2, param.targetId],
+	];
+}
+export function KickoutFromGroupCallRequest(
+	param?: PartialDeep<LINETypes.KickoutFromGroupCallRequest> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.chatMid],
+		[15, 2, [11, param.targetMids]],
 	];
 }
 export function AddMetaInvalid(
@@ -787,12 +794,16 @@ export function AddToFollowBlacklistRequest(
 export function TermsAgreement(
 	param?: PartialDeep<LINETypes.TermsAgreement> | undefined,
 ): NestedArray {
-	return typeof param === "undefined" ? [] : [];
+	return typeof param === "undefined" ? [] : [
+		,
+		,
+	];
 }
 export function AgreeToTermsRequest(
 	param?: PartialDeep<LINETypes.AgreeToTermsRequest> | undefined,
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
+		[8, 1, param.termsType],
 		[12, 2, TermsAgreement(param.termsAgreement)],
 	];
 }
@@ -820,6 +831,7 @@ export function TextMessageAnnouncementContents(
 		[11, 2, param.text],
 		[11, 3, param.senderSquareMemberMid],
 		[10, 4, param.createdAt],
+		[11, 5, param.senderMid],
 	];
 }
 export function SquareChatAnnouncementContents(
@@ -958,6 +970,19 @@ export function SquareJoinMethod(
 		[12, 2, SquareJoinMethodValue(param.value)],
 	];
 }
+export function SquareProviderData(
+	param?: PartialDeep<LINETypes.SquareProviderData> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [];
+}
+export function SquareProvider(
+	param?: PartialDeep<LINETypes.SquareProvider> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[8, 1, param.type],
+		[12, 2, SquareProviderData(param.data)],
+	];
+}
 export function Square(
 	param?: PartialDeep<LINETypes.Square> | undefined,
 ): NestedArray {
@@ -979,6 +1004,11 @@ export function Square(
 		[8, 15, BooleanState(param.adultOnly)],
 		[15, 16, [11, param.svcTags]],
 		[10, 17, param.createdAt],
+		[2, 18, param.paidSquare],
+		[15, 19, [11, param.benefitKeywords]],
+		[15, 20, [11, param.sneakPeekContents]],
+		[10, 21, param.expireAt],
+		[12, 22, SquareProvider(param.provider)],
 	];
 }
 export function SquareMembershipState(
@@ -1018,6 +1048,8 @@ export function SquareMember(
 		[12, 10, SquarePreference(param.preference)],
 		[11, 11, param.joinMessage],
 		[10, 12, param.createdAt],
+		[11, 13, param.selfIntroduction],
+		[15, 14, [11, param.socialMediaAccountUrls]],
 	];
 }
 export function CreateSquareRequest(
@@ -1080,6 +1112,1313 @@ export function FetchMyEventsRequest(
 		[10, 1, param.subscriptionId],
 		[11, 2, param.syncToken],
 		[8, 3, param.limit],
+		[11, 4, param.continuationToken],
+	];
+}
+export function SubscriptionState(
+	param?: PartialDeep<LINETypes.SubscriptionState> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[10, 1, param.subscriptionId],
+		[10, 2, param.ttlMillis],
+	];
+}
+export function SquareEventType(
+	param: LINETypes.SquareEventType | undefined,
+): LINETypes.SquareEventType & number | undefined {
+	return typeof param === "string"
+		? LINETypes.enums.SquareEventType[param]
+		: param;
+}
+export function MIDType(
+	param: LINETypes.MIDType | undefined,
+): LINETypes.MIDType & number | undefined {
+	return typeof param === "string" ? LINETypes.enums.MIDType[param] : param;
+}
+export function Pb1_D6(
+	param: LINETypes.Pb1_D6 | undefined,
+): LINETypes.Pb1_D6 & number | undefined {
+	return typeof param === "string" ? LINETypes.enums.Pb1_D6[param] : param;
+}
+export function Pb1_EnumC13050k(
+	param: LINETypes.Pb1_EnumC13050k | undefined,
+): LINETypes.Pb1_EnumC13050k & number | undefined {
+	return typeof param === "string"
+		? LINETypes.enums.Pb1_EnumC13050k[param]
+		: param;
+}
+export function GeolocationAccuracy(
+	param?: PartialDeep<LINETypes.GeolocationAccuracy> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[4, 1, param.radiusMeters],
+		[4, 2, param.radiusConfidence],
+		[4, 3, param.altitudeAccuracy],
+		[4, 4, param.velocityAccuracy],
+		[4, 5, param.bearingAccuracy],
+		[8, 6, Pb1_EnumC13050k(param.accuracyMode)],
+	];
+}
+export function Location(
+	param?: PartialDeep<LINETypes.Location> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.title],
+		[11, 2, param.address],
+		[4, 3, param.latitude],
+		[4, 4, param.longitude],
+		[11, 5, param.phone],
+		[11, 6, param.categoryId],
+		[8, 7, Pb1_D6(param.provider)],
+		[12, 8, GeolocationAccuracy(param.accuracy)],
+		[4, 9, param.altitudeMeters],
+	];
+}
+export function ContentType(
+	param: LINETypes.ContentType | undefined,
+): LINETypes.ContentType & number | undefined {
+	return typeof param === "string" ? LINETypes.enums.ContentType[param] : param;
+}
+export function Pb1_EnumC13015h6(
+	param: LINETypes.Pb1_EnumC13015h6 | undefined,
+): LINETypes.Pb1_EnumC13015h6 & number | undefined {
+	return typeof param === "string"
+		? LINETypes.enums.Pb1_EnumC13015h6[param]
+		: param;
+}
+export function Pb1_E7(
+	param: LINETypes.Pb1_E7 | undefined,
+): LINETypes.Pb1_E7 & number | undefined {
+	return typeof param === "string" ? LINETypes.enums.Pb1_E7[param] : param;
+}
+export function Pb1_B(
+	param: LINETypes.Pb1_B | undefined,
+): LINETypes.Pb1_B & number | undefined {
+	return typeof param === "string" ? LINETypes.enums.Pb1_B[param] : param;
+}
+export function MessageReactionType(
+	param: LINETypes.MessageReactionType | undefined,
+): LINETypes.MessageReactionType & number | undefined {
+	return typeof param === "string"
+		? LINETypes.enums.MessageReactionType[param]
+		: param;
+}
+export function ReactionType(
+	param?: PartialDeep<LINETypes.ReactionType> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[8, 1, MessageReactionType(param.predefinedReactionType)],
+	];
+}
+export function Reaction(
+	param?: PartialDeep<LINETypes.Reaction> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.fromUserMid],
+		[10, 2, param.atMillis],
+		[12, 3, ReactionType(param.reactionType)],
+	];
+}
+export function Message(
+	param?: PartialDeep<LINETypes.Message> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.from],
+		[11, 2, param.to],
+		[8, 3, MIDType(param.toType)],
+		[11, 4, param.id],
+		[10, 5, param.createdTime],
+		[10, 6, param.deliveredTime],
+		[11, 10, param.text],
+		[12, 11, Location(param.location)],
+		[2, 14, param.hasContent],
+		[8, 15, ContentType(param.contentType)],
+		[11, 17, param.contentPreview],
+		[13, 18, [11, 11, param.contentMetadata]],
+		[3, 19, param.sessionId],
+		[15, 20, [11, param.chunks]],
+		[11, 21, param.relatedMessageId],
+		[8, 22, Pb1_EnumC13015h6(param.messageRelationType)],
+		[8, 23, param.readCount],
+		[8, 24, Pb1_E7(param.relatedMessageServiceCode)],
+		[8, 25, Pb1_B(param.appExtensionType)],
+		[15, 27, [12, param.reactions && param.reactions.map((e) => Reaction(e))]],
+		[10, 28, param.updatedTime],
+	];
+}
+export function SquareMessageState(
+	param: LINETypes.SquareMessageState | undefined,
+): LINETypes.SquareMessageState & number | undefined {
+	return typeof param === "string"
+		? LINETypes.enums.SquareMessageState[param]
+		: param;
+}
+export function SquareMessageThreadInfo(
+	param?: PartialDeep<LINETypes.SquareMessageThreadInfo> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.chatThreadMid],
+		[2, 2, param.threadRoot],
+	];
+}
+export function SquareMessage(
+	param?: PartialDeep<LINETypes.SquareMessage> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[12, 1, Message(param.message)],
+		[8, 3, MIDType(param.fromType)],
+		[10, 4, param.squareMessageRevision],
+		[8, 5, SquareMessageState(param.state)],
+		[12, 6, SquareMessageThreadInfo(param.threadInfo)],
+	];
+}
+export function SquareMessageReaction(
+	param?: PartialDeep<LINETypes.SquareMessageReaction> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[8, 1, MessageReactionType(param.type)],
+		[12, 2, SquareMember(param.reactor)],
+		[10, 3, param.createdAt],
+		[10, 4, param.updatedAt],
+	];
+}
+export function SquareMessageReactionStatus(
+	param?: PartialDeep<LINETypes.SquareMessageReactionStatus> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[8, 1, param.totalCount],
+		[13, 2, [8, 8, param.countByReactionType]],
+		[12, 3, SquareMessageReaction(param.myReaction)],
+	];
+}
+export function ContentsAttribute(
+	param: LINETypes.ContentsAttribute | undefined,
+): LINETypes.ContentsAttribute & number | undefined {
+	return typeof param === "string"
+		? LINETypes.enums.ContentsAttribute[param]
+		: param;
+}
+export function SquareEventReceiveMessage(
+	param?: PartialDeep<LINETypes.SquareEventReceiveMessage> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[12, 2, SquareMessage(param.squareMessage)],
+		[11, 3, param.senderDisplayName],
+		[12, 4, SquareMessageReactionStatus(param.messageReactionStatus)],
+		[10, 5, param.senderRevision],
+		[11, 6, param.squareMid],
+		[11, 7, param.threadMid],
+		[10, 8, param.threadTotalMessageCount],
+		[10, 9, param.threadLastMessageAt],
+		[8, 10, ContentsAttribute(param.contentsAttribute)],
+	];
+}
+export function SquareEventSendMessage(
+	param?: PartialDeep<LINETypes.SquareEventSendMessage> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[12, 2, SquareMessage(param.squareMessage)],
+		[8, 3, param.reqSeq],
+		[11, 4, param.senderDisplayName],
+		[12, 5, SquareMessageReactionStatus(param.messageReactionStatus)],
+		[11, 6, param.threadMid],
+		[10, 7, param.threadTotalMessageCount],
+		[10, 8, param.threadLastMessageAt],
+	];
+}
+export function SquareEventNotifiedJoinSquareChat(
+	param?: PartialDeep<LINETypes.SquareEventNotifiedJoinSquareChat> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[12, 2, SquareMember(param.joinedMember)],
+	];
+}
+export function SquareMemberRelationState(
+	param: LINETypes.SquareMemberRelationState | undefined,
+): LINETypes.SquareMemberRelationState & number | undefined {
+	return typeof param === "string"
+		? LINETypes.enums.SquareMemberRelationState[param]
+		: param;
+}
+export function SquareMemberRelation(
+	param?: PartialDeep<LINETypes.SquareMemberRelation> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[8, 1, SquareMemberRelationState(param.state)],
+		[10, 2, param.revision],
+	];
+}
+export function SquareEventNotifiedInviteIntoSquareChat(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedInviteIntoSquareChat>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[15, 2, [12, param.invitees && param.invitees.map((e) => SquareMember(e))]],
+		[12, 3, SquareMember(param.invitor)],
+		[12, 4, SquareMemberRelation(param.invitorRelation)],
+	];
+}
+export function SquareEventNotifiedLeaveSquareChat(
+	param?: PartialDeep<LINETypes.SquareEventNotifiedLeaveSquareChat> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[11, 2, param.squareMemberMid],
+		[2, 3, param.sayGoodbye],
+		[12, 4, SquareMember(param.squareMember)],
+	];
+}
+export function SquareEventNotifiedDestroyMessage(
+	param?: PartialDeep<LINETypes.SquareEventNotifiedDestroyMessage> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[11, 3, param.messageId],
+		[11, 4, param.threadMid],
+	];
+}
+export function SquareEventNotifiedMarkAsRead(
+	param?: PartialDeep<LINETypes.SquareEventNotifiedMarkAsRead> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[11, 2, param.sMemberMid],
+		[11, 4, param.messageId],
+	];
+}
+export function SquareEventNotifiedUpdateSquareMemberProfile(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedUpdateSquareMemberProfile>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[12, 2, SquareMember(param.squareMember)],
+	];
+}
+export function SquareEventNotifiedUpdateSquare(
+	param?: PartialDeep<LINETypes.SquareEventNotifiedUpdateSquare> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareMid],
+		[12, 2, Square(param.square)],
+	];
+}
+export function SquareEventNotifiedUpdateSquareMember(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedUpdateSquareMember>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareMid],
+		[11, 2, param.squareMemberMid],
+		[12, 3, SquareMember(param.squareMember)],
+	];
+}
+export function SquareEventNotifiedUpdateSquareChat(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedUpdateSquareChat>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareMid],
+		[11, 2, param.squareChatMid],
+		[12, 3, SquareChat(param.squareChat)],
+	];
+}
+export function SquareChatMembershipState(
+	param: LINETypes.SquareChatMembershipState | undefined,
+): LINETypes.SquareChatMembershipState & number | undefined {
+	return typeof param === "string"
+		? LINETypes.enums.SquareChatMembershipState[param]
+		: param;
+}
+export function SquareChatMember(
+	param?: PartialDeep<LINETypes.SquareChatMember> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareMemberMid],
+		[11, 2, param.squareChatMid],
+		[10, 3, param.revision],
+		[8, 4, SquareChatMembershipState(param.membershipState)],
+		[2, 5, param.notificationForMessage],
+		[2, 6, param.notificationForNewMember],
+	];
+}
+export function SquareEventNotifiedUpdateSquareChatMember(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedUpdateSquareChatMember>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[12, 3, SquareChatMember(param.squareChatMember)],
+	];
+}
+export function SquareAuthority(
+	param?: PartialDeep<LINETypes.SquareAuthority> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareMid],
+		[8, 2, SquareMemberRole(param.updateSquareProfile)],
+		[8, 3, SquareMemberRole(param.inviteNewMember)],
+		[8, 4, SquareMemberRole(param.approveJoinRequest)],
+		[8, 5, SquareMemberRole(param.createPost)],
+		[8, 6, SquareMemberRole(param.createOpenSquareChat)],
+		[8, 7, SquareMemberRole(param.deleteSquareChatOrPost)],
+		[8, 8, SquareMemberRole(param.removeSquareMember)],
+		[8, 9, SquareMemberRole(param.grantRole)],
+		[8, 10, SquareMemberRole(param.enableInvitationTicket)],
+		[10, 11, param.revision],
+		[8, 12, SquareMemberRole(param.createSquareChatAnnouncement)],
+		[8, 13, SquareMemberRole(param.updateMaxChatMemberCount)],
+		[8, 14, SquareMemberRole(param.useReadonlyDefaultChat)],
+		[8, 15, SquareMemberRole(param.sendAllMention)],
+	];
+}
+export function SquareEventNotifiedUpdateSquareAuthority(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedUpdateSquareAuthority>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareMid],
+		[12, 2, SquareAuthority(param.squareAuthority)],
+	];
+}
+export function SquareStatus(
+	param?: PartialDeep<LINETypes.SquareStatus> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[8, 1, param.memberCount],
+		[8, 2, param.joinRequestCount],
+		[10, 3, param.lastJoinRequestAt],
+		[8, 4, param.openChatCount],
+	];
+}
+export function SquareEventNotifiedUpdateSquareStatus(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedUpdateSquareStatus>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareMid],
+		[12, 2, SquareStatus(param.squareStatus)],
+	];
+}
+export function NotifiedMessageType(
+	param: LINETypes.NotifiedMessageType | undefined,
+): LINETypes.NotifiedMessageType & number | undefined {
+	return typeof param === "string"
+		? LINETypes.enums.NotifiedMessageType[param]
+		: param;
+}
+export function SquareChatStatusWithoutMessage(
+	param?: PartialDeep<LINETypes.SquareChatStatusWithoutMessage> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[8, 1, param.memberCount],
+		[8, 2, param.unreadMessageCount],
+		[11, 3, param.markedAsReadMessageId],
+		[11, 4, param.mentionedMessageId],
+		[8, 5, NotifiedMessageType(param.notifiedMessageType)],
+		[15, 6, [8, param.badges]],
+	];
+}
+export function SquareEventNotifiedUpdateSquareChatStatus(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedUpdateSquareChatStatus>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[12, 2, SquareChatStatusWithoutMessage(param.statusWithoutMessage)],
+	];
+}
+export function SquareFeatureControlState(
+	param: LINETypes.SquareFeatureControlState | undefined,
+): LINETypes.SquareFeatureControlState & number | undefined {
+	return typeof param === "string"
+		? LINETypes.enums.SquareFeatureControlState[param]
+		: param;
+}
+export function SquareFeature(
+	param?: PartialDeep<LINETypes.SquareFeature> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[8, 1, SquareFeatureControlState(param.controlState)],
+		[8, 2, BooleanState(param.booleanValue)],
+	];
+}
+export function SquareFeatureSet(
+	param?: PartialDeep<LINETypes.SquareFeatureSet> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareMid],
+		[10, 2, param.revision],
+		[12, 11, SquareFeature(param.creatingSecretSquareChat)],
+		[12, 12, SquareFeature(param.invitingIntoOpenSquareChat)],
+		[12, 13, SquareFeature(param.creatingSquareChat)],
+		[12, 14, SquareFeature(param.readonlyDefaultChat)],
+		[12, 15, SquareFeature(param.showingAdvertisement)],
+		[12, 16, SquareFeature(param.delegateJoinToPlug)],
+		[12, 17, SquareFeature(param.delegateKickOutToPlug)],
+		[12, 18, SquareFeature(param.disableUpdateJoinMethod)],
+		[12, 19, SquareFeature(param.disableTransferAdmin)],
+		[12, 20, SquareFeature(param.creatingLiveTalk)],
+		[12, 21, SquareFeature(param.disableUpdateSearchable)],
+		[12, 22, SquareFeature(param.summarizingMessages)],
+		[12, 23, SquareFeature(param.creatingSquareThread)],
+		[12, 24, SquareFeature(param.enableSquareThread)],
+		[12, 25, SquareFeature(param.disableChangeRoleCoAdmin)],
+	];
+}
+export function NoteStatus(
+	param?: PartialDeep<LINETypes.NoteStatus> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[8, 1, param.noteCount],
+		[10, 2, param.latestCreatedAt],
+	];
+}
+export function SquareEventNotifiedCreateSquareMember(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedCreateSquareMember>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[12, 1, Square(param.square)],
+		[12, 2, SquareAuthority(param.squareAuthority)],
+		[12, 3, SquareStatus(param.squareStatus)],
+		[12, 4, SquareMember(param.squareMember)],
+		[12, 5, SquareFeatureSet(param.squareFeatureSet)],
+		[12, 6, NoteStatus(param.noteStatus)],
+	];
+}
+export function SquareChatStatus(
+	param?: PartialDeep<LINETypes.SquareChatStatus> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[12, 3, SquareMessage(param.lastMessage)],
+		[11, 4, param.senderDisplayName],
+		[12, 5, SquareChatStatusWithoutMessage(param.otherStatus)],
+	];
+}
+export function SquareChatFeatureControlState(
+	param: LINETypes.SquareChatFeatureControlState | undefined,
+): LINETypes.SquareChatFeatureControlState & number | undefined {
+	return typeof param === "string"
+		? LINETypes.enums.SquareChatFeatureControlState[param]
+		: param;
+}
+export function SquareChatFeature(
+	param?: PartialDeep<LINETypes.SquareChatFeature> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[8, 1, SquareChatFeatureControlState(param.controlState)],
+		[8, 2, BooleanState(param.booleanValue)],
+	];
+}
+export function SquareChatFeatureSet(
+	param?: PartialDeep<LINETypes.SquareChatFeatureSet> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[10, 2, param.revision],
+		[12, 11, SquareChatFeature(param.disableUpdateMaxChatMemberCount)],
+		[12, 12, SquareChatFeature(param.disableMarkAsReadEvent)],
+	];
+}
+export function SquareEventNotifiedCreateSquareChatMember(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedCreateSquareChatMember>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[12, 1, SquareChat(param.chat)],
+		[12, 2, SquareChatStatus(param.chatStatus)],
+		[12, 3, SquareChatMember(param.chatMember)],
+		[10, 4, param.joinedAt],
+		[12, 5, SquareMember(param.peerSquareMember)],
+		[12, 6, SquareChatFeatureSet(param.squareChatFeatureSet)],
+	];
+}
+export function SquareEventNotifiedUpdateSquareMemberRelation(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedUpdateSquareMemberRelation>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareMid],
+		[11, 2, param.myMemberMid],
+		[11, 3, param.targetSquareMemberMid],
+		[12, 4, SquareMemberRelation(param.squareMemberRelation)],
+	];
+}
+export function SquareEventNotifiedShutdownSquare(
+	param?: PartialDeep<LINETypes.SquareEventNotifiedShutdownSquare> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[12, 2, Square(param.square)],
+	];
+}
+export function SquareEventNotifiedKickoutFromSquare(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedKickoutFromSquare>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[15, 2, [12, param.kickees && param.kickees.map((e) => SquareMember(e))]],
+		[12, 3, SquareMember(param.kicker)],
+	];
+}
+export function SquareEventNotifiedDeleteSquareChat(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedDeleteSquareChat>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[12, 1, SquareChat(param.squareChat)],
+	];
+}
+export function SquareEventNotificationJoinRequest(
+	param?: PartialDeep<LINETypes.SquareEventNotificationJoinRequest> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareMid],
+		[11, 2, param.squareName],
+		[11, 3, param.requestMemberName],
+		[11, 4, param.profileImageObsHash],
+	];
+}
+export function SquareEventNotificationMemberUpdate(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotificationMemberUpdate>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareMid],
+		[11, 2, param.squareName],
+		[11, 3, param.profileImageObsHash],
+	];
+}
+export function SquareEventNotificationSquareDelete(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotificationSquareDelete>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareMid],
+		[11, 2, param.squareName],
+		[11, 3, param.profileImageObsHash],
+	];
+}
+export function SquareEventNotificationSquareChatDelete(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotificationSquareChatDelete>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[11, 2, param.squareChatName],
+		[11, 3, param.profileImageObsHash],
+	];
+}
+export function SquareEventNotificationMessage(
+	param?: PartialDeep<LINETypes.SquareEventNotificationMessage> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[12, 2, SquareMessage(param.squareMessage)],
+		[11, 3, param.senderDisplayName],
+		[8, 4, param.unreadCount],
+		[2, 5, param.requiredToFetchChatEvents],
+		[11, 6, param.mentionedMessageId],
+		[8, 7, NotifiedMessageType(param.notifiedMessageType)],
+		[8, 8, param.reqSeq],
+	];
+}
+export function SquareEventNotifiedUpdateSquareChatProfileName(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedUpdateSquareChatProfileName>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[12, 2, SquareMember(param.editor)],
+		[11, 3, param.updatedChatName],
+	];
+}
+export function SquareEventNotifiedUpdateSquareChatProfileImage(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedUpdateSquareChatProfileImage>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[12, 2, SquareMember(param.editor)],
+	];
+}
+export function SquareEventNotifiedUpdateSquareFeatureSet(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedUpdateSquareFeatureSet>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[12, 1, SquareFeatureSet(param.squareFeatureSet)],
+	];
+}
+export function SquareEventNotifiedAddBot(
+	param?: PartialDeep<LINETypes.SquareEventNotifiedAddBot> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[12, 2, SquareMember(param.squareMember)],
+		[11, 3, param.botMid],
+		[11, 4, param.botDisplayName],
+	];
+}
+export function SquareEventNotifiedRemoveBot(
+	param?: PartialDeep<LINETypes.SquareEventNotifiedRemoveBot> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[12, 2, SquareMember(param.squareMember)],
+		[11, 3, param.botMid],
+		[11, 4, param.botDisplayName],
+	];
+}
+export function SquareEventNotifiedUpdateSquareNoteStatus(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedUpdateSquareNoteStatus>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareMid],
+		[12, 2, NoteStatus(param.noteStatus)],
+	];
+}
+export function SquareEventNotifiedUpdateSquareChatAnnouncement(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedUpdateSquareChatAnnouncement>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[10, 2, param.announcementSeq],
+	];
+}
+export function SquareEventNotifiedUpdateSquareChatMaxMemberCount(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedUpdateSquareChatMaxMemberCount>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[8, 2, param.maxMemberCount],
+		[12, 3, SquareMember(param.editor)],
+	];
+}
+export function SquareEventNotificationPostAnnouncement(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotificationPostAnnouncement>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareMid],
+		[11, 2, param.squareName],
+		[11, 3, param.squareProfileImageObsHash],
+		[11, 4, param.actionUri],
+	];
+}
+export function NotificationPostType(
+	param: LINETypes.NotificationPostType | undefined,
+): LINETypes.NotificationPostType & number | undefined {
+	return typeof param === "string"
+		? LINETypes.enums.NotificationPostType[param]
+		: param;
+}
+export function SquareEventNotificationPost(
+	param?: PartialDeep<LINETypes.SquareEventNotificationPost> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareMid],
+		[8, 2, NotificationPostType(param.notificationPostType)],
+		[11, 3, param.thumbnailObsHash],
+		[11, 4, param.text],
+		[11, 5, param.actionUri],
+	];
+}
+export function SquareEventMutateMessage(
+	param?: PartialDeep<LINETypes.SquareEventMutateMessage> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[12, 2, SquareMessage(param.squareMessage)],
+		[8, 3, param.reqSeq],
+		[11, 4, param.senderDisplayName],
+		[11, 5, param.threadMid],
+	];
+}
+export function SquareEventNotificationNewChatMember(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotificationNewChatMember>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[11, 2, param.squareChatName],
+	];
+}
+export function SquareEventNotifiedUpdateReadonlyChat(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedUpdateReadonlyChat>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[2, 2, param.readonly],
+	];
+}
+export function MessageStatusContents(
+	param?: PartialDeep<LINETypes.MessageStatusContents> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [];
+}
+export function SquareMessageStatus(
+	param?: PartialDeep<LINETypes.SquareMessageStatus> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[11, 2, param.globalMessageId],
+		[8, 3, param.type],
+		[12, 4, MessageStatusContents(param.contents)],
+		[10, 5, param.publishedAt],
+		[11, 6, param.squareChatThreadMid],
+	];
+}
+export function SquareEventNotifiedUpdateMessageStatus(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedUpdateMessageStatus>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[11, 2, param.messageId],
+		[12, 3, SquareMessageStatus(param.messageStatus)],
+		[11, 4, param.threadMid],
+	];
+}
+export function SquareEventNotificationMessageReaction(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotificationMessageReaction>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[11, 2, param.messageId],
+		[11, 3, param.squareChatName],
+		[11, 4, param.reactorName],
+		[11, 5, param.thumbnailObsHash],
+		[11, 6, param.messageText],
+		[8, 7, MessageReactionType(param.type)],
+	];
+}
+export function UrlButton(
+	param?: PartialDeep<LINETypes.UrlButton> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.text],
+		[11, 2, param.url],
+	];
+}
+export function TextButton(
+	param?: PartialDeep<LINETypes.TextButton> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.text],
+	];
+}
+export function OkButton(
+	param?: PartialDeep<LINETypes.OkButton> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.text],
+	];
+}
+export function ButtonContent(
+	param?: PartialDeep<LINETypes.ButtonContent> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[12, 1, UrlButton(param.urlButton)],
+		[12, 2, TextButton(param.textButton)],
+		[12, 3, OkButton(param.okButton)],
+	];
+}
+export function SquareEventChatPopup(
+	param?: PartialDeep<LINETypes.SquareEventChatPopup> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[10, 2, param.popupId],
+		[11, 3, param.flexJson],
+		[12, 4, ButtonContent(param.button)],
+	];
+}
+export function SquareEventNotifiedSystemMessage(
+	param?: PartialDeep<LINETypes.SquareEventNotifiedSystemMessage> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[11, 2, param.text],
+		[11, 3, param.messageKey],
+	];
+}
+export function SquareEventNotifiedUpdateSquareChatFeatureSet(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedUpdateSquareChatFeatureSet>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[12, 1, SquareChatFeatureSet(param.squareChatFeatureSet)],
+	];
+}
+export function SquareEventNotifiedUpdateLiveTalkInfo(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedUpdateLiveTalkInfo>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[12, 2, LiveTalk(param.liveTalk)],
+		[2, 3, param.liveTalkOnAir],
+	];
+}
+export function SquareEventNotifiedUpdateLiveTalk(
+	param?: PartialDeep<LINETypes.SquareEventNotifiedUpdateLiveTalk> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[11, 2, param.sessionId],
+		[2, 3, param.liveTalkOnAir],
+	];
+}
+export function SquareEventNotificationLiveTalk(
+	param?: PartialDeep<LINETypes.SquareEventNotificationLiveTalk> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareChatMid],
+		[11, 2, param.liveTalkInvitationTicket],
+		[11, 3, param.squareChatName],
+		[11, 4, param.chatImageObsHash],
+	];
+}
+export function SquareEventNotificationThreadMessage(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotificationThreadMessage>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.threadMid],
+		[11, 2, param.chatMid],
+		[12, 3, SquareMessage(param.squareMessage)],
+		[11, 4, param.senderDisplayName],
+		[10, 5, param.unreadCount],
+		[10, 6, param.totalMessageCount],
+		[11, 7, param.threadRootMessageId],
+	];
+}
+export function SquareEventNotificationThreadMessageReaction(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotificationThreadMessageReaction>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.threadMid],
+		[11, 2, param.chatMid],
+		[11, 3, param.messageId],
+		[11, 4, param.squareChatName],
+		[11, 5, param.reactorName],
+		[11, 6, param.thumbnailObsHash],
+	];
+}
+export function SquareThreadState(
+	param: LINETypes.SquareThreadState | undefined,
+): LINETypes.SquareThreadState & number | undefined {
+	return typeof param === "string"
+		? LINETypes.enums.SquareThreadState[param]
+		: param;
+}
+export function SquareThread(
+	param?: PartialDeep<LINETypes.SquareThread> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.threadMid],
+		[11, 2, param.chatMid],
+		[11, 3, param.squareMid],
+		[11, 4, param.messageId],
+		[8, 5, SquareThreadState(param.state)],
+		[10, 6, param.expiresAt],
+		[10, 7, param.readOnlyAt],
+		[10, 8, param.revision],
+	];
+}
+export function SquareEventNotifiedUpdateThread(
+	param?: PartialDeep<LINETypes.SquareEventNotifiedUpdateThread> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[12, 1, SquareThread(param.squareThread)],
+	];
+}
+export function SquareEventNotifiedUpdateThreadStatus(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedUpdateThreadStatus>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.threadMid],
+		[11, 2, param.chatMid],
+		[10, 3, param.unreadCount],
+		[11, 4, param.markAsReadMessageId],
+	];
+}
+export function SquareThreadMembershipState(
+	param: LINETypes.SquareThreadMembershipState | undefined,
+): LINETypes.SquareThreadMembershipState & number | undefined {
+	return typeof param === "string"
+		? LINETypes.enums.SquareThreadMembershipState[param]
+		: param;
+}
+export function SquareThreadMember(
+	param?: PartialDeep<LINETypes.SquareThreadMember> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.squareMemberMid],
+		[11, 2, param.threadMid],
+		[11, 3, param.chatMid],
+		[10, 4, param.revision],
+		[8, 5, SquareThreadMembershipState(param.membershipState)],
+	];
+}
+export function SquareEventNotifiedUpdateThreadMember(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedUpdateThreadMember>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[12, 1, SquareThreadMember(param.threadMember)],
+		[12, 2, SquareThread(param.squareThread)],
+		[12, 3, SquareMessage(param.threadRootMessage)],
+		[10, 4, param.totalMessageCount],
+		[12, 5, SquareMessage(param.lastMessage)],
+		[11, 6, param.lastMessageSenderDisplayName],
+	];
+}
+export function SquareEventNotifiedUpdateThreadRootMessage(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedUpdateThreadRootMessage>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[12, 1, SquareThread(param.squareThread)],
+	];
+}
+export function SquareEventNotifiedUpdateThreadRootMessageStatus(
+	param?:
+		| PartialDeep<LINETypes.SquareEventNotifiedUpdateThreadRootMessageStatus>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.chatMid],
+		[11, 2, param.threadMid],
+		[11, 3, param.threadRootMessageId],
+		[10, 4, param.totalMessageCount],
+		[10, 5, param.lastMessageAt],
+	];
+}
+export function SquareEventPayload(
+	param?: PartialDeep<LINETypes.SquareEventPayload> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[12, 1, SquareEventReceiveMessage(param.receiveMessage)],
+		[12, 2, SquareEventSendMessage(param.sendMessage)],
+		[12, 3, SquareEventNotifiedJoinSquareChat(param.notifiedJoinSquareChat)],
+		[
+			12,
+			4,
+			SquareEventNotifiedInviteIntoSquareChat(
+				param.notifiedInviteIntoSquareChat,
+			),
+		],
+		[12, 5, SquareEventNotifiedLeaveSquareChat(param.notifiedLeaveSquareChat)],
+		[12, 6, SquareEventNotifiedDestroyMessage(param.notifiedDestroyMessage)],
+		[12, 7, SquareEventNotifiedMarkAsRead(param.notifiedMarkAsRead)],
+		[
+			12,
+			8,
+			SquareEventNotifiedUpdateSquareMemberProfile(
+				param.notifiedUpdateSquareMemberProfile,
+			),
+		],
+		[12, 9, SquareEventNotifiedUpdateSquare(param.notifiedUpdateSquare)],
+		[
+			12,
+			10,
+			SquareEventNotifiedUpdateSquareMember(param.notifiedUpdateSquareMember),
+		],
+		[
+			12,
+			11,
+			SquareEventNotifiedUpdateSquareChat(param.notifiedUpdateSquareChat),
+		],
+		[
+			12,
+			12,
+			SquareEventNotifiedUpdateSquareChatMember(
+				param.notifiedUpdateSquareChatMember,
+			),
+		],
+		[
+			12,
+			13,
+			SquareEventNotifiedUpdateSquareAuthority(
+				param.notifiedUpdateSquareAuthority,
+			),
+		],
+		[
+			12,
+			14,
+			SquareEventNotifiedUpdateSquareStatus(param.notifiedUpdateSquareStatus),
+		],
+		[
+			12,
+			15,
+			SquareEventNotifiedUpdateSquareChatStatus(
+				param.notifiedUpdateSquareChatStatus,
+			),
+		],
+		[
+			12,
+			16,
+			SquareEventNotifiedCreateSquareMember(param.notifiedCreateSquareMember),
+		],
+		[
+			12,
+			17,
+			SquareEventNotifiedCreateSquareChatMember(
+				param.notifiedCreateSquareChatMember,
+			),
+		],
+		[
+			12,
+			18,
+			SquareEventNotifiedUpdateSquareMemberRelation(
+				param.notifiedUpdateSquareMemberRelation,
+			),
+		],
+		[12, 19, SquareEventNotifiedShutdownSquare(param.notifiedShutdownSquare)],
+		[
+			12,
+			20,
+			SquareEventNotifiedKickoutFromSquare(param.notifiedKickoutFromSquare),
+		],
+		[
+			12,
+			21,
+			SquareEventNotifiedDeleteSquareChat(param.notifiedDeleteSquareChat),
+		],
+		[12, 22, SquareEventNotificationJoinRequest(param.notificationJoinRequest)],
+		[12, 23, SquareEventNotificationMemberUpdate(param.notificationJoined)],
+		[
+			12,
+			24,
+			SquareEventNotificationMemberUpdate(param.notificationPromoteCoadmin),
+		],
+		[
+			12,
+			25,
+			SquareEventNotificationMemberUpdate(param.notificationPromoteAdmin),
+		],
+		[
+			12,
+			26,
+			SquareEventNotificationMemberUpdate(param.notificationDemoteMember),
+		],
+		[12, 27, SquareEventNotificationMemberUpdate(param.notificationKickedOut)],
+		[
+			12,
+			28,
+			SquareEventNotificationSquareDelete(param.notificationSquareDelete),
+		],
+		[
+			12,
+			29,
+			SquareEventNotificationSquareChatDelete(
+				param.notificationSquareChatDelete,
+			),
+		],
+		[12, 30, SquareEventNotificationMessage(param.notificationMessage)],
+		[
+			12,
+			31,
+			SquareEventNotifiedUpdateSquareChatProfileName(
+				param.notifiedUpdateSquareChatProfileName,
+			),
+		],
+		[
+			12,
+			32,
+			SquareEventNotifiedUpdateSquareChatProfileImage(
+				param.notifiedUpdateSquareChatProfileImage,
+			),
+		],
+		[
+			12,
+			33,
+			SquareEventNotifiedUpdateSquareFeatureSet(
+				param.notifiedUpdateSquareFeatureSet,
+			),
+		],
+		[12, 34, SquareEventNotifiedAddBot(param.notifiedAddBot)],
+		[12, 35, SquareEventNotifiedRemoveBot(param.notifiedRemoveBot)],
+		[
+			12,
+			36,
+			SquareEventNotifiedUpdateSquareNoteStatus(
+				param.notifiedUpdateSquareNoteStatus,
+			),
+		],
+		[
+			12,
+			37,
+			SquareEventNotifiedUpdateSquareChatAnnouncement(
+				param.notifiedUpdateSquareChatAnnouncement,
+			),
+		],
+		[
+			12,
+			38,
+			SquareEventNotifiedUpdateSquareChatMaxMemberCount(
+				param.notifiedUpdateSquareChatMaxMemberCount,
+			),
+		],
+		[
+			12,
+			39,
+			SquareEventNotificationPostAnnouncement(
+				param.notificationPostAnnouncement,
+			),
+		],
+		[12, 40, SquareEventNotificationPost(param.notificationPost)],
+		[12, 41, SquareEventMutateMessage(param.mutateMessage)],
+		[
+			12,
+			42,
+			SquareEventNotificationNewChatMember(param.notificationNewChatMember),
+		],
+		[
+			12,
+			43,
+			SquareEventNotifiedUpdateReadonlyChat(param.notifiedUpdateReadonlyChat),
+		],
+		[
+			12,
+			44,
+			SquareEventNotifiedUpdateMessageStatus(param.notifiedUpdateMessageStatus),
+		],
+		[
+			12,
+			45,
+			SquareEventNotificationMessageReaction(param.notificationMessageReaction),
+		],
+		[12, 46, SquareEventChatPopup(param.chatPopup)],
+		[12, 47, SquareEventNotifiedSystemMessage(param.notifiedSystemMessage)],
+		[
+			12,
+			48,
+			SquareEventNotifiedUpdateSquareChatFeatureSet(
+				param.notifiedUpdateSquareChatFeatureSet,
+			),
+		],
+		[
+			12,
+			49,
+			SquareEventNotifiedUpdateLiveTalkInfo(param.notifiedUpdateLiveTalkInfo),
+		],
+		[12, 50, SquareEventNotifiedUpdateLiveTalk(param.notifiedUpdateLiveTalk)],
+		[12, 51, SquareEventNotificationLiveTalk(param.notificationLiveTalk)],
+		[
+			12,
+			52,
+			SquareEventNotificationThreadMessage(param.notificationThreadMessage),
+		],
+		[
+			12,
+			53,
+			SquareEventNotificationThreadMessageReaction(
+				param.notificationThreadMessageReaction,
+			),
+		],
+		[12, 54, SquareEventNotifiedUpdateThread(param.notifiedUpdateThread)],
+		[
+			12,
+			55,
+			SquareEventNotifiedUpdateThreadStatus(param.notifiedUpdateThreadStatus),
+		],
+		[
+			12,
+			56,
+			SquareEventNotifiedUpdateThreadMember(param.notifiedUpdateThreadMember),
+		],
+		[
+			12,
+			57,
+			SquareEventNotifiedUpdateThreadRootMessage(
+				param.notifiedUpdateThreadRootMessage,
+			),
+		],
+		[
+			12,
+			58,
+			SquareEventNotifiedUpdateThreadRootMessageStatus(
+				param.notifiedUpdateThreadRootMessageStatus,
+			),
+		],
+		,
+	];
+}
+export function SquareEventStatus(
+	param: LINETypes.SquareEventStatus | undefined,
+): LINETypes.SquareEventStatus & number | undefined {
+	return typeof param === "string"
+		? LINETypes.enums.SquareEventStatus[param]
+		: param;
+}
+export function SquareEvent(
+	param?: PartialDeep<LINETypes.SquareEvent> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[10, 2, param.createdTime],
+		[8, 3, SquareEventType(param.type)],
+		[12, 4, SquareEventPayload(param.payload)],
+		[11, 5, param.syncToken],
+		[8, 6, SquareEventStatus(param.eventStatus)],
+	];
+}
+export function FetchMyEventsResponse(
+	param?: PartialDeep<LINETypes.FetchMyEventsResponse> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[12, 1, SubscriptionState(param.subscription)],
+		[15, 2, [12, param.events && param.events.map((e) => SquareEvent(e))]],
+		[11, 3, param.syncToken],
 		[11, 4, param.continuationToken],
 	];
 }
@@ -1180,13 +2519,6 @@ export function GetJoinedSquaresRequest(
 		[11, 2, param.continuationToken],
 		[8, 3, param.limit],
 	];
-}
-export function MessageReactionType(
-	param: LINETypes.MessageReactionType | undefined,
-): LINETypes.MessageReactionType & number | undefined {
-	return typeof param === "string"
-		? LINETypes.enums.MessageReactionType[param]
-		: param;
 }
 export function GetMessageReactionsRequest(
 	param?: PartialDeep<LINETypes.GetMessageReactionsRequest> | undefined,
@@ -1304,13 +2636,6 @@ export function GetSquareMemberRelationRequest(
 		[11, 2, param.squareMid],
 		[11, 3, param.targetSquareMemberMid],
 	];
-}
-export function SquareMemberRelationState(
-	param: LINETypes.SquareMemberRelationState | undefined,
-): LINETypes.SquareMemberRelationState & number | undefined {
-	return typeof param === "string"
-		? LINETypes.enums.SquareMemberRelationState[param]
-		: param;
 }
 export function GetSquareMemberRelationsRequest(
 	param?: PartialDeep<LINETypes.GetSquareMemberRelationsRequest> | undefined,
@@ -1654,140 +2979,6 @@ export function SearchSquaresRequest(
 		[8, 4, param.limit],
 	];
 }
-export function MIDType(
-	param: LINETypes.MIDType | undefined,
-): LINETypes.MIDType & number | undefined {
-	return typeof param === "string" ? LINETypes.enums.MIDType[param] : param;
-}
-export function Pb1_D6(
-	param: LINETypes.Pb1_D6 | undefined,
-): LINETypes.Pb1_D6 & number | undefined {
-	return typeof param === "string" ? LINETypes.enums.Pb1_D6[param] : param;
-}
-export function Pb1_EnumC13050k(
-	param: LINETypes.Pb1_EnumC13050k | undefined,
-): LINETypes.Pb1_EnumC13050k & number | undefined {
-	return typeof param === "string"
-		? LINETypes.enums.Pb1_EnumC13050k[param]
-		: param;
-}
-export function GeolocationAccuracy(
-	param?: PartialDeep<LINETypes.GeolocationAccuracy> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[4, 1, param.radiusMeters],
-		[4, 2, param.radiusConfidence],
-		[4, 3, param.altitudeAccuracy],
-		[4, 4, param.velocityAccuracy],
-		[4, 5, param.bearingAccuracy],
-		[8, 6, Pb1_EnumC13050k(param.accuracyMode)],
-	];
-}
-export function Location(
-	param?: PartialDeep<LINETypes.Location> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[11, 1, param.title],
-		[11, 2, param.address],
-		[4, 3, param.latitude],
-		[4, 4, param.longitude],
-		[11, 5, param.phone],
-		[11, 6, param.categoryId],
-		[8, 7, Pb1_D6(param.provider)],
-		[12, 8, GeolocationAccuracy(param.accuracy)],
-		[4, 9, param.altitudeMeters],
-	];
-}
-export function ContentType(
-	param: LINETypes.ContentType | undefined,
-): LINETypes.ContentType & number | undefined {
-	return typeof param === "string" ? LINETypes.enums.ContentType[param] : param;
-}
-export function Pb1_EnumC13015h6(
-	param: LINETypes.Pb1_EnumC13015h6 | undefined,
-): LINETypes.Pb1_EnumC13015h6 & number | undefined {
-	return typeof param === "string"
-		? LINETypes.enums.Pb1_EnumC13015h6[param]
-		: param;
-}
-export function Pb1_E7(
-	param: LINETypes.Pb1_E7 | undefined,
-): LINETypes.Pb1_E7 & number | undefined {
-	return typeof param === "string" ? LINETypes.enums.Pb1_E7[param] : param;
-}
-export function Pb1_B(
-	param: LINETypes.Pb1_B | undefined,
-): LINETypes.Pb1_B & number | undefined {
-	return typeof param === "string" ? LINETypes.enums.Pb1_B[param] : param;
-}
-export function ReactionType(
-	param?: PartialDeep<LINETypes.ReactionType> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[8, 1, MessageReactionType(param.predefinedReactionType)],
-	];
-}
-export function Reaction(
-	param?: PartialDeep<LINETypes.Reaction> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[11, 1, param.fromUserMid],
-		[10, 2, param.atMillis],
-		[12, 3, ReactionType(param.reactionType)],
-	];
-}
-export function Message(
-	param?: PartialDeep<LINETypes.Message> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[11, 1, param.from],
-		[11, 2, param.to],
-		[8, 3, MIDType(param.toType)],
-		[11, 4, param.id],
-		[10, 5, param.createdTime],
-		[10, 6, param.deliveredTime],
-		[11, 10, param.text],
-		[12, 11, Location(param.location)],
-		[2, 14, param.hasContent],
-		[8, 15, ContentType(param.contentType)],
-		[11, 17, param.contentPreview],
-		[13, 18, [11, 11, param.contentMetadata]],
-		[3, 19, param.sessionId],
-		[15, 20, [11, param.chunks]],
-		[11, 21, param.relatedMessageId],
-		[8, 22, Pb1_EnumC13015h6(param.messageRelationType)],
-		[8, 23, param.readCount],
-		[8, 24, Pb1_E7(param.relatedMessageServiceCode)],
-		[8, 25, Pb1_B(param.appExtensionType)],
-		[15, 27, [12, param.reactions && param.reactions.map((e) => Reaction(e))]],
-	];
-}
-export function SquareMessageState(
-	param: LINETypes.SquareMessageState | undefined,
-): LINETypes.SquareMessageState & number | undefined {
-	return typeof param === "string"
-		? LINETypes.enums.SquareMessageState[param]
-		: param;
-}
-export function SquareMessageThreadInfo(
-	param?: PartialDeep<LINETypes.SquareMessageThreadInfo> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[11, 1, param.chatThreadMid],
-		[2, 2, param.threadRoot],
-	];
-}
-export function SquareMessage(
-	param?: PartialDeep<LINETypes.SquareMessage> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[12, 1, Message(param.message)],
-		[8, 3, MIDType(param.fromType)],
-		[10, 4, param.squareMessageRevision],
-		[8, 5, SquareMessageState(param.state)],
-		[12, 6, SquareMessageThreadInfo(param.threadInfo)],
-	];
-}
 export function SendMessageRequest(
 	param?: PartialDeep<LINETypes.SendMessageRequest> | undefined,
 ): NestedArray {
@@ -1838,27 +3029,6 @@ export function SquareAuthorityAttribute(
 		? LINETypes.enums.SquareAuthorityAttribute[param]
 		: param;
 }
-export function SquareAuthority(
-	param?: PartialDeep<LINETypes.SquareAuthority> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[11, 1, param.squareMid],
-		[8, 2, SquareMemberRole(param.updateSquareProfile)],
-		[8, 3, SquareMemberRole(param.inviteNewMember)],
-		[8, 4, SquareMemberRole(param.approveJoinRequest)],
-		[8, 5, SquareMemberRole(param.createPost)],
-		[8, 6, SquareMemberRole(param.createOpenSquareChat)],
-		[8, 7, SquareMemberRole(param.deleteSquareChatOrPost)],
-		[8, 8, SquareMemberRole(param.removeSquareMember)],
-		[8, 9, SquareMemberRole(param.grantRole)],
-		[8, 10, SquareMemberRole(param.enableInvitationTicket)],
-		[10, 11, param.revision],
-		[8, 12, SquareMemberRole(param.createSquareChatAnnouncement)],
-		[8, 13, SquareMemberRole(param.updateMaxChatMemberCount)],
-		[8, 14, SquareMemberRole(param.useReadonlyDefaultChat)],
-		[8, 15, SquareMemberRole(param.sendAllMention)],
-	];
-}
 export function UpdateSquareAuthorityRequest(
 	param?: PartialDeep<LINETypes.UpdateSquareAuthorityRequest> | undefined,
 ): NestedArray {
@@ -1877,25 +3047,6 @@ export function SquareChatMemberAttribute(
 	return typeof param === "string"
 		? LINETypes.enums.SquareChatMemberAttribute[param]
 		: param;
-}
-export function SquareChatMembershipState(
-	param: LINETypes.SquareChatMembershipState | undefined,
-): LINETypes.SquareChatMembershipState & number | undefined {
-	return typeof param === "string"
-		? LINETypes.enums.SquareChatMembershipState[param]
-		: param;
-}
-export function SquareChatMember(
-	param?: PartialDeep<LINETypes.SquareChatMember> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[11, 1, param.squareMemberMid],
-		[11, 2, param.squareChatMid],
-		[10, 3, param.revision],
-		[8, 4, SquareChatMembershipState(param.membershipState)],
-		[2, 5, param.notificationForMessage],
-		[2, 6, param.notificationForNewMember],
-	];
 }
 export function UpdateSquareChatMemberRequest(
 	param?: PartialDeep<LINETypes.UpdateSquareChatMemberRequest> | undefined,
@@ -1935,44 +3086,6 @@ export function SquareFeatureSetAttribute(
 		? LINETypes.enums.SquareFeatureSetAttribute[param]
 		: param;
 }
-export function SquareFeatureControlState(
-	param: LINETypes.SquareFeatureControlState | undefined,
-): LINETypes.SquareFeatureControlState & number | undefined {
-	return typeof param === "string"
-		? LINETypes.enums.SquareFeatureControlState[param]
-		: param;
-}
-export function SquareFeature(
-	param?: PartialDeep<LINETypes.SquareFeature> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[8, 1, SquareFeatureControlState(param.controlState)],
-		[8, 2, BooleanState(param.booleanValue)],
-	];
-}
-export function SquareFeatureSet(
-	param?: PartialDeep<LINETypes.SquareFeatureSet> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[11, 1, param.squareMid],
-		[10, 2, param.revision],
-		[12, 11, SquareFeature(param.creatingSecretSquareChat)],
-		[12, 12, SquareFeature(param.invitingIntoOpenSquareChat)],
-		[12, 13, SquareFeature(param.creatingSquareChat)],
-		[12, 14, SquareFeature(param.readonlyDefaultChat)],
-		[12, 15, SquareFeature(param.showingAdvertisement)],
-		[12, 16, SquareFeature(param.delegateJoinToPlug)],
-		[12, 17, SquareFeature(param.delegateKickOutToPlug)],
-		[12, 18, SquareFeature(param.disableUpdateJoinMethod)],
-		[12, 19, SquareFeature(param.disableTransferAdmin)],
-		[12, 20, SquareFeature(param.creatingLiveTalk)],
-		[12, 21, SquareFeature(param.disableUpdateSearchable)],
-		[12, 22, SquareFeature(param.summarizingMessages)],
-		[12, 23, SquareFeature(param.creatingSquareThread)],
-		[12, 24, SquareFeature(param.enableSquareThread)],
-		[12, 25, SquareFeature(param.disableChangeRoleCoAdmin)],
-	];
-}
 export function UpdateSquareFeatureSetRequest(
 	param?: PartialDeep<LINETypes.UpdateSquareFeatureSetRequest> | undefined,
 ): NestedArray {
@@ -1983,14 +3096,6 @@ export function UpdateSquareFeatureSetRequest(
 			param.updateAttributes.map((e) => SquareFeatureSetAttribute(e)),
 		]],
 		[12, 3, SquareFeatureSet(param.squareFeatureSet)],
-	];
-}
-export function SquareMemberRelation(
-	param?: PartialDeep<LINETypes.SquareMemberRelation> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[8, 1, SquareMemberRelationState(param.state)],
-		[10, 2, param.revision],
 	];
 }
 export function UpdateSquareMemberRelationRequest(
@@ -2173,14 +3278,6 @@ export function CanCreateCombinationStickerRequest(
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
 		[14, 1, [11, param.packageIds]],
-	];
-}
-export function Locale(
-	param?: PartialDeep<LINETypes.Locale> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[11, 1, param.language],
-		[11, 2, param.country],
 	];
 }
 export function CancelChatInvitationRequest(
@@ -2633,16 +3730,6 @@ export function AutoSuggestionShowcaseRequest(
 		[8, 2, Ob1_a2(param.suggestionType)],
 	];
 }
-export function NZ0_C12208u(
-	param?: PartialDeep<LINETypes.NZ0_C12208u> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [];
-}
-export function NZ0_C12214w(
-	param?: PartialDeep<LINETypes.NZ0_C12214w> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [];
-}
 export function ZQ0_b(
 	param?: PartialDeep<LINETypes.ZQ0_b> | undefined,
 ): NestedArray {
@@ -2739,6 +3826,35 @@ export function GetBuddyLiveRequest(
 		[11, 1, param.mid],
 	];
 }
+export function Pb1_C12980f(
+	param?: PartialDeep<LINETypes.Pb1_C12980f> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [];
+}
+export function ErrorCode(
+	param: LINETypes.ErrorCode | undefined,
+): LINETypes.ErrorCode & number | undefined {
+	return typeof param === "string" ? LINETypes.enums.ErrorCode[param] : param;
+}
+export function TalkException(
+	param?: PartialDeep<LINETypes.TalkException> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[8, 1, ErrorCode(param.code)],
+		[11, 2, param.reason],
+		[13, 3, [11, 11, param.parameterMap]],
+	];
+}
+export function acceptChatInvitationByTicket_result(
+	param?:
+		| PartialDeep<LINETypes.acceptChatInvitationByTicket_result>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[12, 0, Pb1_C12980f(param.success)],
+		[12, 1, TalkException(param.e)],
+	];
+}
 export function GetBuddyStatusBarV2Request(
 	param?: PartialDeep<LINETypes.GetBuddyStatusBarV2Request> | undefined,
 ): NestedArray {
@@ -2788,14 +3904,6 @@ export function Pb1_Q2(
 ): LINETypes.Pb1_Q2 & number | undefined {
 	return typeof param === "string" ? LINETypes.enums.Pb1_Q2[param] : param;
 }
-export function GetChatappRequest(
-	param?: PartialDeep<LINETypes.GetChatappRequest> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[11, 1, param.chatappId],
-		[11, 2, param.language],
-	];
-}
 export function GetChatsRequest(
 	param?: PartialDeep<LINETypes.GetChatsRequest> | undefined,
 ): NestedArray {
@@ -2839,6 +3947,30 @@ export function GetCoinHistoryRequest(
 		[11, 4, param.searchEndDate],
 		[8, 5, param.offset],
 		[8, 6, param.limit],
+	];
+}
+export function Configurations(
+	param?: PartialDeep<LINETypes.Configurations> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[10, 1, param.revision],
+		[13, 2, [11, 11, param.configMap]],
+	];
+}
+export function ChannelErrorCode(
+	param: LINETypes.ChannelErrorCode | undefined,
+): LINETypes.ChannelErrorCode & number | undefined {
+	return typeof param === "string"
+		? LINETypes.enums.ChannelErrorCode[param]
+		: param;
+}
+export function ChannelException(
+	param?: PartialDeep<LINETypes.ChannelException> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[8, 1, ChannelErrorCode(param.code)],
+		[11, 2, param.reason],
+		[13, 3, [11, 11, param.parameterMap]],
 	];
 }
 export function GetContactCalendarEventTarget(
@@ -2988,13 +4120,6 @@ export function Pb1_F4(
 ): LINETypes.Pb1_F4 & number | undefined {
 	return typeof param === "string" ? LINETypes.enums.Pb1_F4[param] : param;
 }
-export function GetGnbBadgeStatusRequest(
-	param?: PartialDeep<LINETypes.GetGnbBadgeStatusRequest> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[11, 1, param.uenRevision],
-	];
-}
 export function GetGroupCallUrlInfoRequest(
 	param?: PartialDeep<LINETypes.GetGroupCallUrlInfoRequest> | undefined,
 ): NestedArray {
@@ -3089,25 +4214,7 @@ export function MessageBoxListRequest(
 		[2, 5, param.withUnreadCount],
 		[8, 6, param.lastMessagesPerMessageBoxCount],
 		[2, 7, param.unreadOnly],
-	];
-}
-export function GetModuleLayoutV4Request(
-	param?: PartialDeep<LINETypes.GetModuleLayoutV4Request> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[11, 2, param.etag],
-	];
-}
-export function NZ0_G(
-	param?: PartialDeep<LINETypes.NZ0_G> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[11, 1, param.id],
-		[11, 2, param.etag],
-		[11, 3, param.recommendedModelId],
-		[11, 4, param.deviceAdId],
-		[2, 5, param.agreedWithTargetingAdByMid],
-		[11, 6, param.deviceId],
+		[10, 8, param.lastOpRevision],
 	];
 }
 export function NZ0_E(
@@ -3147,30 +4254,11 @@ export function GetModulesRequestV3(
 		[2, 4, param.agreedWithTargetingAdByMid],
 	];
 }
-export function GetModulesV4WithStatusRequest(
-	param?: PartialDeep<LINETypes.GetModulesV4WithStatusRequest> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[11, 1, param.etag],
-		[11, 2, param.subTabId],
-		[11, 3, param.deviceAdId],
-		[2, 4, param.agreedWithTargetingAdByMid],
-		[11, 5, param.deviceId],
-	];
-}
 export function GetMyAssetInformationV2Request(
 	param?: PartialDeep<LINETypes.GetMyAssetInformationV2Request> | undefined,
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
 		[2, 1, param.refresh],
-	];
-}
-export function GetMyChatappsRequest(
-	param?: PartialDeep<LINETypes.GetMyChatappsRequest> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[11, 1, param.language],
-		[11, 2, param.continuationToken],
 	];
 }
 export function GetMyDashboardRequest(
@@ -3283,6 +4371,7 @@ export function GetPreviousMessagesV2Request(
 		[8, 3, param.messagesCount],
 		[2, 4, param.withReadCount],
 		[2, 5, param.receivedOnly],
+		[10, 6, param.lastOpRevision],
 	];
 }
 export function GetPublishedMembershipsRequest(
@@ -3299,10 +4388,46 @@ export function PurchaseEnabledRequest(
 		[11, 1, param.uniqueKey],
 	];
 }
-export function NZ0_S(
-	param?: PartialDeep<LINETypes.NZ0_S> | undefined,
+export function Pb1_G4(
+	param: LINETypes.Pb1_G4 | undefined,
+): LINETypes.Pb1_G4 & number | undefined {
+	return typeof param === "string" ? LINETypes.enums.Pb1_G4[param] : param;
+}
+export function FriendRequest(
+	param?: PartialDeep<LINETypes.FriendRequest> | undefined,
 ): NestedArray {
-	return typeof param === "undefined" ? [] : [];
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.eMid],
+		[11, 2, param.mid],
+		[8, 3, Pb1_F4(param.direction)],
+		[8, 4, Pb1_G4(param.method)],
+		[11, 5, param.param],
+		[10, 6, param.timestamp],
+		[10, 7, param.seqId],
+		[11, 10, param.displayName],
+		[11, 11, param.picturePath],
+		[11, 12, param.pictureStatus],
+	];
+}
+export function FriendRequestsInfo(
+	param?: PartialDeep<LINETypes.FriendRequestsInfo> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[8, 1, param.totalIncomingCount],
+		[8, 2, param.totalOutgoingCount],
+		[15, 3, [
+			12,
+			param.recentIncomings &&
+			param.recentIncomings.map((e) => FriendRequest(e)),
+		]],
+		[15, 4, [
+			12,
+			param.recentOutgoings &&
+			param.recentOutgoings.map((e) => FriendRequest(e)),
+		]],
+		[8, 5, param.totalIncomingLimit],
+		[8, 6, param.totalOutgoingLimit],
+	];
 }
 export function GetRecommendationDetailTarget(
 	param?: PartialDeep<LINETypes.GetRecommendationDetailTarget> | undefined,
@@ -3323,14 +4448,241 @@ export function GetRecommendationDetailsRequest(
 		[8, 2, Pb1_V7(param.syncReason)],
 	];
 }
-export function ConfigurationsParams(
-	param?: PartialDeep<LINETypes.ConfigurationsParams> | undefined,
+export function AvatarProfile(
+	param?: PartialDeep<LINETypes.AvatarProfile> | undefined,
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
-		[11, 1, param.regionOfUsim],
-		[11, 2, param.regionOfTelephone],
-		[11, 3, param.regionOfLocale],
-		[11, 4, param.carrier],
+		[11, 1, param.version],
+		[10, 2, param.updatedMillis],
+		[11, 3, param.thumbnail],
+		[2, 4, param.usablePublicly],
+	];
+}
+export function Pb1_N6(
+	param: LINETypes.Pb1_N6 | undefined,
+): LINETypes.Pb1_N6 & number | undefined {
+	return typeof param === "string" ? LINETypes.enums.Pb1_N6[param] : param;
+}
+export function Pb1_O6(
+	param: LINETypes.Pb1_O6 | undefined,
+): LINETypes.Pb1_O6 & number | undefined {
+	return typeof param === "string" ? LINETypes.enums.Pb1_O6[param] : param;
+}
+export function Profile(
+	param?: PartialDeep<LINETypes.Profile> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.mid],
+		[11, 3, param.userid],
+		[11, 10, param.phone],
+		[11, 11, param.email],
+		[11, 12, param.regionCode],
+		[11, 20, param.displayName],
+		[11, 21, param.phoneticName],
+		[11, 22, param.pictureStatus],
+		[11, 23, param.thumbnailUrl],
+		[11, 24, param.statusMessage],
+		[2, 31, param.allowSearchByUserid],
+		[2, 32, param.allowSearchByEmail],
+		[11, 33, param.picturePath],
+		[11, 34, param.musicProfile],
+		[11, 35, param.videoProfile],
+		[13, 36, [11, 11, param.statusMessageContentMetadata]],
+		[12, 37, AvatarProfile(param.avatarProfile)],
+		[2, 38, param.nftProfile],
+		[8, 39, Pb1_N6(param.pictureSource)],
+		[11, 40, param.profileId],
+		[8, 41, Pb1_O6(param.profileType)],
+		[10, 42, param.createdTimeMillis],
+	];
+}
+export function RepairTriggerProfileElement(
+	param?: PartialDeep<LINETypes.RepairTriggerProfileElement> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[12, 1, Profile(param.serverProfile)],
+		[8, 2, param.nextCallIntervalMinutes],
+		[15, 3, [
+			12,
+			param.serverMultiProfiles &&
+			param.serverMultiProfiles.map((e) => Profile(e)),
+		]],
+	];
+}
+export function EmailConfirmationStatus(
+	param: LINETypes.EmailConfirmationStatus | undefined,
+): LINETypes.EmailConfirmationStatus & number | undefined {
+	return typeof param === "string"
+		? LINETypes.enums.EmailConfirmationStatus[param]
+		: param;
+}
+export function AccountMigrationPincodeType(
+	param: LINETypes.AccountMigrationPincodeType | undefined,
+): LINETypes.AccountMigrationPincodeType & number | undefined {
+	return typeof param === "string"
+		? LINETypes.enums.AccountMigrationPincodeType[param]
+		: param;
+}
+export function Pb1_I6(
+	param: LINETypes.Pb1_I6 | undefined,
+): LINETypes.Pb1_I6 & number | undefined {
+	return typeof param === "string" ? LINETypes.enums.Pb1_I6[param] : param;
+}
+export function Pb1_S7(
+	param: LINETypes.Pb1_S7 | undefined,
+): LINETypes.Pb1_S7 & number | undefined {
+	return typeof param === "string" ? LINETypes.enums.Pb1_S7[param] : param;
+}
+export function Pb1_M6(
+	param: LINETypes.Pb1_M6 | undefined,
+): LINETypes.Pb1_M6 & number | undefined {
+	return typeof param === "string" ? LINETypes.enums.Pb1_M6[param] : param;
+}
+export function Pb1_gd(
+	param: LINETypes.Pb1_gd | undefined,
+): LINETypes.Pb1_gd & number | undefined {
+	return typeof param === "string" ? LINETypes.enums.Pb1_gd[param] : param;
+}
+export function Settings(
+	param?: PartialDeep<LINETypes.Settings> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[2, 10, param.notificationEnable],
+		[10, 11, param.notificationMuteExpiration],
+		[2, 12, param.notificationNewMessage],
+		[2, 13, param.notificationGroupInvitation],
+		[2, 14, param.notificationShowMessage],
+		[2, 15, param.notificationIncomingCall],
+		[11, 16, param.notificationSoundMessage],
+		[11, 17, param.notificationSoundGroup],
+		[2, 18, param.notificationDisabledWithSub],
+		[2, 19, param.notificationPayment],
+		[2, 20, param.privacySyncContacts],
+		[2, 21, param.privacySearchByPhoneNumber],
+		[2, 22, param.privacySearchByUserid],
+		[2, 23, param.privacySearchByEmail],
+		[2, 24, param.privacyAllowSecondaryDeviceLogin],
+		[2, 25, param.privacyProfileImagePostToMyhome],
+		[2, 26, param.privacyReceiveMessagesFromNotFriend],
+		[2, 27, param.privacyAgreeUseLineCoinToPaidCall],
+		[2, 28, param.privacyAgreeUsePaidCall],
+		[2, 29, param.privacyAllowFriendRequest],
+		[11, 30, param.contactMyTicket],
+		[8, 40, IdentityProvider(param.identityProvider)],
+		[11, 41, param.identityIdentifier],
+		[13, 42, [8, 11, param.snsAccounts]],
+		[2, 43, param.phoneRegistration],
+		[8, 44, EmailConfirmationStatus(param.emailConfirmationStatus)],
+		[8, 45, AccountMigrationPincodeType(param.accountMigrationPincodeType)],
+		[2, 46, param.enforcedInputAccountMigrationPincode],
+		[8, 47, AccountMigrationPincodeType(param.securityCenterSettingsType)],
+		[2, 48, param.allowUnregistrationSecondaryDevice],
+		[2, 49, param.pwlessPrimaryCredentialRegistration],
+		[11, 50, param.preferenceLocale],
+		[13, 60, [8, 11, param.customModes]],
+		[2, 61, param.e2eeEnable],
+		[2, 62, param.hitokotoBackupRequested],
+		[2, 63, param.privacyProfileMusicPostToMyhome],
+		[2, 65, param.privacyAllowNearby],
+		[10, 66, param.agreementNearbyTime],
+		[10, 67, param.agreementSquareTime],
+		[2, 68, param.notificationMention],
+		[10, 69, param.botUseAgreementAcceptedAt],
+		[10, 70, param.agreementShakeFunction],
+		[10, 71, param.agreementMobileContactName],
+		[2, 72, param.notificationThumbnail],
+		[10, 73, param.agreementSoundToText],
+		[11, 74, param.privacyPolicyVersion],
+		[10, 75, param.agreementAdByWebAccess],
+		[10, 76, param.agreementPhoneNumberMatching],
+		[10, 77, param.agreementCommunicationInfo],
+		[8, 78, Pb1_I6(param.privacySharePersonalInfoToFriends)],
+		[10, 79, param.agreementThingsWirelessCommunication],
+		[10, 80, param.agreementGdpr],
+		[8, 81, Pb1_S7(param.privacyStatusMessageHistory)],
+		[10, 82, param.agreementProvideLocation],
+		[10, 83, param.agreementBeacon],
+		[8, 85, Pb1_M6(param.privacyAllowProfileHistory)],
+		[10, 86, param.agreementContentsSuggest],
+		[10, 87, param.agreementContentsSuggestDataCollection],
+		[8, 88, Pb1_gd(param.privacyAgeResult)],
+		[2, 89, param.privacyAgeResultReceived],
+		[10, 90, param.agreementOcrImageCollection],
+		[2, 91, param.privacyAllowFollow],
+		[2, 92, param.privacyShowFollowList],
+		[2, 93, param.notificationBadgeTalkOnly],
+		[10, 94, param.agreementIcna],
+		[2, 95, param.notificationReaction],
+		[10, 96, param.agreementMid],
+		[2, 97, param.homeNotificationNewFriend],
+		[2, 98, param.homeNotificationFavoriteFriendUpdate],
+		[2, 99, param.homeNotificationGroupMemberUpdate],
+		[2, 100, param.homeNotificationBirthday],
+		[13, 101, [8, 2, param.eapAllowedToConnect]],
+		[10, 102, param.agreementLineOutUse],
+		[10, 103, param.agreementLineOutProvideInfo],
+		[2, 104, param.notificationShowProfileImage],
+		[10, 105, param.agreementPdpa],
+		[11, 106, param.agreementLocationVersion],
+		[2, 107, param.zhdPageAllowedToShow],
+		[10, 108, param.agreementSnowAiAvatar],
+		[2, 109, param.eapOnlyAccountTargetCountry],
+		[10, 110, param.agreementLypPremiumAlbum],
+		[10, 112, param.agreementLypPremiumAlbumVersion],
+		[10, 113, param.agreementAlbumUsageData],
+		[10, 114, param.agreementAlbumUsageDataVersion],
+		[10, 115, param.agreementLypPremiumBackup],
+		[10, 116, param.agreementLypPremiumBackupVersion],
+		[10, 117, param.agreementOaAiAssistant],
+		[10, 118, param.agreementOaAiAssistantVersion],
+		[10, 119, param.agreementLypPremiumMultiProfile],
+		[10, 120, param.agreementLypPremiumMultiProfileVersion],
+		[11, 121, param.agreementPremiumBackupPremiumType],
+		[10, 122, param.agreementPdp],
+		[11, 123, param.agreementPremiumAlbumPremiumType],
+		[2, 124, param.homeNotificationNoteNoteLike],
+		[2, 125, param.homeNotificationNoteComment],
+		[2, 126, param.homeNotificationNoteCommentLike],
+		[2, 127, param.homeNotificationNoteMention],
+		[10, 128, param.agreementInAppPurchase],
+		[10, 129, param.agreementInAppPurchaseVersion],
+		[2, 130, param.homeNotificationAlbumLike],
+		[10, 131, param.agreementTriggerMessage],
+		[10, 132, param.agreementLypPremiumUnsend],
+		[10, 133, param.agreementLypPremiumUnsendVersion],
+		[10, 134, param.agreementLypPremiumMessageEdit],
+		[10, 135, param.agreementLypPremiumMessageEditVersion],
+		[2, 136, param.notificationNoteReaction],
+		[2, 137, param.notificationNoteComment],
+		[2, 138, param.notificationNoteCommentLike],
+		[2, 139, param.notificationNoteMention],
+		[2, 140, param.notificationAlbumLike],
+		[2, 141, param.phoneNumberDeleteEnable],
+	];
+}
+export function RepairTriggerSettingsElement(
+	param?: PartialDeep<LINETypes.RepairTriggerSettingsElement> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[12, 1, Settings(param.serverSettings)],
+		[8, 2, param.nextCallIntervalMinutes],
+	];
+}
+export function RepairTriggerConfigurationsElement(
+	param?: PartialDeep<LINETypes.RepairTriggerConfigurationsElement> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[12, 1, Configurations(param.serverConfigurations)],
+		[8, 2, param.nextCallIntervalMinutes],
+	];
+}
+export function RepairTriggerNumElement(
+	param?: PartialDeep<LINETypes.RepairTriggerNumElement> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[2, 1, param.matched],
+		[8, 2, param.numValue],
+		[8, 3, param.nextCallIntervalMinutes],
 	];
 }
 export function RepairGroupMembers(
@@ -3341,22 +4693,48 @@ export function RepairGroupMembers(
 		[2, 3, param.invalidGroup],
 	];
 }
-export function GetRepairElementsRequest(
-	param?: PartialDeep<LINETypes.GetRepairElementsRequest> | undefined,
+export function RepairTriggerGroupMembersElement(
+	param?: PartialDeep<LINETypes.RepairTriggerGroupMembersElement> | undefined,
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
-		[2, 1, param.profile],
-		[2, 2, param.settings],
-		[12, 3, ConfigurationsParams(param.configurations)],
-		[8, 4, param.numLocalJoinedGroups],
-		[8, 5, param.numLocalInvitedGroups],
-		[8, 6, param.numLocalFriends],
-		[8, 7, param.numLocalRecommendations],
-		[8, 8, param.numLocalBlockedFriends],
-		[8, 9, param.numLocalBlockedRecommendations],
-		[13, 10, [11, 12, map(RepairGroupMembers, param.localGroupMembers)]],
-		[8, 11, Pb1_V7(param.syncReason)],
-		[13, 12, [11, 8, param.localProfileMappings]],
+		[13, 1, [11, 12, map(RepairGroupMembers, param.matchedGroups)]],
+		[13, 2, [11, 12, map(RepairGroupMembers, param.mismatchedGroups)]],
+		[8, 3, param.nextCallIntervalMinutes],
+	];
+}
+export function RepairProfileMappingMembers(
+	param?: PartialDeep<LINETypes.RepairProfileMappingMembers> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[2, 1, param.matched],
+		[8, 2, param.numMembers],
+	];
+}
+export function RepairTriggerProfileMappingListElement(
+	param?:
+		| PartialDeep<LINETypes.RepairTriggerProfileMappingListElement>
+		| undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[13, 1, [11, 12, map(RepairProfileMappingMembers, param.profileMappings)]],
+		[8, 2, param.nextCallIntervalMinutes],
+	];
+}
+export function GetRepairElementsResponse(
+	param?: PartialDeep<LINETypes.GetRepairElementsResponse> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[12, 1, RepairTriggerProfileElement(param.profile)],
+		[12, 2, RepairTriggerSettingsElement(param.settings)],
+		[12, 3, RepairTriggerConfigurationsElement(param.configurations)],
+		[12, 4, RepairTriggerNumElement(param.numJoinedGroups)],
+		[12, 5, RepairTriggerNumElement(param.numInvitedGroups)],
+		[12, 6, RepairTriggerNumElement(param.numFriends)],
+		[12, 7, RepairTriggerNumElement(param.numRecommendations)],
+		[12, 8, RepairTriggerNumElement(param.numBlockedFriends)],
+		[12, 9, RepairTriggerNumElement(param.numBlockedRecommendations)],
+		[12, 10, RepairTriggerGroupMembersElement(param.groupMembers)],
+		[12, 11, RepairTriggerProfileMappingListElement(param.profileMappings)],
 	];
 }
 export function GetResponseStatusRequest(
@@ -3532,15 +4910,6 @@ export function GetSuggestResourcesV2Request(
 		[15, 2, [11, param.productIds]],
 	];
 }
-export function GetTaiwanBankBalanceRequest(
-	param?: PartialDeep<LINETypes.GetTaiwanBankBalanceRequest> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[11, 1, param.accessToken],
-		[11, 2, param.authorizationCode],
-		[11, 3, param.codeVerifier],
-	];
-}
 export function GetTargetProfileTarget(
 	param?: PartialDeep<LINETypes.GetTargetProfileTarget> | undefined,
 ): NestedArray {
@@ -3565,13 +4934,6 @@ export function NZ0_C12150a0(
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [];
 }
-export function GetThaiBankBalanceRequest(
-	param?: PartialDeep<LINETypes.GetThaiBankBalanceRequest> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[11, 1, param.deviceId],
-	];
-}
 export function GetTotalCoinBalanceRequest(
 	param?: PartialDeep<LINETypes.GetTotalCoinBalanceRequest> | undefined,
 ): NestedArray {
@@ -3594,13 +4956,6 @@ export function GetUserCollectionsRequest(
 		[10, 1, param.lastUpdatedTimeMillis],
 		[2, 2, param.includeSummary],
 		[8, 3, Ob1_O0(param.productType)],
-	];
-}
-export function GetUserVectorRequest(
-	param?: PartialDeep<LINETypes.GetUserVectorRequest> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[11, 1, param.majorVersion],
 	];
 }
 export function GetUsersMappedByProfileRequest(
@@ -3656,6 +5011,8 @@ export function LiffViewRequest(
 		[11, 5, param.msit],
 		[2, 6, param.subsequentLiff],
 		[11, 7, param.domain],
+		[11, 8, param.interWindowSession],
+		[11, 9, param.requestedUrl],
 	];
 }
 export function IssueBirthdayGiftTokenRequest(
@@ -3680,14 +5037,6 @@ export function JoinChatByCallUrlRequest(
 	return typeof param === "undefined" ? [] : [
 		[11, 1, param.urlId],
 		[8, 2, param.reqSeq],
-	];
-}
-export function KickoutFromGroupCallRequest(
-	param?: PartialDeep<LINETypes.KickoutFromGroupCallRequest> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[11, 1, param.chatMid],
-		[15, 2, [11, param.targetMids]],
 	];
 }
 export function DeviceLinkRequest(
@@ -3994,7 +5343,7 @@ export function PurchaseSubscriptionRequest(
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
 		[11, 1, param.billingItemId],
-		,
+		[8, 2, param.subscriptionService],
 		[8, 3, Ob1_K1(param.storeCode)],
 		[11, 4, param.storeOrderId],
 		[2, 5, param.outsideAppPurchase],
@@ -4031,13 +5380,6 @@ export function RSAEncryptedPassword(
 	return typeof param === "undefined" ? [] : [
 		[11, 1, param.encrypted],
 		[11, 2, param.keyName],
-	];
-}
-export function RegisterCampaignRewardRequest(
-	param?: PartialDeep<LINETypes.RegisterCampaignRewardRequest> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[11, 1, param.campaignId],
 	];
 }
 export function Pb1_C13097n4(
@@ -4113,7 +5455,7 @@ export function RemoveProductFromSubscriptionSlotRequest(
 	return typeof param === "undefined" ? [] : [
 		[8, 1, Ob1_O0(param.productType)],
 		[11, 2, param.productId],
-		,
+		[8, 3, param.subscriptionService],
 		[14, 4, [11, param.productIds]],
 	];
 }
@@ -4269,54 +5611,6 @@ export function LocationDebugInfo(
 		[12, 1, PoiInfo(param.poiInfo)],
 	];
 }
-export function AvatarProfile(
-	param?: PartialDeep<LINETypes.AvatarProfile> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[11, 1, param.version],
-		[10, 2, param.updatedMillis],
-		[11, 3, param.thumbnail],
-		[2, 4, param.usablePublicly],
-	];
-}
-export function Pb1_N6(
-	param: LINETypes.Pb1_N6 | undefined,
-): LINETypes.Pb1_N6 & number | undefined {
-	return typeof param === "string" ? LINETypes.enums.Pb1_N6[param] : param;
-}
-export function Pb1_O6(
-	param: LINETypes.Pb1_O6 | undefined,
-): LINETypes.Pb1_O6 & number | undefined {
-	return typeof param === "string" ? LINETypes.enums.Pb1_O6[param] : param;
-}
-export function Profile(
-	param?: PartialDeep<LINETypes.Profile> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[11, 1, param.mid],
-		[11, 3, param.userid],
-		[11, 10, param.phone],
-		[11, 11, param.email],
-		[11, 12, param.regionCode],
-		[11, 20, param.displayName],
-		[11, 21, param.phoneticName],
-		[11, 22, param.pictureStatus],
-		[11, 23, param.thumbnailUrl],
-		[11, 24, param.statusMessage],
-		[2, 31, param.allowSearchByUserid],
-		[2, 32, param.allowSearchByEmail],
-		[11, 33, param.picturePath],
-		[11, 34, param.musicProfile],
-		[11, 35, param.videoProfile],
-		[13, 36, [11, 11, param.statusMessageContentMetadata]],
-		[12, 37, AvatarProfile(param.avatarProfile)],
-		[2, 38, param.nftProfile],
-		[8, 39, Pb1_N6(param.pictureSource)],
-		[11, 40, param.profileId],
-		[8, 41, Pb1_O6(param.profileType)],
-		[10, 42, param.createdTimeMillis],
-	];
-}
 export function Pb1_EnumC13009h0(
 	param: LINETypes.Pb1_EnumC13009h0 | undefined,
 ): LINETypes.Pb1_EnumC13009h0 & number | undefined {
@@ -4342,136 +5636,6 @@ export function ReportRefreshedAccessTokenRequest(
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
 		[11, 1, param.accessToken],
-	];
-}
-export function EmailConfirmationStatus(
-	param: LINETypes.EmailConfirmationStatus | undefined,
-): LINETypes.EmailConfirmationStatus & number | undefined {
-	return typeof param === "string"
-		? LINETypes.enums.EmailConfirmationStatus[param]
-		: param;
-}
-export function AccountMigrationPincodeType(
-	param: LINETypes.AccountMigrationPincodeType | undefined,
-): LINETypes.AccountMigrationPincodeType & number | undefined {
-	return typeof param === "string"
-		? LINETypes.enums.AccountMigrationPincodeType[param]
-		: param;
-}
-export function Pb1_I6(
-	param: LINETypes.Pb1_I6 | undefined,
-): LINETypes.Pb1_I6 & number | undefined {
-	return typeof param === "string" ? LINETypes.enums.Pb1_I6[param] : param;
-}
-export function Pb1_S7(
-	param: LINETypes.Pb1_S7 | undefined,
-): LINETypes.Pb1_S7 & number | undefined {
-	return typeof param === "string" ? LINETypes.enums.Pb1_S7[param] : param;
-}
-export function Pb1_M6(
-	param: LINETypes.Pb1_M6 | undefined,
-): LINETypes.Pb1_M6 & number | undefined {
-	return typeof param === "string" ? LINETypes.enums.Pb1_M6[param] : param;
-}
-export function Pb1_gd(
-	param: LINETypes.Pb1_gd | undefined,
-): LINETypes.Pb1_gd & number | undefined {
-	return typeof param === "string" ? LINETypes.enums.Pb1_gd[param] : param;
-}
-export function Settings(
-	param?: PartialDeep<LINETypes.Settings> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[2, 10, param.notificationEnable],
-		[10, 11, param.notificationMuteExpiration],
-		[2, 12, param.notificationNewMessage],
-		[2, 13, param.notificationGroupInvitation],
-		[2, 14, param.notificationShowMessage],
-		[2, 15, param.notificationIncomingCall],
-		[11, 16, param.notificationSoundMessage],
-		[11, 17, param.notificationSoundGroup],
-		[2, 18, param.notificationDisabledWithSub],
-		[2, 19, param.notificationPayment],
-		[2, 20, param.privacySyncContacts],
-		[2, 21, param.privacySearchByPhoneNumber],
-		[2, 22, param.privacySearchByUserid],
-		[2, 23, param.privacySearchByEmail],
-		[2, 24, param.privacyAllowSecondaryDeviceLogin],
-		[2, 25, param.privacyProfileImagePostToMyhome],
-		[2, 26, param.privacyReceiveMessagesFromNotFriend],
-		[2, 27, param.privacyAgreeUseLineCoinToPaidCall],
-		[2, 28, param.privacyAgreeUsePaidCall],
-		[2, 29, param.privacyAllowFriendRequest],
-		[11, 30, param.contactMyTicket],
-		[8, 40, IdentityProvider(param.identityProvider)],
-		[11, 41, param.identityIdentifier],
-		[13, 42, [8, 11, param.snsAccounts]],
-		[2, 43, param.phoneRegistration],
-		[8, 44, EmailConfirmationStatus(param.emailConfirmationStatus)],
-		[8, 45, AccountMigrationPincodeType(param.accountMigrationPincodeType)],
-		[2, 46, param.enforcedInputAccountMigrationPincode],
-		[8, 47, AccountMigrationPincodeType(param.securityCenterSettingsType)],
-		[2, 48, param.allowUnregistrationSecondaryDevice],
-		[2, 49, param.pwlessPrimaryCredentialRegistration],
-		[11, 50, param.preferenceLocale],
-		[13, 60, [8, 11, param.customModes]],
-		[2, 61, param.e2eeEnable],
-		[2, 62, param.hitokotoBackupRequested],
-		[2, 63, param.privacyProfileMusicPostToMyhome],
-		[2, 65, param.privacyAllowNearby],
-		[10, 66, param.agreementNearbyTime],
-		[10, 67, param.agreementSquareTime],
-		[2, 68, param.notificationMention],
-		[10, 69, param.botUseAgreementAcceptedAt],
-		[10, 70, param.agreementShakeFunction],
-		[10, 71, param.agreementMobileContactName],
-		[2, 72, param.notificationThumbnail],
-		[10, 73, param.agreementSoundToText],
-		[11, 74, param.privacyPolicyVersion],
-		[10, 75, param.agreementAdByWebAccess],
-		[10, 76, param.agreementPhoneNumberMatching],
-		[10, 77, param.agreementCommunicationInfo],
-		[8, 78, Pb1_I6(param.privacySharePersonalInfoToFriends)],
-		[10, 79, param.agreementThingsWirelessCommunication],
-		[10, 80, param.agreementGdpr],
-		[8, 81, Pb1_S7(param.privacyStatusMessageHistory)],
-		[10, 82, param.agreementProvideLocation],
-		[10, 83, param.agreementBeacon],
-		[8, 85, Pb1_M6(param.privacyAllowProfileHistory)],
-		[10, 86, param.agreementContentsSuggest],
-		[10, 87, param.agreementContentsSuggestDataCollection],
-		[8, 88, Pb1_gd(param.privacyAgeResult)],
-		[2, 89, param.privacyAgeResultReceived],
-		[10, 90, param.agreementOcrImageCollection],
-		[2, 91, param.privacyAllowFollow],
-		[2, 92, param.privacyShowFollowList],
-		[2, 93, param.notificationBadgeTalkOnly],
-		[10, 94, param.agreementIcna],
-		[2, 95, param.notificationReaction],
-		[10, 96, param.agreementMid],
-		[2, 97, param.homeNotificationNewFriend],
-		[2, 98, param.homeNotificationFavoriteFriendUpdate],
-		[2, 99, param.homeNotificationGroupMemberUpdate],
-		[2, 100, param.homeNotificationBirthday],
-		[13, 101, [8, 2, param.eapAllowedToConnect]],
-		[10, 102, param.agreementLineOutUse],
-		[10, 103, param.agreementLineOutProvideInfo],
-		[2, 104, param.notificationShowProfileImage],
-		[10, 105, param.agreementPdpa],
-		[11, 106, param.agreementLocationVersion],
-		[2, 107, param.zhdPageAllowedToShow],
-		[10, 108, param.agreementSnowAiAvatar],
-		[2, 109, param.eapOnlyAccountTargetCountry],
-		[10, 110, param.agreementLypPremiumAlbum],
-		[10, 112, param.agreementLypPremiumAlbumVersion],
-		[10, 113, param.agreementAlbumUsageData],
-		[10, 114, param.agreementAlbumUsageDataVersion],
-		[10, 115, param.agreementLypPremiumBackup],
-		[10, 116, param.agreementLypPremiumBackupVersion],
-		[10, 117, param.agreementOaAiAssistant],
-		[10, 118, param.agreementOaAiAssistantVersion],
-		[10, 119, param.agreementLypPremiumMultiProfile],
-		[10, 120, param.agreementLypPremiumMultiProfileVersion],
 	];
 }
 export function Pb1_od(
@@ -4701,11 +5865,6 @@ export function SyncRequest(
 		[13, 6, [8, 10, param.lastPartialFullSyncs]],
 	];
 }
-export function Pb1_G4(
-	param: LINETypes.Pb1_G4 | undefined,
-): LINETypes.Pb1_G4 & number | undefined {
-	return typeof param === "string" ? LINETypes.enums.Pb1_G4[param] : param;
-}
 export function UnfollowRequest(
 	param?: PartialDeep<LINETypes.UnfollowRequest> | undefined,
 ): NestedArray {
@@ -4750,6 +5909,7 @@ export function GroupExtra(
 		[2, 6, param.addFriendDisabled],
 		[2, 7, param.ticketDisabled],
 		[2, 8, param.autoName],
+		[2, 9, param.penalized],
 	];
 }
 export function Pb1_A6(
@@ -4996,6 +6156,21 @@ export function VerifyQrCodeRequest(
 	return typeof param === "undefined" ? [] : [
 		[11, 1, param.authSessionId],
 		[13, 2, [11, 11, param.metaData]],
+	];
+}
+export function F61_EnumC10204a0(
+	param: LINETypes.F61_EnumC10204a0 | undefined,
+): LINETypes.F61_EnumC10204a0 & number | undefined {
+	return typeof param === "string"
+		? LINETypes.enums.F61_EnumC10204a0[param]
+		: param;
+}
+export function GetUserFriendIdsRequest(
+	param?: PartialDeep<LINETypes.GetUserFriendIdsRequest> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.userPageToken],
+		[8, 2, F61_EnumC10204a0(param.blockStatus)],
 	];
 }
 export function acceptChatInvitationByTicket_args(
@@ -5266,13 +6441,18 @@ export function acquirePaidCallRoute_args(
 	param?: PartialDeep<LINETypes.acquirePaidCallRoute_args> | undefined,
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
-		[8, 2, PaidCallType(param.paidCallType)],
+		[11, 2, param.productId],
 		[11, 3, param.dialedNumber],
 		[11, 4, param.language],
-		[11, 5, param.networkCode],
+		[11, 5, param.recipientMid],
 		[2, 6, param.disableCallerId],
 		[11, 7, param.referer],
 		[11, 8, param.adSessionId],
+		[11, 1, param.shopId],
+		,
+		[2, 12, param.enableLinePointAutoExchange],
+		[12, 21, Locale(param.locale)],
+		[13, 31, [11, 11, param.presentAttributes]],
 	];
 }
 export function activateSubscription_args(
@@ -5287,6 +6467,7 @@ export function adTypeOptOutClickEvent_args(
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
 		[12, 1, AdTypeOptOutClickEventRequest(param.request)],
+		[12, 2, KickoutFromGroupCallRequest(param.kickoutFromGroupCallRequest)],
 	];
 }
 export function addFriendByMid_args(
@@ -5308,6 +6489,9 @@ export function addOaFriend_args(
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
 		[12, 1, NZ0_C12155c(param.request)],
+		[11, 2, param.dialedNumber],
+		[11, 3, param.language],
+		[11, 4, param.referer],
 	];
 }
 export function addProductToSubscriptionSlot_args(
@@ -5435,6 +6619,7 @@ export function SquareService_fetchMyEvents_args(
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
 		[12, 1, FetchMyEventsRequest(param.request)],
+		[12, 0, FetchMyEventsResponse(param.success)],
 	];
 }
 export function SquareService_fetchSquareChatEvents_args(
@@ -6147,9 +7332,8 @@ export function canReceivePresent_args(
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
 		[11, 2, param.shopId],
-		[11, 3, param.productId],
-		[12, 4, Locale(param.locale)],
-		[11, 5, param.recipientMid],
+		,
+		,
 	];
 }
 export function cancelChatInvitation_args(
@@ -6632,15 +7816,15 @@ export function getAutoSuggestionShowcase_args(
 export function getBalanceSummaryV2_args(
 	param?: PartialDeep<LINETypes.getBalanceSummaryV2_args> | undefined,
 ): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[12, 1, NZ0_C12208u(param.request)],
-	];
+	return typeof param === "undefined" ? [] : [];
 }
 export function getBalanceSummaryV4WithPayV3_args(
 	param?: PartialDeep<LINETypes.getBalanceSummaryV4WithPayV3_args> | undefined,
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
-		[12, 1, NZ0_C12214w(param.request)],
+		[8, 1, param.reqSeq],
+		[11, 2, param.chatMid],
+		[14, 3, [11, param.targetUserMids]],
 	];
 }
 export function getBalance_args(
@@ -6736,7 +7920,14 @@ export function getBuddyOnAir_args(
 	param?: PartialDeep<LINETypes.getBuddyOnAir_args> | undefined,
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
-		[11, 4, param.buddyMid],
+		[8, 4, param.limit],
+		[8, 1, param.productType],
+		[11, 2, param.authorId],
+		[8, 3, param.offset],
+		[12, 5, acceptChatInvitationByTicket_result(param.shopFilter)],
+		[2, 6, param.includeStickerIds],
+		[15, 7, [11, param.additionalProductTypes]],
+		[8, 8, param.showcaseType],
 	];
 }
 export function getBuddyStatusBarV2_args(
@@ -6795,7 +7986,8 @@ export function getChannelNotificationSettings_args(
 		| undefined,
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
-		[11, 1, param.locale],
+		,
+		[15, 0, [11, param.success]],
 	];
 }
 export function getChatEffectMetaList_args(
@@ -6832,7 +8024,7 @@ export function getChatapp_args(
 	param?: PartialDeep<LINETypes.getChatapp_args> | undefined,
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
-		[12, 1, GetChatappRequest(param.request)],
+		[2, 1, param.favorite],
 	];
 }
 export function getChats_args(
@@ -6881,6 +8073,8 @@ export function getConfigurations_args(
 		[11, 5, param.regionOfLocale],
 		[11, 6, param.carrier],
 		[8, 7, Pb1_V7(param.syncReason)],
+		[12, 0, Configurations(param.success)],
+		[12, 1, ChannelException(param.e)],
 	];
 }
 export function getContactCalendarEvents_args(
@@ -7026,7 +8220,8 @@ export function getGnbBadgeStatus_args(
 	param?: PartialDeep<LINETypes.getGnbBadgeStatus_args> | undefined,
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
-		[12, 1, GetGnbBadgeStatusRequest(param.request)],
+		,
+		[10, 2, param.revision],
 	];
 }
 export function getGroupCallUrlInfo_args(
@@ -7110,7 +8305,17 @@ export function getKeyBackupCertificatesV2_args(
 export function getLFLSuggestion_args(
 	param?: PartialDeep<LINETypes.getLFLSuggestion_args> | undefined,
 ): NestedArray {
-	return typeof param === "undefined" ? [] : [];
+	return typeof param === "undefined" ? [] : [
+		[11, 1, param.hwid],
+		[11, 2, param.secureMessage],
+		[8, 3, param.applicationType],
+		[11, 4, param.applicationVersion],
+		[11, 5, param.userSessionId],
+		[10, 6, param.actionId],
+		[11, 7, param.screen],
+		[10, 8, param.bannerTappedAt],
+		[2, 9, param.beaconTermAgreed],
+	];
 }
 export function getLastE2EEGroupSharedKey_args(
 	param?: PartialDeep<LINETypes.getLastE2EEGroupSharedKey_args> | undefined,
@@ -7183,14 +8388,17 @@ export function getModuleLayoutV4_args(
 	param?: PartialDeep<LINETypes.getModuleLayoutV4_args> | undefined,
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
-		[12, 1, GetModuleLayoutV4Request(param.request)],
+		[8, 1, param.code],
+		[11, 2, param.reason],
+		[13, 3, [11, 11, param.parameterMap]],
 	];
 }
 export function getModuleWithStatus_args(
 	param?: PartialDeep<LINETypes.getModuleWithStatus_args> | undefined,
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
-		[12, 1, NZ0_G(param.request)],
+		[8, 1, param.subscriptionService],
+		[8, 2, param.storeCode],
 	];
 }
 export function getModule_args(
@@ -7218,7 +8426,7 @@ export function getModulesV4WithStatus_args(
 	param?: PartialDeep<LINETypes.getModulesV4WithStatus_args> | undefined,
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
-		[12, 1, GetModulesV4WithStatusRequest(param.request)],
+		[11, 1, param.channelId],
 	];
 }
 export function getMusicSubscriptionStatus_args(
@@ -7236,15 +8444,15 @@ export function getMyAssetInformationV2_args(
 export function getMyChatapps_args(
 	param?: PartialDeep<LINETypes.getMyChatapps_args> | undefined,
 ): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[12, 1, GetMyChatappsRequest(param.request)],
-	];
+	return typeof param === "undefined" ? [] : [];
 }
 export function getMyDashboard_args(
 	param?: PartialDeep<LINETypes.getMyDashboard_args> | undefined,
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
 		[12, 1, GetMyDashboardRequest(param.request)],
+		[11, 2, param.channelId],
+		[11, 3, param.locale],
 	];
 }
 export function getNewlyReleasedBuddyIds_args(
@@ -7269,6 +8477,7 @@ export function getOwnedProductSummaries_args(
 		[8, 3, param.offset],
 		[8, 4, param.limit],
 		[12, 5, Locale(param.locale)],
+		[12, 1, LiffViewWithoutUserContextRequest(param.request)],
 	];
 }
 export function getPasswordHashingParameter_args(
@@ -7420,6 +8629,8 @@ export function getPromotedBuddyContacts_args(
 	return typeof param === "undefined" ? [] : [
 		[11, 2, param.language],
 		[11, 3, param.country],
+		[15, 0, [11, param.success]],
+		[12, 1, ChannelException(param.e)],
 	];
 }
 export function getPublishedMemberships_args(
@@ -7450,7 +8661,7 @@ export function getQuickMenu_args(
 	param?: PartialDeep<LINETypes.getQuickMenu_args> | undefined,
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
-		[12, 1, NZ0_S(param.request)],
+		[10, 1, param.lastSynced],
 	];
 }
 export function getReceivedPresents_args(
@@ -7467,7 +8678,8 @@ export function getRecentFriendRequests_args(
 	param?: PartialDeep<LINETypes.getRecentFriendRequests_args> | undefined,
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
-		[8, 1, Pb1_V7(param.syncReason)],
+		,
+		[12, 0, FriendRequestsInfo(param.success)],
 	];
 }
 export function getRecommendationDetails_args(
@@ -7487,13 +8699,16 @@ export function getRecommendationIds_args(
 export function getRecommendationList_args(
 	param?: PartialDeep<LINETypes.getRecommendationList_args> | undefined,
 ): NestedArray {
-	return typeof param === "undefined" ? [] : [];
+	return typeof param === "undefined" ? [] : [
+		,
+	];
 }
 export function getRepairElements_args(
 	param?: PartialDeep<LINETypes.getRepairElements_args> | undefined,
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
-		[12, 1, GetRepairElementsRequest(param.request)],
+		,
+		[12, 0, GetRepairElementsResponse(param.success)],
 	];
 }
 export function getResourceFile_args(
@@ -7562,6 +8777,7 @@ export function getSentPresents_args(
 		[8, 3, param.offset],
 		[8, 4, param.limit],
 		[12, 5, Locale(param.locale)],
+		[11, 1, param.squareChatMid],
 	];
 }
 export function getServiceShortcutMenu_args(
@@ -7569,6 +8785,7 @@ export function getServiceShortcutMenu_args(
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
 		[12, 1, NZ0_U(param.request)],
+		[12, 2, WebLoginRequest(param.webLoginRequest)],
 	];
 }
 export function getSessionContentBeforeMigCompletion_args(
@@ -7659,9 +8876,7 @@ export function getSuggestResourcesV2_args(
 export function getTaiwanBankBalance_args(
 	param?: PartialDeep<LINETypes.getTaiwanBankBalance_args> | undefined,
 ): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[12, 1, GetTaiwanBankBalanceRequest(param.request)],
-	];
+	return typeof param === "undefined" ? [] : [];
 }
 export function getTargetProfiles_args(
 	param?: PartialDeep<LINETypes.getTargetProfiles_args> | undefined,
@@ -7675,13 +8890,14 @@ export function getTargetingPopup_args(
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
 		[12, 1, NZ0_C12150a0(param.request)],
+		[12, 2, WebLoginRequest(param.webLoginRequest)],
 	];
 }
 export function getThaiBankBalance_args(
 	param?: PartialDeep<LINETypes.getThaiBankBalance_args> | undefined,
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
-		[12, 1, GetThaiBankBalanceRequest(param.request)],
+		[11, 1, param.channelId],
 	];
 }
 export function getTotalCoinBalance_args(
@@ -7721,7 +8937,13 @@ export function getUserVector_args(
 	param?: PartialDeep<LINETypes.getUserVector_args> | undefined,
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
-		[12, 1, GetUserVectorRequest(param.request)],
+		[11, 1, param.hwid],
+		[11, 2, param.secureMessage],
+		[8, 3, param.applicationType],
+		[11, 4, param.applicationVersion],
+		[11, 5, param.lang],
+		[11, 6, param.region],
+		[11, 7, param.modelName],
 	];
 }
 export function getUsersMappedByProfile_args(
@@ -8110,9 +9332,7 @@ export function registerBarcodeAsync_args(
 export function registerCampaignReward_args(
 	param?: PartialDeep<LINETypes.registerCampaignReward_args> | undefined,
 ): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[12, 1, RegisterCampaignRewardRequest(param.request)],
-	];
+	return typeof param === "undefined" ? [] : [];
 }
 export function registerE2EEGroupKey_args(
 	param?: PartialDeep<LINETypes.registerE2EEGroupKey_args> | undefined,
@@ -8136,8 +9356,9 @@ export function registerE2EEPublicKey_args(
 	param?: PartialDeep<LINETypes.registerE2EEPublicKey_args> | undefined,
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
-		[8, 1, param.reqSeq],
+		,
 		[12, 2, Pb1_C13097n4(param.publicKey)],
+		[12, 0, Pb1_C13097n4(param.success)],
 	];
 }
 export function registerPrimaryCredential_args(
@@ -8278,6 +9499,7 @@ export function reportLocation_args(
 		[10, 4, param.measuredAt],
 		[10, 6, param.clientCurrentTimestamp],
 		[12, 7, LocationDebugInfo(param.debugInfo)],
+		[8, 8, param.appState],
 	];
 }
 export function reportNetworkStatus_args(
@@ -8701,7 +9923,7 @@ export function updateExtendedProfileAttribute_args(
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
 		[8, 1, param.reqSeq],
-		,
+		[8, 2, param.attr],
 		[12, 3, ExtendedProfile(param.extendedProfile)],
 	];
 }
@@ -8904,22 +10126,6 @@ export function wakeUpLongPolling_args(
 ): NestedArray {
 	return typeof param === "undefined" ? [] : [
 		[10, 2, param.clientRevision],
-	];
-}
-
-export function F61_EnumC10204a0(
-	param: LINETypes.F61_EnumC10204a0 | undefined,
-): LINETypes.F61_EnumC10204a0 & number | undefined {
-	return typeof param === "string"
-		? LINETypes.enums.F61_EnumC10204a0[param]
-		: param;
-}
-export function GetUserFriendIdsRequest(
-	param?: PartialDeep<LINETypes.GetUserFriendIdsRequest> | undefined,
-): NestedArray {
-	return typeof param === "undefined" ? [] : [
-		[11, 1, param.userPageToken],
-		[8, 2, F61_EnumC10204a0(param.blockStatus)],
 	];
 }
 export function getUserFriendIds_args(
