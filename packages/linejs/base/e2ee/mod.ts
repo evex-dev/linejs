@@ -8,6 +8,7 @@ import * as LINETypes from "@evex/linejs-types";
 import type { BaseClient } from "../core/mod.ts";
 import { ContentType } from "../thrift/readwrite/struct.ts";
 import CryptoJS from "crypto-js";
+import { gcmsiv } from "@noble/ciphers/aes.js";
 import type { LooseType } from "@evex/loose-types";
 
 interface GroupKey {
@@ -1225,6 +1226,62 @@ export class E2EE {
 				-32,
 			);
 	}
+
+	/**
+	 * AES-GCM-SIV authenticated decryption. RFC 8452.
+	 *
+	 * Used as a low-level primitive by {@link decryptEncryptedQrIdentifier}
+	 * (LINE's newer secure-login / QR-identity flow). Matches CHRLINE-Patch's
+	 * `e2ee._decryptAESGCMSIV`.
+	 *
+	 * @param gcmsivKey - 16 or 32-byte symmetric key.
+	 * @param nonce     - 12-byte nonce.
+	 * @param data      - ciphertext concatenated with the 16-byte tag.
+	 * @param aad       - optional additional authenticated data.
+	 */
+	decryptAESGCMSIV(
+		gcmsivKey: Buffer,
+		nonce: Buffer,
+		data: Buffer,
+		aad?: Buffer,
+	): Buffer {
+		const aead = gcmsiv(
+			toU8(gcmsivKey),
+			toU8(nonce),
+			aad ? toU8(aad) : undefined,
+		);
+		return Buffer.from(aead.decrypt(toU8(data)));
+	}
+
+	/**
+	 * Decrypt an encrypted QR identifier received during LINE's
+	 * secure-login / secondary-device handshake.
+	 *
+	 * The wire layout is `<12-byte nonce><ciphertext+16-byte tag>` keyed by
+	 * an ECDH-derived shared secret over Curve25519 (the same shared-secret
+	 * helper {@link generateSharedSecret} returns).
+	 *
+	 * Mirrors CHRLINE-Patch's `e2ee.decryptEncryptedQrIdentifier`.
+	 */
+	decryptEncryptedQrIdentifier(
+		encryptedQrIdentifier: Buffer,
+		privateKey: Buffer,
+		publicKey: Buffer,
+	): Buffer {
+		const sharedSecret = this.generateSharedSecret(privateKey, publicKey);
+		const NONCE_SIZE = 12;
+		return this.decryptAESGCMSIV(
+			Buffer.from(sharedSecret),
+			encryptedQrIdentifier.subarray(0, NONCE_SIZE),
+			encryptedQrIdentifier.subarray(NONCE_SIZE),
+		);
+	}
+}
+
+// Coerce a Node Buffer (subclass of Uint8Array but flagged by TS as a
+// distinct type) into the plain Uint8Array view that @noble/ciphers expects.
+function toU8(b: Buffer | Uint8Array): Uint8Array {
+	return new Uint8Array(b.buffer, b.byteOffset, b.byteLength);
 }
 
 export default E2EE;
