@@ -187,6 +187,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		});
 		const raw = res.responses[0];
 		return new User({
+			client: this,
 			raw,
 		});
 	}
