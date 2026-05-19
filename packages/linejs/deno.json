@@ -19,6 +19,7 @@
 		"tweetnacl": "npm:tweetnacl@^1.0.3",
 		"jsdom": "npm:jsdom@25.0.0",
 		"node-types": "npm:@types/node@latest",
-		"node-int64": "npm:node-int64@^0.4.0"
+		"node-int64": "npm:node-int64@^0.4.0",
+		"undici": "npm:undici@^7"
 	}
 }
