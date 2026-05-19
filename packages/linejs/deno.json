@@ -20,6 +20,7 @@
 		"jsdom": "npm:jsdom@25.0.0",
 		"node-types": "npm:@types/node@latest",
 		"node-int64": "npm:node-int64@^0.4.0",
-		"undici": "npm:undici@^7"
+		"undici": "npm:undici@^7",
+		"@noble/ciphers": "npm:@noble/ciphers@^2.2"
 	}
 }
