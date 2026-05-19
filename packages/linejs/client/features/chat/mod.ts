@@ -158,4 +158,32 @@ export class Chat {
 	messageFetcher(): Promise<MessageFetcher> {
 		return createMessageFetcher(this.#client, this);
 	}
+
+	/**
+	 * Fetches the BGM (chat background music) currently set on this chat,
+	 * or `undefined` if none is set.
+	 *
+	 * Backed by `Talk.getChatRoomBGMs`, which is a batch RPC; this is the
+	 * single-chat convenience.
+	 */
+	async getBgm(): Promise<line.ChatRoomBGM | undefined> {
+		const res = await this.#client.base.talk.getChatRoomBGMs({
+			chatRoomMids: [this.mid],
+		});
+		return res?.[this.mid];
+	}
+
+	/**
+	 * Sets (or clears) the BGM on this chat.  Pass a string `bgmInfo` to
+	 * set, or `null` to clear.  The `bgmInfo` encoding (LINE MUSIC track
+	 * id etc.) is opaque to linejs and is round-tripped to the server as-
+	 * is.
+	 */
+	async setBgm(bgmInfo: string | null): Promise<line.ChatRoomBGM> {
+		return await this.#client.base.talk.updateChatRoomBGM({
+			reqSeq: await this.#client.base.getReqseq(),
+			chatRoomMid: this.mid,
+			chatRoomBGMInfo: bgmInfo ?? "",
+		});
+	}
 }
