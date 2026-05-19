@@ -35600,6 +35600,7 @@ export const Thrift: LooseType = {
 			"struct": "TalkException",
 		},
 	],
+	"noop_args": [],
 	"noop_result": [
 		{
 			"fid": 1,

@@ -9173,6 +9173,11 @@ export function negotiateE2EEPublicKey_args(
 		[11, 2, param.mid],
 	];
 }
+export function noop_args(
+	param?: PartialDeep<LINETypes.noop_args> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [];
+}
 export function notifyChatAdEntry_args(
 	param?: PartialDeep<LINETypes.notifyChatAdEntry_args> | undefined,
 ): NestedArray {
