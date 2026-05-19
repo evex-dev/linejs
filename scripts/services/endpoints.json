@@ -1,0 +1,345 @@
+{
+  "AccessTokenRefreshService": {
+    "endpoint": "/EXT/auth/tokenrefresh/v1",
+    "methods": [
+      "refresh",
+      "reportRefreshedAccessToken"
+    ],
+    "protocolType": 4
+  },
+  "AccountAuthFactorEapConnectService": {
+    "endpoint": "/ACCT/authfactor/eap/v1",
+    "methods": [
+      "connectEapAccount",
+      "disconnectEapAccount",
+      "openSession",
+      "verifyEapLogin"
+    ],
+    "protocolType": 4
+  },
+  "AuthService": {
+    "endpoint": "/AS4",
+    "protocolType": 4
+  },
+  "BotExternalService": {
+    "endpoint": "/BOTE",
+    "methods": [
+      "notifyOATalkroomEvents",
+      "notifyChatAdEntry"
+    ],
+    "protocolType": 4
+  },
+  "BuddyService": {
+    "endpoint": "/BUDDY4",
+    "methods": [
+      "getPromotedBuddyContacts",
+      "getBuddyDetailWithPersonal",
+      "getNewlyReleasedBuddyIds",
+      "getBuddyDetail"
+    ],
+    "protocolType": 4
+  },
+  "CallService": {
+    "endpoint": "/V4",
+    "protocolType": 4
+  },
+  "ChannelService": {
+    "endpoint": "/CH4",
+    "protocolType": 4
+  },
+  "ChatAppService": {
+    "endpoint": "/CAPP1",
+    "methods": [
+      "getChatapp",
+      "getMyChatapps"
+    ],
+    "protocolType": 4
+  },
+  "CoinService": {
+    "endpoint": "/COIN4",
+    "methods": [
+      "getTotalCoinBalance",
+      "getCoinPurchaseHistory",
+      "getCoinProducts",
+      "reserveCoinPurchase",
+      "getCoinUseAndRefundHistory"
+    ],
+    "protocolType": 4
+  },
+  "DeviceAttestationService": {
+    "endpoint": "/EXT/auth/feature-user/api/primary/device-attestation",
+    "methods": [
+      "getAssertionChallenge",
+      "getAttestationChallenge",
+      "verifyAssertion",
+      "verifyAttestation"
+    ],
+    "protocolType": 4
+  },
+  "E2EEKeyBackupService": {
+    "endpoint": "/EKBS4",
+    "methods": [
+      "getE2EEKeyBackupCertificates",
+      "getE2EEKeyBackupInfo"
+    ],
+    "protocolType": 4
+  },
+  "HomeSafetyCheckService": {
+    "endpoint": "/EXT/home/safety-check/safety-check",
+    "methods": [
+      "deleteSafetyStatus",
+      "getDisasterCases",
+      "updateSafetyStatus"
+    ],
+    "protocolType": 4
+  },
+  "LiffService": {
+    "endpoint": "/LIFF1",
+    "protocolType": 4
+  },
+  "MultiProfileService": {
+    "endpoint": "/PFS4",
+    "methods": [
+      "deleteMultiProfile",
+      "getMappedProfileIds",
+      "mapProfileToUsers",
+      "updateProfileAttributes",
+      "createMultiProfile",
+      "getProfile",
+      "getUsersMappedByProfile"
+    ],
+    "protocolType": 4
+  },
+  "OaChatService": {
+    "endpoint": "/ext/oachat/api/",
+    "methods": [
+      "getCallStatus"
+    ],
+    "protocolType": 4
+  },
+  "OaMembershipService": {
+    "endpoint": "/EXT/bot/oafan",
+    "methods": [
+      "activateSubscription",
+      "getJoinedMembership"
+    ],
+    "protocolType": 4
+  },
+  "PasswordUpdateService": {
+    "endpoint": "/EXT/auth/feature-user/api/primary/password/update",
+    "methods": [
+      "createSession",
+      "getPasswordHashingParameter",
+      "setPassword",
+      "updatePassword"
+    ],
+    "protocolType": 4
+  },
+  "PremiumFontService": {
+    "endpoint": "/EXT/talk/asset-meta-server/thrift/fontService",
+    "methods": [
+      "getAccessToken",
+      "getFontMetas"
+    ],
+    "protocolType": 4
+  },
+  "PremiumStatusService": {
+    "endpoint": "/EXT/line-premium/common/thrift/status",
+    "methods": [
+      "getPremiumStatus",
+      "getPremiumStatusForUpgrade",
+      "getDataRetention",
+      "getIncentiveStatus"
+    ],
+    "protocolType": 4
+  },
+  "PrimaryAccountInitService": {
+    "endpoint": "/acct/pais/v1",
+    "methods": [
+      "openSession",
+      "getCountryInfo",
+      "validateProfile",
+      "setPassword",
+      "getPhoneVerifMethodV2",
+      "requestToSendPhonePinCode",
+      "verifyPhonePinCode",
+      "registerPrimaryUsingPhoneWithTokenV3",
+      "lookupAvailableEap",
+      "getAllowedRegistrationMethod",
+      "verifyEapAccountForRegistration",
+      "registerPrimaryUsingEapAccount",
+      "getPhoneVerifMethodForRegistration",
+      "getAcctVerifMethod",
+      "getPasswordHashingParametersForPwdReg",
+      "setHashedPassword"
+    ],
+    "protocolType": 4
+  },
+  "PrimaryAccountReLoginService": {
+    "endpoint": "/ext/auth/feature-guest/thrift/account/v1/relogin/primary",
+    "methods": [
+      "createSession",
+      "getCountryInfo",
+      "getPhoneVerifMethodV2",
+      "requestToSendPhonePinCode",
+      "verifyEapLogin",
+      "verifyPhonePinCode"
+    ],
+    "protocolType": 4
+  },
+  "PrimaryAccountSmartSwitchRestorePreparationService": {
+    "endpoint": "/EXT/auth/feature-user/thrift/account/v1/restore/smart-switch/prepare",
+    "methods": [
+      "createSession"
+    ],
+    "protocolType": 4
+  },
+  "PrimaryAccountSmartSwitchRestoreService": {
+    "endpoint": "/ext/auth/feature-guest/thrift/account/v1/restore/smart-switch",
+    "methods": [
+      "checkEmailAssigned",
+      "checkIfPasswordSetVerificationEmailVerified",
+      "getAcctVerifMethod",
+      "getCountryInfo",
+      "getMaskedEmail",
+      "getPasswordHashingParametersForPwdReg",
+      "getPasswordHashingParametersForPwdVerif",
+      "getPhoneVerifMethodV2",
+      "requestToSendPasswordSetVerificationEmail",
+      "requestToSendPhonePinCode",
+      "setHashedPassword",
+      "verifyAccountUsingHashedPwd",
+      "verifyEapLogin",
+      "verifyPhonePinCode"
+    ],
+    "protocolType": 4
+  },
+  "PrimaryQrCodeMigrationLongPollingService": {
+    "endpoint": "/EXT/auth/feature-user/lp/api/primary/mig/qr",
+    "methods": [
+      "checkIfEncryptedE2EEKeyReceived"
+    ],
+    "protocolType": 4
+  },
+  "PrimaryQrCodeMigrationPreparationService": {
+    "endpoint": "/EXT/auth/feature-user/api/primary/mig/qr/prepare",
+    "methods": [
+      "createSession",
+      "sendEncryptedE2EEKey"
+    ],
+    "protocolType": 4
+  },
+  "PrimarySeamlessLoginService": {
+    "endpoint": "/EXT/auth/feature-user/api/secondary/login/seamless",
+    "methods": [
+      "permitLogin"
+    ],
+    "protocolType": 4
+  },
+  "PwlessPrimaryRegistrationService": {
+    "endpoint": "/ACCT/authfactor/pwless/v1",
+    "methods": [
+      "createSession",
+      "getChallengeForPrimaryReg"
+    ],
+    "protocolType": 4
+  },
+  "RelationService": {
+    "endpoint": "/RE4",
+    "protocolType": 4
+  },
+  "SecondaryPwlessLoginService": {
+    "endpoint": "/acct/lgn/secpwless/v1",
+    "methods": [
+      "createSession"
+    ],
+    "protocolType": 4
+  },
+  "SecondarySeamlessLoginService": {
+    "endpoint": "/ext/auth/feature-guest/api/secondary/login/seamless",
+    "methods": [
+      "createSession"
+    ],
+    "protocolType": 4
+  },
+  "SettingsService": {
+    "endpoint": "/US4",
+    "methods": [
+      "bulkGetSetting",
+      "bulkSetSetting"
+    ],
+    "protocolType": 4
+  },
+  "ShopAuthService": {
+    "endpoint": "/SHOPA",
+    "methods": [
+      "establishE2EESession"
+    ],
+    "protocolType": 4
+  },
+  "ShopCollectionService": {
+    "endpoint": "/ext/sapi/sapic",
+    "methods": [
+      "getUserCollections",
+      "createCollectionForUser",
+      "addItemToCollection",
+      "removeItemFromCollection",
+      "isProductForCollections"
+    ],
+    "protocolType": 4
+  },
+  "ShopService": {
+    "endpoint": "/TSHOP4",
+    "methods": [
+      "getProductsByAuthor",
+      "getStudentInformation",
+      "canReceivePresent",
+      "getOwnedProductSummaries",
+      "getProductV2",
+      "getProductByVersion",
+      "placePurchaseOrderForFreeProduct",
+      "placePurchaseOrderWithLineCoin",
+      "getPurchasedProducts",
+      "getReceivedPresents",
+      "getSentPresents",
+      "notifyProductEvent",
+      "getProductValidationScheme",
+      "validateProduct",
+      "getRecommendationList",
+      "getResourceFile",
+      "getAutoSuggestionShowcase",
+      "getSubscriptionStatus",
+      "getSuggestResourcesV2",
+      "reserveCoinPurchase",
+      "getCoinUseAndRefundHistory",
+      "getCoinProducts",
+      "getCoinPurchaseHistory",
+      "createCombinationSticker",
+      "shouldShowWelcomeStickerBanner",
+      "stopBundleSubscription",
+      "getProductLatestVersionForUser",
+      "getMusicSubscriptionStatus",
+      "addThemeToSubscriptionSlot"
+    ],
+    "protocolType": 4
+  },
+  "SquareBotService": {
+    "endpoint": "/BP1",
+    "methods": [
+      "getSquareBot"
+    ],
+    "protocolType": 4
+  },
+  "SquareLiveTalkService": {
+    "endpoint": "/SQLV1",
+    "protocolType": 4
+  },
+  "SquareService": {
+    "endpoint": "/SQ1",
+    "protocolType": 4
+  },
+  "TalkService": {
+    "endpoint": "/S4",
+    "protocolType": 4
+  }
+}
