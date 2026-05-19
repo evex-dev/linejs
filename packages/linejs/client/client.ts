@@ -6,7 +6,14 @@ import { User } from "./features/user/mod.ts";
 import { TypedEventEmitter } from "../base/core/typed-event-emitter/index.ts";
 import { SquareMessage, TalkMessage } from "./features/message/mod.ts";
 import type * as LINETypes from "@evex/linejs-types";
+import {
+	getMyProfile,
+	type MyProfileUpdate,
+	updateMyProfile,
+} from "./features/profile.ts";
 export { Chat, Square, SquareChat, SquareMessage, TalkMessage, User };
+export { ProfileAttribute } from "./features/profile.ts";
+export type { MyProfileUpdate } from "./features/profile.ts";
 export interface ListenOptions {
 	/**
 	 * A boolean of whether to enable receiving talk events.
@@ -101,6 +108,29 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	get authToken(): string {
 		// NOTE: client is constructed when logined, so authToken is not undefined.
 		return this.base.authToken as string;
+	}
+
+	/** Returns the signed-in user's own profile. */
+	getMyProfile(): Promise<LINETypes.Profile> {
+		return getMyProfile(this);
+	}
+
+	/**
+	 * Updates one or more attributes on the signed-in user's profile.
+	 * @example client.updateMyProfile({ statusMessage: "今日も頑張る" })
+	 */
+	updateMyProfile(update: MyProfileUpdate): Promise<void> {
+		return updateMyProfile(this, update);
+	}
+
+	/** Convenience: rename the signed-in user. */
+	updateMyDisplayName(displayName: string): Promise<void> {
+		return updateMyProfile(this, { displayName });
+	}
+
+	/** Convenience: set the signed-in user's status message (ステメ). */
+	updateMyStatusMessage(statusMessage: string): Promise<void> {
+		return updateMyProfile(this, { statusMessage });
 	}
 
 	/**
