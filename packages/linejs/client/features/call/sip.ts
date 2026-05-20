@@ -92,7 +92,7 @@ export function newBranch(): string {
 	return `z9hG4bK-${Date.now().toString(36)}-${branchCounter}`;
 }
 
-export function randomCallId(host = "linejs"): string {
+export function randomCallId(host = "invalid"): string {
 	const r = Array.from(crypto.getRandomValues(new Uint8Array(8)))
 		.map((b) => b.toString(16).padStart(2, "0")).join("");
 	return `${r}@${host}`;
