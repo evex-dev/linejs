@@ -7041,6 +7041,7 @@ export const Thrift: LooseType = {
 		{
 			"fid": 1,
 			"name": "events",
+			"map": "ContactCalendarEvent",
 			"key": 8,
 		},
 	],
@@ -23939,6 +23940,7 @@ export const Thrift: LooseType = {
 		{
 			"fid": 5,
 			"name": "endPageMainImages",
+			"list": 11,
 		},
 	],
 	"SticonSummary": [
