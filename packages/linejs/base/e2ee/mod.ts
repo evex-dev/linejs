@@ -830,6 +830,23 @@ export class E2EE {
 		const receiverKeyId = byte2int(chunks[4]);
 		this.e2eeLog("decryptE2EEDataMessageSenderKeyId", senderKeyId);
 		this.e2eeLog("decryptE2EEDataMessageReceiverKeyId", receiverKeyId);
+		// Diagnostic for issue #88 — when 1:1 media decryption fails with
+		// "Unsupported state or unable to authenticate data" we need to see
+		// exactly which byte the AAD was built from.  Text in the same chat
+		// works, so capture enough state here to bisect against a real LINE
+		// ciphertext sample.
+		this.e2eeLog("decryptE2EEDataMessageEnvelope", {
+			toType,
+			specVersion,
+			rawContentType: messageObj.contentType,
+			resolvedContentType: contentType,
+			chatTo: to,
+			chatFrom: _from,
+			isSelf,
+			chunkTypes: chunks.map((c) =>
+				`${c.constructor?.name ?? typeof c}(${c.length})`
+			),
+		});
 
 		const selfKey = await this.getE2EESelfKeyData(
 			this.client.profile?.mid as string,
