@@ -1,6 +1,6 @@
 /**
  * `@evex/linejs-agent` — a faithful client for LINE Android's **"Agent I"**
- * (アゲンティ) feature, the in-app AI agent surfaced from the chat-tab
+ * (エージェント アイ) feature, the in-app AI agent surfaced from the chat-tab
  * search bar.
  *
  * Agent I in LINE Android (verified by reverse-engineering 26.6.2,
@@ -52,3 +52,10 @@ export {
 	frcodeFor,
 	frtypeFor,
 } from "./client.ts";
+export {
+	LineAiClient,
+	LineAiEndpoints,
+	type LineAiOptions,
+	type LineAiQueryRequest,
+	type LineAiResponse,
+} from "./line_ai.ts";

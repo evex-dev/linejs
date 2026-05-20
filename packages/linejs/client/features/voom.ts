@@ -1,30 +1,9 @@
-/**
- * VOOM (timeline / myhome) REST helpers.
- *
- * Two surfaces:
- *   - `client.voom.*` — typed high-level wrappers that mint the right
- *     channel token + assemble the auth headers + call the gateway.
- *   - `client.voomRest({ path, channelToken })` — low-level for ad-hoc
- *     calls.
- *
- * Gateway: `https://gw.line.naver.jp/mh/api/v{34,40,52,57}/...`,
- * returning `{ code, message, result }`.
- *
- * Auth (live-verified): `Authorization: Bearer <channelToken>` +
- * `X-Line-Mid: <mid>`.  `client.base.channel.issueChannelToken({
- * channelId })` takes an **object** (not positional string).
- * `DESKTOPWIN` cannot mint these on LINE 26+ — use
- * `device: "ANDROIDSECONDARY"`.
- *
- * Source of truth:
- *   `decompiled/base/smali/smali/t98/a$b.smali` (channel id enum)
- *   gateway path family confirmed by live HTTP probing.
- */
+// VOOM/MH REST helpers — gw.line.naver.jp/mh, auth via channel-token
+// (Bearer + X-Line-Mid). Needs ANDROIDSECONDARY device — DESKTOPWIN
+// can't mint on LINE 26+.
 import type { Client } from "../mod.ts";
 
-/** Channel-id constants for the MH-family services.  Values verified
- *  from LINE Android 26.6.2 smali `t98.a$b` (the AccessTokenManager
- *  channel-type enum). */
+/** Channel ids from smali t98.a$b. */
 export const VoomChannelId = {
 	TIMELINE: "1341209950",
 	HOME: "1341209850",
@@ -83,11 +62,6 @@ export async function voomRest<T = unknown>(
 	return JSON.parse(text) as VoomRestResponse<T>;
 }
 
-/**
- * Mints + caches a channel-scoped token for one of the MH channels.
- * The token is bound to the current session and device; v2.8.x has
- * verified it works from `device: "ANDROIDSECONDARY"`.
- */
 export async function getChannelToken(
 	client: Client,
 	channelId: string,
@@ -98,18 +72,70 @@ export async function getChannelToken(
 	return t;
 }
 
+/** MH-gateway REST paths from LINE Android 26.6.2 smali. */
+export const VoomEndpoints = {
+	// VOOM feed / posts (TIMELINE channel)
+	feed: "/api/v57/post/list.json",
+	createPost: "/api/v57/post/create.json",
+	updatePost: "/api/v57/post/update.json",
+	deletePost: "/api/v57/post/delete.json",
+	getPost: "/api/v57/post/get.json",
+	sharePost: "/api/v57/post/share.json",
+	sendPostToTalk: "/api/v57/post/sendPostToTalk.json",
+	getShareLink: "/api/v57/post/getShareLink.json",
+	reportPost: "/api/v57/post/report.json",
+	// Comments
+	createComment: "/api/v57/comment/create.json",
+	updateComment: "/api/v57/comment/get.json",
+	deleteComment: "/api/v57/comment/delete.json",
+	getComment: "/api/v57/comment/get.json",
+	listComments: "/api/v57/comment/getList.json",
+	reportComment: "/api/v57/comment/report.json",
+	// Likes
+	createLike: "/api/v57/like/create.json",
+	cancelLike: "/api/v57/like/cancel.json",
+	getLike: "/api/v57/like/get.json",
+	listLikes: "/api/v57/like/getList.json",
+	// Feed / timeline
+	feedGet: "/api/v57/feed/get.json",
+	feedNewfeed: "/api/v57/feed/newfeed.json",
+	timelineStatus: "/api/v57/timeline/tab/status.json",
+	timelineContents: "/api/v57/timeline/tab/contents.json",
+	// Search
+	searchNote: "/api/v57/search/note.json",
+	hashtagPosts: "/api/v57/hashtag/posts.json",
+	hashtagSearch: "/api/v57/hashtag/search.json",
+	// Home / profile
+	homeProfile: "/api/v1/home/profile.json",
+	homeCover: "/api/v1/home/cover.json",
+	homeGroupProfile: "/api/v1/home/groupprofile.json",
+	// Chat Note (BDB = bulletin-board) — bound to the NOTE channel.
+	noteBoardGet: "/api/v1/bdb/board/get",
+	noteBoardDelete: "/api/v1/bdb/board/delete",
+	noteBoardUpdateReadPermission: "/api/v1/bdb/board/update/readPermission",
+	noteCardCreate: "/api/v1/bdb/card/create",
+	noteCardUpdate: "/api/v1/bdb/card/update",
+	noteCardDelete: "/api/v1/bdb/card/delete",
+	noteCardList: "/api/v1/bdb/card/list",
+	noteCardReport: "/api/v1/bdb/card/report",
+	noteCardLikeCreate: "/api/v1/bdb/card/like/create",
+	noteCardLikeCancel: "/api/v1/bdb/card/like/cancel",
+	noteCardLikeList: "/api/v1/bdb/card/like/list",
+} as const;
+
+export type VoomEndpoint = keyof typeof VoomEndpoints;
+
 export interface VoomClient {
-	/** Mints (or returns cached) channel token for the given channel. */
 	getToken(channel: keyof typeof VoomChannelId): Promise<string>;
-	/** Calls a path on the MH gateway using the auto-minted channel
-	 *  token for the given channel. */
 	call<T = unknown>(
 		channel: keyof typeof VoomChannelId,
 		opts: Omit<VoomRestOptions, "channelToken">,
 	): Promise<VoomRestResponse<T>>;
-	/** Convenience: fetch the user's VOOM feed (TIMELINE channel).
-	 *  Wraps `/v57/post/list.json?postLimit=N&followingMaxPage=M`. */
 	feed(opts?: { postLimit?: number; followingMaxPage?: number }): Promise<VoomRestResponse>;
+	noteList(opts: { boardId: string; limit?: number }): Promise<VoomRestResponse>;
+	noteCreate(opts: { boardId: string; body: Record<string, unknown> }): Promise<VoomRestResponse>;
+	noteLike(opts: { cardId: string }): Promise<VoomRestResponse>;
+	noteUnlike(opts: { cardId: string }): Promise<VoomRestResponse>;
 }
 
 class ClientVoom implements VoomClient {
@@ -137,7 +163,36 @@ class ClientVoom implements VoomClient {
 		const postLimit = opts.postLimit ?? 10;
 		const followingMaxPage = opts.followingMaxPage ?? 2;
 		return await this.call("TIMELINE", {
-			path: `/v57/post/list.json?postLimit=${postLimit}&followingMaxPage=${followingMaxPage}`,
+			path:
+				`${VoomEndpoints.feed}?postLimit=${postLimit}&followingMaxPage=${followingMaxPage}`,
+		});
+	}
+	async noteList(opts: { boardId: string; limit?: number }) {
+		const q = new URLSearchParams({ boardId: opts.boardId });
+		if (opts.limit !== undefined) q.set("limit", String(opts.limit));
+		return await this.call("NOTE", {
+			path: `${VoomEndpoints.noteCardList}?${q.toString()}`,
+		});
+	}
+	async noteCreate(opts: { boardId: string; body: Record<string, unknown> }) {
+		return await this.call("NOTE", {
+			path: VoomEndpoints.noteCardCreate,
+			method: "POST",
+			body: { boardId: opts.boardId, ...opts.body },
+		});
+	}
+	async noteLike(opts: { cardId: string }) {
+		return await this.call("NOTE", {
+			path: VoomEndpoints.noteCardLikeCreate,
+			method: "POST",
+			body: { cardId: opts.cardId },
+		});
+	}
+	async noteUnlike(opts: { cardId: string }) {
+		return await this.call("NOTE", {
+			path: VoomEndpoints.noteCardLikeCancel,
+			method: "POST",
+			body: { cardId: opts.cardId },
 		});
 	}
 }

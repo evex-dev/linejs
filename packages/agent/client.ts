@@ -50,19 +50,7 @@ export function frtypeFor(source: AgentISource): string {
 }
 
 export interface AgentIOptions {
-	/**
-	 * `Cookie` header value sent on the SSE POST.  **Optional** — Yahoo's
-	 * search-agent endpoint accepts anonymous sessions (LINE Android calls
-	 * it from a fresh WebView the first time the user taps Agent I without
-	 * any Yahoo login).  When omitted or `""`, the client auto-mints
-	 * anonymous `B`/`XB` cookies via {@link AgentIClient.mintAnonymousCookies}
-	 * on first `chat()` call.  Pass a real cookie string only when you
-	 * want personalization (logged-in `A`/`XA` pair).
-	 *
-	 * Live-verified: anonymous-only invocations succeed; only personalized
-	 * features (history, saved chats) require the login pair.  Tracks
-	 * evex-dev/linejs#152.
-	 */
+	/** Optional; auto-mints anonymous yahoo cookies if omitted. */
 	cookie?: string;
 	/** LINE app version reported in the `Line/<ver>/Agenti` UA suffix.
 	 *  Defaults to a recent value from the LINE iOS captures used to
@@ -211,14 +199,7 @@ export class AgentIClient {
 		}
 	}
 
-	/**
-	 * Mints anonymous Yahoo session cookies (`B`/`XB`) by doing the same
-	 * initial WebView GET LINE Android does when opening the Agent I tab.
-	 * Returns a `Cookie:` header value suitable to pass straight to the
-	 * SSE POST.  Used implicitly when {@link AgentIOptions.cookie} is
-	 * omitted; exposed publicly for callers that want to mint + cache
-	 * cookies out-of-band.
-	 */
+	/** Mints anonymous Yahoo `B`/`XB` cookies via the same GET LINE's WebView does. */
 	static async mintAnonymousCookies(opts: {
 		fetch?: typeof fetch;
 		source?: AgentISource;

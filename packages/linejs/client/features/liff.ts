@@ -1,24 +1,6 @@
-/**
- * High-level LIFF helpers built on top of the hand-written
- * {@link "../../base/service/liff/mod.ts" | LiffService} RPC layer.
- *
- * The base \`LiffService\` already covers the wire surface (issueLiffView /
- * getLiffToken / sendLiff / sub-LIFF / consent flow); this module is the
- * ergonomic adapter for it on \`Client\`.  Two motivations:
- *
- * 1. Save callers from having to know the LiffService's token-cache and
- *    consent retry mechanics.  \`client.liff.shareMessages(chatMid, [...])\`
- *    does what 90% of bots want with one call.
- * 2. Provide typed builders for the most common LINE Messaging-API
- *    message objects (text, sticker, image) so callers don't have to
- *    hand-roll the JSON.
- */
+// High-level LIFF adapter on top of base/service/liff/mod.ts.
 import type { Client } from "../mod.ts";
 
-/** A LINE Messaging-API message payload, in the JSON shape accepted by
- *  the LIFF share endpoint (`/message/v3/share`).  The full schema is
- *  documented at https://developers.line.biz/en/reference/messaging-api/.
- *  This type is intentionally loose because LINE keeps extending it. */
 export type LiffMessage =
 	| LiffTextMessage
 	| LiffStickerMessage
@@ -54,8 +36,6 @@ export interface LiffTemplateMessage {
 	template: Record<string, unknown>;
 }
 
-/** Build a plain-text LIFF message.  Optional `sentBy` adds the
- *  "shared by X" badge LIFF apps can attach. */
 export function text(
 	body: string,
 	sentBy?: LiffTextMessage["sentBy"],
@@ -63,13 +43,10 @@ export function text(
 	return sentBy ? { type: "text", text: body, sentBy } : { type: "text", text: body };
 }
 
-/** Build a sticker LIFF message. */
 export function sticker(packageId: string, stickerId: string): LiffStickerMessage {
 	return { type: "sticker", packageId, stickerId };
 }
 
-/** Build an image LIFF message.  `previewImageUrl` defaults to the
- *  original-content URL when not supplied. */
 export function image(
 	originalContentUrl: string,
 	previewImageUrl: string = originalContentUrl,
@@ -77,7 +54,6 @@ export function image(
 	return { type: "image", originalContentUrl, previewImageUrl };
 }
 
-/** Build a Flex Message.  `contents` must follow LINE's Flex JSON. */
 export function flex(
 	altText: string,
 	contents: Record<string, unknown>,
@@ -86,25 +62,14 @@ export function flex(
 }
 
 export interface LiffClient {
-	/** The bot's default LIFF id, used when callers don't pass one. */
 	readonly defaultLiffId: string;
-	/** Override the default LIFF id (does not persist across reloads). */
 	setDefaultLiffId(liffId: string): void;
-	/** Mints a LIFF access token for a given chat + LIFF app id.
-	 *  Handles consent retry under the hood. */
 	getToken(opts: { chatMid?: string; liffId?: string; lang?: string }): Promise<string>;
-	/**
-	 * Issues a LIFF view for a given LIFF app and (optional) chat context.
-	 * Returns the full {@link LiffViewResponse} (`accessToken`, `viewUri`,
-	 * `viewType`, `features`, ...).  Use {@link getToken} if you only need
-	 * the access token.
-	 */
 	issueView(opts: {
 		chatMid?: string;
 		liffId?: string;
 		lang?: string;
 	}): Promise<import("@evex/linejs-types").LiffViewResponse>;
-	/** Issues a sub-LIFF view scoped to an already-minted parent token. */
 	issueSubView(
 		...args: Parameters<
 			import("../../base/service/liff/mod.ts").LiffService["issueSubLiffView"]
@@ -112,23 +77,16 @@ export interface LiffClient {
 	): ReturnType<
 		import("../../base/service/liff/mod.ts").LiffService["issueSubLiffView"]
 	>;
-	/** Sends one or more LIFF messages to a chat via the LIFF share
-	 *  endpoint.  Returns the raw server response so callers can read
-	 *  `sentMessages[]` if they need the assigned message ids. */
 	shareMessages(
 		to: string,
 		messages: LiffMessage[],
 		opts?: { liffId?: string; forceIssue?: boolean },
 	): Promise<unknown>;
-	/** Single-message convenience.  Equivalent to
-	 *  `shareMessages(to, [message], opts)`. */
 	shareMessage(
 		to: string,
 		message: LiffMessage,
 		opts?: { liffId?: string; forceIssue?: boolean },
 	): Promise<unknown>;
-	/** Lower-level access to the LiffService for callers who need its
-	 *  full surface (sub-LIFF, getLiffViewWithoutUserContext, etc.). */
 	readonly service: import("../../base/service/liff/mod.ts").LiffService;
 }
 
@@ -188,8 +146,6 @@ class ClientLiff implements LiffClient {
 	}
 }
 
-/** Construct the `Client.liff` adapter.  Not user-facing — the Client
- *  class instantiates this lazily. */
 export function createLiffClient(client: Client): LiffClient {
 	return new ClientLiff(client);
 }

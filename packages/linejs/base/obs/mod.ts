@@ -305,14 +305,7 @@ export class LineObs {
 		oType: ObjType;
 		to: string;
 		filename?: string;
-		/**
-		 * Optional pre-generated thumbnail for `image`/`gif`/`video` uploads.
-		 * When provided, it is encrypted with the same `keyMaterial` as the
-		 * main object and uploaded as `__ud-preview`, saving bandwidth (issue
-		 * #103).  When omitted, the previous behavior — re-uploading the full
-		 * encrypted blob as the preview — is preserved for backward compat.
-		 * Callers should pass a small (~256–512px wide) JPEG/PNG/MP4 frame.
-		 */
+		/** Optional thumbnail; encrypted with the same keyMaterial. #103. */
 		preview?: Blob;
 	}): Promise<Message> {
 		const { data, oType, to, filename, preview } = options;
@@ -357,10 +350,6 @@ export class LineObs {
 			params,
 		});
 		if (oType === "image" || oType === "gif" || oType === "video") {
-			// Encrypt the preview with the *same* keyMaterial so the recipient
-			// can reuse the decryption key the main message already carries.
-			// Fall back to the full encrypted blob only when no preview was
-			// supplied (legacy path; issue #103).
 			let previewEdata: Blob;
 			if (preview) {
 				const enc = await this.client.e2ee.encryptByKeyMaterial(
