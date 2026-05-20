@@ -54,6 +54,14 @@ deno run main.js
 
 ##### Documentation is [https://linejs.evex.land](https://linejs.evex.land/)
 
+## Migrating from v1
+
+The v1 → v2 surface change is large enough that a step-by-step manual
+diff isn't worth maintaining.  Install the agent skill (see
+[Installation](#installation)) and ask your coding agent to migrate
+the affected files — it will read the skill's roadmap, pull the
+current API shapes, and rewrite call sites against the live source.
+
 ## Browser Support
 
 For now, please use "https://esm.sh/jsr/@evex/linejs".
