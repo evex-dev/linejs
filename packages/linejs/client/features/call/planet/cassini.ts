@@ -145,82 +145,88 @@ export interface CassiniHeader {
 	userId: string;
 	/** Monotonic per-call sequence (the 0x1d5/0x1d6/... we observed). */
 	msgId: number;
-	/** 16-byte call UUID. */
-	uuid: Uint8Array;
-	/** 33-byte SEC1 compressed EC public key. */
-	userPub: Uint8Array;
-	/** Wire-observed fields 5/6 — opaque integers. */
-	field5?: bigint;
-	field6?: bigint;
-	/** Field 7: ms Unix timestamp. */
-	createdAtMs: bigint;
+	/** 16-byte call UUID — constant for the call's lifetime. */
+	callUuid16: Uint8Array;
+	/** 16-byte per-message random / HMAC tag — varies per packet. */
+	msgNonce: Uint8Array;
+	/** Wire-observed counter (varint). Increments slowly. */
+	counter: bigint;
+	/** Subscription id (varint) — constant per call. */
+	subscriptionId: bigint;
+	/** Session id (varint) — constant per call, differs slightly by msg
+	 *  class (the upper bits encode a class indicator). */
+	sessionId: bigint;
 }
 
 const enum HDR_TAG {
 	USER_ID = 1,
 	MSG_ID = 2,
-	UUID = 3,
-	USER_PUB = 4,
-	FIELD5 = 5,
-	FIELD6 = 6,
-	CREATED_AT_MS = 7,
+	CALL_UUID = 3,
+	MSG_NONCE = 4,
+	COUNTER = 5,
+	SUBSCRIPTION_ID = 6,
+	SESSION_ID = 7,
 }
 
-const enum ENV_TAG {
-	HEADER = 1,
-	BODY = 13, // tag 0x6a = (13 << 3) | 2
-}
+/** Envelope-body tag varies by message class. Observed values from a
+ *  real tom-call: */
+export const ENVELOPE_BODY_TAG = {
+	KA: 2,       // keepalive / handshake init
+	CONTROL: 3,  // req / rsp / exchange_app_str_data / initiator
+	STATE: 4,    // setup / complex state payloads with device info
+} as const;
+
+const ENV_HDR_TAG = 1;
 
 export function packCassiniHeader(h: CassiniHeader): Uint8Array {
-	const fields: PbField[] = [
+	return encodePb([
 		{ tag: HDR_TAG.USER_ID, wireType: WireType.LengthDelim, value: new TextEncoder().encode(h.userId) },
 		{ tag: HDR_TAG.MSG_ID, wireType: WireType.Varint, value: BigInt(h.msgId) },
-		{ tag: HDR_TAG.UUID, wireType: WireType.LengthDelim, value: h.uuid },
-		{ tag: HDR_TAG.USER_PUB, wireType: WireType.LengthDelim, value: h.userPub },
-	];
-	if (h.field5 !== undefined) {
-		fields.push({ tag: HDR_TAG.FIELD5, wireType: WireType.Varint, value: h.field5 });
-	}
-	if (h.field6 !== undefined) {
-		fields.push({ tag: HDR_TAG.FIELD6, wireType: WireType.Varint, value: h.field6 });
-	}
-	fields.push({
-		tag: HDR_TAG.CREATED_AT_MS,
-		wireType: WireType.Varint,
-		value: h.createdAtMs,
-	});
-	return encodePb(fields);
-}
-
-export function packCassini(env: CassiniEnvelope): Uint8Array {
-	const headerBytes = packCassiniHeader(env.header);
-	return encodePb([
-		{ tag: ENV_TAG.HEADER, wireType: WireType.LengthDelim, value: headerBytes },
-		{ tag: ENV_TAG.BODY, wireType: WireType.LengthDelim, value: env.body },
+		{ tag: HDR_TAG.CALL_UUID, wireType: WireType.LengthDelim, value: h.callUuid16 },
+		{ tag: HDR_TAG.MSG_NONCE, wireType: WireType.LengthDelim, value: h.msgNonce },
+		{ tag: HDR_TAG.COUNTER, wireType: WireType.Varint, value: h.counter },
+		{ tag: HDR_TAG.SUBSCRIPTION_ID, wireType: WireType.Varint, value: h.subscriptionId },
+		{ tag: HDR_TAG.SESSION_ID, wireType: WireType.Varint, value: h.sessionId },
 	]);
 }
 
-export function unpackCassini(wire: Uint8Array): CassiniEnvelope {
+export function packCassini(
+	env: CassiniEnvelope,
+	bodyTag: number = ENVELOPE_BODY_TAG.CONTROL,
+): Uint8Array {
+	const headerBytes = packCassiniHeader(env.header);
+	return encodePb([
+		{ tag: ENV_HDR_TAG, wireType: WireType.LengthDelim, value: headerBytes },
+		{ tag: bodyTag, wireType: WireType.LengthDelim, value: env.body },
+	]);
+}
+
+export function unpackCassini(
+	wire: Uint8Array,
+): CassiniEnvelope & { bodyTag: number } {
 	const fields = decodePb(wire);
-	const hdrField = fields.find((f) => f.tag === ENV_TAG.HEADER);
-	const bodyField = fields.find((f) => f.tag === ENV_TAG.BODY);
+	const hdrField = fields.find((f) => f.tag === ENV_HDR_TAG);
+	const bodyField = fields.find((f) =>
+		f.tag !== ENV_HDR_TAG && f.wireType === WireType.LengthDelim
+	);
 	if (!hdrField || !bodyField) throw new Error("unpackCassini: missing header/body");
-	const hdrParts = decodePb(hdrField.value as Uint8Array);
-	let userId = "", msgId = 0, uuid = new Uint8Array(0), userPub = new Uint8Array(0);
-	let field5: bigint | undefined, field6: bigint | undefined;
-	let createdAtMs = 0n;
+	const hdrParts = decodePb(new Uint8Array(hdrField.value as Uint8Array));
+	let userId = "", msgId = 0;
+	let callUuid16 = new Uint8Array(0), msgNonce = new Uint8Array(0);
+	let counter = 0n, subscriptionId = 0n, sessionId = 0n;
 	for (const f of hdrParts) {
 		if (f.tag === HDR_TAG.USER_ID) userId = new TextDecoder().decode(new Uint8Array(f.value as Uint8Array));
 		else if (f.tag === HDR_TAG.MSG_ID) msgId = Number(f.value);
-		else if (f.tag === HDR_TAG.UUID) uuid = new Uint8Array(f.value as Uint8Array);
-		else if (f.tag === HDR_TAG.USER_PUB) userPub = new Uint8Array(f.value as Uint8Array);
-		else if (f.tag === HDR_TAG.FIELD5) field5 = f.value as bigint;
-		else if (f.tag === HDR_TAG.FIELD6) field6 = f.value as bigint;
-		else if (f.tag === HDR_TAG.CREATED_AT_MS) createdAtMs = f.value as bigint;
+		else if (f.tag === HDR_TAG.CALL_UUID) callUuid16 = new Uint8Array(f.value as Uint8Array);
+		else if (f.tag === HDR_TAG.MSG_NONCE) msgNonce = new Uint8Array(f.value as Uint8Array);
+		else if (f.tag === HDR_TAG.COUNTER) counter = f.value as bigint;
+		else if (f.tag === HDR_TAG.SUBSCRIPTION_ID) subscriptionId = f.value as bigint;
+		else if (f.tag === HDR_TAG.SESSION_ID) sessionId = f.value as bigint;
 	}
 	return {
-		header: { userId, msgId, uuid, userPub, field5, field6, createdAtMs },
-		body: bodyField.value as Uint8Array,
+		header: { userId, msgId, callUuid16, msgNonce, counter, subscriptionId, sessionId },
+		body: new Uint8Array(bodyField.value as Uint8Array),
+		bodyTag: bodyField.tag,
 	};
 }
 
@@ -284,81 +290,98 @@ export function unpackCassiniBody(wire: Uint8Array): CassiniBody {
 	return out;
 }
 
-/** Build a Cassini SETUP envelope (the outgoing-call initiator). */
-export function buildSetupReq(opts: {
+/** Common per-call session parameters. The subscriptionId + sessionId
+ *  values are observed-constant within a single call and need to be
+ *  established by an initial bootstrap handshake (still under RE). */
+export interface CassiniSession {
 	fromMid: string;
+	callUuid16: Uint8Array;
+	callUuidString: string;
+	subscriptionId: bigint;
+	sessionId: bigint;
+}
+
+function nextNonce16(): Uint8Array {
+	const n = new Uint8Array(16);
+	crypto.getRandomValues(n);
+	return n;
+}
+
+/** Build a Cassini SETUP envelope (state-class body, tag=4 on the wire). */
+export function buildSetupReq(opts: {
+	session: CassiniSession;
 	msgId: number;
-	uuid: Uint8Array;
-	userPub: Uint8Array;
-	callUuid: string;
+	counter: bigint;
 	deviceInfo: string;
 }): Uint8Array {
 	const body = packCassiniBody({
-		callUuid: opts.callUuid,
+		callUuid: opts.session.callUuidString,
 		msgTypeName: "setup_req",
 		deviceInfo: opts.deviceInfo,
 	});
 	return packCassini({
 		header: {
-			userId: opts.fromMid,
+			userId: opts.session.fromMid,
 			msgId: opts.msgId,
-			uuid: opts.uuid,
-			userPub: opts.userPub,
-			createdAtMs: BigInt(Date.now()),
+			callUuid16: opts.session.callUuid16,
+			msgNonce: nextNonce16(),
+			counter: opts.counter,
+			subscriptionId: opts.session.subscriptionId,
+			sessionId: opts.session.sessionId,
 		},
 		body,
-	});
+	}, ENVELOPE_BODY_TAG.STATE);
 }
 
 /** Build a Cassini "exchange_app_str_data" — used mid-call for app-level
- *  signaling (e.g. CSV capability flag). */
+ *  signaling (e.g. CSV capability flag). control-class body (tag=3). */
 export function buildExchangeAppStrData(opts: {
-	fromMid: string;
+	session: CassiniSession;
 	msgId: number;
-	uuid: Uint8Array;
-	userPub: Uint8Array;
-	callUuid: string;
+	counter: bigint;
 	json: string;
 }): Uint8Array {
 	const body = packCassiniBody({
-		callUuid: opts.callUuid,
+		callUuid: opts.session.callUuidString,
 		msgTypeName: "exchange_app_str_data",
 		jsonParams: opts.json,
 	});
 	return packCassini({
 		header: {
-			userId: opts.fromMid,
+			userId: opts.session.fromMid,
 			msgId: opts.msgId,
-			uuid: opts.uuid,
-			userPub: opts.userPub,
-			createdAtMs: BigInt(Date.now()),
+			callUuid16: opts.session.callUuid16,
+			msgNonce: nextNonce16(),
+			counter: opts.counter,
+			subscriptionId: opts.session.subscriptionId,
+			sessionId: opts.session.sessionId,
 		},
 		body,
-	});
+	}, ENVELOPE_BODY_TAG.CONTROL);
 }
 
-/** Build a Cassini REL (release / BYE-equivalent). */
+/** Build a Cassini REL (release / BYE-equivalent). control-class body. */
 export function buildRelReq(opts: {
-	fromMid: string;
+	session: CassiniSession;
 	msgId: number;
-	uuid: Uint8Array;
-	userPub: Uint8Array;
-	callUuid: string;
+	counter: bigint;
 	reason?: string;
 }): Uint8Array {
 	const body = packCassiniBody({
-		callUuid: opts.callUuid,
+		callUuid: opts.session.callUuidString,
 		msgTypeName: "rel_req",
 		jsonParams: opts.reason ? JSON.stringify({ reason: opts.reason }) : undefined,
 	});
 	return packCassini({
 		header: {
-			userId: opts.fromMid,
+			userId: opts.session.fromMid,
 			msgId: opts.msgId,
-			uuid: opts.uuid,
-			userPub: opts.userPub,
-			createdAtMs: BigInt(Date.now()),
+			callUuid16: opts.session.callUuid16,
+			msgNonce: nextNonce16(),
+			counter: opts.counter,
+			subscriptionId: opts.session.subscriptionId,
+			sessionId: opts.session.sessionId,
 		},
 		body,
-	});
+	}, ENVELOPE_BODY_TAG.CONTROL);
 }

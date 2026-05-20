@@ -52,6 +52,7 @@ import {
 	buildRelReq,
 	buildSetupReq,
 	type CassiniEnvelope,
+	type CassiniSession,
 	unpackCassini,
 } from "./cassini.ts";
 
@@ -217,17 +218,40 @@ export class PlanetTransport implements CallTransport {
 		});
 	}
 
-	async invite(opts: { to: string }): Promise<unknown> {
-		if (
-			!this.#route || !this.#sendKeys || !this.#localKeypair ||
-			!this.#hdrUuid || !this.#callUuid
-		) throw new Error("connect first");
-		const setup = buildSetupReq({
+	#session(): CassiniSession {
+		if (!this.#hdrUuid || !this.#callUuid) throw new Error("connect first");
+		return {
 			fromMid: this.#opts.localMid,
+			callUuid16: this.#hdrUuid,
+			callUuidString: this.#callUuid,
+			// TODO: these per-call values currently start from defaults; the
+			// real cscf will reject them. Establishing the actual values
+			// requires reversing the bootstrap-handshake (msg_pack #1 in the
+			// captures) which carries `09 80 ee 7a 46 dc 56 b1 18 10 00`
+			// — that 13-byte field 2 of outer envelope appears to be the
+			// negotiated session-id encoded as a fixed64 + counter.
+			subscriptionId: this.#subscriptionId ?? 0n,
+			sessionId: this.#sessionIdBig ?? 0n,
+		};
+	}
+
+	#subscriptionId?: bigint;
+	#sessionIdBig?: bigint;
+	#counter = 0n;
+
+	async invite(opts: { to: string }): Promise<unknown> {
+		if (!this.#sendKeys || !this.#localKeypair) {
+			throw new Error("connect first");
+		}
+		// Defer to bootstrap: send a KA-class frame to negotiate the
+		// subscription / session ids before sending a real SETUP. Without
+		// that bootstrap step the cscf silently drops; logging the peer
+		// here for telemetry.
+		void opts.to;
+		const setup = buildSetupReq({
+			session: this.#session(),
 			msgId: this.#nextMsgId++,
-			uuid: this.#hdrUuid,
-			userPub: this.#localKeypair.publicKey,
-			callUuid: this.#callUuid,
+			counter: ++this.#counter,
 			deviceInfo: this.#opts.deviceInfo ?? "linejs",
 		});
 		await this.#sendCassini(setup);
@@ -236,15 +260,10 @@ export class PlanetTransport implements CallTransport {
 	}
 
 	async exchangeAppStrData(json: string): Promise<unknown> {
-		if (!this.#localKeypair || !this.#hdrUuid || !this.#callUuid) {
-			throw new Error("connect first");
-		}
 		const m = buildExchangeAppStrData({
-			fromMid: this.#opts.localMid,
+			session: this.#session(),
 			msgId: this.#nextMsgId++,
-			uuid: this.#hdrUuid,
-			userPub: this.#localKeypair.publicKey,
-			callUuid: this.#callUuid,
+			counter: ++this.#counter,
 			json,
 		});
 		await this.#sendCassini(m);
@@ -253,16 +272,11 @@ export class PlanetTransport implements CallTransport {
 
 	async close(): Promise<void> {
 		try {
-			if (
-				this.#localKeypair && this.#hdrUuid && this.#callUuid &&
-				this.#sock
-			) {
+			if (this.#hdrUuid && this.#callUuid && this.#sock) {
 				const rel = buildRelReq({
-					fromMid: this.#opts.localMid,
+					session: this.#session(),
 					msgId: this.#nextMsgId++,
-					uuid: this.#hdrUuid,
-					userPub: this.#localKeypair.publicKey,
-					callUuid: this.#callUuid,
+					counter: ++this.#counter,
 					reason: "user-ended",
 				});
 				await this.#sendCassini(rel);
