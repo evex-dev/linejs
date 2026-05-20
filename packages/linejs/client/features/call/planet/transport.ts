@@ -1,28 +1,17 @@
 /**
- * PLANET transport — UDP/IPv6 + framing + ECDH + HKDF chain + AES-CTR + Cassini.
+ * PLANET transport — full state-machine implementation.
  *
- * End-to-end flow:
- *
- *   On connect():
- *     - parse CallRoute.commParam.mpkey (peer's ephemeral P-256 SEC1 pubkey)
- *     - generate local ephemeral P-256 keypair
- *     - ECDH(local_priv, peer_pub) → 32B shared secret
- *     - stage1 = HKDF-SHA512(salt=secret, ikm=our_pub, info=peer_pub, len=64)
- *     - stage2_send/recv = HKDF-SHA256(stage1[:32], session_id, direction_tag, len=128)
- *     - carve send/recv {encKey, macKey, ivNonce} from stage2 outputs
- *
- *   On send(msg):
- *     - serialize Cassini envelope to protobuf bytes (pln_msg_pack-compatible)
- *     - AES-256-CTR encrypt with ivNonce + per-packet counter
- *     - HMAC-SHA256 tag (truncated to 16 bytes)
- *     - wrap with chunk_hdr (16-bit packed) + fixed_hdr (4-byte type/len/seq)
- *     - UDP send to cscf IPv6
- *
- *   On receive:
- *     - parse frame header → recover sequence
- *     - verify HMAC tag against recv.macKey
- *     - AES-CTR decrypt with recv.encKey + sequence-derived IV
- *     - unpack Cassini envelope
+ * Flow:
+ *   1. acquireRoute (caller already did)
+ *   2. connect(route): generate ephemeral keypair, derive session keys
+ *      via 2-stage HKDF, open UDP socket to cscf
+ *   3. invite(to): send SETUP_REQ (planet_msg with cc_msg.setup_req,
+ *      rmt_nonce=0 since we don't yet know cscf's loc_nonce)
+ *   4. First reply: decrypt, parse planet_msg_hdr,
+ *      extract cscf's loc_nonce → use as session.rmtNonce going forward
+ *      (libandromeda 0xcaa524: `str x8, [x19, #0xa0]`)
+ *   5. Subsequent sends: include the captured rmt_nonce
+ *   6. close(): send REL_REQ
  */
 
 import { Buffer } from "node:buffer";
@@ -48,13 +37,17 @@ import {
 	type TransportKeys,
 } from "./crypto.ts";
 import {
-	buildExchangeAppStrData,
-	buildRelReq,
-	buildSetupReq,
-	type CassiniEnvelope,
-	type CassiniSession,
-	unpackCassini,
-} from "./cassini.ts";
+	CC_MSG,
+	type CcSetupReq,
+	decodeFields,
+	extractRmtNonceFromReply,
+	packCcSetupReq,
+	packPlanetCcMsg,
+	packPlanetMsg,
+	type PlanetMsgHdr,
+	WireType,
+	wrapCcMsg,
+} from "./schema.ts";
 
 export interface PlanetTransportOpts {
 	localMid: string;
@@ -66,9 +59,13 @@ interface CallRouteParsed {
 	cscfHost: string;
 	cscfPort: number;
 	cscfHost6?: string;
-	peerPub: Uint8Array; // 33B SEC1 compressed
+	peerPub: Uint8Array;
 	toMid: string;
 	fromToken: string;
+	iZone?: string;
+	rZone?: string;
+	stid?: string;
+	stnpk?: string;
 }
 
 function parseRoute(r: LINETypes.CallRoute): CallRouteParsed {
@@ -82,28 +79,37 @@ function parseRoute(r: LINETypes.CallRoute): CallRouteParsed {
 		peerPub: decodeMpKey(mpkeyB64),
 		toMid: r.toMid,
 		fromToken: r.fromToken,
+		iZone: r.fromZone,
+		rZone: r.toZone,
+		stid: r.stid,
+		stnpk: r.stnpk,
 	};
 }
 
-/** Random 4-byte direction label (matches the observed 0x329aba33-style
- *  values used in the second-stage HKDF info field). */
-function randomLabel(): number {
-	return Math.floor(Math.random() * 0xffffffff) >>> 0;
-}
+const HEADER_LEN = 6;
 
 export class PlanetTransport implements CallTransport {
 	#opts: PlanetTransportOpts;
 	#sock?: DgramSocket;
 	#route?: CallRouteParsed;
-	#localKeypair?: EphemeralKeypair;
+	#local?: EphemeralKeypair;
 	#sendKeys?: TransportKeys;
 	#recvKeys?: TransportKeys;
-	#sessionId?: Uint8Array;
+	#sessId?: Uint8Array;
 	#callUuid?: string;
-	#nextMsgId = 0x100;
+	#callUuid16?: Uint8Array;
+
+	// Per-msg sequence + protocol state
 	#nextSeq = 0x01d0;
-	#pending: ((env: CassiniEnvelope) => void)[] = [];
-	#hdrUuid?: Uint8Array;
+	#tranSeq = 1;
+	#msgIdCounter = 1;
+
+	// loc_nonce we generate, rmt_nonce we learn from cscf's first reply
+	#locNonce = 0n;
+	#rmtNonce = 0n;
+	#nonceLearned = false;
+
+	#pending: Array<(env: Uint8Array | Error) => void> = [];
 
 	constructor(opts: PlanetTransportOpts) {
 		this.#opts = opts;
@@ -111,61 +117,81 @@ export class PlanetTransport implements CallTransport {
 
 	async connect(opts: { route: LINETypes.CallRoute }): Promise<void> {
 		this.#route = parseRoute(opts.route);
-		this.#localKeypair = generateEphemeralKeypair();
-		this.#sessionId = newSessionId();
-		this.#hdrUuid = new Uint8Array(16);
-		crypto.getRandomValues(this.#hdrUuid);
+		this.#local = generateEphemeralKeypair();
+		this.#sessId = newSessionId();
+		this.#callUuid16 = crypto.getRandomValues(new Uint8Array(16));
 		this.#callUuid = crypto.randomUUID();
-		const sendLabel = randomLabel();
-		const recvLabel = randomLabel();
+
+		// Random per-session nonces — sendLabel/recvLabel are 2-byte session counters
+		// (libandromeda's transport.@0x730 — we use 1 for forward, 2 for reverse)
 		const keys = deriveCallKeys({
 			mpkey: this.#route.peerPub,
-			local: this.#localKeypair,
-			sessionId: this.#sessionId,
-			sendLabel,
-			recvLabel,
+			local: this.#local,
+			sessionId: this.#sessId,
+			sendLabel: 1,
+			recvLabel: 2,
 		});
 		this.#sendKeys = keys.send;
 		this.#recvKeys = keys.recv;
 
+		// loc_nonce is a random u64 we choose
+		const buf = new Uint8Array(8);
+		crypto.getRandomValues(buf);
+		// Library convention: high byte 0x6a (matches LINE's observed values)
+		buf[7] = 0x6a;
+		this.#locNonce = new DataView(buf.buffer).getBigUint64(0, false);
+
 		const dgram = await import("node:dgram");
-		const sock = dgram.createSocket(this.#route.cscfHost6 ? "udp6" : "udp4");
+		const isIPv6 = !!this.#route.cscfHost6;
+		const sock = dgram.createSocket(isIPv6 ? "udp6" : "udp4");
 		this.#sock = sock;
 		await new Promise<void>((res) =>
-			sock.bind({ address: this.#route!.cscfHost6 ? "::" : "0.0.0.0", port: 0 }, () => res())
+			sock.bind(
+				{ address: isIPv6 ? "::" : "0.0.0.0", port: 0 },
+				() => res(),
+			)
 		);
 		sock.on("message", (buf) => this.#onWire(new Uint8Array(buf)));
 	}
 
 	#onWire(wire: Uint8Array) {
 		try {
-			if (wire.length < 6 + 16) return;
+			if (wire.length < HEADER_LEN + 16) return;
 			const { fixed } = parseFrameHeader(wire);
-			const body = wire.subarray(6);
-			const env = this.#decrypt(body, fixed.sequence);
-			if (env) {
-				const w = this.#pending.shift();
-				if (w) w(env);
+			const body = wire.subarray(HEADER_LEN);
+			const pt = this.#decrypt(body, fixed.sequence);
+			if (!pt) return;
+
+			// Parse outer planet_msg to find hdr → extract loc_nonce on first reply
+			if (!this.#nonceLearned) {
+				try {
+					const outer = decodeFields(pt);
+					const hdrField = outer.find((f) =>
+						f.tag === 1 && f.wireType === WireType.LengthDelim
+					);
+					if (hdrField) {
+						const hdrBytes = new Uint8Array(hdrField.value as Uint8Array);
+						this.#rmtNonce = extractRmtNonceFromReply(hdrBytes);
+						this.#nonceLearned = true;
+					}
+				} catch (_e) { /* keep trying on next msg */ }
 			}
+
+			const w = this.#pending.shift();
+			if (w) w(pt);
 		} catch (_e) {
-			// Not a PLANET frame (likely SRTP media), ignore
+			// Probably SRTP media or malformed — ignore
 		}
 	}
 
-	#decrypt(body: Uint8Array, sequence: number): CassiniEnvelope | null {
-		if (!this.#recvKeys) return null;
-		if (body.length < 16) return null;
+	#decrypt(body: Uint8Array, sequence: number): Uint8Array | null {
+		if (!this.#recvKeys || body.length < 16) return null;
 		const tag = body.subarray(body.length - 16);
 		const ct = body.subarray(0, body.length - 16);
 		const expected = hmacTag(this.#recvKeys.macKey, ct);
 		if (!tagEquals(tag, expected)) return null;
 		const iv = buildCtrIv(this.#recvKeys.ivNonce, sequence);
-		const pt = aesCtrDecrypt(this.#recvKeys.encKey, iv, ct);
-		try {
-			return unpackCassini(pt);
-		} catch (_e) {
-			return null;
-		}
+		return aesCtrDecrypt(this.#recvKeys.encKey, iv, ct);
 	}
 
 	#encrypt(plaintext: Uint8Array, sequence: number): Uint8Array {
@@ -179,10 +205,28 @@ export class PlanetTransport implements CallTransport {
 		return out;
 	}
 
-	async #sendCassini(envBytes: Uint8Array): Promise<void> {
+	#planetHdr(): PlanetMsgHdr {
+		if (!this.#sessId) throw new Error("connect first");
+		const tranId = new Uint8Array(16);
+		crypto.getRandomValues(tranId);
+		return {
+			userId: this.#opts.localMid,
+			msgId: this.#msgIdCounter++,
+			sessId: this.#sessId,
+			tranId,
+			tranSeq: this.#tranSeq++,
+			locNonce: this.#locNonce,
+			rmtNonce: this.#rmtNonce,
+		};
+	}
+
+	async #sendEnvelope(body: { kind: "sc" | "cc" | "mc"; data: Uint8Array }): Promise<void> {
 		if (!this.#sock || !this.#route) throw new Error("not connected");
+		const planetMsg = packPlanetMsg(this.#planetHdr(), body);
 		const seq = this.#nextSeq++;
-		const enc = this.#encrypt(envBytes, seq);
+		const enc = this.#encrypt(planetMsg, seq);
+		const totalLen = HEADER_LEN + enc.length;
+		const chunkLogical = (((totalLen - 4) << 5) | 0xd) & 0xffff;
 		const fixed: PlanetFixedHdr = {
 			type: 0,
 			flagA: false,
@@ -190,31 +234,22 @@ export class PlanetTransport implements CallTransport {
 			flagB: false,
 			sequence: seq & 0x7fff,
 		};
-		// chunkLogical encodes the total datagram length via the formula
-		// `((datagramLen - 4) << 5) | 0xd`, derived by inverse-fitting the
-		// observed wire pattern. The low nibble (0xd) is the PLANET
-		// message-class marker. Bit 4 set on the input flips to bit 11 of
-		// the wire byte; the captured 952B STATE-class packet had it set,
-		// others didn't — currently unflagged.
-		const HEADER_LEN = 6; // chunk_hdr (2) + fixed_hdr (4)
-		const totalLen = HEADER_LEN + enc.length;
-		const chunkLogical = (((totalLen - 4) << 5) | 0xd) & 0xffff;
 		const hdr = buildFrameHeader(chunkLogical, fixed);
 		const datagram = new Uint8Array(hdr.length + enc.length);
 		datagram.set(hdr, 0);
 		datagram.set(enc, hdr.length);
 		const host = this.#route.cscfHost6 || this.#route.cscfHost;
-		await new Promise<void>((res, rj) => {
+		await new Promise<void>((res, rj) =>
 			this.#sock!.send(
 				Buffer.from(datagram),
 				this.#route!.cscfPort,
 				host,
-				(e) => e ? rj(e) : res(),
-			);
-		});
+				(e) => (e ? rj(e) : res()),
+			)
+		);
 	}
 
-	#waitForReply(timeoutMs: number): Promise<CassiniEnvelope> {
+	#waitForReply(timeoutMs: number): Promise<Uint8Array> {
 		return new Promise((res, rj) => {
 			const t = setTimeout(
 				() => rj(new Error("PLANET reply timeout")),
@@ -222,86 +257,62 @@ export class PlanetTransport implements CallTransport {
 			);
 			this.#pending.push((env) => {
 				clearTimeout(t);
-				res(env);
+				if (env instanceof Error) rj(env);
+				else res(env);
 			});
 		});
 	}
 
-	#session(): CassiniSession {
-		if (!this.#hdrUuid || !this.#callUuid) throw new Error("connect first");
-		return {
-			fromMid: this.#opts.localMid,
-			callUuid16: this.#hdrUuid,
-			callUuidString: this.#callUuid,
-			// TODO: these per-call values currently start from defaults; the
-			// real cscf will reject them. Establishing the actual values
-			// requires reversing the bootstrap-handshake (msg_pack #1 in the
-			// captures) which carries `09 80 ee 7a 46 dc 56 b1 18 10 00`
-			// — that 13-byte field 2 of outer envelope appears to be the
-			// negotiated session-id encoded as a fixed64 + counter.
-			subscriptionId: this.#subscriptionId ?? 0n,
-			sessionId: this.#sessionIdBig ?? 0n,
+	async invite(opts: { to: string }): Promise<Uint8Array> {
+		if (!this.#route || !this.#local) throw new Error("connect first");
+		const ourPubB64 = btoa(String.fromCharCode(...this.#local.publicKey));
+		const setup: CcSetupReq = {
+			initiator: this.#opts.localMid,
+			responder: opts.to,
+			iZone: this.#route.iZone,
+			rZone: this.#route.rZone,
+			devId: this.#opts.deviceInfo ?? "linejs",
+			offer: new TextEncoder().encode("AUDIO"),
+			credential: new TextEncoder().encode(this.#route.fromToken),
+			fakeCall: false,
+			svcKey: ourPubB64,
+			stid: this.#route.stid,
 		};
-	}
-
-	#subscriptionId?: bigint;
-	#sessionIdBig?: bigint;
-	#counter = 0n;
-
-	async invite(opts: { to: string }): Promise<unknown> {
-		if (!this.#sendKeys || !this.#localKeypair) {
-			throw new Error("connect first");
-		}
-		// Defer to bootstrap: send a KA-class frame to negotiate the
-		// subscription / session ids before sending a real SETUP. Without
-		// that bootstrap step the cscf silently drops; logging the peer
-		// here for telemetry.
-		void opts.to;
-		const setup = buildSetupReq({
-			session: this.#session(),
-			msgId: this.#nextMsgId++,
-			counter: ++this.#counter,
-			deviceInfo: this.#opts.deviceInfo ?? "linejs",
-		});
-		await this.#sendCassini(setup);
+		const setupBytes = packCcSetupReq(setup);
+		const ccBody = wrapCcMsg(CC_MSG.SETUP_REQ, setupBytes);
+		const cid = this.#callUuid!;
+		const ccMsg = packPlanetCcMsg(
+			{ cid, srcChanId: 1n, dstChanId: 0n },
+			ccBody,
+		);
+		await this.#sendEnvelope({ kind: "cc", data: ccMsg });
 		const reply = await this.#waitForReply(this.#opts.timeoutMs ?? 10000);
 		return reply;
 	}
 
-	async exchangeAppStrData(json: string): Promise<unknown> {
-		const m = buildExchangeAppStrData({
-			session: this.#session(),
-			msgId: this.#nextMsgId++,
-			counter: ++this.#counter,
-			json,
-		});
-		await this.#sendCassini(m);
-		return await this.#waitForReply(this.#opts.timeoutMs ?? 10000);
-	}
-
 	async close(): Promise<void> {
 		try {
-			if (this.#hdrUuid && this.#callUuid && this.#sock) {
-				const rel = buildRelReq({
-					session: this.#session(),
-					msgId: this.#nextMsgId++,
-					counter: ++this.#counter,
-					reason: "user-ended",
+			if (this.#route && this.#sock) {
+				const relBody = packCcSetupReq({
+					initiator: this.#opts.localMid,
+					responder: this.#route.toMid,
 				});
-				await this.#sendCassini(rel);
+				const ccBody = wrapCcMsg(CC_MSG.REL_REQ, relBody);
+				const ccMsg = packPlanetCcMsg(
+					{ cid: this.#callUuid ?? "rel", srcChanId: 1n, dstChanId: 0n },
+					ccBody,
+				);
+				await this.#sendEnvelope({ kind: "cc", data: ccMsg });
 			}
 		} catch { /* */ }
 		await new Promise<void>((res) => this.#sock?.close(() => res()));
 	}
 
 	send(_packet: Uint8Array): void | Promise<void> {
-		// Media-plane send happens via AndromedaTransport/srtp; PlanetTransport
-		// is for signaling only.
-		throw new Error("PlanetTransport.send: media plane is handled separately");
+		throw new Error("PlanetTransport.send: signaling only");
 	}
 
 	async *receive(): AsyncIterable<Uint8Array> {
-		// Same — receive is signaling-only here.
 		return;
 	}
 }
