@@ -7,14 +7,23 @@
  * against LINE 26.6.2 — every documented path returns JSON envelopes
  * of the form `{ code, message, result }`.
  *
- * **Auth status (provisional, see evex-dev/linejs#151):** the gateway
- * rejects the raw `X-Line-Access` primaryToken with `code: 401
- * "Renewing user verification..."`.  It expects a channel-scoped token
- * for the TIMELINE channel (id `1341209950`), which on DESKTOPWIN
- * cannot be minted via `Channel.issueChannelToken` — that returns
- * `ILLEGAL_ARGUMENT: invalid channelId`.  ANDROID-typed clients may
- * succeed; this helper exposes the wire shape so callers who *can*
- * mint the right token can drive the gateway.
+ * **Auth (live-verified):** the gateway expects a channel-scoped
+ * token sent as `Authorization: Bearer <token>`, plus `X-Line-Mid`.
+ * Mint the channel token with
+ * `client.base.channel.issueChannelToken({ channelId })` — the wrapper
+ * takes an **object**, not a positional string (the JSON Thrift
+ * codegen emits `{ channelId }`; passing a string yields
+ * `ILLEGAL_ARGUMENT: invalid channelId. channelid: "null"`).
+ *
+ * `DESKTOPWIN` device type cannot create QR-login sessions, but
+ * **`ANDROIDSECONDARY`** can (verified) and successfully mints
+ * channel tokens for TIMELINE / HOME / HOME26 / NOTE / SQUARE_NOTE /
+ * ALBUM.  After moving from `X-Line-Access` to `Authorization: Bearer
+ * <channelToken>` the gateway moves from `code:401 "Renewing user
+ * verification..."` to `code:504` (temporary downstream error) —
+ * meaning the auth surface is now correct but the upstream "myhome"
+ * service still doesn't deliver from this client context.  The
+ * remaining 504 is tracked in #151.
  *
  * Source of truth:
  *   `decompiled/base/smali/smali/t98/a$b.smali`  — channel id enum
@@ -68,14 +77,29 @@ export async function voomRest<T = unknown>(
 		opts.path.startsWith("/") ? opts.path : "/" + opts.path
 	}`;
 
+	// MH gateway auth shape (live-verified against LINE 26.6.2):
+	//   - `Authorization: Bearer <channelToken>` — the channel-scoped
+	//     OAuth-style token minted via Channel.issueChannelToken.  The
+	//     RPC wrapper takes `{ channelId: "..." }` (object), NOT a
+	//     positional string — passing a string yields `ILLEGAL_ARGUMENT:
+	//     invalid channelId. channelid: "null"`.
+	//   - `X-Line-Mid: <mid>` — the account's own mid; without this the
+	//     gateway returns `code:405 "No results were found for the
+	//     requested user information."`.
+	//   - `X-Line-Application` and a Line/<ver> UA — kept for consistency
+	//     with LINE Android's traffic shape.
+	//
+	// Channel tokens are minted per channel — TIMELINE / HOME / NOTE /
+	// SQUARE_NOTE / ALBUM, see `VoomChannelId`.  Mint with:
+	//   client.base.channel.issueChannelToken({ channelId: VoomChannelId.TIMELINE })
 	const headers: Record<string, string> = {
 		accept: "application/json",
 		"x-line-application": client.base.request.systemType,
 		"user-agent": client.base.request.userAgent,
-		"x-line-access": client.authToken,
+		"X-Line-Mid": client.base.profile?.mid ?? "",
 		...(opts.channelToken
-			? { "X-Line-ChannelToken": opts.channelToken }
-			: {}),
+			? { authorization: `Bearer ${opts.channelToken}` }
+			: { "x-line-access": client.authToken }),
 		...(opts.extraHeaders ?? {}),
 	};
 	if (opts.body !== undefined) headers["content-type"] = "application/json";
