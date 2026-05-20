@@ -216,4 +216,16 @@ export class CallService implements BaseService {
 			this.requestPath,
 		);
 	}
+
+	async getCallStatus(
+		...param: Parameters<typeof LINEStruct.getCallStatus_args>
+	): Promise<LINETypes.getCallStatus_result["success"]> {
+		return await this.client.request.request(
+			LINEStruct.getCallStatus_args(...param),
+			"getCallStatus",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
 }
