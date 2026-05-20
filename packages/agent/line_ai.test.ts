@@ -155,13 +155,13 @@ Deno.test("deleteThread — DELETE /v2/thread/<id>", async () => {
 	assertEquals(m.calls[0].url, "https://line-x-openai.line-apps.com/v2/thread/t1");
 });
 
-Deno.test("getPromptPresets — GET /v2/<serviceId>/prompt-preset with Accept-Language", async () => {
+Deno.test("getPromptPresets — GET /v2/<contextType>/prompt-preset with Accept-Language (live-verified)", async () => {
 	const m = mockFetch();
-	await client(m.fetch).getPromptPresets({ serviceId: "line-ai-agent" });
+	await client(m.fetch).getPromptPresets({ contextType: "trending" });
 	assertEquals(m.calls[0].method, "GET");
 	assertEquals(
 		m.calls[0].url,
-		"https://line-x-openai.line-apps.com/v2/line-ai-agent/prompt-preset",
+		"https://line-x-openai.line-apps.com/v2/trending/prompt-preset",
 	);
 	assertEquals(m.calls[0].headers["accept-language"], "ja-JP");
 });
