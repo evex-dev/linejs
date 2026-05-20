@@ -55,6 +55,9 @@ That's the smallest useful bot. For richer surfaces start with the `Client` wrap
 
 ## Roadmap — where to look for what
 
+In all cases, looking at the latest code is best.
+https://github.com/evex-dev/linejs
+
 | You want to … | Look at |
 |---|---|
 | log in (QR / email) | `packages/linejs/base/login/mod.ts` — uses ForSecure RPCs as of v2.7; legacy `createQrCode` is server-rejected |
