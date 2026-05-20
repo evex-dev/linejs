@@ -15,6 +15,10 @@ import {
 } from "./features/profile.ts";
 import { createLiffClient, type LiffClient } from "./features/liff.ts";
 export * as liff from "./features/liff.ts";
+export * as voom from "./features/voom.ts";
+import { VoomChannelId, voomRest, type VoomRestOptions, type VoomRestResponse } from "./features/voom.ts";
+export { VoomChannelId };
+export type { VoomRestOptions, VoomRestResponse };
 export { Chat, Square, SquareChat, SquareMessage, TalkMessage, User };
 export { ProfileAttribute } from "./features/profile.ts";
 export type { MyProfileUpdate } from "./features/profile.ts";
@@ -59,6 +63,14 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	get liff(): LiffClient {
 		if (!this.#liff) this.#liff = createLiffClient(this);
 		return this.#liff;
+	}
+
+	/**
+	 * Low-level VOOM REST call.  See {@link "./features/voom.ts"} for
+	 * docs + channel-token caveats (#151 tracks the auth investigation).
+	 */
+	voomRest<T = unknown>(opts: VoomRestOptions): Promise<VoomRestResponse<T>> {
+		return voomRest(this, opts);
 	}
 
 	/**
