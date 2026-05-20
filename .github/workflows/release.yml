@@ -30,6 +30,11 @@ jobs:
           cd packages/linejs
           deno run -A jsr:@david/publish-on-tag@0.1.3
       - name: Publish linejs-agent to JSR
+        # First publish needs the package created at
+        #   https://jsr.io/new?scope=evex&package=linejs-agent&from=cli
+        # with OIDC trust to this repo. Until that's done this step is
+        # expected to fail; don't fail the release for it.
+        continue-on-error: true
         run: |
           cd packages/agent
           deno run -A jsr:@david/publish-on-tag@0.1.3
