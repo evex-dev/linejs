@@ -66,6 +66,7 @@ https://github.com/evex-dev/linejs
 | change profile attributes | `client.updateMyProfile({...})` / see `packages/linejs/client/features/profile.ts` |
 | rename / favourite / mute friends | `User.rename()` / `User.setFavorite()` etc. — see `packages/linejs/client/features/user/mod.ts` |
 | chat BGM | `Chat.getBgm()` / `Chat.setBgm()` |
+| LIFF share / token | `client.liff.shareMessages(chatMid, [...])` and `client.liff.getToken({ liffId, chatMid })` — see `packages/linejs/client/features/liff.ts` for message builders (`text` / `sticker` / `image` / `flex`).  Lower-level surface at `client.liff.service` / `BaseClient.liff`. |
 | calendar events on a contact | `User.fetchCalendarEvents()` — note: server-gated on some client device types (DESKTOPWIN currently lacks it) |
 | upload profile picture / cover | `client.uploadMyProfileImage(blob)` / `client.uploadMyProfileBackground(blob)` |
 | **Agent I** (LINE's chat-tab AI search) | `@evex/linejs-agent` — wraps Yahoo's search-agent SSE backend that LINE Android opens in a WebView. Requires Yahoo session cookies; LINE does not mint them. |
