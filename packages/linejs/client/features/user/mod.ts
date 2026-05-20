@@ -46,6 +46,56 @@ export class User {
 		return [];
 	}
 
+	/**
+	 * Sets a display-name override (the "rename friend" feature in LINE
+	 * Android: 友だち編集 → 表示名).  Pass `null` to clear the override.
+	 *
+	 * Backed by `talk.updateContactSetting` with flag =
+	 * `CONTACT_SETTING_DISPLAY_NAME_OVERRIDE`.
+	 */
+	async rename(displayNameOverride: string | null): Promise<void> {
+		const client = this.#requireClient("rename");
+		await client.base.talk.updateContactSetting({
+			reqSeq: await client.base.getReqseq(),
+			mid: this.mid,
+			flag: "CONTACT_SETTING_DISPLAY_NAME_OVERRIDE",
+			value: displayNameOverride ?? "",
+		});
+	}
+
+	/** Toggles favorite (☆) on this contact. */
+	async setFavorite(favorite: boolean): Promise<void> {
+		const client = this.#requireClient("setFavorite");
+		await client.base.talk.updateContactSetting({
+			reqSeq: await client.base.getReqseq(),
+			mid: this.mid,
+			flag: "CONTACT_SETTING_FAVORITE",
+			value: favorite ? "true" : "false",
+		});
+	}
+
+	/** Mutes notifications for this contact's chats. */
+	async setNotificationDisabled(disabled: boolean): Promise<void> {
+		const client = this.#requireClient("setNotificationDisabled");
+		await client.base.talk.updateContactSetting({
+			reqSeq: await client.base.getReqseq(),
+			mid: this.mid,
+			flag: "CONTACT_SETTING_NOTIFICATION_DISABLE",
+			value: disabled ? "true" : "false",
+		});
+	}
+
+	/** Hides this contact from the friend list. */
+	async setHidden(hidden: boolean): Promise<void> {
+		const client = this.#requireClient("setHidden");
+		await client.base.talk.updateContactSetting({
+			reqSeq: await client.base.getReqseq(),
+			mid: this.mid,
+			flag: "CONTACT_SETTING_CONTACT_HIDE",
+			value: hidden ? "true" : "false",
+		});
+	}
+
 	#requireClient(method: string): Client {
 		if (!this.#client) {
 			throw new Error(
