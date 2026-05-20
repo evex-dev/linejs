@@ -84,34 +84,19 @@ Deno.test("VoomClient.feed — custom limits", async () => {
 	assertEquals(u.searchParams.get("followingMaxPage"), "5");
 });
 
-Deno.test("VoomClient.noteList — uses NOTE channel + bdb/card/list endpoint (#150)", async () => {
+Deno.test("VoomClient.timelineStatus — uses /tl prefix + TIMELINE channel token (live-verified)", async () => {
 	const { client, fetched, issued } = makeFake();
 	const vc = createVoomClient(client);
-	await vc.noteList({ boardId: "BD-1", limit: 50 });
-	assertEquals(issued, [VoomChannelId.NOTE]);
+	await vc.timelineStatus();
+	assertEquals(issued, [VoomChannelId.TIMELINE]);
 	const u = new URL(fetched[0].url);
-	assertEquals(u.pathname, "/mh/api/v1/bdb/card/list");
-	assertEquals(u.searchParams.get("boardId"), "BD-1");
-	assertEquals(u.searchParams.get("limit"), "50");
-	assertEquals(fetched[0].headers["X-Line-ChannelToken"], `tok-${VoomChannelId.NOTE}`);
+	assertEquals(u.pathname, "/tl/api/v57/timeline/tab/status.json");
+	assertEquals(fetched[0].headers["X-Line-ChannelToken"], `tok-${VoomChannelId.TIMELINE}`);
 });
 
-Deno.test("VoomClient.noteCreate — POSTs to bdb/card/create with boardId in body (#150)", async () => {
+Deno.test("VoomClient.call — routing prefix selects the right gateway path", async () => {
 	const { client, fetched } = makeFake();
 	const vc = createVoomClient(client);
-	await vc.noteCreate({
-		boardId: "BD-1",
-		body: { text: "hello", attachments: [] },
-	});
-	const u = new URL(fetched[0].url);
-	assertEquals(u.pathname, "/mh/api/v1/bdb/card/create");
-});
-
-Deno.test("VoomClient.noteLike / noteUnlike — POSTs with cardId (#150)", async () => {
-	const { client, fetched } = makeFake();
-	const vc = createVoomClient(client);
-	await vc.noteLike({ cardId: "CARD-1" });
-	await vc.noteUnlike({ cardId: "CARD-1" });
-	assertEquals(new URL(fetched[0].url).pathname, "/mh/api/v1/bdb/card/like/create");
-	assertEquals(new URL(fetched[1].url).pathname, "/mh/api/v1/bdb/card/like/cancel");
+	await vc.call("ALBUM", { routing: "ALBUM", path: "/api/v1.0/initialize" });
+	assertEquals(new URL(fetched[0].url).pathname, "/ext/album/api/v1.0/initialize");
 });
