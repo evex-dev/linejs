@@ -53,9 +53,13 @@ export {
 	frtypeFor,
 } from "./client.ts";
 export {
+	LINE_AI_CHANNEL_ID,
+	LINE_AI_HOST_ALPHA,
+	LINE_AI_HOST_RELEASE,
 	LineAiClient,
-	LineAiEndpoints,
+	type LineAiCancelQueryRequest,
 	type LineAiOptions,
+	type LineAiQueryChunk,
 	type LineAiQueryRequest,
 	type LineAiResponse,
 } from "./line_ai.ts";
