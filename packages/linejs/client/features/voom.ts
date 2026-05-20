@@ -1,6 +1,6 @@
-// VOOM/MH REST helpers — gw.line.naver.jp/mh, auth via channel-token
-// (Bearer + X-Line-Mid). Needs ANDROIDSECONDARY device — DESKTOPWIN
-// can't mint on LINE 26+.
+// VOOM / MyHome / Note / Album REST helpers. Routing prefix table +
+// X-Line-ChannelToken auth — all from smali (m98/v$a, ps5/j) and
+// live-verified against gw.line.naver.jp.
 import type { Client } from "../mod.ts";
 
 /** Channel ids from smali t98.a$b. */
@@ -13,12 +13,37 @@ export const VoomChannelId = {
 	ALBUM: "1375220249",
 } as const;
 
+/**
+ * Routing prefix per MH-family service, from smali ps5/j enum
+ * (LINE Android 26.6.2). The gateway is gw.line.naver.jp and the prefix
+ * selects which upstream Spring service handles the request.
+ */
+export const VoomRoutingPrefix = {
+	MYHOME: "/mh",
+	MYHOME_RENEWAL: "/hm",
+	TIMELINE: "/tl",
+	TIMELINE_GATEWAY: "/ext/timeline/tlgw",
+	NOTE: "/ext/note/nt",
+	HOMEAPI: "/ma",
+	SQUARE_NOTE: "/sn",
+	ALBUM: "/ext/album",
+	STORY: "/st",
+	SOCIAL_NOTIFICATION: "/eg",
+	TRANSLATION: "/ds",
+} as const;
+
+export type VoomRouting = keyof typeof VoomRoutingPrefix;
+
 export interface VoomRestOptions {
+	/** Path under the routing prefix, e.g. "/api/v57/post/list.json". */
 	path: string;
+	/** Which routing prefix to apply. Defaults to MYHOME. */
+	routing?: VoomRouting;
 	method?: "GET" | "POST" | "PUT" | "DELETE";
 	body?: unknown;
 	channelToken?: string;
 	extraHeaders?: Record<string, string>;
+	/** Full host override (default gw.line.naver.jp). */
 	host?: string;
 }
 
@@ -32,13 +57,11 @@ export async function voomRest<T = unknown>(
 	client: Client,
 	opts: VoomRestOptions,
 ): Promise<VoomRestResponse<T>> {
-	// Live probe: gw.line.naver.jp/<path> returns 404; the gateway prefix
-	// is /mh. So host default = "gw.line.naver.jp/mh".
-	const host = opts.host ?? "gw.line.naver.jp/mh";
-	const method = opts.method ?? "GET";
-	const url = `https://${host}${
-		opts.path.startsWith("/") ? opts.path : "/" + opts.path
-	}`;
+	const host = opts.host ?? "gw.line.naver.jp";
+	const prefix = VoomRoutingPrefix[opts.routing ?? "MYHOME"];
+	const method = opts.method ?? (opts.body !== undefined ? "POST" : "GET");
+	const path = opts.path.startsWith("/") ? opts.path : "/" + opts.path;
+	const url = `https://${host}${prefix}${path}`;
 	const headers: Record<string, string> = {
 		accept: "application/json",
 		"X-Line-Application": client.base.request.systemType,
@@ -76,9 +99,12 @@ export async function getChannelToken(
 	return t;
 }
 
-/** MH-gateway REST paths from LINE Android 26.6.2 smali. */
+/**
+ * Curated MH-family REST paths from LINE Android 26.6.2 smali.
+ * Each path is paired with its routing prefix in {@link VoomEndpointRouting}.
+ */
 export const VoomEndpoints = {
-	// VOOM feed / posts (TIMELINE channel)
+	// VOOM feed / posts → MYHOME prefix
 	feed: "/api/v57/post/list.json",
 	createPost: "/api/v57/post/create.json",
 	updatePost: "/api/v57/post/update.json",
@@ -88,58 +114,38 @@ export const VoomEndpoints = {
 	sendPostToTalk: "/api/v57/post/sendPostToTalk.json",
 	getShareLink: "/api/v57/post/getShareLink.json",
 	reportPost: "/api/v57/post/report.json",
-	// Comments
 	createComment: "/api/v57/comment/create.json",
-	updateComment: "/api/v57/comment/get.json",
 	deleteComment: "/api/v57/comment/delete.json",
 	getComment: "/api/v57/comment/get.json",
 	listComments: "/api/v57/comment/getList.json",
 	reportComment: "/api/v57/comment/report.json",
-	// Likes
 	createLike: "/api/v57/like/create.json",
 	cancelLike: "/api/v57/like/cancel.json",
 	getLike: "/api/v57/like/get.json",
 	listLikes: "/api/v57/like/getList.json",
-	// Feed / timeline
 	feedGet: "/api/v57/feed/get.json",
 	feedNewfeed: "/api/v57/feed/newfeed.json",
-	timelineStatus: "/api/v57/timeline/tab/status.json",
-	timelineContents: "/api/v57/timeline/tab/contents.json",
-	// Search
-	searchNote: "/api/v57/search/note.json",
 	hashtagPosts: "/api/v57/hashtag/posts.json",
 	hashtagSearch: "/api/v57/hashtag/search.json",
-	// Home / profile
+	// TIMELINE prefix
+	timelineStatus: "/api/v57/timeline/tab/status.json",
+	timelineContents: "/api/v57/timeline/tab/contents.json",
+	// HOMEAPI prefix
 	homeProfile: "/api/v1/home/profile.json",
 	homeCover: "/api/v1/home/cover.json",
-	homeGroupProfile: "/api/v1/home/groupprofile.json",
-	// Chat Note (BDB = bulletin-board) — bound to the NOTE channel.
-	noteBoardGet: "/api/v1/bdb/board/get",
-	noteBoardDelete: "/api/v1/bdb/board/delete",
-	noteBoardUpdateReadPermission: "/api/v1/bdb/board/update/readPermission",
-	noteCardCreate: "/api/v1/bdb/card/create",
-	noteCardUpdate: "/api/v1/bdb/card/update",
-	noteCardDelete: "/api/v1/bdb/card/delete",
-	noteCardList: "/api/v1/bdb/card/list",
-	noteCardReport: "/api/v1/bdb/card/report",
-	noteCardLikeCreate: "/api/v1/bdb/card/like/create",
-	noteCardLikeCancel: "/api/v1/bdb/card/like/cancel",
-	noteCardLikeList: "/api/v1/bdb/card/like/list",
 } as const;
-
-export type VoomEndpoint = keyof typeof VoomEndpoints;
 
 export interface VoomClient {
 	getToken(channel: keyof typeof VoomChannelId): Promise<string>;
+	/** Low-level call. Auto-mints channel token + applies routing prefix. */
 	call<T = unknown>(
 		channel: keyof typeof VoomChannelId,
 		opts: Omit<VoomRestOptions, "channelToken">,
 	): Promise<VoomRestResponse<T>>;
+	/** GET /mh/api/v57/post/list.json — VOOM feed. Live-verified (#151). */
 	feed(opts?: { postLimit?: number; followingMaxPage?: number }): Promise<VoomRestResponse>;
-	noteList(opts: { boardId: string; limit?: number }): Promise<VoomRestResponse>;
-	noteCreate(opts: { boardId: string; body: Record<string, unknown> }): Promise<VoomRestResponse>;
-	noteLike(opts: { cardId: string }): Promise<VoomRestResponse>;
-	noteUnlike(opts: { cardId: string }): Promise<VoomRestResponse>;
+	/** GET /tl/api/v57/timeline/tab/status.json. Live-verified. */
+	timelineStatus(): Promise<VoomRestResponse>;
 }
 
 class ClientVoom implements VoomClient {
@@ -167,36 +173,15 @@ class ClientVoom implements VoomClient {
 		const postLimit = opts.postLimit ?? 10;
 		const followingMaxPage = opts.followingMaxPage ?? 2;
 		return await this.call("TIMELINE", {
+			routing: "MYHOME",
 			path:
 				`${VoomEndpoints.feed}?postLimit=${postLimit}&followingMaxPage=${followingMaxPage}`,
 		});
 	}
-	async noteList(opts: { boardId: string; limit?: number }) {
-		const q = new URLSearchParams({ boardId: opts.boardId });
-		if (opts.limit !== undefined) q.set("limit", String(opts.limit));
-		return await this.call("NOTE", {
-			path: `${VoomEndpoints.noteCardList}?${q.toString()}`,
-		});
-	}
-	async noteCreate(opts: { boardId: string; body: Record<string, unknown> }) {
-		return await this.call("NOTE", {
-			path: VoomEndpoints.noteCardCreate,
-			method: "POST",
-			body: { boardId: opts.boardId, ...opts.body },
-		});
-	}
-	async noteLike(opts: { cardId: string }) {
-		return await this.call("NOTE", {
-			path: VoomEndpoints.noteCardLikeCreate,
-			method: "POST",
-			body: { cardId: opts.cardId },
-		});
-	}
-	async noteUnlike(opts: { cardId: string }) {
-		return await this.call("NOTE", {
-			path: VoomEndpoints.noteCardLikeCancel,
-			method: "POST",
-			body: { cardId: opts.cardId },
+	async timelineStatus() {
+		return await this.call("TIMELINE", {
+			routing: "TIMELINE",
+			path: VoomEndpoints.timelineStatus,
 		});
 	}
 }
