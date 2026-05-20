@@ -1,5 +1,5 @@
 {
-	"workspace": ["./packages/linejs", "./packages/types", "./docs"],
+	"workspace": ["./packages/linejs", "./packages/types", "./packages/agent", "./docs"],
 	"fmt": {
 		"singleQuote": false,
 		"useTabs": true,
