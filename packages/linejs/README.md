@@ -51,6 +51,21 @@ For now, please use "https://esm.sh/jsr/@evex/linejs".
 
 Example is [here](./example/browser).
 
+## Agent Skill (LLM コーディングアシスタント向け)
+
+Claude Code / Cursor / Codex / Antigravity / Gemini CLI など、
+[skills エコシステム](https://github.com/vercel-labs/skills) 対応の
+エージェントに LINEJS の使い方を仕込めます:
+
+```sh
+npx skills add evex-dev/linejs --skill linejs
+```
+
+入るのは `skills/linejs/SKILL.md` のロードマップだけ — API 詳細を
+凍結せず、エージェントが必要な箇所のソースを自力で読みに行ける
+ように書いてあります。ログイン手順 (ForSecure 必須)、主要 wrapper
+の在処、Agent I の取り扱い、バグ報告先など最低限の地図のみ。
+
 ## LINEJS Types
 
 Please see [@evex/linejs-types](https://jsr.io/@evex/linejs-types).\
