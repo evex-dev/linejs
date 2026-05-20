@@ -16,9 +16,9 @@ import {
 import { createLiffClient, type LiffClient } from "./features/liff.ts";
 export * as liff from "./features/liff.ts";
 export * as voom from "./features/voom.ts";
-import { VoomChannelId, voomRest, type VoomRestOptions, type VoomRestResponse } from "./features/voom.ts";
+import { createVoomClient, VoomChannelId, type VoomClient, voomRest, type VoomRestOptions, type VoomRestResponse } from "./features/voom.ts";
 export { VoomChannelId };
-export type { VoomRestOptions, VoomRestResponse };
+export type { VoomClient, VoomRestOptions, VoomRestResponse };
 export { Chat, Square, SquareChat, SquareMessage, TalkMessage, User };
 export { ProfileAttribute } from "./features/profile.ts";
 export type { MyProfileUpdate } from "./features/profile.ts";
@@ -71,6 +71,17 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 */
 	voomRest<T = unknown>(opts: VoomRestOptions): Promise<VoomRestResponse<T>> {
 		return voomRest(this, opts);
+	}
+
+	#voom?: VoomClient;
+	/**
+	 * High-level VOOM accessor with auto channel-token minting.
+	 * `client.voom.feed()` mints the TIMELINE token + calls the gateway
+	 * + returns the response.  Tokens are cached per-channel.
+	 */
+	get voom(): VoomClient {
+		if (!this.#voom) this.#voom = createVoomClient(this);
+		return this.#voom;
 	}
 
 	/**
