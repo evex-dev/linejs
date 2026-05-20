@@ -59,6 +59,7 @@ export {
 	LineAiClient,
 	type LineAiCancelQueryRequest,
 	type LineAiOptions,
+	type LineAiPromptContext,
 	type LineAiQueryChunk,
 	type LineAiQueryRequest,
 	type LineAiResponse,

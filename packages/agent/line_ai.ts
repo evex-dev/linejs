@@ -6,6 +6,9 @@
 export const LINE_AI_HOST_RELEASE = "https://line-x-openai.line-apps.com";
 export const LINE_AI_HOST_ALPHA = "https://line-x-openai.line-apps-alpha.com";
 
+/** Known valid context-types for {@link LineAiClient.getPromptPresets}. */
+export type LineAiPromptContext = "trending" | "image-attached";
+
 /** LINE AI gateway channel id (smali sj2/a;->g()). The `accessToken`
  *  this client takes is the channel-scoped token minted via
  *  `Channel.issueChannelToken({ channelId: LINE_AI_CHANNEL_ID })`,
@@ -73,12 +76,15 @@ export class LineAiClient {
 		return this.#get("/v2/service-info");
 	}
 
-	/** GET /v2/{serviceId}/prompt-preset — suggested prompts per service. */
+	/** GET /v2/{contextType}/prompt-preset — suggested prompts per context.
+	 *  Live-verified context types: "trending", "image-attached" (smali
+	 *  zk2/a + zk2/d). The path segment is the context type, NOT a locale
+	 *  (server error message confirms parsing). */
 	getPromptPresets(opts: {
-		serviceId: string;
+		contextType: LineAiPromptContext | string;
 		acceptLanguage?: string;
 	}): Promise<LineAiResponse> {
-		return this.#get(`/v2/${encodeURIComponent(opts.serviceId)}/prompt-preset`, {
+		return this.#get(`/v2/${encodeURIComponent(opts.contextType)}/prompt-preset`, {
 			"Accept-Language": opts.acceptLanguage ?? this.#acceptLanguage,
 		});
 	}
