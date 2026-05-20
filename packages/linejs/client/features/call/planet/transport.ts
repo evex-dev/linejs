@@ -190,7 +190,16 @@ export class PlanetTransport implements CallTransport {
 			flagB: false,
 			sequence: seq & 0x7fff,
 		};
-		const hdr = buildFrameHeader(seq, fixed);
+		// chunkLogical encodes the total datagram length via the formula
+		// `((datagramLen - 4) << 5) | 0xd`, derived by inverse-fitting the
+		// observed wire pattern. The low nibble (0xd) is the PLANET
+		// message-class marker. Bit 4 set on the input flips to bit 11 of
+		// the wire byte; the captured 952B STATE-class packet had it set,
+		// others didn't — currently unflagged.
+		const HEADER_LEN = 6; // chunk_hdr (2) + fixed_hdr (4)
+		const totalLen = HEADER_LEN + enc.length;
+		const chunkLogical = (((totalLen - 4) << 5) | 0xd) & 0xffff;
+		const hdr = buildFrameHeader(chunkLogical, fixed);
 		const datagram = new Uint8Array(hdr.length + enc.length);
 		datagram.set(hdr, 0);
 		datagram.set(enc, hdr.length);
