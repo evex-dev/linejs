@@ -5,6 +5,7 @@
 	"exports": {
 		".": "./client/mod.ts",
 		"./base": "./base/mod.ts",
+		"./call": "./client/features/call/mod.ts",
 		"./storage": "./base/storage/mod.ts",
 		"./thrift": "./base/thrift/mod.ts"
 	},

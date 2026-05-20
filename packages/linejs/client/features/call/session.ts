@@ -37,6 +37,9 @@ export interface CallTransport {
 	close(): Promise<void>;
 	send(packet: Uint8Array): void | Promise<void>;
 	receive(): AsyncIterable<Uint8Array>;
+	/** Optional. When present, CallSession.start() drives the full
+	 *  signaling dialog after connect() (SIP INVITE → 200 → ACK). */
+	invite?(opts: { to: string }): Promise<unknown>;
 }
 
 export const stubTransport: CallTransport = {
@@ -106,6 +109,9 @@ export class CallSession extends TypedEventEmitter<CallSessionEvents> {
 			});
 			this.#setState("connecting");
 			await this.#transport.connect({ route: this.#route });
+			if (this.#transport.invite) {
+				await this.#transport.invite({ to: this.#opts.to });
+			}
 			this.#setState("in-call");
 			this.emit("connected", this.#route);
 			return this.#route;
