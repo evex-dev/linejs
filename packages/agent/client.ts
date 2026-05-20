@@ -287,7 +287,13 @@ function extractText(data: unknown): string | null {
 	if (typeof data === "string") return data;
 	if (!data || typeof data !== "object") return null;
 	const o = data as Record<string, unknown>;
-	// Common payload shapes seen on Yahoo's stream.
+	// Yahoo search-agent wire shape (live-verified 2026-05):
+	//   {type:"compositeMessage-delta", value:{message:"..."}, messageType:"text"}
+	if (o.type === "compositeMessage-delta" || o.type === "compositeMessage-end") {
+		const v = o.value as { message?: unknown } | undefined;
+		if (v && typeof v.message === "string") return v.message;
+	}
+	// Common fallbacks for other payload shapes.
 	if (typeof o.text === "string") return o.text;
 	if (typeof o.delta === "string") return o.delta;
 	if (typeof o.content === "string") return o.content;
