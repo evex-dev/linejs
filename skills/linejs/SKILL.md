@@ -68,6 +68,7 @@ https://github.com/evex-dev/linejs
 | chat BGM | `Chat.getBgm()` / `Chat.setBgm()` |
 | LIFF share / token | `client.liff.shareMessages(chatMid, [...])` and `client.liff.getToken({ liffId, chatMid })` — see `packages/linejs/client/features/liff.ts` for message builders (`text` / `sticker` / `image` / `flex`).  Lower-level surface at `client.liff.service` / `BaseClient.liff`. |
 | calendar events on a contact | `User.fetchCalendarEvents()` — note: server-gated on some client device types (DESKTOPWIN currently lacks it) |
+| approve a PIN login on this device | `client.base.loginProcess.respondE2EELoginRequest({ verifier, publicKey, encryptedKeyChain, hashKeyChain, errorCode? })` — primary-side counterpart to `confirmE2EELogin`. Call when this client receives a PIN-login notification from another device the user wants to admit. |
 | upload profile picture / cover | `client.uploadMyProfileImage(blob)` / `client.uploadMyProfileBackground(blob)` |
 | **Agent I** (LINE's chat-tab AI search) | `@evex/linejs-agent` — wraps Yahoo's search-agent SSE backend that LINE Android opens in a WebView. Requires Yahoo session cookies; LINE does not mint them. |
 | E2EE primitives | `packages/linejs/base/e2ee/mod.ts` — AES-GCM-SIV, ECDH, decrypt encrypted QR identifier, key chain etc. |

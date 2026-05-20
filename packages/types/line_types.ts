@@ -20707,6 +20707,14 @@ export interface respondE2EEKeyExchange_result {
 	e: TalkException;
 }
 
+export interface respondE2EELoginRequest_args {
+	verifier: string;
+	publicKey: Pb1_C13097n4;
+	encryptedKeyChain: string;
+	hashKeyChain: string;
+	errorCode: number;
+}
+
 export interface respondE2EELoginRequest_result {
 	e: TalkException;
 }
