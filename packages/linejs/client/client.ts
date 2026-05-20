@@ -47,10 +47,6 @@ export type ClientEvents = {
 	"square:event": (event: LINETypes.SquareEvent) => void;
 };
 
-/** True if the thrown error is the server's "API method not capable"
- *  signal (the message LINE returns when the calling client's device
- *  type isn't allowed to use the RPC).  Used to drive the
- *  V3 → V2 → V1 fallback chain in {@link Client.fetchUsers}. */
 function isApiNotCapable(e: unknown): boolean {
 	const msg = e instanceof Error ? e.message : String(e);
 	return /API method not capable/i.test(msg);
@@ -64,30 +60,16 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		this.base = base;
 	}
 
-	/**
-	 * High-level LIFF helpers (token minting + message sharing).  See
-	 * {@link "./features/liff.ts" | features/liff.ts} for the message
-	 * builders (`text` / `sticker` / `image` / `flex`).
-	 */
 	get liff(): LiffClient {
 		if (!this.#liff) this.#liff = createLiffClient(this);
 		return this.#liff;
 	}
 
-	/**
-	 * Low-level VOOM REST call.  See {@link "./features/voom.ts"} for
-	 * docs + channel-token caveats (#151 tracks the auth investigation).
-	 */
 	voomRest<T = unknown>(opts: VoomRestOptions): Promise<VoomRestResponse<T>> {
 		return voomRest(this, opts);
 	}
 
 	#voom?: VoomClient;
-	/**
-	 * High-level VOOM accessor with auto channel-token minting.
-	 * `client.voom.feed()` mints the TIMELINE token + calls the gateway
-	 * + returns the response.  Tokens are cached per-channel.
-	 */
 	get voom(): VoomClient {
 		if (!this.#voom) this.#voom = createVoomClient(this);
 		return this.#voom;
@@ -214,20 +196,12 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		return chats.map((raw) => new Chat({ client: this, raw }));
 	}
 
-	/**
-	 * Fetches all friend.
-	 */
+	/** Fetches all friends. V3→V2→getUser fallback for #71. */
 	async fetchUsers(): Promise<User[]> {
 		const { userFriendMids } = await this.base.relation.getUserFriendIds({
 			request: { blockStatus: "ALL" },
 		});
 		if (!userFriendMids?.length) return [];
-
-		// Prefer Relation.getContactsV3 (returns GetContactV3Response[]).
-		// DESKTOPWIN clients can't call V3 ("API method not capable") so
-		// fall back to Talk.getContactsV2 → Talk.getContacts.  All three
-		// shapes feed `new User({ raw })` because User only reads
-		// `targetUserMid` + a handful of optional fields that overlap.
 		try {
 			const res = await this.base.relation.getContactsV3({
 				mids: userFriendMids,
@@ -240,9 +214,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			const res2 = await this.base.talk.getContactsV2({
 				mids: userFriendMids,
 			});
-			// V2 returns `contacts: Record<mid, ContactEntry>`; shim each
-			// entry into a V3-shaped `{ targetUserMid, ...entry }` so
-			// User's existing readers keep working.
+			// V2 returns { contacts: Record<mid, entry> }; shim to V3 shape.
 			const out: User[] = [];
 			for (const [mid, entry] of Object.entries(res2.contacts ?? {})) {
 				out.push(new User({
@@ -254,7 +226,6 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		} catch (e) {
 			if (!isApiNotCapable(e)) throw e;
 		}
-		// Final fallback: per-mid getContact loop (last resort, slowest).
 		const out: User[] = [];
 		for (const mid of userFriendMids) {
 			try {

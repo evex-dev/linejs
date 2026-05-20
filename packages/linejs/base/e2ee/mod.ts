@@ -701,8 +701,7 @@ export class E2EE {
 		let selfPubKey: Buffer | undefined;
 
 		if (toType === LINETypes.enums.MIDType.USER || toType === "USER") {
-			// #88: select self-key by the id LINE used at encrypt time, not
-			// the latest one — survives key rotation between messages.
+			// #88: pin self-key by id from envelope.
 			const selfKeyId = isSelf ? senderKeyId : receiverKeyId;
 			let selfKey = await this.getE2EESelfKeyDataByKeyId(selfKeyId);
 			if (!selfKey) {
@@ -839,38 +838,15 @@ export class E2EE {
 
 		const senderKeyId = byte2int(chunks[3]);
 		const receiverKeyId = byte2int(chunks[4]);
-		this.e2eeLog("decryptE2EEDataMessageSenderKeyId", senderKeyId);
-		this.e2eeLog("decryptE2EEDataMessageReceiverKeyId", receiverKeyId);
-		this.e2eeLog("decryptE2EEDataMessageEnvelope", {
-			toType,
-			specVersion,
-			rawContentType: messageObj.contentType,
-			resolvedContentType: contentType,
-			chatTo: to,
-			chatFrom: _from,
-			isSelf,
-			chunkTypes: chunks.map((c) =>
-				`${c.constructor?.name ?? typeof c}(${c.length})`
-			),
-		});
 
 		let privK: Buffer;
 		let pubK: LooseType;
 
 		if (toType === LINETypes.enums.MIDType.USER || toType === "USER") {
-			// Fix for #88: a received 1:1 message was encrypted against the
-			// `receiverKeyId` LINE picked for *us* at encrypt time — that may
-			// not be our current default self-key if E2EE keys rotated since.
-			// Look up the specific self-key by id (matches CHRLINE-Patch's
-			// "patch to use correct key by id"); the previous code path used
-			// the latest self-key blindly and ECDH'd to a wrong shared
-			// secret, causing the GCM auth tag to fail.
+			// #88: pin self-key by id from envelope.
 			const selfKeyId = isSelf ? senderKeyId : receiverKeyId;
 			let selfKey = await this.getE2EESelfKeyDataByKeyId(selfKeyId);
 			if (!selfKey) {
-				// Fall back to the latest known self-key — covers the case
-				// where the by-id store is empty (first run / pre-migration
-				// storage layouts).
 				selfKey = await this.getE2EESelfKeyData(
 					this.client.profile?.mid as string,
 				);
