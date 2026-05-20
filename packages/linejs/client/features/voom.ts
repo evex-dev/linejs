@@ -1,37 +1,30 @@
 /**
  * VOOM (timeline / myhome) REST helpers.
  *
- * VOOM lives on a separate REST gateway under
- * `https://gw.line.naver.jp/mh/api/v{34,40,52,57}/...` rather than the
- * Thrift binary protocol used by Talk/Square.  Confirmed dynamically
- * against LINE 26.6.2 — every documented path returns JSON envelopes
- * of the form `{ code, message, result }`.
+ * Two surfaces:
+ *   - `client.voom.*` — typed high-level wrappers that mint the right
+ *     channel token + assemble the auth headers + call the gateway.
+ *   - `client.voomRest({ path, channelToken })` — low-level for ad-hoc
+ *     calls.
  *
- * **Auth (live-verified):** the gateway expects a channel-scoped
- * token sent as `Authorization: Bearer <token>`, plus `X-Line-Mid`.
- * Mint the channel token with
- * `client.base.channel.issueChannelToken({ channelId })` — the wrapper
- * takes an **object**, not a positional string (the JSON Thrift
- * codegen emits `{ channelId }`; passing a string yields
- * `ILLEGAL_ARGUMENT: invalid channelId. channelid: "null"`).
+ * Gateway: `https://gw.line.naver.jp/mh/api/v{34,40,52,57}/...`,
+ * returning `{ code, message, result }`.
  *
- * `DESKTOPWIN` device type cannot create QR-login sessions, but
- * **`ANDROIDSECONDARY`** can (verified) and successfully mints
- * channel tokens for TIMELINE / HOME / HOME26 / NOTE / SQUARE_NOTE /
- * ALBUM.  After moving from `X-Line-Access` to `Authorization: Bearer
- * <channelToken>` the gateway moves from `code:401 "Renewing user
- * verification..."` to `code:504` (temporary downstream error) —
- * meaning the auth surface is now correct but the upstream "myhome"
- * service still doesn't deliver from this client context.  The
- * remaining 504 is tracked in #151.
+ * Auth (live-verified): `Authorization: Bearer <channelToken>` +
+ * `X-Line-Mid: <mid>`.  `client.base.channel.issueChannelToken({
+ * channelId })` takes an **object** (not positional string).
+ * `DESKTOPWIN` cannot mint these on LINE 26+ — use
+ * `device: "ANDROIDSECONDARY"`.
  *
  * Source of truth:
- *   `decompiled/base/smali/smali/t98/a$b.smali`  — channel id enum
- *   gateway base path family confirmed by live HTTP probing.
+ *   `decompiled/base/smali/smali/t98/a$b.smali` (channel id enum)
+ *   gateway path family confirmed by live HTTP probing.
  */
 import type { Client } from "../mod.ts";
 
-/** Channel-id constants for LINE's MH-family services. */
+/** Channel-id constants for the MH-family services.  Values verified
+ *  from LINE Android 26.6.2 smali `t98.a$b` (the AccessTokenManager
+ *  channel-type enum). */
 export const VoomChannelId = {
 	TIMELINE: "1341209950",
 	HOME: "1341209850",
@@ -42,17 +35,11 @@ export const VoomChannelId = {
 } as const;
 
 export interface VoomRestOptions {
-	/** Path under `/mh/api/`, leading slash included. */
 	path: string;
 	method?: "GET" | "POST" | "PUT" | "DELETE";
 	body?: unknown;
-	/** Override the channel token used in `X-Line-ChannelToken`.  When
-	 *  unset, falls back to the client's primaryToken in `X-Line-Access`
-	 *  (which currently 401s on the MH gateway — see #151). */
 	channelToken?: string;
-	/** Additional headers to send. */
 	extraHeaders?: Record<string, string>;
-	/** Override the gateway hostname. */
 	host?: string;
 }
 
@@ -62,11 +49,6 @@ export interface VoomRestResponse<T = unknown> {
 	result: T | null;
 }
 
-/**
- * Low-level VOOM REST call.  Hands you the JSON envelope verbatim so
- * you can iterate against the gateway while we sort out the auth
- * story (#151).
- */
 export async function voomRest<T = unknown>(
 	client: Client,
 	opts: VoomRestOptions,
@@ -76,39 +58,90 @@ export async function voomRest<T = unknown>(
 	const url = `https://${host}${
 		opts.path.startsWith("/") ? opts.path : "/" + opts.path
 	}`;
-
-	// MH gateway auth shape (live-verified against LINE 26.6.2):
-	//   - `Authorization: Bearer <channelToken>` — the channel-scoped
-	//     OAuth-style token minted via Channel.issueChannelToken.  The
-	//     RPC wrapper takes `{ channelId: "..." }` (object), NOT a
-	//     positional string — passing a string yields `ILLEGAL_ARGUMENT:
-	//     invalid channelId. channelid: "null"`.
-	//   - `X-Line-Mid: <mid>` — the account's own mid; without this the
-	//     gateway returns `code:405 "No results were found for the
-	//     requested user information."`.
-	//   - `X-Line-Application` and a Line/<ver> UA — kept for consistency
-	//     with LINE Android's traffic shape.
-	//
-	// Channel tokens are minted per channel — TIMELINE / HOME / NOTE /
-	// SQUARE_NOTE / ALBUM, see `VoomChannelId`.  Mint with:
-	//   client.base.channel.issueChannelToken({ channelId: VoomChannelId.TIMELINE })
 	const headers: Record<string, string> = {
 		accept: "application/json",
 		"x-line-application": client.base.request.systemType,
 		"user-agent": client.base.request.userAgent,
 		"X-Line-Mid": client.base.profile?.mid ?? "",
+		"x-lal": "ja-JP",
+		"X-Line-BDBTemplateVersion": "v1",
 		...(opts.channelToken
 			? { authorization: `Bearer ${opts.channelToken}` }
 			: { "x-line-access": client.authToken }),
 		...(opts.extraHeaders ?? {}),
 	};
 	if (opts.body !== undefined) headers["content-type"] = "application/json";
-
 	const res = await client.base.fetch(url, {
 		method,
 		headers,
 		body: opts.body === undefined ? undefined : JSON.stringify(opts.body),
 	});
-	const json = await res.json() as VoomRestResponse<T>;
-	return json;
+	const text = await res.text();
+	if (!text) {
+		return { code: res.status, message: res.statusText, result: null };
+	}
+	return JSON.parse(text) as VoomRestResponse<T>;
+}
+
+/**
+ * Mints + caches a channel-scoped token for one of the MH channels.
+ * The token is bound to the current session and device; v2.8.x has
+ * verified it works from `device: "ANDROIDSECONDARY"`.
+ */
+export async function getChannelToken(
+	client: Client,
+	channelId: string,
+): Promise<string> {
+	const r = await client.base.channel.issueChannelToken({ channelId });
+	const t = (r as unknown as { token?: string }).token;
+	if (!t) throw new Error("issueChannelToken returned no token");
+	return t;
+}
+
+export interface VoomClient {
+	/** Mints (or returns cached) channel token for the given channel. */
+	getToken(channel: keyof typeof VoomChannelId): Promise<string>;
+	/** Calls a path on the MH gateway using the auto-minted channel
+	 *  token for the given channel. */
+	call<T = unknown>(
+		channel: keyof typeof VoomChannelId,
+		opts: Omit<VoomRestOptions, "channelToken">,
+	): Promise<VoomRestResponse<T>>;
+	/** Convenience: fetch the user's VOOM feed (TIMELINE channel).
+	 *  Wraps `/v57/post/list.json?postLimit=N&followingMaxPage=M`. */
+	feed(opts?: { postLimit?: number; followingMaxPage?: number }): Promise<VoomRestResponse>;
+}
+
+class ClientVoom implements VoomClient {
+	#client: Client;
+	#tokenCache = new Map<string, string>();
+	constructor(client: Client) {
+		this.#client = client;
+	}
+	async getToken(channel: keyof typeof VoomChannelId): Promise<string> {
+		let t = this.#tokenCache.get(channel);
+		if (!t) {
+			t = await getChannelToken(this.#client, VoomChannelId[channel]);
+			this.#tokenCache.set(channel, t);
+		}
+		return t;
+	}
+	async call<T = unknown>(
+		channel: keyof typeof VoomChannelId,
+		opts: Omit<VoomRestOptions, "channelToken">,
+	): Promise<VoomRestResponse<T>> {
+		const channelToken = await this.getToken(channel);
+		return await voomRest<T>(this.#client, { ...opts, channelToken });
+	}
+	async feed(opts: { postLimit?: number; followingMaxPage?: number } = {}) {
+		const postLimit = opts.postLimit ?? 10;
+		const followingMaxPage = opts.followingMaxPage ?? 2;
+		return await this.call("TIMELINE", {
+			path: `/v57/post/list.json?postLimit=${postLimit}&followingMaxPage=${followingMaxPage}`,
+		});
+	}
+}
+
+export function createVoomClient(client: Client): VoomClient {
+	return new ClientVoom(client);
 }
