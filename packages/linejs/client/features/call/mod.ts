@@ -25,6 +25,25 @@ export {
 export { stubTransport } from "./session.ts";
 export { AndromedaTransport, type AndromedaTransportOpts } from "./andromeda.ts";
 export {
+	buildAudioOffer,
+	buildSdp,
+	cryptoAttr,
+	parseSdp,
+	readCrypto,
+	readRtpmap,
+	type SdpMedia,
+	type SdpSession,
+} from "./sdp.ts";
+export {
+	buildRtp,
+	deriveSrtpContext,
+	parseRtp,
+	type SrtpCryptoContext,
+	srtpDecrypt,
+	srtpEncrypt,
+	SRTP_KEYING_LEN,
+} from "./srtp.ts";
+export {
 	buildSip,
 	digestResponse,
 	getStatusCode,
