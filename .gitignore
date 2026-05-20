@@ -4,3 +4,4 @@ sandbox
 node_modules
 deno.lock
 docs/vitepress/cache
+packages/linejs/base/thrift/struct.ts
