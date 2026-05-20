@@ -50,9 +50,12 @@ export function frtypeFor(source: AgentISource): string {
 }
 
 export interface AgentIOptions {
-	/** Yahoo session cookies (`B`, `XB`, `A`, `XA`) as a single Cookie
-	 *  header string — e.g. `"B=...; XB=...; A=...; XA=..."`.  Required;
-	 *  LINE Android does not mint these. */
+	/** `Cookie` header value sent on the SSE POST.  See evex-dev/linejs#152
+	 *  for the open investigation: LINE Android can drive Agent I without
+	 *  the user being logged into Yahoo, so the real requirement is
+	 *  probably anonymous `B` / `XB` cookies issued by `search.yahoo.co.jp`
+	 *  on a prior GET — not a full Yahoo login.  Pass whatever Cookie
+	 *  string you've got; pass `""` to try without one. */
 	cookie: string;
 	/** LINE app version reported in the `Line/<ver>/Agenti` UA suffix.
 	 *  Defaults to a recent value from the LINE iOS captures used to

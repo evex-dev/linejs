@@ -13,11 +13,18 @@
  * can drive Agent I from outside the LINE app provided they hold a
  * valid Yahoo session.
  *
- * Auth: the SSE endpoint requires Yahoo session cookies (`B`, `XB`,
- * `A`, `XA`).  LINE Android does not mint these — they come from
- * Yahoo's own auth (a separate Yahoo Japan login).  This library
- * accepts them as a `cookie` string; it makes no attempt to obtain
- * them on the caller's behalf.
+ * Auth (provisional, **see issue evex-dev/linejs#152**): the SSE
+ * endpoint expects a `Cookie` header.  The original capture that
+ * seeded this work had `B` / `XB` / `A` / `XA` placeholders, but
+ * **LINE Android itself can use Agent I without the user logging
+ * into Yahoo**, which means the real auth shape is something
+ * lighter than a full Yahoo login session — possibly anonymous
+ * `B` / `XB` cookies issued by `search.yahoo.co.jp` on first GET,
+ * possibly origin/referer alone, possibly a LINE-side handshake.
+ * This client accepts any `cookie` string the caller can mint; until
+ * #152 nails down the exact requirement, the simplest working
+ * approach is to hit `https://search.yahoo.co.jp/chat` first to let
+ * Yahoo set the anonymous cookies, then pass them in here.
  *
  * Source of truth: LINE Android 26.6.2 — see
  *   `decompiled/base/smali/smali_classes8/km2/a.smali`        (URL builder)
@@ -29,7 +36,7 @@
  * @example
  *   import { AgentIClient } from "@evex/linejs-agent";
  *   const agent = new AgentIClient({
- *     cookie: yahooSessionCookies, // "B=...; XB=...; A=...; XA=..."
+ *     cookie: cookies, // see #152 — Yahoo anonymous cookies usually suffice
  *     lineVersion: "26.6.0",
  *     source: "chattab_searchbar",
  *   });
