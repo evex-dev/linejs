@@ -15,10 +15,9 @@ export const VoomChannelId = {
 
 /**
  * Routing prefix per MH-family service, from smali ps5/j enum.
- * Live-verified prefixes ✓: MYHOME, MYHOME_RENEWAL, TIMELINE,
- * TIMELINE_GATEWAY, NOTE, SQUARE_NOTE, ALBUM, STORY (all reachable
- * with channel-token auth). Untested live but identical routing logic:
- * HOMEAPI, SOCIAL_NOTIFICATION, TRANSLATION.
+ * All 11 prefixes live-verified against gw.line.naver.jp — gateway
+ * routes the request and returns a structured response (LINE code or
+ * Spring error from the right upstream).
  */
 export const VoomRoutingPrefix = {
 	MYHOME: "/mh",
