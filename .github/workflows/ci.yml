@@ -32,7 +32,10 @@ jobs:
       - uses: denoland/setup-deno@v1
         with:
           deno-version: v2.x
-      - run: deno test
+      # `-A` because transitive deps (e.g. the `q` promise lib reachable
+      # through Buffer) read env vars at module init.  Without env access
+      # the test runner fails before any test body runs.
+      - run: deno test -A
 
 #  format:
 #    name: "Format Check"
