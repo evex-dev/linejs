@@ -10,6 +10,8 @@ import {
 	getMyProfile,
 	type MyProfileUpdate,
 	updateMyProfile,
+	uploadMyProfileBackground,
+	uploadMyProfileImage,
 } from "./features/profile.ts";
 export { Chat, Square, SquareChat, SquareMessage, TalkMessage, User };
 export { ProfileAttribute } from "./features/profile.ts";
@@ -131,6 +133,24 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	/** Convenience: set the signed-in user's status message (ステメ). */
 	updateMyStatusMessage(statusMessage: string): Promise<void> {
 		return updateMyProfile(this, { statusMessage });
+	}
+
+	/**
+	 * Uploads a new profile picture for the signed-in user (the avatar
+	 * shown in chats).  Returns the OBS object id + hash.
+	 */
+	uploadMyProfileImage(data: Blob): Promise<{ objId: string; objHash: string }> {
+		return uploadMyProfileImage(this, data);
+	}
+
+	/**
+	 * Uploads a new profile background (the cover photo behind the
+	 * profile picture on the user's profile page).
+	 */
+	uploadMyProfileBackground(
+		data: Blob,
+	): Promise<{ objId: string; objHash: string }> {
+		return uploadMyProfileBackground(this, data);
 	}
 
 	/**

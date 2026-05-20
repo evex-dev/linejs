@@ -77,6 +77,59 @@ export async function getMyProfile(client: Client): Promise<line.Profile> {
 }
 
 /**
+ * Uploads a new profile picture for the signed-in user.
+ *
+ * LINE Android does this by POSTing the image bytes directly to
+ * `/r/talk/p/<mid>` on OBS — the OBS edge writes the object, returns
+ * its hash, and the next `getProfile` call shows the new
+ * `pictureStatus` reflecting the new image.  No separate Thrift call
+ * is needed.
+ *
+ * @param data  The image bytes (JPEG / PNG).
+ * @returns OBS object id + hash. The new picture is live after this
+ *          resolves; subsequent friends' `getContacts` will see it.
+ */
+export async function uploadMyProfileImage(
+	client: Client,
+	data: Blob,
+): Promise<{ objId: string; objHash: string }> {
+	const mid = client.base.profile?.mid;
+	if (!mid) {
+		throw new Error(
+			"uploadMyProfileImage requires client to be logged in (no profile.mid)",
+		);
+	}
+	const result = await client.base.obs.uploadObjectForService({
+		data,
+		oType: "image",
+		obsPath: `talk/p/${mid}`,
+	});
+	return { objId: result.objId, objHash: result.objHash };
+}
+
+/**
+ * Uploads a new profile-background image (the cover photo behind the
+ * profile picture, visible on the user's profile page).
+ *
+ * Posts to OBS path `myhome/h` — same as a regular myhome photo post
+ * — and the returned object id is the one to associate with the
+ * profile in a follow-up call (LINE Android persists this association
+ * via the myhome service; the OBS object alone is enough for the
+ * image to be queryable).
+ */
+export async function uploadMyProfileBackground(
+	client: Client,
+	data: Blob,
+): Promise<{ objId: string; objHash: string }> {
+	const result = await client.base.obs.uploadObjectForService({
+		data,
+		oType: "image",
+		obsPath: "myhome/h",
+	});
+	return { objId: result.objId, objHash: result.objHash };
+}
+
+/**
  * Updates one or more attributes on the signed-in user's profile.
  *
  * Server-side this is a single `updateProfileAttributes` RPC carrying
