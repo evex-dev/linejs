@@ -93,17 +93,18 @@ In order of difficulty:
    - Bridge through a real LINE Android instance via Frida (works today,
      doesn't help non-Android users)
 
-## Practical v3 plan
+## Practical plan
 
 Ship in two stages:
 
-- **v3.0**: control-plane only — typed wrappers for the 14 call-related
-  Thrift RPCs, incoming-call event surface, group-call URL CRUD. Useful for
-  bots that want to *manage* calls (kick, invite, get status, create
-  meeting URLs) without sending audio/video.
-- **v3.1+**: media-plane work, depending on RE depth. Start with a Frida
-  trace of a real freecall to capture the `cscf`/`mix` wire protocol and
-  decide between native-lib-wrap vs clean-room.
+- **v2.11.0 (shipped)**: control-plane only — typed wrappers for the 14
+  call-related Thrift RPCs, incoming-call event surface, group-call URL
+  CRUD. Useful for bots that want to *manage* calls (kick, invite, get
+  status, create meeting URLs) without sending audio/video.
+- **v3.0 (later)**: reserved for the day media plane works end-to-end.
+  Until then we stay on v2.x. Path forward: Frida trace of a real
+  freecall to capture the `cscf`/`mix` wire protocol, then decide
+  between native-lib-wrap vs clean-room.
 
 ## Files to grep next
 
