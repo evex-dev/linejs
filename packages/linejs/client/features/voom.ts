@@ -14,9 +14,11 @@ export const VoomChannelId = {
 } as const;
 
 /**
- * Routing prefix per MH-family service, from smali ps5/j enum
- * (LINE Android 26.6.2). The gateway is gw.line.naver.jp and the prefix
- * selects which upstream Spring service handles the request.
+ * Routing prefix per MH-family service, from smali ps5/j enum.
+ * Live-verified prefixes ✓: MYHOME, MYHOME_RENEWAL, TIMELINE,
+ * TIMELINE_GATEWAY, NOTE, SQUARE_NOTE, ALBUM, STORY (all reachable
+ * with channel-token auth). Untested live but identical routing logic:
+ * HOMEAPI, SOCIAL_NOTIFICATION, TRANSLATION.
  */
 export const VoomRoutingPrefix = {
 	MYHOME: "/mh",
@@ -123,10 +125,10 @@ export const VoomEndpoints = {
 	cancelLike: "/api/v57/like/cancel.json",
 	getLike: "/api/v57/like/get.json",
 	listLikes: "/api/v57/like/getList.json",
-	feedGet: "/api/v57/feed/get.json",
-	feedNewfeed: "/api/v57/feed/newfeed.json",
 	hashtagPosts: "/api/v57/hashtag/posts.json",
 	hashtagSearch: "/api/v57/hashtag/search.json",
+	hashtagSuggestPopular: "/api/v57/hashtag/suggest/popular.json",
+	groupHomeInit: "/api/v57/grouphome/init.json",
 	// TIMELINE prefix
 	timelineStatus: "/api/v57/timeline/tab/status.json",
 	timelineContents: "/api/v57/timeline/tab/contents.json",

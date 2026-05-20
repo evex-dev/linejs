@@ -131,7 +131,9 @@ export class LineAiClient {
 		yield* parseSseStream(res.body);
 	}
 
-	/** POST /v2/query-ai/cancel — cancel an in-flight query. */
+	/** POST /v2/query-ai/cancel — cancel an in-flight query. Live-tested:
+	 *  responds 404 NOT_FOUND_RUN_ID for unknown runId, so the body shape
+	 *  {threadId, runId} is correct (server parses both). */
 	cancelQuery(req: LineAiCancelQueryRequest): Promise<LineAiResponse> {
 		return this.#postJson("/v2/query-ai/cancel", req);
 	}
