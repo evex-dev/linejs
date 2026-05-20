@@ -215,24 +215,61 @@ export class Login {
 
 	public async requestSQR2(): Promise<string> {
 		const { 1: sqr } = await this.createSession();
-		let { 1: url } = await this.createQrCode(sqr);
+		const forSecure = await this.createQrCodeForSecure(sqr);
+		// Response shape per `oc4.i` (CreateQrCodeForSecureResponse):
+		//   1: callbackUrl, 2: longPollingMaxCount,
+		//   3: longPollingIntervalSec, 4: nonce
+		let url: string = forSecure[1];
+		// Generous fallbacks: if the server omits these (older builds, or
+		// future protocol drift), we still get up to 6 minutes of total
+		// poll budget instead of immediately giving up.
+		const longPollingMaxCount: number = forSecure[2] ?? 12;
+		const longPollingIntervalSec: number = forSecure[3] ?? 30;
+		const nonce: string = forSecure[4] ?? "";
+		console.log(
+			`[login] ForSecure: maxCount=${longPollingMaxCount} intervalSec=${longPollingIntervalSec} nonce=${nonce.length}chars`,
+		);
 		const [secret, secretUrl] = this.client.e2ee.createSqrSecret();
 		url = url + secretUrl;
 		this.client.emit("qrcall", url);
-		if (await this.checkQrCodeVerified(sqr)) {
+		// The ForSecure flow expects us to long-poll: the server holds
+		// each `checkQrCodeVerified` request open for `longPollingIntervalSec`
+		// and retries up to `longPollingMaxCount` times.  A single
+		// non-long-polling call (the legacy behaviour) makes the server
+		// expire the session almost immediately.
+		if (
+			await this.checkQrCodeVerified(
+				sqr,
+				longPollingMaxCount,
+				longPollingIntervalSec,
+			)
+		) {
 			try {
 				await this.verifyCertificate(sqr, await this.getQrCert());
 			} catch (_e) {
 				const { 1: pincode } = await this.createPinCode(sqr);
 				this.client.emit("pincall", pincode);
-				await this.checkPinCodeVerified(sqr);
+				await this.checkPinCodeVerified(
+					sqr,
+					longPollingMaxCount,
+					longPollingIntervalSec,
+				);
 			}
-			const response = await this.qrCodeLoginV2(sqr);
-			const { 1: pem, 3: tokenInfo, 4: _mid, 10: e2eeInfo } = response;
+			const response = await this.qrCodeLoginV2ForSecure(sqr, nonce);
+			// Response shape per `oc4.q` (QrCodeLoginV2Response — reused
+			// by both V2 and V2ForSecure):
+			//   1: certificate, 2: accessTokenV2 (legacy str),
+			//   3: tokenV3IssueResult, 4: mid, 5: lastBindTimestamp,
+			//   6: metaData (map<string,string>)
+			const { 1: pem, 3: tokenInfo, 4: _mid, 6: metaData } = response;
 			if (pem) {
 				this.client.emit("update:qrcert", pem);
 				await this.registerQrCert(pem);
 			}
+			// E2EE info historically arrived in field 10 on the non-
+			// ForSecure response, and in metaData["e2eeInfo"] on
+			// ForSecure.  Try both.
+			const e2eeInfo = response[10] ?? metaData?.["e2eeInfo"];
 			if (e2eeInfo) {
 				await this.client.e2ee.decodeE2EEKeyV1(
 					e2eeInfo,
@@ -244,7 +281,6 @@ export class Login {
 				"expire",
 				tokenInfo[3] + tokenInfo[6],
 			);
-			console.log(tokenInfo);
 			return tokenInfo[1];
 		}
 		throw new InternalError(
@@ -641,24 +677,41 @@ export class Login {
 		);
 	}
 
-	public async checkQrCodeVerified(qrcode: string): Promise<boolean> {
-		try {
-			await this.client.request.request(
-				[[12, 1, [[11, 1, qrcode]]]],
-				"checkQrCodeVerified",
-				4,
-				false,
-				"/acct/lp/lgn/sq/v1",
-				{
-					"x-lst": "180000",
-					"x-line-access": qrcode,
-				},
-				this.client.config.longTimeout,
-			);
-			return true;
-		} catch (error) {
-			throw error;
+	public async checkQrCodeVerified(
+		qrcode: string,
+		maxCount: number = 1,
+		intervalSec: number = 30,
+	): Promise<boolean> {
+		const intervalMs = intervalSec * 1000;
+		for (let i = 0; i < maxCount; i++) {
+			try {
+				await this.client.request.request(
+					[[12, 1, [[11, 1, qrcode]]]],
+					"checkQrCodeVerified",
+					4,
+					false,
+					"/acct/lp/lgn/sq/v1",
+					{
+						"x-lst": intervalMs.toString(),
+						"x-line-access": qrcode,
+					},
+					intervalMs + 5000,
+				);
+				return true;
+			} catch (error) {
+				const msg = error instanceof Error ? error.message : String(error);
+				// Long-polling: a timed-out poll just means "no user
+				// action yet", keep looping.  Anything else is fatal.
+				if (
+					/Timeout|timed out|status=408|status=410/i.test(msg) &&
+					i < maxCount - 1
+				) {
+					continue;
+				}
+				throw error;
+			}
 		}
+		return false;
 	}
 
 	public async verifyCertificate(
@@ -684,24 +737,39 @@ export class Login {
 		);
 	}
 
-	public async checkPinCodeVerified(qrcode: string): Promise<boolean> {
-		try {
-			await this.client.request.request(
-				[[12, 1, [[11, 1, qrcode]]]],
-				"checkPinCodeVerified",
-				4,
-				false,
-				"/acct/lp/lgn/sq/v1",
-				{
-					"x-lst": "180000",
-					"x-line-access": qrcode,
-				},
-				this.client.config.longTimeout,
-			);
-			return true;
-		} catch (error) {
-			throw error;
+	public async checkPinCodeVerified(
+		qrcode: string,
+		maxCount: number = 1,
+		intervalSec: number = 30,
+	): Promise<boolean> {
+		const intervalMs = intervalSec * 1000;
+		for (let i = 0; i < maxCount; i++) {
+			try {
+				await this.client.request.request(
+					[[12, 1, [[11, 1, qrcode]]]],
+					"checkPinCodeVerified",
+					4,
+					false,
+					"/acct/lp/lgn/sq/v1",
+					{
+						"x-lst": intervalMs.toString(),
+						"x-line-access": qrcode,
+					},
+					intervalMs + 5000,
+				);
+				return true;
+			} catch (error) {
+				const msg = error instanceof Error ? error.message : String(error);
+				if (
+					/Timeout|timed out|status=408|status=410/i.test(msg) &&
+					i < maxCount - 1
+				) {
+					continue;
+				}
+				throw error;
+			}
 		}
+		return false;
 	}
 
 	public async qrCodeLogin(
@@ -735,6 +803,66 @@ export class Login {
 				[2, 4, autoLoginIsRequired],
 			]]],
 			"qrCodeLoginV2",
+			4,
+			false,
+			"/acct/lgn/sq/v1",
+		);
+	}
+
+	/**
+	 * ForSecure variant of {@link createQrCode}.  The newer LINE-Android
+	 * login flow (LINE 26+) requires this — the legacy `createQrCode`
+	 * RPC still exists but the server marks issued QR sessions
+	 * immediately expired, so logins through it fail with `Expired` on
+	 * the device side.
+	 *
+	 * Returns the callback URL, the long-polling parameters
+	 * (`longPollingMaxCount`, `longPollingIntervalSec`), and a `nonce`
+	 * that {@link qrCodeLoginV2ForSecure} must echo back to complete
+	 * the login.
+	 *
+	 * Schema source: smali `oc4.i.smali` in LINE Android 26.6.2.
+	 */
+	public async createQrCodeForSecure(
+		authSessionId: string,
+	): Promise<LooseType> {
+		return await this.client.request.request(
+			[[12, 1, [[11, 1, authSessionId]]]],
+			"createQrCodeForSecure",
+			4,
+			false,
+			"/acct/lgn/sq/v1",
+		);
+	}
+
+	/**
+	 * ForSecure variant of {@link qrCodeLoginV2}.  Echoes the `nonce`
+	 * received from {@link createQrCodeForSecure}.
+	 *
+	 * Schema source: smali `oc4.p.smali` (QrCodeLoginV2ForSecureRequest)
+	 * in LINE Android 26.6.2.  Field map:
+	 *   1: authSessionId       (string)
+	 *   2: systemName          (string)
+	 *   3: modelName           (string)
+	 *   4: autoLoginIsRequired (bool)
+	 *   5: nonce               (string)
+	 */
+	public async qrCodeLoginV2ForSecure(
+		authSessionId: string,
+		nonce: string,
+		modelName: string = "evex-device",
+		systemName: string = "linejs-v2",
+		autoLoginIsRequired: boolean = true,
+	): Promise<LooseType> {
+		return await this.client.request.request(
+			[[12, 1, [
+				[11, 1, authSessionId],
+				[11, 2, systemName],
+				[11, 3, modelName],
+				[2, 4, autoLoginIsRequired],
+				[11, 5, nonce],
+			]]],
+			"qrCodeLoginV2ForSecure",
 			4,
 			false,
 			"/acct/lgn/sq/v1",

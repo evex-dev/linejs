@@ -176,9 +176,11 @@ export class RequestClient {
 			res = this.client.thrift.readThrift(parsedBody, protocol);
 		} catch {
 			throw new Error(
-				`Request internal failed: Invalid response buffer <${
-					[...parsedBody].map((e) => e.toString(16)).join(" ")
-				}>`,
+				`Request internal failed: status=${response.status} ` +
+					`headers=${JSON.stringify([...response.headers.entries()])} ` +
+					`body=<${
+						[...parsedBody].map((e) => e.toString(16)).join(" ")
+					}>`,
 			);
 		}
 		if (!res.data[0] && Object.keys(res.data).length) {
@@ -242,7 +244,7 @@ export class RequestClient {
 			);
 		}
 		if (hasError && !isRefresh) {
-			if (res.data.e.code === "NOT_AUTHORIZED_DEVICE") {
+			if (res.data.e?.code === "NOT_AUTHORIZED_DEVICE") {
 				delete this.client.authToken;
 				this.client.emit("end", this.client.profile!);
 			}

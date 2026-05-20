@@ -5,3 +5,5 @@ node_modules
 deno.lock
 docs/vitepress/cache
 packages/linejs/base/thrift/struct.ts
+verify_v2_7.ts
+qr_login.png
