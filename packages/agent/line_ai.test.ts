@@ -69,14 +69,15 @@ Deno.test("LineAiClient.query — POST /v2/query-ai with X-ACCESS-TOKEN + X-LINE
 		"x-ratelimit-remaining": "99",
 		"x-ratelimit-usage": "1",
 	});
-	const r = await c.query({ prompt: "hello", threadId: null });
+	const r = await c.query({ message: "hello", threadId: null, imageUrl: null });
 	assertEquals(m.calls[0].url, "https://ai-gw.example/v2/query-ai");
 	assertEquals(m.calls[0].method, "POST");
 	assertEquals(m.calls[0].headers["x-access-token"], "tok-xyz");
 	assertEquals(m.calls[0].headers["x-line-version"], "26.6.2");
 	const body = JSON.parse(m.calls[0].body!);
-	assertEquals(body.prompt, "hello");
+	assertEquals(body.message, "hello");
 	assertEquals(body.threadId, null);
+	assertEquals(body.imageUrl, null);
 	assertEquals(r.rateLimit.remaining, "99");
 	assertEquals(typeof r.body, "object");
 });
