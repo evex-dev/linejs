@@ -47,6 +47,15 @@ export type ClientEvents = {
 	"square:event": (event: LINETypes.SquareEvent) => void;
 };
 
+/** True if the thrown error is the server's "API method not capable"
+ *  signal (the message LINE returns when the calling client's device
+ *  type isn't allowed to use the RPC).  Used to drive the
+ *  V3 → V2 → V1 fallback chain in {@link Client.fetchUsers}. */
+function isApiNotCapable(e: unknown): boolean {
+	const msg = e instanceof Error ? e.message : String(e);
+	return /API method not capable/i.test(msg);
+}
+
 export class Client extends TypedEventEmitter<ClientEvents> {
 	readonly base: BaseClient;
 	#liff?: LiffClient;
@@ -209,24 +218,50 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 * Fetches all friend.
 	 */
 	async fetchUsers(): Promise<User[]> {
-		await 0;
-		throw new Error("fetchUsers is not implemented")
-		/*
 		const { userFriendMids } = await this.base.relation.getUserFriendIds({
-			request: {
-				blockStatus: "ALL",
-			},
+			request: { blockStatus: "ALL" },
 		});
-		const res = await this.base.talk.getContactsV2({
-			mids: userFriendMids,
-		});
-		const contacts = res.responses;
-		return contacts.map((raw) =>
-			new User({
-				raw,
-			})
-		);
-		*/
+		if (!userFriendMids?.length) return [];
+
+		// Prefer Relation.getContactsV3 (returns GetContactV3Response[]).
+		// DESKTOPWIN clients can't call V3 ("API method not capable") so
+		// fall back to Talk.getContactsV2 → Talk.getContacts.  All three
+		// shapes feed `new User({ raw })` because User only reads
+		// `targetUserMid` + a handful of optional fields that overlap.
+		try {
+			const res = await this.base.relation.getContactsV3({
+				mids: userFriendMids,
+			});
+			return res.responses.map((raw) => new User({ client: this, raw }));
+		} catch (e) {
+			if (!isApiNotCapable(e)) throw e;
+		}
+		try {
+			const res2 = await this.base.talk.getContactsV2({
+				mids: userFriendMids,
+			});
+			// V2 returns `contacts: Record<mid, ContactEntry>`; shim each
+			// entry into a V3-shaped `{ targetUserMid, ...entry }` so
+			// User's existing readers keep working.
+			const out: User[] = [];
+			for (const [mid, entry] of Object.entries(res2.contacts ?? {})) {
+				out.push(new User({
+					client: this,
+					raw: { ...(entry as object), targetUserMid: mid } as never,
+				}));
+			}
+			if (out.length) return out;
+		} catch (e) {
+			if (!isApiNotCapable(e)) throw e;
+		}
+		// Final fallback: per-mid getContact loop (last resort, slowest).
+		const out: User[] = [];
+		for (const mid of userFriendMids) {
+			try {
+				out.push(await this.getUser(mid));
+			} catch { /* skip unreachable */ }
+		}
+		return out;
 	}
 
 	/**
