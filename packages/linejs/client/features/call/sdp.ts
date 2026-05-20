@@ -152,7 +152,7 @@ export function buildAudioOfferMikey(opts: {
 	sessionVer?: number;
 }): string {
 	const pt = opts.opusPayloadType ?? 96;
-	const user = opts.username ?? "linejs";
+	const user = opts.username ?? "-";
 	const sid = opts.sessionId ?? Math.floor(Date.now() / 1000);
 	const sver = opts.sessionVer ?? sid;
 	return buildSdp({
@@ -187,7 +187,7 @@ export function buildAudioOffer(opts: {
 	sessionVer?: number;
 }): string {
 	const pt = opts.opusPayloadType ?? 96;
-	const user = opts.username ?? "linejs";
+	const user = opts.username ?? "-";
 	const sid = opts.sessionId ?? Math.floor(Date.now() / 1000);
 	const sver = opts.sessionVer ?? sid;
 	return buildSdp({
