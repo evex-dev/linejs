@@ -1,7 +1,6 @@
-// LINE PLANET / Cassini call-signaling implementation, reverse-engineered
-// from libandromeda.so. See docs/PLANET_PROTOCOL.md for the full wire
-// format. Replaces the standard-SIP `andromeda.ts` for LINE cscf interop;
-// the SRTP/RTCP/Opus media-plane layers in linejs continue to apply.
+// LINE PLANET / Cassini call signaling, reverse-engineered from a
+// real tom-call's `pln_msg_pack` + `ear_crypto_hkdf` Frida capture.
+// See docs/PLANET_PROTOCOL.md for the full reverse-engineering trail.
 
 export {
 	buildFrameHeader,
@@ -14,27 +13,42 @@ export {
 } from "./framing.ts";
 
 export {
-	buildIv,
+	aesCtrDecrypt,
+	aesCtrEncrypt,
+	buildCtrIv,
+	buildDirectionTag,
 	decodeMpKey,
-	decryptCtr,
-	deriveSessionKeys,
-	encryptCtr,
+	deriveCallKeys,
+	ecdh,
+	type EphemeralKeypair,
+	generateEphemeralKeypair,
 	hmacTag,
-	type PlanetSessionKeys,
+	newSessionId,
+	planetHkdfStage1,
+	planetHkdfStage2,
 	sha256,
 	tagEquals,
+	type TransportKeys,
 } from "./crypto.ts";
 
 export {
+	buildExchangeAppStrData,
 	buildRelReq,
 	buildSetupReq,
-	CASSINI_MSG,
+	type CassiniBody,
+	type CassiniEnvelope,
 	type CassiniHeader,
-	type CassiniMsgType,
+	decodePb,
+	decodeVarint,
+	encodePb,
+	encodeVarint,
 	packCassini,
-	SETUP_TAG,
-	type TLV,
+	packCassiniBody,
+	packCassiniHeader,
+	type PbField,
 	unpackCassini,
+	unpackCassiniBody,
+	WireType,
 } from "./cassini.ts";
 
 export {

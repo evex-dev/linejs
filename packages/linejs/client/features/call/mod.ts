@@ -25,24 +25,25 @@ export {
 export { stubTransport } from "./session.ts";
 export { AndromedaTransport, type AndromedaTransportOpts } from "./andromeda.ts";
 export {
+	buildExchangeAppStrData as planetBuildExchangeAppStrData,
 	buildFrameHeader as planetBuildFrameHeader,
 	buildRelReq as planetBuildRelReq,
 	buildSetupReq as planetBuildSetupReq,
-	CASSINI_MSG,
+	type CassiniBody,
+	type CassiniEnvelope,
 	type CassiniHeader,
-	type CassiniMsgType,
 	decodeMpKey as planetDecodeMpKey,
-	deriveSessionKeys as planetDeriveSessionKeys,
+	deriveCallKeys as planetDeriveCallKeys,
+	type EphemeralKeypair,
+	generateEphemeralKeypair as planetGenerateEphemeralKeypair,
 	makeChunkHdr as planetMakeChunkHdr,
 	packCassini,
 	parseChunkHdr as planetParseChunkHdr,
 	parseFrameHeader as planetParseFrameHeader,
 	type PlanetFixedHdr,
-	type PlanetSessionKeys,
 	PlanetTransport,
 	type PlanetTransportOpts,
-	SETUP_TAG,
-	type TLV,
+	type TransportKeys,
 	unpackCassini,
 } from "./planet/mod.ts";
 export { opusCodecFactory } from "./opus.ts";

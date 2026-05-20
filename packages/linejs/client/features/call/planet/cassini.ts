@@ -1,217 +1,364 @@
 /**
- * PLANET / Cassini message types.
+ * PLANET Cassini message format — ground-truth revision.
  *
- * The full set of 27 Cassini message types enumerated from
- * libandromeda's `pln_cassini_send_*` dynamic symbols:
+ * Live `pln_msg_pack` capture during a real tom-call shows the on-wire
+ * format is **protobuf**. Captured hex bytes:
  *
- *   0x774d34  pln_cassini_send_setup           — outbound INVITE-equivalent
- *   0x775530  pln_cassini_send_verify          — call-leg verification
- *   0x775898  pln_cassini_send_conn            — connection establishment
- *   0x775c04  pln_cassini_send_conrx           — connection-rx ack
- *   0x775f50  pln_cassini_send_ho              — handover
- *   0x7761e0  pln_cassini_send_so              — service operation
- *   0x77684c  pln_cassini_send_mcp             — media control
- *   0x776aa8  pln_cassini_send_info            — call info exchange
- *   0x776de8  pln_cassini_send_data_sess_req   — data session
- *   0x777404  pln_cassini_send_unsubscribe_req
- *   0x7776f4  pln_cassini_send_<other>         (truncated in readelf)
- *   0x777c58  pln_cassini_send_pull
- *   0x777f10  pln_cassini_send_push
- *   0x778150  pln_cassini_send_set_speaker
- *   0x778380  pln_cassini_send_unavail
- *   0x779b10  pln_cassini_send_participate_rsp
- *   0x77a0b8  pln_cassini_send_subscribe
- *   0x77a32c  pln_cassini_send_subpush
- *   0x77a8a8  pln_cassini_send_upd
- *   0x77aa98  pln_cassini_send_dtass_rsp
- *   0x77ad0c  pln_cassini_send_push_rsp
- *   0x77b44c  pln_cassini_send_subpush_rsp
- *   0x77b974  pln_cassini_send_set_speaker_rsp
- *   0x77b48c  pln_cassini_send_rel             — release (BYE-equivalent)
+ *   0a 60 0a 21 75 63 38 34 35 38 36 34 37 34 37 30 33 61 36 31 37 32
+ *   65 39 64 30 35 31 65 61 62 62 63 62 36 32 37 10 81 22 1a 10 b0 c2
+ *   a7 4c e7 cd 45 02 a0 fa 32 58 6d a9 0e 54 22 21 0f c4 ed 07 ...
  *
- * Each is a 600-1100-byte function that builds a binary payload and
- * hands it to pln_sess_send_req.
+ * Decoded as protobuf:
  *
- * Exact field schemas require deeper RE; this file ships the type tags
- * + a TLV-style builder framework that matches the observed wire shape
- * (length-prefixed fields).
+ *   field 1 (tag 0x0a, length-delimited, len=0x60):
+ *     // nested header message
+ *     field 1 (0x0a, len=0x21): user_id "uc84586474703a6172e9d051eabbcb627"
+ *     field 2 (0x10, varint):   msg_id   (varint 0x81 0x22 = 4353 ascending per call)
+ *     field 3 (0x1a, len=0x10): uuid     (16-byte session UUID)
+ *     field 4 (0x22, len=0x21): user_pub (33-byte SEC1 EC pubkey)
+ *     field 5 (0x28, varint):   timestamp1
+ *     field 6 (0x30, varint):   timestamp2
+ *     field 7 (0x38, varint):   created_at_ms (Unix-ms timestamp)
+ *
+ *   field N+1 (0x6a, len=...): body payload — typically:
+ *     field 1 (0x0a, len-delim): call_uuid "c5cd3923-5d89-45d6-a0bf-..."
+ *     field N (0x12 or 0x22, len-delim): "exchange_app_str_data" (msg type name)
+ *     field N (0x22, len-delim): JSON params  e.g. {"csv":1}
+ *     field N (0x...):           device info  "Android..36..Pixel 6a"
+ *
+ * This file gives a clean protobuf encoder/decoder for these messages
+ * plus typed builders for the SETUP / EXCHANGE / REL flows.
  */
 
-export const CASSINI_MSG = {
-	SETUP: 0x01,
-	SETUP_RSP: 0x02,
-	CONN: 0x03,
-	CONN_RSP: 0x04,
-	CONRX: 0x05,
-	CONRX_RSP: 0x06,
-	REL: 0x07,
-	REL_RSP: 0x08,
-	INFO: 0x09,
-	INFO_RSP: 0x0a,
-	MCP: 0x0b,
-	MCP_RSP: 0x0c,
-	VERIFY: 0x0d,
-	VERIFY_RSP: 0x0e,
-	HO: 0x0f,
-	HO_RSP: 0x10,
-	UPD: 0x11,
-	UPD_RSP: 0x12,
-	UNAVAIL: 0x13,
-	UNAVAIL_RSP: 0x14,
-	SO: 0x15,
-	SO_RSP: 0x16,
-	PUSH: 0x17,
-	PUSH_RSP: 0x18,
-	PULL: 0x19,
-	PULL_RSP: 0x1a,
-	SUBSCRIBE: 0x1b,
-	SUBSCRIBE_RSP: 0x1c,
-	UNSUBSCRIBE: 0x1d,
-	SUBPUSH: 0x1e,
-	SUBPUSH_RSP: 0x1f,
-	PARTICIPATE: 0x20,
-	PARTICIPATE_RSP: 0x21,
-	DATA_SESS_REQ: 0x22,
-	BIG_DATA: 0x23,
-	BIG_DATA_RSP: 0x24,
-	DTASS: 0x25,
-	DTASS_RSP: 0x26,
-	SET_SPEAKER: 0x27,
-	SET_SPEAKER_RSP: 0x28,
-} as const;
+import { Buffer } from "node:buffer";
 
-export type CassiniMsgType = (typeof CASSINI_MSG)[keyof typeof CASSINI_MSG];
-
-/** Fields shared by every Cassini message. */
-export interface CassiniHeader {
-	/** Class (req=0, rsp=1, event=2). Derived from `pln_msg_get_msg_cls`. */
-	cls: number;
-	/** Message type — one of `CASSINI_MSG`. */
-	type: CassiniMsgType;
-	/** Transaction id — increments per request. */
-	msgId: number;
-	/** Owning user mid. */
-	userId: string;
+/** Protobuf wire type tags. */
+export const enum WireType {
+	Varint = 0,
+	Fixed64 = 1,
+	LengthDelim = 2,
+	Fixed32 = 5,
 }
 
-/** A TLV (type-length-value) field, used to encode optional payload data. */
-export interface TLV {
+/** Encode a protobuf varint. */
+export function encodeVarint(n: number | bigint): Uint8Array {
+	let v = typeof n === "bigint" ? n : BigInt(n);
+	const out: number[] = [];
+	while (v > 0x7fn) {
+		out.push(Number((v & 0x7fn) | 0x80n));
+		v >>= 7n;
+	}
+	out.push(Number(v));
+	return new Uint8Array(out);
+}
+
+/** Decode a protobuf varint. Returns [value, byte length]. */
+export function decodeVarint(buf: Uint8Array, off: number): [bigint, number] {
+	let v = 0n;
+	let shift = 0n;
+	let i = off;
+	while (i < buf.length) {
+		const b = BigInt(buf[i]);
+		v |= (b & 0x7fn) << shift;
+		shift += 7n;
+		i++;
+		if ((b & 0x80n) === 0n) break;
+	}
+	return [v, i - off];
+}
+
+/** A single protobuf field. */
+export interface PbField {
 	tag: number;
-	value: Uint8Array;
+	wireType: WireType;
+	value: bigint | Uint8Array;
 }
 
-/** Pack a Cassini message: header + TLV body, in the wire format that
- *  `pln_msg_pack` produces (best-effort match: 1-byte class, 1-byte
- *  type, 4-byte msgId BE, length-prefixed userId, then TLVs). */
-export function packCassini(hdr: CassiniHeader, tlvs: TLV[]): Uint8Array {
-	const userIdBytes = new TextEncoder().encode(hdr.userId);
-	let total = 1 + 1 + 4 + 2 + userIdBytes.length;
-	for (const t of tlvs) total += 1 + 2 + t.value.length;
-	const out = new Uint8Array(total);
-	const dv = new DataView(out.buffer);
-	let o = 0;
-	out[o++] = hdr.cls & 0xff;
-	out[o++] = hdr.type & 0xff;
-	dv.setUint32(o, hdr.msgId >>> 0, false);
-	o += 4;
-	dv.setUint16(o, userIdBytes.length, false);
-	o += 2;
-	out.set(userIdBytes, o);
-	o += userIdBytes.length;
-	for (const t of tlvs) {
-		out[o++] = t.tag & 0xff;
-		dv.setUint16(o, t.value.length, false);
-		o += 2;
-		out.set(t.value, o);
-		o += t.value.length;
+/** Encode a sequence of protobuf fields to wire bytes. */
+export function encodePb(fields: PbField[]): Uint8Array {
+	const out: number[] = [];
+	for (const f of fields) {
+		const key = encodeVarint(BigInt((f.tag << 3) | f.wireType));
+		for (const b of key) out.push(b);
+		if (f.wireType === WireType.Varint) {
+			for (const b of encodeVarint(f.value as bigint)) out.push(b);
+		} else if (f.wireType === WireType.LengthDelim) {
+			const v = new Uint8Array(f.value as Uint8Array);
+			for (const b of encodeVarint(v.length)) out.push(b);
+			for (const b of v) out.push(b);
+		} else {
+			throw new Error(`encodePb: wireType ${f.wireType} not implemented`);
+		}
+	}
+	return new Uint8Array(out);
+}
+
+/** Decode protobuf bytes into a list of fields (varint + length-delim only). */
+export function decodePb(buf: Uint8Array): PbField[] {
+	const out: PbField[] = [];
+	let i = 0;
+	while (i < buf.length) {
+		const [k, kl] = decodeVarint(buf, i);
+		i += kl;
+		const tag = Number(k >> 3n);
+		const wt = Number(k & 7n) as WireType;
+		if (wt === WireType.Varint) {
+			const [v, vl] = decodeVarint(buf, i);
+			out.push({ tag, wireType: wt, value: v });
+			i += vl;
+		} else if (wt === WireType.LengthDelim) {
+			const [len, ll] = decodeVarint(buf, i);
+			i += ll;
+			const v = buf.subarray(i, i + Number(len));
+			out.push({ tag, wireType: wt, value: v });
+			i += Number(len);
+		} else if (wt === WireType.Fixed64) {
+			out.push({
+				tag,
+				wireType: wt,
+				value: buf.subarray(i, i + 8),
+			});
+			i += 8;
+		} else if (wt === WireType.Fixed32) {
+			out.push({
+				tag,
+				wireType: wt,
+				value: buf.subarray(i, i + 4),
+			});
+			i += 4;
+		} else {
+			throw new Error(`decodePb: unknown wireType ${wt} at offset ${i}`);
+		}
 	}
 	return out;
 }
 
-/** Unpack a Cassini message produced by `packCassini`. */
-export function unpackCassini(
-	wire: Uint8Array,
-): { hdr: CassiniHeader; tlvs: TLV[] } {
-	if (wire.length < 8) throw new Error("unpackCassini: too short");
-	const dv = new DataView(wire.buffer, wire.byteOffset, wire.byteLength);
-	let o = 0;
-	const cls = wire[o++];
-	const type = wire[o++] as CassiniMsgType;
-	const msgId = dv.getUint32(o, false);
-	o += 4;
-	const uidLen = dv.getUint16(o, false);
-	o += 2;
-	const userId = new TextDecoder().decode(wire.subarray(o, o + uidLen));
-	o += uidLen;
-	const tlvs: TLV[] = [];
-	while (o + 3 <= wire.length) {
-		const tag = wire[o++];
-		const len = dv.getUint16(o, false);
-		o += 2;
-		if (o + len > wire.length) break;
-		tlvs.push({ tag, value: wire.subarray(o, o + len) });
-		o += len;
-	}
-	return { hdr: { cls, type, msgId, userId }, tlvs };
+/** Cassini message envelope — the outer protobuf the libandromeda
+ *  call control plane uses. Field tags match `pln_msg_pack` output. */
+export interface CassiniEnvelope {
+	header: CassiniHeader;
+	body: Uint8Array;
 }
 
-/** Cassini SETUP request — initiates an outgoing call.
- *  Field tags are best-effort guesses; live verification needed. */
-export const SETUP_TAG = {
-	PEER_MID: 0x01,
-	CALL_TYPE: 0x02, // 1=AUDIO, 2=VIDEO, 3=FACEPLAY
-	SDP_OFFER: 0x03,
-	CAPABILITIES: 0x04,
-	CALL_FLOW_TYPE: 0x05,
-	FROM_TOKEN: 0x06,
-} as const;
-
-export function buildSetupReq(opts: {
+export interface CassiniHeader {
+	/** Owning user mid (Cassini "user_id"). */
+	userId: string;
+	/** Monotonic per-call sequence (the 0x1d5/0x1d6/... we observed). */
 	msgId: number;
-	fromMid: string;
-	toMid: string;
-	callType: "AUDIO" | "VIDEO" | "FACEPLAY";
-	fromToken: string;
-	sdpOffer: Uint8Array;
-	capabilities?: string[];
-}): Uint8Array {
-	const callTypeMap = { AUDIO: 1, VIDEO: 2, FACEPLAY: 3 } as const;
-	const enc = new TextEncoder();
-	const tlvs: TLV[] = [
-		{ tag: SETUP_TAG.PEER_MID, value: enc.encode(opts.toMid) },
-		{ tag: SETUP_TAG.CALL_TYPE, value: new Uint8Array([callTypeMap[opts.callType]]) },
-		{ tag: SETUP_TAG.SDP_OFFER, value: opts.sdpOffer },
-		{ tag: SETUP_TAG.FROM_TOKEN, value: enc.encode(opts.fromToken) },
-		{ tag: SETUP_TAG.CALL_FLOW_TYPE, value: new Uint8Array([2]) }, // PLANET
+	/** 16-byte call UUID. */
+	uuid: Uint8Array;
+	/** 33-byte SEC1 compressed EC public key. */
+	userPub: Uint8Array;
+	/** Wire-observed fields 5/6 — opaque integers. */
+	field5?: bigint;
+	field6?: bigint;
+	/** Field 7: ms Unix timestamp. */
+	createdAtMs: bigint;
+}
+
+const enum HDR_TAG {
+	USER_ID = 1,
+	MSG_ID = 2,
+	UUID = 3,
+	USER_PUB = 4,
+	FIELD5 = 5,
+	FIELD6 = 6,
+	CREATED_AT_MS = 7,
+}
+
+const enum ENV_TAG {
+	HEADER = 1,
+	BODY = 13, // tag 0x6a = (13 << 3) | 2
+}
+
+export function packCassiniHeader(h: CassiniHeader): Uint8Array {
+	const fields: PbField[] = [
+		{ tag: HDR_TAG.USER_ID, wireType: WireType.LengthDelim, value: new TextEncoder().encode(h.userId) },
+		{ tag: HDR_TAG.MSG_ID, wireType: WireType.Varint, value: BigInt(h.msgId) },
+		{ tag: HDR_TAG.UUID, wireType: WireType.LengthDelim, value: h.uuid },
+		{ tag: HDR_TAG.USER_PUB, wireType: WireType.LengthDelim, value: h.userPub },
 	];
-	if (opts.capabilities && opts.capabilities.length) {
-		tlvs.push({
-			tag: SETUP_TAG.CAPABILITIES,
-			value: enc.encode(opts.capabilities.join(",")),
-		});
+	if (h.field5 !== undefined) {
+		fields.push({ tag: HDR_TAG.FIELD5, wireType: WireType.Varint, value: h.field5 });
 	}
-	return packCassini({
-		cls: 0, // req
-		type: CASSINI_MSG.SETUP,
-		msgId: opts.msgId,
-		userId: opts.fromMid,
-	}, tlvs);
+	if (h.field6 !== undefined) {
+		fields.push({ tag: HDR_TAG.FIELD6, wireType: WireType.Varint, value: h.field6 });
+	}
+	fields.push({
+		tag: HDR_TAG.CREATED_AT_MS,
+		wireType: WireType.Varint,
+		value: h.createdAtMs,
+	});
+	return encodePb(fields);
 }
 
-/** Cassini REL request — terminate a call. */
-export function buildRelReq(opts: {
-	msgId: number;
+export function packCassini(env: CassiniEnvelope): Uint8Array {
+	const headerBytes = packCassiniHeader(env.header);
+	return encodePb([
+		{ tag: ENV_TAG.HEADER, wireType: WireType.LengthDelim, value: headerBytes },
+		{ tag: ENV_TAG.BODY, wireType: WireType.LengthDelim, value: env.body },
+	]);
+}
+
+export function unpackCassini(wire: Uint8Array): CassiniEnvelope {
+	const fields = decodePb(wire);
+	const hdrField = fields.find((f) => f.tag === ENV_TAG.HEADER);
+	const bodyField = fields.find((f) => f.tag === ENV_TAG.BODY);
+	if (!hdrField || !bodyField) throw new Error("unpackCassini: missing header/body");
+	const hdrParts = decodePb(hdrField.value as Uint8Array);
+	let userId = "", msgId = 0, uuid = new Uint8Array(0), userPub = new Uint8Array(0);
+	let field5: bigint | undefined, field6: bigint | undefined;
+	let createdAtMs = 0n;
+	for (const f of hdrParts) {
+		if (f.tag === HDR_TAG.USER_ID) userId = new TextDecoder().decode(new Uint8Array(f.value as Uint8Array));
+		else if (f.tag === HDR_TAG.MSG_ID) msgId = Number(f.value);
+		else if (f.tag === HDR_TAG.UUID) uuid = new Uint8Array(f.value as Uint8Array);
+		else if (f.tag === HDR_TAG.USER_PUB) userPub = new Uint8Array(f.value as Uint8Array);
+		else if (f.tag === HDR_TAG.FIELD5) field5 = f.value as bigint;
+		else if (f.tag === HDR_TAG.FIELD6) field6 = f.value as bigint;
+		else if (f.tag === HDR_TAG.CREATED_AT_MS) createdAtMs = f.value as bigint;
+	}
+	return {
+		header: { userId, msgId, uuid, userPub, field5, field6, createdAtMs },
+		body: bodyField.value as Uint8Array,
+	};
+}
+
+/** Body payload — observed contents include:
+ *  - call UUID string
+ *  - message type name (e.g. "exchange_app_str_data")
+ *  - JSON params (e.g. `{"csv":1}`)
+ *  - device info
+ */
+export interface CassiniBody {
+	callUuid?: string;
+	msgTypeName?: string;
+	jsonParams?: string;
+	deviceInfo?: string;
+	/** Additional protobuf fields that we don't yet have names for. */
+	extra?: PbField[];
+}
+
+const enum BODY_TAG {
+	CALL_UUID = 1,
+	MSG_TYPE = 2,
+	JSON_PARAMS = 4,
+	DEVICE_INFO = 13,
+}
+
+export function packCassiniBody(b: CassiniBody): Uint8Array {
+	const enc = new TextEncoder();
+	const fields: PbField[] = [];
+	if (b.callUuid !== undefined) {
+		fields.push({ tag: BODY_TAG.CALL_UUID, wireType: WireType.LengthDelim, value: enc.encode(b.callUuid) });
+	}
+	if (b.msgTypeName !== undefined) {
+		fields.push({ tag: BODY_TAG.MSG_TYPE, wireType: WireType.LengthDelim, value: enc.encode(b.msgTypeName) });
+	}
+	if (b.jsonParams !== undefined) {
+		fields.push({ tag: BODY_TAG.JSON_PARAMS, wireType: WireType.LengthDelim, value: enc.encode(b.jsonParams) });
+	}
+	if (b.deviceInfo !== undefined) {
+		fields.push({ tag: BODY_TAG.DEVICE_INFO, wireType: WireType.LengthDelim, value: enc.encode(b.deviceInfo) });
+	}
+	if (b.extra) fields.push(...b.extra);
+	return encodePb(fields);
+}
+
+export function unpackCassiniBody(wire: Uint8Array): CassiniBody {
+	const fields = decodePb(wire);
+	const out: CassiniBody = { extra: [] };
+	const dec = new TextDecoder();
+	for (const f of fields) {
+		if (f.wireType !== WireType.LengthDelim) {
+			out.extra!.push(f);
+			continue;
+		}
+		const v = new Uint8Array(f.value as Uint8Array);
+		if (f.tag === BODY_TAG.CALL_UUID) out.callUuid = dec.decode(v);
+		else if (f.tag === BODY_TAG.MSG_TYPE) out.msgTypeName = dec.decode(v);
+		else if (f.tag === BODY_TAG.JSON_PARAMS) out.jsonParams = dec.decode(v);
+		else if (f.tag === BODY_TAG.DEVICE_INFO) out.deviceInfo = dec.decode(v);
+		else out.extra!.push(f);
+	}
+	return out;
+}
+
+/** Build a Cassini SETUP envelope (the outgoing-call initiator). */
+export function buildSetupReq(opts: {
 	fromMid: string;
+	msgId: number;
+	uuid: Uint8Array;
+	userPub: Uint8Array;
+	callUuid: string;
+	deviceInfo: string;
+}): Uint8Array {
+	const body = packCassiniBody({
+		callUuid: opts.callUuid,
+		msgTypeName: "setup_req",
+		deviceInfo: opts.deviceInfo,
+	});
+	return packCassini({
+		header: {
+			userId: opts.fromMid,
+			msgId: opts.msgId,
+			uuid: opts.uuid,
+			userPub: opts.userPub,
+			createdAtMs: BigInt(Date.now()),
+		},
+		body,
+	});
+}
+
+/** Build a Cassini "exchange_app_str_data" — used mid-call for app-level
+ *  signaling (e.g. CSV capability flag). */
+export function buildExchangeAppStrData(opts: {
+	fromMid: string;
+	msgId: number;
+	uuid: Uint8Array;
+	userPub: Uint8Array;
+	callUuid: string;
+	json: string;
+}): Uint8Array {
+	const body = packCassiniBody({
+		callUuid: opts.callUuid,
+		msgTypeName: "exchange_app_str_data",
+		jsonParams: opts.json,
+	});
+	return packCassini({
+		header: {
+			userId: opts.fromMid,
+			msgId: opts.msgId,
+			uuid: opts.uuid,
+			userPub: opts.userPub,
+			createdAtMs: BigInt(Date.now()),
+		},
+		body,
+	});
+}
+
+/** Build a Cassini REL (release / BYE-equivalent). */
+export function buildRelReq(opts: {
+	fromMid: string;
+	msgId: number;
+	uuid: Uint8Array;
+	userPub: Uint8Array;
+	callUuid: string;
 	reason?: string;
 }): Uint8Array {
-	const tlvs: TLV[] = [];
-	if (opts.reason) {
-		tlvs.push({ tag: 0x01, value: new TextEncoder().encode(opts.reason) });
-	}
+	const body = packCassiniBody({
+		callUuid: opts.callUuid,
+		msgTypeName: "rel_req",
+		jsonParams: opts.reason ? JSON.stringify({ reason: opts.reason }) : undefined,
+	});
 	return packCassini({
-		cls: 0,
-		type: CASSINI_MSG.REL,
-		msgId: opts.msgId,
-		userId: opts.fromMid,
-	}, tlvs);
+		header: {
+			userId: opts.fromMid,
+			msgId: opts.msgId,
+			uuid: opts.uuid,
+			userPub: opts.userPub,
+			createdAtMs: BigInt(Date.now()),
+		},
+		body,
+	});
 }
