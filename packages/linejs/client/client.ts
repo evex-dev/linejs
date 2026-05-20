@@ -13,6 +13,8 @@ import {
 	uploadMyProfileBackground,
 	uploadMyProfileImage,
 } from "./features/profile.ts";
+import { createLiffClient, type LiffClient } from "./features/liff.ts";
+export * as liff from "./features/liff.ts";
 export { Chat, Square, SquareChat, SquareMessage, TalkMessage, User };
 export { ProfileAttribute } from "./features/profile.ts";
 export type { MyProfileUpdate } from "./features/profile.ts";
@@ -43,9 +45,20 @@ export type ClientEvents = {
 
 export class Client extends TypedEventEmitter<ClientEvents> {
 	readonly base: BaseClient;
+	#liff?: LiffClient;
 	constructor(base: BaseClient) {
 		super();
 		this.base = base;
+	}
+
+	/**
+	 * High-level LIFF helpers (token minting + message sharing).  See
+	 * {@link "./features/liff.ts" | features/liff.ts} for the message
+	 * builders (`text` / `sticker` / `image` / `flex`).
+	 */
+	get liff(): LiffClient {
+		if (!this.#liff) this.#liff = createLiffClient(this);
+		return this.#liff;
 	}
 
 	/**
