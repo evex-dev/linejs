@@ -33,7 +33,10 @@ bunx --bun jsr add @evex/linejs
 deno add @evex/linejs
 ```
 
-### For Agent
+### For AI coding agents
+
+Install LINEJS as a skill so Codex, Claude Code, and other coding
+agents know how to work with the library:
 
 ```sh
 npx skills add evex-dev/linejs --skill linejs
