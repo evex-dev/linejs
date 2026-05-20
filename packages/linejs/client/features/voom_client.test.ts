@@ -60,7 +60,7 @@ Deno.test("VoomClient.call — Bearer + X-Line-Mid headers", async () => {
 	assertEquals(r.code, 200);
 	assert(r.result);
 	assertEquals(fetched.length, 1);
-	assertEquals(fetched[0].url, "https://gw.line.naver.jp/api/v57/post/list.json");
+	assertEquals(fetched[0].url, "https://gw.line.naver.jp/mh/api/v57/post/list.json");
 	assertEquals(fetched[0].headers["authorization"], "Bearer tok-1341209950");
 	assertEquals(fetched[0].headers["X-Line-Mid"], "u-test-mid");
 });
@@ -70,7 +70,7 @@ Deno.test("VoomClient.feed — default postLimit/followingMaxPage", async () => 
 	const vc = createVoomClient(client);
 	await vc.feed();
 	const u = new URL(fetched[0].url);
-	assertEquals(u.pathname, "/api/v57/post/list.json");
+	assertEquals(u.pathname, "/mh/api/v57/post/list.json");
 	assertEquals(u.searchParams.get("postLimit"), "10");
 	assertEquals(u.searchParams.get("followingMaxPage"), "2");
 });
@@ -90,7 +90,7 @@ Deno.test("VoomClient.noteList — uses NOTE channel + bdb/card/list endpoint (#
 	await vc.noteList({ boardId: "BD-1", limit: 50 });
 	assertEquals(issued, [VoomChannelId.NOTE]);
 	const u = new URL(fetched[0].url);
-	assertEquals(u.pathname, "/api/v1/bdb/card/list");
+	assertEquals(u.pathname, "/mh/api/v1/bdb/card/list");
 	assertEquals(u.searchParams.get("boardId"), "BD-1");
 	assertEquals(u.searchParams.get("limit"), "50");
 	assertEquals(fetched[0].headers["authorization"], `Bearer tok-${VoomChannelId.NOTE}`);
@@ -104,7 +104,7 @@ Deno.test("VoomClient.noteCreate — POSTs to bdb/card/create with boardId in bo
 		body: { text: "hello", attachments: [] },
 	});
 	const u = new URL(fetched[0].url);
-	assertEquals(u.pathname, "/api/v1/bdb/card/create");
+	assertEquals(u.pathname, "/mh/api/v1/bdb/card/create");
 });
 
 Deno.test("VoomClient.noteLike / noteUnlike — POSTs with cardId (#150)", async () => {
@@ -112,6 +112,6 @@ Deno.test("VoomClient.noteLike / noteUnlike — POSTs with cardId (#150)", async
 	const vc = createVoomClient(client);
 	await vc.noteLike({ cardId: "CARD-1" });
 	await vc.noteUnlike({ cardId: "CARD-1" });
-	assertEquals(new URL(fetched[0].url).pathname, "/api/v1/bdb/card/like/create");
-	assertEquals(new URL(fetched[1].url).pathname, "/api/v1/bdb/card/like/cancel");
+	assertEquals(new URL(fetched[0].url).pathname, "/mh/api/v1/bdb/card/like/create");
+	assertEquals(new URL(fetched[1].url).pathname, "/mh/api/v1/bdb/card/like/cancel");
 });
