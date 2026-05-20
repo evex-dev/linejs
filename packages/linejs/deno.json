@@ -19,6 +19,7 @@
 		"node-types": "npm:@types/node@latest",
 		"node-int64": "npm:node-int64@^0.4.0",
 		"undici": "npm:undici@^7",
-		"@noble/ciphers": "npm:@noble/ciphers@^2.2"
+		"@noble/ciphers": "npm:@noble/ciphers@^2.2",
+		"opusscript": "npm:opusscript@^0.1.1"
 	}
 }

@@ -24,6 +24,7 @@ export {
 } from "./audio.ts";
 export { stubTransport } from "./session.ts";
 export { AndromedaTransport, type AndromedaTransportOpts } from "./andromeda.ts";
+export { opusCodecFactory } from "./opus.ts";
 export {
 	buildAudioOffer,
 	buildAudioOfferMikey,
