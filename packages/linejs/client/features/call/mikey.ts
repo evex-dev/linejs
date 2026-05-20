@@ -245,17 +245,26 @@ async function deriveMikeyKey(envKey: Uint8Array, csbId: number, label: number):
 
 /** RSA-OAEP-SHA1 encrypt with a DER-encoded SPKI public key. */
 async function rsaOaepEncrypt(spki: Uint8Array, plaintext: Uint8Array): Promise<Uint8Array> {
-	const spkiBuf = spki.buffer.slice(spki.byteOffset, spki.byteOffset + spki.byteLength) as ArrayBuffer;
 	const key = await crypto.subtle.importKey(
 		"spki",
-		spkiBuf,
+		toArrayBuffer(spki),
 		{ name: "RSA-OAEP", hash: "SHA-1" },
 		false,
 		["encrypt"],
 	);
-	const ptBuf = plaintext.buffer.slice(plaintext.byteOffset, plaintext.byteOffset + plaintext.byteLength) as ArrayBuffer;
-	const ct = await crypto.subtle.encrypt({ name: "RSA-OAEP" }, key, ptBuf);
+	const ct = await crypto.subtle.encrypt(
+		{ name: "RSA-OAEP" },
+		key,
+		toArrayBuffer(plaintext),
+	);
 	return new Uint8Array(ct);
+}
+
+/** Copy a Uint8Array into a fresh ArrayBuffer (avoids SAB ambiguity). */
+function toArrayBuffer(u: Uint8Array): ArrayBuffer {
+	const ab = new ArrayBuffer(u.byteLength);
+	new Uint8Array(ab).set(u);
+	return ab;
 }
 
 // ---------------------------------------------------------------------------

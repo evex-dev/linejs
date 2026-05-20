@@ -2,6 +2,7 @@
 // Uses node:dgram for UDP (works in Node and Deno without flags).
 
 import { Buffer } from "node:buffer";
+import type { Socket as DgramSocket } from "node:dgram";
 import type * as LINETypes from "@evex/linejs-types";
 import type { CallTransport } from "./session.ts";
 import {
@@ -37,11 +38,40 @@ export interface AndromedaTransportOpts {
 	timeoutMs?: number;
 }
 
-interface UdpSocket {
-	send(data: Uint8Array, port: number, host: string, cb: (e?: Error) => void): void;
-	on(ev: "message", h: (msg: Buffer, rinfo: { address: string; port: number }) => void): void;
-	close(cb?: () => void): void;
-	bind(opts: { address?: string; port?: number }, cb?: () => void): void;
+type UdpSocket = DgramSocket;
+
+/** Endpoint extracted from a CallRoute. SIP signaling + media live on
+ *  the same UDP host:port for LINE; SRTP packets flow back over RTP-
+ *  established socket pairs after the SDP answer. */
+interface CallRouteEndpoint {
+	host: string;
+	port: number;
+	tcpPort?: number;
+	host6?: string;
+	fromToken: string;
+	stnpk?: Uint8Array;
+}
+
+/** Decode a base64 string to Uint8Array. */
+function b64decode(s: string): Uint8Array {
+	const bin = atob(s);
+	const out = new Uint8Array(bin.length);
+	for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+	return out;
+}
+
+/** Resolve the SIP/SRTP endpoint + credentials from a CallRoute. */
+function routeEndpoint(r: LINETypes.CallRoute): CallRouteEndpoint {
+	if (!r.voipAddress) throw new Error("CallRoute: no voipAddress");
+	if (!r.voipUdpPort) throw new Error("CallRoute: no voipUdpPort");
+	return {
+		host: r.voipAddress,
+		port: r.voipUdpPort,
+		tcpPort: r.voipTcpPort,
+		host6: r.voipAddress6 || undefined,
+		fromToken: r.fromToken,
+		stnpk: r.stnpk ? b64decode(r.stnpk) : undefined,
+	};
 }
 
 export class AndromedaTransport implements CallTransport {
@@ -74,7 +104,7 @@ export class AndromedaTransport implements CallTransport {
 	async connect(opts: { route: LINETypes.CallRoute }): Promise<void> {
 		this.#route = opts.route;
 		const dgram = await import("node:dgram");
-		const sock = dgram.createSocket("udp4") as unknown as UdpSocket;
+		const sock: UdpSocket = dgram.createSocket("udp4");
 		this.#sock = sock;
 		await new Promise<void>((res) => sock.bind({ address: "0.0.0.0", port: 0 }, () => res()));
 		sock.on("message", (buf, rinfo) => {
@@ -143,25 +173,21 @@ export class AndromedaTransport implements CallTransport {
 
 	/** REGISTER against cscf. Returns final SIP status (200 = registered). */
 	async register(): Promise<number> {
-		const route = this.#route!;
-		const cscf = (route as { cscf?: { host?: string; port?: number } }).cscf;
-		const token = (route as { fromToken?: string }).fromToken ?? "";
-		if (!cscf?.host || !cscf?.port) {
-			throw new Error("AndromedaTransport.register: no cscf in CallRoute");
-		}
-		const target = `sip:${cscf.host}`;
+		const ep = routeEndpoint(this.#route!);
+		const token = ep.fromToken;
+		const target = `sip:${ep.host}`;
 		const callId = this.#callId ?? randomCallId(this.#opts.localMid);
 		const fromTag = this.#sipFromTag ?? newBranch().slice(7, 15);
 		this.#callId = callId;
 		this.#sipFromTag = fromTag;
-		this.#sipFrom = `<sip:${this.#opts.localMid}@${cscf.host}>`;
+		this.#sipFrom = `<sip:${this.#opts.localMid}@${ep.host}>`;
 		const ua = this.#opts.userAgent ?? "Line/26.6.2";
 
 		const baseHeaders = (cseq: number, auth?: string): Record<string, string> => ({
 			"Via": `SIP/2.0/UDP ${this.#opts.localMid}.invalid;branch=${newBranch()};rport`,
 			"Max-Forwards": "70",
-			"From": `<sip:${this.#opts.localMid}@${cscf.host}>;tag=${fromTag}`,
-			"To": `<sip:${this.#opts.localMid}@${cscf.host}>`,
+			"From": `<sip:${this.#opts.localMid}@${ep.host}>;tag=${fromTag}`,
+			"To": `<sip:${this.#opts.localMid}@${ep.host}>`,
 			"Call-ID": callId,
 			"CSeq": `${cseq} REGISTER`,
 			"User-Agent": ua,
@@ -171,7 +197,7 @@ export class AndromedaTransport implements CallTransport {
 			...(auth ? { "Authorization": auth } : {}),
 		});
 
-		const dst = { host: cscf.host, port: cscf.port };
+		const dst = { host: ep.host, port: ep.port };
 		this.#cseq++;
 		await this.#sendTo(dst, {
 			startLine: `REGISTER ${target} SIP/2.0`,
@@ -190,7 +216,7 @@ export class AndromedaTransport implements CallTransport {
 		const auth = await digestResponse({
 			username: this.#opts.localMid,
 			password: token,
-			realm: d.realm ?? cscf.host,
+			realm: d.realm ?? ep.host,
 			nonce: d.nonce ?? "",
 			uri: target,
 			method: "REGISTER",
@@ -224,10 +250,7 @@ export class AndromedaTransport implements CallTransport {
 		 *  call; without it the answer's KEMAC is opaque. */
 		decryptKey?: Uint8Array;
 	}): Promise<{ status: number; remoteKey: Uint8Array; mix: { host: string; port: number } }> {
-		const route = this.#route!;
-		const cscf = (route as { cscf?: { host: string; port: number } }).cscf!;
-		const mix = (route as { mix?: { host: string; port: number } }).mix ?? cscf;
-		if (!mix.host || !mix.port) throw new Error("invite: no mix host/port in CallRoute");
+		const ep = routeEndpoint(this.#route!);
 
 		// Generate local SRTP key (16-byte key + 14-byte salt = 30 bytes)
 		const localKey = new Uint8Array(SRTP_KEYING_LEN);
@@ -236,7 +259,7 @@ export class AndromedaTransport implements CallTransport {
 
 		const localHost = opts.localHost ?? "0.0.0.0";
 		const localPort = opts.localPort ?? 0;
-		const stnpk = (route as unknown as { stnpk?: Uint8Array }).stnpk;
+		const stnpk = ep.stnpk;
 		const offerSdp = stnpk
 			? buildAudioOfferMikey({
 				host: localHost,
@@ -258,10 +281,10 @@ export class AndromedaTransport implements CallTransport {
 				username: this.#opts.localMid,
 			});
 
-		const target = `sip:${opts.to}@${cscf.host}`;
+		const target = `sip:${opts.to}@${ep.host}`;
 		this.#cseq++;
 		const ua = this.#opts.userAgent ?? "Line/26.6.2";
-		await this.#sendTo({ host: cscf.host, port: cscf.port }, {
+		await this.#sendTo({ host: ep.host, port: ep.port }, {
 			startLine: `INVITE ${target} SIP/2.0`,
 			headers: {
 				"Via": `SIP/2.0/UDP ${this.#opts.localMid}.invalid;branch=${newBranch()};rport`,
@@ -314,9 +337,12 @@ export class AndromedaTransport implements CallTransport {
 		this.#remoteKey = remoteKey;
 		this.#srtpSend = await deriveSrtpContext(localKey);
 		this.#srtpRecv = await deriveSrtpContext(remoteKey);
+		// SRTP flows to the SDP-answer's connection address + media port.
+		const answerC = audio.c ?? answer.c ?? "";
+		const ansHost = answerC.split(/\s+/)[2] ?? ep.host;
 		this.#rtp = {
-			host: mix.host,
-			port: mix.port,
+			host: ansHost,
+			port: audio.port || ep.port,
 			ssrc: Math.floor(Math.random() * 0xffffffff) >>> 0,
 			seq: Math.floor(Math.random() * 0x10000),
 			timestamp: Math.floor(Math.random() * 0x10000),
@@ -324,7 +350,7 @@ export class AndromedaTransport implements CallTransport {
 
 		// ACK to complete the 3-way handshake
 		this.#cseq++;
-		await this.#sendTo({ host: cscf.host, port: cscf.port }, {
+		await this.#sendTo({ host: ep.host, port: ep.port }, {
 			startLine: `ACK ${target} SIP/2.0`,
 			headers: {
 				"Via": `SIP/2.0/UDP ${this.#opts.localMid}.invalid;branch=${newBranch()};rport`,
@@ -339,7 +365,11 @@ export class AndromedaTransport implements CallTransport {
 			body: "",
 		});
 
-		return { status: finalStatus, remoteKey, mix: { host: mix.host, port: mix.port } };
+		return {
+			status: finalStatus,
+			remoteKey,
+			mix: { host: this.#rtp.host, port: this.#rtp.port },
+		};
 	}
 
 	#sendTo(
@@ -365,21 +395,17 @@ async function decryptMikeyKemac(
 	parsed: ReturnType<typeof parseMikey>,
 	pkcs8PrivateKey: Uint8Array,
 ): Promise<Uint8Array> {
-	const spkiBuf = pkcs8PrivateKey.buffer.slice(
-		pkcs8PrivateKey.byteOffset,
-		pkcs8PrivateKey.byteOffset + pkcs8PrivateKey.byteLength,
-	) as ArrayBuffer;
+	if (!parsed.pkeBody) throw new Error("MIKEY answer: missing PKE body");
+	if (!parsed.kemacEncrypted) throw new Error("MIKEY answer: missing KEMAC");
 	const priv = await crypto.subtle.importKey(
 		"pkcs8",
-		spkiBuf,
+		toArrayBuffer(pkcs8PrivateKey),
 		{ name: "RSA-OAEP", hash: "SHA-1" },
 		false,
 		["decrypt"],
 	);
-	const pke = parsed.pkeBody!;
-	const pkeBuf = pke.buffer.slice(pke.byteOffset, pke.byteOffset + pke.byteLength) as ArrayBuffer;
 	const envKey = new Uint8Array(
-		await crypto.subtle.decrypt({ name: "RSA-OAEP" }, priv, pkeBuf),
+		await crypto.subtle.decrypt({ name: "RSA-OAEP" }, priv, toArrayBuffer(parsed.pkeBody)),
 	);
 	// Derive encr_key from envKey, then AES-CTR decrypt the KEMAC body
 	const info = new Uint8Array(8);
@@ -390,7 +416,15 @@ async function decryptMikeyKemac(
 	const encrKey = new Uint8Array(macKey).subarray(0, 16);
 	const iv = new Uint8Array(16);
 	const c = createCipheriv("aes-128-ctr", Buffer.from(encrKey), Buffer.from(iv));
-	const inner = Buffer.concat([c.update(Buffer.from(parsed.kemacEncrypted!)), c.final()]);
+	const inner = Buffer.concat([c.update(Buffer.from(parsed.kemacEncrypted)), c.final()]);
 	// Skip the KEY_DATA payload header (5 bytes) to get the 30-byte TGK
 	return new Uint8Array(inner.subarray(5, 5 + 30));
+}
+
+/** Strict ArrayBuffer slice — avoids the SharedArrayBuffer ambiguity on
+ *  Uint8Array.buffer when calling WebCrypto. */
+function toArrayBuffer(u: Uint8Array): ArrayBuffer {
+	const ab = new ArrayBuffer(u.byteLength);
+	new Uint8Array(ab).set(u);
+	return ab;
 }

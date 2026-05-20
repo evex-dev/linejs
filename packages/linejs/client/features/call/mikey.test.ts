@@ -75,11 +75,12 @@ Deno.test("MIKEY-PKE: peer can decrypt envelope key with private RSA key", async
 	});
 	const parsed = parseMikey(msg);
 	// Decrypt PKE body with the private key
-	const pke = parsed.pkeBody!;
-	const ab = pke.buffer.slice(pke.byteOffset, pke.byteOffset + pke.byteLength) as ArrayBuffer;
+	const pke = parsed.pkeBody;
+	if (!pke) throw new Error("expected pkeBody");
+	const ab = new ArrayBuffer(pke.byteLength);
+	new Uint8Array(ab).set(pke);
 	const dec = await crypto.subtle.decrypt({ name: "RSA-OAEP" }, kp.priv, ab);
-	const recovered = new Uint8Array(dec);
-	assertEquals(recovered, envKey);
+	assertEquals(new Uint8Array(dec), envKey);
 });
 
 Deno.test("mikeyToBase64 + mikeyFromBase64 round-trip", () => {

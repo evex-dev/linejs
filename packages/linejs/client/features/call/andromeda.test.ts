@@ -66,7 +66,8 @@ Deno.test("AndromedaTransport.register: 401 → digest → 200 against mock cscf
 	try {
 		await t.connect({
 			route: {
-				cscf: { host: mock.host, port: mock.port } as never,
+				voipAddress: mock.host,
+				voipUdpPort: mock.port,
 				fromToken: "secret-pw",
 			} as never,
 		});
@@ -179,8 +180,8 @@ Deno.test("AndromedaTransport.invite: REGISTER + INVITE + ACK against mock UAS",
 	try {
 		await t.connect({
 			route: {
-				cscf: { host: mock.host, port: mock.port } as never,
-				mix: { host: mock.host, port: mock.port } as never,
+				voipAddress: mock.host,
+				voipUdpPort: mock.port,
 				fromToken: "secret-pw",
 			} as never,
 		});
@@ -197,7 +198,7 @@ Deno.test("AndromedaTransport.invite: REGISTER + INVITE + ACK against mock UAS",
 	}
 });
 
-Deno.test("AndromedaTransport.register: throws on missing cscf", async () => {
+Deno.test("AndromedaTransport.register: throws on missing voipAddress", async () => {
 	const t = new AndromedaTransport({ localMid: "u-test-mid" });
 	let err: unknown;
 	try {
@@ -207,5 +208,5 @@ Deno.test("AndromedaTransport.register: throws on missing cscf", async () => {
 	}
 	await t.close().catch(() => {});
 	assert(err instanceof Error);
-	assertEquals(/no cscf/.test((err as Error).message), true);
+	assertEquals(/no voipAddress/.test((err as Error).message), true);
 });
