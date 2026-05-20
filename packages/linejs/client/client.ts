@@ -19,7 +19,8 @@ export * as voom from "./features/voom.ts";
 import { createVoomClient, VoomChannelId, type VoomClient, voomRest, type VoomRestOptions, type VoomRestResponse } from "./features/voom.ts";
 export { VoomChannelId };
 export type { VoomClient, VoomRestOptions, VoomRestResponse };
-export * as call from "./features/call.ts";
+export * as call from "./features/call/mod.ts";
+export * as audio from "./features/call/audio.ts";
 import {
 	type CallClient,
 	type CancelCallEvent,
@@ -27,8 +28,8 @@ import {
 	type IncomingCallEvent,
 	parseCancelCall,
 	parseIncomingCall,
-} from "./features/call.ts";
-export type { CallClient, CancelCallEvent, CallType, IncomingCallEvent } from "./features/call.ts";
+} from "./features/call/mod.ts";
+export type { CallClient, CancelCallEvent, CallType, IncomingCallEvent } from "./features/call/mod.ts";
 export { Chat, Square, SquareChat, SquareMessage, TalkMessage, User };
 export { ProfileAttribute } from "./features/profile.ts";
 export type { MyProfileUpdate } from "./features/profile.ts";

@@ -1,103 +1,120 @@
-// High-level call control-plane adapter (#148 v3.0).
-// Wraps the Thrift CallService — route allocation, group-call URL
-// CRUD, kick/invite. No media plane; that's v3.1+ (CALLS.md).
-import type { Client } from "../mod.ts";
+// Call control-plane wrappers + CallSession glue.
+import type { Client } from "../../mod.ts";
 import type * as LINETypes from "@evex/linejs-types";
+import type { CodecFactory } from "./audio.ts";
+import { defaultCodecFactory } from "./audio.ts";
+import { CallSession, type CallSessionOpts, type CallTransport } from "./session.ts";
+
+export type { CallSession, CallSessionEvents, CallSessionOpts, CallSessionState, CallTransport } from "./session.ts";
+export {
+	type AudioDecoder,
+	type AudioEncoder,
+	type AudioSink,
+	type AudioSource,
+	bufferSink,
+	bufferSource,
+	type CodecFactory,
+	decodeWavSync,
+	defaultCodecFactory,
+	type FileDecoder,
+	type PcmFrame,
+	resampleLinear,
+	streamSink,
+	streamSource,
+} from "./audio.ts";
+export { stubTransport } from "./session.ts";
 
 export type CallType = "AUDIO" | "VIDEO" | "FACEPLAY";
 
 export interface CallClient {
-	/**
-	 * Allocate a 1:1 call route. Returns the `cscf`/`mix` host pair the
-	 * Andromeda media client would dial into, plus the `fromToken`.
-	 */
 	acquireRoute(opts: {
 		to: string;
 		callType?: CallType;
 		fromEnvInfo?: Record<string, string>;
 	}): Promise<LINETypes.CallRoute>;
 
-	/** Allocate a group-call route. */
 	acquireGroupRoute(
 		...args: Parameters<
-			import("../../base/service/call/mod.ts").CallService["acquireGroupCallRoute"]
+			import("../../../base/service/call/mod.ts").CallService["acquireGroupCallRoute"]
 		>
 	): ReturnType<
-		import("../../base/service/call/mod.ts").CallService["acquireGroupCallRoute"]
+		import("../../../base/service/call/mod.ts").CallService["acquireGroupCallRoute"]
 	>;
 
-	/** OA (official-account) call route. */
 	acquireOARoute(
 		...args: Parameters<
-			import("../../base/service/call/mod.ts").CallService["acquireOACallRoute"]
+			import("../../../base/service/call/mod.ts").CallService["acquireOACallRoute"]
 		>
 	): ReturnType<
-		import("../../base/service/call/mod.ts").CallService["acquireOACallRoute"]
+		import("../../../base/service/call/mod.ts").CallService["acquireOACallRoute"]
 	>;
 
-	/** Get current group-call state for a chat. */
 	getGroupCall(chatMid: string): Promise<unknown>;
 
-	/** Group-call URL CRUD. */
 	createGroupCallUrl(
 		...args: Parameters<
-			import("../../base/service/call/mod.ts").CallService["createGroupCallUrl"]
+			import("../../../base/service/call/mod.ts").CallService["createGroupCallUrl"]
 		>
 	): ReturnType<
-		import("../../base/service/call/mod.ts").CallService["createGroupCallUrl"]
+		import("../../../base/service/call/mod.ts").CallService["createGroupCallUrl"]
 	>;
 	getGroupCallUrl(
 		ticket: string,
 	): ReturnType<
-		import("../../base/service/call/mod.ts").CallService["getGroupCallUrlInfo"]
+		import("../../../base/service/call/mod.ts").CallService["getGroupCallUrlInfo"]
 	>;
 	listGroupCallUrls(): ReturnType<
-		import("../../base/service/call/mod.ts").CallService["getGroupCallUrls"]
+		import("../../../base/service/call/mod.ts").CallService["getGroupCallUrls"]
 	>;
 	updateGroupCallUrl(
 		...args: Parameters<
-			import("../../base/service/call/mod.ts").CallService["updateGroupCallUrl"]
+			import("../../../base/service/call/mod.ts").CallService["updateGroupCallUrl"]
 		>
 	): ReturnType<
-		import("../../base/service/call/mod.ts").CallService["updateGroupCallUrl"]
+		import("../../../base/service/call/mod.ts").CallService["updateGroupCallUrl"]
 	>;
 	deleteGroupCallUrl(
 		...args: Parameters<
-			import("../../base/service/call/mod.ts").CallService["deleteGroupCallUrl"]
+			import("../../../base/service/call/mod.ts").CallService["deleteGroupCallUrl"]
 		>
 	): ReturnType<
-		import("../../base/service/call/mod.ts").CallService["deleteGroupCallUrl"]
+		import("../../../base/service/call/mod.ts").CallService["deleteGroupCallUrl"]
 	>;
-	/** Join a chat via a group-call URL ticket. */
 	joinChatByUrl(ticket: string): Promise<unknown>;
-	/** Invite users into an in-progress group call. */
 	invite(
 		...args: Parameters<
-			import("../../base/service/call/mod.ts").CallService["inviteIntoGroupCall"]
+			import("../../../base/service/call/mod.ts").CallService["inviteIntoGroupCall"]
 		>
 	): ReturnType<
-		import("../../base/service/call/mod.ts").CallService["inviteIntoGroupCall"]
+		import("../../../base/service/call/mod.ts").CallService["inviteIntoGroupCall"]
 	>;
-	/** Kick a user from an in-progress group call. */
 	kick(
 		...args: Parameters<
-			import("../../base/service/call/mod.ts").CallService["kickoutFromGroupCall"]
+			import("../../../base/service/call/mod.ts").CallService["kickoutFromGroupCall"]
 		>
 	): ReturnType<
-		import("../../base/service/call/mod.ts").CallService["kickoutFromGroupCall"]
+		import("../../../base/service/call/mod.ts").CallService["kickoutFromGroupCall"]
 	>;
 
-	/** Low-level: the base CallService for any RPC not wrapped above. */
-	readonly service: import("../../base/service/call/mod.ts").CallService;
+	readonly service: import("../../../base/service/call/mod.ts").CallService;
+	startSession(opts: CallSessionOpts): CallSession;
+	setCodecFactory(factory: CodecFactory): void;
 }
 
 class ClientCall implements CallClient {
 	#client: Client;
+	#codecs: CodecFactory = defaultCodecFactory;
 	constructor(client: Client) {
 		this.#client = client;
 	}
 	get service() {
 		return this.#client.base.call;
+	}
+	startSession(opts: CallSessionOpts): CallSession {
+		return new CallSession(this.#client, { codecs: this.#codecs, ...opts });
+	}
+	setCodecFactory(factory: CodecFactory): void {
+		this.#codecs = factory;
 	}
 
 	acquireRoute(opts: {
@@ -158,14 +175,6 @@ export function createCallClient(client: Client): CallClient {
 	return new ClientCall(client);
 }
 
-/**
- * Parsed incoming-call event from the polling stream. Surfaced by
- * Client via `on("call:incoming", ...)`. Fields are derived from the
- * raw Operation params:
- * - `callMid` = param1 (a c-prefixed mid identifying the call instance)
- * - `from`    = param2 (caller's user mid; absent if we're the caller)
- * - `kind`    = param3 (AUDIO / VIDEO / FACEPLAY when LINE sets it)
- */
 export interface IncomingCallEvent {
 	callMid: string;
 	from: string;
@@ -173,7 +182,6 @@ export interface IncomingCallEvent {
 	raw: LINETypes.Operation;
 }
 
-/** Parsed cancel-call event (OpType CANCEL_CALL). */
 export interface CancelCallEvent {
 	callMid: string;
 	from: string;
