@@ -8,12 +8,15 @@ applied), and re-running on a future APK should always succeed.
 ## Quickstart
 
 ```powershell
-# 1. fetch the latest LINE APK bundle (downloads .apkm + extracts inner APKs)
-python ..\..\..\scripts\fetch_line_apk.py
-# → apks\jp.naver.line.android\<version>\base.apk
+# 1. Get base.apk for the LINE Android version you want to track.
+#    Pull from a connected device:
+#      adb shell pm path jp.naver.line.android   # prints /data/.../base.apk
+#      adb pull <that path> base.apk
+#    or download from APKMirror / APKPure manually. xAPK / .apkm bundles
+#    are zip archives — unzip and use the inner base.apk.
 
 # 2. sync linejs's Thrift schema from that base.apk
-deno run -A scripts\apk\sync_from_apk.ts --apk ..\..\..\apks\jp.naver.line.android\<version>\base.apk
+deno run -A scripts\apk\sync_from_apk.ts --apk <path>\base.apk
 ```
 
 `sync_from_apk.ts` runs five steps:
@@ -84,8 +87,8 @@ on identical inner names.
 After LINE ships a new APK:
 
 ```powershell
-python ..\..\..\scripts\fetch_line_apk.py
-deno run -A scripts\apk\sync_from_apk.ts --apk ..\..\..\apks\jp.naver.line.android\<new-version>\base.apk
+# Pull base.apk (see Quickstart above), then:
+deno run -A scripts\apk\sync_from_apk.ts --apk <path>\base.apk
 ```
 
 The diff against the previous run is purely additive in the common case (new
