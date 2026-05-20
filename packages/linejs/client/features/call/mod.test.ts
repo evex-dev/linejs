@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { createCallClient, parseCancelCall, parseIncomingCall } from "./call.ts";
+import { createCallClient, parseCancelCall, parseIncomingCall } from "./mod.ts";
 
 function fakeBaseClient() {
 	const calls: { method: string; args: unknown[] }[] = [];
