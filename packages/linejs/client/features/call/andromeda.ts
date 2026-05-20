@@ -83,6 +83,10 @@ export class AndromedaTransport implements CallTransport {
 	#sipFrom?: string;
 	#sipFromTag?: string;
 	#callId?: string;
+	#peerTarget?: string;
+	#peerToTag?: string;
+	#refreshTimer?: ReturnType<typeof setTimeout>;
+	#keepaliveTimer?: ReturnType<typeof setTimeout>;
 	#localKey?: Uint8Array;
 	#remoteKey?: Uint8Array;
 	#srtpSend?: SrtpCryptoContext;
@@ -137,7 +141,164 @@ export class AndromedaTransport implements CallTransport {
 	}
 
 	async close(): Promise<void> {
+		try { await this.bye(); } catch { /* dialog may not exist */ }
+		if (this.#refreshTimer !== undefined) clearTimeout(this.#refreshTimer);
+		if (this.#keepaliveTimer !== undefined) clearTimeout(this.#keepaliveTimer);
 		await new Promise<void>((res) => this.#sock?.close(() => res()));
+	}
+
+	/** Send SIP BYE to terminate an established dialog. Best-effort. */
+	async bye(): Promise<void> {
+		if (!this.#callId || !this.#peerTarget || !this.#peerToTag) return;
+		const ep = routeEndpoint(this.#route!);
+		const ua = this.#opts.userAgent ?? "Line/26.6.2";
+		this.#cseq++;
+		await this.#sendTo({ host: ep.host, port: ep.port }, {
+			startLine: `BYE ${this.#peerTarget} SIP/2.0`,
+			headers: {
+				"Via": `SIP/2.0/UDP ${this.#opts.localMid}.invalid;branch=${newBranch()};rport`,
+				"Max-Forwards": "70",
+				"From": `${this.#sipFrom};tag=${this.#sipFromTag}`,
+				"To": `<${this.#peerTarget}>;tag=${this.#peerToTag}`,
+				"Call-ID": this.#callId,
+				"CSeq": `${this.#cseq} BYE`,
+				"User-Agent": ua,
+				"Content-Length": "0",
+			},
+			body: "",
+		});
+		// Best-effort: ignore the 200 reply
+	}
+
+	/**
+	 * Wait for an incoming INVITE on the registered transport, answer
+	 * with 100 Trying → 180 Ringing → 200 OK + SDP answer, then ACK.
+	 * Sets up SRTP contexts the same way `invite()` does.
+	 */
+	async answer(opts: {
+		localHost?: string;
+		localPort?: number;
+		decryptKey?: Uint8Array;
+		ringMs?: number;
+	} = {}): Promise<{ remoteKey: Uint8Array; mix: { host: string; port: number } }> {
+		const ep = routeEndpoint(this.#route!);
+		const invite = parseSip(await this.#receive());
+		if (!invite.startLine.startsWith("INVITE")) {
+			throw new Error(`answer: expected INVITE, got ${invite.startLine}`);
+		}
+		const via = invite.headers["Via"];
+		const from = invite.headers["From"];
+		const to = invite.headers["To"];
+		const callId = invite.headers["Call-ID"];
+		const cseq = invite.headers["CSeq"];
+		const toTag = newBranch().slice(7, 15);
+		const respHeaders = (status: string): Record<string, string> => ({
+			"Via": via,
+			"From": from,
+			"To": `${to};tag=${toTag}`,
+			"Call-ID": callId,
+			"CSeq": cseq,
+			"User-Agent": this.#opts.userAgent ?? "Line/26.6.2",
+			"Content-Length": "0",
+		});
+		// 100 Trying immediately
+		await this.#sendTo({ host: ep.host, port: ep.port }, {
+			startLine: "SIP/2.0 100 Trying",
+			headers: respHeaders("100"),
+			body: "",
+		});
+		// 180 Ringing
+		await this.#sendTo({ host: ep.host, port: ep.port }, {
+			startLine: "SIP/2.0 180 Ringing",
+			headers: respHeaders("180"),
+			body: "",
+		});
+		if (opts.ringMs) await new Promise((r) => setTimeout(r, opts.ringMs));
+
+		// Parse offer SDP, build answer
+		const offer = parseSdp(invite.body);
+		const audio = offer.media.find((m) => m.type === "audio");
+		if (!audio) throw new Error("answer: no audio in offer");
+
+		// Recover remote key (SDES or MIKEY)
+		let remoteKey: Uint8Array | null = null;
+		const sdes = readCrypto(audio)[0];
+		if (sdes) remoteKey = sdes.key;
+		else {
+			const km = readKeyMgmt(audio);
+			if (km && km.proto === "mikey") {
+				const mk = parseMikey(mikeyFromBase64(km.data));
+				if (mk.kemacEncrypted && opts.decryptKey) {
+					remoteKey = await decryptMikeyKemac(mk, opts.decryptKey);
+				}
+			}
+		}
+		if (!remoteKey) throw new Error("answer: no recoverable remote key in offer");
+
+		const localKey = new Uint8Array(SRTP_KEYING_LEN);
+		crypto.getRandomValues(localKey);
+		const localHost = opts.localHost ?? "0.0.0.0";
+		const localPort = opts.localPort ?? 0;
+		const answerSdp = buildAudioOffer({
+			host: localHost,
+			port: localPort,
+			crypto: { suite: "AES_CM_128_HMAC_SHA1_80", key: localKey },
+			username: this.#opts.localMid,
+		});
+
+		await this.#sendTo({ host: ep.host, port: ep.port }, {
+			startLine: "SIP/2.0 200 OK",
+			headers: {
+				...respHeaders("200"),
+				"Content-Type": "application/sdp",
+				"Content-Length": String(answerSdp.length),
+			},
+			body: answerSdp,
+		});
+
+		// Wait for ACK
+		await this.#receive();
+
+		this.#srtpSend = await deriveSrtpContext(localKey);
+		this.#srtpRecv = await deriveSrtpContext(remoteKey);
+		const offerC = audio.c ?? offer.c ?? "";
+		const offerHost = offerC.split(/\s+/)[2] ?? ep.host;
+		this.#rtp = {
+			host: offerHost,
+			port: audio.port || ep.port,
+			ssrc: Math.floor(Math.random() * 0xffffffff) >>> 0,
+			seq: Math.floor(Math.random() * 0x10000),
+			timestamp: Math.floor(Math.random() * 0x10000),
+		};
+		this.#callId = callId;
+		this.#sipFrom = to;
+		this.#sipFromTag = toTag;
+		const fromTagMatch = from.match(/tag=([^;>\s]+)/);
+		if (fromTagMatch) this.#peerToTag = fromTagMatch[1];
+		const targetMatch = from.match(/<([^>]+)>/);
+		if (targetMatch) this.#peerTarget = targetMatch[1];
+		return { remoteKey, mix: { host: this.#rtp.host, port: this.#rtp.port } };
+	}
+
+	/** Send SIP OPTIONS as a keep-alive ping to the cscf. */
+	async optionsPing(): Promise<void> {
+		const ep = routeEndpoint(this.#route!);
+		const ua = this.#opts.userAgent ?? "Line/26.6.2";
+		this.#cseq++;
+		await this.#sendTo({ host: ep.host, port: ep.port }, {
+			startLine: `OPTIONS sip:${ep.host} SIP/2.0`,
+			headers: {
+				"Via": `SIP/2.0/UDP ${this.#opts.localMid}.invalid;branch=${newBranch()};rport`,
+				"Max-Forwards": "70",
+				"From": `${this.#sipFrom};tag=${this.#sipFromTag}`,
+				"To": `<sip:${ep.host}>`,
+				"Call-ID": this.#callId ?? randomCallId(this.#opts.localMid),
+				"CSeq": `${this.#cseq} OPTIONS`,
+				"User-Agent": ua,
+				"Content-Length": "0",
+			},
+			body: "",
+		});
 	}
 
 	async send(opusPacket: Uint8Array): Promise<void> {
@@ -347,6 +508,11 @@ export class AndromedaTransport implements CallTransport {
 			seq: Math.floor(Math.random() * 0x10000),
 			timestamp: Math.floor(Math.random() * 0x10000),
 		};
+		// Capture dialog identifiers for BYE
+		this.#peerTarget = target;
+		const toHdr = response.headers["To"] ?? "";
+		const tagMatch = toHdr.match(/tag=([^;>\s]+)/);
+		if (tagMatch) this.#peerToTag = tagMatch[1];
 
 		// ACK to complete the 3-way handshake
 		this.#cseq++;

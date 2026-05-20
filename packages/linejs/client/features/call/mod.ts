@@ -26,6 +26,32 @@ export { stubTransport } from "./session.ts";
 export { AndromedaTransport, type AndromedaTransportOpts } from "./andromeda.ts";
 export { opusCodecFactory } from "./opus.ts";
 export {
+	buildRtcpBye,
+	buildRtcpCompound,
+	nowNtp as rtcpNowNtp,
+	parseRtcp,
+	type ParsedRtcp,
+	type ReportBlock,
+	type SenderInfo,
+} from "./rtcp.ts";
+export {
+	buildBindingRequestAsync,
+	parseStun,
+	readMappedAddress,
+	type StunMessage,
+} from "./stun.ts";
+export {
+	DEFAULT_STUN_HOSTS,
+	formatCandidate,
+	gatherHost,
+	gatherIceCandidates,
+	gatherSrflx,
+	type IceCandidate,
+	type IceCandidateType,
+	icePriority,
+	parseCandidate,
+} from "./ice.ts";
+export {
 	buildAudioOffer,
 	buildAudioOfferMikey,
 	buildSdp,
