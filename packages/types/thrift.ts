@@ -37080,6 +37080,33 @@ export const Thrift: LooseType = {
 			"struct": "TalkException",
 		},
 	],
+	"respondE2EELoginRequest_args": [
+		{
+			"fid": 1,
+			"name": "verifier",
+			"type": 11,
+		},
+		{
+			"fid": 2,
+			"name": "publicKey",
+			"struct": "Pb1_C13097n4",
+		},
+		{
+			"fid": 3,
+			"name": "encryptedKeyChain",
+			"type": 11,
+		},
+		{
+			"fid": 4,
+			"name": "hashKeyChain",
+			"type": 11,
+		},
+		{
+			"fid": 5,
+			"name": "errorCode",
+			"type": 8,
+		},
+	],
 	"respondE2EELoginRequest_result": [
 		{
 			"fid": 1,

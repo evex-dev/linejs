@@ -884,4 +884,56 @@ export class Login {
 			"/api/v3p/rs",
 		);
 	}
+
+	/**
+	 * Primary (already-logged-in) device's response to a pending PIN-
+	 * authorized login on another device.  The new device sees the PIN,
+	 * the user types it here, and this call ships:
+	 *   - `verifier`         — the secondary device's auth session id
+	 *   - `publicKey`        — secondary device's E2EE public key
+	 *   - `encryptedKeyChain`— this device's E2EE keychain, encrypted
+	 *                         with the shared secret derived from
+	 *                         `publicKey`
+	 *   - `hashKeyChain`     — integrity hash over the plaintext chain
+	 *   - `errorCode`        — `0` for accept, non-zero rejects
+	 *
+	 * Schema recovered from LINE Android 26.6.2 smali at
+	 * `decompiled/base/smali/smali_classes4/fh8/c1.smali` (the args
+	 * struct), filed as evex-dev/linejs#155.
+	 *
+	 * Companion to {@link confirmE2EELogin}, which the new device
+	 * calls after this one approves.
+	 */
+	public async respondE2EELoginRequest(opts: {
+		verifier: string;
+		publicKey: LINETypes.Pb1_C13097n4;
+		encryptedKeyChain: Buffer;
+		hashKeyChain: Buffer;
+		errorCode?: number;
+	}): Promise<LooseType> {
+		const { verifier, publicKey, encryptedKeyChain, hashKeyChain } = opts;
+		const errorCode = opts.errorCode ?? 0;
+		const pk = publicKey as unknown as {
+			version?: number;
+			keyId?: number;
+			keyData?: Buffer;
+		};
+		const pkTuple: import("../thrift/mod.ts").NestedArray = [];
+		if (pk.version !== undefined) pkTuple.push([8, 1, pk.version]);
+		if (pk.keyId !== undefined) pkTuple.push([8, 2, pk.keyId]);
+		if (pk.keyData !== undefined) pkTuple.push([11, 4, pk.keyData]);
+		return await this.client.request.request(
+			[
+				[11, 1, verifier],
+				[12, 2, pkTuple],
+				[11, 3, encryptedKeyChain],
+				[11, 4, hashKeyChain],
+				[8, 5, errorCode],
+			],
+			"respondE2EELoginRequest",
+			4,
+			false,
+			"/S4",
+		);
+	}
 }
