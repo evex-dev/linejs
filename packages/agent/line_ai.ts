@@ -26,11 +26,11 @@ export interface LineAiOptions {
 	userAgent?: string;
 }
 
+/** Wire shape from smali fk2/a$a$a — kotlinx @SerialName fields. */
 export interface LineAiQueryRequest {
-	threadId?: string | null;
-	prompt: string;
-	serviceId?: string;
-	[k: string]: unknown;
+	threadId: string | null;
+	message: string;
+	imageUrl: string | null;
 }
 
 export interface LineAiResponse<T = unknown> {
