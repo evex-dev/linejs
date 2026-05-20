@@ -67,6 +67,7 @@ export {
 	packKeepaliveReq,
 	packPlanetCcHdr,
 	packPlanetCcMsg,
+	extractRmtNonceFromReply,
 	packPlanetMsg,
 	packPlanetMsgHdr,
 	packPlanetScMsgKaReq,

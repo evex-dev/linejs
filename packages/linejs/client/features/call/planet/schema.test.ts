@@ -138,6 +138,23 @@ Deno.test("packKeepaliveReq produces the captured msg #1 body (13 bytes)", () =>
 	assertEquals(decoded[0].value, ts);
 });
 
+Deno.test("extractRmtNonceFromReply pulls loc_nonce (field 6) out", async () => {
+	const { extractRmtNonceFromReply, packPlanetMsgHdr } = await import("./schema.ts");
+	// Build a reply header where the server's loc_nonce = 0x6a0e122c0e9d22ac
+	const expected = 0x6a0e122c0e9d22acn;
+	const hdr = packPlanetMsgHdr({
+		userId: "u9dfba8dc9529aeb6063ee013a5933184",
+		msgId: 1,
+		sessId: new Uint8Array(16).fill(0xaa),
+		tranId: new Uint8Array(16).fill(0xbb),
+		tranSeq: 1,
+		locNonce: expected,    // cscf's local nonce — what becomes OUR rmt_nonce
+		rmtNonce: 199820756n,  // cscf knows our loc_nonce → echoes it back
+	});
+	const recovered = extractRmtNonceFromReply(hdr);
+	assertEquals(recovered, expected);
+});
+
 Deno.test("encodeVarint matches well-known protobuf encodings", () => {
 	assertEquals(encodeVarint(150), new Uint8Array([0x96, 0x01]));
 	assertEquals(encodeVarint(4353), new Uint8Array([0x81, 0x22]));

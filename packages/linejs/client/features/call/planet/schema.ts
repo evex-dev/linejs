@@ -286,6 +286,26 @@ export function packPlanetScMsgKaReq(inner: Uint8Array): Uint8Array {
 	return finalize(b);
 }
 
+// ─── handshake helper — extract rmt_nonce from incoming msg ─────────────
+
+/** Extract the loc_nonce (field 6) from a decrypted incoming planet_msg.
+ *  This value MUST be used as `rmt_nonce` on all subsequent outgoing msgs
+ *  in the same session (echoed back to cscf so it can verify continuity).
+ *
+ *  Reverse-engineered from libandromeda 0xcaa4f0..0xcaa524:
+ *    bl pln_msg_get_local_nonce  // sp+0x10 = msg.loc_nonce (field 6)
+ *    str x8, [sess, #0xa0]       // session.rmt_nonce = that value
+ */
+export function extractRmtNonceFromReply(replyHdrBytes: Uint8Array): bigint {
+	const fields = decodeFields(replyHdrBytes);
+	for (const f of fields) {
+		if (f.tag === 6 /* loc_nonce */ && f.wireType === WireType.Varint) {
+			return f.value as bigint;
+		}
+	}
+	throw new Error("extractRmtNonceFromReply: no loc_nonce in reply header");
+}
+
 // ─── decoding (read-only side) ──────────────────────────────────────────
 
 export interface DecodedField {
