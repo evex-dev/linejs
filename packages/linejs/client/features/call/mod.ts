@@ -26,14 +26,25 @@ export { stubTransport } from "./session.ts";
 export { AndromedaTransport, type AndromedaTransportOpts } from "./andromeda.ts";
 export {
 	buildAudioOffer,
+	buildAudioOfferMikey,
 	buildSdp,
 	cryptoAttr,
+	keyMgmtMikeyAttr,
 	parseSdp,
 	readCrypto,
+	readKeyMgmt,
 	readRtpmap,
 	type SdpMedia,
 	type SdpSession,
 } from "./sdp.ts";
+export {
+	buildMikeyPke,
+	type MikeyParsed,
+	type MikeyPkeOpts,
+	mikeyFromBase64,
+	mikeyToBase64,
+	parseMikey,
+} from "./mikey.ts";
 export {
 	buildRtp,
 	deriveSrtpContext,

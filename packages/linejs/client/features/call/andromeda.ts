@@ -1,7 +1,7 @@
 // SIP-over-UDP transport for LINE call media plane.
 // Uses node:dgram for UDP (works in Node and Deno without flags).
 
-import type { Buffer } from "node:buffer";
+import { Buffer } from "node:buffer";
 import type * as LINETypes from "@evex/linejs-types";
 import type { CallTransport } from "./session.ts";
 import {
@@ -13,7 +13,14 @@ import {
 	parseSip,
 	randomCallId,
 } from "./sip.ts";
-import { buildAudioOffer, parseSdp, readCrypto } from "./sdp.ts";
+import {
+	buildAudioOffer,
+	buildAudioOfferMikey,
+	parseSdp,
+	readCrypto,
+	readKeyMgmt,
+} from "./sdp.ts";
+import { buildMikeyPke, mikeyFromBase64, mikeyToBase64, parseMikey } from "./mikey.ts";
 import {
 	buildRtp,
 	deriveSrtpContext,
@@ -205,11 +212,17 @@ export class AndromedaTransport implements CallTransport {
 	/**
 	 * INVITE the peer via cscf. Returns the SDP answer from the 200 OK,
 	 * and configures the SRTP send/receive contexts for media exchange.
+	 * When `stnpk` is set on the route, the SDP offer uses MIKEY-PKE
+	 * (LINE's actual wire format) instead of SDES `a=crypto:`.
 	 */
 	async invite(opts: {
 		to: string;
 		localHost?: string;
 		localPort?: number;
+		/** Optional RSA private key (SPKI/PKCS8) used to decrypt a MIKEY
+		 *  answer from the peer. Required to fully complete a MIKEY-PKE
+		 *  call; without it the answer's KEMAC is opaque. */
+		decryptKey?: Uint8Array;
 	}): Promise<{ status: number; remoteKey: Uint8Array; mix: { host: string; port: number } }> {
 		const route = this.#route!;
 		const cscf = (route as { cscf?: { host: string; port: number } }).cscf!;
@@ -223,12 +236,27 @@ export class AndromedaTransport implements CallTransport {
 
 		const localHost = opts.localHost ?? "0.0.0.0";
 		const localPort = opts.localPort ?? 0;
-		const offerSdp = buildAudioOffer({
-			host: localHost,
-			port: localPort,
-			crypto: { suite: "AES_CM_128_HMAC_SHA1_80", key: localKey },
-			username: this.#opts.localMid,
-		});
+		const stnpk = (route as unknown as { stnpk?: Uint8Array }).stnpk;
+		const offerSdp = stnpk
+			? buildAudioOfferMikey({
+				host: localHost,
+				port: localPort,
+				mikeyBase64: mikeyToBase64(
+					await buildMikeyPke({
+						peerPublicKey: stnpk,
+						tgk: localKey,
+						initiatorId: this.#opts.localMid,
+						responderId: opts.to,
+					}),
+				),
+				username: this.#opts.localMid,
+			})
+			: buildAudioOffer({
+				host: localHost,
+				port: localPort,
+				crypto: { suite: "AES_CM_128_HMAC_SHA1_80", key: localKey },
+				username: this.#opts.localMid,
+			});
 
 		const target = `sip:${opts.to}@${cscf.host}`;
 		this.#cseq++;
@@ -261,15 +289,31 @@ export class AndromedaTransport implements CallTransport {
 		if (finalStatus !== 200) {
 			throw new Error(`INVITE failed: ${response.startLine}`);
 		}
-		// Parse SDP answer
+		// Parse SDP answer — handle both SDES (a=crypto:) and MIKEY (a=key-mgmt:mikey)
 		const answer = parseSdp(response.body);
 		const audio = answer.media.find((m) => m.type === "audio");
 		if (!audio) throw new Error("INVITE: no audio in SDP answer");
-		const remoteCrypto = readCrypto(audio)[0];
-		if (!remoteCrypto) throw new Error("INVITE: no a=crypto in SDP answer");
-		this.#remoteKey = remoteCrypto.key;
+		let remoteKey: Uint8Array | null = null;
+		const sdes = readCrypto(audio)[0];
+		if (sdes) {
+			remoteKey = sdes.key;
+		} else {
+			const km = readKeyMgmt(audio);
+			if (km && km.proto === "mikey") {
+				const mk = parseMikey(mikeyFromBase64(km.data));
+				if (!mk.kemacEncrypted) throw new Error("INVITE: MIKEY answer has no KEMAC");
+				if (!opts.decryptKey) {
+					throw new Error(
+						"INVITE: peer sent MIKEY-PKE answer but no decryptKey supplied",
+					);
+				}
+				remoteKey = await decryptMikeyKemac(mk, opts.decryptKey);
+			}
+		}
+		if (!remoteKey) throw new Error("INVITE: no crypto/key-mgmt in SDP answer");
+		this.#remoteKey = remoteKey;
 		this.#srtpSend = await deriveSrtpContext(localKey);
-		this.#srtpRecv = await deriveSrtpContext(remoteCrypto.key);
+		this.#srtpRecv = await deriveSrtpContext(remoteKey);
 		this.#rtp = {
 			host: mix.host,
 			port: mix.port,
@@ -295,7 +339,7 @@ export class AndromedaTransport implements CallTransport {
 			body: "",
 		});
 
-		return { status: finalStatus, remoteKey: remoteCrypto.key, mix: { host: mix.host, port: mix.port } };
+		return { status: finalStatus, remoteKey, mix: { host: mix.host, port: mix.port } };
 	}
 
 	#sendTo(
@@ -314,4 +358,39 @@ export class AndromedaTransport implements CallTransport {
 			this.#pending.push((buf) => { clearTimeout(t); res(buf); });
 		});
 	}
+}
+
+/** Decrypt a peer's MIKEY-PKE KEMAC to recover the SRTP master key. */
+async function decryptMikeyKemac(
+	parsed: ReturnType<typeof parseMikey>,
+	pkcs8PrivateKey: Uint8Array,
+): Promise<Uint8Array> {
+	const spkiBuf = pkcs8PrivateKey.buffer.slice(
+		pkcs8PrivateKey.byteOffset,
+		pkcs8PrivateKey.byteOffset + pkcs8PrivateKey.byteLength,
+	) as ArrayBuffer;
+	const priv = await crypto.subtle.importKey(
+		"pkcs8",
+		spkiBuf,
+		{ name: "RSA-OAEP", hash: "SHA-1" },
+		false,
+		["decrypt"],
+	);
+	const pke = parsed.pkeBody!;
+	const pkeBuf = pke.buffer.slice(pke.byteOffset, pke.byteOffset + pke.byteLength) as ArrayBuffer;
+	const envKey = new Uint8Array(
+		await crypto.subtle.decrypt({ name: "RSA-OAEP" }, priv, pkeBuf),
+	);
+	// Derive encr_key from envKey, then AES-CTR decrypt the KEMAC body
+	const info = new Uint8Array(8);
+	new DataView(info.buffer).setUint32(0, parsed.csbId, false);
+	new DataView(info.buffer).setUint32(4, 0, false); // label 0 = encr
+	const { createHmac, createCipheriv } = await import("node:crypto");
+	const macKey = createHmac("sha1", Buffer.from(envKey)).update(Buffer.from(info)).digest();
+	const encrKey = new Uint8Array(macKey).subarray(0, 16);
+	const iv = new Uint8Array(16);
+	const c = createCipheriv("aes-128-ctr", Buffer.from(encrKey), Buffer.from(iv));
+	const inner = Buffer.concat([c.update(Buffer.from(parsed.kemacEncrypted!)), c.final()]);
+	// Skip the KEY_DATA payload header (5 bytes) to get the 30-byte TGK
+	return new Uint8Array(inner.subarray(5, 5 + 30));
 }

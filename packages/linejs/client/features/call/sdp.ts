@@ -127,6 +127,55 @@ export function cryptoAttr(opts: {
 	return `crypto:${opts.tag} ${opts.suite} inline:${base64Encode(opts.key)}`;
 }
 
+/** Pull `a=key-mgmt:mikey <base64>` (RFC 4567). */
+export function readKeyMgmt(m: SdpMedia): { proto: string; data: string } | null {
+	for (const a of m.attrs) {
+		const x = a.match(/^key-mgmt:(\S+)\s+(\S+)/);
+		if (x) return { proto: x[1], data: x[2] };
+	}
+	return null;
+}
+
+/** Build `a=key-mgmt:mikey <base64-message>` (RFC 4567). */
+export function keyMgmtMikeyAttr(base64Message: string): string {
+	return `key-mgmt:mikey ${base64Message}`;
+}
+
+/** Build a LINE-style audio SDP offer with MIKEY key management. */
+export function buildAudioOfferMikey(opts: {
+	host: string;
+	port: number;
+	opusPayloadType?: number;
+	mikeyBase64: string;
+	username?: string;
+	sessionId?: number;
+	sessionVer?: number;
+}): string {
+	const pt = opts.opusPayloadType ?? 96;
+	const user = opts.username ?? "linejs";
+	const sid = opts.sessionId ?? Math.floor(Date.now() / 1000);
+	const sver = opts.sessionVer ?? sid;
+	return buildSdp({
+		o: `${user} ${sid} ${sver} IN IP4 ${opts.host}`,
+		s: "-",
+		c: `IN IP4 ${opts.host}`,
+		t: "0 0",
+		attrs: [keyMgmtMikeyAttr(opts.mikeyBase64)],
+		media: [{
+			type: "audio",
+			port: opts.port,
+			proto: "RTP/SAVP",
+			formats: [String(pt)],
+			attrs: [
+				`rtpmap:${pt} opus/48000/2`,
+				`fmtp:${pt} useinbandfec=1;usedtx=1;stereo=0`,
+				"sendrecv",
+				"ptime:20",
+			],
+		}],
+	});
+}
+
 /** Build a LINE-style audio SDP offer: Opus on RTP/SAVP with crypto. */
 export function buildAudioOffer(opts: {
 	host: string;
