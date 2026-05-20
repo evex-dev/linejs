@@ -1904,19 +1904,30 @@ async function main() {
 			console.log(`\nApplied additive diff to ${thriftPath}`);
 		}
 		if (args.rewriteMismatches && totalMismatch > 0) {
-			// Two-tier safety filter for field rewrites:
-			//   tier A (always safe): direct-name match — APK canonical name
-			//                         equals linejs entry name
-			//   tier B (also safe):   Jaccard-only match BUT the matched
-			//                         linejs entry's field-name set is unique
-			//                         across the whole linejs Thrift dict.
-			//                         Uniqueness means there's no other
-			//                         linejs struct with the same shape, so
-			//                         the obfuscated APK class can only be
-			//                         this entry — a 100%-Jaccard match
-			//                         cannot be aliasing some sibling that
-			//                         happens to share fields.
-			// Anything still ambiguous after both gates is skipped.
+			// Safety filter for field rewrites — only auto-apply when the
+			// (apk, linejs) struct pairing is provably unambiguous:
+			//
+			//   tier A (always safe): the APK struct kept its canonical
+			//                         name (= linejs entry name).
+			//   tier B (also safe):   the RPC-cross-ref `overrides` map
+			//                         explicitly bound the obfuscated APK
+			//                         class to this linejs entry via a wire
+			//                         RPC string — the strongest signal we
+			//                         have, immune to R8 shading.
+			//   tier C (also safe):   field-name set is unique on BOTH sides
+			//                         — i.e. the linejs entry's shape exists
+			//                         nowhere else in linejs AND the APK
+			//                         struct's shape exists nowhere else in
+			//                         the APK.  Only then is the Jaccard
+			//                         match a bijection.  Without the APK-
+			//                         side check the matcher will happily
+			//                         re-pair `Locale` to whichever apk
+			//                         struct happens to share `{language,
+			//                         country}` on a subsequent extraction,
+			//                         producing oscillating false-positive
+			//                         fid-rewrites between builds.
+			//
+			// Anything still ambiguous after all three gates is skipped.
 			//
 			// Enum value-name rewrites stay behind --rewrite-enums because
 			// even unique-shape enums turn out to be unsafe (e.g. CarrierCode
@@ -1929,17 +1940,32 @@ async function main() {
 				const key = fieldNameSetKey(v as LineField[]);
 				linejsShapeCount.set(key, (linejsShapeCount.get(key) ?? 0) + 1);
 			}
-			const isUniqueShape = (linejsName: string): boolean => {
-				const entry = thrift[linejsName];
-				if (!Array.isArray(entry)) return false;
-				const key = fieldNameSetKey(entry as LineField[]);
-				return (linejsShapeCount.get(key) ?? 0) === 1;
+			const apkShapeCount = new Map<string, number>();
+			for (const s of idl.structs.values()) {
+				const key = s.fields.slice()
+					.map((f) => f.name)
+					.sort()
+					.join("|");
+				apkShapeCount.set(key, (apkShapeCount.get(key) ?? 0) + 1);
+			}
+			const isUniqueShape = (linejsName: string, apkCanonical: string): boolean => {
+				const lEntry = thrift[linejsName];
+				if (!Array.isArray(lEntry)) return false;
+				const lKey = fieldNameSetKey(lEntry as LineField[]);
+				if ((linejsShapeCount.get(lKey) ?? 0) !== 1) return false;
+				const aEntry = idl.structs.get(apkCanonical);
+				if (!aEntry) return false;
+				const aKey = aEntry.fields.slice()
+					.map((f) => f.name)
+					.sort()
+					.join("|");
+				return (apkShapeCount.get(aKey) ?? 0) === 1;
 			};
 
 			const safeFieldMismatches = mismatches.fieldMismatches.filter((m) =>
 				m.struct.canonical === m.struct.linejs ||
-				isUniqueShape(m.struct.linejs) ||
-				overrides[m.struct.canonical] === m.struct.linejs
+				overrides[m.struct.canonical] === m.struct.linejs ||
+				isUniqueShape(m.struct.linejs, m.struct.canonical)
 			);
 			const safeEnumMismatches = args.rewriteEnums
 				? mismatches.enumMismatches.filter((m) =>

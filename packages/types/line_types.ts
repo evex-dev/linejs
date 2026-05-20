@@ -9154,6 +9154,7 @@ export interface ContactCalendarEvent {
 }
 
 export interface ContactCalendarEvents {
+	events: Record<number, ContactCalendarEvent>;
 }
 
 export interface ContactModification {
@@ -15015,6 +15016,7 @@ export interface SticonProperty {
 	sticonIds: string[];
 	availableForPhotoEdit: boolean;
 	sticonResourceType: Ob1_F1;
+	endPageMainImages: string[];
 }
 
 export interface SticonSummary {

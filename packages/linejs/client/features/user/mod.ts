@@ -32,18 +32,9 @@ export class User {
 			},
 		});
 		const entry = res.responses.find((r) => r.targetUserMid === this.mid);
-		// NOTE: `ContactCalendarEvents.events` is missing a value-type in
-		// the synced Thrift schema (apk-sync leaves it as a bare key:8).
-		// Until the schema is fixed we treat the payload structurally and
-		// reach in through `unknown`.
-		const events =
-			(entry?.ContactCalendarEvents as unknown as { events?: unknown })
-				?.events;
-		if (Array.isArray(events)) return events as line.ContactCalendarEvent[];
-		if (events && typeof events === "object") {
-			return Object.values(events) as line.ContactCalendarEvent[];
-		}
-		return [];
+		const events = entry?.ContactCalendarEvents?.events;
+		if (!events) return [];
+		return Object.values(events);
 	}
 
 	/**
