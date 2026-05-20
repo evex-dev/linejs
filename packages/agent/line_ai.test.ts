@@ -1,4 +1,4 @@
-import { assert, assertEquals } from "@std/assert";
+import { assertEquals } from "@std/assert";
 import { LineAiClient, LineAiEndpoints } from "./line_ai.ts";
 
 function mockFetch(): {
@@ -45,10 +45,15 @@ function mockFetch(): {
 	};
 }
 
-Deno.test("LineAiClient — defaults to provisional gw host", () => {
-	const c = new LineAiClient({ accessToken: "tok", lineVersion: "26.6.2" });
-	// Has a usable host without user supplying one (#157 — actual host TBD).
-	assert(c);
+Deno.test("LineAiClient — defaults to release host from smali", async () => {
+	const m = mockFetch();
+	const c = new LineAiClient({
+		accessToken: "tok",
+		lineVersion: "26.6.2",
+		fetch: m.fetch,
+	});
+	await c.getServiceInfo();
+	assertEquals(m.calls[0].url, "https://line-x-openai.line-apps.com/v2/service-info");
 });
 
 Deno.test("LineAiClient.query — POST /v2/query-ai with X-ACCESS-TOKEN + X-LINE-VERSION", async () => {
@@ -73,7 +78,7 @@ Deno.test("LineAiClient.query — POST /v2/query-ai with X-ACCESS-TOKEN + X-LINE
 	assertEquals(body.prompt, "hello");
 	assertEquals(body.threadId, null);
 	assertEquals(r.rateLimit.remaining, "99");
-	assert(r.body && typeof r.body === "object");
+	assertEquals(typeof r.body, "object");
 });
 
 Deno.test("LineAiClient.getThread — GET /v2/thread/<id>", async () => {
