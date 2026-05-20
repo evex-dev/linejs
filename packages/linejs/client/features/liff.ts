@@ -93,6 +93,25 @@ export interface LiffClient {
 	/** Mints a LIFF access token for a given chat + LIFF app id.
 	 *  Handles consent retry under the hood. */
 	getToken(opts: { chatMid?: string; liffId?: string; lang?: string }): Promise<string>;
+	/**
+	 * Issues a LIFF view for a given LIFF app and (optional) chat context.
+	 * Returns the full {@link LiffViewResponse} (`accessToken`, `viewUri`,
+	 * `viewType`, `features`, ...).  Use {@link getToken} if you only need
+	 * the access token.
+	 */
+	issueView(opts: {
+		chatMid?: string;
+		liffId?: string;
+		lang?: string;
+	}): Promise<import("@evex/linejs-types").LiffViewResponse>;
+	/** Issues a sub-LIFF view scoped to an already-minted parent token. */
+	issueSubView(
+		...args: Parameters<
+			import("../../base/service/liff/mod.ts").LiffService["issueSubLiffView"]
+		>
+	): ReturnType<
+		import("../../base/service/liff/mod.ts").LiffService["issueSubLiffView"]
+	>;
 	/** Sends one or more LIFF messages to a chat via the LIFF share
 	 *  endpoint.  Returns the raw server response so callers can read
 	 *  `sentMessages[]` if they need the assigned message ids. */
@@ -136,6 +155,18 @@ class ClientLiff implements LiffClient {
 			liffId: opts.liffId ?? this.#liffId,
 			lang: opts.lang,
 		});
+	}
+	issueView(opts: { chatMid?: string; liffId?: string; lang?: string }) {
+		return this.#client.base.liff.issueLiffView({
+			chatMid: opts.chatMid,
+			liffId: opts.liffId ?? this.#liffId,
+			lang: opts.lang,
+		});
+	}
+	issueSubView(
+		...args: Parameters<typeof this.service.issueSubLiffView>
+	): ReturnType<typeof this.service.issueSubLiffView> {
+		return this.service.issueSubLiffView(...args);
 	}
 	async shareMessages(
 		to: string,
