@@ -1,7 +1,6 @@
-// Native LINE AI ("Agent i" home-tab tile) REST client.
-// Endpoints + headers from smali (smali_classes8/fk2/*); host is a
-// best-guess default — Hilt-injected at runtime, override via opts.host
-// once a wire trace lands (#157).
+// Native LINE AI ("Agent i" home-tab) REST client.
+// Host + endpoints + headers extracted from LINE Android 26.6.2 smali
+// (de8/c pswitch_1, smali_classes8/fk2/*).
 import type {} from "node:buffer";
 
 export const LineAiEndpoints = {
@@ -14,8 +13,10 @@ export const LineAiEndpoints = {
 	promptPreset: "/prompt-preset",
 } as const;
 
-/** Provisional default host — override if/when the live host is known. */
-export const DEFAULT_LINE_AI_HOST = "https://gw.line.naver.jp/lineai";
+/** Release-phase host from smali de8/c. */
+export const LINE_AI_HOST_RELEASE = "https://line-x-openai.line-apps.com";
+/** Alpha-phase host (dev-menu opt-in). */
+export const LINE_AI_HOST_ALPHA = "https://line-x-openai.line-apps-alpha.com";
 
 export interface LineAiOptions {
 	accessToken: string;
@@ -46,7 +47,7 @@ export class LineAiClient {
 
 	constructor(opts: LineAiOptions) {
 		this.#opts = {
-			host: (opts.host ?? DEFAULT_LINE_AI_HOST).replace(/\/+$/, ""),
+			host: (opts.host ?? LINE_AI_HOST_RELEASE).replace(/\/+$/, ""),
 			accessToken: opts.accessToken,
 			lineVersion: opts.lineVersion,
 			fetch: opts.fetch ?? fetch,
