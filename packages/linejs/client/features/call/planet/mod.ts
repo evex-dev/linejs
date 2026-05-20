@@ -55,3 +55,23 @@ export {
 	PlanetTransport,
 	type PlanetTransportOpts,
 } from "./transport.ts";
+
+// Ground-truth Cassini protobuf-c schema (reverse-engineered from the
+// .data.rel.ro descriptor objects in libandromeda).
+export {
+	CC_MSG,
+	type CcSetupReq,
+	type DecodedField,
+	decodeFields,
+	packCcSetupReq,
+	packKeepaliveReq,
+	packPlanetCcHdr,
+	packPlanetCcMsg,
+	packPlanetMsg,
+	packPlanetMsgHdr,
+	packPlanetScMsgKaReq,
+	type PlanetCcHdr,
+	type PlanetMsgBody,
+	type PlanetMsgHdr,
+	wrapCcMsg,
+} from "./schema.ts";
