@@ -41,14 +41,16 @@ export async function voomRest<T = unknown>(
 	}`;
 	const headers: Record<string, string> = {
 		accept: "application/json",
-		"x-line-application": client.base.request.systemType,
+		"X-Line-Application": client.base.request.systemType,
 		"user-agent": client.base.request.userAgent,
 		"X-Line-Mid": client.base.profile?.mid ?? "",
 		"x-lal": "ja-JP",
 		"X-Line-BDBTemplateVersion": "v1",
+		// Channel-scoped → X-Line-ChannelToken (smali m98/v$a). Primary
+		// session → X-Line-Access. NOT Authorization: Bearer.
 		...(opts.channelToken
-			? { authorization: `Bearer ${opts.channelToken}` }
-			: { "x-line-access": client.authToken }),
+			? { "X-Line-ChannelToken": opts.channelToken }
+			: { "X-Line-Access": client.authToken }),
 		...(opts.extraHeaders ?? {}),
 	};
 	if (opts.body !== undefined) headers["content-type"] = "application/json";

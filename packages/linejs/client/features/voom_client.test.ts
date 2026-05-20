@@ -53,7 +53,7 @@ Deno.test("VoomClient.getToken — caches per-channel", async () => {
 	assertEquals(issued, [VoomChannelId.TIMELINE, VoomChannelId.NOTE]);
 });
 
-Deno.test("VoomClient.call — Bearer + X-Line-Mid headers", async () => {
+Deno.test("VoomClient.call — X-Line-ChannelToken + X-Line-Mid headers (live-verified)", async () => {
 	const { client, fetched } = makeFake();
 	const vc = createVoomClient(client);
 	const r = await vc.call("TIMELINE", { path: "/api/v57/post/list.json" });
@@ -61,7 +61,7 @@ Deno.test("VoomClient.call — Bearer + X-Line-Mid headers", async () => {
 	assert(r.result);
 	assertEquals(fetched.length, 1);
 	assertEquals(fetched[0].url, "https://gw.line.naver.jp/mh/api/v57/post/list.json");
-	assertEquals(fetched[0].headers["authorization"], "Bearer tok-1341209950");
+	assertEquals(fetched[0].headers["X-Line-ChannelToken"], "tok-1341209950");
 	assertEquals(fetched[0].headers["X-Line-Mid"], "u-test-mid");
 });
 
@@ -93,7 +93,7 @@ Deno.test("VoomClient.noteList — uses NOTE channel + bdb/card/list endpoint (#
 	assertEquals(u.pathname, "/mh/api/v1/bdb/card/list");
 	assertEquals(u.searchParams.get("boardId"), "BD-1");
 	assertEquals(u.searchParams.get("limit"), "50");
-	assertEquals(fetched[0].headers["authorization"], `Bearer tok-${VoomChannelId.NOTE}`);
+	assertEquals(fetched[0].headers["X-Line-ChannelToken"], `tok-${VoomChannelId.NOTE}`);
 });
 
 Deno.test("VoomClient.noteCreate — POSTs to bdb/card/create with boardId in body (#150)", async () => {
