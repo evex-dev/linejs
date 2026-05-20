@@ -32,7 +32,9 @@ export async function voomRest<T = unknown>(
 	client: Client,
 	opts: VoomRestOptions,
 ): Promise<VoomRestResponse<T>> {
-	const host = opts.host ?? "gw.line.naver.jp";
+	// Live probe: gw.line.naver.jp/<path> returns 404; the gateway prefix
+	// is /mh. So host default = "gw.line.naver.jp/mh".
+	const host = opts.host ?? "gw.line.naver.jp/mh";
 	const method = opts.method ?? "GET";
 	const url = `https://${host}${
 		opts.path.startsWith("/") ? opts.path : "/" + opts.path
