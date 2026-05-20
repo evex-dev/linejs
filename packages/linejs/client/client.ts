@@ -19,6 +19,16 @@ export * as voom from "./features/voom.ts";
 import { createVoomClient, VoomChannelId, type VoomClient, voomRest, type VoomRestOptions, type VoomRestResponse } from "./features/voom.ts";
 export { VoomChannelId };
 export type { VoomClient, VoomRestOptions, VoomRestResponse };
+export * as call from "./features/call.ts";
+import {
+	type CallClient,
+	type CancelCallEvent,
+	createCallClient,
+	type IncomingCallEvent,
+	parseCancelCall,
+	parseIncomingCall,
+} from "./features/call.ts";
+export type { CallClient, CancelCallEvent, CallType, IncomingCallEvent } from "./features/call.ts";
 export { Chat, Square, SquareChat, SquareMessage, TalkMessage, User };
 export { ProfileAttribute } from "./features/profile.ts";
 export type { MyProfileUpdate } from "./features/profile.ts";
@@ -45,6 +55,8 @@ export type ClientEvents = {
 	event: (event: LINETypes.Operation) => void;
 	"square:message": (message: SquareMessage) => void;
 	"square:event": (event: LINETypes.SquareEvent) => void;
+	"call:incoming": (event: IncomingCallEvent) => void;
+	"call:cancel": (event: CancelCallEvent) => void;
 };
 
 function isApiNotCapable(e: unknown): boolean {
@@ -73,6 +85,13 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	get voom(): VoomClient {
 		if (!this.#voom) this.#voom = createVoomClient(this);
 		return this.#voom;
+	}
+
+	#call?: CallClient;
+	/** Call control-plane wrapper (#148 v3.0). Media plane TBD. */
+	get call(): CallClient {
+		if (!this.#call) this.#call = createCallClient(this);
+		return this.#call;
 	}
 
 	/**
@@ -108,6 +127,10 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 								client: this,
 							}),
 						);
+					} else if (event.type === "NOTIFIED_RECEIVED_CALL") {
+						this.emit("call:incoming", parseIncomingCall(event));
+					} else if (event.type === "CANCEL_CALL") {
+						this.emit("call:cancel", parseCancelCall(event));
 					}
 				}
 			})();
