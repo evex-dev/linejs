@@ -1,0 +1,9 @@
+{
+	"name": "linejs",
+	"version": "1.0.0",
+	"description": "Skill: write LINE Messenger bots / clients with the @evex/linejs library. Points the calling agent at the canonical sources, doesn't freeze API details.",
+	"entry": "SKILL.md",
+	"license": "MIT",
+	"repository": "https://github.com/evex-dev/linejs",
+	"keywords": ["line", "linejs", "messenger", "bot", "thrift", "e2ee", "deno", "jsr"]
+}
