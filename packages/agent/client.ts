@@ -50,13 +50,20 @@ export function frtypeFor(source: AgentISource): string {
 }
 
 export interface AgentIOptions {
-	/** `Cookie` header value sent on the SSE POST.  See evex-dev/linejs#152
-	 *  for the open investigation: LINE Android can drive Agent I without
-	 *  the user being logged into Yahoo, so the real requirement is
-	 *  probably anonymous `B` / `XB` cookies issued by `search.yahoo.co.jp`
-	 *  on a prior GET — not a full Yahoo login.  Pass whatever Cookie
-	 *  string you've got; pass `""` to try without one. */
-	cookie: string;
+	/**
+	 * `Cookie` header value sent on the SSE POST.  **Optional** — Yahoo's
+	 * search-agent endpoint accepts anonymous sessions (LINE Android calls
+	 * it from a fresh WebView the first time the user taps Agent I without
+	 * any Yahoo login).  When omitted or `""`, the client auto-mints
+	 * anonymous `B`/`XB` cookies via {@link AgentIClient.mintAnonymousCookies}
+	 * on first `chat()` call.  Pass a real cookie string only when you
+	 * want personalization (logged-in `A`/`XA` pair).
+	 *
+	 * Live-verified: anonymous-only invocations succeed; only personalized
+	 * features (history, saved chats) require the login pair.  Tracks
+	 * evex-dev/linejs#152.
+	 */
+	cookie?: string;
 	/** LINE app version reported in the `Line/<ver>/Agenti` UA suffix.
 	 *  Defaults to a recent value from the LINE iOS captures used to
 	 *  derive this shape; bump when LINE bumps. */
@@ -113,10 +120,10 @@ export class AgentIClient {
 	 *  echo the prior turns.  Reset via {@link reset}. */
 	#history: ChatMessage[] = [];
 
-	constructor(opts: AgentIOptions) {
+	constructor(opts: AgentIOptions = {}) {
 		const lineVersion = opts.lineVersion ?? "26.6.0";
 		this.#opts = {
-			cookie: opts.cookie,
+			cookie: opts.cookie ?? "",
 			lineVersion,
 			source: opts.source ?? "chattab_searchbar",
 			endpoint: opts.endpoint ?? "https://search-agent.yahoo.co.jp/v2/chat",
@@ -158,6 +165,12 @@ export class AgentIClient {
 			debug: {},
 		};
 
+		if (!this.#opts.cookie) {
+			this.#opts.cookie = await AgentIClient.mintAnonymousCookies({
+				fetch: this.#opts.fetch,
+				source: this.#opts.source,
+			});
+		}
 		const res = await this.#opts.fetch(this.#opts.endpoint, {
 			method: "POST",
 			headers: {
@@ -196,6 +209,33 @@ export class AgentIClient {
 				contents: [{ type: "text", text: assistantText.join("") }],
 			});
 		}
+	}
+
+	/**
+	 * Mints anonymous Yahoo session cookies (`B`/`XB`) by doing the same
+	 * initial WebView GET LINE Android does when opening the Agent I tab.
+	 * Returns a `Cookie:` header value suitable to pass straight to the
+	 * SSE POST.  Used implicitly when {@link AgentIOptions.cookie} is
+	 * omitted; exposed publicly for callers that want to mint + cache
+	 * cookies out-of-band.
+	 */
+	static async mintAnonymousCookies(opts: {
+		fetch?: typeof fetch;
+		source?: AgentISource;
+	} = {}): Promise<string> {
+		const f = opts.fetch ?? fetch;
+		const url = buildAgentIWebViewUrl({
+			source: opts.source ?? "chattab_searchbar",
+		});
+		const res = await f(url, { method: "GET", redirect: "manual" });
+		const setCookie = res.headers.get("set-cookie") ?? "";
+		// Quick parse — each cookie pair before the first `;` per
+		// Set-Cookie line.  We don't care about expiry/path here.
+		return setCookie
+			.split(/,(?=\s*\w+=)/)
+			.map((c) => c.split(";")[0].trim())
+			.filter(Boolean)
+			.join("; ");
 	}
 
 	/** Drop the in-memory conversation history. */

@@ -167,3 +167,53 @@ Deno.test("AgentIClient — sends the right request shape", async () => {
 	assertEquals(body.chats[0].role, "user");
 	assertEquals(body.chats[0].contents[0].text, "hi");
 });
+
+Deno.test("AgentIClient — no-cookie option auto-mints anonymous yahoo cookies (#152)", async () => {
+	let mintCalled = 0;
+	let sseCookie: string | null = null;
+	const fakeFetch = ((url: unknown, init?: { method?: string }) => {
+		const u = String(url);
+		if (u.includes("search.yahoo.co.jp/chat") && (init?.method ?? "GET") === "GET") {
+			mintCalled++;
+			return Promise.resolve(
+				new Response(null, {
+					status: 200,
+					headers: {
+						"set-cookie":
+							"B=anon-b-value; Path=/; Domain=.yahoo.co.jp, XB=anon-xb-value; Path=/",
+					},
+				}),
+			);
+		}
+		// SSE POST
+		sseCookie = new Headers(
+			(init as { headers?: HeadersInit } | undefined)?.headers,
+		).get("cookie");
+		return Promise.resolve(
+			new Response(new ReadableStream({ start(c) { c.close(); } }), {
+				status: 200,
+				headers: { "content-type": "text/event-stream" },
+			}),
+		);
+	}) as unknown as typeof fetch;
+	const client = new AgentIClient({ fetch: fakeFetch });
+	for await (const _c of client.chat("hi")) { /* drain */ }
+	assertEquals(mintCalled, 1);
+	// Both B and XB cookies passed through; comma-separated Set-Cookie
+	// merged into a single Cookie header.
+	assertEquals(sseCookie, "B=anon-b-value; XB=anon-xb-value");
+});
+
+Deno.test("AgentIClient.mintAnonymousCookies — public helper round-trips Set-Cookie", async () => {
+	const fakeFetch = ((_url: unknown) =>
+		Promise.resolve(
+			new Response(null, {
+				status: 200,
+				headers: {
+					"set-cookie": "B=anon; Path=/, XB=anon; Path=/",
+				},
+			}),
+		)) as unknown as typeof fetch;
+	const cookie = await AgentIClient.mintAnonymousCookies({ fetch: fakeFetch });
+	assertEquals(cookie, "B=anon; XB=anon");
+});
