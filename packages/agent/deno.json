@@ -1,0 +1,13 @@
+{
+	"name": "@evex/linejs-agent",
+	"version": "0.0.0",
+	"license": "MIT",
+	"exports": {
+		".": "./mod.ts",
+		"./summarize": "./summarize.ts"
+	},
+	"imports": {
+		"@anthropic-ai/sdk": "npm:@anthropic-ai/sdk@^0.65",
+		"@evex/linejs": "../linejs/client/mod.ts"
+	}
+}
