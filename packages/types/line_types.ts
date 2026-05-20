@@ -21176,7 +21176,6 @@ export interface updateProfileAttribute_result {
 export interface updateProfileAttributes_args {
 	reqSeq: number;
 	request: UpdateProfileAttributesRequest;
-	success: any;
 }
 
 export interface updateProfileAttributes_result {

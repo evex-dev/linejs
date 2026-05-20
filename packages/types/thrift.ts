@@ -38200,11 +38200,6 @@ export const Thrift: LooseType = {
 			"name": "request",
 			"struct": "UpdateProfileAttributesRequest",
 		},
-		{
-			"fid": 0,
-			"name": "success",
-			"struct": "k",
-		},
 	],
 	"updateProfileAttributes_result": [
 		{

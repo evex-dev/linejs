@@ -147,6 +147,5 @@ export async function updateMyProfile(
 	await client.base.talk.updateProfileAttributes({
 		reqSeq: await client.base.getReqseq(),
 		request: { profileAttributes },
-		success: undefined as never,
 	});
 }

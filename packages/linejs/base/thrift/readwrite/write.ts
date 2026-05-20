@@ -187,11 +187,27 @@ function writeValue(
 			{
 				const obj = val[2] as Record<string, LooseType>;
 				const keys = Object.keys(obj);
-				output.writeMapBegin(val[0], val[1], keys.length);
+				const keyType = val[0];
+				// JS object keys are always strings, but the wire format
+				// needs the declared key type (often I32/I64).  Coerce
+				// strings → numbers for the numeric key types so callers
+				// can pass plain `Record<number, V>` ergonomically.
+				const coerceKey = (k: string): string | number => {
+					switch (keyType) {
+						case Thrift.Type.I32:
+						case Thrift.Type.I64:
+						case Thrift.Type.DOUBLE:
+						case Thrift.Type.BYTE:
+							return Number(k);
+						default:
+							return k;
+					}
+				};
+				output.writeMapBegin(keyType, val[1], keys.length);
 				for (let i = 0; i < keys.length; i++) {
 					const kiter = keys[i];
 					const viter = obj[kiter];
-					writeValue_(output, val[0], kiter);
+					writeValue_(output, keyType, coerceKey(kiter));
 					writeValue_(output, val[1], viter);
 				}
 				output.writeMapEnd();
