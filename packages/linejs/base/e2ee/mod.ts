@@ -696,22 +696,33 @@ export class E2EE {
 		this.e2eeLog("decryptE2EETextMessageSenderKeyId", senderKeyId);
 		this.e2eeLog("decryptE2EETextMessageReceiverKeyId", receiverKeyId);
 
-		const selfKey = await this.getE2EESelfKeyData(this.client.profile!.mid);
-		let privK = Buffer.from(selfKey.privKey, "base64");
+		let privK: Buffer;
 		let pubK: LooseType;
+		let selfPubKey: Buffer | undefined;
 
 		if (toType === LINETypes.enums.MIDType.USER || toType === "USER") {
+			// #88: select self-key by the id LINE used at encrypt time, not
+			// the latest one — survives key rotation between messages.
+			const selfKeyId = isSelf ? senderKeyId : receiverKeyId;
+			let selfKey = await this.getE2EESelfKeyDataByKeyId(selfKeyId);
+			if (!selfKey) {
+				selfKey = await this.getE2EESelfKeyData(this.client.profile!.mid);
+			}
+			privK = Buffer.from(selfKey.privKey, "base64");
+			selfPubKey = Buffer.from(selfKey.pubKey, "base64");
 			pubK = await this.getE2EELocalPublicKey(
 				isSelf ? to : _from,
 				isSelf ? receiverKeyId : senderKeyId,
 			);
 		} else {
+			const selfKey = await this.getE2EESelfKeyData(this.client.profile!.mid);
+			selfPubKey = Buffer.from(selfKey.pubKey, "base64");
 			const groupK = await this.getE2EELocalPublicKey(
 				to,
 				receiverKeyId,
 			) as GroupKey;
 			privK = Buffer.from(groupK.privKey, "base64");
-			pubK = Buffer.from(selfKey.pubKey, "base64");
+			pubK = selfPubKey;
 			if (_from !== this.client.profile?.mid) {
 				pubK = await this.getE2EELocalPublicKey(_from, senderKeyId);
 			}
@@ -830,11 +841,6 @@ export class E2EE {
 		const receiverKeyId = byte2int(chunks[4]);
 		this.e2eeLog("decryptE2EEDataMessageSenderKeyId", senderKeyId);
 		this.e2eeLog("decryptE2EEDataMessageReceiverKeyId", receiverKeyId);
-		// Diagnostic for issue #88 — when 1:1 media decryption fails with
-		// "Unsupported state or unable to authenticate data" we need to see
-		// exactly which byte the AAD was built from.  Text in the same chat
-		// works, so capture enough state here to bisect against a real LINE
-		// ciphertext sample.
 		this.e2eeLog("decryptE2EEDataMessageEnvelope", {
 			toType,
 			specVersion,
@@ -848,18 +854,37 @@ export class E2EE {
 			),
 		});
 
-		const selfKey = await this.getE2EESelfKeyData(
-			this.client.profile?.mid as string,
-		);
-		let privK = Buffer.from(selfKey.privKey, "base64");
+		let privK: Buffer;
 		let pubK: LooseType;
 
 		if (toType === LINETypes.enums.MIDType.USER || toType === "USER") {
+			// Fix for #88: a received 1:1 message was encrypted against the
+			// `receiverKeyId` LINE picked for *us* at encrypt time — that may
+			// not be our current default self-key if E2EE keys rotated since.
+			// Look up the specific self-key by id (matches CHRLINE-Patch's
+			// "patch to use correct key by id"); the previous code path used
+			// the latest self-key blindly and ECDH'd to a wrong shared
+			// secret, causing the GCM auth tag to fail.
+			const selfKeyId = isSelf ? senderKeyId : receiverKeyId;
+			let selfKey = await this.getE2EESelfKeyDataByKeyId(selfKeyId);
+			if (!selfKey) {
+				// Fall back to the latest known self-key — covers the case
+				// where the by-id store is empty (first run / pre-migration
+				// storage layouts).
+				selfKey = await this.getE2EESelfKeyData(
+					this.client.profile?.mid as string,
+				);
+			}
+			privK = Buffer.from(selfKey.privKey, "base64");
 			pubK = await this.getE2EELocalPublicKey(
 				isSelf ? to : _from,
 				isSelf ? receiverKeyId : senderKeyId,
 			);
 		} else {
+			const selfKey = await this.getE2EESelfKeyData(
+				this.client.profile?.mid as string,
+			);
+			privK = Buffer.from(selfKey.privKey, "base64");
 			const groupK = await this.getE2EELocalPublicKey(
 				to,
 				receiverKeyId,
