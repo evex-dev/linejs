@@ -2,7 +2,7 @@
  * PLANET call crypto, ground-truth revision.
  *
  * Reverse-engineered from a real LINE call (`ear_crypto_hkdf` Frida
- * hook on `tom` call, 2026-05-21). Earlier guess of "mpkey is the
+ * hook, 2026-05-21). Earlier guess of "mpkey is the
  * master secret" was wrong; mpkey is actually the peer's ephemeral
  * P-256 public key.
  *

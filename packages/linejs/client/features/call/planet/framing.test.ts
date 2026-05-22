@@ -22,7 +22,11 @@ Deno.test("chunk hdr is bijective (each input -> unique output)", () => {
 	for (let i = 0; i < 0x10000; i++) {
 		const w = makeChunkHdr(i);
 		if (seen.has(w)) {
-			throw new Error(`collision: input 0x${i.toString(16)} -> wire 0x${w.toString(16)} (also produced by another input)`);
+			throw new Error(
+				`collision: input 0x${i.toString(16)} -> wire 0x${
+					w.toString(16)
+				} (also produced by another input)`,
+			);
 		}
 		seen.add(w);
 	}
@@ -44,7 +48,13 @@ Deno.test("fixed hdr roundtrip", () => {
 });
 
 Deno.test("buildFrameHeader + parseFrameHeader roundtrip", () => {
-	const fixed = { type: 0, flagA: false, length: 535, flagB: false, sequence: 0x1d5 };
+	const fixed = {
+		type: 0,
+		flagA: false,
+		length: 535,
+		flagB: false,
+		sequence: 0x1d5,
+	};
 	const wire = buildFrameHeader(0x10de, fixed);
 	assertEquals(wire.length, 6);
 	const parsed = parseFrameHeader(wire);
@@ -53,7 +63,7 @@ Deno.test("buildFrameHeader + parseFrameHeader roundtrip", () => {
 });
 
 Deno.test("observed wire bytes — sequence in BE bytes 2..3 of frame", () => {
-	// Captured live during a real tom-call. The transaction counter
+	// Captured live during a native LINE call. The transaction counter
 	// pattern (01d5, 01d6, 01d7, ..., 01e6, 01e7, 01e8) lives in BE
 	// bytes [2..3] of the datagram (= bytes [0..1] of the fixed header).
 	// We pull it out directly here; the rest of the fixed-header

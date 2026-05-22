@@ -23,7 +23,10 @@ import {
 } from "./crypto.ts";
 
 Deno.test("decodeMpKey extracts the 33-byte SEC1 P-256 pubkey", () => {
-	const b64 = "AhLRU30XuXFenT3Z8ZapU+2YPTPzrYA2ZObDqRzy+hr3";
+	const raw = new Uint8Array(33);
+	raw[0] = 0x02;
+	for (let i = 1; i < raw.length; i++) raw[i] = i;
+	const b64 = btoa(String.fromCharCode(...raw));
 	const k = decodeMpKey(b64);
 	assertEquals(k.length, 33);
 	assertEquals(k[0], 0x02); // parity byte

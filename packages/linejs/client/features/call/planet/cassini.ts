@@ -1,7 +1,7 @@
 /**
  * PLANET Cassini message format — ground-truth revision.
  *
- * Live `pln_msg_pack` capture during a real tom-call shows the on-wire
+ * Live `pln_msg_pack` capture during a native LINE call shows the on-wire
  * format is **protobuf**. Captured hex bytes:
  *
  *   0a 60 0a 21 75 63 38 34 35 38 36 34 37 34 37 30 33 61 36 31 37 32
@@ -12,7 +12,7 @@
  *
  *   field 1 (tag 0x0a, length-delimited, len=0x60):
  *     // nested header message
- *     field 1 (0x0a, len=0x21): user_id "uc84586474703a6172e9d051eabbcb627"
+ *     field 1 (0x0a, len=0x21): user_id "u00000000000000000000000000000000"
  *     field 2 (0x10, varint):   msg_id   (varint 0x81 0x22 = 4353 ascending per call)
  *     field 3 (0x1a, len=0x10): uuid     (16-byte session UUID)
  *     field 4 (0x22, len=0x21): user_pub (33-byte SEC1 EC pubkey)
@@ -169,23 +169,39 @@ const enum HDR_TAG {
 }
 
 /** Envelope-body tag varies by message class. Observed values from a
- *  real tom-call: */
+ *  native LINE call: */
 export const ENVELOPE_BODY_TAG = {
-	KA: 2,       // keepalive / handshake init
-	CONTROL: 3,  // req / rsp / exchange_app_str_data / initiator
-	STATE: 4,    // setup / complex state payloads with device info
+	KA: 2, // keepalive / handshake init
+	CONTROL: 3, // req / rsp / exchange_app_str_data / initiator
+	STATE: 4, // setup / complex state payloads with device info
 } as const;
 
 const ENV_HDR_TAG = 1;
 
 export function packCassiniHeader(h: CassiniHeader): Uint8Array {
 	return encodePb([
-		{ tag: HDR_TAG.USER_ID, wireType: WireType.LengthDelim, value: new TextEncoder().encode(h.userId) },
+		{
+			tag: HDR_TAG.USER_ID,
+			wireType: WireType.LengthDelim,
+			value: new TextEncoder().encode(h.userId),
+		},
 		{ tag: HDR_TAG.MSG_ID, wireType: WireType.Varint, value: BigInt(h.msgId) },
-		{ tag: HDR_TAG.CALL_UUID, wireType: WireType.LengthDelim, value: h.callUuid16 },
-		{ tag: HDR_TAG.MSG_NONCE, wireType: WireType.LengthDelim, value: h.msgNonce },
+		{
+			tag: HDR_TAG.CALL_UUID,
+			wireType: WireType.LengthDelim,
+			value: h.callUuid16,
+		},
+		{
+			tag: HDR_TAG.MSG_NONCE,
+			wireType: WireType.LengthDelim,
+			value: h.msgNonce,
+		},
 		{ tag: HDR_TAG.COUNTER, wireType: WireType.Varint, value: h.counter },
-		{ tag: HDR_TAG.SUBSCRIPTION_ID, wireType: WireType.Varint, value: h.subscriptionId },
+		{
+			tag: HDR_TAG.SUBSCRIPTION_ID,
+			wireType: WireType.Varint,
+			value: h.subscriptionId,
+		},
 		{ tag: HDR_TAG.SESSION_ID, wireType: WireType.Varint, value: h.sessionId },
 	]);
 }
@@ -209,22 +225,36 @@ export function unpackCassini(
 	const bodyField = fields.find((f) =>
 		f.tag !== ENV_HDR_TAG && f.wireType === WireType.LengthDelim
 	);
-	if (!hdrField || !bodyField) throw new Error("unpackCassini: missing header/body");
+	if (!hdrField || !bodyField) {
+		throw new Error("unpackCassini: missing header/body");
+	}
 	const hdrParts = decodePb(new Uint8Array(hdrField.value as Uint8Array));
 	let userId = "", msgId = 0;
 	let callUuid16 = new Uint8Array(0), msgNonce = new Uint8Array(0);
 	let counter = 0n, subscriptionId = 0n, sessionId = 0n;
 	for (const f of hdrParts) {
-		if (f.tag === HDR_TAG.USER_ID) userId = new TextDecoder().decode(new Uint8Array(f.value as Uint8Array));
-		else if (f.tag === HDR_TAG.MSG_ID) msgId = Number(f.value);
-		else if (f.tag === HDR_TAG.CALL_UUID) callUuid16 = new Uint8Array(f.value as Uint8Array);
-		else if (f.tag === HDR_TAG.MSG_NONCE) msgNonce = new Uint8Array(f.value as Uint8Array);
-		else if (f.tag === HDR_TAG.COUNTER) counter = f.value as bigint;
-		else if (f.tag === HDR_TAG.SUBSCRIPTION_ID) subscriptionId = f.value as bigint;
-		else if (f.tag === HDR_TAG.SESSION_ID) sessionId = f.value as bigint;
+		if (f.tag === HDR_TAG.USER_ID) {
+			userId = new TextDecoder().decode(new Uint8Array(f.value as Uint8Array));
+		} else if (f.tag === HDR_TAG.MSG_ID) msgId = Number(f.value);
+		else if (f.tag === HDR_TAG.CALL_UUID) {
+			callUuid16 = new Uint8Array(f.value as Uint8Array);
+		} else if (f.tag === HDR_TAG.MSG_NONCE) {
+			msgNonce = new Uint8Array(f.value as Uint8Array);
+		} else if (f.tag === HDR_TAG.COUNTER) counter = f.value as bigint;
+		else if (f.tag === HDR_TAG.SUBSCRIPTION_ID) {
+			subscriptionId = f.value as bigint;
+		} else if (f.tag === HDR_TAG.SESSION_ID) sessionId = f.value as bigint;
 	}
 	return {
-		header: { userId, msgId, callUuid16, msgNonce, counter, subscriptionId, sessionId },
+		header: {
+			userId,
+			msgId,
+			callUuid16,
+			msgNonce,
+			counter,
+			subscriptionId,
+			sessionId,
+		},
 		body: new Uint8Array(bodyField.value as Uint8Array),
 		bodyTag: bodyField.tag,
 	};
@@ -256,16 +286,32 @@ export function packCassiniBody(b: CassiniBody): Uint8Array {
 	const enc = new TextEncoder();
 	const fields: PbField[] = [];
 	if (b.callUuid !== undefined) {
-		fields.push({ tag: BODY_TAG.CALL_UUID, wireType: WireType.LengthDelim, value: enc.encode(b.callUuid) });
+		fields.push({
+			tag: BODY_TAG.CALL_UUID,
+			wireType: WireType.LengthDelim,
+			value: enc.encode(b.callUuid),
+		});
 	}
 	if (b.msgTypeName !== undefined) {
-		fields.push({ tag: BODY_TAG.MSG_TYPE, wireType: WireType.LengthDelim, value: enc.encode(b.msgTypeName) });
+		fields.push({
+			tag: BODY_TAG.MSG_TYPE,
+			wireType: WireType.LengthDelim,
+			value: enc.encode(b.msgTypeName),
+		});
 	}
 	if (b.jsonParams !== undefined) {
-		fields.push({ tag: BODY_TAG.JSON_PARAMS, wireType: WireType.LengthDelim, value: enc.encode(b.jsonParams) });
+		fields.push({
+			tag: BODY_TAG.JSON_PARAMS,
+			wireType: WireType.LengthDelim,
+			value: enc.encode(b.jsonParams),
+		});
 	}
 	if (b.deviceInfo !== undefined) {
-		fields.push({ tag: BODY_TAG.DEVICE_INFO, wireType: WireType.LengthDelim, value: enc.encode(b.deviceInfo) });
+		fields.push({
+			tag: BODY_TAG.DEVICE_INFO,
+			wireType: WireType.LengthDelim,
+			value: enc.encode(b.deviceInfo),
+		});
 	}
 	if (b.extra) fields.push(...b.extra);
 	return encodePb(fields);
@@ -370,7 +416,9 @@ export function buildRelReq(opts: {
 	const body = packCassiniBody({
 		callUuid: opts.session.callUuidString,
 		msgTypeName: "rel_req",
-		jsonParams: opts.reason ? JSON.stringify({ reason: opts.reason }) : undefined,
+		jsonParams: opts.reason
+			? JSON.stringify({ reason: opts.reason })
+			: undefined,
 	});
 	return packCassini({
 		header: {

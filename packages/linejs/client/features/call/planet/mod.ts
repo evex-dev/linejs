@@ -1,5 +1,5 @@
 // LINE PLANET / Cassini call signaling, reverse-engineered from a
-// real tom-call's `pln_msg_pack` + `ear_crypto_hkdf` Frida capture.
+// native LINE call's `pln_msg_pack` + `ear_crypto_hkdf` Frida capture.
 // See docs/PLANET_PROTOCOL.md for the full reverse-engineering trail.
 
 export {

@@ -31,14 +31,14 @@ import {
 	wrapCcMsg,
 } from "./schema.ts";
 
-Deno.test("packPlanetMsgHdr matches the captured 96-byte header byte-for-byte", () => {
-	// Reproduce the exact captured msg_pack #1 header bytes from the
-	// live `pln_msg_pack` hook during a real tom-call.
+Deno.test("packPlanetMsgHdr matches an observed 96-byte header shape", () => {
+	// Reproduce an observed msg_pack header shape without account-specific
+	// identifiers.
 	const expected = new Uint8Array([
 		// field 1 (user_id, 33B str)
 		0x0a,
 		0x21,
-		...new TextEncoder().encode("uc84586474703a6172e9d051eabbcb627"),
+		...new TextEncoder().encode("u00000000000000000000000000000000"),
 		// field 2 (msg_id varint = 4353)
 		0x10,
 		0x81,
@@ -108,7 +108,7 @@ Deno.test("packPlanetMsgHdr matches the captured 96-byte header byte-for-byte", 
 		0x6a,
 	]);
 	const got = packPlanetMsgHdr({
-		userId: "uc84586474703a6172e9d051eabbcb627",
+		userId: "u00000000000000000000000000000000",
 		msgId: 4353,
 		sessId: expected.subarray(40, 56),
 		tranId: expected.subarray(58, 74),
@@ -123,7 +123,7 @@ Deno.test("decodeFields parses the captured header into the expected fields", ()
 	const captured = new Uint8Array([
 		0x0a,
 		0x21,
-		...new TextEncoder().encode("uc84586474703a6172e9d051eabbcb627"),
+		...new TextEncoder().encode("u00000000000000000000000000000000"),
 		0x10,
 		0x81,
 		0x22,
@@ -190,7 +190,7 @@ Deno.test("decodeFields parses the captured header into the expected fields", ()
 	assertEquals(f.length, 7);
 	assertEquals(
 		new TextDecoder().decode(f[0].value as Uint8Array),
-		"uc84586474703a6172e9d051eabbcb627",
+		"u00000000000000000000000000000000",
 	);
 	assertEquals(f[1].value, 4353n);
 	assertEquals((f[2].value as Uint8Array).length, 16);
@@ -554,7 +554,7 @@ Deno.test("extractRmtNonceFromReply pulls loc_nonce (field 6) out", async () => 
 	// Build a reply header where the server's loc_nonce = 0x6a0e122c0e9d22ac
 	const expected = 0x6a0e122c0e9d22acn;
 	const hdr = packPlanetMsgHdr({
-		userId: "u9dfba8dc9529aeb6063ee013a5933184",
+		userId: "u11111111111111111111111111111111",
 		msgId: 1,
 		sessId: new Uint8Array(16).fill(0xaa),
 		tranId: new Uint8Array(16).fill(0xbb),
