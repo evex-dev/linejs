@@ -39,6 +39,7 @@ export default defineConfig({
 					{ text: "Client Options", link: "/docs/client-options" },
 					// { text: "Utils", link: "/docs/utils" },
 					{ text: "Client Methods", link: "/docs/methods" },
+					{ text: "Calls", link: "/docs/call" },
 				],
 			},
 			{
