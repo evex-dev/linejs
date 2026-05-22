@@ -31,6 +31,7 @@ import {
 	buildPlanetCtrIv,
 	decodeMpKey,
 	deriveCallKeys,
+	derivePlanetMediaKeys,
 	type EphemeralKeypair,
 	generateEphemeralKeypair,
 	hmacTag,
@@ -41,11 +42,16 @@ import {
 } from "./crypto.ts";
 import {
 	CC_MSG,
+	type CcConnReq,
 	type CcSetupReq,
+	decodeCcConnReq,
 	decodeCcSetupRsp,
 	decodeFields,
+	decodeNativeSetupOffer,
 	decodePlanetMsg,
 	extractRmtNonceFromReply,
+	type NativeSetupOffer,
+	packCcConnRsp,
 	packCcRelReq,
 	packCcSetupReq,
 	packNativeSetupOffer,
@@ -59,6 +65,14 @@ import {
 	WireType,
 	wrapCcMsg,
 } from "./schema.ts";
+import {
+	buildRtp,
+	deriveSrtpContext,
+	parseRtp,
+	type SrtpCryptoContext,
+	srtpDecrypt,
+	srtpEncrypt,
+} from "../srtp.ts";
 
 export interface PlanetTransportOpts {
 	localMid: string;
@@ -90,6 +104,21 @@ export interface PlanetInviteResult {
 	plaintext: Uint8Array;
 	message: ReturnType<typeof decodePlanetMsg>;
 	setupRsp?: ReturnType<typeof decodeCcSetupRsp>;
+}
+
+export interface PlanetIncomingMessage {
+	plaintext: Uint8Array;
+	message?: ReturnType<typeof decodePlanetMsg>;
+}
+
+export interface PlanetAnswerResult {
+	plaintext: Uint8Array;
+	message: ReturnType<typeof decodePlanetMsg>;
+	connReq: CcConnReq;
+	peerAnswerOffer?: NativeSetupOffer;
+	peerOffer?: NativeSetupOffer;
+	connRspSent: boolean;
+	mediaReady: boolean;
 }
 
 export interface PlanetLocalMediaOffer {
@@ -246,6 +275,17 @@ function cloneMediaOfferMaterial(
 	};
 }
 
+function tryDecodeNativeSetupOffer(
+	bytes: Uint8Array | undefined,
+): NativeSetupOffer | undefined {
+	if (!bytes) return undefined;
+	try {
+		return decodeNativeSetupOffer(bytes);
+	} catch {
+		return undefined;
+	}
+}
+
 function defaultLocalMediaOffer(): PlanetLocalMediaOffer {
 	const media = generateEphemeralKeypair();
 	const material: PlanetSetupOfferMaterial = {
@@ -283,6 +323,10 @@ function defaultSetupCredential(
 	);
 }
 
+function isRtpLike(wire: Uint8Array): boolean {
+	return wire.length >= 12 && (wire[0] & 0xc0) === 0x80;
+}
+
 export class PlanetTransport implements CallTransport {
 	#opts: PlanetTransportOpts;
 	#sock?: DgramSocket;
@@ -297,6 +341,18 @@ export class PlanetTransport implements CallTransport {
 	#callUuid?: string;
 	#callUuid16?: Uint8Array;
 	#localMediaOffer?: PlanetLocalMediaOffer;
+	#localMediaChanId = 1n;
+	#srtpSend?: SrtpCryptoContext;
+	#srtpRecv?: SrtpCryptoContext;
+	#rtp?: {
+		host: string;
+		port: number;
+		ssrc: number;
+		seq: number;
+		timestamp: number;
+	};
+	#rtpQueue: Uint8Array[] = [];
+	#rtpWaiters: Array<(packet: Uint8Array | null) => void> = [];
 	#srcChanId = 1n;
 	#setupSent = false;
 
@@ -310,7 +366,8 @@ export class PlanetTransport implements CallTransport {
 	#rmtNonce = 0n;
 	#nonceLearned = false;
 
-	#pending: Array<(env: Uint8Array | Error) => void> = [];
+	#pending: Array<(env: PlanetIncomingMessage | Error) => void> = [];
+	#queued: PlanetIncomingMessage[] = [];
 
 	constructor(opts: PlanetTransportOpts) {
 		this.#opts = opts;
@@ -341,9 +398,15 @@ export class PlanetTransport implements CallTransport {
 		this.#msgIdCounter = randomVarint2();
 		this.#tranSeq = randomNativeTranSeq();
 		this.#srcChanId = BigInt(randomNativeLargeId());
+		this.#localMediaChanId = BigInt(randomNativeLargeId());
 		this.#nextSeq = randomInitialFrameSeq();
 		this.#setupSent = false;
 		this.#localMediaOffer = undefined;
+		this.#srtpSend = undefined;
+		this.#srtpRecv = undefined;
+		this.#rtp = undefined;
+		this.#rtpQueue = [];
+		this.#queued = [];
 
 		// Native bootstrap uses a 16-byte seed and two random 2-byte labels.
 		const keys = deriveCallKeys({
@@ -375,10 +438,15 @@ export class PlanetTransport implements CallTransport {
 
 	#onWire(wire: Uint8Array) {
 		try {
+			if (this.#srtpRecv && isRtpLike(wire)) {
+				this.#enqueueRtp(wire);
+				return;
+			}
 			if (wire.length < HEADER_LEN + 16) return;
 			parseFrameHeader(wire);
 			const pt = this.#decryptWire(wire);
 			if (!pt) return;
+			const incoming: PlanetIncomingMessage = { plaintext: pt };
 
 			// Parse outer planet_msg to find hdr → extract loc_nonce on first reply
 			if (!this.#nonceLearned) {
@@ -396,6 +464,7 @@ export class PlanetTransport implements CallTransport {
 			}
 			try {
 				const msg = decodePlanetMsg(pt);
+				incoming.message = msg;
 				if (msg.hdr?.sessId?.length) this.#sessId = msg.hdr.sessId;
 				if (msg.hdr?.locNonce !== undefined && !this.#nonceLearned) {
 					this.#rmtNonce = msg.hdr.locNonce;
@@ -406,10 +475,23 @@ export class PlanetTransport implements CallTransport {
 			}
 
 			const w = this.#pending.shift();
-			if (w) w(pt);
+			if (w) w(incoming);
+			else this.#queued.push(incoming);
 		} catch (_e) {
 			// Probably SRTP media or malformed — ignore
 		}
+	}
+
+	#enqueueRtp(packet: Uint8Array) {
+		const waiter = this.#rtpWaiters.shift();
+		if (waiter) waiter(packet);
+		else this.#rtpQueue.push(packet);
+	}
+
+	#takeRtp(): Promise<Uint8Array | null> {
+		const queued = this.#rtpQueue.shift();
+		if (queued) return Promise.resolve(queued);
+		return new Promise((resolve) => this.#rtpWaiters.push(resolve));
 	}
 
 	#decryptWire(wire: Uint8Array): Uint8Array | null {
@@ -523,7 +605,9 @@ export class PlanetTransport implements CallTransport {
 		);
 	}
 
-	#waitForReply(timeoutMs: number): Promise<Uint8Array> {
+	#waitForIncoming(timeoutMs: number): Promise<PlanetIncomingMessage> {
+		const queued = this.#queued.shift();
+		if (queued) return Promise.resolve(queued);
 		return new Promise((res, rj) => {
 			const t = setTimeout(
 				() => rj(new Error("PLANET reply timeout")),
@@ -535,6 +619,30 @@ export class PlanetTransport implements CallTransport {
 				else res(env);
 			});
 		});
+	}
+
+	async #waitForCc(
+		bodyTag: number,
+		timeoutMs: number,
+	): Promise<
+		PlanetIncomingMessage & {
+			message: ReturnType<typeof decodePlanetMsg>;
+		}
+	> {
+		const deadline = Date.now() + timeoutMs;
+		while (true) {
+			const remaining = Math.max(1, deadline - Date.now());
+			const incoming = await this.#waitForIncoming(remaining);
+			if (
+				incoming.message?.cc?.bodyTag === bodyTag &&
+				incoming.message.cc.bodyBytes
+			) {
+				return incoming as PlanetIncomingMessage & {
+					message: ReturnType<typeof decodePlanetMsg>;
+				};
+			}
+			if (Date.now() >= deadline) throw new Error("PLANET reply timeout");
+		}
 	}
 
 	async #sendSetup(opts: { to: string }): Promise<void> {
@@ -585,20 +693,129 @@ export class PlanetTransport implements CallTransport {
 
 	async inviteDetailed(opts: { to: string }): Promise<PlanetInviteResult> {
 		await this.#sendSetup(opts);
-		const reply = await this.#waitForReply(this.#opts.timeoutMs ?? 10000);
-		const message = decodePlanetMsg(reply);
-		const setupBytes = message.cc?.bodyTag === CC_MSG.SETUP_RSP
-			? message.cc.bodyBytes
-			: undefined;
+		const reply = await this.#waitForCc(
+			CC_MSG.SETUP_RSP,
+			this.#opts.timeoutMs ?? 10000,
+		);
+		const setupBytes = reply.message.cc?.bodyBytes;
+		if (!setupBytes) throw new Error("PLANET setup_rsp missing body");
 		return {
-			plaintext: reply,
-			message,
+			plaintext: reply.plaintext,
+			message: reply.message,
 			setupRsp: setupBytes ? decodeCcSetupRsp(setupBytes) : undefined,
 		};
 	}
 
 	async invite(opts: { to: string }): Promise<Uint8Array> {
 		return (await this.inviteDetailed(opts)).plaintext;
+	}
+
+	async waitForAnswerDetailed(opts: {
+		timeoutMs?: number;
+		autoConnRsp?: boolean;
+	} = {}): Promise<PlanetAnswerResult> {
+		const reply = await this.#waitForCc(
+			CC_MSG.CONN_REQ,
+			opts.timeoutMs ?? 60000,
+		);
+		const connReqBytes = reply.message.cc?.bodyBytes;
+		if (!connReqBytes) throw new Error("PLANET conn_req missing body");
+		const connReq = decodeCcConnReq(connReqBytes);
+		const peerAnswerOffer = tryDecodeNativeSetupOffer(connReq.answer);
+		const peerOffer = tryDecodeNativeSetupOffer(connReq.offer);
+		const mediaReady = await this.#configureMedia(peerAnswerOffer ?? peerOffer);
+		let connRspSent = false;
+		if (opts.autoConnRsp ?? true) {
+			await this.#sendConnRsp(reply, connReq);
+			connRspSent = true;
+		}
+		return {
+			plaintext: reply.plaintext,
+			message: reply.message,
+			connReq,
+			peerAnswerOffer,
+			peerOffer,
+			connRspSent,
+			mediaReady,
+		};
+	}
+
+	waitForAnswer(_opts?: { to: string }): Promise<PlanetAnswerResult> {
+		return this.waitForAnswerDetailed();
+	}
+
+	async #configureMedia(
+		peerOffer: NativeSetupOffer | undefined,
+	): Promise<boolean> {
+		if (!peerOffer) return false;
+		const local = this.#localMediaOffer;
+		const route = this.#route;
+		if (!local || !route) return false;
+		if (
+			!peerOffer.mediaPubKey || peerOffer.mediaKeyId === undefined ||
+			!peerOffer.mediaNonce
+		) {
+			return false;
+		}
+		const keys = derivePlanetMediaKeys({
+			local: {
+				privateKey: local.keypair.privateKey,
+				publicKey: local.material.mediaPubKey,
+				mediaKeyId: local.material.mediaKeyId,
+				mediaNonce: local.material.mediaNonce,
+			},
+			peer: {
+				publicKey: peerOffer.mediaPubKey,
+				mediaKeyId: peerOffer.mediaKeyId,
+				mediaNonce: peerOffer.mediaNonce,
+			},
+		});
+		this.#srtpSend = await deriveSrtpContext(keys.sendKeying);
+		this.#srtpRecv = await deriveSrtpContext(keys.recvKeying);
+		const host = this.#opts.preferIpv6 && route.cscfHost6
+			? route.cscfHost6
+			: route.cscfHost;
+		this.#rtp = {
+			host,
+			port: route.cscfPort,
+			ssrc: randomU32(),
+			seq: randomIntInclusive(0, 0xffff),
+			timestamp: randomU32(),
+		};
+		return true;
+	}
+
+	async #sendConnRsp(
+		request: PlanetIncomingMessage & {
+			message: ReturnType<typeof decodePlanetMsg>;
+		},
+		connReq: CcConnReq,
+	): Promise<void> {
+		const ccBody = wrapCcMsg(
+			CC_MSG.CONN_RSP,
+			packCcConnRsp({
+				result: 0,
+				mChanId: this.#localMediaChanId,
+				netType: connReq.netType ?? 1,
+				unavailToSec: connReq.unavailToSec ?? 120,
+				ua: packPlanetUserAgent(
+					this.#opts.userAgent ??
+						defaultAndroidUserAgent(this.#opts.deviceInfo),
+				),
+				svcId: connReq.svcId,
+				tgtSvcId: connReq.tgtSvcId,
+				interDomain: connReq.interDomain,
+			}),
+		);
+		const ccMsg = packPlanetCcMsg(
+			{
+				cid: request.message.cc?.hdr?.cid ?? this.#callUuid ?? "conn-rsp",
+				srcChanId: this.#srcChanId,
+				dstChanId: request.message.cc?.hdr?.srcChanId ?? 0n,
+			},
+			ccBody,
+		);
+		await this.#sendEnvelope({ kind: "cc", data: ccMsg });
 	}
 
 	async close(): Promise<void> {
@@ -627,13 +844,57 @@ export class PlanetTransport implements CallTransport {
 			await new Promise<void>((res) => this.#sock!.close(() => res()));
 			this.#sock = undefined;
 		}
+		for (const waiter of this.#rtpWaiters.splice(0)) waiter(null);
 	}
 
-	send(_packet: Uint8Array): void | Promise<void> {
-		throw new Error("PlanetTransport.send: signaling only");
+	async send(opusPacket: Uint8Array): Promise<void> {
+		if (!this.#srtpSend || !this.#rtp) {
+			throw new Error("PlanetTransport.send: media not established");
+		}
+		const rtp = buildRtp({
+			payloadType: 96,
+			seq: this.#rtp.seq++ & 0xffff,
+			timestamp: (this.#rtp.timestamp += 960) >>> 0,
+			ssrc: this.#rtp.ssrc,
+			payload: opusPacket,
+		});
+		const wire = await srtpEncrypt(this.#srtpSend, rtp);
+		if (this.#opts.wireSend) {
+			await this.#opts.wireSend(wire, {
+				host: this.#rtp.host,
+				port: this.#rtp.port,
+				bootstrap: false,
+				seq: this.#rtp.seq,
+				plainLen: opusPacket.length,
+				bodyLen: wire.length,
+				plaintext: opusPacket,
+			});
+			return;
+		}
+		if (!this.#sock) throw new Error("PlanetTransport.send: socket closed");
+		await new Promise<void>((res, rj) =>
+			this.#sock!.send(
+				Buffer.from(wire),
+				this.#rtp!.port,
+				this.#rtp!.host,
+				(e) => (e ? rj(e) : res()),
+			)
+		);
 	}
 
 	async *receive(): AsyncIterable<Uint8Array> {
-		return;
+		if (!this.#srtpRecv) {
+			throw new Error("PlanetTransport.receive: media not established");
+		}
+		while (true) {
+			const wire = await this.#takeRtp();
+			if (!wire) return;
+			try {
+				const rtp = await srtpDecrypt(this.#srtpRecv, wire);
+				yield parseRtp(rtp).payload;
+			} catch {
+				// Drop unauthenticated media.
+			}
+		}
 	}
 }

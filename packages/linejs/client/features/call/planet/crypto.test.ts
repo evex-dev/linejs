@@ -5,14 +5,17 @@ import {
 	buildCtrIv,
 	buildDirectionLabel,
 	buildPlanetCtrIv,
+	buildPlanetMediaKeyInfo,
 	decodeMpKey,
 	decodeStnpkPublicKey,
 	deriveCallKeys,
+	derivePlanetMediaKeys,
 	ecdh,
 	generateEphemeralKeypair,
 	hmacTag,
 	planetHkdfStage1,
 	planetHkdfStage2,
+	planetKdfSha256,
 	planetKdfSha512,
 	sha256,
 	tagEquals,
@@ -88,6 +91,70 @@ Deno.test("PLANET KDF matches native HMAC counter construction", () => {
 			"6fb5e028aed635928bad222cf8ccadbb82e7cca9c06525b759175072" +
 			"61cf625b20954d2a",
 	);
+});
+
+Deno.test("PLANET SHA-256 KDF matches native media-key construction", () => {
+	const salt = new TextEncoder().encode("salt material");
+	const ikm = new TextEncoder().encode("ikm key");
+	const info = new TextEncoder().encode("label");
+	const out = planetKdfSha256(salt, ikm, info, 64);
+	assertEquals(
+		hex(out),
+		"167aa50312736560a497178812df827c7b999f86d8d6157bd7cce447" +
+			"9eba894bf0680590a44c729c8c76810348eea091ecb6aa81e602c23" +
+			"b1f3eeefdb8ca4aec",
+	);
+});
+
+Deno.test("derivePlanetMediaKeys produces opposite-direction SRTP keying material", () => {
+	const a = generateEphemeralKeypair();
+	const b = generateEphemeralKeypair();
+	const aNonce = new Uint8Array(16).fill(0xa1);
+	const bNonce = new Uint8Array(16).fill(0xb2);
+	const aKeys = derivePlanetMediaKeys({
+		local: {
+			privateKey: a.privateKey,
+			publicKey: a.publicKey,
+			mediaKeyId: 0x11223344,
+			mediaNonce: aNonce,
+		},
+		peer: {
+			publicKey: b.publicKey,
+			mediaKeyId: 0x55667788,
+			mediaNonce: bNonce,
+		},
+	});
+	const bKeys = derivePlanetMediaKeys({
+		local: {
+			privateKey: b.privateKey,
+			publicKey: b.publicKey,
+			mediaKeyId: 0x55667788,
+			mediaNonce: bNonce,
+		},
+		peer: {
+			publicKey: a.publicKey,
+			mediaKeyId: 0x11223344,
+			mediaNonce: aNonce,
+		},
+	});
+	assertEquals(
+		buildPlanetMediaKeyInfo(0x11223344),
+		new Uint8Array([
+			0x11,
+			0x22,
+			0x33,
+			0x44,
+			0,
+			0,
+			0,
+			0,
+		]),
+	);
+	assertEquals(aKeys.sendKeying.length, 30);
+	assertEquals(aKeys.recvKeying.length, 30);
+	assertEquals(aKeys.sendKeying, bKeys.recvKeying);
+	assertEquals(aKeys.recvKeying, bKeys.sendKeying);
+	assertNotEquals(aKeys.sendKeying, aKeys.recvKeying);
 });
 
 Deno.test("Stage-2 HKDF carves four distinct material slices", () => {

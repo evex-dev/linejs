@@ -1,12 +1,16 @@
 import { assertEquals } from "@std/assert";
 import {
 	CC_MSG,
+	decodeCcConnReq,
+	decodeCcConnRsp,
 	decodeCcSetupRsp,
 	decodeFields,
 	decodeNativeSetupOffer,
 	decodePlanetMsg,
 	decodeVarint,
 	encodeVarint,
+	packCcConnReq,
+	packCcConnRsp,
 	packCcRelReq,
 	packCcSetupReq,
 	packKeepaliveReq,
@@ -373,6 +377,56 @@ Deno.test("decodePlanetMsg unwraps cc setup_rsp", () => {
 	assertEquals(decoded.cc?.bodyName, "setup_rsp");
 	assertEquals(decodeCcSetupRsp(decoded.cc!.bodyBytes!).aliveRptInterval, 30);
 	assertEquals(decodeCcSetupRsp(decoded.cc!.bodyBytes!).noAnsToSec, 120);
+});
+
+Deno.test("packCcConnReq/packCcConnRsp round-trip answered-call media fields", () => {
+	const answer = new Uint8Array([1, 2, 3]);
+	const ua = packPlanetUserAgent({
+		osName: "Android",
+		osVersion: "36",
+		deviceName: "Pixel 6a",
+	});
+	const req = packCcConnReq({
+		answer,
+		mChanId: 0x11223344n,
+		netType: 1,
+		unavailToSec: 120,
+		oCapas: [1, 2, 7],
+		features: [packPlanetFeatureRegister(16, true, 0)],
+		ua,
+		mAddr: { ver: 4, trpt: 1, ip: "203.0.113.10", port: 12345 },
+		reqRec: false,
+	});
+	const decodedReq = decodeCcConnReq(req);
+	assertEquals(decodedReq.answer, answer);
+	assertEquals(decodedReq.mChanId, 0x11223344n);
+	assertEquals(decodedReq.netType, 1);
+	assertEquals(decodedReq.unavailToSec, 120);
+	assertEquals(decodedReq.oCapas, [1, 2, 7]);
+	assertEquals(decodedReq.features.length, 1);
+	assertEquals(decodedReq.ua, ua);
+	assertEquals(decodedReq.mAddr, {
+		ver: 4,
+		trpt: 1,
+		ip: "203.0.113.10",
+		ports: undefined,
+		port: 12345,
+	});
+	assertEquals(decodedReq.reqRec, false);
+
+	const rsp = packCcConnRsp({
+		result: 0,
+		mChanId: 0x55667788n,
+		netType: 1,
+		unavailToSec: 120,
+		ua,
+	});
+	const decodedRsp = decodeCcConnRsp(rsp);
+	assertEquals(decodedRsp.result, 0);
+	assertEquals(decodedRsp.mChanId, 0x55667788n);
+	assertEquals(decodedRsp.netType, 1);
+	assertEquals(decodedRsp.unavailToSec, 120);
+	assertEquals(decodedRsp.ua, ua);
 });
 
 Deno.test("packCcRelReq matches the observed local-hangup field shape", () => {

@@ -949,6 +949,40 @@ export interface CcConnReq {
 	pt?: boolean;
 }
 
+export function packPlanetAddr(addr: PlanetAddr): Uint8Array {
+	const b: Buf = { bytes: [] };
+	if (addr.ver !== undefined) emitUint32(b, 1, addr.ver);
+	if (addr.trpt !== undefined) emitUint32(b, 2, addr.trpt);
+	if (addr.ip !== undefined) emitString(b, 3, addr.ip);
+	if (addr.ports !== undefined) emitString(b, 4, addr.ports);
+	if (addr.port !== undefined) emitUint32(b, 5, addr.port);
+	return finalize(b);
+}
+
+export function packCcConnReq(r: CcConnReq): Uint8Array {
+	const b: Buf = { bytes: [] };
+	if (r.answer) emitBytes(b, 1, r.answer);
+	if (r.mChanId !== undefined) emitUint64(b, 2, r.mChanId);
+	if (r.netType !== undefined) emitEnum(b, 3, r.netType);
+	if (r.unavailToSec !== undefined) emitUint32(b, 4, r.unavailToSec);
+	for (const c of r.oCapas) emitEnum(b, 5, c);
+	if (r.ueData) emitBytes(b, 6, r.ueData);
+	if (r.ueDataCompType !== undefined) emitEnum(b, 7, r.ueDataCompType);
+	for (const f of r.features) emitMessage(b, 8, f);
+	if (r.ua) emitMessage(b, 9, r.ua);
+	if (r.rCountry !== undefined) emitString(b, 10, r.rCountry);
+	if (r.reqRec !== undefined) emitBool(b, 51, r.reqRec);
+	if (r.mAddr) emitMessage(b, 101, packPlanetAddr(r.mAddr));
+	if (r.devId !== undefined) emitString(b, 102, r.devId);
+	if (r.uePublicAddr) emitMessage(b, 103, packPlanetAddr(r.uePublicAddr));
+	if (r.offer) emitBytes(b, 104, r.offer);
+	if (r.svcId !== undefined) emitString(b, 151, r.svcId);
+	if (r.tgtSvcId !== undefined) emitString(b, 152, r.tgtSvcId);
+	if (r.interDomain !== undefined) emitBool(b, 153, r.interDomain);
+	if (r.pt !== undefined) emitBool(b, 154, r.pt);
+	return finalize(b);
+}
+
 export function decodeCcConnReq(bytes: Uint8Array): CcConnReq {
 	const fields = decodeFields(bytes);
 	const mAddr = asBytesField(fields, 101);
@@ -989,6 +1023,23 @@ export interface CcConnRsp {
 	svcId?: string;
 	tgtSvcId?: string;
 	interDomain?: boolean;
+}
+
+export function packCcConnRsp(r: CcConnRsp): Uint8Array {
+	const b: Buf = { bytes: [] };
+	if (r.result !== undefined) emitUint32(b, 1, r.result);
+	if (r.relCode !== undefined) emitUint32(b, 2, r.relCode);
+	if (r.relPhrase !== undefined) emitString(b, 3, r.relPhrase);
+	if (r.mChanId !== undefined) emitUint64(b, 4, r.mChanId);
+	if (r.netType !== undefined) emitEnum(b, 5, r.netType);
+	if (r.unavailToSec !== undefined) emitUint32(b, 6, r.unavailToSec);
+	if (r.ua) emitMessage(b, 7, r.ua);
+	if (r.mAddr) emitMessage(b, 101, packPlanetAddr(r.mAddr));
+	if (r.uePublicAddr) emitMessage(b, 102, packPlanetAddr(r.uePublicAddr));
+	if (r.svcId !== undefined) emitString(b, 151, r.svcId);
+	if (r.tgtSvcId !== undefined) emitString(b, 152, r.tgtSvcId);
+	if (r.interDomain !== undefined) emitBool(b, 153, r.interDomain);
+	return finalize(b);
 }
 
 export function decodeCcConnRsp(bytes: Uint8Array): CcConnRsp {

@@ -133,10 +133,18 @@ export function ecdh(
 	return new Uint8Array(ec.computeSecret(Buffer.from(peerPub)));
 }
 
-function hmacSha512(key: Uint8Array, ...parts: Uint8Array[]): Uint8Array {
-	const h = createHmac("sha512", key);
+function hmacDigest(
+	algorithm: "sha256" | "sha512",
+	key: Uint8Array,
+	...parts: Uint8Array[]
+): Uint8Array {
+	const h = createHmac(algorithm, key);
 	for (const p of parts) h.update(p);
 	return new Uint8Array(h.digest());
+}
+
+function hmacSha512(key: Uint8Array, ...parts: Uint8Array[]): Uint8Array {
+	return hmacDigest("sha512", key, ...parts);
 }
 
 function u32be(v: number): Uint8Array {
@@ -162,13 +170,33 @@ export function planetKdfSha512(
 	info: Uint8Array,
 	outLen = 64,
 ): Uint8Array {
-	if (outLen < 0) throw new Error("planetKdfSha512: outLen < 0");
-	const prk = hmacSha512(ikm, salt);
+	return planetKdf("sha512", salt, ikm, info, outLen);
+}
+
+/** Native PLANET KDF used by media-key setup for kdf_id=2/SHA-256. */
+export function planetKdfSha256(
+	salt: Uint8Array,
+	ikm: Uint8Array,
+	info: Uint8Array,
+	outLen = 32,
+): Uint8Array {
+	return planetKdf("sha256", salt, ikm, info, outLen);
+}
+
+function planetKdf(
+	algorithm: "sha256" | "sha512",
+	salt: Uint8Array,
+	ikm: Uint8Array,
+	info: Uint8Array,
+	outLen: number,
+): Uint8Array {
+	if (outLen < 0) throw new Error("planetKdf: outLen < 0");
+	const prk = hmacDigest(algorithm, ikm, salt);
 	const out = new Uint8Array(outLen);
 	let written = 0;
 	let counter = 0;
 	while (written < outLen) {
-		const block = hmacSha512(prk, info, u32be(counter++));
+		const block = hmacDigest(algorithm, prk, info, u32be(counter++));
 		const n = Math.min(block.length, outLen - written);
 		out.set(block.subarray(0, n), written);
 		written += n;
@@ -191,6 +219,97 @@ export function planetHkdfStage1(
 		throw new Error("planetHkdfStage1: pubkeys must be 33 bytes SEC1");
 	}
 	return planetKdfSha512(ecdhSecret, ikmPub, infoPub, 64);
+}
+
+export interface PlanetMediaKeyPeer {
+	publicKey: Uint8Array;
+	mediaKeyId: number;
+	mediaNonce: Uint8Array;
+}
+
+export interface PlanetMediaKeyLocal extends PlanetMediaKeyPeer {
+	privateKey: Uint8Array;
+}
+
+export interface PlanetMediaKeys {
+	sendKeying: Uint8Array;
+	recvKeying: Uint8Array;
+	sendRaw: Uint8Array;
+	recvRaw: Uint8Array;
+	sendStage1: Uint8Array;
+	recvStage1: Uint8Array;
+	ecdhSecret: Uint8Array;
+}
+
+export function buildPlanetMediaKeyInfo(mediaKeyId: number): Uint8Array {
+	const out = new Uint8Array(8);
+	out.set(u32be(mediaKeyId >>> 0), 0);
+	return out;
+}
+
+/** Derive LINE's PLANET media SRTP keying material.
+ *
+ * Native capture shows kdf_id=2/SHA-256 in two stages:
+ *   stage1 = KDF-SHA256(ECDH(local_priv, peer_pub), ordered_pub_a, ordered_pub_b)
+ *   stage2 = KDF-SHA256(stage1, media_nonce, u32be(media_key_id) || 0)
+ *
+ * The outgoing SRTP key uses the peer's nonce/key id. The incoming SRTP key
+ * uses our advertised nonce/key id. The first 30 bytes are the SRTP master key
+ * and salt expected by AES_CM_128_HMAC_SHA1_80.
+ */
+export function derivePlanetMediaKeys(opts: {
+	local: PlanetMediaKeyLocal;
+	peer: PlanetMediaKeyPeer;
+}): PlanetMediaKeys {
+	if (opts.local.privateKey.length !== 32) {
+		throw new Error(
+			"derivePlanetMediaKeys: local private key must be 32 bytes",
+		);
+	}
+	if (opts.local.publicKey.length !== 33 || opts.peer.publicKey.length !== 33) {
+		throw new Error(
+			"derivePlanetMediaKeys: media public keys must be 33 bytes",
+		);
+	}
+	if (
+		opts.local.mediaNonce.length !== 16 || opts.peer.mediaNonce.length !== 16
+	) {
+		throw new Error("derivePlanetMediaKeys: media nonces must be 16 bytes");
+	}
+	const ecdhSecret = ecdh(opts.local.privateKey, opts.peer.publicKey);
+	const sendStage1 = planetKdfSha256(
+		ecdhSecret,
+		opts.local.publicKey,
+		opts.peer.publicKey,
+		32,
+	);
+	const recvStage1 = planetKdfSha256(
+		ecdhSecret,
+		opts.peer.publicKey,
+		opts.local.publicKey,
+		32,
+	);
+	const sendRaw = planetKdfSha256(
+		sendStage1,
+		opts.peer.mediaNonce,
+		buildPlanetMediaKeyInfo(opts.peer.mediaKeyId),
+		32,
+	);
+	const recvRaw = planetKdfSha256(
+		recvStage1,
+		opts.local.mediaNonce,
+		buildPlanetMediaKeyInfo(opts.local.mediaKeyId),
+		32,
+	);
+	return {
+		sendKeying: sendRaw.subarray(0, 30),
+		recvKeying: recvRaw.subarray(0, 30),
+		sendRaw,
+		recvRaw,
+		sendStage1,
+		recvStage1,
+		ecdhSecret,
+	};
 }
 
 export interface TransportKeys {

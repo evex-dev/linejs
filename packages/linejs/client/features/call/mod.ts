@@ -55,6 +55,7 @@ export {
 	packCassini,
 	parseChunkHdr as planetParseChunkHdr,
 	parseFrameHeader as planetParseFrameHeader,
+	type PlanetAnswerResult,
 	type PlanetFixedHdr,
 	type PlanetInviteResult,
 	type PlanetLocalMediaOffer,

@@ -40,15 +40,22 @@ export interface CallTransport {
 	/** Optional. When present, CallSession.start() drives the full
 	 *  signaling dialog after connect() (SIP INVITE → 200 → ACK). */
 	invite?(opts: { to: string }): Promise<unknown>;
+	/** Optional. PLANET-style transports may enter ringing after INVITE and
+	 *  only become media-ready after the peer sends CONN_REQ. */
+	waitForAnswer?(opts?: { to: string }): Promise<unknown>;
 }
 
 export const stubTransport: CallTransport = {
 	connect() {
 		throw new Error("CallTransport not configured");
 	},
-	close() { return Promise.resolve(); },
-	send() { throw new Error("stubTransport.send"); },
-	async *receive() { /* */ },
+	close() {
+		return Promise.resolve();
+	},
+	send() {
+		throw new Error("stubTransport.send");
+	},
+	async *receive() {/* */},
 };
 
 export type CallSessionEvents = {
@@ -112,6 +119,10 @@ export class CallSession extends TypedEventEmitter<CallSessionEvents> {
 			if (this.#transport.invite) {
 				await this.#transport.invite({ to: this.#opts.to });
 			}
+			if (this.#transport.waitForAnswer) {
+				this.#setState("ringing");
+				await this.#transport.waitForAnswer({ to: this.#opts.to });
+			}
 			this.#setState("in-call");
 			this.emit("connected", this.#route);
 			return this.#route;
@@ -123,7 +134,10 @@ export class CallSession extends TypedEventEmitter<CallSessionEvents> {
 		}
 	}
 
-	async sendStream(source: AudioSource, opts: { signal?: AbortSignal } = {}): Promise<void> {
+	async sendStream(
+		source: AudioSource,
+		opts: { signal?: AbortSignal } = {},
+	): Promise<void> {
 		if (this.#state !== "in-call") {
 			throw new Error(`sendStream: session not in-call (state=${this.#state})`);
 		}
@@ -153,11 +167,13 @@ export class CallSession extends TypedEventEmitter<CallSessionEvents> {
 
 	async sendFile(opts: {
 		bytes: Uint8Array;
-		decode: (b: Uint8Array) => Promise<{
-			samples: Int16Array;
-			sampleRate: number;
-			channels: number;
-		}> | { samples: Int16Array; sampleRate: number; channels: number };
+		decode: (b: Uint8Array) =>
+			| Promise<{
+				samples: Int16Array;
+				sampleRate: number;
+				channels: number;
+			}>
+			| { samples: Int16Array; sampleRate: number; channels: number };
 	}): Promise<void> {
 		const decoded = await opts.decode(opts.bytes);
 		await this.sendBuffer(decoded);
@@ -165,7 +181,9 @@ export class CallSession extends TypedEventEmitter<CallSessionEvents> {
 
 	async receiveInto(sink: AudioSink): Promise<void> {
 		if (this.#state !== "in-call") {
-			throw new Error(`receiveInto: session not in-call (state=${this.#state})`);
+			throw new Error(
+				`receiveInto: session not in-call (state=${this.#state})`,
+			);
 		}
 		this.#receiveSink = sink;
 		const dec = this.#decoder ??= this.#codecs.newDecoder({
