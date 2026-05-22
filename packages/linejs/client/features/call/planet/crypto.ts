@@ -241,6 +241,40 @@ export interface PlanetMediaKeys {
 	ecdhSecret: Uint8Array;
 }
 
+export type PlanetMediaKeyVariantName =
+	| "local-peer/peer"
+	| "peer-local/local"
+	| "local-peer/local"
+	| "peer-local/peer";
+
+export interface PlanetMediaKeyingVariants {
+	variants: Record<PlanetMediaKeyVariantName, Uint8Array>;
+	raw: Record<PlanetMediaKeyVariantName, Uint8Array>;
+	localPeerStage1: Uint8Array;
+	peerLocalStage1: Uint8Array;
+	ecdhSecret: Uint8Array;
+}
+
+const MEDIA_STREAM_KEY_NAMES = new Set(["AUDIO", "VIDEO", "DATA"]);
+
+export function derivePlanetMediaStreamKeying(
+	baseKeying: Uint8Array,
+	streamName: "AUDIO" | "VIDEO" | "DATA" = "AUDIO",
+): Uint8Array {
+	if (baseKeying.length !== 30) {
+		throw new Error(
+			`derivePlanetMediaStreamKeying: base keying must be 30 bytes, got ${baseKeying.length}`,
+		);
+	}
+	if (!MEDIA_STREAM_KEY_NAMES.has(streamName)) {
+		throw new Error(
+			`derivePlanetMediaStreamKeying: invalid stream ${streamName}`,
+		);
+	}
+	const streamKey = new TextEncoder().encode(streamName);
+	return hmacDigest("sha256", streamKey, baseKeying).subarray(0, 30);
+}
+
 export function buildPlanetMediaKeyInfo(mediaKeyId: number): Uint8Array {
 	const out = new Uint8Array(8);
 	out.set(u32be(mediaKeyId >>> 0), 0);
@@ -261,6 +295,24 @@ export function derivePlanetMediaKeys(opts: {
 	local: PlanetMediaKeyLocal;
 	peer: PlanetMediaKeyPeer;
 }): PlanetMediaKeys {
+	const derived = derivePlanetMediaKeyingVariants(opts);
+	const sendRaw = derived.raw["local-peer/peer"];
+	const recvRaw = derived.raw["peer-local/local"];
+	return {
+		sendKeying: derived.variants["local-peer/peer"],
+		recvKeying: derived.variants["peer-local/local"],
+		sendRaw,
+		recvRaw,
+		sendStage1: derived.localPeerStage1,
+		recvStage1: derived.peerLocalStage1,
+		ecdhSecret: derived.ecdhSecret,
+	};
+}
+
+export function derivePlanetMediaKeyingVariants(opts: {
+	local: PlanetMediaKeyLocal;
+	peer: PlanetMediaKeyPeer;
+}): PlanetMediaKeyingVariants {
 	if (opts.local.privateKey.length !== 32) {
 		throw new Error(
 			"derivePlanetMediaKeys: local private key must be 32 bytes",
@@ -277,37 +329,57 @@ export function derivePlanetMediaKeys(opts: {
 		throw new Error("derivePlanetMediaKeys: media nonces must be 16 bytes");
 	}
 	const ecdhSecret = ecdh(opts.local.privateKey, opts.peer.publicKey);
-	const sendStage1 = planetKdfSha256(
+	const localPeerStage1 = planetKdfSha256(
 		ecdhSecret,
 		opts.local.publicKey,
 		opts.peer.publicKey,
 		32,
 	);
-	const recvStage1 = planetKdfSha256(
+	const peerLocalStage1 = planetKdfSha256(
 		ecdhSecret,
 		opts.peer.publicKey,
 		opts.local.publicKey,
 		32,
 	);
-	const sendRaw = planetKdfSha256(
-		sendStage1,
+	const localPeerPeerRaw = planetKdfSha256(
+		localPeerStage1,
 		opts.peer.mediaNonce,
 		buildPlanetMediaKeyInfo(opts.peer.mediaKeyId),
 		32,
 	);
-	const recvRaw = planetKdfSha256(
-		recvStage1,
+	const peerLocalLocalRaw = planetKdfSha256(
+		peerLocalStage1,
 		opts.local.mediaNonce,
 		buildPlanetMediaKeyInfo(opts.local.mediaKeyId),
 		32,
 	);
+	const localPeerLocalRaw = planetKdfSha256(
+		localPeerStage1,
+		opts.local.mediaNonce,
+		buildPlanetMediaKeyInfo(opts.local.mediaKeyId),
+		32,
+	);
+	const peerLocalPeerRaw = planetKdfSha256(
+		peerLocalStage1,
+		opts.peer.mediaNonce,
+		buildPlanetMediaKeyInfo(opts.peer.mediaKeyId),
+		32,
+	);
 	return {
-		sendKeying: sendRaw.subarray(0, 30),
-		recvKeying: recvRaw.subarray(0, 30),
-		sendRaw,
-		recvRaw,
-		sendStage1,
-		recvStage1,
+		variants: {
+			"local-peer/peer": localPeerPeerRaw.subarray(0, 30),
+			"peer-local/local": peerLocalLocalRaw.subarray(0, 30),
+			"local-peer/local": localPeerLocalRaw.subarray(0, 30),
+			"peer-local/peer": peerLocalPeerRaw.subarray(0, 30),
+		},
+		raw: {
+			"local-peer/peer": localPeerPeerRaw,
+			"peer-local/local": peerLocalLocalRaw,
+			"local-peer/local": localPeerLocalRaw,
+			"peer-local/peer": peerLocalPeerRaw,
+		},
+		localPeerStage1,
+		peerLocalStage1,
 		ecdhSecret,
 	};
 }

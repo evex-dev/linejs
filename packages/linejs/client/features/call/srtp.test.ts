@@ -27,6 +27,34 @@ Deno.test("buildRtp + parseRtp round-trip", () => {
 	assertEquals(Array.from(p.payload), Array.from(payload));
 });
 
+Deno.test("SRTP preserves RTP extension headers while encrypting payload", async () => {
+	const keying = new Uint8Array(SRTP_KEYING_LEN).fill(9);
+	const ctxA = await deriveSrtpContext(keying);
+	const ctxB = await deriveSrtpContext(keying);
+	const payload = new Uint8Array([1, 2, 3, 4, 5, 6]);
+	const rtp = buildRtp({
+		payloadType: 96,
+		seq: 0x215,
+		timestamp: 960,
+		ssrc: 202,
+		payload,
+		extensionProfile: 0x0240,
+	});
+	const encrypted = await srtpEncrypt(ctxA, rtp);
+	assertEquals(
+		Array.from(encrypted.subarray(0, 16)),
+		Array.from(rtp.subarray(0, 16)),
+	);
+	let differs = 0;
+	for (let i = 16; i < rtp.length; i++) {
+		if (encrypted[i] !== rtp[i]) differs++;
+	}
+	assert(differs > 0);
+	const decrypted = await srtpDecrypt(ctxB, encrypted);
+	assertEquals(Array.from(decrypted), Array.from(rtp));
+	assertEquals(Array.from(parseRtp(decrypted).payload), Array.from(payload));
+});
+
 Deno.test("deriveSrtpContext: enforces 30-byte master keying", async () => {
 	await assertRejects(
 		() => deriveSrtpContext(new Uint8Array(29)),

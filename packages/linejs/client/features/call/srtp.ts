@@ -20,9 +20,13 @@ const LABEL_RTP_AUTH = 0x01;
 const LABEL_RTP_SALT = 0x02;
 
 /** Derive SRTP session keys from the 30-byte SDES master keying material. */
-export async function deriveSrtpContext(masterKeying: Uint8Array): Promise<SrtpCryptoContext> {
+export async function deriveSrtpContext(
+	masterKeying: Uint8Array,
+): Promise<SrtpCryptoContext> {
 	if (masterKeying.length !== SRTP_KEYING_LEN) {
-		throw new Error(`SRTP master keying must be ${SRTP_KEYING_LEN} bytes, got ${masterKeying.length}`);
+		throw new Error(
+			`SRTP master keying must be ${SRTP_KEYING_LEN} bytes, got ${masterKeying.length}`,
+		);
 	}
 	const masterKey = masterKeying.subarray(0, SRTP_KEY_LEN);
 	const masterSalt = masterKeying.subarray(SRTP_KEY_LEN);
@@ -58,17 +62,25 @@ export async function srtpEncrypt(
 	rtpPacket: Uint8Array,
 ): Promise<Uint8Array> {
 	if (rtpPacket.length < 12) throw new Error("RTP packet too short");
-	const header = rtpPacket.subarray(0, 12);
-	const payload = rtpPacket.subarray(12);
+	const headerLen = rtpHeaderLength(rtpPacket);
+	const header = rtpPacket.subarray(0, headerLen);
+	const payload = rtpPacket.subarray(headerLen);
 	const ssrc = readU32(rtpPacket, 8);
 	const seq = readU16(rtpPacket, 2);
 	const rocKey = ssrc;
 	const roc = ctx.rocs.get(rocKey) ?? 0;
-	const enc = await aesCmEncrypt(ctx.cipherKey, ctx.cipherSalt, ssrc, roc, seq, payload);
+	const enc = await aesCmEncrypt(
+		ctx.cipherKey,
+		ctx.cipherSalt,
+		ssrc,
+		roc,
+		seq,
+		payload,
+	);
 
 	const out = new Uint8Array(rtpPacket.length + HMAC_TAG_LEN);
 	out.set(header, 0);
-	out.set(enc, 12);
+	out.set(enc, headerLen);
 
 	// auth = HMAC-SHA1(authKey, packet || ROC) [0..10]
 	const { createHmac } = await import("node:crypto");
@@ -91,7 +103,9 @@ export async function srtpDecrypt(
 	ctx: SrtpCryptoContext,
 	srtpPacket: Uint8Array,
 ): Promise<Uint8Array> {
-	if (srtpPacket.length < 12 + HMAC_TAG_LEN) throw new Error("SRTP packet too short");
+	if (srtpPacket.length < 12 + HMAC_TAG_LEN) {
+		throw new Error("SRTP packet too short");
+	}
 	const taggedLen = srtpPacket.length - HMAC_TAG_LEN;
 	const tag = srtpPacket.subarray(taggedLen);
 	const inner = srtpPacket.subarray(0, taggedLen);
@@ -110,11 +124,19 @@ export async function srtpDecrypt(
 	if (!constantTimeEqual(tag, expected)) {
 		throw new Error("SRTP auth tag mismatch");
 	}
-	const payload = inner.subarray(12);
-	const dec = await aesCmEncrypt(ctx.cipherKey, ctx.cipherSalt, ssrc, roc, seq, payload);
-	const out = new Uint8Array(12 + dec.length);
-	out.set(inner.subarray(0, 12), 0);
-	out.set(dec, 12);
+	const headerLen = rtpHeaderLength(inner);
+	const payload = inner.subarray(headerLen);
+	const dec = await aesCmEncrypt(
+		ctx.cipherKey,
+		ctx.cipherSalt,
+		ssrc,
+		roc,
+		seq,
+		payload,
+	);
+	const out = new Uint8Array(headerLen + dec.length);
+	out.set(inner.subarray(0, headerLen), 0);
+	out.set(dec, headerLen);
 	return out;
 }
 
@@ -144,12 +166,21 @@ async function aesCmEncrypt(
 	iv[13] ^= seq & 0xff;
 	// Final two bytes (14..15) start as counter 0 — Node aes-128-ctr increments them
 	const { createCipheriv } = await import("node:crypto");
-	const cipher = createCipheriv("aes-128-ctr", Buffer.from(key), Buffer.from(iv));
-	const out = Buffer.concat([cipher.update(Buffer.from(payload)), cipher.final()]);
+	const cipher = createCipheriv(
+		"aes-128-ctr",
+		Buffer.from(key),
+		Buffer.from(iv),
+	);
+	const out = Buffer.concat([
+		cipher.update(Buffer.from(payload)),
+		cipher.final(),
+	]);
 	return new Uint8Array(out.subarray(0, payload.length));
 }
 
-function readU16(b: Uint8Array, o: number): number { return (b[o] << 8) | b[o + 1]; }
+function readU16(b: Uint8Array, o: number): number {
+	return (b[o] << 8) | b[o + 1];
+}
 function readU32(b: Uint8Array, o: number): number {
 	return ((b[o] << 24) | (b[o + 1] << 16) | (b[o + 2] << 8) | b[o + 3]) >>> 0;
 }
@@ -174,15 +205,31 @@ export function buildRtp(opts: {
 	ssrc: number;
 	payload: Uint8Array;
 	marker?: boolean;
+	extensionProfile?: number;
+	extensionData?: Uint8Array;
 }): Uint8Array {
-	const out = new Uint8Array(12 + opts.payload.length);
-	out[0] = 0x80; // V=2, P=0, X=0, CC=0
+	const hasExtension = opts.extensionProfile !== undefined;
+	const extensionData = opts.extensionData ?? new Uint8Array(0);
+	if (extensionData.length % 4 !== 0) {
+		throw new Error("RTP extension data length must be a multiple of 4 bytes");
+	}
+	const extensionLen = hasExtension ? 4 + extensionData.length : 0;
+	const out = new Uint8Array(12 + extensionLen + opts.payload.length);
+	out[0] = hasExtension ? 0x90 : 0x80; // V=2, optional X bit, CC=0
 	out[1] = ((opts.marker ? 0x80 : 0) | (opts.payloadType & 0x7f)) & 0xff;
 	out[2] = (opts.seq >>> 8) & 0xff;
 	out[3] = opts.seq & 0xff;
 	writeU32(out, 4, opts.timestamp >>> 0);
 	writeU32(out, 8, opts.ssrc >>> 0);
-	out.set(opts.payload, 12);
+	if (hasExtension) {
+		out[12] = (opts.extensionProfile! >>> 8) & 0xff;
+		out[13] = opts.extensionProfile! & 0xff;
+		const extensionWords = extensionData.length / 4;
+		out[14] = (extensionWords >>> 8) & 0xff;
+		out[15] = extensionWords & 0xff;
+		out.set(extensionData, 16);
+	}
+	out.set(opts.payload, 12 + extensionLen);
 	return out;
 }
 
@@ -201,6 +248,22 @@ export function parseRtp(pkt: Uint8Array): {
 		seq: readU16(pkt, 2),
 		timestamp: readU32(pkt, 4),
 		ssrc: readU32(pkt, 8),
-		payload: pkt.subarray(12),
+		payload: pkt.subarray(rtpHeaderLength(pkt)),
 	};
+}
+
+function rtpHeaderLength(pkt: Uint8Array): number {
+	if (pkt.length < 12) throw new Error("RTP too short");
+	const csrcCount = pkt[0] & 0x0f;
+	let offset = 12 + csrcCount * 4;
+	if (pkt.length < offset) throw new Error("RTP CSRC header truncated");
+	if ((pkt[0] & 0x10) !== 0) {
+		if (pkt.length < offset + 4) {
+			throw new Error("RTP extension header truncated");
+		}
+		const extensionWords = readU16(pkt, offset + 2);
+		offset += 4 + extensionWords * 4;
+		if (pkt.length < offset) throw new Error("RTP extension data truncated");
+	}
+	return offset;
 }

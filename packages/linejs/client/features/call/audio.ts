@@ -128,6 +128,7 @@ export interface CodecFactory {
 		sampleRate: number;
 		channels: number;
 		bitrate?: number;
+		frameDurationMs?: number;
 	}): AudioEncoder;
 	newDecoder(opts: {
 		sampleRate: number;

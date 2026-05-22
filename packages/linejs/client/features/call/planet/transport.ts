@@ -18,19 +18,15 @@ import { Buffer } from "node:buffer";
 import type { Socket as DgramSocket } from "node:dgram";
 import type * as LINETypes from "@evex/linejs-types";
 import type { CallTransport } from "../session.ts";
-import {
-	buildFrameHeader,
-	makeChunkHdr,
-	parseFrameHeader,
-	type PlanetFixedHdr,
-} from "./framing.ts";
+import { makeChunkHdr, parseFrameHeader } from "./framing.ts";
 import {
 	aesCtrDecrypt,
 	aesCtrEncrypt,
 	buildDirectionLabel,
 	buildPlanetCtrIv,
 	decodeMpKey,
-	derivePlanetMediaKeys,
+	derivePlanetMediaKeyingVariants,
+	derivePlanetMediaStreamKeying,
 	ecdh,
 	type EphemeralKeypair,
 	generateEphemeralKeypair,
@@ -38,6 +34,7 @@ import {
 	newSessionId,
 	planetHkdfStage1,
 	planetHkdfStage2,
+	type PlanetMediaKeyVariantName,
 	sha256,
 	tagEquals,
 	type TransportKeys,
@@ -49,9 +46,11 @@ import {
 	decodeCcConnReq,
 	decodeCcInfoReq,
 	decodeCcSetupRsp,
+	type DecodedField,
 	decodeFields,
 	decodeNativeSetupOffer,
 	decodePlanetMsg,
+	encodeVarint,
 	extractRmtNonceFromReply,
 	type NativeSetupOffer,
 	packCcConnRsp,
@@ -86,6 +85,7 @@ export interface PlanetTransportOpts {
 	deviceInfo?: string;
 	userAgent?: PlanetUserAgent;
 	deviceId?: string;
+	transportKeypair?: EphemeralKeypair;
 	setupOffer?: Uint8Array;
 	credential?: Uint8Array;
 	serviceKey?: string;
@@ -93,6 +93,8 @@ export interface PlanetTransportOpts {
 	features?: Uint8Array[];
 	timeoutMs?: number;
 	keepaliveIntervalMs?: number;
+	mediaKeyMode?: PlanetMediaKeyMode;
+	rtpTimestampStep?: number;
 	preferIpv6?: boolean;
 	wireSend?: (
 		packet: Uint8Array,
@@ -106,7 +108,31 @@ export interface PlanetTransportOpts {
 			plaintext: Uint8Array;
 		},
 	) => Promise<Uint8Array | void> | Uint8Array | void;
+	debug?: (event: Record<string, unknown>) => void;
 }
+
+export type PlanetMediaKeyMode =
+	| "current"
+	| "reverse-stage"
+	| "sender-material"
+	| "sender-material-reverse-stage"
+	| "audio-current"
+	| "audio-reverse-stage"
+	| "audio-sender-material"
+	| "audio-sender-material-reverse-stage"
+	| "secret-receiver"
+	| "secret-sender"
+	| "audio-secret-receiver"
+	| "audio-secret-sender"
+	| "auto";
+
+type MediaKdfMode = Extract<
+	PlanetMediaKeyMode,
+	| "current"
+	| "reverse-stage"
+	| "sender-material"
+	| "sender-material-reverse-stage"
+>;
 
 export interface PlanetInviteResult {
 	plaintext: Uint8Array;
@@ -148,6 +174,53 @@ interface CallRouteParsed {
 	stnpk?: string;
 }
 
+interface MediaKeySelection {
+	mode: MediaKdfMode;
+	send: PlanetMediaKeyVariantName;
+	recv: PlanetMediaKeyVariantName;
+}
+
+interface MediaKeyCandidate {
+	mode: Exclude<PlanetMediaKeyMode, "auto">;
+	send: string;
+	recv: string;
+	sendContext: SrtpCryptoContext;
+	recvContext: SrtpCryptoContext;
+}
+
+const MEDIA_KEY_SELECTIONS: Record<
+	MediaKdfMode,
+	MediaKeySelection
+> = {
+	current: {
+		mode: "current",
+		send: "local-peer/peer",
+		recv: "peer-local/local",
+	},
+	"reverse-stage": {
+		mode: "reverse-stage",
+		send: "peer-local/local",
+		recv: "local-peer/peer",
+	},
+	"sender-material": {
+		mode: "sender-material",
+		send: "local-peer/local",
+		recv: "peer-local/peer",
+	},
+	"sender-material-reverse-stage": {
+		mode: "sender-material-reverse-stage",
+		send: "peer-local/peer",
+		recv: "local-peer/local",
+	},
+};
+
+function audioMediaKeyMode(mode: MediaKdfMode): Exclude<
+	PlanetMediaKeyMode,
+	"auto"
+> {
+	return `audio-${mode}` as Exclude<PlanetMediaKeyMode, "auto">;
+}
+
 function parseRoute(r: LINETypes.CallRoute): CallRouteParsed {
 	const commParam = JSON.parse(r.commParam || "{}");
 	const mpkeyB64 = commParam.mpkey;
@@ -171,6 +244,19 @@ const BOOTSTRAP_PREFIX_LEN = 51;
 const BOOTSTRAP_SEC_HEADER_LEN = 5;
 const BOOTSTRAP_CIPHER_OFFSET = HEADER_LEN + BOOTSTRAP_PREFIX_LEN +
 	BOOTSTRAP_SEC_HEADER_LEN;
+const CASSINI_MSG_ID_CC_BASE = 0x2140;
+const CASSINI_MSG_ID_SETUP_REQ = 0x2141;
+const CASSINI_MSG_ID_KEEPALIVE_REQ = 0x1101;
+const REGULAR_TAIL_CONTROL_BASE = 0x18;
+const REGULAR_TAIL_RAW_BASE = 0x48;
+const PINHOLE_PROBE_COUNT = 16;
+const PINHOLE_KIND = 16;
+const PINHOLE_MTU = 300;
+const PINHOLE_REPORT_MTU = 500;
+const PINHOLE_PAYLOAD_BYTES = 500;
+const PINHOLE_ID_HIGH_BIT = 1n << 47n;
+const PINHOLE_ID_MASK = (1n << 48n) - 1n;
+let lastPinholeProbeId = 0n;
 
 function readObservedSequence(wire: Uint8Array): number {
 	if (wire.length < HEADER_LEN) throw new Error("PLANET wire too short");
@@ -178,10 +264,13 @@ function readObservedSequence(wire: Uint8Array): number {
 }
 
 function readCipherSequence(wire: Uint8Array, cipherOffset: number): number {
-	if (cipherOffset === BOOTSTRAP_CIPHER_OFFSET) {
-		return readObservedSequence(wire);
+	// Native PLANET stores the CTR sequence in clear header bytes 2..3 for
+	// bootstrap and regular packets alike. The remaining two fixed-header bytes
+	// encode the payload length/class.
+	if (cipherOffset !== BOOTSTRAP_CIPHER_OFFSET && cipherOffset !== HEADER_LEN) {
+		throw new Error("readCipherSequence: unknown cipher offset");
 	}
-	return parseFrameHeader(wire).fixed.sequence;
+	return readObservedSequence(wire);
 }
 
 function concatBytes(parts: Uint8Array[]): Uint8Array {
@@ -193,6 +282,70 @@ function concatBytes(parts: Uint8Array[]): Uint8Array {
 		off += p.length;
 	}
 	return out;
+}
+
+function packVarintField(tag: number, value: bigint | number): Uint8Array {
+	return concatBytes([
+		encodeVarint((tag << 3) | WireType.Varint),
+		encodeVarint(value),
+	]);
+}
+
+function packBytesField(tag: number, value: Uint8Array): Uint8Array {
+	return concatBytes([
+		encodeVarint((tag << 3) | WireType.LengthDelim),
+		encodeVarint(value.length),
+		value,
+	]);
+}
+
+function randomBytes(byteLength: number): Uint8Array {
+	const out = new Uint8Array(byteLength);
+	crypto.getRandomValues(out);
+	return out;
+}
+
+function bytesToHex(bytes: Uint8Array, maxBytes: number): string {
+	const view = bytes.subarray(0, Math.min(bytes.length, maxBytes));
+	return Array.from(view, (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+function nextPinholeProbeId(): bigint {
+	const nowNs = BigInt(
+		Math.floor((performance.timeOrigin + performance.now()) * 1_000_000),
+	);
+	let value = (nowNs & PINHOLE_ID_MASK) | PINHOLE_ID_HIGH_BIT;
+	if (value <= lastPinholeProbeId) {
+		value = ((lastPinholeProbeId + 1n) & PINHOLE_ID_MASK) |
+			PINHOLE_ID_HIGH_BIT;
+	}
+	lastPinholeProbeId = value;
+	return value;
+}
+
+function packPinholeProbe(): Uint8Array {
+	const inner = concatBytes([
+		packVarintField(1, PINHOLE_KIND),
+		packVarintField(2, nextPinholeProbeId()),
+		packVarintField(3, PINHOLE_MTU),
+		packBytesField(4, randomBytes(PINHOLE_PAYLOAD_BYTES)),
+	]);
+	return packBytesField(3, inner);
+}
+
+function packPinholeProbeReport(): Uint8Array {
+	return packBytesField(
+		1,
+		concatBytes([
+			packVarintField(1, PINHOLE_REPORT_MTU),
+			packVarintField(2, PINHOLE_KIND),
+			packVarintField(3, PINHOLE_MTU),
+		]),
+	);
+}
+
+function ccMsgId(bodyTag: number): number {
+	return CASSINI_MSG_ID_CC_BASE + bodyTag;
 }
 
 function buildObservedFrameHeader(
@@ -222,6 +375,12 @@ function buildBootstrapSecHeader(plaintextLen: number): Uint8Array {
 		0x28 | ((plaintextLen >>> 8) & 0x07),
 		plaintextLen & 0xff,
 	]);
+}
+
+function regularTail16(plaintextLen: number, raw: boolean): number {
+	const base = raw ? REGULAR_TAIL_RAW_BASE : REGULAR_TAIL_CONTROL_BASE;
+	return (((base | ((plaintextLen >>> 8) & 0x07)) << 8) |
+		(plaintextLen & 0xff)) & 0xffff;
 }
 
 function randomBase64(byteLength: number): string {
@@ -305,6 +464,18 @@ function tryDecodeNativeSetupOffer(
 	}
 }
 
+function fieldShape(fields: DecodedField[]): Array<{
+	tag: number;
+	wt: number;
+	len?: number;
+}> {
+	return fields.map((f) => ({
+		tag: f.tag,
+		wt: f.wireType,
+		len: f.value instanceof Uint8Array ? f.value.length : undefined,
+	}));
+}
+
 function defaultLocalMediaOffer(): PlanetLocalMediaOffer {
 	const media = generateEphemeralKeypair();
 	const material: PlanetSetupOfferMaterial = {
@@ -385,9 +556,12 @@ export class PlanetTransport implements CallTransport {
 	#localMediaChanId = 1n;
 	#srtpSend?: SrtpCryptoContext;
 	#srtpRecv?: SrtpCryptoContext;
+	#mediaKeyMode?: PlanetMediaKeyMode;
+	#mediaKeyCandidates: MediaKeyCandidate[] = [];
 	#rtp?: {
 		host: string;
 		port: number;
+		payloadType: number;
 		ssrc: number;
 		seq: number;
 		timestamp: number;
@@ -398,6 +572,8 @@ export class PlanetTransport implements CallTransport {
 	#srcChanId = 1n;
 	#setupSent = false;
 	#closed = true;
+	#autoConnRspDuplicates = false;
+	#connRspDuplicateInFlight = false;
 
 	// Per-msg sequence + protocol state
 	#nextSeq = 0x01d0;
@@ -416,6 +592,12 @@ export class PlanetTransport implements CallTransport {
 		this.#opts = opts;
 	}
 
+	#debug(event: Record<string, unknown>) {
+		try {
+			this.#opts.debug?.(event);
+		} catch { /* debug hooks must never affect transport */ }
+	}
+
 	get localMediaOffer(): PlanetLocalMediaOffer | undefined {
 		const local = this.#localMediaOffer;
 		if (!local) return undefined;
@@ -431,7 +613,12 @@ export class PlanetTransport implements CallTransport {
 
 	async connect(opts: { route: LINETypes.CallRoute }): Promise<void> {
 		this.#route = parseRoute(opts.route);
-		this.#local = generateEphemeralKeypair();
+		this.#local = this.#opts.transportKeypair
+			? {
+				privateKey: copyBytes(this.#opts.transportKeypair.privateKey),
+				publicKey: copyBytes(this.#opts.transportKeypair.publicKey),
+			}
+			: generateEphemeralKeypair();
 		this.#sessId = new Uint8Array(0);
 		this.#bootstrapSeed = newSessionId();
 		this.#sendLabel = crypto.getRandomValues(new Uint16Array(1))[0];
@@ -443,9 +630,13 @@ export class PlanetTransport implements CallTransport {
 		this.#localMediaChanId = BigInt(randomNativeLargeId());
 		this.#nextSeq = randomInitialFrameSeq();
 		this.#setupSent = false;
+		this.#autoConnRspDuplicates = false;
+		this.#connRspDuplicateInFlight = false;
 		this.#localMediaOffer = undefined;
 		this.#srtpSend = undefined;
 		this.#srtpRecv = undefined;
+		this.#mediaKeyMode = undefined;
+		this.#mediaKeyCandidates = [];
 		this.#rtp = undefined;
 		this.#rtpQueue = [];
 		this.#queued = [];
@@ -474,26 +665,78 @@ export class PlanetTransport implements CallTransport {
 					() => res(),
 				)
 			);
-			sock.on("message", (buf) => this.#onWire(new Uint8Array(buf)));
+			sock.on("message", (buf, rinfo) =>
+				this.#onWire(new Uint8Array(buf), {
+					host: rinfo.address,
+					port: rinfo.port,
+				}));
 		}
 	}
 
-	#onWire(wire: Uint8Array) {
+	#onWire(wire: Uint8Array, source?: { host: string; port: number }) {
 		try {
+			this.#debug({
+				type: "recv",
+				bytes: wire.length,
+				rtpLike: isRtpLike(wire),
+				sourceFamily: source?.host.includes(":")
+					? "ipv6"
+					: source
+					? "ipv4"
+					: "",
+				sourcePort: source?.port,
+			});
 			if (this.#srtpRecv && isRtpLike(wire)) {
+				this.#updateRtpEndpointFromSource(source);
 				this.#enqueueRtp(wire);
 				return;
 			}
-			if (wire.length < HEADER_LEN + 16) return;
+			if (wire.length < HEADER_LEN + 16) {
+				this.#debug({ type: "recv_ignored", reason: "short" });
+				return;
+			}
 			parseFrameHeader(wire);
 			const pt = this.#decryptWire(wire);
-			if (!pt) return;
+			if (!pt) {
+				this.#debug({ type: "decrypt_fail" });
+				return;
+			}
+			this.#debug({ type: "decrypt_ok", plainBytes: pt.length });
 			const incoming: PlanetIncomingMessage = { plaintext: pt };
+			let outer: DecodedField[];
+			try {
+				outer = decodeFields(pt);
+			} catch (e) {
+				this.#debug({
+					type: "raw_plain",
+					plainBytes: pt.length,
+					head: bytesToHex(pt, 48),
+					decodeError: e instanceof Error ? e.message : String(e),
+				});
+				const w = this.#pending.shift();
+				if (w) w(incoming);
+				else this.#queued.push(incoming);
+				return;
+			}
+			this.#debug({ type: "plain_shape", outer: fieldShape(outer) });
+			if (
+				outer.length === 1 &&
+				outer[0]?.value instanceof Uint8Array &&
+				outer[0].tag !== 1 &&
+				outer[0].tag !== 3
+			) {
+				this.#debug({
+					type: "raw_plain",
+					plainBytes: pt.length,
+					tag: outer[0].tag,
+					bodyLen: outer[0].value.length,
+					head: bytesToHex(pt, 48),
+				});
+			}
 
 			// Parse outer planet_msg to find hdr → extract loc_nonce on first reply
 			if (!this.#nonceLearned) {
 				try {
-					const outer = decodeFields(pt);
 					const hdrField = outer.find((f) =>
 						f.tag === 1 && f.wireType === WireType.LengthDelim
 					);
@@ -507,6 +750,25 @@ export class PlanetTransport implements CallTransport {
 			try {
 				const msg = decodePlanetMsg(pt);
 				incoming.message = msg;
+				const ccBytes = outer.find((f) =>
+					f.tag === 3 && f.value instanceof Uint8Array
+				)?.value as Uint8Array | undefined;
+				if (ccBytes) {
+					const ccFields = decodeFields(ccBytes);
+					const bodyBytes = ccFields.find((f) =>
+						f.tag === 2 && f.value instanceof Uint8Array
+					)?.value as Uint8Array | undefined;
+					this.#debug({
+						type: "cc_shape",
+						cc: fieldShape(ccFields),
+						body: bodyBytes ? fieldShape(decodeFields(bodyBytes)) : [],
+					});
+				}
+				this.#debug({
+					type: "planet_msg",
+					cc: msg.cc?.bodyName ?? "",
+					ccTag: msg.cc?.bodyTag ?? 0,
+				});
 				if (msg.hdr?.sessId?.length) this.#sessId = msg.hdr.sessId;
 				if (msg.hdr?.locNonce !== undefined && !this.#nonceLearned) {
 					this.#rmtNonce = msg.hdr.locNonce;
@@ -514,6 +776,13 @@ export class PlanetTransport implements CallTransport {
 				}
 				if (msg.cc?.bodyTag === CC_MSG.INFO_REQ && msg.cc.bodyBytes) {
 					void this.#sendInfoRsp(
+						incoming as PlanetIncomingMessage & {
+							message: ReturnType<typeof decodePlanetMsg>;
+						},
+					).catch(() => {});
+				}
+				if (msg.cc?.bodyTag === CC_MSG.CONN_REQ && msg.cc.bodyBytes) {
+					void this.#sendDuplicateConnRsp(
 						incoming as PlanetIncomingMessage & {
 							message: ReturnType<typeof decodePlanetMsg>;
 						},
@@ -527,6 +796,7 @@ export class PlanetTransport implements CallTransport {
 			if (w) w(incoming);
 			else this.#queued.push(incoming);
 		} catch (_e) {
+			this.#debug({ type: "recv_error" });
 			// Probably SRTP media or malformed — ignore
 		}
 	}
@@ -537,10 +807,59 @@ export class PlanetTransport implements CallTransport {
 		else this.#rtpQueue.push(packet);
 	}
 
+	#updateRtpEndpointFromSource(
+		source: { host: string; port: number } | undefined,
+	) {
+		if (!source || !this.#rtp) return;
+		if (this.#rtp.host === source.host && this.#rtp.port === source.port) {
+			return;
+		}
+		this.#rtp.host = source.host;
+		this.#rtp.port = source.port;
+		this.#debug({
+			type: "media_endpoint_learned",
+			family: source.host.includes(":") ? "ipv6" : "ipv4",
+			port: source.port,
+		});
+	}
+
 	#takeRtp(): Promise<Uint8Array | null> {
 		const queued = this.#rtpQueue.shift();
 		if (queued) return Promise.resolve(queued);
 		return new Promise((resolve) => this.#rtpWaiters.push(resolve));
+	}
+
+	async #decryptMediaRtp(
+		wire: Uint8Array,
+	): Promise<{ rtp: Uint8Array; mode: string; switched: boolean }> {
+		if (!this.#srtpRecv) {
+			throw new Error("PlanetTransport.receive: media not established");
+		}
+		try {
+			return {
+				rtp: await srtpDecrypt(this.#srtpRecv, wire),
+				mode: String(this.#mediaKeyMode ?? "current"),
+				switched: false,
+			};
+		} catch (e) {
+			if (this.#mediaKeyMode !== "auto") throw e;
+		}
+		for (const candidate of this.#mediaKeyCandidates) {
+			if (candidate.recvContext === this.#srtpRecv) continue;
+			try {
+				const rtp = await srtpDecrypt(candidate.recvContext, wire);
+				this.#srtpSend = candidate.sendContext;
+				this.#srtpRecv = candidate.recvContext;
+				this.#debug({
+					type: "media_key_selected",
+					mode: candidate.mode,
+					send: candidate.send,
+					recv: candidate.recv,
+				});
+				return { rtp, mode: candidate.mode, switched: true };
+			} catch { /* try next candidate */ }
+		}
+		throw new Error("SRTP auth tag mismatch");
 	}
 
 	#decryptWire(wire: Uint8Array): Uint8Array | null {
@@ -631,13 +950,13 @@ export class PlanetTransport implements CallTransport {
 		return out;
 	}
 
-	#planetHdr(): PlanetMsgHdr {
+	#planetHdr(msgId = this.#msgIdCounter++): PlanetMsgHdr {
 		if (!this.#sessId) throw new Error("connect first");
 		const tranId = new Uint8Array(16);
 		crypto.getRandomValues(tranId);
 		return {
 			userId: this.#opts.localMid,
-			msgId: this.#msgIdCounter++,
+			msgId,
 			sessId: this.#sessId,
 			tranId,
 			tranSeq: this.#tranSeq++,
@@ -648,18 +967,28 @@ export class PlanetTransport implements CallTransport {
 
 	async #sendEnvelope(
 		body: { kind: "sc" | "cc" | "mc"; data: Uint8Array },
-		opts: { bootstrap?: boolean } = {},
+		opts: { bootstrap?: boolean; msgId?: number } = {},
+	): Promise<void> {
+		const planetMsg = packPlanetMsg(this.#planetHdr(opts.msgId), body);
+		await this.#sendTransportPlaintext(planetMsg, {
+			bootstrap: opts.bootstrap,
+			raw: false,
+		});
+	}
+
+	async #sendTransportPlaintext(
+		plaintext: Uint8Array,
+		opts: { bootstrap?: boolean; raw?: boolean } = {},
 	): Promise<void> {
 		if ((!this.#sock && !this.#opts.wireSend) || !this.#route) {
 			throw new Error("not connected");
 		}
-		const planetMsg = packPlanetMsg(this.#planetHdr(), body);
 		const seq = this.#nextSeq++;
 		const prefix = opts.bootstrap ? this.#bootstrapPrefix() : new Uint8Array(0);
 		const sec = opts.bootstrap
-			? buildBootstrapSecHeader(planetMsg.length)
+			? buildBootstrapSecHeader(plaintext.length)
 			: new Uint8Array(0);
-		const ct = this.#encrypt(planetMsg, seq & 0xffff);
+		const ct = this.#encrypt(plaintext, seq & 0xffff);
 		const tagLen = 16;
 		const bodyLen = prefix.length + sec.length + ct.length + tagLen;
 		const totalLen = HEADER_LEN + bodyLen;
@@ -667,15 +996,10 @@ export class PlanetTransport implements CallTransport {
 			(opts.bootstrap ? 0x1d : 0x0d)) & 0xffff;
 		const hdr = opts.bootstrap
 			? buildObservedFrameHeader(chunkLogical, seq & 0xffff, 0x0602)
-			: buildFrameHeader(
+			: buildObservedFrameHeader(
 				chunkLogical,
-				{
-					type: 0,
-					flagA: false,
-					length: bodyLen & 0x7ff,
-					flagB: false,
-					sequence: seq & 0x7fff,
-				} satisfies PlanetFixedHdr,
+				seq & 0xffff,
+				regularTail16(plaintext.length, !!opts.raw),
 			);
 		const macInput = concatBytes([hdr, prefix, sec, ct]);
 		const tag = hmacTag(this.#sendKeys!.macKey, macInput);
@@ -683,15 +1007,25 @@ export class PlanetTransport implements CallTransport {
 		const host = this.#opts.preferIpv6 && this.#route.cscfHost6
 			? this.#route.cscfHost6
 			: this.#route.cscfHost;
+		this.#debug({
+			type: "send",
+			bootstrap: !!opts.bootstrap,
+			raw: !!opts.raw,
+			seq,
+			bytes: datagram.length,
+			plainBytes: plaintext.length,
+			bodyBytes: bodyLen,
+			family: host.includes(":") ? "ipv6" : "ipv4",
+		});
 		if (this.#opts.wireSend) {
 			const reply = await this.#opts.wireSend(datagram, {
 				host,
 				port: this.#route.cscfPort,
 				bootstrap: !!opts.bootstrap,
 				seq,
-				plainLen: planetMsg.length,
+				plainLen: plaintext.length,
 				bodyLen,
-				plaintext: planetMsg,
+				plaintext,
 			});
 			if (reply?.length) this.#onWire(reply);
 			return;
@@ -704,6 +1038,13 @@ export class PlanetTransport implements CallTransport {
 				(e) => (e ? rj(e) : res()),
 			)
 		);
+	}
+
+	async #sendPinholeProbes(): Promise<void> {
+		for (let i = 0; i < PINHOLE_PROBE_COUNT; i++) {
+			await this.#sendTransportPlaintext(packPinholeProbe(), { raw: true });
+		}
+		await this.#sendTransportPlaintext(packPinholeProbeReport(), { raw: true });
 	}
 
 	#waitForIncoming(timeoutMs: number): Promise<PlanetIncomingMessage> {
@@ -788,7 +1129,10 @@ export class PlanetTransport implements CallTransport {
 			{ cid, srcChanId: this.#srcChanId, dstChanId: 0n },
 			ccBody,
 		);
-		await this.#sendEnvelope({ kind: "cc", data: ccMsg }, { bootstrap: true });
+		await this.#sendEnvelope(
+			{ kind: "cc", data: ccMsg },
+			{ bootstrap: true, msgId: CASSINI_MSG_ID_SETUP_REQ },
+		);
 		this.#setupSent = true;
 	}
 
@@ -801,6 +1145,8 @@ export class PlanetTransport implements CallTransport {
 		const setupBytes = reply.message.cc?.bodyBytes;
 		if (!setupBytes) throw new Error("PLANET setup_rsp missing body");
 		const setupRsp = decodeCcSetupRsp(setupBytes);
+		await this.#sendPinholeProbes();
+		await this.#sendKeepalive();
 		this.#startKeepalive(setupRsp.aliveRptInterval);
 		return {
 			plaintext: reply.plaintext,
@@ -833,6 +1179,7 @@ export class PlanetTransport implements CallTransport {
 		let connRspSent = false;
 		if (opts.autoConnRsp ?? true) {
 			await this.#sendConnRsp(reply, connReq);
+			this.#autoConnRspDuplicates = true;
 			connRspSent = true;
 		}
 		return {
@@ -864,7 +1211,7 @@ export class PlanetTransport implements CallTransport {
 		) {
 			return false;
 		}
-		const keys = derivePlanetMediaKeys({
+		const keyInput = {
 			local: {
 				privateKey: local.keypair.privateKey,
 				publicKey: local.material.mediaPubKey,
@@ -876,22 +1223,115 @@ export class PlanetTransport implements CallTransport {
 				mediaKeyId: peerOffer.mediaKeyId,
 				mediaNonce: peerOffer.mediaNonce,
 			},
-		});
-		this.#srtpSend = await deriveSrtpContext(keys.sendKeying);
-		this.#srtpRecv = await deriveSrtpContext(keys.recvKeying);
+		};
+		const variants = derivePlanetMediaKeyingVariants(keyInput);
+		this.#mediaKeyCandidates = [];
+		for (const selection of Object.values(MEDIA_KEY_SELECTIONS)) {
+			const sendKeying = variants.variants[selection.send];
+			const recvKeying = variants.variants[selection.recv];
+			this.#mediaKeyCandidates.push({
+				...selection,
+				sendContext: await deriveSrtpContext(sendKeying),
+				recvContext: await deriveSrtpContext(recvKeying),
+			}, {
+				mode: audioMediaKeyMode(selection.mode),
+				send: `AUDIO/${selection.send}`,
+				recv: `AUDIO/${selection.recv}`,
+				sendContext: await deriveSrtpContext(
+					derivePlanetMediaStreamKeying(sendKeying, "AUDIO"),
+				),
+				recvContext: await deriveSrtpContext(
+					derivePlanetMediaStreamKeying(recvKeying, "AUDIO"),
+				),
+			});
+		}
+		if (
+			local.material.mediaSecret.length === 30 &&
+			peerOffer.mediaSecret?.length === 30
+		) {
+			this.#mediaKeyCandidates.push(
+				{
+					mode: "secret-receiver",
+					send: "peer-secret",
+					recv: "local-secret",
+					sendContext: await deriveSrtpContext(peerOffer.mediaSecret),
+					recvContext: await deriveSrtpContext(local.material.mediaSecret),
+				},
+				{
+					mode: "secret-sender",
+					send: "local-secret",
+					recv: "peer-secret",
+					sendContext: await deriveSrtpContext(local.material.mediaSecret),
+					recvContext: await deriveSrtpContext(peerOffer.mediaSecret),
+				},
+				{
+					mode: "audio-secret-receiver",
+					send: "AUDIO/peer-secret",
+					recv: "AUDIO/local-secret",
+					sendContext: await deriveSrtpContext(
+						derivePlanetMediaStreamKeying(peerOffer.mediaSecret, "AUDIO"),
+					),
+					recvContext: await deriveSrtpContext(
+						derivePlanetMediaStreamKeying(local.material.mediaSecret, "AUDIO"),
+					),
+				},
+				{
+					mode: "audio-secret-sender",
+					send: "AUDIO/local-secret",
+					recv: "AUDIO/peer-secret",
+					sendContext: await deriveSrtpContext(
+						derivePlanetMediaStreamKeying(local.material.mediaSecret, "AUDIO"),
+					),
+					recvContext: await deriveSrtpContext(
+						derivePlanetMediaStreamKeying(peerOffer.mediaSecret, "AUDIO"),
+					),
+				},
+			);
+		}
+		const requestedMode = this.#opts.mediaKeyMode ?? "current";
+		const initialMode = requestedMode === "auto" ? "current" : requestedMode;
+		const initial = this.#mediaKeyCandidates.find((c) =>
+			c.mode === initialMode
+		);
+		if (!initial) return false;
+		this.#srtpSend = initial.sendContext;
+		this.#srtpRecv = initial.recvContext;
+		this.#mediaKeyMode = requestedMode;
 		const fallbackHost = this.#opts.preferIpv6 && route.cscfHost6
 			? route.cscfHost6
 			: route.cscfHost;
-		const endpoint = addrEndpoint(connReq.mAddr) ??
-			addrEndpoint(connReq.uePublicAddr) ??
+		const mAddrEndpoint = addrEndpoint(connReq.mAddr);
+		const publicEndpoint = addrEndpoint(connReq.uePublicAddr);
+		const endpoint = mAddrEndpoint ?? publicEndpoint ??
 			{ host: fallbackHost, port: route.cscfPort };
+		const endpointSource = mAddrEndpoint
+			? "mAddr"
+			: publicEndpoint
+			? "uePublicAddr"
+			: "route";
+		const audio =
+			peerOffer.media.find((m) =>
+				m.name === "A" && m.enabled !== 0 && m.rtpId !== undefined
+			) ?? peerOffer.media.find((m) =>
+				m.kind === 1 && m.enabled !== 0 && m.rtpId !== undefined
+			);
 		this.#rtp = {
 			host: endpoint.host,
 			port: endpoint.port,
-			ssrc: randomU32(),
+			payloadType: audio?.rtpId ?? 96,
+			ssrc: audio?.rtcpId ?? audio?.rtpPort ?? randomU32(),
 			seq: randomIntInclusive(0, 0xffff),
-			timestamp: randomU32(),
+			timestamp: 0,
 		};
+		this.#debug({
+			type: "media_configured",
+			endpoint: endpointSource,
+			family: endpoint.host.includes(":") ? "ipv6" : "ipv4",
+			port: endpoint.port,
+			payloadType: this.#rtp.payloadType,
+			mediaKeyMode: requestedMode,
+			activeMediaKeyMode: initial.mode,
+		});
 		return true;
 	}
 
@@ -925,7 +1365,35 @@ export class PlanetTransport implements CallTransport {
 			},
 			ccBody,
 		);
-		await this.#sendEnvelope({ kind: "cc", data: ccMsg });
+		await this.#sendEnvelope(
+			{ kind: "cc", data: ccMsg },
+			{ msgId: ccMsgId(CC_MSG.CONN_RSP) },
+		);
+	}
+
+	async #sendDuplicateConnRsp(
+		request: PlanetIncomingMessage & {
+			message: ReturnType<typeof decodePlanetMsg>;
+		},
+	): Promise<void> {
+		if (!this.#autoConnRspDuplicates || this.#connRspDuplicateInFlight) {
+			return;
+		}
+		const bodyBytes = request.message.cc?.bodyBytes;
+		if (!bodyBytes) return;
+		this.#connRspDuplicateInFlight = true;
+		try {
+			const connReq = decodeCcConnReq(bodyBytes);
+			if (!this.#srtpSend || !this.#rtp) {
+				const peerAnswerOffer = tryDecodeNativeSetupOffer(connReq.answer);
+				const peerOffer = tryDecodeNativeSetupOffer(connReq.offer);
+				await this.#configureMedia(peerAnswerOffer ?? peerOffer, connReq);
+			}
+			await this.#sendConnRsp(request, connReq);
+			this.#debug({ type: "conn_rsp_duplicate" });
+		} finally {
+			this.#connRspDuplicateInFlight = false;
+		}
 	}
 
 	async #sendInfoRsp(
@@ -960,7 +1428,10 @@ export class PlanetTransport implements CallTransport {
 			},
 			ccBody,
 		);
-		await this.#sendEnvelope({ kind: "cc", data: ccMsg });
+		await this.#sendEnvelope(
+			{ kind: "cc", data: ccMsg },
+			{ msgId: ccMsgId(CC_MSG.INFO_RSP) },
+		);
 	}
 
 	#clearKeepalive() {
@@ -990,10 +1461,13 @@ export class PlanetTransport implements CallTransport {
 
 	async #sendKeepalive(): Promise<void> {
 		const inner = packKeepaliveReq(BigInt(Date.now()), false);
-		await this.#sendEnvelope({
-			kind: "sc",
-			data: packPlanetScMsgKaReq(inner),
-		});
+		await this.#sendEnvelope(
+			{
+				kind: "sc",
+				data: packPlanetScMsgKaReq(inner),
+			},
+			{ msgId: CASSINI_MSG_ID_KEEPALIVE_REQ },
+		);
 	}
 
 	async close(): Promise<void> {
@@ -1017,7 +1491,10 @@ export class PlanetTransport implements CallTransport {
 					},
 					ccBody,
 				);
-				await this.#sendEnvelope({ kind: "cc", data: ccMsg });
+				await this.#sendEnvelope(
+					{ kind: "cc", data: ccMsg },
+					{ msgId: ccMsgId(CC_MSG.REL_REQ) },
+				);
 			}
 		} catch { /* */ }
 		if (this.#sock) {
@@ -1027,18 +1504,35 @@ export class PlanetTransport implements CallTransport {
 		for (const waiter of this.#rtpWaiters.splice(0)) waiter(null);
 	}
 
-	async send(opusPacket: Uint8Array): Promise<void> {
+	async send(
+		opusPacket: Uint8Array,
+		opts: { timestampStep?: number } = {},
+	): Promise<void> {
 		if (!this.#srtpSend || !this.#rtp) {
 			throw new Error("PlanetTransport.send: media not established");
 		}
+		const timestampStep = opts.timestampStep ??
+			this.#opts.rtpTimestampStep ?? 960;
 		const rtp = buildRtp({
-			payloadType: 96,
+			payloadType: this.#rtp.payloadType,
 			seq: this.#rtp.seq++ & 0xffff,
-			timestamp: (this.#rtp.timestamp += 960) >>> 0,
+			timestamp: (this.#rtp.timestamp += timestampStep) >>> 0,
 			ssrc: this.#rtp.ssrc,
 			payload: opusPacket,
+			extensionProfile: 0x0240,
 		});
 		const wire = await srtpEncrypt(this.#srtpSend, rtp);
+		this.#debug({
+			type: "media_send",
+			bytes: wire.length,
+			payloadBytes: opusPacket.length,
+			payloadType: this.#rtp.payloadType,
+			ssrc: this.#rtp.ssrc,
+			rtpFirstByte: rtp[0],
+			timestampStep,
+			family: this.#rtp.host.includes(":") ? "ipv6" : "ipv4",
+			port: this.#rtp.port,
+		});
 		if (this.#opts.wireSend) {
 			await this.#opts.wireSend(wire, {
 				host: this.#rtp.host,
@@ -1070,9 +1564,26 @@ export class PlanetTransport implements CallTransport {
 			const wire = await this.#takeRtp();
 			if (!wire) return;
 			try {
-				const rtp = await srtpDecrypt(this.#srtpRecv, wire);
-				yield parseRtp(rtp).payload;
-			} catch {
+				const decrypted = await this.#decryptMediaRtp(wire);
+				const parsed = parseRtp(decrypted.rtp);
+				this.#debug({
+					type: "media_recv",
+					bytes: wire.length,
+					payloadBytes: parsed.payload.length,
+					payloadType: parsed.payloadType,
+					ssrc: parsed.ssrc,
+					mediaKeyMode: decrypted.mode,
+					mediaKeySwitched: decrypted.switched,
+				});
+				yield parsed.payload;
+			} catch (e) {
+				this.#debug({
+					type: "media_decrypt_fail",
+					bytes: wire.length,
+					rtpPayloadType: wire.length > 1 ? wire[1] & 0x7f : undefined,
+					rtpSecondByte: wire.length > 1 ? wire[1] : undefined,
+					reason: e instanceof Error ? e.message : String(e),
+				});
 				// Drop unauthenticated media.
 			}
 		}

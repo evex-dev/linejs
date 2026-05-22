@@ -10,6 +10,7 @@ import {
 	decodeStnpkPublicKey,
 	deriveCallKeys,
 	derivePlanetMediaKeys,
+	derivePlanetMediaStreamKeying,
 	ecdh,
 	generateEphemeralKeypair,
 	hmacTag,
@@ -104,6 +105,18 @@ Deno.test("PLANET SHA-256 KDF matches native media-key construction", () => {
 			"9eba894bf0680590a44c729c8c76810348eea091ecb6aa81e602c23" +
 			"b1f3eeefdb8ca4aec",
 	);
+});
+
+Deno.test("derivePlanetMediaStreamKeying applies native stream label HMAC", () => {
+	const base = new Uint8Array(30);
+	for (let i = 0; i < base.length; i++) base[i] = i;
+	const out = derivePlanetMediaStreamKeying(base, "AUDIO");
+	assertEquals(out.length, 30);
+	assertEquals(
+		hex(out),
+		"3ebc662d4d812b04d940362540d64ecf18bbcc2cb2253cf722676d1e2554",
+	);
+	assertNotEquals(out, base);
 });
 
 Deno.test("derivePlanetMediaKeys produces opposite-direction SRTP keying material", () => {

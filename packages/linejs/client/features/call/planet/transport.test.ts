@@ -14,12 +14,7 @@ import {
 	tagEquals,
 	type TransportKeys,
 } from "./crypto.ts";
-import {
-	buildFrameHeader,
-	makeChunkHdr,
-	parseFrameHeader,
-	type PlanetFixedHdr,
-} from "./framing.ts";
+import { makeChunkHdr } from "./framing.ts";
 import {
 	CC_MSG,
 	decodeFields,
@@ -41,6 +36,7 @@ type CallRouteLike = Parameters<PlanetTransport["connect"]>[0]["route"];
 const HEADER_LEN = 6;
 const BOOTSTRAP_PREFIX_LEN = 51;
 const BOOTSTRAP_SEC_HEADER_LEN = 5;
+const REGULAR_TAIL_CONTROL_BASE = 0x18;
 
 function bytesToBase64(bytes: Uint8Array): string {
 	let raw = "";
@@ -103,19 +99,20 @@ function buildBootstrapFrameHeader(
 function buildRegularFrameHeader(
 	totalLen: number,
 	sequence: number,
+	plaintextLen: number,
 ): Uint8Array {
-	const bodyLen = totalLen - HEADER_LEN;
 	const chunkLogical = ((((totalLen - 4) << 5) | 0x0d) & 0xffff) >>> 0;
-	return buildFrameHeader(
-		chunkLogical,
-		{
-			type: 0,
-			flagA: false,
-			length: bodyLen & 0x7ff,
-			flagB: false,
-			sequence: sequence & 0x7fff,
-		} satisfies PlanetFixedHdr,
-	);
+	const chunk = makeChunkHdr(chunkLogical);
+	const tail16 = (((REGULAR_TAIL_CONTROL_BASE |
+		((plaintextLen >>> 8) & 0x07)) << 8) | (plaintextLen & 0xff)) & 0xffff;
+	return new Uint8Array([
+		chunk & 0xff,
+		(chunk >>> 8) & 0xff,
+		(sequence >>> 8) & 0xff,
+		sequence & 0xff,
+		(tail16 >>> 8) & 0xff,
+		tail16 & 0xff,
+	]);
 }
 
 function buildServerWire(
@@ -147,7 +144,7 @@ function buildServerWire(
 		return concatBytes([macInput, hmacTag(keys.macKey, macInput)]);
 	}
 	const totalLen = HEADER_LEN + ct.length + tagLen;
-	const hdr = buildRegularFrameHeader(totalLen, sequence);
+	const hdr = buildRegularFrameHeader(totalLen, sequence, plaintext.length);
 	const macInput = concatBytes([hdr, ct]);
 	return concatBytes([macInput, hmacTag(keys.macKey, macInput)]);
 }
@@ -211,7 +208,7 @@ function decryptRegularWire(
 	const macInput = wire.subarray(0, wire.length - 16);
 	const expected = hmacTag(keys.macKey, macInput);
 	if (!tagEquals(tag, expected)) return undefined;
-	const seq = parseFrameHeader(wire).fixed.sequence;
+	const seq = ((wire[2] << 8) | wire[3]) & 0xffff;
 	const ct = wire.subarray(HEADER_LEN, wire.length - 16);
 	return aesCtrDecrypt(keys.encKey, buildPlanetCtrIv(keys.ctrBase, seq), ct);
 }
@@ -283,11 +280,15 @@ Deno.test("PlanetTransport.close does not send REL before SETUP/INVITE", async (
 
 Deno.test("PlanetTransport retains generated media offer material for SRTP setup", async () => {
 	let sends = 0;
+	let setupMsgId = 0;
 	const transport = new PlanetTransport({
 		localMid: "u-local",
 		timeoutMs: 1,
-		wireSend() {
+		wireSend(_packet, endpoint) {
 			sends++;
+			if (endpoint.bootstrap) {
+				setupMsgId = decodePlanetMsg(endpoint.plaintext).hdr?.msgId ?? 0;
+			}
 		},
 	});
 
@@ -302,6 +303,7 @@ Deno.test("PlanetTransport retains generated media offer material for SRTP setup
 	const media = transport.localMediaOffer;
 	assert(media);
 	assertEquals(sends, 1);
+	assertEquals(setupMsgId, 0x2141);
 	assertEquals(media.keypair.publicKey.length, 33);
 	assertEquals(media.keypair.privateKey.length, 32);
 	assertEquals(media.material.mediaPubKey.length, 33);
@@ -310,7 +312,7 @@ Deno.test("PlanetTransport retains generated media offer material for SRTP setup
 	assertEquals(media.offer.length, 311);
 });
 
-Deno.test("PlanetTransport handles inbound bootstrap answer and sends decryptable SRTP media", async () => {
+Deno.test("PlanetTransport learns RTP source and sends decryptable SRTP media", async () => {
 	const routePeer = generateEphemeralKeypair();
 	const server = await bindUdpServer();
 	const mediaServer = await bindUdpServer();
@@ -358,12 +360,6 @@ Deno.test("PlanetTransport handles inbound bootstrap answer and sends decryptabl
 			unavailToSec: 120,
 			oCapas: [1, 2, 3],
 			features: [],
-			mAddr: {
-				ver: 4,
-				trpt: 1,
-				ip: "127.0.0.1",
-				port: mediaPort,
-			},
 		}),
 		msgId: 2,
 		sessId,
@@ -391,14 +387,26 @@ Deno.test("PlanetTransport handles inbound bootstrap answer and sends decryptabl
 	});
 
 	let setupHandled = false;
+	let clientRinfo: RemoteInfo | undefined;
 	let serverRecvKeys: TransportKeys | undefined;
 	let serverMessages = 0;
 	let serverError: unknown;
+	let connReqWireForRetry: Uint8Array | undefined;
+	let connRspCount = 0;
+	const pinholePlainLengths: number[] = [];
 	let resolveMedia!: (packet: Uint8Array) => void;
+	let resolvePinholeReport!: () => void;
+	let resolveSecondConnRsp!: () => void;
 	let resolveInfoRsp!: (bodyTag: number) => void;
 	let resolveKeepalive!: (bodyTag: number) => void;
 	const mediaWire = new Promise<Uint8Array>((resolve) => {
 		resolveMedia = resolve;
+	});
+	const pinholeReport = new Promise<void>((resolve) => {
+		resolvePinholeReport = resolve;
+	});
+	const secondConnRsp = new Promise<void>((resolve) => {
+		resolveSecondConnRsp = resolve;
 	});
 	const infoRsp = new Promise<number>((resolve) => {
 		resolveInfoRsp = resolve;
@@ -411,6 +419,7 @@ Deno.test("PlanetTransport handles inbound bootstrap answer and sends decryptabl
 	});
 	server.on("message", (buf: Buffer, rinfo: RemoteInfo) => {
 		try {
+			clientRinfo = rinfo;
 			serverMessages++;
 			const wire = new Uint8Array(buf);
 			if (isRtpLike(wire)) {
@@ -420,7 +429,16 @@ Deno.test("PlanetTransport handles inbound bootstrap answer and sends decryptabl
 			if (setupHandled && serverRecvKeys) {
 				const plain = decryptRegularWire(serverRecvKeys, wire);
 				if (!plain) return;
+				if (plain.length === 519 || plain.length === 10) {
+					pinholePlainLengths.push(plain.length);
+					if (plain.length === 10) resolvePinholeReport();
+					return;
+				}
 				const msg = decodePlanetMsg(plain);
+				if (msg.cc?.bodyTag === CC_MSG.CONN_RSP) {
+					connRspCount++;
+					if (connRspCount >= 2) resolveSecondConnRsp();
+				}
 				if (msg.cc?.bodyTag === CC_MSG.INFO_RSP) {
 					resolveInfoRsp(msg.cc.bodyTag);
 				}
@@ -461,6 +479,7 @@ Deno.test("PlanetTransport handles inbound bootstrap answer and sends decryptabl
 				},
 			);
 			const connReqWire = buildServerWire(serverKeys, connReqPlain, 0x5102);
+			connReqWireForRetry = connReqWire;
 			const infoReqWire = buildServerWire(serverKeys, infoReqPlain, 0x5103);
 			void sendUdp(server, setupRspWire, rinfo).then(() =>
 				new Promise((resolve) => setTimeout(resolve, 5))
@@ -489,8 +508,21 @@ Deno.test("PlanetTransport handles inbound bootstrap answer and sends decryptabl
 		const answer = await transport.waitForAnswerDetailed({ timeoutMs: 1000 });
 		assert(answer.mediaReady);
 		assertEquals(answer.connRspSent, true);
+		await withTimeout(pinholeReport, 1000, "pinhole_report");
+		assertEquals(pinholePlainLengths.filter((len) => len === 519).length, 16);
+		assertEquals(pinholePlainLengths.filter((len) => len === 10).length, 1);
 		assertEquals(await withTimeout(infoRsp, 1000, "info_rsp"), CC_MSG.INFO_RSP);
 		assertEquals(await withTimeout(keepalive, 1000, "keepalive"), 1);
+		assert(clientRinfo);
+		assert(connReqWireForRetry);
+		await sendUdp(server, connReqWireForRetry, clientRinfo);
+		await withTimeout(secondConnRsp, 1000, "duplicate_conn_rsp");
+		await sendUdp(
+			mediaServer,
+			new Uint8Array([0x80, 0x60, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1]),
+			clientRinfo,
+		);
+		await new Promise((resolve) => setTimeout(resolve, 10));
 
 		const localMedia = transport.localMediaOffer;
 		assert(localMedia);

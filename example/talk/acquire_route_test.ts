@@ -13,7 +13,7 @@ const client = await loginWithAuthToken(
 	},
 );
 
-console.log("[login] mid =", client.base.user?.mid);
+console.log("[login] mid =", client.base.profile?.mid);
 console.log("[try] acquireCallRoute peer =", PEER_MID);
 try {
 	const route = await client.call.acquireRoute({
