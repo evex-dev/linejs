@@ -61,6 +61,7 @@ import {
 	packPlanetFeatureRegister,
 	packPlanetMsg,
 	packPlanetUserAgent,
+	type PlanetAddr,
 	type PlanetMsgHdr,
 	type PlanetSetupOfferMaterial,
 	type PlanetUserAgent,
@@ -338,6 +339,29 @@ function defaultSetupCredential(
 
 function isRtpLike(wire: Uint8Array): boolean {
 	return wire.length >= 12 && (wire[0] & 0xc0) === 0x80;
+}
+
+function firstPort(ports: string | undefined): number | undefined {
+	if (!ports) return undefined;
+	const hit = ports.match(/\d+/);
+	if (!hit) return undefined;
+	const port = Number(hit[0]);
+	return Number.isInteger(port) && port > 0 && port <= 65535 ? port : undefined;
+}
+
+function addrEndpoint(
+	addr: PlanetAddr | undefined,
+): { host: string; port: number } | undefined {
+	if (!addr?.ip) return undefined;
+	if (addr.trpt !== undefined && addr.trpt !== 1) return undefined;
+	const port = typeof addr.port === "number"
+		? addr.port
+		: firstPort(addr.ports);
+	if (
+		typeof port !== "number" || !Number.isInteger(port) || port <= 0 ||
+		port > 65535
+	) return undefined;
+	return { host: addr.ip, port };
 }
 
 export class PlanetTransport implements CallTransport {
@@ -784,7 +808,10 @@ export class PlanetTransport implements CallTransport {
 		const connReq = decodeCcConnReq(connReqBytes);
 		const peerAnswerOffer = tryDecodeNativeSetupOffer(connReq.answer);
 		const peerOffer = tryDecodeNativeSetupOffer(connReq.offer);
-		const mediaReady = await this.#configureMedia(peerAnswerOffer ?? peerOffer);
+		const mediaReady = await this.#configureMedia(
+			peerAnswerOffer ?? peerOffer,
+			connReq,
+		);
 		let connRspSent = false;
 		if (opts.autoConnRsp ?? true) {
 			await this.#sendConnRsp(reply, connReq);
@@ -807,6 +834,7 @@ export class PlanetTransport implements CallTransport {
 
 	async #configureMedia(
 		peerOffer: NativeSetupOffer | undefined,
+		connReq: CcConnReq,
 	): Promise<boolean> {
 		if (!peerOffer) return false;
 		const local = this.#localMediaOffer;
@@ -833,12 +861,15 @@ export class PlanetTransport implements CallTransport {
 		});
 		this.#srtpSend = await deriveSrtpContext(keys.sendKeying);
 		this.#srtpRecv = await deriveSrtpContext(keys.recvKeying);
-		const host = this.#opts.preferIpv6 && route.cscfHost6
+		const fallbackHost = this.#opts.preferIpv6 && route.cscfHost6
 			? route.cscfHost6
 			: route.cscfHost;
+		const endpoint = addrEndpoint(connReq.mAddr) ??
+			addrEndpoint(connReq.uePublicAddr) ??
+			{ host: fallbackHost, port: route.cscfPort };
 		this.#rtp = {
-			host,
-			port: route.cscfPort,
+			host: endpoint.host,
+			port: endpoint.port,
 			ssrc: randomU32(),
 			seq: randomIntInclusive(0, 0xffff),
 			timestamp: randomU32(),

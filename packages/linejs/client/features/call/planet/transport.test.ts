@@ -286,8 +286,11 @@ Deno.test("PlanetTransport retains generated media offer material for SRTP setup
 Deno.test("PlanetTransport handles inbound bootstrap answer and sends decryptable SRTP media", async () => {
 	const routePeer = generateEphemeralKeypair();
 	const server = await bindUdpServer();
+	const mediaServer = await bindUdpServer();
 	const addr = server.address();
+	const mediaAddr = mediaServer.address();
 	const port = typeof addr === "string" ? 0 : addr.port;
+	const mediaPort = typeof mediaAddr === "string" ? 0 : mediaAddr.port;
 	const route = makeRoute(routePeer, port);
 	const transport = new PlanetTransport({
 		localMid: "u-local",
@@ -327,6 +330,12 @@ Deno.test("PlanetTransport handles inbound bootstrap answer and sends decryptabl
 			unavailToSec: 120,
 			oCapas: [1, 2, 3],
 			features: [],
+			mAddr: {
+				ver: 4,
+				trpt: 1,
+				ip: "127.0.0.1",
+				port: mediaPort,
+			},
 		}),
 		msgId: 2,
 		sessId,
@@ -343,12 +352,15 @@ Deno.test("PlanetTransport handles inbound bootstrap answer and sends decryptabl
 	const mediaWire = new Promise<Uint8Array>((resolve) => {
 		resolveMedia = resolve;
 	});
+	mediaServer.on("message", (buf: Buffer) => {
+		resolveMedia(new Uint8Array(buf));
+	});
 	server.on("message", (buf: Buffer, rinfo: RemoteInfo) => {
 		try {
 			serverMessages++;
 			const wire = new Uint8Array(buf);
 			if (isRtpLike(wire)) {
-				resolveMedia(wire);
+				serverError = new Error("media packet was sent to signaling socket");
 				return;
 			}
 			if (setupHandled) return;
@@ -424,5 +436,6 @@ Deno.test("PlanetTransport handles inbound bootstrap answer and sends decryptabl
 	} finally {
 		await transport.close();
 		await new Promise<void>((resolve) => server.close(() => resolve()));
+		await new Promise<void>((resolve) => mediaServer.close(() => resolve()));
 	}
 });
