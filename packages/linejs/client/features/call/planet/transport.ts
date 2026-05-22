@@ -58,10 +58,12 @@ import {
 	packCcInfoRsp,
 	packCcRelReq,
 	packCcSetupReq,
+	packKeepaliveReq,
 	packNativeSetupOffer,
 	packPlanetCcMsg,
 	packPlanetFeatureRegister,
 	packPlanetMsg,
+	packPlanetScMsgKaReq,
 	packPlanetUserAgent,
 	type PlanetAddr,
 	type PlanetMsgHdr,
@@ -90,6 +92,7 @@ export interface PlanetTransportOpts {
 	capabilities?: number[];
 	features?: Uint8Array[];
 	timeoutMs?: number;
+	keepaliveIntervalMs?: number;
 	preferIpv6?: boolean;
 	wireSend?: (
 		packet: Uint8Array,
@@ -391,8 +394,10 @@ export class PlanetTransport implements CallTransport {
 	};
 	#rtpQueue: Uint8Array[] = [];
 	#rtpWaiters: Array<(packet: Uint8Array | null) => void> = [];
+	#keepaliveTimer?: ReturnType<typeof setTimeout>;
 	#srcChanId = 1n;
 	#setupSent = false;
+	#closed = true;
 
 	// Per-msg sequence + protocol state
 	#nextSeq = 0x01d0;
@@ -444,6 +449,8 @@ export class PlanetTransport implements CallTransport {
 		this.#rtp = undefined;
 		this.#rtpQueue = [];
 		this.#queued = [];
+		this.#clearKeepalive();
+		this.#closed = false;
 
 		// Native bootstrap uses a local seed/label for the first outbound SETUP.
 		// The first inbound packet carries its own seed/label, so receive keys
@@ -793,10 +800,12 @@ export class PlanetTransport implements CallTransport {
 		);
 		const setupBytes = reply.message.cc?.bodyBytes;
 		if (!setupBytes) throw new Error("PLANET setup_rsp missing body");
+		const setupRsp = decodeCcSetupRsp(setupBytes);
+		this.#startKeepalive(setupRsp.aliveRptInterval);
 		return {
 			plaintext: reply.plaintext,
 			message: reply.message,
-			setupRsp: setupBytes ? decodeCcSetupRsp(setupBytes) : undefined,
+			setupRsp,
 		};
 	}
 
@@ -954,7 +963,42 @@ export class PlanetTransport implements CallTransport {
 		await this.#sendEnvelope({ kind: "cc", data: ccMsg });
 	}
 
+	#clearKeepalive() {
+		if (this.#keepaliveTimer !== undefined) {
+			clearTimeout(this.#keepaliveTimer);
+			this.#keepaliveTimer = undefined;
+		}
+	}
+
+	#startKeepalive(aliveRptIntervalSec: number | undefined) {
+		this.#clearKeepalive();
+		const configured = this.#opts.keepaliveIntervalMs;
+		const intervalMs = configured ??
+			(aliveRptIntervalSec && aliveRptIntervalSec > 0
+				? aliveRptIntervalSec * 1000
+				: undefined);
+		if (!intervalMs || intervalMs <= 0) return;
+		const delayMs = Math.max(10, Math.floor(intervalMs));
+		const tick = () => {
+			if (this.#closed) return;
+			void this.#sendKeepalive().catch(() => {}).finally(() => {
+				if (!this.#closed) this.#keepaliveTimer = setTimeout(tick, delayMs);
+			});
+		};
+		this.#keepaliveTimer = setTimeout(tick, delayMs);
+	}
+
+	async #sendKeepalive(): Promise<void> {
+		const inner = packKeepaliveReq(BigInt(Date.now()), false);
+		await this.#sendEnvelope({
+			kind: "sc",
+			data: packPlanetScMsgKaReq(inner),
+		});
+	}
+
 	async close(): Promise<void> {
+		this.#closed = true;
+		this.#clearKeepalive();
 		try {
 			if (
 				this.#setupSent && this.#route && (this.#sock || this.#opts.wireSend)

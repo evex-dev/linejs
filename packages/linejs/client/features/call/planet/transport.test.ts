@@ -22,6 +22,7 @@ import {
 } from "./framing.ts";
 import {
 	CC_MSG,
+	decodeFields,
 	decodePlanetMsg,
 	packCcConnReq,
 	packCcInfoReq,
@@ -321,6 +322,7 @@ Deno.test("PlanetTransport handles inbound bootstrap answer and sends decryptabl
 	const transport = new PlanetTransport({
 		localMid: "u-local",
 		timeoutMs: 1000,
+		keepaliveIntervalMs: 20,
 	});
 
 	const peerMedia = generateEphemeralKeypair();
@@ -394,11 +396,15 @@ Deno.test("PlanetTransport handles inbound bootstrap answer and sends decryptabl
 	let serverError: unknown;
 	let resolveMedia!: (packet: Uint8Array) => void;
 	let resolveInfoRsp!: (bodyTag: number) => void;
+	let resolveKeepalive!: (bodyTag: number) => void;
 	const mediaWire = new Promise<Uint8Array>((resolve) => {
 		resolveMedia = resolve;
 	});
 	const infoRsp = new Promise<number>((resolve) => {
 		resolveInfoRsp = resolve;
+	});
+	const keepalive = new Promise<number>((resolve) => {
+		resolveKeepalive = resolve;
 	});
 	mediaServer.on("message", (buf: Buffer) => {
 		resolveMedia(new Uint8Array(buf));
@@ -417,6 +423,9 @@ Deno.test("PlanetTransport handles inbound bootstrap answer and sends decryptabl
 				const msg = decodePlanetMsg(plain);
 				if (msg.cc?.bodyTag === CC_MSG.INFO_RSP) {
 					resolveInfoRsp(msg.cc.bodyTag);
+				}
+				if (msg.scBytes) {
+					resolveKeepalive(decodeFields(msg.scBytes)[0]?.tag ?? 0);
 				}
 				return;
 			}
@@ -481,6 +490,7 @@ Deno.test("PlanetTransport handles inbound bootstrap answer and sends decryptabl
 		assert(answer.mediaReady);
 		assertEquals(answer.connRspSent, true);
 		assertEquals(await withTimeout(infoRsp, 1000, "info_rsp"), CC_MSG.INFO_RSP);
+		assertEquals(await withTimeout(keepalive, 1000, "keepalive"), 1);
 
 		const localMedia = transport.localMediaOffer;
 		assert(localMedia);
