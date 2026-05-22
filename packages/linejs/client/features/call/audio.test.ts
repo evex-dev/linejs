@@ -50,10 +50,22 @@ Deno.test("bufferSource respects abort signal", async () => {
 });
 
 Deno.test("streamSource forwards frames from a ReadableStream", async () => {
-	const f1: PcmFrame = { samples: new Int16Array([1, 2]), sampleRate: 48000, channels: 1 };
-	const f2: PcmFrame = { samples: new Int16Array([3, 4]), sampleRate: 48000, channels: 1 };
+	const f1: PcmFrame = {
+		samples: new Int16Array([1, 2]),
+		sampleRate: 48000,
+		channels: 1,
+	};
+	const f2: PcmFrame = {
+		samples: new Int16Array([3, 4]),
+		sampleRate: 48000,
+		channels: 1,
+	};
 	const stream = new ReadableStream<PcmFrame>({
-		start(c) { c.enqueue(f1); c.enqueue(f2); c.close(); },
+		start(c) {
+			c.enqueue(f1);
+			c.enqueue(f2);
+			c.close();
+		},
 	});
 	const collected: PcmFrame[] = [];
 	for await (const f of streamSource(stream).frames()) collected.push(f);
@@ -70,9 +82,17 @@ Deno.test("bufferSink collects every write", () => {
 
 Deno.test("streamSink writes through to underlying WritableStream", async () => {
 	const written: PcmFrame[] = [];
-	const ws = new WritableStream<PcmFrame>({ write(f) { written.push(f); } });
+	const ws = new WritableStream<PcmFrame>({
+		write(f) {
+			written.push(f);
+		},
+	});
 	const sink = streamSink(ws);
-	await sink.write({ samples: new Int16Array([1]), sampleRate: 48000, channels: 1 });
+	await sink.write({
+		samples: new Int16Array([1]),
+		sampleRate: 48000,
+		channels: 1,
+	});
 	await sink.end?.();
 	assertEquals(written.length, 1);
 });
@@ -110,18 +130,47 @@ Deno.test("decodeWavSync: minimal 16-bit PCM mono WAV", () => {
 	// fmt
 	buf.set([0x66, 0x6d, 0x74, 0x20], 12); // "fmt "
 	dv.setUint32(16, 16, true);
-	dv.setUint16(20, 1, true);    // PCM
-	dv.setUint16(22, 1, true);    // mono
+	dv.setUint16(20, 1, true); // PCM
+	dv.setUint16(22, 1, true); // mono
 	dv.setUint32(24, 16000, true); // 16kHz
 	dv.setUint32(28, 32000, true);
 	dv.setUint16(32, 2, true);
-	dv.setUint16(34, 16, true);   // 16-bit
+	dv.setUint16(34, 16, true); // 16-bit
 	// data
 	buf.set([0x64, 0x61, 0x74, 0x61], 36); // "data"
 	dv.setUint32(40, dataLen, true);
-	for (let i = 0; i < samples.length; i++) dv.setInt16(44 + i * 2, samples[i], true);
+	for (let i = 0; i < samples.length; i++) {
+		dv.setInt16(44 + i * 2, samples[i], true);
+	}
 	const out = decodeWavSync(buf);
 	assertEquals(out.sampleRate, 16000);
+	assertEquals(out.channels, 1);
+	assertEquals(Array.from(out.samples), samples);
+});
+
+Deno.test("decodeWavSync: accepts streamed WAV with placeholder data size", () => {
+	const samples = [10, 20, 30, 40];
+	const dataLen = samples.length * 2;
+	const buf = new Uint8Array(44 + dataLen);
+	const dv = new DataView(buf.buffer);
+	buf.set([0x52, 0x49, 0x46, 0x46], 0);
+	dv.setUint32(4, 0xffffffff, true);
+	buf.set([0x57, 0x41, 0x56, 0x45], 8);
+	buf.set([0x66, 0x6d, 0x74, 0x20], 12);
+	dv.setUint32(16, 16, true);
+	dv.setUint16(20, 1, true);
+	dv.setUint16(22, 1, true);
+	dv.setUint32(24, 48000, true);
+	dv.setUint32(28, 96000, true);
+	dv.setUint16(32, 2, true);
+	dv.setUint16(34, 16, true);
+	buf.set([0x64, 0x61, 0x74, 0x61], 36);
+	dv.setUint32(40, 0xffffffff, true);
+	for (let i = 0; i < samples.length; i++) {
+		dv.setInt16(44 + i * 2, samples[i], true);
+	}
+	const out = decodeWavSync(buf);
+	assertEquals(out.sampleRate, 48000);
 	assertEquals(out.channels, 1);
 	assertEquals(Array.from(out.samples), samples);
 });
@@ -179,9 +228,15 @@ Deno.test("stub assertions: streamSource cancels when aborted", async () => {
 	let cancelled = false;
 	const stream = new ReadableStream<PcmFrame>({
 		pull(c) {
-			c.enqueue({ samples: new Int16Array([0]), sampleRate: 48000, channels: 1 });
+			c.enqueue({
+				samples: new Int16Array([0]),
+				sampleRate: 48000,
+				channels: 1,
+			});
 		},
-		cancel() { cancelled = true; },
+		cancel() {
+			cancelled = true;
+		},
 	});
 	const ctrl = new AbortController();
 	let n = 0;

@@ -50,7 +50,8 @@ export function bufferSource(opts: {
 }): AudioSource {
 	const channels = opts.channels ?? 1;
 	const frameMs = opts.frameDurationMs ?? 20;
-	const frameSamples = Math.floor((opts.sampleRate * frameMs) / 1000) * channels;
+	const frameSamples = Math.floor((opts.sampleRate * frameMs) / 1000) *
+		channels;
 	return {
 		async *frames(o) {
 			for (let i = 0; i < opts.samples.length; i += frameSamples) {
@@ -135,8 +136,12 @@ export interface CodecFactory {
 }
 
 export const defaultCodecFactory: CodecFactory = {
-	newEncoder() { throw new Error("no audio encoder configured"); },
-	newDecoder() { throw new Error("no audio decoder configured"); },
+	newEncoder() {
+		throw new Error("no audio encoder configured");
+	},
+	newDecoder() {
+		throw new Error("no audio decoder configured");
+	},
 };
 
 /** Minimal 16-bit PCM WAV decoder. Throws on compressed formats. */
@@ -155,14 +160,27 @@ export function decodeWavSync(bytes: Uint8Array): {
 		bytes[11] !== 0x45
 	) throw new Error("decodeWavSync: not a WAVE file");
 	let off = 12;
-	let fmt: { channels: number; sampleRate: number; bitsPerSample: number; audioFormat: number } | null = null;
+	let fmt: {
+		channels: number;
+		sampleRate: number;
+		bitsPerSample: number;
+		audioFormat: number;
+	} | null = null;
 	let dataOff = -1;
 	let dataLen = 0;
 	while (off + 8 <= bytes.length) {
-		const id = String.fromCharCode(bytes[off], bytes[off + 1], bytes[off + 2], bytes[off + 3]);
+		const id = String.fromCharCode(
+			bytes[off],
+			bytes[off + 1],
+			bytes[off + 2],
+			bytes[off + 3],
+		);
 		const size = dv.getUint32(off + 4, true);
 		const start = off + 8;
 		if (id === "fmt ") {
+			if (size < 16 || start + 16 > bytes.length) {
+				throw new Error("decodeWavSync: invalid fmt chunk");
+			}
 			fmt = {
 				audioFormat: dv.getUint16(start, true),
 				channels: dv.getUint16(start + 2, true),
@@ -171,7 +189,10 @@ export function decodeWavSync(bytes: Uint8Array): {
 			};
 		} else if (id === "data") {
 			dataOff = start;
-			dataLen = size;
+			// ffmpeg writes a placeholder 0xffffffff data size when emitting WAV
+			// to a non-seekable stream. In that case the real data is the
+			// remaining bytes in the buffer.
+			dataLen = Math.min(size, Math.max(0, bytes.length - start));
 			break;
 		}
 		off = start + size + (size % 2); // chunks are 2-aligned
