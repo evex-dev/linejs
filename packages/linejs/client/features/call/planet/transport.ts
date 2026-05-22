@@ -47,6 +47,7 @@ import {
 	type CcConnReq,
 	type CcSetupReq,
 	decodeCcConnReq,
+	decodeCcInfoReq,
 	decodeCcSetupRsp,
 	decodeFields,
 	decodeNativeSetupOffer,
@@ -54,6 +55,7 @@ import {
 	extractRmtNonceFromReply,
 	type NativeSetupOffer,
 	packCcConnRsp,
+	packCcInfoRsp,
 	packCcRelReq,
 	packCcSetupReq,
 	packNativeSetupOffer,
@@ -503,6 +505,13 @@ export class PlanetTransport implements CallTransport {
 					this.#rmtNonce = msg.hdr.locNonce;
 					this.#nonceLearned = true;
 				}
+				if (msg.cc?.bodyTag === CC_MSG.INFO_REQ && msg.cc.bodyBytes) {
+					void this.#sendInfoRsp(
+						incoming as PlanetIncomingMessage & {
+							message: ReturnType<typeof decodePlanetMsg>;
+						},
+					).catch(() => {});
+				}
 			} catch {
 				// Keep the raw reply flowing even if a newer message type is unknown.
 			}
@@ -902,6 +911,41 @@ export class PlanetTransport implements CallTransport {
 		const ccMsg = packPlanetCcMsg(
 			{
 				cid: request.message.cc?.hdr?.cid ?? this.#callUuid ?? "conn-rsp",
+				srcChanId: this.#srcChanId,
+				dstChanId: request.message.cc?.hdr?.srcChanId ?? 0n,
+			},
+			ccBody,
+		);
+		await this.#sendEnvelope({ kind: "cc", data: ccMsg });
+	}
+
+	async #sendInfoRsp(
+		request: PlanetIncomingMessage & {
+			message: ReturnType<typeof decodePlanetMsg>;
+		},
+	): Promise<void> {
+		const bodyBytes = request.message.cc?.bodyBytes;
+		if (!bodyBytes) return;
+		let infoReq: ReturnType<typeof decodeCcInfoReq>;
+		try {
+			infoReq = decodeCcInfoReq(bodyBytes);
+		} catch {
+			return;
+		}
+		const ccBody = wrapCcMsg(
+			CC_MSG.INFO_RSP,
+			packCcInfoRsp({
+				result: 0,
+				bodyType: infoReq.bodyType,
+				body: infoReq.body,
+				svcId: infoReq.svcId,
+				tgtSvcId: infoReq.tgtSvcId,
+				interDomain: infoReq.interDomain,
+			}),
+		);
+		const ccMsg = packPlanetCcMsg(
+			{
+				cid: request.message.cc?.hdr?.cid ?? this.#callUuid ?? "info-rsp",
 				srcChanId: this.#srcChanId,
 				dstChanId: request.message.cc?.hdr?.srcChanId ?? 0n,
 			},

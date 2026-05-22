@@ -3,6 +3,8 @@ import {
 	CC_MSG,
 	decodeCcConnReq,
 	decodeCcConnRsp,
+	decodeCcInfoReq,
+	decodeCcInfoRsp,
 	decodeCcSetupRsp,
 	decodeFields,
 	decodeNativeSetupOffer,
@@ -11,6 +13,8 @@ import {
 	encodeVarint,
 	packCcConnReq,
 	packCcConnRsp,
+	packCcInfoReq,
+	packCcInfoRsp,
 	packCcRelReq,
 	packCcSetupReq,
 	packCcSetupRsp,
@@ -446,6 +450,50 @@ Deno.test("packCcConnReq/packCcConnRsp round-trip answered-call media fields", (
 	assertEquals(decodedRsp.netType, 1);
 	assertEquals(decodedRsp.unavailToSec, 120);
 	assertEquals(decodedRsp.ua, ua);
+});
+
+Deno.test("packCcInfoReq/packCcInfoRsp round-trip info exchange fields", () => {
+	const body = new Uint8Array([1, 2, 3]);
+	const ue = new Uint8Array([4, 5]);
+	const req = packCcInfoReq({
+		bodyType: "profile",
+		body,
+		targets: ["callee"],
+		source: "caller",
+		sourceSvcId: "freecall.audio",
+		tgtUe: [ue],
+		trxOrigin: "origin",
+		svcId: "svc",
+		tgtSvcId: "target",
+		interDomain: false,
+	});
+	const decodedReq = decodeCcInfoReq(req);
+	assertEquals(decodedReq.bodyType, "profile");
+	assertEquals(decodedReq.body, body);
+	assertEquals(decodedReq.targets, ["callee"]);
+	assertEquals(decodedReq.source, "caller");
+	assertEquals(decodedReq.sourceSvcId, "freecall.audio");
+	assertEquals(decodedReq.tgtUe, [ue]);
+	assertEquals(decodedReq.trxOrigin, "origin");
+	assertEquals(decodedReq.svcId, "svc");
+	assertEquals(decodedReq.tgtSvcId, "target");
+	assertEquals(decodedReq.interDomain, false);
+
+	const rsp = packCcInfoRsp({
+		result: 0,
+		bodyType: "profile",
+		body,
+		svcId: "svc",
+		tgtSvcId: "target",
+		interDomain: true,
+	});
+	const decodedRsp = decodeCcInfoRsp(rsp);
+	assertEquals(decodedRsp.result, 0);
+	assertEquals(decodedRsp.bodyType, "profile");
+	assertEquals(decodedRsp.body, body);
+	assertEquals(decodedRsp.svcId, "svc");
+	assertEquals(decodedRsp.tgtSvcId, "target");
+	assertEquals(decodedRsp.interDomain, true);
 });
 
 Deno.test("packCcRelReq matches the observed local-hangup field shape", () => {

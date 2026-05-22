@@ -783,6 +783,10 @@ function repeatedBytes(fields: DecodedField[], tag: number): Uint8Array[] {
 		.filter((v): v is Uint8Array => v !== undefined);
 }
 
+function repeatedStrings(fields: DecodedField[], tag: number): string[] {
+	return repeatedBytes(fields, tag).map((b) => new TextDecoder().decode(b));
+}
+
 export interface DecodedPlanetMsgHdr {
 	userId?: string;
 	msgId?: number;
@@ -1078,6 +1082,88 @@ export function decodeCcConnRsp(bytes: Uint8Array): CcConnRsp {
 		ua: asBytesField(fields, 7),
 		mAddr: mAddr ? decodePlanetAddr(mAddr) : undefined,
 		uePublicAddr: uePublicAddr ? decodePlanetAddr(uePublicAddr) : undefined,
+		svcId: asStringField(fields, 151),
+		tgtSvcId: asStringField(fields, 152),
+		interDomain: asBoolField(fields, 153),
+	};
+}
+
+export interface CcInfoReq {
+	bodyType?: string;
+	body?: Uint8Array;
+	targets: string[];
+	source?: string;
+	sourceSvcId?: string;
+	tgtUe: Uint8Array[];
+	trxOrigin?: string;
+	svcId?: string;
+	tgtSvcId?: string;
+	interDomain?: boolean;
+}
+
+export function packCcInfoReq(r: CcInfoReq): Uint8Array {
+	const b: Buf = { bytes: [] };
+	if (r.bodyType !== undefined) emitString(b, 1, r.bodyType);
+	if (r.body) emitBytes(b, 2, r.body);
+	for (const target of r.targets) emitString(b, 3, target);
+	if (r.source !== undefined) emitString(b, 4, r.source);
+	if (r.sourceSvcId !== undefined) emitString(b, 5, r.sourceSvcId);
+	for (const ue of r.tgtUe) emitMessage(b, 6, ue);
+	if (r.trxOrigin !== undefined) emitString(b, 7, r.trxOrigin);
+	if (r.svcId !== undefined) emitString(b, 151, r.svcId);
+	if (r.tgtSvcId !== undefined) emitString(b, 152, r.tgtSvcId);
+	if (r.interDomain !== undefined) emitBool(b, 153, r.interDomain);
+	return finalize(b);
+}
+
+export function decodeCcInfoReq(bytes: Uint8Array): CcInfoReq {
+	const fields = decodeFields(bytes);
+	return {
+		bodyType: asStringField(fields, 1),
+		body: asBytesField(fields, 2),
+		targets: repeatedStrings(fields, 3),
+		source: asStringField(fields, 4),
+		sourceSvcId: asStringField(fields, 5),
+		tgtUe: repeatedBytes(fields, 6),
+		trxOrigin: asStringField(fields, 7),
+		svcId: asStringField(fields, 151),
+		tgtSvcId: asStringField(fields, 152),
+		interDomain: asBoolField(fields, 153),
+	};
+}
+
+export interface CcInfoRsp {
+	result?: number;
+	relCode?: number;
+	relPhrase?: string;
+	bodyType?: string;
+	body?: Uint8Array;
+	svcId?: string;
+	tgtSvcId?: string;
+	interDomain?: boolean;
+}
+
+export function packCcInfoRsp(r: CcInfoRsp): Uint8Array {
+	const b: Buf = { bytes: [] };
+	if (r.result !== undefined) emitUint32(b, 1, r.result);
+	if (r.relCode !== undefined) emitUint32(b, 2, r.relCode);
+	if (r.relPhrase !== undefined) emitString(b, 3, r.relPhrase);
+	if (r.bodyType !== undefined) emitString(b, 4, r.bodyType);
+	if (r.body) emitBytes(b, 5, r.body);
+	if (r.svcId !== undefined) emitString(b, 151, r.svcId);
+	if (r.tgtSvcId !== undefined) emitString(b, 152, r.tgtSvcId);
+	if (r.interDomain !== undefined) emitBool(b, 153, r.interDomain);
+	return finalize(b);
+}
+
+export function decodeCcInfoRsp(bytes: Uint8Array): CcInfoRsp {
+	const fields = decodeFields(bytes);
+	return {
+		result: asNumberField(fields, 1),
+		relCode: asNumberField(fields, 2),
+		relPhrase: asStringField(fields, 3),
+		bodyType: asStringField(fields, 4),
+		body: asBytesField(fields, 5),
 		svcId: asStringField(fields, 151),
 		tgtSvcId: asStringField(fields, 152),
 		interDomain: asBoolField(fields, 153),
