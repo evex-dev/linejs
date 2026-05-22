@@ -17,23 +17,32 @@
  *   3. ECDH(local_priv, peer_pub) → 32-byte shared secret (P-256 X
  *      coordinate of the resulting point).
  *
- *   4. Stage-1 HKDF (kdf_id=3 → hash_id=64 = SHA-512):
- *        HKDF-SHA512(
- *          salt = ecdh_shared_secret (32B),
- *          ikm  = our_pub (33B SEC1 compressed),
- *          info = peer_pub (33B SEC1 compressed = mpkey),
- *        ) → 64-byte session base material
+ *   4. Stage-1 PLANET KDF (kdf_id=3, SHA-512):
+ *        PRK = HMAC-SHA512(key = route mpkey, data = ecdh_secret)
+ *        OUT = HMAC-SHA512(key = PRK, data = local_pub || u32be(0))
+ *        → 64-byte forward base material
  *
- *   5. Stage-2 HKDF (kdf_id=2 → hash_id=32 = SHA-256):
- *        HKDF-SHA256(
- *          salt = stage1_out[:32],
- *          ikm  = 16-byte session id (random per call),
- *          info = 8-byte direction tag (first 4 BE bytes = counter,
- *                 last 4 = zero) — different label per direction.
- *        ) → 128-byte transport keying material
+ *      Reverse direction repeats stage 1 with the public keys swapped.
  *
- *   6. Transport keys carved from stage2_out (observed pattern fits
- *      32B encKey + 32B macKey + 16B IV-nonce + 48B reserve).
+ *   5. Stage-2 PLANET KDF:
+ *        PRK = HMAC-SHA512(key = 16-byte bootstrap seed,
+ *                          data = 64-byte stage1 output)
+ *        OUT = HMAC-SHA512(key = PRK, data = 2-byte label || u32be(0))
+ *        → 64-byte transport keying material
+ *
+ *   6. Native transport carve observed from `ear_crypto_aes_ctr_create`,
+ *      `ear_crypto_aes_ctr_do`, and `ear_crypto_calc_hmac`:
+ *        AES-128 key = stage2[0..16]
+ *        CTR base    = stage2[16..32]
+ *        HMAC key    = stage2[32..64]
+ *
+ *      Per packet, the CTR IV is `CTR base XOR seq_hi/seq_lo` repeated
+ *      across alternating bytes. The 16-bit sequence is the clear value in
+ *      PLANET header bytes 2..3.
+ *
+ * The exported native function is named `ear_crypto_hkdf`, but live
+ * arguments plus disassembly show it is not RFC 5869 HKDF. It is the
+ * HMAC-based counter KDF above.
  *
  * The matching libtomcrypt functions live behind ear_crypto_hkdf's
  * dispatch table (`_get_hash_type_from_kdf` at va 0xcb5cd8):
@@ -54,9 +63,6 @@ import {
 	createECDH,
 	createHash,
 	createHmac,
-	createPrivateKey,
-	createPublicKey,
-	hkdfSync,
 	randomBytes,
 } from "node:crypto";
 
@@ -72,10 +78,33 @@ export function decodeMpKey(b64: string): Uint8Array {
 	}
 	if (out[0] !== 0x02 && out[0] !== 0x03) {
 		throw new Error(
-			`decodeMpKey: unexpected parity byte 0x${out[0].toString(16)}, want 0x02/0x03`,
+			`decodeMpKey: unexpected parity byte 0x${
+				out[0].toString(16)
+			}, want 0x02/0x03`,
 		);
 	}
 	return out;
+}
+
+/** Decode route.stnpk to a SEC1 P-256 public key.
+ *
+ * LINE returns stnpk as a base64 DER SubjectPublicKeyInfo. The useful ECDH
+ * point is the trailing uncompressed SEC1 point: 0x04 || X || Y.
+ */
+export function decodeStnpkPublicKey(b64: string): Uint8Array {
+	const bin = atob(b64);
+	const raw = new Uint8Array(bin.length);
+	for (let i = 0; i < bin.length; i++) raw[i] = bin.charCodeAt(i);
+	if (raw.length === 33 && (raw[0] === 0x02 || raw[0] === 0x03)) {
+		return raw;
+	}
+	if (raw.length === 65 && raw[0] === 0x04) return raw;
+	if (raw.length >= 65 && raw[raw.length - 65] === 0x04) {
+		return raw.subarray(raw.length - 65);
+	}
+	throw new Error(
+		`decodeStnpkPublicKey: unsupported key material length ${raw.length}`,
+	);
 }
 
 /** A freshly-generated local ephemeral P-256 keypair, with the public
@@ -104,60 +133,120 @@ export function ecdh(
 	return new Uint8Array(ec.computeSecret(Buffer.from(peerPub)));
 }
 
-/** Stage-1 HKDF: derive 64-byte session base from ECDH secret + the
- *  two SEC1 compressed public keys. */
+function hmacSha512(key: Uint8Array, ...parts: Uint8Array[]): Uint8Array {
+	const h = createHmac("sha512", key);
+	for (const p of parts) h.update(p);
+	return new Uint8Array(h.digest());
+}
+
+function u32be(v: number): Uint8Array {
+	const out = new Uint8Array(4);
+	out[0] = (v >>> 24) & 0xff;
+	out[1] = (v >>> 16) & 0xff;
+	out[2] = (v >>> 8) & 0xff;
+	out[3] = v & 0xff;
+	return out;
+}
+
+/** Native PLANET KDF used by `ear_crypto_hkdf` for kdf_id=3/SHA-512.
+ *  This is not RFC HKDF:
+ *
+ *    prk = HMAC-SHA512(key = ikm, data = salt)
+ *    block[i] = HMAC-SHA512(key = prk, data = info || u32be(i))
+ *
+ *  The first counter value is 0, matching live `ear_crypto_hkdf` output.
+ */
+export function planetKdfSha512(
+	salt: Uint8Array,
+	ikm: Uint8Array,
+	info: Uint8Array,
+	outLen = 64,
+): Uint8Array {
+	if (outLen < 0) throw new Error("planetKdfSha512: outLen < 0");
+	const prk = hmacSha512(ikm, salt);
+	const out = new Uint8Array(outLen);
+	let written = 0;
+	let counter = 0;
+	while (written < outLen) {
+		const block = hmacSha512(prk, info, u32be(counter++));
+		const n = Math.min(block.length, outLen - written);
+		out.set(block.subarray(0, n), written);
+		written += n;
+	}
+	return out;
+}
+
+/** Stage-1 KDF: derive 64-byte session base from ECDH secret + the two
+ *  SEC1 compressed public keys. `ikmPub` and `infoPub` are intentionally
+ *  ordered; native computes one base per direction by swapping them. */
 export function planetHkdfStage1(
 	ecdhSecret: Uint8Array,
-	ourPub: Uint8Array,
-	peerPub: Uint8Array,
+	ikmPub: Uint8Array,
+	infoPub: Uint8Array,
 ): Uint8Array {
 	if (ecdhSecret.length !== 32) {
 		throw new Error("planetHkdfStage1: ecdhSecret must be 32 bytes");
 	}
-	if (ourPub.length !== 33 || peerPub.length !== 33) {
+	if (ikmPub.length !== 33 || infoPub.length !== 33) {
 		throw new Error("planetHkdfStage1: pubkeys must be 33 bytes SEC1");
 	}
-	return new Uint8Array(
-		hkdfSync("sha512", ourPub, ecdhSecret, peerPub, 64),
-	);
+	return planetKdfSha512(ecdhSecret, ikmPub, infoPub, 64);
 }
 
 export interface TransportKeys {
-	/** AES-256-CTR encryption key, 32 bytes. */
+	/** AES-128-CTR encryption key, 16 bytes. */
 	encKey: Uint8Array;
-	/** HMAC-SHA256 authentication key, 32 bytes. */
+	/** HMAC-SHA256 key, 32 bytes. Native truncates the digest to 16 bytes. */
 	macKey: Uint8Array;
-	/** 16-byte CTR nonce/IV base. */
-	ivNonce: Uint8Array;
-	/** Remaining 48 bytes of HKDF output (reserved). */
-	reserve: Uint8Array;
+	/** 16-byte CTR base mixed with the clear 16-bit packet sequence. */
+	ctrBase: Uint8Array;
+	/** Full 64-byte native stage-2 KDF output. */
+	raw: Uint8Array;
 }
 
-/** Stage-2 HKDF: carve 128 bytes of transport keying material from the
- *  stage-1 base + a per-direction tag + a 16-byte session-id. */
+/** Stage-2 KDF and native key carve. */
 export function planetHkdfStage2(
 	stage1Base: Uint8Array,
-	sessionId16: Uint8Array,
-	directionTag8: Uint8Array,
+	bootstrapSeed16: Uint8Array,
+	directionLabel2: Uint8Array,
 ): TransportKeys {
-	if (stage1Base.length < 32) {
-		throw new Error("planetHkdfStage2: stage1Base too short");
+	if (stage1Base.length !== 64) {
+		throw new Error("planetHkdfStage2: stage1Base must be 64 bytes");
 	}
-	if (sessionId16.length !== 16) {
-		throw new Error("planetHkdfStage2: sessionId must be 16 bytes");
+	if (bootstrapSeed16.length !== 16) {
+		throw new Error("planetHkdfStage2: bootstrap seed must be 16 bytes");
 	}
-	if (directionTag8.length !== 8) {
-		throw new Error("planetHkdfStage2: directionTag must be 8 bytes");
+	if (directionLabel2.length !== 2) {
+		throw new Error("planetHkdfStage2: direction label must be 2 bytes");
 	}
-	const out = new Uint8Array(
-		hkdfSync("sha256", sessionId16, stage1Base.subarray(0, 32), directionTag8, 128),
-	);
+	const out = planetKdfSha512(stage1Base, bootstrapSeed16, directionLabel2, 64);
 	return {
-		encKey: out.subarray(0, 32),
+		encKey: out.subarray(0, 16),
 		macKey: out.subarray(32, 64),
-		ivNonce: out.subarray(64, 80),
-		reserve: out.subarray(80, 128),
+		ctrBase: out.subarray(16, 32),
+		raw: out,
 	};
+}
+
+/** Build the native PLANET per-packet CTR IV.
+ *
+ * Native code copies the 16-byte base at transport offset `0x1180` and XORs
+ * alternating bytes with the clear packet sequence high and low bytes.
+ */
+export function buildPlanetCtrIv(
+	ctrBase: Uint8Array,
+	sequence: number,
+): Uint8Array {
+	if (ctrBase.length !== 16) {
+		throw new Error("buildPlanetCtrIv: ctrBase must be 16 bytes");
+	}
+	const hi = (sequence >>> 8) & 0xff;
+	const lo = sequence & 0xff;
+	const out = new Uint8Array(16);
+	for (let i = 0; i < out.length; i++) {
+		out[i] = ctrBase[i] ^ (i % 2 === 0 ? hi : lo);
+	}
+	return out;
 }
 
 /** Build the per-packet CTR IV: ivNonce[0..11] || 4-byte BE counter. */
@@ -178,7 +267,7 @@ export function aesCtrEncrypt(
 	iv: Uint8Array,
 	plaintext: Uint8Array,
 ): Uint8Array {
-	const c = createCipheriv("aes-256-ctr", key, iv);
+	const c = createCipheriv(aesCtrAlgorithm(key), key, iv);
 	return new Uint8Array(Buffer.concat([c.update(plaintext), c.final()]));
 }
 
@@ -187,8 +276,14 @@ export function aesCtrDecrypt(
 	iv: Uint8Array,
 	ciphertext: Uint8Array,
 ): Uint8Array {
-	const c = createDecipheriv("aes-256-ctr", key, iv);
+	const c = createDecipheriv(aesCtrAlgorithm(key), key, iv);
 	return new Uint8Array(Buffer.concat([c.update(ciphertext), c.final()]));
+}
+
+function aesCtrAlgorithm(key: Uint8Array): "aes-128-ctr" | "aes-256-ctr" {
+	if (key.length === 16) return "aes-128-ctr";
+	if (key.length === 32) return "aes-256-ctr";
+	throw new Error(`AES-CTR key must be 16 or 32 bytes, got ${key.length}`);
 }
 
 /** HMAC-SHA256, truncated to 16 bytes (the apparent PLANET tag size). */
@@ -214,15 +309,12 @@ export function newSessionId(): Uint8Array {
 	return new Uint8Array(randomBytes(16));
 }
 
-/** Build the 8-byte direction tag: 4-byte BE counter + 4 zero bytes.
- *  The captured wire used 0x329aba33 and 0x8bd74aaa as the leading 4 bytes
- *  — these are per-session random labels, NOT a monotonic counter. */
-export function buildDirectionTag(label32: number): Uint8Array {
-	const t = new Uint8Array(8);
-	t[0] = (label32 >>> 24) & 0xff;
-	t[1] = (label32 >>> 16) & 0xff;
-	t[2] = (label32 >>> 8) & 0xff;
-	t[3] = label32 & 0xff;
+/** Build the native 2-byte per-direction label seen in the plaintext
+ *  bootstrap prefix and in stage-2 KDF `info`. */
+export function buildDirectionLabel(label16: number): Uint8Array {
+	const t = new Uint8Array(2);
+	t[0] = (label16 >>> 8) & 0xff;
+	t[1] = label16 & 0xff;
 	return t;
 }
 
@@ -231,13 +323,35 @@ export function buildDirectionTag(label32: number): Uint8Array {
 export function deriveCallKeys(opts: {
 	mpkey: Uint8Array; // peer EC pub (33B SEC1)
 	local: EphemeralKeypair;
-	sessionId: Uint8Array; // 16B
+	bootstrapSeed: Uint8Array; // 16B
 	sendLabel: number;
 	recvLabel: number;
-}): { send: TransportKeys; recv: TransportKeys; ourPub: Uint8Array; ecdhSecret: Uint8Array } {
+}): {
+	send: TransportKeys;
+	recv: TransportKeys;
+	ourPub: Uint8Array;
+	ecdhSecret: Uint8Array;
+} {
 	const ecdhSecret = ecdh(opts.local.privateKey, opts.mpkey);
-	const stage1 = planetHkdfStage1(ecdhSecret, opts.local.publicKey, opts.mpkey);
-	const send = planetHkdfStage2(stage1, opts.sessionId, buildDirectionTag(opts.sendLabel));
-	const recv = planetHkdfStage2(stage1, opts.sessionId, buildDirectionTag(opts.recvLabel));
+	const sendStage1 = planetHkdfStage1(
+		ecdhSecret,
+		opts.mpkey,
+		opts.local.publicKey,
+	);
+	const recvStage1 = planetHkdfStage1(
+		ecdhSecret,
+		opts.local.publicKey,
+		opts.mpkey,
+	);
+	const send = planetHkdfStage2(
+		sendStage1,
+		opts.bootstrapSeed,
+		buildDirectionLabel(opts.sendLabel),
+	);
+	const recv = planetHkdfStage2(
+		recvStage1,
+		opts.bootstrapSeed,
+		buildDirectionLabel(opts.recvLabel),
+	);
 	return { send, recv, ourPub: opts.local.publicKey, ecdhSecret };
 }
