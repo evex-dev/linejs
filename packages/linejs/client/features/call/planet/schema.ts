@@ -904,6 +904,28 @@ export interface CcSetupRsp {
 	maxCallTimeSec?: number;
 }
 
+export function packCcSetupRsp(r: CcSetupRsp): Uint8Array {
+	const b: Buf = { bytes: [] };
+	if (r.result !== undefined) emitUint32(b, 1, r.result);
+	if (r.relCode !== undefined) emitUint32(b, 2, r.relCode);
+	if (r.relPhrase !== undefined) emitString(b, 3, r.relPhrase);
+	if (r.cfgs !== undefined) emitString(b, 4, r.cfgs);
+	if (r.releaser !== undefined) emitString(b, 6, r.releaser);
+	if (r.compCfgs) emitBytes(b, 7, r.compCfgs);
+	if (r.compCfgsType !== undefined) emitUint32(b, 8, r.compCfgsType);
+	if (r.aliveRptInterval !== undefined) emitUint32(b, 101, r.aliveRptInterval);
+	if (r.stops !== undefined) emitString(b, 102, r.stops);
+	if (r.pt !== undefined) emitBool(b, 111, r.pt);
+	if (r.noAnsToSec !== undefined) emitUint32(b, 112, r.noAnsToSec);
+	if (r.maxDurSec !== undefined) emitUint32(b, 113, r.maxDurSec);
+	if (r.ptt !== undefined) emitBool(b, 114, r.ptt);
+	if (r.svcId !== undefined) emitString(b, 151, r.svcId);
+	if (r.tgtSvcId !== undefined) emitString(b, 152, r.tgtSvcId);
+	if (r.interDomain !== undefined) emitBool(b, 153, r.interDomain);
+	if (r.maxCallTimeSec !== undefined) emitUint32(b, 154, r.maxCallTimeSec);
+	return finalize(b);
+}
+
 export function decodeCcSetupRsp(bytes: Uint8Array): CcSetupRsp {
 	const fields = decodeFields(bytes);
 	return {

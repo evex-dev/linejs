@@ -99,6 +99,7 @@ export {
 	packCcConnRsp,
 	packCcRelReq,
 	packCcSetupReq,
+	packCcSetupRsp,
 	packKeepaliveReq,
 	packNativeSetupOffer,
 	packPlanetAddr,

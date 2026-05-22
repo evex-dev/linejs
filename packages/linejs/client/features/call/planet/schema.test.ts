@@ -13,6 +13,7 @@ import {
 	packCcConnRsp,
 	packCcRelReq,
 	packCcSetupReq,
+	packCcSetupRsp,
 	packKeepaliveReq,
 	packNativeSetupOffer,
 	packPlanetCcHdr,
@@ -217,6 +218,24 @@ Deno.test("packCcSetupReq emits initiator + responder + svc_key in tag order", (
 		"BASE64PUBKEY==",
 	);
 	assertEquals(byTag.get(10)!.value, new Uint8Array([1, 2, 3]));
+});
+
+Deno.test("packCcSetupRsp round-trips setup response fields", () => {
+	const wire = packCcSetupRsp({
+		result: 0,
+		aliveRptInterval: 5,
+		noAnsToSec: 30,
+		svcId: "svc",
+		tgtSvcId: "target",
+		interDomain: true,
+	});
+	const decoded = decodeCcSetupRsp(wire);
+	assertEquals(decoded.result, 0);
+	assertEquals(decoded.aliveRptInterval, 5);
+	assertEquals(decoded.noAnsToSec, 30);
+	assertEquals(decoded.svcId, "svc");
+	assertEquals(decoded.tgtSvcId, "target");
+	assertEquals(decoded.interDomain, true);
 });
 
 Deno.test("packPlanetUserAgent emits the native Android UA field layout", () => {

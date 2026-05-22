@@ -30,12 +30,14 @@ import {
 	buildDirectionLabel,
 	buildPlanetCtrIv,
 	decodeMpKey,
-	deriveCallKeys,
 	derivePlanetMediaKeys,
+	ecdh,
 	type EphemeralKeypair,
 	generateEphemeralKeypair,
 	hmacTag,
 	newSessionId,
+	planetHkdfStage1,
+	planetHkdfStage2,
 	sha256,
 	tagEquals,
 	type TransportKeys,
@@ -159,10 +161,21 @@ function parseRoute(r: LINETypes.CallRoute): CallRouteParsed {
 }
 
 const HEADER_LEN = 6;
+const BOOTSTRAP_PREFIX_LEN = 51;
+const BOOTSTRAP_SEC_HEADER_LEN = 5;
+const BOOTSTRAP_CIPHER_OFFSET = HEADER_LEN + BOOTSTRAP_PREFIX_LEN +
+	BOOTSTRAP_SEC_HEADER_LEN;
 
 function readObservedSequence(wire: Uint8Array): number {
 	if (wire.length < HEADER_LEN) throw new Error("PLANET wire too short");
 	return ((wire[2] << 8) | wire[3]) & 0xffff;
+}
+
+function readCipherSequence(wire: Uint8Array, cipherOffset: number): number {
+	if (cipherOffset === BOOTSTRAP_CIPHER_OFFSET) {
+		return readObservedSequence(wire);
+	}
+	return parseFrameHeader(wire).fixed.sequence;
 }
 
 function concatBytes(parts: Uint8Array[]): Uint8Array {
@@ -337,7 +350,6 @@ export class PlanetTransport implements CallTransport {
 	#sessId?: Uint8Array;
 	#bootstrapSeed?: Uint8Array;
 	#sendLabel = 0;
-	#recvLabel = 0;
 	#callUuid?: string;
 	#callUuid16?: Uint8Array;
 	#localMediaOffer?: PlanetLocalMediaOffer;
@@ -392,7 +404,6 @@ export class PlanetTransport implements CallTransport {
 		this.#sessId = new Uint8Array(0);
 		this.#bootstrapSeed = newSessionId();
 		this.#sendLabel = crypto.getRandomValues(new Uint16Array(1))[0];
-		this.#recvLabel = crypto.getRandomValues(new Uint16Array(1))[0];
 		this.#callUuid16 = crypto.getRandomValues(new Uint8Array(16));
 		this.#callUuid = crypto.randomUUID();
 		this.#msgIdCounter = randomVarint2();
@@ -408,16 +419,14 @@ export class PlanetTransport implements CallTransport {
 		this.#rtpQueue = [];
 		this.#queued = [];
 
-		// Native bootstrap uses a 16-byte seed and two random 2-byte labels.
-		const keys = deriveCallKeys({
-			mpkey: this.#route.peerPub,
-			local: this.#local,
-			bootstrapSeed: this.#bootstrapSeed,
-			sendLabel: this.#sendLabel,
-			recvLabel: this.#recvLabel,
-		});
-		this.#sendKeys = keys.send;
-		this.#recvKeys = keys.recv;
+		// Native bootstrap uses a local seed/label for the first outbound SETUP.
+		// The first inbound packet carries its own seed/label, so receive keys
+		// are derived lazily from that packet before HMAC verification.
+		this.#sendKeys = this.#deriveSendKeys(
+			this.#bootstrapSeed,
+			this.#sendLabel,
+		);
+		this.#recvKeys = undefined;
 
 		this.#locNonce = BigInt(randomNativeLargeId());
 
@@ -495,16 +504,68 @@ export class PlanetTransport implements CallTransport {
 	}
 
 	#decryptWire(wire: Uint8Array): Uint8Array | null {
-		if (!this.#recvKeys || wire.length < HEADER_LEN + 16) return null;
-		const seq = readObservedSequence(wire);
+		if (wire.length < HEADER_LEN + 16) return null;
+		const regular = this.#recvKeys
+			? this.#decryptWithKeys(wire, this.#recvKeys, HEADER_LEN)
+			: null;
+		if (regular) return regular;
+		return this.#decryptBootstrapWire(wire);
+	}
+
+	#deriveSendKeys(seed: Uint8Array, label: number): TransportKeys {
+		if (!this.#local || !this.#route) throw new Error("connect first");
+		const secret = ecdh(this.#local.privateKey, this.#route.peerPub);
+		const stage1 = planetHkdfStage1(
+			secret,
+			this.#route.peerPub,
+			this.#local.publicKey,
+		);
+		return planetHkdfStage2(stage1, seed, buildDirectionLabel(label));
+	}
+
+	#deriveRecvKeys(seed: Uint8Array, label: number): TransportKeys {
+		if (!this.#local || !this.#route) throw new Error("connect first");
+		const secret = ecdh(this.#local.privateKey, this.#route.peerPub);
+		const stage1 = planetHkdfStage1(
+			secret,
+			this.#local.publicKey,
+			this.#route.peerPub,
+		);
+		return planetHkdfStage2(stage1, seed, buildDirectionLabel(label));
+	}
+
+	#decryptBootstrapWire(wire: Uint8Array): Uint8Array | null {
+		if (wire.length < BOOTSTRAP_CIPHER_OFFSET + 16) return null;
+		const label = ((wire[HEADER_LEN] << 8) | wire[HEADER_LEN + 1]) & 0xffff;
+		const seed = copyBytes(
+			wire.subarray(HEADER_LEN + 2, HEADER_LEN + 18),
+		);
+		const keys = this.#deriveRecvKeys(seed, label);
+		const plaintext = this.#decryptWithKeys(
+			wire,
+			keys,
+			BOOTSTRAP_CIPHER_OFFSET,
+		);
+		if (!plaintext) return null;
+		this.#recvKeys = keys;
+		return plaintext;
+	}
+
+	#decryptWithKeys(
+		wire: Uint8Array,
+		keys: TransportKeys,
+		cipherOffset: number,
+	): Uint8Array | null {
+		if (wire.length < cipherOffset + 16) return null;
+		const seq = readCipherSequence(wire, cipherOffset);
 		const tag = wire.subarray(wire.length - 16);
 		const macInput = wire.subarray(0, wire.length - 16);
-		const ct = wire.subarray(HEADER_LEN, wire.length - 16);
-		const expected = hmacTag(this.#recvKeys.macKey, macInput);
+		const ct = wire.subarray(cipherOffset, wire.length - 16);
+		const expected = hmacTag(keys.macKey, macInput);
 		if (!tagEquals(tag, expected)) return null;
 		return aesCtrDecrypt(
-			this.#recvKeys.encKey,
-			buildPlanetCtrIv(this.#recvKeys.ctrBase, seq),
+			keys.encKey,
+			buildPlanetCtrIv(keys.ctrBase, seq),
 			ct,
 		);
 	}
