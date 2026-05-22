@@ -719,3 +719,8 @@ The call implementation is covered by focused protocol tests:
 
 The public example is intentionally small, but it uses the same primitives as
 the tested implementation.
+
+## Need Help?
+
+If you run into call-related issues, please ask on the LINEJS Discord:
+[https://discord.gg/evex](https://discord.gg/evex).
