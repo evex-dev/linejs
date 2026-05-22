@@ -129,6 +129,13 @@ export interface CodecFactory {
 		channels: number;
 		bitrate?: number;
 		frameDurationMs?: number;
+		bandwidth?:
+			| "narrowband"
+			| "mediumband"
+			| "wideband"
+			| "superwideband"
+			| "fullband";
+		signal?: "auto" | "voice" | "music";
 	}): AudioEncoder;
 	newDecoder(opts: {
 		sampleRate: number;

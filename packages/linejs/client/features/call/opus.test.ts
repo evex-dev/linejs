@@ -71,6 +71,27 @@ Deno.test("opusCodecFactory: encodes 10ms mono frames", async () => {
 	dec.close?.();
 });
 
+Deno.test("opusCodecFactory: can force narrowband SILK 10ms packets", async () => {
+	const factory = await opusCodecFactory();
+	const enc = factory.newEncoder({
+		sampleRate: 48000,
+		channels: 1,
+		frameDurationMs: 10,
+		bandwidth: "narrowband",
+		signal: "voice",
+	});
+
+	const pcm = new Int16Array(480);
+	for (let i = 0; i < pcm.length; i++) {
+		pcm[i] = Math.floor(Math.sin((2 * Math.PI * 440 * i) / 48000) * 4000);
+	}
+	const packet = enc.encode({ samples: pcm, sampleRate: 48000, channels: 1 });
+	assert(packet !== null);
+	assertEquals(packet[0] >> 3, 0);
+
+	enc.close?.();
+});
+
 Deno.test("opusCodecFactory: uses all interleaved stereo samples", async () => {
 	const factory = await opusCodecFactory();
 	const enc = factory.newEncoder({ sampleRate: 48000, channels: 2 });

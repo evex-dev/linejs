@@ -11,6 +11,8 @@ import { Buffer } from "node:buffer";
 interface OpusInstance {
 	encode(pcm: Buffer, sampleCount: number): Buffer;
 	decode(packet: Buffer): Buffer;
+	setBitrate(bitrate: number): void;
+	encoderCTL(ctl: number, arg: number): void;
 	delete(): void;
 }
 type OpusCtor = new (
@@ -19,6 +21,21 @@ type OpusCtor = new (
 	app: number,
 ) => OpusInstance;
 const OPUS_VOIP = 2048; // OPUS_APPLICATION_VOIP per opus.h
+const OPUS_AUTO = -1000;
+const OPUS_SET_BANDWIDTH_REQUEST = 4008;
+const OPUS_SET_SIGNAL_REQUEST = 4024;
+const OPUS_BANDWIDTH = {
+	narrowband: 1101,
+	mediumband: 1102,
+	wideband: 1103,
+	superwideband: 1104,
+	fullband: 1105,
+} as const;
+const OPUS_SIGNAL = {
+	auto: OPUS_AUTO,
+	voice: 3001,
+	music: 3002,
+} as const;
 
 async function loadOpusScript(): Promise<OpusCtor> {
 	const mod = await import("opusscript");
@@ -31,8 +48,20 @@ async function loadOpusScript(): Promise<OpusCtor> {
 export async function opusCodecFactory(): Promise<CodecFactory> {
 	const OpusCtor = await loadOpusScript();
 	return {
-		newEncoder({ sampleRate, channels, frameDurationMs }): AudioEncoder {
+		newEncoder({
+			sampleRate,
+			channels,
+			bitrate,
+			frameDurationMs,
+			bandwidth,
+			signal,
+		}): AudioEncoder {
 			const enc = new OpusCtor(sampleRate, channels, OPUS_VOIP);
+			if (bitrate !== undefined) enc.setBitrate(bitrate);
+			if (bandwidth) {
+				enc.encoderCTL(OPUS_SET_BANDWIDTH_REQUEST, OPUS_BANDWIDTH[bandwidth]);
+			}
+			if (signal) enc.encoderCTL(OPUS_SET_SIGNAL_REQUEST, OPUS_SIGNAL[signal]);
 			const samplesPerChannel = Math.floor(
 				(sampleRate * (frameDurationMs ?? 20)) / 1000,
 			);
