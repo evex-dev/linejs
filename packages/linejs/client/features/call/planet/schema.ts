@@ -76,6 +76,11 @@ function fixed32(v: number): Uint8Array {
 	o[3] = (v >>> 24) & 0xff;
 	return o;
 }
+function float32(v: number): Uint8Array {
+	const o = new Uint8Array(4);
+	new DataView(o.buffer, o.byteOffset, o.byteLength).setFloat32(0, v, true);
+	return o;
+}
 
 // ─── encoder primitive: emit (tag, value) → wire bytes ──────────────────
 
@@ -121,12 +126,25 @@ function emitEnum(b: Buf, tag: number, v: number) {
 function emitBoolAsVarint(b: Buf, tag: number, v: boolean) {
 	emitUint32(b, tag, v ? 1 : 0);
 }
+function emitFloat32(b: Buf, tag: number, v: number) {
+	_key(b, tag, WireType.Fixed32);
+	_emit(b, float32(v));
+}
 function emitMessage(b: Buf, tag: number, v: Uint8Array) {
 	_key(b, tag, WireType.LengthDelim);
 	_emit(b, encodeVarint(v.length), v);
 }
 function finalize(b: Buf): Uint8Array {
 	return new Uint8Array(b.bytes);
+}
+function concatSchemaBytes(parts: Uint8Array[]): Uint8Array {
+	const out = new Uint8Array(parts.reduce((n, p) => n + p.length, 0));
+	let off = 0;
+	for (const part of parts) {
+		out.set(part, off);
+		off += part.length;
+	}
+	return out;
 }
 
 // ─── planet_msg_hdr ─────────────────────────────────────────────────────
@@ -235,13 +253,15 @@ function packOfferPath(
 	rtpId: number,
 	rtpPort: number,
 	rtcpId: number,
+	rtpPairSecondary = 6801,
+	rtcpPairSecondary = 13601,
 ): Uint8Array {
 	const b: Buf = { bytes: [] };
 	emitUint32(b, 1, rtpId);
 	emitUint32(b, 11, rtpPort);
-	emitMessage(b, 12, packPortPair(67, 6801));
+	emitMessage(b, 12, packPortPair(67, rtpPairSecondary));
 	emitUint32(b, 61, rtcpId);
-	emitMessage(b, 62, packPortPair(67, 13601));
+	emitMessage(b, 62, packPortPair(67, rtcpPairSecondary));
 	return finalize(b);
 }
 
@@ -272,6 +292,7 @@ function packAudioVideoOffer(
 	path: Uint8Array,
 	rtpPort: number,
 	rtcpId: number,
+	extraModes: Uint8Array[] = [],
 ): Uint8Array {
 	const nested: Buf = { bytes: [] };
 	emitUint32(nested, 1, 127);
@@ -283,18 +304,22 @@ function packAudioVideoOffer(
 	emitMessage(b, 1, codec);
 	emitMessage(b, 2, path);
 	emitMessage(b, 3, finalize(nested));
+	for (const mode of extraModes) emitMessage(b, 51, mode);
+	return finalize(b);
+}
+
+function packOfferMode(first: number, second: number): Uint8Array {
+	const b: Buf = { bytes: [] };
+	emitUint32(b, 1, first);
+	emitUint32(b, 2, second);
 	return finalize(b);
 }
 
 function packDataOffer(codec: Uint8Array, path: Uint8Array): Uint8Array {
-	const dataMode: Buf = { bytes: [] };
-	emitUint32(dataMode, 1, 0);
-	emitUint32(dataMode, 2, 2);
-
 	const b: Buf = { bytes: [] };
 	emitMessage(b, 1, codec);
 	emitMessage(b, 2, path);
-	emitMessage(b, 51, finalize(dataMode));
+	emitMessage(b, 51, packOfferMode(0, 2));
 	return finalize(b);
 }
 
@@ -367,6 +392,74 @@ export function packNativeSetupOffer(
 	emitMessage(out, 1, data);
 	emitMessage(out, 2, finalize(secA));
 	emitMessage(out, 2, finalize(secB));
+	emitMessage(out, 3, finalize(version));
+	return finalize(out);
+}
+
+export interface PlanetGroupParticipateOfferMaterial {
+	/** 30-byte random secret/blob used by the group media key offer. */
+	mediaSecret: Uint8Array;
+}
+
+/** Pack the native group-call participate offer shape observed in LINE Android
+ * 26.6.2. Group calls carry audio, disabled video, and data records, plus the
+ * shared media secret. Unlike 1:1 SETUP, the captured group offer does not
+ * include a per-offer media public key/key-id/nonce block.
+ */
+export function packNativeGroupParticipateOffer(
+	material: PlanetGroupParticipateOfferMaterial,
+): Uint8Array {
+	if (material.mediaSecret.length !== 30) {
+		throw new Error(
+			"packNativeGroupParticipateOffer: mediaSecret must be 30 bytes",
+		);
+	}
+	const audioPath = packOfferPath(96, 103, 203, 6803, 13603);
+	const videoPath = packOfferPath(97, 113, 213, 6803, 13603);
+	const dataPath = packOfferPath(98, 123, 223, 6803, 13603);
+	const audio = packAudioVideoOffer(
+		"A",
+		packOfferCodec("A", { enabled: 1, bitrate: 32, kind: 1 }),
+		audioPath,
+		103,
+		203,
+	);
+	const videoCodec: Buf = { bytes: [] };
+	emitBytes(videoCodec, 1, new TextEncoder().encode("V"));
+	emitUint32(videoCodec, 2, 3);
+	emitUint32(videoCodec, 3, 0);
+	emitUint32(videoCodec, 4, 800);
+	emitUint32(videoCodec, 5, 15);
+	emitUint32(videoCodec, 6, 2);
+	emitUint32(videoCodec, 50, 7);
+	emitUint32(videoCodec, 50, 4);
+	const video = packAudioVideoOffer(
+		"V",
+		finalize(videoCodec),
+		videoPath,
+		113,
+		213,
+		[packOfferMode(0, 2), packOfferMode(2, 1)],
+	);
+	const data = packDataOffer(
+		packOfferCodec("D", { enabled: 1, bitrate: 2000, kind: 6 }),
+		dataPath,
+	);
+
+	const secInner: Buf = { bytes: [] };
+	emitBytes(secInner, 1, material.mediaSecret);
+	const sec: Buf = { bytes: [] };
+	emitMessage(sec, 2, finalize(secInner));
+
+	const version: Buf = { bytes: [] };
+	emitUint32(version, 1, 0);
+	emitUint32(version, 2, 3);
+
+	const out: Buf = { bytes: [] };
+	emitMessage(out, 1, audio);
+	emitMessage(out, 1, video);
+	emitMessage(out, 1, data);
+	emitMessage(out, 2, finalize(sec));
 	emitMessage(out, 3, finalize(version));
 	return finalize(out);
 }
@@ -579,6 +672,100 @@ export function packCcSetupReq(r: CcSetupReq): Uint8Array {
 	return finalize(b);
 }
 
+// ─── cc_participate_req / rsp — group-call join flow ───────────────────
+
+export interface CcParticipateReq {
+	participant: string; // tag 1
+	roomId: string; // tag 2
+	pZone?: string; // tag 3
+	xZone?: string; // tag 4
+	orionIp?: string; // tag 5
+	mixIp?: string; // tag 6
+	ua?: Uint8Array; // tag 7 — packed PlanetUserAgent
+	devId?: string; // tag 8
+	commTypeFlags?: number; // tag 9 — enum
+	capas?: number[]; // tag 10 — repeated enum
+	offer?: Uint8Array; // tag 11
+	credential?: Uint8Array; // tag 12
+	svcKey?: string; // tag 13
+	netType?: number; // tag 14 — enum
+	mChanId?: bigint; // tag 15
+	crt?: boolean; // tag 16
+	mixPort?: number; // tag 17
+	features?: Uint8Array[]; // tag 18 — repeated packed PlanetFeatRegister
+	roomAttrs?: number[]; // tag 19 — repeated enum
+	recvRtp?: number; // tag 20 — enum
+	ccp?: string; // tag 21
+	maxChanCnt?: number; // tag 22
+	unavailToSec?: number; // tag 23
+	pdtpOndemandStreams?: Uint8Array[]; // tag 24
+	disableConferenceInfo?: boolean; // tag 25
+	stid?: string; // tag 31
+	gsid?: string; // tag 32
+	gmsid?: string; // tag 33
+	speaker?: boolean; // tag 34
+	svcId?: string; // tag 51
+	tgtSvcId?: string; // tag 52
+	ueExtraInfo?: Uint8Array; // tag 53
+	appSvrDataId?: string; // tag 54
+	userExtraInfo?: Uint8Array; // tag 55
+	uePublicAddr?: Uint8Array; // tag 101 — packed PlanetAddr
+	pathCheck?: boolean; // tag 102
+	pdtpTunnel?: boolean; // tag 103
+	interDomain?: boolean; // tag 151
+	ghost?: boolean; // tag 161
+	subsType?: number; // tag 162 — enum
+}
+
+export function packCcParticipateReq(r: CcParticipateReq): Uint8Array {
+	const b: Buf = { bytes: [] };
+	emitString(b, 1, r.participant);
+	emitString(b, 2, r.roomId);
+	if (r.pZone !== undefined) emitString(b, 3, r.pZone);
+	if (r.xZone !== undefined) emitString(b, 4, r.xZone);
+	if (r.orionIp !== undefined) emitString(b, 5, r.orionIp);
+	if (r.mixIp !== undefined) emitString(b, 6, r.mixIp);
+	if (r.ua) emitMessage(b, 7, r.ua);
+	if (r.devId !== undefined) emitString(b, 8, r.devId);
+	if (r.commTypeFlags !== undefined) emitEnum(b, 9, r.commTypeFlags);
+	if (r.capas) { for (const c of r.capas) emitEnum(b, 10, c); }
+	if (r.offer) emitBytes(b, 11, r.offer);
+	if (r.credential) emitBytes(b, 12, r.credential);
+	if (r.svcKey !== undefined) emitString(b, 13, r.svcKey);
+	if (r.netType !== undefined) emitEnum(b, 14, r.netType);
+	if (r.mChanId !== undefined) emitUint64(b, 15, r.mChanId);
+	if (r.crt !== undefined) emitBool(b, 16, r.crt);
+	if (r.mixPort !== undefined) emitUint32(b, 17, r.mixPort);
+	if (r.features) { for (const f of r.features) emitMessage(b, 18, f); }
+	if (r.roomAttrs) { for (const a of r.roomAttrs) emitEnum(b, 19, a); }
+	if (r.recvRtp !== undefined) emitEnum(b, 20, r.recvRtp);
+	if (r.ccp !== undefined) emitString(b, 21, r.ccp);
+	if (r.maxChanCnt !== undefined) emitUint32(b, 22, r.maxChanCnt);
+	if (r.unavailToSec !== undefined) emitUint32(b, 23, r.unavailToSec);
+	if (r.pdtpOndemandStreams) {
+		for (const s of r.pdtpOndemandStreams) emitMessage(b, 24, s);
+	}
+	if (r.disableConferenceInfo !== undefined) {
+		emitBool(b, 25, r.disableConferenceInfo);
+	}
+	if (r.stid !== undefined) emitString(b, 31, r.stid);
+	if (r.gsid !== undefined) emitString(b, 32, r.gsid);
+	if (r.gmsid !== undefined) emitString(b, 33, r.gmsid);
+	if (r.speaker !== undefined) emitBool(b, 34, r.speaker);
+	if (r.svcId !== undefined) emitString(b, 51, r.svcId);
+	if (r.tgtSvcId !== undefined) emitString(b, 52, r.tgtSvcId);
+	if (r.ueExtraInfo) emitMessage(b, 53, r.ueExtraInfo);
+	if (r.appSvrDataId !== undefined) emitString(b, 54, r.appSvrDataId);
+	if (r.userExtraInfo) emitMessage(b, 55, r.userExtraInfo);
+	if (r.uePublicAddr) emitMessage(b, 101, r.uePublicAddr);
+	if (r.pathCheck !== undefined) emitBool(b, 102, r.pathCheck);
+	if (r.pdtpTunnel !== undefined) emitBool(b, 103, r.pdtpTunnel);
+	if (r.interDomain !== undefined) emitBool(b, 151, r.interDomain);
+	if (r.ghost !== undefined) emitBool(b, 161, r.ghost);
+	if (r.subsType !== undefined) emitEnum(b, 162, r.subsType);
+	return finalize(b);
+}
+
 // ─── cc_rel_req — call release / hangup ─────────────────────────────────
 
 export interface CcRelReq {
@@ -605,6 +792,295 @@ export function packCcRelReq(r: CcRelReq): Uint8Array {
 	if (r.roomDestroy !== undefined) emitBool(b, 51, r.roomDestroy);
 	if (r.devId !== undefined) emitString(b, 101, r.devId);
 	return finalize(b);
+}
+
+export function decodeCcRelReq(bytes: Uint8Array): CcRelReq {
+	const fields = decodeFields(bytes);
+	return {
+		relCode: asNumberField(fields, 1),
+		relPhrase: asStringField(fields, 2),
+		releaser: asStringField(fields, 3),
+		commMediaFlags: asNumberField(fields, 4),
+		userRelCode: asStringField(fields, 5),
+		dataSvcs: repeatedNumbers(fields, 6),
+		lastKaTs: asBigintField(fields, 7),
+		roomDestroy: asBoolField(fields, 51),
+		devId: asStringField(fields, 101),
+	};
+}
+
+// ─── planet_mc_msg / mc_data_req — group media-control bootstrap ───────
+
+export interface PlanetMcHdr {
+	cid: string;
+	srcChanId: bigint;
+	dstChanId: bigint;
+}
+
+export function packPlanetMcHdr(h: PlanetMcHdr): Uint8Array {
+	const b: Buf = { bytes: [] };
+	emitString(b, 1, h.cid);
+	emitUint64(b, 2, h.srcChanId);
+	if (h.dstChanId !== 0n) emitUint64(b, 3, h.dstChanId);
+	return finalize(b);
+}
+
+export interface McDataReq {
+	srcType?: number;
+	dstType?: number;
+	dispatchId: number;
+	data: Uint8Array;
+}
+
+export function packMcDataReq(r: McDataReq): Uint8Array {
+	const b: Buf = { bytes: [] };
+	if (r.srcType !== undefined) emitEnum(b, 1, r.srcType);
+	if (r.dstType !== undefined) emitEnum(b, 2, r.dstType);
+	emitUint32(b, 3, r.dispatchId);
+	emitBytes(b, 4, r.data);
+	return finalize(b);
+}
+
+export function wrapMcMsg(
+	oneofTag: number,
+	packedInner: Uint8Array,
+): Uint8Array {
+	const b: Buf = { bytes: [] };
+	emitMessage(b, oneofTag, packedInner);
+	return finalize(b);
+}
+
+export function packPlanetMcMsg(
+	hdr: PlanetMcHdr,
+	body: Uint8Array,
+): Uint8Array {
+	const b: Buf = { bytes: [] };
+	emitMessage(b, 1, packPlanetMcHdr(hdr));
+	emitMessage(b, 2, body);
+	return finalize(b);
+}
+
+export const MC_MSG = {
+	OPEN_REQ: 1,
+	OPEN_RSP: 2,
+	CLOSE_RPT: 3,
+	BRIDGE_REQ: 5,
+	BRIDGE_RSP: 6,
+	REOPEN_REQ: 7,
+	REOPEN_RSP: 8,
+	JOIN_REQ: 9,
+	JOIN_RSP: 10,
+	CHANGE_REQ: 11,
+	CHANGE_RSP: 12,
+	CHECK_RPT: 13,
+	P2P_REQ: 14,
+	P2P_RSP: 15,
+	DATA_REQ: 16,
+	DATA_RSP: 17,
+	DATA_RPT: 18,
+	SOPEN_REQ: 19,
+	SOPEN_RSP: 20,
+	MOPEN_REQ: 51,
+	MOPEN_RSP: 52,
+	MCLOSE_REQ: 53,
+	MCLOSE_RSP: 54,
+	STRM_REQ: 55,
+	STRM_RSP: 56,
+	RESET_REQ: 57,
+	RESET_RSP: 58,
+	NOTIFY_STRM_REQ: 59,
+	NOTIFY_STRM_RSP: 60,
+	CH_CHG_REQ: 61,
+	CH_CHG_RSP: 62,
+	OTO_STRM_REQ: 63,
+	OTO_STRM_RSP: 64,
+} as const;
+
+export const MC_MSG_NAMES: Record<number, string> = {
+	[MC_MSG.OPEN_REQ]: "open_req",
+	[MC_MSG.OPEN_RSP]: "open_rsp",
+	[MC_MSG.CLOSE_RPT]: "close_rpt",
+	[MC_MSG.BRIDGE_REQ]: "bridge_req",
+	[MC_MSG.BRIDGE_RSP]: "bridge_rsp",
+	[MC_MSG.REOPEN_REQ]: "reopen_req",
+	[MC_MSG.REOPEN_RSP]: "reopen_rsp",
+	[MC_MSG.JOIN_REQ]: "join_req",
+	[MC_MSG.JOIN_RSP]: "join_rsp",
+	[MC_MSG.CHANGE_REQ]: "change_req",
+	[MC_MSG.CHANGE_RSP]: "change_rsp",
+	[MC_MSG.CHECK_RPT]: "check_rpt",
+	[MC_MSG.P2P_REQ]: "p2p_req",
+	[MC_MSG.P2P_RSP]: "p2p_rsp",
+	[MC_MSG.DATA_REQ]: "data_req",
+	[MC_MSG.DATA_RSP]: "data_rsp",
+	[MC_MSG.DATA_RPT]: "data_rpt",
+	[MC_MSG.SOPEN_REQ]: "sopen_req",
+	[MC_MSG.SOPEN_RSP]: "sopen_rsp",
+	[MC_MSG.MOPEN_REQ]: "mopen_req",
+	[MC_MSG.MOPEN_RSP]: "mopen_rsp",
+	[MC_MSG.MCLOSE_REQ]: "mclose_req",
+	[MC_MSG.MCLOSE_RSP]: "mclose_rsp",
+	[MC_MSG.STRM_REQ]: "strm_req",
+	[MC_MSG.STRM_RSP]: "strm_rsp",
+	[MC_MSG.RESET_REQ]: "reset_req",
+	[MC_MSG.RESET_RSP]: "reset_rsp",
+	[MC_MSG.NOTIFY_STRM_REQ]: "notify_strm_req",
+	[MC_MSG.NOTIFY_STRM_RSP]: "notify_strm_rsp",
+	[MC_MSG.CH_CHG_REQ]: "ch_chg_req",
+	[MC_MSG.CH_CHG_RSP]: "ch_chg_rsp",
+	[MC_MSG.OTO_STRM_REQ]: "oto_strm_req",
+	[MC_MSG.OTO_STRM_RSP]: "oto_strm_rsp",
+};
+
+export interface MinMaxAttr {
+	min?: number;
+	max?: number;
+	target?: number;
+}
+
+export interface StrmState {
+	paused?: boolean;
+	code?: number;
+}
+
+export interface RetxRxAttr {
+	periOn?: boolean;
+	periIntvMs?: number;
+	periLossThre?: number[];
+}
+
+export interface RetxTxAttr {
+	reqdOn?: boolean;
+	reqdRttThre?: number;
+}
+
+export interface StrmAttr {
+	ssrc: number;
+	bitrate?: MinMaxAttr;
+	state?: StrmState;
+	disableDtx?: boolean;
+	ptime?: number;
+	retx?: RetxRxAttr;
+	fecLossThre?: number[];
+}
+
+export interface TxStrmAttr {
+	ssrc: number;
+	state?: StrmState;
+	retx?: RetxTxAttr;
+}
+
+export interface LinkAttr {
+	bwInitKbps?: number;
+	bwMaxKbps?: number;
+	probeRate?: number;
+	probeBrMaxKbps?: number;
+}
+
+export interface StrmSpec {
+	strms: StrmAttr[];
+	fbIntv?: number;
+	tp?: number;
+	fecBypass?: boolean;
+	fbOn?: boolean;
+	txStrms?: TxStrmAttr[];
+	link?: LinkAttr;
+}
+
+function packMinMaxAttr(r: MinMaxAttr): Uint8Array {
+	const b: Buf = { bytes: [] };
+	if (r.min !== undefined) emitUint32(b, 1, r.min);
+	if (r.max !== undefined) emitUint32(b, 2, r.max);
+	if (r.target !== undefined) emitUint32(b, 3, r.target);
+	return finalize(b);
+}
+
+function packStrmState(r: StrmState): Uint8Array {
+	const b: Buf = { bytes: [] };
+	if (r.paused !== undefined) emitBool(b, 1, r.paused);
+	if (r.code !== undefined) emitUint32(b, 2, r.code);
+	return finalize(b);
+}
+
+function packRetxRxAttr(r: RetxRxAttr): Uint8Array {
+	const b: Buf = { bytes: [] };
+	if (r.periOn !== undefined) emitBool(b, 1, r.periOn);
+	if (r.periIntvMs !== undefined) emitUint32(b, 2, r.periIntvMs);
+	if (r.periLossThre) {
+		for (const thre of r.periLossThre) emitUint32(b, 3, thre);
+	}
+	return finalize(b);
+}
+
+function packRetxTxAttr(r: RetxTxAttr): Uint8Array {
+	const b: Buf = { bytes: [] };
+	if (r.reqdOn !== undefined) emitBool(b, 1, r.reqdOn);
+	if (r.reqdRttThre !== undefined) emitUint32(b, 2, r.reqdRttThre);
+	return finalize(b);
+}
+
+function packFecRxAttr(lossThresholds: number[]): Uint8Array {
+	const b: Buf = { bytes: [] };
+	for (const thre of lossThresholds) emitUint32(b, 1, thre);
+	return finalize(b);
+}
+
+function packStrmAttr(r: StrmAttr): Uint8Array {
+	const b: Buf = { bytes: [] };
+	emitUint32(b, 1, r.ssrc >>> 0);
+	if (r.bitrate) emitMessage(b, 2, packMinMaxAttr(r.bitrate));
+	if (r.state) emitMessage(b, 3, packStrmState(r.state));
+	if (r.disableDtx !== undefined) emitBool(b, 4, r.disableDtx);
+	if (r.ptime !== undefined) emitUint32(b, 5, r.ptime);
+	if (r.retx) emitMessage(b, 6, packRetxRxAttr(r.retx));
+	if (r.fecLossThre) emitMessage(b, 7, packFecRxAttr(r.fecLossThre));
+	return finalize(b);
+}
+
+function packTxStrmAttr(r: TxStrmAttr): Uint8Array {
+	const b: Buf = { bytes: [] };
+	emitUint32(b, 1, r.ssrc >>> 0);
+	if (r.state) emitMessage(b, 2, packStrmState(r.state));
+	if (r.retx) emitMessage(b, 3, packRetxTxAttr(r.retx));
+	return finalize(b);
+}
+
+function packLinkAttr(r: LinkAttr): Uint8Array {
+	const b: Buf = { bytes: [] };
+	if (r.bwInitKbps !== undefined) emitUint32(b, 1, r.bwInitKbps);
+	if (r.bwMaxKbps !== undefined) emitUint32(b, 2, r.bwMaxKbps);
+	if (r.probeRate !== undefined) emitFloat32(b, 3, r.probeRate);
+	if (r.probeBrMaxKbps !== undefined) emitUint32(b, 4, r.probeBrMaxKbps);
+	return finalize(b);
+}
+
+export function packStrmSpec(r: StrmSpec): Uint8Array {
+	const b: Buf = { bytes: [] };
+	for (const strm of r.strms) emitMessage(b, 1, packStrmAttr(strm));
+	if (r.fbIntv !== undefined) emitUint32(b, 2, r.fbIntv);
+	if (r.tp !== undefined) emitEnum(b, 3, r.tp);
+	if (r.fecBypass !== undefined) emitBool(b, 4, r.fecBypass);
+	if (r.fbOn !== undefined) emitBool(b, 5, r.fbOn);
+	if (r.txStrms) {
+		for (const strm of r.txStrms) emitMessage(b, 6, packTxStrmAttr(strm));
+	}
+	if (r.link) emitMessage(b, 7, packLinkAttr(r.link));
+	return finalize(b);
+}
+
+export function packMcDataSessionPayload(body: Uint8Array): Uint8Array {
+	const pad = (4 - (body.length % 4)) % 4;
+	const header = new Uint8Array([
+		0x00,
+		0x02,
+		0x00,
+		0x00,
+		(body.length >>> 8) & 0xff,
+		body.length & 0xff,
+		0x00,
+		0x00,
+	]);
+	return concatSchemaBytes([header, body, new Uint8Array(pad)]);
 }
 
 // ─── cc_msg oneof wrapper ───────────────────────────────────────────────
@@ -823,11 +1299,19 @@ export interface DecodedPlanetCcMsg {
 	bodyBytes?: Uint8Array;
 }
 
+export interface DecodedPlanetMcMsg {
+	hdr?: DecodedPlanetCcHdr;
+	bodyTag?: number;
+	bodyName?: string;
+	bodyBytes?: Uint8Array;
+}
+
 export interface DecodedPlanetMsg {
 	hdr?: DecodedPlanetMsgHdr;
 	scBytes?: Uint8Array;
 	cc?: DecodedPlanetCcMsg;
 	mcBytes?: Uint8Array;
+	mc?: DecodedPlanetMcMsg;
 }
 
 export function decodePlanetCcMsg(bytes: Uint8Array): DecodedPlanetCcMsg {
@@ -855,6 +1339,31 @@ export function decodePlanetCcMsg(bytes: Uint8Array): DecodedPlanetCcMsg {
 	return decoded;
 }
 
+export function decodePlanetMcMsg(bytes: Uint8Array): DecodedPlanetMcMsg {
+	const fields = decodeFields(bytes);
+	const hdrBytes = asBytesField(fields, 1);
+	const body = asBytesField(fields, 2);
+	const decoded: DecodedPlanetMcMsg = {};
+	if (hdrBytes) {
+		const hdrFields = decodeFields(hdrBytes);
+		decoded.hdr = {
+			cid: asStringField(hdrFields, 1),
+			srcChanId: asBigintField(hdrFields, 2),
+			dstChanId: asBigintField(hdrFields, 3),
+		};
+	}
+	if (body) {
+		const bodyFields = decodeFields(body);
+		const oneof = bodyFields[0];
+		if (oneof?.value instanceof Uint8Array) {
+			decoded.bodyTag = oneof.tag;
+			decoded.bodyName = MC_MSG_NAMES[oneof.tag] ?? `mc_msg_${oneof.tag}`;
+			decoded.bodyBytes = oneof.value;
+		}
+	}
+	return decoded;
+}
+
 export function decodePlanetMsg(bytes: Uint8Array): DecodedPlanetMsg {
 	const fields = decodeFields(bytes);
 	const hdrBytes = asBytesField(fields, 1);
@@ -866,6 +1375,7 @@ export function decodePlanetMsg(bytes: Uint8Array): DecodedPlanetMsg {
 		scBytes,
 		cc: ccBytes ? decodePlanetCcMsg(ccBytes) : undefined,
 		mcBytes,
+		mc: mcBytes ? decodePlanetMcMsg(mcBytes) : undefined,
 	};
 }
 
@@ -946,6 +1456,61 @@ export function decodeCcSetupRsp(bytes: Uint8Array): CcSetupRsp {
 		noAnsToSec: asNumberField(fields, 112),
 		maxDurSec: asNumberField(fields, 113),
 		ptt: asBoolField(fields, 114),
+		svcId: asStringField(fields, 151),
+		tgtSvcId: asStringField(fields, 152),
+		interDomain: asBoolField(fields, 153),
+		maxCallTimeSec: asNumberField(fields, 154),
+	};
+}
+
+export interface CcParticipateRsp {
+	result?: number;
+	relCode?: number;
+	relPhrase?: string;
+	releaser?: string;
+	cfgs?: string;
+	answer?: Uint8Array;
+	mChanId?: bigint;
+	contentsType?: number;
+	contents?: Uint8Array;
+	compCfgs?: Uint8Array;
+	compCfgsType?: number;
+	compContentsType?: number;
+	role?: string;
+	joinTs?: bigint;
+	bridgeInfo?: Uint8Array;
+	aliveRptInterval?: number;
+	stops?: string;
+	msgCreator?: number;
+	ptt?: boolean;
+	svcId?: string;
+	tgtSvcId?: string;
+	interDomain?: boolean;
+	maxCallTimeSec?: number;
+}
+
+export function decodeCcParticipateRsp(bytes: Uint8Array): CcParticipateRsp {
+	const fields = decodeFields(bytes);
+	return {
+		result: asNumberField(fields, 1),
+		relCode: asNumberField(fields, 2),
+		relPhrase: asStringField(fields, 3),
+		releaser: asStringField(fields, 4),
+		cfgs: asStringField(fields, 5),
+		answer: asBytesField(fields, 6),
+		mChanId: asBigintField(fields, 7),
+		contentsType: asNumberField(fields, 8),
+		contents: asBytesField(fields, 9),
+		compCfgs: asBytesField(fields, 10),
+		compCfgsType: asNumberField(fields, 11),
+		compContentsType: asNumberField(fields, 12),
+		role: asStringField(fields, 13),
+		joinTs: asBigintField(fields, 14),
+		bridgeInfo: asBytesField(fields, 101),
+		aliveRptInterval: asNumberField(fields, 102),
+		stops: asStringField(fields, 103),
+		msgCreator: asNumberField(fields, 104),
+		ptt: asBoolField(fields, 105),
 		svcId: asStringField(fields, 151),
 		tgtSvcId: asStringField(fields, 152),
 		interDomain: asBoolField(fields, 153),

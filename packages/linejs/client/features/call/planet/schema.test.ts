@@ -5,30 +5,40 @@ import {
 	decodeCcConnRsp,
 	decodeCcInfoReq,
 	decodeCcInfoRsp,
+	decodeCcParticipateRsp,
+	decodeCcRelReq,
 	decodeCcSetupRsp,
 	decodeFields,
 	decodeNativeSetupOffer,
 	decodePlanetMsg,
 	decodeVarint,
 	encodeVarint,
+	MC_MSG,
 	packCcConnReq,
 	packCcConnRsp,
 	packCcInfoReq,
 	packCcInfoRsp,
+	packCcParticipateReq,
 	packCcRelReq,
 	packCcSetupReq,
 	packCcSetupRsp,
 	packKeepaliveReq,
+	packMcDataReq,
+	packMcDataSessionPayload,
+	packNativeGroupParticipateOffer,
 	packNativeSetupOffer,
 	packPlanetCcHdr,
 	packPlanetCcMsg,
 	packPlanetFeatureRegister,
+	packPlanetMcMsg,
 	packPlanetMsg,
 	packPlanetMsgHdr,
 	packPlanetScMsgKaReq,
 	packPlanetUserAgent,
+	packStrmSpec,
 	WireType,
 	wrapCcMsg,
+	wrapMcMsg,
 } from "./schema.ts";
 
 Deno.test("packPlanetMsgHdr matches an observed 96-byte header shape", () => {
@@ -240,6 +250,364 @@ Deno.test("packCcSetupRsp round-trips setup response fields", () => {
 	assertEquals(decoded.svcId, "svc");
 	assertEquals(decoded.tgtSvcId, "target");
 	assertEquals(decoded.interDomain, true);
+});
+
+Deno.test("packNativeGroupParticipateOffer emits group media records", () => {
+	const offer = packNativeGroupParticipateOffer({
+		mediaSecret: new Uint8Array(30).fill(7),
+	});
+	assertEquals(offer.length, 265);
+	const decoded = decodeNativeSetupOffer(offer);
+	assertEquals(decoded.media.map((m) => m.name), ["A", "V", "D"]);
+	assertEquals(decoded.media.map((m) => m.kind), [1, 7, 6]);
+	assertEquals(decoded.media.map((m) => m.enabled), [1, 0, 1]);
+	assertEquals(decoded.media.map((m) => m.rtpPort), [103, 113, 123]);
+	assertEquals(decoded.media.map((m) => m.rtcpId), [203, 213, 223]);
+	assertEquals(decoded.mediaSecret, new Uint8Array(30).fill(7));
+	assertEquals(decoded.mediaPubKey, undefined);
+	assertEquals(decoded.version, { major: 0, mode: 3 });
+});
+
+Deno.test("packCcParticipateReq emits native group join field order", () => {
+	const wire = packCcParticipateReq({
+		participant: "u00000000000000000000000000000000",
+		roomId: "c00000000000000000000000000000000",
+		pZone: "jp",
+		xZone: "jp",
+		orionIp: "10.0.0.1",
+		mixIp: "10.0.0.2",
+		ua: packPlanetUserAgent({
+			osName: "Android",
+			osVersion: "36",
+			deviceName: "Pixel 6a",
+		}),
+		devId: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+		commTypeFlags: 1,
+		capas: [1, 2, 3, 6, 4, 5],
+		offer: new Uint8Array([1, 2, 3]),
+		credential: new Uint8Array(32).fill(1),
+		svcKey: "groupcall.audio",
+		netType: 1,
+		mChanId: 0x7d3158f8n,
+		mixPort: 33828,
+		features: [
+			packPlanetFeatureRegister(16, true, 0),
+			packPlanetFeatureRegister(17, false, 0),
+		],
+		roomAttrs: [1],
+		recvRtp: 2,
+		maxChanCnt: 30,
+		unavailToSec: 0,
+		pdtpOndemandStreams: [new Uint8Array([0x08, 0x04, 0x10, 0x02])],
+		ueExtraInfo: new Uint8Array([0x08, 0x01]),
+		pathCheck: false,
+	});
+	const fields = decodeFields(wire);
+	assertEquals(fields.map((f) => f.tag), [
+		1,
+		2,
+		3,
+		4,
+		5,
+		6,
+		7,
+		8,
+		9,
+		10,
+		10,
+		10,
+		10,
+		10,
+		10,
+		11,
+		12,
+		13,
+		14,
+		15,
+		17,
+		18,
+		18,
+		19,
+		20,
+		22,
+		23,
+		24,
+		53,
+		102,
+	]);
+	assertEquals(
+		new TextDecoder().decode(
+			fields.find((f) => f.tag === 13)!.value as Uint8Array,
+		),
+		"groupcall.audio",
+	);
+});
+
+Deno.test("decodeCcParticipateRsp and decodeCcRelReq parse group replies", () => {
+	const rsp = decodeCcParticipateRsp(
+		new Uint8Array([
+			0x08,
+			0x00,
+			0x32,
+			0x03,
+			1,
+			2,
+			3,
+			0x40,
+			0x01,
+		]),
+	);
+	assertEquals(rsp.result, 0);
+	assertEquals(rsp.answer, new Uint8Array([1, 2, 3]));
+	assertEquals(rsp.contentsType, 1);
+
+	const rel = decodeCcRelReq(packCcRelReq({
+		relCode: 219,
+		relPhrase: "closed",
+		releaser: "participant",
+		commMediaFlags: 1,
+	}));
+	assertEquals(rel.relCode, 219);
+	assertEquals(rel.relPhrase, "closed");
+	assertEquals(rel.releaser, "participant");
+	assertEquals(rel.commMediaFlags, 1);
+});
+
+Deno.test("packStrmSpec matches native group mc_data_req payload", () => {
+	const base = 0xe3530100;
+	const state = { paused: false, code: 0 };
+	const spec = packStrmSpec({
+		strms: [
+			{
+				ssrc: base + 0x79,
+				bitrate: { target: 32 },
+				state,
+				ptime: 40,
+				retx: { periOn: true, periIntvMs: 40, periLossThre: [0, 0, 20] },
+				fecLossThre: [],
+			},
+			{
+				ssrc: base + 0xd9,
+				bitrate: { min: 100, max: 1200, target: 800 },
+				state,
+				retx: { periOn: false },
+				fecLossThre: [0, 1, 10],
+			},
+			{
+				ssrc: base + 0xa9,
+				bitrate: { max: 2000 },
+				state,
+				retx: { periOn: false },
+				fecLossThre: [],
+			},
+		],
+		fbIntv: 200,
+		tp: 1,
+		fbOn: true,
+		txStrms: [
+			{
+				ssrc: base + 0x7d,
+				state,
+				retx: { reqdOn: true, reqdRttThre: 300 },
+			},
+			{
+				ssrc: base + 0xdd,
+				state,
+				retx: { reqdOn: false },
+			},
+		],
+		link: {
+			bwInitKbps: 1200,
+			bwMaxKbps: 3000,
+			probeRate: 0.2,
+			probeBrMaxKbps: 200,
+		},
+	});
+	assertEquals(
+		spec,
+		new Uint8Array([
+			0x0a,
+			0x20,
+			0x08,
+			0xf9,
+			0x82,
+			0xcc,
+			0x9a,
+			0x0e,
+			0x12,
+			0x02,
+			0x18,
+			0x20,
+			0x1a,
+			0x04,
+			0x08,
+			0x00,
+			0x10,
+			0x00,
+			0x28,
+			0x28,
+			0x32,
+			0x0a,
+			0x08,
+			0x01,
+			0x10,
+			0x28,
+			0x18,
+			0x00,
+			0x18,
+			0x00,
+			0x18,
+			0x14,
+			0x3a,
+			0x00,
+			0x0a,
+			0x22,
+			0x08,
+			0xd9,
+			0x83,
+			0xcc,
+			0x9a,
+			0x0e,
+			0x12,
+			0x08,
+			0x08,
+			0x64,
+			0x10,
+			0xb0,
+			0x09,
+			0x18,
+			0xa0,
+			0x06,
+			0x1a,
+			0x04,
+			0x08,
+			0x00,
+			0x10,
+			0x00,
+			0x32,
+			0x02,
+			0x08,
+			0x00,
+			0x3a,
+			0x06,
+			0x08,
+			0x00,
+			0x08,
+			0x01,
+			0x08,
+			0x0a,
+			0x0a,
+			0x17,
+			0x08,
+			0xa9,
+			0x83,
+			0xcc,
+			0x9a,
+			0x0e,
+			0x12,
+			0x03,
+			0x10,
+			0xd0,
+			0x0f,
+			0x1a,
+			0x04,
+			0x08,
+			0x00,
+			0x10,
+			0x00,
+			0x32,
+			0x02,
+			0x08,
+			0x00,
+			0x3a,
+			0x00,
+			0x10,
+			0xc8,
+			0x01,
+			0x18,
+			0x01,
+			0x28,
+			0x01,
+			0x32,
+			0x13,
+			0x08,
+			0xfd,
+			0x82,
+			0xcc,
+			0x9a,
+			0x0e,
+			0x12,
+			0x04,
+			0x08,
+			0x00,
+			0x10,
+			0x00,
+			0x1a,
+			0x05,
+			0x08,
+			0x01,
+			0x10,
+			0xac,
+			0x02,
+			0x32,
+			0x10,
+			0x08,
+			0xdd,
+			0x83,
+			0xcc,
+			0x9a,
+			0x0e,
+			0x12,
+			0x04,
+			0x08,
+			0x00,
+			0x10,
+			0x00,
+			0x1a,
+			0x02,
+			0x08,
+			0x00,
+			0x3a,
+			0x0e,
+			0x08,
+			0xb0,
+			0x09,
+			0x10,
+			0xb8,
+			0x17,
+			0x1d,
+			0xcd,
+			0xcc,
+			0x4c,
+			0x3e,
+			0x20,
+			0xc8,
+			0x01,
+		]),
+	);
+
+	const data = packMcDataSessionPayload(spec);
+	assertEquals(data.length, 168);
+	assertEquals(
+		data.subarray(0, 8),
+		new Uint8Array([0x00, 0x02, 0x00, 0x00, 0x00, 0x9d, 0x00, 0x00]),
+	);
+	assertEquals(data.subarray(8, 8 + spec.length), spec);
+	assertEquals(data.subarray(8 + spec.length), new Uint8Array([0, 0, 0]));
+
+	const dataReq = packMcDataReq({
+		srcType: 0,
+		dstType: 0,
+		dispatchId: 2,
+		data,
+	});
+	assertEquals(decodeFields(dataReq).map((f) => f.tag), [1, 2, 3, 4]);
+
+	const mc = packPlanetMcMsg(
+		{ cid: crypto.randomUUID(), srcChanId: 1n, dstChanId: 2n },
+		wrapMcMsg(MC_MSG.DATA_REQ, dataReq),
+	);
+	assertEquals(decodeFields(mc).map((f) => f.tag), [1, 2]);
 });
 
 Deno.test("packPlanetUserAgent emits the native Android UA field layout", () => {
