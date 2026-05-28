@@ -6,6 +6,18 @@ import { LINEStruct } from "../../thrift/mod.ts";
 import type { Buffer } from "node:buffer";
 import { ContentType } from "../../thrift/readwrite/struct.ts";
 import type { LooseType } from "@evex/loose-types";
+import {
+	COMPACT_E2EE_MESSAGE_ENDPOINT,
+	COMPACT_PLAIN_MESSAGE_ENDPOINT,
+	CompactMessageProtocolError,
+	type CompactMessageResponse,
+	decodeCompactMessageResponse,
+	packCompactE2EEMessage,
+	packCompactPlainMessage,
+	type SendCompactMessageOptions,
+} from "./compact.ts";
+
+export type { CompactMessageResponse, SendCompactMessageOptions };
 
 export class TalkService implements BaseService {
 	client: BaseClient;
@@ -168,6 +180,133 @@ export class TalkService implements BaseService {
 			} else {
 				throw error;
 			}
+		}
+	}
+
+	async sendCompactMessage(
+		options: SendCompactMessageOptions,
+	): Promise<CompactMessageResponse> {
+		if (options.chunks || options.e2ee === true) {
+			return this.sendCompactE2EEMessage(options);
+		}
+		if (options.text === undefined) {
+			throw new TypeError("sendCompactMessage requires text or chunks");
+		}
+		try {
+			return await this.sendCompactPlainMessage({
+				to: options.to,
+				text: options.text,
+			});
+		} catch (error) {
+			const code = compactMessageErrorCode(error);
+			if (options.e2ee === undefined && (code === 82 || code === 99)) {
+				return this.sendCompactE2EEMessage({
+					to: options.to,
+					text: options.text,
+				});
+			}
+			throw error;
+		}
+	}
+
+	async sendCompactPlainMessage(options: {
+		to: string;
+		text: string;
+	}): Promise<CompactMessageResponse> {
+		const seqId = await this.client.getReqseq();
+		const body = packCompactPlainMessage(seqId, options.to, options.text);
+		return await this.#requestCompactMessage(
+			COMPACT_PLAIN_MESSAGE_ENDPOINT,
+			seqId,
+			body,
+		);
+	}
+
+	async sendCompactE2EEMessage(options: {
+		to: string;
+		text?: string;
+		chunks?: readonly Uint8Array[];
+	}): Promise<CompactMessageResponse> {
+		let chunks = options.chunks;
+		if (!chunks) {
+			if (options.text === undefined) {
+				throw new TypeError("sendCompactE2EEMessage requires text or chunks");
+			}
+			chunks = await this.client.e2ee.encryptE2EEMessage(
+				options.to,
+				options.text,
+			);
+		}
+		const seqId = await this.client.getReqseq();
+		const body = packCompactE2EEMessage(seqId, options.to, chunks);
+		return await this.#requestCompactMessage(
+			COMPACT_E2EE_MESSAGE_ENDPOINT,
+			seqId,
+			body,
+		);
+	}
+
+	async #requestCompactMessage(
+		path: string,
+		seqId: number,
+		body: Uint8Array,
+		isRetry = false,
+	): Promise<CompactMessageResponse> {
+		if (this.client?.disabled) {
+			throw new InternalError(
+				"ClientClosed",
+				"Request aborted: client has been disabled (logged out)",
+			);
+		}
+		const headers = {
+			...this.client.request.getHeader("POST"),
+			"x-lai": String(seqId),
+		};
+		this.client.log("compactMessageRequest", {
+			path: `https://${this.client.request.endpoint}${path}`,
+			headers,
+			body,
+		});
+		const requestBody = Uint8Array.from(body).buffer as ArrayBuffer;
+		const response = await this.client.fetch(
+			`https://${this.client.request.endpoint}${path}`,
+			{
+				method: "POST",
+				headers,
+				signal: AbortSignal.timeout(this.client.config.timeout),
+				body: requestBody,
+			},
+		);
+		const nextToken = response.headers.get("x-line-next-access");
+		if (nextToken) {
+			this.client.emit("update:authtoken", nextToken);
+		}
+		const parsedBody = new Uint8Array(await response.arrayBuffer());
+		this.client.log("compactMessageResponse", {
+			path,
+			status: response.status,
+			body: parsedBody,
+		});
+		if (!response.ok) {
+			throw new InternalError(
+				"CompactMessageRequestError",
+				`Compact message request failed: status=${response.status}`,
+				{ status: response.status },
+			);
+		}
+		try {
+			return decodeCompactMessageResponse(parsedBody);
+		} catch (error) {
+			const code = compactMessageErrorCode(error);
+			if (
+				code === 119 &&
+				!isRetry &&
+				await this.client.storage.get("refreshToken")
+			) {
+				await this.client.auth.tryRefreshToken();
+				return await this.#requestCompactMessage(path, seqId, body, true);
+			}
+			throw error;
 		}
 	}
 
@@ -1577,4 +1716,11 @@ export class TalkService implements BaseService {
 			this.requestPath,
 		);
 	}
+}
+
+function compactMessageErrorCode(error: unknown): number | undefined {
+	if (error instanceof CompactMessageProtocolError) {
+		return error.code;
+	}
+	return undefined;
 }

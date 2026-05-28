@@ -6,6 +6,10 @@ import { User } from "./features/user/mod.ts";
 import { TypedEventEmitter } from "../base/core/typed-event-emitter/index.ts";
 import { SquareMessage, TalkMessage } from "./features/message/mod.ts";
 import type * as LINETypes from "@evex/linejs-types";
+import type {
+	CompactMessageResponse,
+	SendCompactMessageOptions,
+} from "../base/service/talk/mod.ts";
 import {
 	getMyProfile,
 	type MyProfileUpdate,
@@ -16,9 +20,17 @@ import {
 import { createLiffClient, type LiffClient } from "./features/liff.ts";
 export * as liff from "./features/liff.ts";
 export * as voom from "./features/voom.ts";
-import { createVoomClient, VoomChannelId, type VoomClient, voomRest, type VoomRestOptions, type VoomRestResponse } from "./features/voom.ts";
+import {
+	createVoomClient,
+	VoomChannelId,
+	type VoomClient,
+	voomRest,
+	type VoomRestOptions,
+	type VoomRestResponse,
+} from "./features/voom.ts";
 export { VoomChannelId };
 export type { VoomClient, VoomRestOptions, VoomRestResponse };
+export type { CompactMessageResponse, SendCompactMessageOptions };
 export * as call from "./features/call/mod.ts";
 export * as audio from "./features/call/audio.ts";
 import {
@@ -29,7 +41,12 @@ import {
 	parseCancelCall,
 	parseIncomingCall,
 } from "./features/call/mod.ts";
-export type { CallClient, CancelCallEvent, CallType, IncomingCallEvent } from "./features/call/mod.ts";
+export type {
+	CallClient,
+	CallType,
+	CancelCallEvent,
+	IncomingCallEvent,
+} from "./features/call/mod.ts";
 export { Chat, Square, SquareChat, SquareMessage, TalkMessage, User };
 export { ProfileAttribute } from "./features/profile.ts";
 export type { MyProfileUpdate } from "./features/profile.ts";
@@ -163,6 +180,20 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		return this.base.authToken as string;
 	}
 
+	/**
+	 * Sends a compact talk message through `/CA5` or `/ECA5`.
+	 * When `e2ee` is omitted, LINE E2EE retry errors fall back to compact E2EE.
+	 */
+	sendCompactMessage(
+		to: string,
+		input: string | Omit<SendCompactMessageOptions, "to">,
+	): Promise<CompactMessageResponse> {
+		if (typeof input === "string") {
+			return this.base.talk.sendCompactMessage({ to, text: input });
+		}
+		return this.base.talk.sendCompactMessage({ ...input, to });
+	}
+
 	/** Returns the signed-in user's own profile. */
 	getMyProfile(): Promise<LINETypes.Profile> {
 		return getMyProfile(this);
@@ -190,7 +221,9 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 * Uploads a new profile picture for the signed-in user (the avatar
 	 * shown in chats).  Returns the OBS object id + hash.
 	 */
-	uploadMyProfileImage(data: Blob): Promise<{ objId: string; objHash: string }> {
+	uploadMyProfileImage(
+		data: Blob,
+	): Promise<{ objId: string; objHash: string }> {
 		return uploadMyProfileImage(this, data);
 	}
 
@@ -241,10 +274,12 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			// V2 returns { contacts: Record<mid, entry> }; shim to V3 shape.
 			const out: User[] = [];
 			for (const [mid, entry] of Object.entries(res2.contacts ?? {})) {
-				out.push(new User({
-					client: this,
-					raw: { ...(entry as object), targetUserMid: mid } as never,
-				}));
+				out.push(
+					new User({
+						client: this,
+						raw: { ...(entry as object), targetUserMid: mid } as never,
+					}),
+				);
 			}
 			if (out.length) return out;
 		} catch (e) {

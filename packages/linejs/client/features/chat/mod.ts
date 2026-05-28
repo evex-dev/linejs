@@ -2,6 +2,10 @@ import type { Client } from "../../mod.ts";
 import type * as line from "@evex/linejs-types";
 import { TalkMessage } from "../message/talk.ts";
 import { createMessageFetcher, type MessageFetcher } from "./fetcher.ts";
+import type {
+	CompactMessageResponse,
+	SendCompactMessageOptions,
+} from "../../../base/service/talk/mod.ts";
 
 interface ChatInit {
 	client: Client;
@@ -62,6 +66,24 @@ export class Chat {
 			...sent,
 			to: this.mid,
 		}, this.#client);
+	}
+
+	/**
+	 * Sends a compact talk message through `/CA5` or `/ECA5`.
+	 */
+	sendCompactMessage(
+		input: string | Omit<SendCompactMessageOptions, "to">,
+	): Promise<CompactMessageResponse> {
+		if (typeof input === "string") {
+			return this.#client.base.talk.sendCompactMessage({
+				to: this.mid,
+				text: input,
+			});
+		}
+		return this.#client.base.talk.sendCompactMessage({
+			...input,
+			to: this.mid,
+		});
 	}
 
 	/**
