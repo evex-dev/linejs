@@ -33,17 +33,17 @@ export function getDeviceDetails(
 	let appVersion;
 	let systemName;
 	let systemVersion;
-	systemVersion = "12.1.4";
 
 	switch (device) {
 		case "DESKTOPWIN":
-			appVersion = version || "9.2.0.3403";
+			appVersion = version || "9.7.0.3556";
 			systemName = "WINDOWS";
 			systemVersion = "10.0.0-NT-x64";
 			break;
 		case "DESKTOPMAC":
-			appVersion = version || "9.2.0.3402";
+			appVersion = version || "26.2.0";
 			systemName = "MAC";
+			systemVersion = "13.0.0";
 			break;
 		/*
 		case "CHROMEOS":
@@ -53,30 +53,34 @@ export function getDeviceDetails(
 			break;
 		*/
 		case "ANDROID":
-			appVersion = version || "13.4.1";
+			appVersion = version || "26.6.2";
 			systemName = "Android OS";
-			systemVersion = "13";
+			systemVersion = "16";
 			break;
 		case "ANDROIDSECONDARY":
-			appVersion = version || "15.21.3";
+			appVersion = version || "26.6.2";
 			systemName = "Android OS";
-			systemVersion = "14";
+			systemVersion = "16";
 			break;
 		case "IOS":
-			appVersion = version || "15.19.0";
+			appVersion = version || "26.7.2";
 			systemName = "iOS";
+			systemVersion = "18.0";
 			break;
 		case "IOSIPAD":
-			appVersion = version || "15.19.0";
+			appVersion = version || "26.7.2";
 			systemName = "iOS";
+			systemVersion = "18.0";
 			break;
 		case "WATCHOS":
-			appVersion = version || "15.19.0";
+			appVersion = version || "26.7.2";
 			systemName = "Watch OS";
+			systemVersion = "11.0";
 			break;
 		case "WEAROS":
 			appVersion = version || "13.4.1";
 			systemName = "Wear OS";
+			systemVersion = "3.0";
 			break;
 		default:
 			return null;

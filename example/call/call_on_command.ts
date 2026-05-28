@@ -19,7 +19,10 @@ const COMMAND = Deno.env.get("LINE_CALL_COMMAND") ?? "!call";
 const SAMPLE_RATE = 48_000;
 const wavPath = Deno.args[0] ?? Deno.env.get("LINE_CALL_WAV") ??
 	new URL("./unity.wav", import.meta.url);
-const device = (Deno.env.get("LINE_DEVICE") ?? "ANDROID") as Device;
+const configuredDevice = Deno.env.get("LINE_DEVICE")?.trim() as
+	| Device
+	| undefined;
+const version = Deno.env.get("LINE_VERSION") ?? undefined;
 const storagePath = Deno.env.get("LINE_STORAGE_FILE");
 const mediaKeyMode = (Deno.env.get("LINE_CALL_MEDIA_KEY_MODE") ??
 	"audio-reverse-stage") as PlanetMediaKeyMode;
@@ -41,9 +44,10 @@ const payloadPrefix = hexToBytes(
 );
 
 const authToken = await readAuthToken();
+const device = configuredDevice || (authToken ? "ANDROID" : "ANDROIDSECONDARY");
 const storage = storagePath ? new FileStorage(storagePath) : undefined;
 const client = authToken
-	? await loginWithAuthToken(authToken, { device, storage })
+	? await loginWithAuthToken(authToken, { device, version, storage })
 	: await loginWithQR({
 		onReceiveQRUrl(url) {
 			console.log(`QR: ${url}`);
@@ -51,7 +55,7 @@ const client = authToken
 		onPincodeRequest(pin) {
 			console.log(`PIN: ${pin}`);
 		},
-	}, { device, storage });
+	}, { device, version, storage });
 
 const audio = await loadWavForCall(wavPath, gain);
 let activeCall: Promise<void> | undefined;

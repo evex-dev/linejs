@@ -269,7 +269,8 @@ repository:
 | `LINE_AUTH_TOKEN` | | Auth token string. |
 | `LINE_AUTH_TOKEN_FILE` | | File containing an auth token. If unset, QR login is used. |
 | `LINE_STORAGE_FILE` | | Optional `FileStorage` path. If unset, in-memory storage is used. |
-| `LINE_DEVICE` | `ANDROID` | Login device type. |
+| `LINE_DEVICE` | context-aware | Login device type. Defaults to `ANDROID` with an auth token, otherwise `ANDROIDSECONDARY`. |
+| `LINE_VERSION` | package default | LINE app version used in `x-line-application`. |
 | `LINE_CALL_COMMAND` | `!call` | Chat command that starts the call. |
 | `LINE_CALL_WAV` | `./unity.wav` | WAV file to stream. The first CLI arg overrides this. |
 | `LINE_CALL_FRAME_MS` | `20` | Opus frame size. |

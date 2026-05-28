@@ -43,6 +43,8 @@ const createBaseClient = (init: InitOptions) =>
 	new BaseClient({
 		fetch: init.fetch,
 		device: init.device,
+		version: init.version,
+		endpoint: init.endpoint,
 		storage: init.storage,
 	});
 
