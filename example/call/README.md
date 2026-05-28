@@ -32,6 +32,8 @@ Useful environment variables:
 | `LINE_STORAGE_FILE`            |                       | Optional FileStorage path. If unset, in-memory storage is used.                            |
 | `LINE_DEVICE`                  |         context-aware | Login device type. Defaults to `ANDROID` with an auth token, otherwise `ANDROIDSECONDARY`. |
 | `LINE_VERSION`                 |       package default | LINE app version used in `x-line-application`.                                             |
+| `LINE_CALL_DEVNAME`            |       package default | Device name sent in `fromEnvInfo.devname` for call route acquisition.                      |
+| `LINE_CALL_FROM_ENV_INFO`      |                       | JSON string map for the full `fromEnvInfo` route-acquisition field.                        |
 | `LINE_CALL_COMMAND`            |               `!call` | Command text to trigger the call.                                                          |
 | `LINE_CALL_WAV`                |         `./unity.wav` | WAV file to stream. The first CLI arg overrides this.                                      |
 | `LINE_CALL_FRAME_MS`           |                  `20` | Opus frame size.                                                                           |
@@ -42,3 +44,8 @@ Useful environment variables:
 | `LINE_CALL_OPUS_BANDWIDTH`     |                       | Optional Opus bandwidth: `narrowband`, `wideband`, `fullband`, etc.                        |
 
 The bundled sample WAV is credited in `CREDITS.md`.
+
+If `acquireCallRoute(/V4)` returns `INVALID_STATE` while using a primary token,
+first verify that `LINE_DEVICE` matches the token's real device family and that
+the command came from a callable 1:1 friend chat. If it still fails, set
+`LINE_CALL_DEVNAME` to the primary device model, for example `Pixel 8`.

@@ -23,6 +23,7 @@ const configuredDevice = Deno.env.get("LINE_DEVICE")?.trim() as
 	| Device
 	| undefined;
 const version = Deno.env.get("LINE_VERSION") ?? undefined;
+const fromEnvInfo = readFromEnvInfo();
 const storagePath = Deno.env.get("LINE_STORAGE_FILE");
 const mediaKeyMode = (Deno.env.get("LINE_CALL_MEDIA_KEY_MODE") ??
 	"audio-reverse-stage") as PlanetMediaKeyMode;
@@ -96,7 +97,7 @@ async function callAndPlay(to: string): Promise<void> {
 	const localMid = client.base.profile?.mid;
 	if (!localMid) throw new Error("profile is not ready");
 
-	const route = await client.call.acquireRoute({ to, callType: "AUDIO" });
+	const route = await acquireAudioRoute(to);
 	const transport = new PlanetTransport({
 		localMid,
 		timeoutMs,
@@ -117,6 +118,18 @@ async function callAndPlay(to: string): Promise<void> {
 		if (holdMs > 0) await sleep(holdMs);
 	} finally {
 		await transport.close();
+	}
+}
+
+async function acquireAudioRoute(to: string) {
+	try {
+		return await client.call.acquireRoute({
+			to,
+			callType: "AUDIO",
+			fromEnvInfo,
+		});
+	} catch (error) {
+		throw addAcquireRouteHint(error);
 	}
 }
 
@@ -191,6 +204,44 @@ function downmixToMono(samples: Int16Array, channels: number): Int16Array {
 		out[frame] = clamp16(Math.round(sum / channels));
 	}
 	return out;
+}
+
+function readFromEnvInfo(): Record<string, string> | undefined {
+	const json = Deno.env.get("LINE_CALL_FROM_ENV_INFO")?.trim();
+	if (json) {
+		const parsed = JSON.parse(json) as unknown;
+		if (!isStringRecord(parsed)) {
+			throw new Error("LINE_CALL_FROM_ENV_INFO must be a JSON string map");
+		}
+		return parsed;
+	}
+	const devname = Deno.env.get("LINE_CALL_DEVNAME")?.trim();
+	return devname ? { devname } : undefined;
+}
+
+function isStringRecord(value: unknown): value is Record<string, string> {
+	return (
+		typeof value === "object" &&
+		value !== null &&
+		!Array.isArray(value) &&
+		Object.values(value).every((item) => typeof item === "string")
+	);
+}
+
+function addAcquireRouteHint(error: unknown): Error {
+	const message = error instanceof Error ? error.message : String(error);
+	if (
+		!message.includes("acquireCallRoute") || !message.includes("INVALID_STATE")
+	) {
+		return error instanceof Error ? error : new Error(message);
+	}
+	return new Error(
+		message +
+			"\nacquireCallRoute INVALID_STATE: LINE rejected this account/peer state. " +
+			"Check that the token device matches LINE_DEVICE, the peer is a callable 1:1 friend, " +
+			"and set LINE_CALL_DEVNAME to the primary device model if you are using a primary token.",
+		{ cause: error },
+	);
 }
 
 function applyGain(samples: Int16Array, audioGain: number): Int16Array {

@@ -48,6 +48,7 @@ For a reliable outgoing audio call, these defaults matter:
 | --- | --- |
 | Device | `ANDROID` |
 | Call type | `AUDIO` |
+| Route env info | `fromEnvInfo.devname` |
 | Transport | `PlanetTransport` |
 | Media key mode | `audio-reverse-stage` |
 | Input audio | 16-bit PCM WAV |
@@ -154,7 +155,11 @@ const to = Deno.env.get("LINE_CALL_TO")!;
 const localMid = client.base.profile?.mid;
 if (!localMid) throw new Error("profile is not ready");
 
-const route = await client.call.acquireRoute({ to, callType: "AUDIO" });
+const route = await client.call.acquireRoute({
+	to,
+	callType: "AUDIO",
+	fromEnvInfo: { devname: "Android" },
+});
 const transport = new PlanetTransport({
 	localMid,
 	mediaKeyMode: "audio-reverse-stage",
@@ -271,6 +276,8 @@ repository:
 | `LINE_STORAGE_FILE` | | Optional `FileStorage` path. If unset, in-memory storage is used. |
 | `LINE_DEVICE` | context-aware | Login device type. Defaults to `ANDROID` with an auth token, otherwise `ANDROIDSECONDARY`. |
 | `LINE_VERSION` | package default | LINE app version used in `x-line-application`. |
+| `LINE_CALL_DEVNAME` | package default | Device name sent in `fromEnvInfo.devname` during route acquisition. |
+| `LINE_CALL_FROM_ENV_INFO` | | JSON string map for the full `fromEnvInfo` route-acquisition field. |
 | `LINE_CALL_COMMAND` | `!call` | Chat command that starts the call. |
 | `LINE_CALL_WAV` | `./unity.wav` | WAV file to stream. The first CLI arg overrides this. |
 | `LINE_CALL_FRAME_MS` | `20` | Opus frame size. |
@@ -290,7 +297,20 @@ An outgoing 1:1 audio call has seven phases.
 ### 1. Acquire a Call Route
 
 `client.call.acquireRoute({ to, callType: "AUDIO" })` asks LINE for the route
-needed to start a call. The returned `CallRoute` includes:
+needed to start a call. Native Android includes a small `fromEnvInfo` map with
+a `devname` entry at this step. linejs sends a generic device name by default,
+and you can override it when a primary-token session is sensitive to the exact
+device profile:
+
+```ts
+const route = await client.call.acquireRoute({
+	to,
+	callType: "AUDIO",
+	fromEnvInfo: { devname: "Pixel 8" },
+});
+```
+
+The returned `CallRoute` includes:
 
 - the peer MID and routing metadata;
 - IPv4 and sometimes IPv6 PLANET endpoints;
@@ -658,6 +678,7 @@ material in public examples and issue reports.
 | Symptom | Likely cause | What to check |
 | --- | --- | --- |
 | Call never rings | No `setup_req`, stale route, wrong peer, or route acquisition failed. | Acquire a fresh route, call `inviteDetailed()`, verify `route.fakeCall` is false. |
+| `acquireCallRoute(/V4)` returns `INVALID_STATE` | LINE rejected the account, peer, or device state before signaling started. | Verify the command came from a callable 1:1 friend chat, do not call yourself, match `LINE_DEVICE` to the token's device family, and set `LINE_CALL_DEVNAME` or `fromEnvInfo.devname` to the primary device model. |
 | `PLANET reply timeout` before ringing | UDP path or transport key bootstrap failed. | Check IPv4/IPv6 choice, network, route endpoint, and `commParam.mpkey`. |
 | Peer answers but `mediaReady` is false | `conn_req` did not contain decodable media material. | Inspect `answer.peerAnswerOffer`, `answer.peerOffer`, and debug `plain_shape`. |
 | Peer hears silence | SRTP may be valid but payload shape is wrong. | Use `mediaKeyMode: "audio-reverse-stage"`, prefix Opus with `00`, and send 20 ms frames. |

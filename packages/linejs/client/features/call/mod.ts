@@ -1,6 +1,7 @@
 // Call control-plane wrappers + CallSession glue.
 import type { Client } from "../../mod.ts";
 import type * as LINETypes from "@evex/linejs-types";
+import type { DeviceDetails } from "../../../base/mod.ts";
 import type { CodecFactory } from "./audio.ts";
 import { defaultCodecFactory } from "./audio.ts";
 import {
@@ -134,6 +135,33 @@ export {
 
 export type CallType = "AUDIO" | "VIDEO" | "FACEPLAY";
 
+export function defaultCallFromEnvInfo(
+	deviceDetails: DeviceDetails,
+): Record<string, string> {
+	const devname = (() => {
+		switch (deviceDetails.device) {
+			case "ANDROID":
+			case "ANDROIDSECONDARY":
+				return "Android";
+			case "IOS":
+				return "iPhone";
+			case "IOSIPAD":
+				return "iPad";
+			case "DESKTOPWIN":
+				return "Windows";
+			case "DESKTOPMAC":
+				return "Mac";
+			case "WATCHOS":
+				return "Watch";
+			case "WEAROS":
+				return "Wear OS";
+			default:
+				return deviceDetails.systemName || deviceDetails.device;
+		}
+	})();
+	return { devname };
+}
+
 export interface CallClient {
 	acquireRoute(opts: {
 		to: string;
@@ -263,7 +291,8 @@ class ClientCall implements CallClient {
 		return this.service.acquireCallRoute({
 			to: opts.to,
 			callType: opts.callType ?? "AUDIO",
-			fromEnvInfo: opts.fromEnvInfo,
+			fromEnvInfo: opts.fromEnvInfo ??
+				defaultCallFromEnvInfo(this.#client.base.deviceDetails),
 		} as never);
 	}
 	acquireGroupRoute(

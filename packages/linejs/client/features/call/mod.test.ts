@@ -1,5 +1,10 @@
 import { assertEquals } from "@std/assert";
-import { createCallClient, parseCancelCall, parseIncomingCall } from "./mod.ts";
+import {
+	createCallClient,
+	defaultCallFromEnvInfo,
+	parseCancelCall,
+	parseIncomingCall,
+} from "./mod.ts";
 
 function fakeBaseClient() {
 	const calls: { method: string; args: unknown[] }[] = [];
@@ -8,6 +13,12 @@ function fakeBaseClient() {
 		return Promise.resolve({ ok: true, method });
 	};
 	const base = {
+		deviceDetails: {
+			device: "ANDROID",
+			appVersion: "26.6.2",
+			systemName: "Android OS",
+			systemVersion: "16",
+		},
 		call: {
 			acquireCallRoute: record("acquireCallRoute"),
 			acquireGroupCallRoute: record("acquireGroupCallRoute"),
@@ -36,12 +47,45 @@ Deno.test("call.acquireRoute defaults callType=AUDIO", async () => {
 		"AUDIO",
 	);
 	assertEquals((calls[0].args[0] as { to: string }).to, "u-peer");
+	assertEquals(
+		(calls[0].args[0] as { fromEnvInfo: Record<string, string> })
+			.fromEnvInfo,
+		{ devname: "Android" },
+	);
 });
 
 Deno.test("call.acquireRoute respects explicit callType", async () => {
 	const { client, calls } = fakeBaseClient();
-	await createCallClient(client).acquireRoute({ to: "u-peer", callType: "VIDEO" });
+	await createCallClient(client).acquireRoute({
+		to: "u-peer",
+		callType: "VIDEO",
+	});
 	assertEquals((calls[0].args[0] as { callType: string }).callType, "VIDEO");
+});
+
+Deno.test("call.acquireRoute respects explicit fromEnvInfo", async () => {
+	const { client, calls } = fakeBaseClient();
+	await createCallClient(client).acquireRoute({
+		to: "u-peer",
+		fromEnvInfo: { devname: "Pixel 8" },
+	});
+	assertEquals(
+		(calls[0].args[0] as { fromEnvInfo: Record<string, string> })
+			.fromEnvInfo,
+		{ devname: "Pixel 8" },
+	);
+});
+
+Deno.test("defaultCallFromEnvInfo returns native-shaped devname values", () => {
+	assertEquals(
+		defaultCallFromEnvInfo({
+			device: "IOSIPAD",
+			appVersion: "26.7.2",
+			systemName: "iOS",
+			systemVersion: "18.0",
+		}),
+		{ devname: "iPad" },
+	);
 });
 
 Deno.test("call.getGroupCall + URL CRUD route to right base methods", async () => {
