@@ -13,7 +13,9 @@ function mockFetch() {
 	let nextStatus = 200;
 	const f = ((url: unknown, init?: RequestInit) => {
 		const hdrs: Record<string, string> = {};
-		new Headers(init?.headers).forEach((v, k) => { hdrs[k] = v; });
+		new Headers(init?.headers).forEach((v, k) => {
+			hdrs[k] = v;
+		});
 		calls.push({
 			url: String(url),
 			method: init?.method ?? "GET",
@@ -49,17 +51,36 @@ function client(fetchFn: typeof fetch): LineAiClient {
 Deno.test("default host = release", async () => {
 	const m = mockFetch();
 	await client(m.fetch).getServiceInfo();
-	assertEquals(m.calls[0].url, "https://line-x-openai.line-apps.com/v2/service-info");
+	assertEquals(
+		m.calls[0].url,
+		"https://line-x-openai.line-apps.com/v2/service-info",
+	);
 });
 
 Deno.test("channel id constant", () => {
 	assertEquals(LINE_AI_CHANNEL_ID, "2006890580");
 });
 
+Deno.test("LineAiClient — default native headers match current iOS app shape", async () => {
+	const m = mockFetch();
+	await new LineAiClient({
+		accessToken: "channel-tok",
+		fetch: m.fetch,
+	}).getServiceInfo();
+	assertEquals(
+		m.calls[0].headers["user-agent"],
+		"LINE/26.7.2 CFNetwork/3860.200.71 Darwin/25.1.0",
+	);
+	assertEquals(m.calls[0].headers["x-access-token"], "channel-tok");
+	assertEquals(m.calls[0].headers["x-line-version"], "26.7.2");
+	assertEquals(m.calls[0].headers["x-line-os"], "IOS");
+	assertEquals(m.calls[0].headers["accept-language"], "ja");
+});
+
 Deno.test("query — POSTs /v2/query-ai with accept: text/event-stream + streams SSE chunks", async () => {
 	const events = [
-		"event:run.started\ndata:{\"runId\":\"R1\",\"threadId\":\"T1\"}\n\n",
-		"event:message\ndata:{\"delta\":\"hello\"}\n\n",
+		'event:run.started\ndata:{"runId":"R1","threadId":"T1"}\n\n',
+		'event:message\ndata:{"delta":"hello"}\n\n',
 		"event:run.completed\ndata:{}\n\n",
 	];
 	let capturedUrl = "", capturedAccept = "", capturedBody = "";
@@ -87,12 +108,18 @@ Deno.test("query — POSTs /v2/query-ai with accept: text/event-stream + streams
 		fetch: fakeFetch,
 	});
 	const chunks = [];
-	for await (const ch of c.query({ threadId: null, message: "hi", imageUrl: null })) {
+	for await (
+		const ch of c.query({ threadId: null, message: "hi", imageUrl: null })
+	) {
 		chunks.push(ch);
 	}
 	assertEquals(capturedUrl, "https://line-x-openai.line-apps.com/v2/query-ai");
 	assertEquals(capturedAccept, "text/event-stream");
-	assertEquals(JSON.parse(capturedBody), { threadId: null, message: "hi", imageUrl: null });
+	assertEquals(JSON.parse(capturedBody), {
+		threadId: null,
+		message: "hi",
+		imageUrl: null,
+	});
 	assertEquals(chunks.length, 3);
 	assertEquals(chunks[0].event, "run.started");
 	assertEquals((chunks[0].data as { runId: string }).runId, "R1");
@@ -103,10 +130,12 @@ Deno.test("query — POSTs /v2/query-ai with accept: text/event-stream + streams
 
 Deno.test("query — throws with body included on non-2xx", async () => {
 	const fakeFetch = (() =>
-		Promise.resolve(new Response(`{"statusMessage":"UNDEFINED_ERROR"}`, {
-			status: 500,
-			statusText: "Internal Server Error",
-		}))) as unknown as typeof fetch;
+		Promise.resolve(
+			new Response(`{"statusMessage":"UNDEFINED_ERROR"}`, {
+				status: 500,
+				statusText: "Internal Server Error",
+			}),
+		)) as unknown as typeof fetch;
 	const c = new LineAiClient({
 		accessToken: "x",
 		lineVersion: "26.6.2",
@@ -114,7 +143,9 @@ Deno.test("query — throws with body included on non-2xx", async () => {
 	});
 	let err: unknown;
 	try {
-		for await (const _ of c.query({ threadId: null, message: "x", imageUrl: null })) {/* drain */}
+		for await (
+			const _ of c.query({ threadId: null, message: "x", imageUrl: null })
+		) { /* drain */ }
 	} catch (e) {
 		err = e;
 	}
@@ -134,7 +165,10 @@ Deno.test("submitAgreement — POST /v2/user/agreement with empty body", async (
 	const m = mockFetch();
 	await client(m.fetch).submitAgreement();
 	assertEquals(m.calls[0].method, "POST");
-	assertEquals(m.calls[0].url, "https://line-x-openai.line-apps.com/v2/user/agreement");
+	assertEquals(
+		m.calls[0].url,
+		"https://line-x-openai.line-apps.com/v2/user/agreement",
+	);
 	assertEquals(m.calls[0].body, "");
 });
 
@@ -152,7 +186,10 @@ Deno.test("deleteThread — DELETE /v2/thread/<id>", async () => {
 	const m = mockFetch();
 	await client(m.fetch).deleteThread("t1");
 	assertEquals(m.calls[0].method, "DELETE");
-	assertEquals(m.calls[0].url, "https://line-x-openai.line-apps.com/v2/thread/t1");
+	assertEquals(
+		m.calls[0].url,
+		"https://line-x-openai.line-apps.com/v2/thread/t1",
+	);
 });
 
 Deno.test("getPromptPresets — GET /v2/<contextType>/prompt-preset with Accept-Language (live-verified)", async () => {
@@ -163,13 +200,16 @@ Deno.test("getPromptPresets — GET /v2/<contextType>/prompt-preset with Accept-
 		m.calls[0].url,
 		"https://line-x-openai.line-apps.com/v2/trending/prompt-preset",
 	);
-	assertEquals(m.calls[0].headers["accept-language"], "ja-JP");
+	assertEquals(m.calls[0].headers["accept-language"], "ja");
 });
 
 Deno.test("cancelQuery — POST /v2/query-ai/cancel with {threadId, runId}", async () => {
 	const m = mockFetch();
 	await client(m.fetch).cancelQuery({ threadId: "T1", runId: "R1" });
-	assertEquals(m.calls[0].url, "https://line-x-openai.line-apps.com/v2/query-ai/cancel");
+	assertEquals(
+		m.calls[0].url,
+		"https://line-x-openai.line-apps.com/v2/query-ai/cancel",
+	);
 	const body = JSON.parse(m.calls[0].body!);
 	assertEquals(body, { threadId: "T1", runId: "R1" });
 });

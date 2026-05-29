@@ -101,15 +101,17 @@ function randomId32(): string {
 /** Faithful client of LINE Android's Agent I (Yahoo search-agent /v2/chat
  *  SSE endpoint). */
 export class AgentIClient {
-	#opts: Required<
-		Omit<AgentIOptions, "fetch" | "userAgent">
-	> & { fetch: typeof fetch; userAgent: string };
+	#opts:
+		& Required<
+			Omit<AgentIOptions, "fetch" | "userAgent">
+		>
+		& { fetch: typeof fetch; userAgent: string };
 	/** Conversation `chats` accumulator — Agent I expects every turn to
 	 *  echo the prior turns.  Reset via {@link reset}. */
 	#history: ChatMessage[] = [];
 
 	constructor(opts: AgentIOptions = {}) {
-		const lineVersion = opts.lineVersion ?? "26.6.0";
+		const lineVersion = opts.lineVersion ?? "26.7.2";
 		this.#opts = {
 			cookie: opts.cookie ?? "",
 			lineVersion,
@@ -289,9 +291,15 @@ function extractText(data: unknown): string | null {
 	const o = data as Record<string, unknown>;
 	// Yahoo search-agent wire shape (live-verified 2026-05):
 	//   {type:"compositeMessage-delta", value:{message:"..."}, messageType:"text"}
-	if (o.type === "compositeMessage-delta" || o.type === "compositeMessage-end") {
+	if (
+		o.type === "compositeMessage-delta" || o.type === "compositeMessage-end"
+	) {
 		const v = o.value as { message?: unknown } | undefined;
 		if (v && typeof v.message === "string") return v.message;
+		if (v && v.message && typeof v.message === "object") {
+			const message = v.message as { text?: unknown };
+			if (typeof message.text === "string") return message.text;
+		}
 	}
 	// Common fallbacks for other payload shapes.
 	if (typeof o.text === "string") return o.text;
@@ -301,7 +309,10 @@ function extractText(data: unknown): string | null {
 	if (Array.isArray(contents)) {
 		const parts: string[] = [];
 		for (const c of contents) {
-			if (c && typeof c === "object" && typeof (c as { text?: unknown }).text === "string") {
+			if (
+				c && typeof c === "object" &&
+				typeof (c as { text?: unknown }).text === "string"
+			) {
 				parts.push((c as { text: string }).text);
 			}
 		}

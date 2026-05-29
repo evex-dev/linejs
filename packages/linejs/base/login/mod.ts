@@ -7,9 +7,13 @@ import { Buffer } from "node:buffer";
 import { LINEStruct } from "../thrift/mod.ts";
 import type { BaseClient } from "../core/mod.ts";
 import type { LooseType } from "@evex/loose-types";
+import {
+	type AuthTokenInput,
+	parseAuthTokenInput,
+} from "../request/auth_token.ts";
 
 export type LoginOption = PasswordLoginOption | QrCodeLoginOption | {
-	authToken: string;
+	authToken: AuthTokenInput;
 	email?: undefined;
 	qr?: undefined;
 };
@@ -145,8 +149,15 @@ export class Login {
 		} else if (options.qr) {
 			await this.withQrCode({ v3: options.v3 });
 		} else if (options.authToken) {
-			this.client.emit("update:authtoken", options.authToken);
-			this.client.authToken = options.authToken;
+			const credential = parseAuthTokenInput(options.authToken);
+			this.client.emit("update:authtoken", credential.accessToken);
+			this.client.authToken = credential.accessToken;
+			if (credential.refreshToken) {
+				await this.client.storage.set("refreshToken", credential.refreshToken);
+			}
+			if (credential.expire !== undefined) {
+				await this.client.storage.set("expire", credential.expire);
+			}
 		} else if (options.email) {
 			await this.withPassword(options);
 		} else {

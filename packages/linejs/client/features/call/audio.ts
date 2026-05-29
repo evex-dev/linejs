@@ -17,6 +17,14 @@ export interface AudioSink {
 	end?(): Promise<void> | void;
 }
 
+export interface NativeGroupOpusPacketizeOptions {
+	/**
+	 * Number of bytes before the raw Opus TOC byte in each input packet.
+	 * PLANET 1:1 examples usually pass packets shaped as `00 + opus`.
+	 */
+	inputPrefixBytes?: number;
+}
+
 export function streamSource(
 	stream: ReadableStream<PcmFrame>,
 ): AudioSource {
@@ -113,6 +121,52 @@ export function streamSink(
 	};
 }
 
+export function packetizeNativeGroupOpusPairs(
+	packets: Uint8Array[],
+	opts: NativeGroupOpusPacketizeOptions = {},
+): Uint8Array[] {
+	const inputPrefixBytes = opts.inputPrefixBytes ?? 1;
+	if (!Number.isInteger(inputPrefixBytes) || inputPrefixBytes < 0) {
+		throw new Error("packetizeNativeGroupOpusPairs: invalid inputPrefixBytes");
+	}
+	const out: Uint8Array[] = [];
+	for (let i = 0; i + 1 < packets.length; i += 2) {
+		const left = packets[i];
+		const right = packets[i + 1];
+		if (
+			left.length <= inputPrefixBytes || right.length <= inputPrefixBytes
+		) continue;
+		const nativePrefix = out.length < 2 ? 0x00 : 0x10;
+		const toc = (left[inputPrefixBytes] & 0xfc) | 0x03;
+		const leftFrame = left.subarray(inputPrefixBytes + 1);
+		const rightFrame = right.subarray(inputPrefixBytes + 1);
+		const header = leftFrame.length === rightFrame.length
+			? new Uint8Array([nativePrefix, toc, 0x02])
+			: new Uint8Array([
+				nativePrefix,
+				toc,
+				0x82,
+				...opusFrameSizeBytes(leftFrame.length),
+			]);
+		const packet = new Uint8Array(
+			header.length + leftFrame.length + rightFrame.length,
+		);
+		packet.set(header, 0);
+		packet.set(leftFrame, header.length);
+		packet.set(rightFrame, header.length + leftFrame.length);
+		out.push(packet);
+	}
+	return out;
+}
+
+function opusFrameSizeBytes(size: number): number[] {
+	if (size < 0 || !Number.isInteger(size)) {
+		throw new Error("packetizeNativeGroupOpusPairs: invalid Opus frame size");
+	}
+	if (size < 252) return [size];
+	return [252 + (size & 0x03), size >>> 2];
+}
+
 export interface AudioEncoder {
 	encode(frame: PcmFrame): Uint8Array | null;
 	close?(): void;
@@ -136,6 +190,7 @@ export interface CodecFactory {
 			| "superwideband"
 			| "fullband";
 		signal?: "auto" | "voice" | "music";
+		vbr?: boolean;
 	}): AudioEncoder;
 	newDecoder(opts: {
 		sampleRate: number;

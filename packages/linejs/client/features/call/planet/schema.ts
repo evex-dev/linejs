@@ -841,6 +841,57 @@ export function packMcDataReq(r: McDataReq): Uint8Array {
 	return finalize(b);
 }
 
+export function decodeMcDataReq(bytes: Uint8Array): McDataReq {
+	const fields = decodeFields(bytes);
+	return {
+		srcType: asNumberField(fields, 1),
+		dstType: asNumberField(fields, 2),
+		dispatchId: asNumberField(fields, 3) ?? 0,
+		data: asBytesField(fields, 4) ?? new Uint8Array(),
+	};
+}
+
+export interface McDataRsp {
+	result?: number;
+	relCode?: number;
+	relPhrase?: string;
+	dispatchId?: number;
+	data?: Uint8Array;
+}
+
+export function packMcDataRsp(r: McDataRsp): Uint8Array {
+	const b: Buf = { bytes: [] };
+	if (r.result !== undefined) emitUint32(b, 1, r.result);
+	if (r.relCode !== undefined) emitUint32(b, 2, r.relCode);
+	if (r.relPhrase !== undefined) emitString(b, 3, r.relPhrase);
+	if (r.dispatchId !== undefined) emitUint32(b, 4, r.dispatchId);
+	if (r.data) emitBytes(b, 5, r.data);
+	return finalize(b);
+}
+
+export function decodeMcDataRsp(bytes: Uint8Array): McDataRsp {
+	const fields = decodeFields(bytes);
+	return {
+		result: asNumberField(fields, 1),
+		relCode: asNumberField(fields, 2),
+		relPhrase: asStringField(fields, 3),
+		dispatchId: asNumberField(fields, 4),
+		data: asBytesField(fields, 5),
+	};
+}
+
+export interface PlanetUeInfo {
+	userId?: string;
+	svcId?: string;
+}
+
+export function packPlanetUeInfo(info: PlanetUeInfo): Uint8Array {
+	const b: Buf = { bytes: [] };
+	if (info.userId !== undefined) emitString(b, 1, info.userId);
+	if (info.svcId !== undefined) emitString(b, 2, info.svcId);
+	return finalize(b);
+}
+
 export function wrapMcMsg(
 	oneofTag: number,
 	packedInner: Uint8Array,

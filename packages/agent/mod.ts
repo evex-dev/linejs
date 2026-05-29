@@ -44,7 +44,11 @@
  *     process.stdout.write(chunk.text ?? "");
  *   }
  */
-export { AgentIClient, type AgentIOptions, type AgentIChunk } from "./client.ts";
+export {
+	type AgentIChunk,
+	AgentIClient,
+	type AgentIOptions,
+} from "./client.ts";
 export {
 	type AgentISource,
 	type AgentRole,
@@ -54,10 +58,13 @@ export {
 } from "./client.ts";
 export {
 	LINE_AI_CHANNEL_ID,
+	LINE_AI_DEFAULT_ACCEPT_LANGUAGE,
+	LINE_AI_DEFAULT_LINE_OS,
+	LINE_AI_DEFAULT_LINE_VERSION,
 	LINE_AI_HOST_ALPHA,
 	LINE_AI_HOST_RELEASE,
-	LineAiClient,
 	type LineAiCancelQueryRequest,
+	LineAiClient,
 	type LineAiOptions,
 	type LineAiPromptContext,
 	type LineAiQueryChunk,

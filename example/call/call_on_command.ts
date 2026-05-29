@@ -30,6 +30,10 @@ const mediaKeyMode = (Deno.env.get("LINE_CALL_MEDIA_KEY_MODE") ??
 const frameMs = readNumberEnv("LINE_CALL_FRAME_MS", 20);
 const gain = readNumberEnv("LINE_CALL_GAIN", 1);
 const holdMs = readNumberEnv("LINE_CALL_HOLD_MS", 1_000);
+const repeatCount = Math.max(
+	1,
+	Math.floor(readNumberEnv("LINE_CALL_REPEAT_COUNT", 1)),
+);
 const timeoutMs = readNumberEnv("LINE_CALL_TIMEOUT_MS", 10_000);
 const answerTimeoutMs = readNumberEnv("LINE_CALL_ANSWER_TIMEOUT_MS", 60_000);
 const bitrate = readOptionalNumberEnv("LINE_CALL_OPUS_BITRATE");
@@ -40,6 +44,8 @@ const bandwidth = Deno.env.get("LINE_CALL_OPUS_BANDWIDTH") as
 	| "superwideband"
 	| "fullband"
 	| undefined;
+const opusSignal = readOpusSignalEnv();
+const opusVbr = readBooleanEnv("LINE_CALL_OPUS_VBR", false);
 const payloadPrefix = hexToBytes(
 	Deno.env.get("LINE_CALL_PAYLOAD_PREFIX_HEX") ?? "00",
 );
@@ -114,7 +120,7 @@ async function callAndPlay(to: string): Promise<void> {
 		if (!answer.mediaReady) {
 			throw new Error("call answered, but media was not established");
 		}
-		await streamOpus(transport, audio);
+		await streamOpus(transport, audio, repeatCount);
 		if (holdMs > 0) await sleep(holdMs);
 	} finally {
 		await transport.close();
@@ -136,6 +142,7 @@ async function acquireAudioRoute(to: string) {
 async function streamOpus(
 	transport: PlanetTransport,
 	samples: Int16Array,
+	repeats: number,
 ): Promise<void> {
 	const codec = await opusCodecFactory();
 	const encoder = codec.newEncoder({
@@ -144,24 +151,27 @@ async function streamOpus(
 		frameDurationMs: frameMs,
 		bitrate,
 		bandwidth,
-		signal: "music",
+		signal: opusSignal,
+		vbr: opusVbr,
 	});
 	const frameSamples = Math.floor((SAMPLE_RATE * frameMs) / 1000);
 	try {
-		for (let offset = 0; offset < samples.length; offset += frameSamples) {
-			const frame = new Int16Array(frameSamples);
-			frame.set(samples.subarray(offset, offset + frameSamples));
-			const packet = encoder.encode({
-				samples: frame,
-				sampleRate: SAMPLE_RATE,
-				channels: 1,
-			});
-			if (packet) {
-				await transport.send(prepend(packet, payloadPrefix), {
-					timestampStep: frameSamples,
+		for (let repeat = 0; repeat < repeats; repeat++) {
+			for (let offset = 0; offset < samples.length; offset += frameSamples) {
+				const frame = new Int16Array(frameSamples);
+				frame.set(samples.subarray(offset, offset + frameSamples));
+				const packet = encoder.encode({
+					samples: frame,
+					sampleRate: SAMPLE_RATE,
+					channels: 1,
 				});
+				if (packet) {
+					await transport.send(prepend(packet, payloadPrefix), {
+						timestampStep: frameSamples,
+					});
+				}
+				await sleep(frameMs);
 			}
-			await sleep(frameMs);
 		}
 	} finally {
 		encoder.close?.();
@@ -295,6 +305,20 @@ function readOptionalNumberEnv(name: string): number | undefined {
 	const number = Number(value);
 	if (!Number.isFinite(number)) throw new Error(`${name} must be a number`);
 	return number;
+}
+
+function readBooleanEnv(name: string, fallback: boolean): boolean {
+	const value = Deno.env.get(name);
+	if (value === undefined || value === "") return fallback;
+	if (value === "true" || value === "1") return true;
+	if (value === "false" || value === "0") return false;
+	throw new Error(`${name} must be true or false`);
+}
+
+function readOpusSignalEnv(): "auto" | "voice" | "music" {
+	const value = Deno.env.get("LINE_CALL_OPUS_SIGNAL") ?? "music";
+	if (value === "auto" || value === "voice" || value === "music") return value;
+	throw new Error("LINE_CALL_OPUS_SIGNAL must be one of auto, voice, music");
 }
 
 function clamp16(n: number): number {

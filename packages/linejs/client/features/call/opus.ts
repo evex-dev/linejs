@@ -22,6 +22,7 @@ type OpusCtor = new (
 ) => OpusInstance;
 const OPUS_VOIP = 2048; // OPUS_APPLICATION_VOIP per opus.h
 const OPUS_AUTO = -1000;
+const OPUS_SET_VBR_REQUEST = 4006;
 const OPUS_SET_BANDWIDTH_REQUEST = 4008;
 const OPUS_SET_SIGNAL_REQUEST = 4024;
 const OPUS_BANDWIDTH = {
@@ -55,9 +56,11 @@ export async function opusCodecFactory(): Promise<CodecFactory> {
 			frameDurationMs,
 			bandwidth,
 			signal,
+			vbr,
 		}): AudioEncoder {
 			const enc = new OpusCtor(sampleRate, channels, OPUS_VOIP);
 			if (bitrate !== undefined) enc.setBitrate(bitrate);
+			if (vbr !== undefined) enc.encoderCTL(OPUS_SET_VBR_REQUEST, vbr ? 1 : 0);
 			if (bandwidth) {
 				enc.encoderCTL(OPUS_SET_BANDWIDTH_REQUEST, OPUS_BANDWIDTH[bandwidth]);
 			}

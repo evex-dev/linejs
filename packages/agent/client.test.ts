@@ -103,6 +103,18 @@ Deno.test("AgentIClient — raw-string data payloads (non-JSON) round-trip", asy
 	assertEquals((chunks[1] as { text: string }).text, "and then json");
 });
 
+Deno.test("AgentIClient — extracts composite message text object shape", async () => {
+	const client = new AgentIClient({
+		cookie: "x=y",
+		fetch: makeMockFetch([
+			`event: message\ndata: {"type":"compositeMessage-delta","value":{"message":{"text":"nested"}}}\n\n`,
+		]),
+	});
+	const chunks = [];
+	for await (const c of client.chat("Hi")) chunks.push(c);
+	assertEquals((chunks[0] as { text: string }).text, "nested");
+});
+
 Deno.test("AgentIClient — surfaces server errors with status code", async () => {
 	const client = new AgentIClient({
 		cookie: "x=y",
@@ -140,17 +152,22 @@ Deno.test("AgentIClient — sends the right request shape", async () => {
 		cookie: "B=anon",
 		source: "chattab_searchbar",
 		lineVersion: "26.7.0",
-		fetch: ((url: unknown, init?: { headers?: HeadersInit; body?: BodyInit }) => {
-			capturedUrl = String(url);
-			capturedHeaders = new Headers(init?.headers);
-			capturedBody = init?.body as string;
-			return Promise.resolve(
-				new Response(
-					new ReadableStream({ start(c) { c.close(); } }),
-					{ status: 200, headers: { "content-type": "text/event-stream" } },
-				),
-			);
-		}) as unknown as typeof fetch,
+		fetch:
+			((url: unknown, init?: { headers?: HeadersInit; body?: BodyInit }) => {
+				capturedUrl = String(url);
+				capturedHeaders = new Headers(init?.headers);
+				capturedBody = init?.body as string;
+				return Promise.resolve(
+					new Response(
+						new ReadableStream({
+							start(c) {
+								c.close();
+							},
+						}),
+						{ status: 200, headers: { "content-type": "text/event-stream" } },
+					),
+				);
+			}) as unknown as typeof fetch,
 	});
 	for await (const _c of client.chat("hi")) { /* drain */ }
 	assertEquals(capturedUrl, "https://search-agent.yahoo.co.jp/v2/chat");
@@ -173,7 +190,9 @@ Deno.test("AgentIClient — no-cookie option auto-mints anonymous yahoo cookies 
 	let sseCookie: string | null = null;
 	const fakeFetch = ((url: unknown, init?: { method?: string }) => {
 		const u = String(url);
-		if (u.includes("search.yahoo.co.jp/chat") && (init?.method ?? "GET") === "GET") {
+		if (
+			u.includes("search.yahoo.co.jp/chat") && (init?.method ?? "GET") === "GET"
+		) {
 			mintCalled++;
 			return Promise.resolve(
 				new Response(null, {
@@ -190,10 +209,17 @@ Deno.test("AgentIClient — no-cookie option auto-mints anonymous yahoo cookies 
 			(init as { headers?: HeadersInit } | undefined)?.headers,
 		).get("cookie");
 		return Promise.resolve(
-			new Response(new ReadableStream({ start(c) { c.close(); } }), {
-				status: 200,
-				headers: { "content-type": "text/event-stream" },
-			}),
+			new Response(
+				new ReadableStream({
+					start(c) {
+						c.close();
+					},
+				}),
+				{
+					status: 200,
+					headers: { "content-type": "text/event-stream" },
+				},
+			),
 		);
 	}) as unknown as typeof fetch;
 	const client = new AgentIClient({ fetch: fakeFetch });

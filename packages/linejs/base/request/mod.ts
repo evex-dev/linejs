@@ -5,6 +5,8 @@ import {
 	Protocols,
 } from "../thrift/mod.ts";
 import { type BaseClient, InternalError } from "../core/mod.ts";
+import { shouldUseLegyEncryptedAccess } from "./auth_token.ts";
+import { LegyEncryptedTransport } from "./legy.ts";
 
 const square = ["/SQ1", "/SQLV1"];
 
@@ -28,6 +30,7 @@ export class RequestClient {
 	readonly client: BaseClient;
 	endpoint: string;
 	userAgent: string;
+	#legyTransport?: LegyEncryptedTransport;
 	/**
 	 * x-line-application
 	 */
@@ -149,16 +152,20 @@ export class RequestClient {
 			body: Trequest,
 		});
 
-		const response = await this.client.fetch(
-			`https://${this.endpoint}${path}`,
-			{
-				method: overrideMethod,
-				headers,
-				signal: AbortSignal.timeout(timeout),
-				// @ts-expect-error: will fix cuz typescript version change
-				body: Trequest,
-			},
-		);
+		const request = new Request(`https://${this.endpoint}${path}`, {
+			method: overrideMethod,
+			headers,
+			signal: AbortSignal.timeout(timeout),
+			// @ts-expect-error: will fix cuz typescript version change
+			body: Trequest,
+		});
+		const response = this.shouldUseLegyEncryptedRequest(path, headers)
+			? await this.legyTransport.fetch(request, this.client.fetch, {
+				application: this.systemType,
+				userAgent: this.userAgent,
+				endpoint: this.client.legy.endpoint,
+			})
+			: await this.client.fetch(request);
 		const nextToken = response.headers.get("x-line-next-access");
 		if (nextToken) {
 			this.client.emit("update:authtoken", nextToken);
@@ -178,9 +185,7 @@ export class RequestClient {
 			throw new Error(
 				`Request internal failed: status=${response.status} ` +
 					`headers=${JSON.stringify([...response.headers.entries()])} ` +
-					`body=<${
-						[...parsedBody].map((e) => e.toString(16)).join(" ")
-					}>`,
+					`body=<${[...parsedBody].map((e) => e.toString(16)).join(" ")}>`,
 			);
 		}
 		if (!res.data[0] && Object.keys(res.data).length) {
@@ -298,4 +303,29 @@ export class RequestClient {
 
 		return header;
 	}
+
+	private get legyTransport(): LegyEncryptedTransport {
+		return this.#legyTransport ??= new LegyEncryptedTransport(
+			this.client.legy.endpoint,
+		);
+	}
+
+	private shouldUseLegyEncryptedRequest(
+		path: string,
+		headers: Record<string, string>,
+	): boolean {
+		const mode = this.client.legy.encrypted;
+		if (mode === false) return false;
+		if (!headers["x-line-access"]) return false;
+		if (mode === true) return true;
+		return isLegyTalkPath(path) &&
+			shouldUseLegyEncryptedAccess(headers["x-line-access"]);
+	}
+}
+
+function isLegyTalkPath(path: string): boolean {
+	return path === "/S3" || path === "/S4" || path === "/V4" ||
+		path === "/SYNC3" || path === "/SYNC4" || path === "/P4" ||
+		path === "/P5" || path === "/NP4" || path === "/NP5" ||
+		path === "/C5" || path === "/CA5" || path === "/ECA5";
 }

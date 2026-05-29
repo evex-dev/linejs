@@ -29,6 +29,7 @@ import {
 import { Login } from "../login/mod.ts";
 import { Thrift } from "../thrift/mod.ts";
 import { RequestClient } from "../request/mod.ts";
+import type { AuthTokenInput } from "../request/auth_token.ts";
 import { E2EE } from "../e2ee/mod.ts";
 import { LineObs } from "../obs/mod.ts";
 import { Timeline } from "../timeline/mod.ts";
@@ -45,7 +46,7 @@ export interface LoginOption {
 	email?: string;
 	password?: string;
 	pincode?: string;
-	authToken?: string;
+	authToken?: AuthTokenInput;
 	qr?: boolean;
 	e2ee?: boolean;
 	v3?: boolean;
@@ -79,6 +80,19 @@ export interface ClientInit {
 	 * @default `globalThis.fetch`
 	 */
 	fetch?: FetchLike;
+
+	/**
+	 * LEGY encrypted gateway options.
+	 *
+	 * `auto` encrypts requests for modern JWT/primary/auth-key tokens while
+	 * keeping legacy opaque auth tokens on the normal endpoint.
+	 *
+	 * @default { encrypted: "auto" }
+	 */
+	legy?: {
+		encrypted?: boolean | "auto";
+		endpoint?: string;
+	};
 }
 
 export interface Config {
@@ -125,6 +139,10 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	config: Config;
 	readonly deviceDetails: DeviceDetails;
 	readonly endpoint: string;
+	readonly legy: {
+		encrypted: boolean | "auto";
+		endpoint?: string;
+	};
 	/**
 	 * Initializes a new instance of the class.
 	 *
@@ -164,6 +182,10 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			longTimeout: 180_000,
 		};
 		this.device = init.device;
+		this.legy = {
+			encrypted: init.legy?.encrypted ?? "auto",
+			endpoint: init.legy?.endpoint,
+		};
 
 		this.storage = init.storage ?? new MemoryStorage();
 		this.request = new RequestClient(this);
@@ -256,7 +278,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			if (midType && midType[1]) {
 				return `[${midType[1].toUpperCase()} mid]`;
 			}
-			if (k === "x-line-access") {
+			if (k === "x-line-access" || k === "x-lt" || k === "x-lcs") {
 				return `[AuthToken]`;
 			}
 		}

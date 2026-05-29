@@ -100,7 +100,8 @@ and real-time pacing.
 | Incoming call notifications | `call:incoming`, `call:cancel` |
 | Incoming call answering | Not wrapped as a high-level public flow yet |
 | Group-call URL/control APIs | Wrapped under `client.call.*` |
-| Group-call media mixing | Not wrapped by `PlanetTransport` |
+| Group-call PLANET join | `PlanetTransport.joinGroupDetailed()` |
+| Group-call audio send | Supported with native group Opus packetization |
 
 The older `AndromedaTransport` and SIP/MIKEY helpers are still exported for
 experiments and compatibility, but the working modern Android 1:1 audio flow is
@@ -284,11 +285,14 @@ repository:
 | `LINE_CALL_PAYLOAD_PREFIX_HEX` | `00` | Native PLANET audio payload prefix. |
 | `LINE_CALL_MEDIA_KEY_MODE` | `audio-reverse-stage` | SRTP key selection mode for the observed Android audio path. |
 | `LINE_CALL_GAIN` | `1` | PCM gain before Opus encoding. |
+| `LINE_CALL_REPEAT_COUNT` | `1` | Number of times to replay the WAV before closing the call. |
 | `LINE_CALL_HOLD_MS` | `1000` | Extra hold time after audio finishes. |
 | `LINE_CALL_TIMEOUT_MS` | `10000` | Timeout for initial PLANET replies. |
 | `LINE_CALL_ANSWER_TIMEOUT_MS` | `60000` | Timeout while waiting for the peer to answer. |
 | `LINE_CALL_OPUS_BITRATE` | | Optional Opus bitrate in bit/s. |
 | `LINE_CALL_OPUS_BANDWIDTH` | | Optional Opus bandwidth. |
+| `LINE_CALL_OPUS_SIGNAL` | `music` | Opus signal hint. Use `voice` for speech-only clips. |
+| `LINE_CALL_OPUS_VBR` | `false` | Enable Opus VBR. |
 
 ## How the Outgoing Flow Works
 
@@ -540,6 +544,7 @@ building blocks instead of hiding the whole pipeline:
 | `bufferSink()` | Collects decoded PCM frames. |
 | `streamSource()` / `streamSink()` | Adapt Web streams to call audio sources/sinks. |
 | `opusCodecFactory()` | Loads `opusscript` and creates Opus encoders/decoders. |
+| `packetizeNativeGroupOpusPairs()` | Combines two 20 ms Opus packets into the native 40 ms group-call payload shape. |
 
 Recommended sender pipeline:
 
@@ -563,7 +568,8 @@ ffmpeg -i input.mp3 -ac 1 -ar 48000 -sample_fmt s16 output.wav
 ```
 
 For speech, `signal: "voice"` is reasonable. For music or mixed clips, use
-`signal: "music"`.
+`signal: "music"`. The bundled command example defaults to `music` because it
+streams a WAV sample.
 
 ```ts
 const encoder = (await opusCodecFactory()).newEncoder({
@@ -709,7 +715,58 @@ can be copied without exposing account-specific state.
 
 ## Group Calls
 
-Group-call APIs are currently control-plane helpers:
+Group calls use a different control-plane flow from 1:1 calls. A 1:1 call asks
+LINE for a route to a peer and then sends `setup_req` so that peer rings. A
+group call first checks the chat's call state, acquires a group route for the
+chat, connects to PLANET, and joins the room:
+
+```ts
+const state = await client.call.getGroupCall(chatMid);
+const online = (state as { online?: boolean }).online === true;
+
+const route = await client.call.acquireGroupRoute({
+	chatMid,
+	mediaType: "AUDIO",
+	isInitialHost: !online,
+	capabilities: ["AUDIO", "VIDEO"],
+} as never);
+
+const transport = new PlanetTransport({
+	localMid,
+	mediaKeyMode: "audio-secret-sender",
+});
+
+await transport.connect({ route });
+const joined = await transport.joinGroupDetailed({ roomId: chatMid });
+if (!joined.mediaReady) {
+	throw new Error("joined group call, but media was not established");
+}
+```
+
+After `mediaReady`, group-call audio is still Opus over SRTP, but the native
+payload shape is not the same as the 1:1 `00 + 20 ms Opus` payload. Native group
+calls combine two 20 ms Opus frames into one 40 ms Opus code-3 packet. The first
+two media payloads use native prefix `00`; later payloads use `10`.
+
+`packetizeNativeGroupOpusPairs()` converts the same prefixed 20 ms packets used
+by 1:1 examples into the native group-call payload shape:
+
+```ts
+import { packetizeNativeGroupOpusPairs } from "@evex/linejs/call";
+
+const groupPackets = packetizeNativeGroupOpusPairs(oneToOneStylePackets);
+for (const packet of groupPackets) {
+	await transport.send(packet, { timestampStep: 1920 });
+	await sleep(40);
+}
+```
+
+The helper strips the 1:1 prefix, reuses the Opus TOC configuration, writes the
+correct code-3 frame count/header, and preserves VBR frame lengths when the two
+frames differ in size. Use `timestampStep: 1920` because each output packet
+carries 40 ms at 48 kHz.
+
+Group-call URL and membership APIs are also available:
 
 ```ts
 const created = await client.call.createGroupCallUrl({ /* request */ });
@@ -722,9 +779,6 @@ await client.call.joinChatByUrl("ticket");
 await client.call.invite({ /* request */ });
 await client.call.kick({ /* request */ });
 ```
-
-These APIs manage group-call URLs and membership actions. They do not expose a
-group-call media mixer abstraction.
 
 ## Test Coverage
 

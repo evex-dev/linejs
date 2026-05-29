@@ -18,15 +18,20 @@ import { makeChunkHdr } from "./framing.ts";
 import {
 	CC_MSG,
 	decodeFields,
+	decodeMcDataRsp,
 	decodePlanetMsg,
+	MC_MSG,
 	packCcConnReq,
 	packCcInfoReq,
 	packCcSetupRsp,
+	packMcDataReq,
 	packNativeSetupOffer,
 	packPlanetCcMsg,
+	packPlanetMcMsg,
 	packPlanetMsg,
 	type PlanetSetupOfferMaterial,
 	wrapCcMsg,
+	wrapMcMsg,
 } from "./schema.ts";
 import { PlanetTransport } from "./transport.ts";
 import { deriveSrtpContext, parseRtp, srtpDecrypt } from "../srtp.ts";
@@ -180,6 +185,42 @@ function buildControlPlain(opts: {
 					dstChanId: opts.dstChanId ?? 0n,
 				},
 				wrapCcMsg(opts.bodyTag, opts.bodyBytes),
+			),
+		},
+	);
+}
+
+function buildMediaControlPlain(opts: {
+	bodyTag: number;
+	bodyBytes: Uint8Array;
+	msgId: number;
+	sessId: Uint8Array;
+	locNonce: bigint;
+	cid: string;
+	srcChanId: bigint;
+	dstChanId?: bigint;
+}): Uint8Array {
+	const tranId = new Uint8Array(16);
+	tranId.fill(opts.msgId & 0xff);
+	return packPlanetMsg(
+		{
+			userId: "u-server",
+			msgId: opts.msgId,
+			sessId: opts.sessId,
+			tranId,
+			tranSeq: opts.msgId,
+			locNonce: opts.locNonce,
+			rmtNonce: 0n,
+		},
+		{
+			kind: "mc",
+			data: packPlanetMcMsg(
+				{
+					cid: opts.cid,
+					srcChanId: opts.srcChanId,
+					dstChanId: opts.dstChanId ?? 0n,
+				},
+				wrapMcMsg(opts.bodyTag, opts.bodyBytes),
 			),
 		},
 	);
@@ -385,6 +426,21 @@ Deno.test("PlanetTransport learns RTP source and sends decryptable SRTP media", 
 		srcChanId: 0x1001n,
 		dstChanId: 0x2002n,
 	});
+	const mcDataReqPlain = buildMediaControlPlain({
+		bodyTag: MC_MSG.DATA_REQ,
+		bodyBytes: packMcDataReq({
+			srcType: 0,
+			dstType: 0,
+			dispatchId: 2,
+			data: new Uint8Array([0]),
+		}),
+		msgId: 0x3189,
+		sessId,
+		locNonce: 0x123456n,
+		cid,
+		srcChanId: 0x2002n,
+		dstChanId: 0x3003n,
+	});
 
 	let setupHandled = false;
 	let clientRinfo: RemoteInfo | undefined;
@@ -397,7 +453,12 @@ Deno.test("PlanetTransport learns RTP source and sends decryptable SRTP media", 
 	let resolveMedia!: (packet: Uint8Array) => void;
 	let resolvePinholeReport!: () => void;
 	let resolveSecondConnRsp!: () => void;
+	let resolveInfoReq!: (bodyTag: number) => void;
 	let resolveInfoRsp!: (bodyTag: number) => void;
+	let resolveMcDataRsp!: (
+		rsp: { dispatchId: number; dataLength: number; bodyLength: number },
+	) => void;
+	let resolveRelReq!: (req: { bodyTag: number; dstChanId: string }) => void;
 	let resolveKeepalive!: (bodyTag: number) => void;
 	const mediaWire = new Promise<Uint8Array>((resolve) => {
 		resolveMedia = resolve;
@@ -408,9 +469,22 @@ Deno.test("PlanetTransport learns RTP source and sends decryptable SRTP media", 
 	const secondConnRsp = new Promise<void>((resolve) => {
 		resolveSecondConnRsp = resolve;
 	});
+	const infoReq = new Promise<number>((resolve) => {
+		resolveInfoReq = resolve;
+	});
 	const infoRsp = new Promise<number>((resolve) => {
 		resolveInfoRsp = resolve;
 	});
+	const mcDataRsp = new Promise<
+		{ dispatchId: number; dataLength: number; bodyLength: number }
+	>((resolve) => {
+		resolveMcDataRsp = resolve;
+	});
+	const relReq = new Promise<{ bodyTag: number; dstChanId: string }>(
+		(resolve) => {
+			resolveRelReq = resolve;
+		},
+	);
 	const keepalive = new Promise<number>((resolve) => {
 		resolveKeepalive = resolve;
 	});
@@ -439,8 +513,26 @@ Deno.test("PlanetTransport learns RTP source and sends decryptable SRTP media", 
 					connRspCount++;
 					if (connRspCount >= 2) resolveSecondConnRsp();
 				}
+				if (msg.cc?.bodyTag === CC_MSG.INFO_REQ) {
+					resolveInfoReq(msg.cc.bodyTag);
+				}
 				if (msg.cc?.bodyTag === CC_MSG.INFO_RSP) {
 					resolveInfoRsp(msg.cc.bodyTag);
+				}
+				if (msg.cc?.bodyTag === CC_MSG.REL_REQ) {
+					resolveRelReq({
+						bodyTag: msg.cc.bodyTag,
+						dstChanId: String(msg.cc.hdr?.dstChanId ?? 0n),
+					});
+				}
+				if (msg.mc?.bodyTag === MC_MSG.DATA_RSP && msg.mc.bodyBytes) {
+					const rsp = decodeMcDataRsp(msg.mc.bodyBytes);
+					const data = rsp.data ?? new Uint8Array();
+					resolveMcDataRsp({
+						dispatchId: rsp.dispatchId ?? 0,
+						dataLength: data.length,
+						bodyLength: data.length >= 6 ? ((data[4] << 8) | data[5]) : 0,
+					});
 				}
 				if (msg.scBytes) {
 					resolveKeepalive(decodeFields(msg.scBytes)[0]?.tag ?? 0);
@@ -481,16 +573,20 @@ Deno.test("PlanetTransport learns RTP source and sends decryptable SRTP media", 
 			const connReqWire = buildServerWire(serverKeys, connReqPlain, 0x5102);
 			connReqWireForRetry = connReqWire;
 			const infoReqWire = buildServerWire(serverKeys, infoReqPlain, 0x5103);
+			const mcDataReqWire = buildServerWire(serverKeys, mcDataReqPlain, 0x5104);
 			void sendUdp(server, setupRspWire, rinfo).then(() =>
 				new Promise((resolve) => setTimeout(resolve, 5))
 			).then(() => sendUdp(server, connReqWire, rinfo)).then(() =>
 				new Promise((resolve) => setTimeout(resolve, 5))
-			).then(() => sendUdp(server, infoReqWire, rinfo));
+			).then(() => sendUdp(server, infoReqWire, rinfo)).then(() =>
+				new Promise((resolve) => setTimeout(resolve, 5))
+			).then(() => sendUdp(server, mcDataReqWire, rinfo));
 		} catch (e) {
 			serverError = e;
 		}
 	});
 
+	let transportClosed = false;
 	try {
 		await transport.connect({ route });
 		const invite = await transport.inviteDetailed({ to: "u-peer" }).catch(
@@ -511,7 +607,13 @@ Deno.test("PlanetTransport learns RTP source and sends decryptable SRTP media", 
 		await withTimeout(pinholeReport, 1000, "pinhole_report");
 		assertEquals(pinholePlainLengths.filter((len) => len === 519).length, 16);
 		assertEquals(pinholePlainLengths.filter((len) => len === 10).length, 1);
+		assertEquals(await withTimeout(infoReq, 1000, "info_req"), CC_MSG.INFO_REQ);
 		assertEquals(await withTimeout(infoRsp, 1000, "info_rsp"), CC_MSG.INFO_RSP);
+		assertEquals(await withTimeout(mcDataRsp, 1000, "mc_data_rsp"), {
+			dispatchId: 2,
+			dataLength: 148,
+			bodyLength: 139,
+		});
 		assertEquals(await withTimeout(keepalive, 1000, "keepalive"), 1);
 		assert(clientRinfo);
 		assert(connReqWireForRetry);
@@ -545,8 +647,14 @@ Deno.test("PlanetTransport learns RTP source and sends decryptable SRTP media", 
 		const receivedWire = await withTimeout(mediaWire, 1000, "media");
 		const rtp = await srtpDecrypt(peerRecv, receivedWire);
 		assertEquals(parseRtp(rtp).payload, opus);
-	} finally {
 		await transport.close();
+		transportClosed = true;
+		assertEquals(await withTimeout(relReq, 1000, "rel_req"), {
+			bodyTag: CC_MSG.REL_REQ,
+			dstChanId: String(0x1001n),
+		});
+	} finally {
+		if (!transportClosed) await transport.close();
 		await new Promise<void>((resolve) => server.close(() => resolve()));
 		await new Promise<void>((resolve) => mediaServer.close(() => resolve()));
 	}

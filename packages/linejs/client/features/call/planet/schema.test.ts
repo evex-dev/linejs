@@ -9,6 +9,8 @@ import {
 	decodeCcRelReq,
 	decodeCcSetupRsp,
 	decodeFields,
+	decodeMcDataReq,
+	decodeMcDataRsp,
 	decodeNativeSetupOffer,
 	decodePlanetMsg,
 	decodeVarint,
@@ -24,6 +26,7 @@ import {
 	packCcSetupRsp,
 	packKeepaliveReq,
 	packMcDataReq,
+	packMcDataRsp,
 	packMcDataSessionPayload,
 	packNativeGroupParticipateOffer,
 	packNativeSetupOffer,
@@ -34,6 +37,7 @@ import {
 	packPlanetMsg,
 	packPlanetMsgHdr,
 	packPlanetScMsgKaReq,
+	packPlanetUeInfo,
 	packPlanetUserAgent,
 	packStrmSpec,
 	WireType,
@@ -608,6 +612,52 @@ Deno.test("packStrmSpec matches native group mc_data_req payload", () => {
 		wrapMcMsg(MC_MSG.DATA_REQ, dataReq),
 	);
 	assertEquals(decodeFields(mc).map((f) => f.tag), [1, 2]);
+});
+
+Deno.test("packMcDataRsp and packPlanetUeInfo match post-answer control shapes", () => {
+	const data = packMcDataSessionPayload(
+		packStrmSpec({
+			strms: [{
+				ssrc: 102,
+				bitrate: { target: 32 },
+				state: { paused: false, code: 0 },
+				ptime: 40,
+				retx: { periOn: true, periIntvMs: 40, periLossThre: [0, 0, 20] },
+				fecLossThre: [],
+			}],
+			fbIntv: 200,
+			tp: 1,
+			fbOn: true,
+		}),
+	);
+	const rsp = packMcDataRsp({
+		result: 0,
+		relCode: 0,
+		dispatchId: 2,
+		data,
+	});
+	assertEquals(decodeFields(rsp).map((f) => f.tag), [1, 2, 4, 5]);
+	const decoded = decodeMcDataRsp(rsp);
+	assertEquals(decoded.result, 0);
+	assertEquals(decoded.relCode, 0);
+	assertEquals(decoded.dispatchId, 2);
+	assertEquals(decoded.data, data);
+
+	const req = packMcDataReq({
+		srcType: 0,
+		dstType: 0,
+		dispatchId: 2,
+		data: new Uint8Array([1, 2, 3]),
+	});
+	assertEquals(decodeMcDataReq(req), {
+		srcType: 0,
+		dstType: 0,
+		dispatchId: 2,
+		data: new Uint8Array([1, 2, 3]),
+	});
+
+	const ue = packPlanetUeInfo({ userId: "u00000000000000000000000000000000" });
+	assertEquals(decodeFields(ue).map((f) => f.tag), [1]);
 });
 
 Deno.test("packPlanetUserAgent emits the native Android UA field layout", () => {

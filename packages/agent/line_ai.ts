@@ -5,6 +5,9 @@
 
 export const LINE_AI_HOST_RELEASE = "https://line-x-openai.line-apps.com";
 export const LINE_AI_HOST_ALPHA = "https://line-x-openai.line-apps-alpha.com";
+export const LINE_AI_DEFAULT_LINE_VERSION = "26.7.2";
+export const LINE_AI_DEFAULT_LINE_OS = "IOS";
+export const LINE_AI_DEFAULT_ACCEPT_LANGUAGE = "ja";
 
 /** Known valid context-types for {@link LineAiClient.getPromptPresets}. */
 export type LineAiPromptContext = "trending" | "image-attached";
@@ -18,7 +21,10 @@ export const LINE_AI_CHANNEL_ID = "2006890580";
 export interface LineAiOptions {
 	/** Channel-scoped token for channel {@link LINE_AI_CHANNEL_ID}. */
 	accessToken: string;
-	lineVersion: string;
+	/** LINE app version reported to the native LINE AI gateway. */
+	lineVersion?: string;
+	/** Native app OS marker. LINE's iOS-shaped Agent I path uses "IOS". */
+	lineOs?: string;
 	/** Accept-Language for /prompt-preset (e.g. "ja-JP"). */
 	acceptLanguage?: string;
 	host?: string;
@@ -57,6 +63,7 @@ export class LineAiClient {
 	#host: string;
 	#accessToken: string;
 	#lineVersion: string;
+	#lineOs: string;
 	#acceptLanguage: string;
 	#fetch: typeof fetch;
 	#userAgent: string;
@@ -64,11 +71,13 @@ export class LineAiClient {
 	constructor(opts: LineAiOptions) {
 		this.#host = (opts.host ?? LINE_AI_HOST_RELEASE).replace(/\/+$/, "");
 		this.#accessToken = opts.accessToken;
-		this.#lineVersion = opts.lineVersion;
-		this.#acceptLanguage = opts.acceptLanguage ?? "ja-JP";
+		this.#lineVersion = opts.lineVersion ?? LINE_AI_DEFAULT_LINE_VERSION;
+		this.#lineOs = opts.lineOs ?? LINE_AI_DEFAULT_LINE_OS;
+		this.#acceptLanguage = opts.acceptLanguage ??
+			LINE_AI_DEFAULT_ACCEPT_LANGUAGE;
 		this.#fetch = opts.fetch ?? fetch;
 		this.#userAgent = opts.userAgent ??
-			`Line/${opts.lineVersion}/LineAi`;
+			`LINE/${this.#lineVersion} CFNetwork/3860.200.71 Darwin/25.1.0`;
 	}
 
 	/** GET /v2/service-info — list of AI services + help URLs. */
@@ -84,9 +93,12 @@ export class LineAiClient {
 		contextType: LineAiPromptContext | string;
 		acceptLanguage?: string;
 	}): Promise<LineAiResponse> {
-		return this.#get(`/v2/${encodeURIComponent(opts.contextType)}/prompt-preset`, {
-			"Accept-Language": opts.acceptLanguage ?? this.#acceptLanguage,
-		});
+		return this.#get(
+			`/v2/${encodeURIComponent(opts.contextType)}/prompt-preset`,
+			{
+				"accept-language": opts.acceptLanguage ?? this.#acceptLanguage,
+			},
+		);
 	}
 
 	/** POST /v2/thread (empty body) — create a new conversation thread. */
@@ -126,7 +138,11 @@ export class LineAiClient {
 		});
 		if (!res.ok || !res.body) {
 			const errBody = await res.text();
-			throw new Error(`LineAi.query: ${res.status} ${res.statusText} body=${errBody.slice(0, 200)}`);
+			throw new Error(
+				`LineAi.query: ${res.status} ${res.statusText} body=${
+					errBody.slice(0, 200)
+				}`,
+			);
 		}
 		yield* parseSseStream(res.body);
 	}
@@ -142,13 +158,18 @@ export class LineAiClient {
 		return {
 			accept: "application/json",
 			"user-agent": this.#userAgent,
-			"X-ACCESS-TOKEN": this.#accessToken,
-			"X-LINE-VERSION": this.#lineVersion,
+			"x-access-token": this.#accessToken,
+			"x-line-version": this.#lineVersion,
+			"x-line-os": this.#lineOs,
+			"accept-language": this.#acceptLanguage,
 			...extra,
 		};
 	}
 
-	async #get(path: string, extra?: Record<string, string>): Promise<LineAiResponse> {
+	async #get(
+		path: string,
+		extra?: Record<string, string>,
+	): Promise<LineAiResponse> {
 		return this.#req(path, "GET", undefined, extra);
 	}
 	async #postEmpty(path: string): Promise<LineAiResponse> {
@@ -175,15 +196,21 @@ export class LineAiClient {
 		});
 		return await this.#wrap(res);
 	}
-	async #wrap(res: Response): Promise<LineAiResponse> { return wrapResponse(res); }
+	async #wrap(res: Response): Promise<LineAiResponse> {
+		return wrapResponse(res);
+	}
 }
 
 async function wrapResponse(res: Response): Promise<LineAiResponse> {
-		const text = await res.text();
-		let parsed: unknown = null;
-		if (text) {
-			try { parsed = JSON.parse(text); } catch { parsed = text; }
+	const text = await res.text();
+	let parsed: unknown = null;
+	if (text) {
+		try {
+			parsed = JSON.parse(text);
+		} catch {
+			parsed = text;
 		}
+	}
 	return {
 		status: res.status,
 		rateLimit: {
@@ -228,7 +255,9 @@ function parseSseBlock(block: string): LineAiQueryChunk {
 	const raw = dataLines.join("\n");
 	let data: unknown = raw;
 	if (raw) {
-		try { data = JSON.parse(raw); } catch { /* keep raw */ }
+		try {
+			data = JSON.parse(raw);
+		} catch { /* keep raw */ }
 	}
 	return { event, data };
 }

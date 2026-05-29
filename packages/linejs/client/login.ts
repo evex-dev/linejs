@@ -7,6 +7,10 @@ import type { FetchLike } from "../base/mod.ts";
 import type { Device } from "../base/mod.ts";
 import { BaseClient } from "../base/mod.ts";
 import type { BaseStorage } from "../base/storage/mod.ts";
+import {
+	type AuthTokenInput,
+	parseAuthTokenInput,
+} from "../base/request/auth_token.ts";
 import { Client } from "./client.ts";
 
 export interface InitOptions {
@@ -37,6 +41,14 @@ export interface InitOptions {
 	 * @default `globalThis.fetch`
 	 */
 	fetch?: FetchLike;
+
+	/**
+	 * LEGY encrypted gateway options.
+	 */
+	legy?: {
+		encrypted?: boolean | "auto";
+		endpoint?: string;
+	};
 }
 
 const createBaseClient = (init: InitOptions) =>
@@ -46,6 +58,7 @@ const createBaseClient = (init: InitOptions) =>
 		version: init.version,
 		endpoint: init.endpoint,
 		storage: init.storage,
+		legy: init.legy,
 	});
 
 export interface WithQROptions {
@@ -88,11 +101,18 @@ export const loginWithPassword = async (
 };
 
 export const loginWithAuthToken = async (
-	authToken: string,
+	authToken: AuthTokenInput,
 	init: InitOptions,
 ): Promise<Client> => {
 	const base = createBaseClient(init);
-	base.authToken = authToken;
+	const credential = parseAuthTokenInput(authToken);
+	base.authToken = credential.accessToken;
+	if (credential.refreshToken) {
+		await base.storage.set("refreshToken", credential.refreshToken);
+	}
+	if (credential.expire !== undefined) {
+		await base.storage.set("expire", credential.expire);
+	}
 	await base.loginProcess.ready();
 	return new Client(base);
 };

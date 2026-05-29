@@ -92,6 +92,30 @@ Deno.test("opusCodecFactory: can force narrowband SILK 10ms packets", async () =
 	enc.close?.();
 });
 
+Deno.test("opusCodecFactory: can force CBR voice packets", async () => {
+	const factory = await opusCodecFactory();
+	const enc = factory.newEncoder({
+		sampleRate: 48000,
+		channels: 1,
+		frameDurationMs: 40,
+		bitrate: 16000,
+		bandwidth: "fullband",
+		signal: "voice",
+		vbr: false,
+	});
+
+	const pcm = new Int16Array(1920);
+	for (let i = 0; i < pcm.length; i++) {
+		pcm[i] = Math.floor(Math.sin((2 * Math.PI * 440 * i) / 48000) * 5000);
+	}
+	const packet = enc.encode({ samples: pcm, sampleRate: 48000, channels: 1 });
+	assert(packet !== null);
+	assertEquals(packet[0], 0x7b);
+	assertEquals(packet.length, 80);
+
+	enc.close?.();
+});
+
 Deno.test("opusCodecFactory: uses all interleaved stereo samples", async () => {
 	const factory = await opusCodecFactory();
 	const enc = factory.newEncoder({ sampleRate: 48000, channels: 2 });

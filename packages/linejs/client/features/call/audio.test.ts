@@ -4,6 +4,7 @@ import {
 	bufferSource,
 	decodeWavSync,
 	defaultCodecFactory,
+	packetizeNativeGroupOpusPairs,
 	type PcmFrame,
 	resampleLinear,
 	streamSink,
@@ -95,6 +96,50 @@ Deno.test("streamSink writes through to underlying WritableStream", async () => 
 	});
 	await sink.end?.();
 	assertEquals(written.length, 1);
+});
+
+Deno.test("packetizeNativeGroupOpusPairs combines prefixed 20ms Opus frames", () => {
+	const packets = [
+		new Uint8Array([0x00, 0x78, 0x11, 0x12]),
+		new Uint8Array([0x00, 0x78, 0x21, 0x22]),
+		new Uint8Array([0x00, 0x78, 0x31]),
+		new Uint8Array([0x00, 0x78, 0x41]),
+		new Uint8Array([0x00, 0x78, 0x51]),
+		new Uint8Array([0x00, 0x78, 0x61]),
+	];
+
+	const grouped = packetizeNativeGroupOpusPairs(packets);
+
+	assertEquals(grouped.length, 3);
+	assertEquals(Array.from(grouped[0]), [
+		0x00,
+		0x7b,
+		0x02,
+		0x11,
+		0x12,
+		0x21,
+		0x22,
+	]);
+	assertEquals(Array.from(grouped[1]), [0x00, 0x7b, 0x02, 0x31, 0x41]);
+	assertEquals(Array.from(grouped[2]), [0x10, 0x7b, 0x02, 0x51, 0x61]);
+});
+
+Deno.test("packetizeNativeGroupOpusPairs writes VBR frame-size headers", () => {
+	const grouped = packetizeNativeGroupOpusPairs([
+		new Uint8Array([0x00, 0x78, 0x11, 0x12, 0x13]),
+		new Uint8Array([0x00, 0x78, 0x21]),
+	]);
+
+	assertEquals(Array.from(grouped[0]), [
+		0x00,
+		0x7b,
+		0x82,
+		0x03,
+		0x11,
+		0x12,
+		0x13,
+		0x21,
+	]);
 });
 
 Deno.test("resampleLinear: identity when rates match", () => {

@@ -28,6 +28,8 @@ export {
 	decodeWavSync,
 	defaultCodecFactory,
 	type FileDecoder,
+	type NativeGroupOpusPacketizeOptions,
+	packetizeNativeGroupOpusPairs,
 	type PcmFrame,
 	resampleLinear,
 	streamSink,
