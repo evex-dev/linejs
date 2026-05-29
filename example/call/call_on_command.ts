@@ -8,6 +8,7 @@ import { FileStorage } from "@evex/linejs/storage";
 import {
 	decodeWavSync,
 	opusCodecFactory,
+	packetizeNativeGroupOpusPairs,
 	PlanetTransport,
 	type PlanetTransportOpts,
 	resampleLinear,
@@ -158,7 +159,9 @@ async function callGroupAndPlay(chatMid: string): Promise<void> {
 		if (!joined.mediaReady) {
 			throw new Error("group call joined, but media was not established");
 		}
-		await streamOpus(transport, audio, repeatCount);
+		await streamOpus(transport, audio, repeatCount, {
+			nativeGroupPacketize: true,
+		});
 		if (holdMs > 0) await sleep(holdMs);
 	} finally {
 		await transport.close();
@@ -181,6 +184,7 @@ async function streamOpus(
 	transport: PlanetTransport,
 	samples: Int16Array,
 	repeats: number,
+	opts: { nativeGroupPacketize?: boolean } = {},
 ): Promise<void> {
 	const codec = await opusCodecFactory();
 	const encoder = codec.newEncoder({
@@ -193,9 +197,30 @@ async function streamOpus(
 		vbr: opusVbr,
 	});
 	const frameSamples = Math.floor((SAMPLE_RATE * frameMs) / 1000);
-	let sentFrames = 0;
+	let sentPackets = 0;
 	let sentBytes = 0;
 	try {
+		if (opts.nativeGroupPacketize) {
+			const packets = encodeOpusPackets(
+				encoder,
+				samples,
+				repeats,
+				frameSamples,
+			);
+			for (
+				const payload of packetizeNativeGroupOpusPairs(packets, {
+					inputPrefixBytes: payloadPrefix.length,
+				})
+			) {
+				await transport.send(payload, {
+					timestampStep: frameSamples * 2,
+				});
+				sentPackets++;
+				sentBytes += payload.length;
+				await sleep(frameMs * 2);
+			}
+			return;
+		}
 		for (let repeat = 0; repeat < repeats; repeat++) {
 			for (let offset = 0; offset < samples.length; offset += frameSamples) {
 				const frame = new Int16Array(frameSamples);
@@ -210,7 +235,7 @@ async function streamOpus(
 					await transport.send(payload, {
 						timestampStep: frameSamples,
 					});
-					sentFrames++;
+					sentPackets++;
 					sentBytes += payload.length;
 				}
 				await sleep(frameMs);
@@ -218,8 +243,32 @@ async function streamOpus(
 		}
 	} finally {
 		encoder.close?.();
+		console.log(`[call] audio sent packets=${sentPackets} bytes=${sentBytes}`);
 	}
-	console.log(`[call] audio sent frames=${sentFrames} bytes=${sentBytes}`);
+}
+
+function encodeOpusPackets(
+	encoder: ReturnType<
+		Awaited<ReturnType<typeof opusCodecFactory>>["newEncoder"]
+	>,
+	samples: Int16Array,
+	repeats: number,
+	frameSamples: number,
+): Uint8Array[] {
+	const packets: Uint8Array[] = [];
+	for (let repeat = 0; repeat < repeats; repeat++) {
+		for (let offset = 0; offset < samples.length; offset += frameSamples) {
+			const frame = new Int16Array(frameSamples);
+			frame.set(samples.subarray(offset, offset + frameSamples));
+			const packet = encoder.encode({
+				samples: frame,
+				sampleRate: SAMPLE_RATE,
+				channels: 1,
+			});
+			if (packet) packets.push(prepend(packet, payloadPrefix));
+		}
+	}
+	return packets;
 }
 
 async function loadWavForCall(
