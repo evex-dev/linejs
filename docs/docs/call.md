@@ -249,9 +249,11 @@ For a complete reusable script, see `example/call/call_on_command.ts`.
 
 ## Command Trigger Example
 
-`example/call/call_on_command.ts` listens for `!call` in a 1:1 Talk chat. When
-another user sends the command, the example calls that user and streams the
-bundled `unity.wav`.
+`example/call/call_on_command.ts` listens for `!call` in a Talk chat. In a 1:1
+chat, the example calls the sender and streams the bundled `unity.wav`. In a
+group or room chat, it starts or joins the group call and streams the same audio
+with LINE.js only: route acquisition, PLANET join, SRTP setup, and RTP media are
+all handled by the library.
 
 ```sh
 LINE_AUTH_TOKEN_FILE=/path/to/auth-token.txt \
@@ -278,12 +280,13 @@ repository:
 | `LINE_DEVICE` | context-aware | Login device type. Defaults to `ANDROID` with an auth token, otherwise `ANDROIDSECONDARY`. |
 | `LINE_VERSION` | package default | LINE app version used in `x-line-application`. |
 | `LINE_CALL_DEVNAME` | package default | Device name sent in `fromEnvInfo.devname` during route acquisition. |
+| `LINE_CALL_DEVICE_INFO` | Android default | PLANET user-agent device info. Override only when emulating a specific native client. |
 | `LINE_CALL_FROM_ENV_INFO` | | JSON string map for the full `fromEnvInfo` route-acquisition field. |
 | `LINE_CALL_COMMAND` | `!call` | Chat command that starts the call. |
 | `LINE_CALL_WAV` | `./unity.wav` | WAV file to stream. The first CLI arg overrides this. |
 | `LINE_CALL_FRAME_MS` | `20` | Opus frame size. |
 | `LINE_CALL_PAYLOAD_PREFIX_HEX` | `00` | Native PLANET audio payload prefix. |
-| `LINE_CALL_MEDIA_KEY_MODE` | `audio-reverse-stage` | SRTP key selection mode for the observed Android audio path. |
+| `LINE_CALL_MEDIA_KEY_MODE` | mode default | SRTP key selection mode. Defaults to `audio-reverse-stage` for 1:1 calls and `audio-secret-sender` for group calls. |
 | `LINE_CALL_GAIN` | `1` | PCM gain before Opus encoding. |
 | `LINE_CALL_REPEAT_COUNT` | `1` | Number of times to replay the WAV before closing the call. |
 | `LINE_CALL_HOLD_MS` | `1000` | Extra hold time after audio finishes. |

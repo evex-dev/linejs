@@ -25,8 +25,10 @@ const configuredDevice = Deno.env.get("LINE_DEVICE")?.trim() as
 const version = Deno.env.get("LINE_VERSION") ?? undefined;
 const fromEnvInfo = readFromEnvInfo();
 const storagePath = Deno.env.get("LINE_STORAGE_FILE");
-const mediaKeyMode = (Deno.env.get("LINE_CALL_MEDIA_KEY_MODE") ??
-	"audio-reverse-stage") as PlanetMediaKeyMode;
+const configuredMediaKeyMode = Deno.env.get("LINE_CALL_MEDIA_KEY_MODE")
+	?.trim() as PlanetMediaKeyMode | undefined;
+const oneToOneMediaKeyMode = configuredMediaKeyMode ?? "audio-reverse-stage";
+const groupMediaKeyMode = configuredMediaKeyMode ?? "audio-secret-sender";
 const frameMs = readNumberEnv("LINE_CALL_FRAME_MS", 20);
 const gain = readNumberEnv("LINE_CALL_GAIN", 1);
 const holdMs = readNumberEnv("LINE_CALL_HOLD_MS", 1_000);
@@ -52,6 +54,7 @@ const payloadPrefix = hexToBytes(
 
 const authToken = await readAuthToken();
 const device = configuredDevice || (authToken ? "ANDROID" : "ANDROIDSECONDARY");
+const deviceInfo = readDeviceInfo();
 const storage = storagePath ? new FileStorage(storagePath) : undefined;
 const client = authToken
 	? await loginWithAuthToken(authToken, { device, version, storage })
@@ -83,16 +86,17 @@ async function handleMessage(message: TalkMessage): Promise<void> {
 	const myMid = client.base.profile?.mid;
 	if (!myMid) throw new Error("profile is not ready");
 	const to = oneToOnePeer(message, myMid);
-	if (!to) {
-		await message.reply("1:1 chat only");
+	const chatMid = groupChatMid(message);
+	if (!to && !chatMid) {
+		await message.reply("1:1 or group chat only");
 		return;
 	}
 	if (activeCall) {
 		await message.reply("call already running");
 		return;
 	}
-	await message.reply("calling");
-	activeCall = callAndPlay(to)
+	await message.reply(to ? "calling" : "starting group call");
+	activeCall = (to ? callAndPlay(to) : callGroupAndPlay(chatMid!))
 		.finally(() => {
 			activeCall = undefined;
 		});
@@ -107,7 +111,8 @@ async function callAndPlay(to: string): Promise<void> {
 	const transport = new PlanetTransport({
 		localMid,
 		timeoutMs,
-		mediaKeyMode,
+		mediaKeyMode: oneToOneMediaKeyMode,
+		deviceInfo,
 	});
 
 	try {
@@ -119,6 +124,39 @@ async function callAndPlay(to: string): Promise<void> {
 		});
 		if (!answer.mediaReady) {
 			throw new Error("call answered, but media was not established");
+		}
+		await streamOpus(transport, audio, repeatCount);
+		if (holdMs > 0) await sleep(holdMs);
+	} finally {
+		await transport.close();
+	}
+}
+
+async function callGroupAndPlay(chatMid: string): Promise<void> {
+	const localMid = client.base.profile?.mid;
+	if (!localMid) throw new Error("profile is not ready");
+
+	const state = await client.call.getGroupCall(chatMid)
+		.catch(() => undefined);
+	const online = Boolean((state as { online?: boolean } | undefined)?.online);
+	const route = await client.call.acquireGroupRoute({
+		chatMid,
+		mediaType: "AUDIO",
+		isInitialHost: !online,
+		capabilities: ["AUDIO", "VIDEO"],
+	} as never);
+	const transport = new PlanetTransport({
+		localMid,
+		timeoutMs,
+		mediaKeyMode: groupMediaKeyMode,
+		deviceInfo,
+	});
+
+	try {
+		await transport.connect({ route });
+		const joined = await transport.joinGroupDetailed({ roomId: chatMid });
+		if (!joined.mediaReady) {
+			throw new Error("group call joined, but media was not established");
 		}
 		await streamOpus(transport, audio, repeatCount);
 		if (holdMs > 0) await sleep(holdMs);
@@ -155,6 +193,8 @@ async function streamOpus(
 		vbr: opusVbr,
 	});
 	const frameSamples = Math.floor((SAMPLE_RATE * frameMs) / 1000);
+	let sentFrames = 0;
+	let sentBytes = 0;
 	try {
 		for (let repeat = 0; repeat < repeats; repeat++) {
 			for (let offset = 0; offset < samples.length; offset += frameSamples) {
@@ -166,9 +206,12 @@ async function streamOpus(
 					channels: 1,
 				});
 				if (packet) {
-					await transport.send(prepend(packet, payloadPrefix), {
+					const payload = prepend(packet, payloadPrefix);
+					await transport.send(payload, {
 						timestampStep: frameSamples,
 					});
+					sentFrames++;
+					sentBytes += payload.length;
 				}
 				await sleep(frameMs);
 			}
@@ -176,6 +219,7 @@ async function streamOpus(
 	} finally {
 		encoder.close?.();
 	}
+	console.log(`[call] audio sent frames=${sentFrames} bytes=${sentBytes}`);
 }
 
 async function loadWavForCall(
@@ -198,8 +242,20 @@ async function loadWavForCall(
 }
 
 function oneToOnePeer(message: TalkMessage, myMid: string): string | null {
-	if (message.to.type !== "USER" && message.to.type !== 0) return null;
+	if (!isUserMidType(message.to.type)) return null;
 	return message.from.id === myMid ? message.to.id : message.from.id;
+}
+
+function groupChatMid(message: TalkMessage): string | null {
+	return isGroupMidType(message.to.type) ? message.to.id : null;
+}
+
+function isUserMidType(type: TalkMessage["to"]["type"]): boolean {
+	return type === "USER" || type === 0;
+}
+
+function isGroupMidType(type: TalkMessage["to"]["type"]): boolean {
+	return type === "GROUP" || type === 2 || type === "ROOM" || type === 1;
 }
 
 function downmixToMono(samples: Int16Array, channels: number): Int16Array {
@@ -227,6 +283,15 @@ function readFromEnvInfo(): Record<string, string> | undefined {
 	}
 	const devname = Deno.env.get("LINE_CALL_DEVNAME")?.trim();
 	return devname ? { devname } : undefined;
+}
+
+function readDeviceInfo(): string | undefined {
+	const direct = Deno.env.get("LINE_CALL_DEVICE_INFO")?.trim();
+	if (direct) return direct;
+	if (device === "ANDROID" || device === "ANDROIDSECONDARY") {
+		return `ANDROID\t${version ?? "26.6.2"}\tAndroid OS\t16`;
+	}
+	return undefined;
 }
 
 function isStringRecord(value: unknown): value is Record<string, string> {
