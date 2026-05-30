@@ -2,11 +2,11 @@
 
 ## Talk Methods
 
-All the functions for TalkService are in `Client.base.talk`.
+All low-level TalkService methods are available on `client.base.talk`.
 
 For example:
 
-```js
+```ts
 await client.base.talk.sendMessage({
     to: "u...",
     text: "Hello, LINEJS!",
@@ -19,11 +19,11 @@ user.
 
 ## Square Methods
 
-All the functions for SquareService are in `Client.square`.
+All low-level SquareService methods are available on `client.base.square`.
 
 For example:
 
-```js
+```ts
 await client.base.square.findSquareByInvitationTicket({
     request: {
         invitationTicket: "INVITATION_TICKET",
@@ -39,11 +39,11 @@ If you just want simple api access or custom event handlers, you can use `BaseCl
 
 For example:
 
-```js
+```ts
 import { BaseClient } from "@evex/linejs/base";
 
 
-const client = new BaseClient({ device: "DESKTOPWIN", version:"..." });
+const client = new BaseClient({ device: "DESKTOPWIN", version: "9.7.0.3556" });
 client.on("pincall", (pin) => {
 });
 
