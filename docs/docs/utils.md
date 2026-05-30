@@ -1,83 +1,58 @@
-# Utils of LINEJS
+# Utilities
 
-LINEJS is not only a self-bot.  
-From building internal URIs to building OBS, open chat search, regex for picking emid, ticket, and more.  
-I will explain one by one.  
+Standalone utilities are no longer exported from a separate package subpath.
+Current utilities are exposed through the client or the documented package
+subpaths below.
 
-## LINE_OBS
+## OBS
 
-Utils to retrieve images and videos from obs hash.  
-You can retrieve them as follows  
-
-```ts
-import { LINE_OBS } from "@evex/linejs/utils";
-
-const OBS = new LINE_OBS(); // endpoint is optional
-
-const OBS_IMAGE_URI = OBS.getURI("0hy28TkoGoJh0FLTatCdtZSjt7ezN-Xj8PeFUrfHAvey8pHDUcMEppKXR-eisuFGJObRhheCh6KngqGzY"); // obs hash
-
-const OBS_PROFILE_IAMGE_URI = OBS.getProfileImage("u**********"); // member id (mid)
-
-const OBS_SQUARE_PROFILE_IAMGE_URI = OBS.getSquareMemberImage("p**********"); // square member id (pid)
-
-// and more
-```
-
-All methods can be viewed [here](https://github.com/evex-dev/linejs/blob/main/packages/linejs/utils/obs/index.ts)
-
-## LINE_SCHEME
-
-Utils for constructing a scheme URI for LINE
+OBS helpers are available from the authenticated client's `BaseClient`:
 
 ```ts
-import { LINE_SCHEME } from "@evex/linejs/utils";
+const metadata = await client.base.obs.getMessageObsMetadata({
+  messageId: "MESSAGE_ID",
+});
 
-const SCHEME = new LINE_SCHEME();
-
-const SCHEME_HOME_URI = SCHEME.getHome();
-
-const SCHEME_PROFILE_POPUP_URI = SCHEME.getProfilePopup("u**********");
-
-// and more
+const file = await client.base.obs.downloadMessageData({
+  messageId: "MESSAGE_ID",
+});
 ```
 
-All methods can be viewed [here](https://github.com/evex-dev/linejs/blob/main/packages/linejs/utils/scheme/index.ts)
-
-
-## LINE_REGEX
-
-Utils for extracting tickets and emids from URLs.
+Media upload helpers are available on the same object:
 
 ```ts
-import { LINE_REGEX } from "@evex/linejs/utils";
-
-const REGEX = new LINE_REGEX();
-
-console.log(REGEX.getTicket("Square Invitation https://line.me/ti/g2/*************")); // *************
-
-console.log(REGEX.getEmid(".../emid=*************")); // *************
+const message = await client.base.obs.uploadMediaByE2EE({
+  to: "u...",
+  oType: "image",
+  data: imageFile,
+  filename: "image.png",
+});
 ```
 
-All methods can be viewed [here](https://github.com/evex-dev/linejs/blob/main/packages/linejs/utils/regex/index.ts)
+Implementation details live in
+[`packages/linejs/base/obs/mod.ts`](https://github.com/evex-dev/linejs/blob/main/packages/linejs/base/obs/mod.ts).
 
-## LINE_FUNCTIONS
+## Storage
 
-Utils for connecting to external APIs related to LINE
+Storage helpers are exported from `@evex/linejs/storage`:
 
 ```ts
-import Utils from '@evex/linejs/utils';
+import { FileStorage, MemoryStorage } from "@evex/linejs/storage";
 
-const squareList = await Utils.LINE_FUNCTIONS.searchSquare("Developer", 100);
-
-if (squareList.error === null) {
-    const squareInfo = await Utils.LINE_FUNCTIONS.getSquare(squareList.data.squares[0].square.emid, false, {
-        "x-line-channeltoken": "..."
-    });
-
-    console.log(squareInfo);
-}
+const storage = new FileStorage("./storage.json");
 ```
 
-All methods can be viewed [here](https://github.com/evex-dev/linejs/blob/main/packages/linejs/utils/functions/index.ts)
+Use `FileStorage` when login state, E2EE keys, and request sequence state must
+survive process restarts. Use `MemoryStorage` only for short-lived clients.
 
-The next sections will introduce the various methods.
+## Base Helpers
+
+Low-level helpers that are part of the public base package are exported from
+`@evex/linejs/base`:
+
+```ts
+import { BaseClient, continueRequest, InternalError } from "@evex/linejs/base";
+```
+
+The package exports are defined in
+[`packages/linejs/deno.json`](https://github.com/evex-dev/linejs/blob/main/packages/linejs/deno.json).

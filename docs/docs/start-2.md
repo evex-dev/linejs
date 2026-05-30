@@ -16,7 +16,7 @@ const client = await loginWithPassword({
   }
 }, { device: "IOSIPAD" })
 
-console.log(await client.base.talk.getProfile());
+console.log(await client.getMyProfile());
 ```
 
 The output will be as follows.
@@ -41,7 +41,8 @@ It is therefore a good idea to use an **AuthToken**.
 
 A temporary token is used for email login.\
 Therefore, after a few days, it will expire and the client will stop running.\
-So, if you want to run the client permanently, you must use v3.
+So, if you want to run the client permanently, persist your storage and reuse an
+auth token instead of repeating email login.
 
 Repeating the email login multiple times is highly discouraged.
 

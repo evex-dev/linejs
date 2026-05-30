@@ -76,10 +76,12 @@ MessageType, etc.) are provided.
 
 ## Provided Packages
 
-- client - (@evex/linejs) or (@evex/linejs/client)
+- client - (@evex/linejs)
   - Client - LINE SelfBot Client
 - base - (@evex/linejs/base)
   - BaseClient - LINE SelfBot API Client
+- call - (@evex/linejs/call)
+  - Call control-plane and media helpers
 - thrift - (@evex/linejs/thrift)
   - Thrift - Thrift read/write
 - storage - (@evex/linejs/storage)
