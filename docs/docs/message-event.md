@@ -5,7 +5,7 @@ The atmosphere is becoming more and more like a bot!
 
 :::warning
 Note, however, that to receive the group's message, the decrypt key
-in `FileStorage` or so on, as described in [Start 2](/docs/start-2). 
+in `FileStorage` or so on, as described in [Start 2](./start-2.md).
 :::
 
 First, let's create a bot that only receives “!ping” and returns “pong!”.

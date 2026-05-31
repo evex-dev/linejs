@@ -18,6 +18,14 @@ export type LoginOption = PasswordLoginOption | QrCodeLoginOption | {
 	qr?: undefined;
 };
 
+export function registrationAuthEndpoint(
+	device: Device,
+): "/api/v3p/rs" | "/api/v4p/rs" {
+	return device === "ANDROID" || device === "ANDROIDSECONDARY"
+		? "/api/v4p/rs"
+		: "/api/v3p/rs";
+}
+
 interface LoginVer {
 	loginV2: LooseType;
 	loginZ: LINETypes.LoginResult;
@@ -664,7 +672,7 @@ export class Login {
 			methodName,
 			3,
 			methodName === "loginZ" ? "LoginResult" : false,
-			"/api/v3p/rs",
+			registrationAuthEndpoint(this.client.device),
 		);
 	}
 
@@ -892,7 +900,7 @@ export class Login {
 			"confirmE2EELogin",
 			3,
 			false,
-			"/api/v3p/rs",
+			registrationAuthEndpoint(this.client.device),
 		);
 	}
 

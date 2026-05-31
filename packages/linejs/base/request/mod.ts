@@ -45,6 +45,7 @@ export class RequestClient {
 		"/SQ1": "SquareException",
 		"/LIFF1": "LiffException",
 		"/api/v3p/rs": "TalkException",
+		"/api/v4p/rs": "TalkException",
 		"/api/v3/TalkService.do": "TalkException",
 	};
 
