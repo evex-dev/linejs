@@ -136,7 +136,17 @@ function writeValue(
 		case Thrift.Type.I64:
 			if (typeof val === "bigint") {
 				output.writeFieldBegin("", Thrift.Type.I64, fid);
-				output.writeI64(new Int64(val.toString()));
+				// node-int64 parses a bare string argument as hex, so passing
+				// `val.toString()` (decimal) silently corrupts the value, e.g.
+				// 618946633287860670n -> "8946633287860670" on the wire, which
+				// makes the LINE server reject message IDs (MESSAGE_NOT_FOUND).
+				// Encode the full 64-bit two's-complement value as a padded hex
+				// string instead; `asUintN` keeps negative I64 values correct.
+				output.writeI64(
+					new Int64(
+						"0x" + BigInt.asUintN(64, val).toString(16).padStart(16, "0"),
+					),
+				);
 				output.writeFieldEnd();
 			} else if (typeof val !== "number") {
 				throw new TypeError(`ftype=${ftype}: value is not number`);
