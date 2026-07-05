@@ -130,4 +130,40 @@ export class RelationService implements BaseService {
 			this.requestPath,
 		);
 	}
+
+	/**
+	 * @description Find a contact by its search id (the user's LINE ID). Official
+	 * Accounts include the leading `@`, e.g. `@livecast`. Throws when nothing matches
+	 * or the id search is rate limited.
+	 */
+	public async findContactBySearchIdOrTicketV3(options: {
+		searchId: string;
+	}): Promise<LINETypes.Contact> {
+		const { searchId } = options;
+		return await this.client.request.request(
+			[[12, 1, [[12, 1, [[11, 1, searchId]]]]]],
+			"findContactBySearchIdOrTicketV3",
+			this.protocolType,
+			"Contact",
+			this.requestPath,
+		);
+	}
+
+	/**
+	 * @description Search a user by their LINE ID and add them as a friend. Official
+	 * Account IDs include the leading `@`.
+	 */
+	public async addFriendByUserId(options: {
+		userId: string;
+	}): Promise<LooseType> {
+		const contact = await this.findContactBySearchIdOrTicketV3({
+			searchId: options.userId,
+		});
+		return await this.addFriendByMid({
+			mid: contact.mid,
+			reference: '{"screen":"friendAdd:idSearch","spec":"native"}',
+			trackingMetaType: 2,
+			trackingMetaHint: options.userId,
+		});
+	}
 }

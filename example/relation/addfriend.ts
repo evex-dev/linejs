@@ -20,3 +20,15 @@ await client.relation.addFriendByMid({
     trackingMetaHint: "uhex",
     trackingMetaType: 4,
 })
+
+
+// by LINE ID — searches then adds. Official Accounts include the leading "@"
+await client.relation.addFriendByUserId({
+    userId: "@livecast",
+})
+
+// or resolve the mid yourself
+const contact = await client.relation.findContactBySearchIdOrTicketV3({
+    searchId: "@livecast",
+})
+console.log(contact.mid, contact.displayName)
