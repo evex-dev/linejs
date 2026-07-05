@@ -218,11 +218,15 @@ export class Login {
 				this.client.emit("update:qrcert", pem);
 				await this.registerQrCert(pem);
 			}
+			let e2eeKeyResult: LooseType = undefined;
 			if (e2eeInfo) {
-				await this.client.e2ee.decodeE2EEKeyV1(
+				e2eeKeyResult = await this.client.e2ee.decodeE2EEKeyV1(
 					e2eeInfo,
 					Buffer.from(secret),
 				);
+			}
+			if (!e2eeKeyResult) {
+				await this.client.e2ee.registerE2EEKeyPair();
 			}
 			return authToken;
 		}
@@ -289,11 +293,15 @@ export class Login {
 			// ForSecure response, and in metaData["e2eeInfo"] on
 			// ForSecure.  Try both.
 			const e2eeInfo = response[10] ?? metaData?.["e2eeInfo"];
+			let e2eeKeyResult: LooseType = undefined;
 			if (e2eeInfo) {
-				await this.client.e2ee.decodeE2EEKeyV1(
+				e2eeKeyResult = await this.client.e2ee.decodeE2EEKeyV1(
 					e2eeInfo,
 					Buffer.from(secret),
 				);
+			}
+			if (!e2eeKeyResult) {
+				await this.client.e2ee.registerE2EEKeyPair();
 			}
 			await this.client.storage.set("refreshToken", tokenInfo[2]);
 			await this.client.storage.set(
