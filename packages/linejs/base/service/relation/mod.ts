@@ -166,4 +166,35 @@ export class RelationService implements BaseService {
 			trackingMetaHint: options.userId,
 		});
 	}
+
+	/**
+	 * @description Find a contact by phone number. The number is in E.164 form,
+	 * e.g. `+66814298575`. Throws when nothing matches or the lookup is rate limited.
+	 */
+	public async findContactByPhoneV3(options: {
+		phone: string;
+	}): Promise<LINETypes.Contact> {
+		return await this.client.request.request(
+			[[12, 1, [[11, 1, options.phone]]]],
+			"findContactByPhoneV3",
+			this.protocolType,
+			"Contact",
+			this.requestPath,
+		);
+	}
+
+	/**
+	 * @description Look up a user by phone number (E.164) and add them as a friend.
+	 */
+	public async addFriendByPhone(options: {
+		phone: string;
+	}): Promise<LooseType> {
+		const contact = await this.findContactByPhoneV3({ phone: options.phone });
+		return await this.addFriendByMid({
+			mid: contact.mid,
+			reference: '{"screen":"friendAdd:phoneSearch","spec":"native"}',
+			trackingMetaType: 2,
+			trackingMetaHint: options.phone,
+		});
+	}
 }
