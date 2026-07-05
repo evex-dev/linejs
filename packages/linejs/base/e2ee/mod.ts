@@ -21,6 +21,37 @@ export class E2EE {
 	constructor(client: BaseClient) {
 		this.client = client;
 	}
+	public verifyE2EEKeyPair(
+		privKey: Buffer,
+		registeredPubKey: Buffer,
+	): boolean {
+		const derivedPub = nacl.scalarMult.base(new Uint8Array(privKey));
+		return Buffer.from(derivedPub).equals(registeredPubKey);
+	}
+
+	public async verifyStoredKeyAgainstServer(
+		keyId: number | string,
+		privKey: Buffer,
+	): Promise<boolean> {
+		try {
+			const registeredKeys = await this.client.talk.getE2EEPublicKeys();
+			for (const key of registeredKeys) {
+				const regKeyId = key.keyId ??
+					(key as unknown as { "2"?: number })[2];
+				if (String(regKeyId) === String(keyId)) {
+					const regKeyData = key.keyData ??
+						(key as unknown as { "4"?: string })[4];
+					if (!regKeyData) continue;
+					const registeredPubKey = Buffer.from(regKeyData);
+					return this.verifyE2EEKeyPair(privKey, registeredPubKey);
+				}
+			}
+		} catch (_e) {
+			this.e2eeLog("verifyStoredKeyAgainstServerFailed", _e);
+		}
+		return true;
+	}
+
 	public async getE2EESelfKeyData(mid: string): Promise<LooseType> {
 		try {
 			const keyData = JSON.parse(
@@ -307,7 +338,12 @@ export class E2EE {
 		data: LooseType,
 		secret: Buffer,
 	): Promise<
-		| { keyId: LooseType; privKey: Buffer; pubKey: Buffer; e2eeVersion: LooseType }
+		| {
+			keyId: LooseType;
+			privKey: Buffer;
+			pubKey: Buffer;
+			e2eeVersion: LooseType;
+		}
 		| undefined
 	> {
 		if (data.encryptedKeyChain) {
@@ -331,6 +367,36 @@ export class E2EE {
 					e2eeVersion,
 				},
 			});
+			const derivedPub = Buffer.from(
+				nacl.scalarMult.base(new Uint8Array(privKey)),
+			);
+			if (!derivedPub.equals(pubKey)) {
+				this.e2eeLog("decodeE2EEKeyV1KeyMismatch", {
+					keyId,
+					derivedPub: derivedPub.toString("base64"),
+					chainPub: pubKey.toString("base64"),
+				});
+				this.client.emit(
+					"e2ee:keyMismatch" as LooseType,
+					{ keyId, reason: "privKey does not derive to pubKey in chain" },
+				);
+				return undefined;
+			}
+			const verified = await this.verifyStoredKeyAgainstServer(
+				keyId,
+				privKey,
+			);
+			if (!verified) {
+				this.e2eeLog("decodeE2EEKeyV1ServerKeyMismatch", {
+					keyId,
+					derivedPub: derivedPub.toString("base64"),
+				});
+				this.client.emit(
+					"e2ee:keyMismatch" as LooseType,
+					{ keyId, reason: "privKey does not match server-registered pubKey" },
+				);
+				return undefined;
+			}
 			await this.client.storage.set(
 				"e2eeKeys:" + keyId,
 				JSON.stringify({
@@ -1059,6 +1125,42 @@ export class E2EE {
 		];
 	}
 
+	public async registerE2EEKeyPair(): Promise<
+		| { keyId: number; privKey: Buffer; pubKey: Buffer; e2eeVersion: number }
+		| undefined
+	> {
+		const keyPair = nacl.box.keyPair();
+		const privKey = Buffer.from(keyPair.secretKey);
+		const pubKey = Buffer.from(keyPair.publicKey);
+		try {
+			const registered = await this.client.talk.registerE2EEPublicKey({
+				publicKey: {
+					version: 1,
+					keyId: 0,
+					keyData: pubKey.toString("base64"),
+					createdTime: 0,
+				},
+			});
+			const keyId = registered.keyId;
+			const keyData = {
+				keyId,
+				privKey: privKey.toString("base64"),
+				pubKey: pubKey.toString("base64"),
+				e2eeVersion: 1,
+			};
+			await this.client.storage.set(
+				"e2eeKeys:" + keyId,
+				JSON.stringify(keyData),
+			);
+			await this.saveE2EESelfKeyData(keyData);
+			this.e2eeLog("registerE2EEKeyPairSuccess", { keyId });
+			return { keyId, privKey, pubKey, e2eeVersion: 1 };
+		} catch (e) {
+			this.e2eeLog("registerE2EEKeyPairFailed", e);
+			return undefined;
+		}
+	}
+
 	// for e2ee next
 
 	_encryptAESCTR(aesKey: Buffer, nonce: Buffer, data: Buffer): Buffer {
@@ -1073,9 +1175,15 @@ export class E2EE {
 		nonce: Buffer,
 		data: Buffer,
 	): Promise<Buffer> {
-		const aesKeyArrayBuffer = aesKey.buffer.slice(aesKey.byteOffset, aesKey.byteOffset + aesKey.byteLength);
-		const dataArrayBuffer = data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength);
-		
+		const aesKeyArrayBuffer = aesKey.buffer.slice(
+			aesKey.byteOffset,
+			aesKey.byteOffset + aesKey.byteLength,
+		);
+		const dataArrayBuffer = data.buffer.slice(
+			data.byteOffset,
+			data.byteOffset + data.byteLength,
+		);
+
 		return Buffer.from(
 			await globalThis.crypto.subtle.encrypt(
 				{
