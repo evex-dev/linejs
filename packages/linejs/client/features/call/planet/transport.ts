@@ -65,6 +65,7 @@ import {
 	packCcParticipateReq,
 	packCcRelReq,
 	packCcSetupReq,
+	packCcUpdRsp,
 	packKeepaliveReq,
 	packMcDataReq,
 	packMcDataRsp,
@@ -1274,6 +1275,9 @@ export class PlanetTransport implements CallTransport {
 						},
 					).catch(() => {});
 				}
+				if (msg.cc?.rawFields && msg.cc.bodyTag === CC_MSG.UPD_RSP) {
+					void this.#handleFlatCcUpd(msg.cc.rawFields).catch(() => {});
+				}
 			} catch {
 				// Keep the raw reply flowing even if a newer message type is unknown.
 			}
@@ -2308,6 +2312,53 @@ export class PlanetTransport implements CallTransport {
 		);
 	}
 
+	async #handleFlatCcUpd(rawFields: DecodedField[]): Promise<void> {
+		const seq = rawFields.find((f) => f.tag === 2)?.value;
+		const seqBig = typeof seq === "bigint" ? seq : 0n;
+		const interval = fieldNumber(rawFields, 3) ?? 300;
+		if (!this.#updRspActive) {
+			this.#updRspActive = true;
+			this.#updRspIntervalMs = interval;
+			this.#startCcUpdTimer();
+		}
+		this.#lastUpdSeq = seqBig;
+	}
+
+	#updRspActive = false;
+	#updRspIntervalMs = 300;
+	#lastUpdSeq = 0n;
+	#ccUpdTimer: ReturnType<typeof setTimeout> | undefined;
+	#ccUpdSeq = 0n;
+
+	#startCcUpdTimer() {
+		this.#clearCcUpdTimer();
+		const tick = () => {
+			if (this.#closed) return;
+			void this.#sendCcUpdRsp().catch(() => {}).finally(() => {
+				if (!this.#closed && this.#updRspActive) {
+					this.#ccUpdTimer = setTimeout(tick, this.#updRspIntervalMs);
+				}
+			});
+		};
+		this.#ccUpdTimer = setTimeout(tick, this.#updRspIntervalMs);
+	}
+
+	#clearCcUpdTimer() {
+		if (this.#ccUpdTimer !== undefined) {
+			clearTimeout(this.#ccUpdTimer);
+			this.#ccUpdTimer = undefined;
+		}
+	}
+
+	async #sendCcUpdRsp(): Promise<void> {
+		this.#ccUpdSeq++;
+		const updBytes = packCcUpdRsp(this.#ccUpdSeq, this.#updRspIntervalMs);
+		await this.#sendEnvelope(
+			{ kind: "cc", data: updBytes },
+			{ msgId: ccMsgId(CC_MSG.UPD_RSP) },
+		);
+	}
+
 	#clearKeepalive() {
 		if (this.#keepaliveTimer !== undefined) {
 			clearTimeout(this.#keepaliveTimer);
@@ -2347,6 +2398,7 @@ export class PlanetTransport implements CallTransport {
 	async close(): Promise<void> {
 		this.#closed = true;
 		this.#clearKeepalive();
+		this.#clearCcUpdTimer();
 		try {
 			if (
 				this.#setupSent && this.#route && (this.#sock || this.#opts.wireSend)

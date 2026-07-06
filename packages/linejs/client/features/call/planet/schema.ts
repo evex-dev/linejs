@@ -1194,6 +1194,25 @@ export function packPlanetScMsgKaReq(inner: Uint8Array): Uint8Array {
 	return finalize(b);
 }
 
+// ─── cc_upd_rsp (mid-call quality report / keepalive) ───────────────────
+
+/**
+ * Pack a flat-format UPD_RSP message.  The relay sends a flood of cc
+ * messages with `{ 1:16, 2:<seq>, 3:300, 4:<blob> }` after `conn_req`.
+ * linejs must echo back an equivalent to avoid T103.
+ *
+ * The flat format bypasses the normal cc_msg oneof wrapper — it is NOT
+ * `wrapCcMsg(CC_MSG.UPD_RSP, ...)`, but a top-level protobuf placed
+ * directly in field 3 (cc) of the outer planet_msg.
+ */
+export function packCcUpdRsp(seq: bigint, intervalMs = 300): Uint8Array {
+	const b: Buf = { bytes: [] };
+	emitUint32(b, 1, CC_MSG.UPD_RSP);
+	emitUint64(b, 2, seq);
+	emitUint32(b, 3, intervalMs);
+	return finalize(b);
+}
+
 // ─── handshake helper — extract rmt_nonce from incoming msg ─────────────
 
 /** Extract the loc_nonce (field 6) from a decrypted incoming planet_msg.
@@ -1348,6 +1367,8 @@ export interface DecodedPlanetCcMsg {
 	bodyTag?: number;
 	bodyName?: string;
 	bodyBytes?: Uint8Array;
+	/** Raw decoded fields for non-standard (flat) cc messages. */
+	rawFields?: DecodedField[];
 }
 
 export interface DecodedPlanetMcMsg {
@@ -1385,6 +1406,15 @@ export function decodePlanetCcMsg(bytes: Uint8Array): DecodedPlanetCcMsg {
 			decoded.bodyTag = oneof.tag;
 			decoded.bodyName = CC_MSG_NAMES[oneof.tag] ?? `cc_msg_${oneof.tag}`;
 			decoded.bodyBytes = oneof.value;
+		}
+	}
+	if (!decoded.bodyTag && !hdrBytes && !body && fields.length > 0) {
+		const typeVal = asNumberField(fields, 1);
+		if (typeVal !== undefined) {
+			decoded.bodyTag = typeVal;
+			decoded.bodyName = CC_MSG_NAMES[typeVal] ??
+				`cc_flat_${typeVal}`;
+			decoded.rawFields = fields;
 		}
 	}
 	return decoded;
