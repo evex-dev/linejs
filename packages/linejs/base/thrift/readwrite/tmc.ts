@@ -122,7 +122,8 @@ export class TMoreCompactProtocol {
 
 	// ZigZag decode
 	decodeZigZag(encoded: number): number {
-		return Number((BigInt(encoded) >> 1n) * ((encoded & 1) ? -1n : 1n));
+		const n = BigInt(encoded);
+		return Number((n >> 1n) ^ -(n & 1n));
 	}
 
 	// Read data by type
@@ -216,8 +217,8 @@ export class TMoreCompactProtocol {
 			}
 		} else if (typeId === 16) {
 			// STRING (string ID delta)
-			const temp = BigInt(this.readVarint());
-			const delta = (temp % 2n ? -1n : 1n) * (temp / 2n);
+			const raw = BigInt(this.readVarint());
+			const delta = (raw >> 1n) ^ -(raw & 1n);
 			const stringId = delta + this.lastStringId;
 			this.lastStringId = stringId;
 			value = String(stringId);
