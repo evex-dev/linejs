@@ -1134,6 +1134,49 @@ export function packMcDataSessionPayload(body: Uint8Array): Uint8Array {
 	return concatSchemaBytes([header, body, new Uint8Array(pad)]);
 }
 
+// ─── mc join/change responses (1:1 BEPI handshake) ─────────────────────
+
+export interface McSessionRsp {
+	result?: number;
+	relCode?: number;
+	relPhrase?: string;
+	data?: Uint8Array;
+}
+
+export function packMcJoinRsp(r: McSessionRsp): Uint8Array {
+	const b: Buf = { bytes: [] };
+	if (r.result !== undefined) emitUint32(b, 1, r.result);
+	if (r.relCode !== undefined) emitUint32(b, 2, r.relCode);
+	if (r.relPhrase !== undefined) emitString(b, 3, r.relPhrase);
+	if (r.data) emitMessage(b, 17, r.data);
+	return finalize(b);
+}
+
+export function packMcChangeRsp(r: McSessionRsp): Uint8Array {
+	const b: Buf = { bytes: [] };
+	if (r.result !== undefined) emitUint32(b, 1, r.result);
+	if (r.relCode !== undefined) emitUint32(b, 2, r.relCode);
+	if (r.relPhrase !== undefined) emitString(b, 3, r.relPhrase);
+	if (r.data) emitMessage(b, 17, r.data);
+	return finalize(b);
+}
+
+export function packMcCheckRpt(strmSpec: Uint8Array): Uint8Array {
+	const b: Buf = { bytes: [] };
+	emitMessage(b, 17, strmSpec);
+	return finalize(b);
+}
+
+export function packBepiChannelOpen(token: bigint): Uint8Array {
+	const inner: Buf = { bytes: [] };
+	emitSfixed64(inner, 1, token);
+	const mid: Buf = { bytes: [] };
+	emitMessage(mid, 3, finalize(inner));
+	const outer: Buf = { bytes: [] };
+	emitMessage(outer, 2, finalize(mid));
+	return finalize(outer);
+}
+
 // ─── cc_msg oneof wrapper ───────────────────────────────────────────────
 
 export function wrapCcMsg(
