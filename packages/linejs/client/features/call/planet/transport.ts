@@ -59,6 +59,7 @@ import {
 	extractRmtNonceFromReply,
 	MC_MSG,
 	type NativeSetupOffer,
+	packBepiChannelOpen,
 	packCcConnRsp,
 	packCcInfoReq,
 	packCcInfoRsp,
@@ -66,9 +67,12 @@ import {
 	packCcRelReq,
 	packCcSetupReq,
 	packKeepaliveReq,
+	packMcChangeRsp,
+	packMcCheckRpt,
 	packMcDataReq,
 	packMcDataRsp,
 	packMcDataSessionPayload,
+	packMcJoinRsp,
 	packNativeGroupParticipateOffer,
 	packNativeSetupOffer,
 	packPlanetCcMsg,
@@ -308,9 +312,13 @@ const CASSINI_MSG_ID_CC_BASE = 0x2140;
 const CASSINI_MSG_ID_SETUP_REQ = 0x2141;
 const CASSINI_MSG_ID_REL_REQ = 0x2145;
 const CASSINI_MSG_ID_GROUP_PARTICIPATE_REQ = 0x214e;
+const CASSINI_MSG_ID_MC_JOIN_RSP = 0x3285;
+const CASSINI_MSG_ID_MC_CHANGE_RSP = 0x3286;
+const CASSINI_MSG_ID_MC_CHECK_RPT = 0x3287;
 const CASSINI_MSG_ID_MC_DATA_REQ = 0x3189;
 const CASSINI_MSG_ID_MC_DATA_RSP = 0x3289;
 const CASSINI_MSG_ID_KEEPALIVE_REQ = 0x1101;
+const CASSINI_MSG_ID_BEPI_OPEN = 0x1102;
 const REGULAR_TAIL_CONTROL_BASE = 0x18;
 const REGULAR_TAIL_RAW_BASE = 0x48;
 const PINHOLE_PROBE_COUNT = 16;
@@ -623,9 +631,9 @@ function defaultAndroidUserAgent(deviceInfo?: string): PlanetUserAgent {
 	};
 }
 
-function defaultOneToOneDataSessionPayload(): Uint8Array {
+function defaultOneToOneStrmSpec(): Uint8Array {
 	const state = { paused: false, code: 0 };
-	const strmSpec = packStrmSpec({
+	return packStrmSpec({
 		strms: [
 			{
 				ssrc: 102,
@@ -672,7 +680,10 @@ function defaultOneToOneDataSessionPayload(): Uint8Array {
 			probeBrMaxKbps: 200,
 		},
 	});
-	return packMcDataSessionPayload(strmSpec);
+}
+
+function defaultOneToOneDataSessionPayload(): Uint8Array {
+	return packMcDataSessionPayload(defaultOneToOneStrmSpec());
 }
 
 function defaultSetupFeatures(): Uint8Array[] {
@@ -942,6 +953,7 @@ export class PlanetTransport implements CallTransport {
 	#srtpSend?: SrtpCryptoContext;
 	#srtpRecv?: SrtpCryptoContext;
 	#groupDataSrtpSend?: SrtpCryptoContext;
+	#dataSrtpRecv?: SrtpCryptoContext;
 	#mediaKeyMode?: PlanetMediaKeyMode;
 	#mediaKeyCandidates: MediaKeyCandidate[] = [];
 	#rtp?: {
@@ -1039,7 +1051,7 @@ export class PlanetTransport implements CallTransport {
 			this.#localMediaChanId = BigInt(randomNativeGroupMediaChanId());
 		} else {
 			this.#srcChanId = BigInt(randomNativeLargeId());
-			this.#localMediaChanId = BigInt(randomNativeLargeId());
+			this.#localMediaChanId = this.#srcChanId;
 		}
 		this.#nextSeq = randomInitialFrameSeq();
 		this.#setupSent = false;
@@ -1061,6 +1073,7 @@ export class PlanetTransport implements CallTransport {
 		this.#srtpSend = undefined;
 		this.#srtpRecv = undefined;
 		this.#groupDataSrtpSend = undefined;
+		this.#dataSrtpRecv = undefined;
 		this.#mediaKeyMode = undefined;
 		this.#mediaKeyCandidates = [];
 		this.#rtp = undefined;
@@ -1223,6 +1236,20 @@ export class PlanetTransport implements CallTransport {
 					}
 					if (msg.mc.bodyTag === MC_MSG.DATA_REQ) {
 						void this.#sendMcDataRsp(
+							incoming as PlanetIncomingMessage & {
+								message: ReturnType<typeof decodePlanetMsg>;
+							},
+						).catch(() => {});
+					}
+					if (msg.mc.bodyTag === MC_MSG.JOIN_REQ) {
+						void this.#sendMcJoinRsp(
+							incoming as PlanetIncomingMessage & {
+								message: ReturnType<typeof decodePlanetMsg>;
+							},
+						).catch(() => {});
+					}
+					if (msg.mc.bodyTag === MC_MSG.CHANGE_REQ) {
+						void this.#sendMcChangeRsp(
 							incoming as PlanetIncomingMessage & {
 								message: ReturnType<typeof decodePlanetMsg>;
 							},
@@ -2067,9 +2094,19 @@ export class PlanetTransport implements CallTransport {
 		this.#srtpRecv = initial.recvContext;
 		this.#groupDataSrtpSend = undefined;
 		this.#groupDataRtp = undefined;
+		this.#dataSrtpRecv = undefined;
 		if (this.#groupJoined && local.material.mediaSecret.length === 30) {
 			this.#groupDataSrtpSend = await deriveSrtpContext(
 				derivePlanetMediaStreamKeying(local.material.mediaSecret, "DATA"),
+			);
+		}
+		if (
+			!this.#groupJoined &&
+			local.material.mediaSecret.length === 30 &&
+			peerOffer.mediaSecret?.length === 30
+		) {
+			this.#dataSrtpRecv = await deriveSrtpContext(
+				derivePlanetMediaStreamKeying(peerOffer.mediaSecret, "DATA"),
 			);
 		}
 		this.#mediaKeyMode = requestedMode;
@@ -2242,6 +2279,98 @@ export class PlanetTransport implements CallTransport {
 		await this.#sendEnvelope(
 			{ kind: "mc", data: mcMsg },
 			{ msgId: CASSINI_MSG_ID_MC_DATA_RSP },
+		);
+	}
+
+	async #sendMcJoinRsp(
+		request: PlanetIncomingMessage & {
+			message: ReturnType<typeof decodePlanetMsg>;
+		},
+	): Promise<void> {
+		const rsp = packMcJoinRsp({
+			result: 0,
+			data: defaultOneToOneStrmSpec(),
+		});
+		const mcBody = wrapMcMsg(MC_MSG.JOIN_RSP, rsp);
+		const mcMsg = packPlanetMcMsg(
+			{
+				cid: request.message.mc?.hdr?.cid ?? this.#callUuid ?? "mc-join-rsp",
+				srcChanId: this.#localMediaChanId,
+				dstChanId: request.message.mc?.hdr?.srcChanId ??
+					this.#remoteMediaChanId,
+			},
+			mcBody,
+		);
+		this.#debug({ type: "mc_join_rsp_sent" });
+		await this.#sendEnvelope(
+			{ kind: "mc", data: mcMsg },
+			{ msgId: CASSINI_MSG_ID_MC_JOIN_RSP },
+		);
+		void this.#sendBepiChannelOpen().catch(() => {});
+		void this.#sendMcCheckRpt(request).catch(() => {});
+	}
+
+	async #sendMcChangeRsp(
+		request: PlanetIncomingMessage & {
+			message: ReturnType<typeof decodePlanetMsg>;
+		},
+	): Promise<void> {
+		const rsp = packMcChangeRsp({
+			result: 0,
+			data: defaultOneToOneStrmSpec(),
+		});
+		const mcBody = wrapMcMsg(MC_MSG.CHANGE_RSP, rsp);
+		const mcMsg = packPlanetMcMsg(
+			{
+				cid: request.message.mc?.hdr?.cid ?? this.#callUuid ?? "mc-change-rsp",
+				srcChanId: this.#localMediaChanId,
+				dstChanId: request.message.mc?.hdr?.srcChanId ??
+					this.#remoteMediaChanId,
+			},
+			mcBody,
+		);
+		this.#debug({ type: "mc_change_rsp_sent" });
+		await this.#sendEnvelope(
+			{ kind: "mc", data: mcMsg },
+			{ msgId: CASSINI_MSG_ID_MC_CHANGE_RSP },
+		);
+	}
+
+	async #sendMcCheckRpt(
+		request: PlanetIncomingMessage & {
+			message: ReturnType<typeof decodePlanetMsg>;
+		},
+	): Promise<void> {
+		const rpt = packMcCheckRpt(defaultOneToOneStrmSpec());
+		const mcBody = wrapMcMsg(MC_MSG.CHECK_RPT, rpt);
+		const mcMsg = packPlanetMcMsg(
+			{
+				cid: request.message.mc?.hdr?.cid ?? this.#callUuid ?? "mc-check-rpt",
+				srcChanId: this.#localMediaChanId,
+				dstChanId: request.message.mc?.hdr?.srcChanId ??
+					this.#remoteMediaChanId,
+			},
+			mcBody,
+		);
+		this.#debug({ type: "mc_check_rpt_sent" });
+		await this.#sendEnvelope(
+			{ kind: "mc", data: mcMsg },
+			{ msgId: CASSINI_MSG_ID_MC_CHECK_RPT },
+		);
+	}
+
+	async #sendBepiChannelOpen(): Promise<void> {
+		const token = BigInt(
+			"0x" +
+				Array.from(crypto.getRandomValues(new Uint8Array(8)))
+					.map((b) => b.toString(16).padStart(2, "0"))
+					.join(""),
+		);
+		const data = packBepiChannelOpen(token);
+		this.#debug({ type: "bepi_channel_open_sent" });
+		await this.#sendEnvelope(
+			{ kind: "sc", data },
+			{ msgId: CASSINI_MSG_ID_BEPI_OPEN },
 		);
 	}
 
