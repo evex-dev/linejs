@@ -128,6 +128,7 @@ export class SquareService implements BaseService {
 		squareChatMid: string;
 		threadMid?: string;
 		syncToken?: string;
+		continuationToken?: string;
 		limit?: number;
 		direction?: LINETypes.FetchDirection;
 	}): Promise<
