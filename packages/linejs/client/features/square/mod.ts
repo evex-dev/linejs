@@ -5,6 +5,7 @@ import type {
 import type * as LINETypes from "@evex/linejs-types";
 import type { Client } from "../../mod.ts";
 import { continueRequest } from "../../../base/mod.ts";
+import type { ObjType } from "../../../base/obs/mod.ts";
 import { SquareMessage } from "../message/mod.ts";
 import { TypedEventEmitter } from "../../../base/core/typed-event-emitter/index.ts";
 
@@ -107,6 +108,61 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 			...input,
 			squareChatMid: this.raw.squareChatMid,
 		});
+	}
+
+	/**
+	 * Sends an image to this OpenChat.
+	 *
+	 * OpenChat rejects the "reserve an empty IMAGE/AUDIO/VIDEO message via
+	 * `sendMessage`, then attach the obs object to its id" pattern with
+	 * ILLEGAL_ARGUMENT. Uploading the obs object with no `oid` ("reqseq" mode)
+	 * instead makes the server create the message itself. A consequence is that
+	 * such a message can't carry a `relatedMessageId`, so media sent this way is
+	 * never threaded as a reply.
+	 */
+	async sendImage(
+		data: Blob,
+		filename = "image",
+	): Promise<{ objId: string; objHash: string }> {
+		return await this.#sendMedia("image", data, filename);
+	}
+
+	/** Sends a video to this OpenChat. See {@link sendImage} for the caveats. */
+	async sendVideo(
+		data: Blob,
+		filename = "video",
+		durationMs?: number,
+	): Promise<{ objId: string; objHash: string }> {
+		return await this.#sendMedia("video", data, filename, durationMs);
+	}
+
+	/**
+	 * Sends a voice/audio message to this OpenChat.
+	 * See {@link sendImage} for the caveats.
+	 */
+	async sendAudio(
+		data: Blob,
+		filename = "voice.m4a",
+		durationMs?: number,
+	): Promise<{ objId: string; objHash: string }> {
+		return await this.#sendMedia("audio", data, filename, durationMs);
+	}
+
+	async #sendMedia(
+		type: ObjType,
+		data: Blob,
+		filename: string,
+		durationMs?: number,
+	): Promise<{ objId: string; objHash: string }> {
+		const { objId, objHash } = await this.#client.base.obs.uploadObjTalk(
+			this.raw.squareChatMid,
+			type,
+			data,
+			undefined, // oid unset => reqseq mode => the server creates the message
+			filename,
+			durationMs,
+		);
+		return { objId, objHash };
 	}
 
 	async updateSquareChat(
