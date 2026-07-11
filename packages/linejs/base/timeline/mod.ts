@@ -1,4 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
+import { Buffer } from "node:buffer";
+import crypto from "node:crypto";
 import type { BaseClient } from "../mod.ts";
 import type { LooseType } from "@evex/loose-types";
 
@@ -497,5 +499,89 @@ export class Timeline {
 				}),
 			},
 		).then((r) => r.json());
+	}
+
+	/**
+	 * Uploads an image or video into the myhome OBS space so it can be attached
+	 * to a Note post via {@link createPost}'s `mediaObjectIds` / `mediaObjectTypes`
+	 * (e.g. `mediaObjectTypes: ["PHOTO"]` for an image, `["VIDEO"]` for a video).
+	 *
+	 * Note media does NOT go through `obs.uploadObjectForService` — that hits
+	 * `/r/{obsPath}`, which the myhome edge rejects with 403. Notes use the legacy
+	 * `.nhn` upload endpoint, authenticated with the timeline channel token (see
+	 * {@link initTimeline}); the object id is chosen client-side and echoed back as
+	 * `x-obs-oid`.
+	 */
+	public async uploadNoteMedia(
+		type: "image" | "video",
+		data: Blob,
+	): Promise<{ objId: string; objHash: string }> {
+		await this.initTimeline();
+		const objId = crypto.createHash("md5")
+			.update(`${this.client.profile!.mid}-${Date.now()}`)
+			.digest("hex");
+		const res = await this.#uploadObjNhn("myhome/h", objId, type, data);
+		return { objId, objHash: res.headers.get("x-obs-hash") ?? "" };
+	}
+
+	/**
+	 * Uploads an image into the myhome comment OBS space (`myhome/cmt`) for use in
+	 * a Note comment's `contentsList` media entry (`{ categoryId: "media", extData:
+	 * { objectId, type: "PHOTO", obsNamespace: "cmt", serviceName: "myhome", … } }`).
+	 *
+	 * Unlike {@link uploadNoteMedia}, the server assigns the object id here, so the
+	 * returned `objId` comes from the response `x-obs-oid` — reusing a client-chosen
+	 * id would leave the comment referencing a non-existent object (renders broken).
+	 * Note comments accept images only (video comments are not supported by LINE).
+	 */
+	public async uploadNoteCommentImage(
+		data: Blob,
+	): Promise<{ objId: string; objHash: string }> {
+		await this.initTimeline();
+		const seed = crypto.createHash("md5")
+			.update(`${this.client.profile!.mid}-${Date.now()}`)
+			.digest("hex");
+		const res = await this.#uploadObjNhn("myhome/cmt", seed, "image", data);
+		return {
+			objId: res.headers.get("x-obs-oid") ?? seed,
+			objHash: res.headers.get("x-obs-hash") ?? "",
+		};
+	}
+
+	async #uploadObjNhn(
+		obsPath: string,
+		oid: string,
+		type: "image" | "video",
+		data: Blob,
+	): Promise<Response> {
+		const contentType = type === "video" ? "video/mp4" : "image/jpeg";
+		const params = {
+			name: `${oid}.${type === "video" ? "mp4" : "jpg"}`,
+			oid,
+			type,
+			ver: "2.0",
+		};
+		const body = new Blob([data], { type: contentType });
+		const res: Response = await this.client.fetch(
+			`https://obs.line-apps.com/${obsPath}/upload.nhn`,
+			{
+				method: "POST",
+				headers: {
+					...this.timelineHeaders,
+					"content-type": contentType,
+					"content-length": String(body.size),
+					"x-obs-params": Buffer.from(JSON.stringify(params)).toString(
+						"base64",
+					),
+				},
+				body,
+			},
+		);
+		if (res.status !== 201) {
+			throw new Error(
+				`Note media upload failed (${obsPath}): HTTP ${res.status}`,
+			);
+		}
+		return res;
 	}
 }
