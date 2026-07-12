@@ -157,6 +157,7 @@ export class LineObs {
 		data: Blob,
 		oid?: string,
 		filename?: string,
+		durationMs?: number,
 	): Promise<{
 		objId: string;
 		objHash: string;
@@ -195,7 +196,10 @@ export class LineObs {
 			param.cat = "original";
 			param.type = "image";
 		} else if (type === "audio" || type === "video") {
-			param.duration = "1919"; // 810
+			// LINE uses this obs param verbatim as the displayed length (it does not
+			// recompute it from the uploaded file), so a caller-supplied real duration
+			// must be honoured; keep the historical value as the fallback.
+			param.duration = (durationMs ?? 1919).toString();
 		}
 		const toType: "talk" | "g2" = to[0] === "m" || to[0] === "t"
 			? "g2"
