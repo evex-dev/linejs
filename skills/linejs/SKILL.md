@@ -100,4 +100,4 @@ CHRLINE-Patch-compatible behaviour reports (e.g. "this RPC works in CHRLINE but 
 
 - Frozen API signatures — they change. Read the source.
 - A list of every wrapped method — there are 130+, see `packages/linejs/base/service/` for the live set.
-- Reverse-engineering details for LINE Android — those live in `EdamAme-x/android-reverse` (private). The linejs side is what's published.
+- Reverse-engineering details for LINE Android — Join Our Discord.
