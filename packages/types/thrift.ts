@@ -33516,6 +33516,30 @@ export const Thrift: LooseType = {
 			"struct": "TalkException",
 		},
 	],
+	"getRecentMessagesV2_args": [
+		{
+			"fid": 2,
+			"name": "messageBoxId",
+			"type": 11,
+		},
+		{
+			"fid": 3,
+			"name": "messagesCount",
+			"type": 8,
+		},
+	],
+	"getRecentMessagesV2_result": [
+		{
+			"fid": 0,
+			"name": "success",
+			"list": "Message",
+		},
+		{
+			"fid": 1,
+			"name": "e",
+			"struct": "TalkException",
+		},
+	],
 	"getProductByVersion_args": [
 		{
 			"fid": 2,
