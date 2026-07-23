@@ -19147,6 +19147,16 @@ export interface getPreviousMessagesV2WithRequest_result {
 	e: TalkException;
 }
 
+export interface getRecentMessagesV2_args {
+	messageBoxId: string;
+	messagesCount: number;
+}
+
+export interface getRecentMessagesV2_result {
+	success: Message[];
+	e: TalkException;
+}
+
 export interface getProductByVersion_args {
 	shopId: string;
 	productId: string;

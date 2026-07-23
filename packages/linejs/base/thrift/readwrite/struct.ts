@@ -8573,6 +8573,14 @@ export function getPreviousMessagesV2WithRequest_args(
 		[8, 3, Pb1_V7(param.syncReason)],
 	];
 }
+export function getRecentMessagesV2_args(
+	param?: PartialDeep<LINETypes.getRecentMessagesV2_args> | undefined,
+): NestedArray {
+	return typeof param === "undefined" ? [] : [
+		[11, 2, param.messageBoxId],
+		[8, 3, param.messagesCount],
+	];
+}
 export function getProductByVersion_args(
 	param?: PartialDeep<LINETypes.getProductByVersion_args> | undefined,
 ): NestedArray {

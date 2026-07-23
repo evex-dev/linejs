@@ -1643,6 +1643,26 @@ export class TalkService implements BaseService {
 	}
 
 	/**
+	 * Fetches the N most recent messages in a message box.
+	 *
+	 * Single-call convenience for "give me the last N messages", skipping the
+	 * `getMessageBoxes` → `lastDeliveredMessageId` lookup that
+	 * `getPreviousMessagesV2WithRequest` needs. Handy for periodic polling or
+	 * initial-fetch tools.
+	 */
+	async getRecentMessagesV2(
+		...param: Parameters<typeof LINEStruct.getRecentMessagesV2_args>
+	): Promise<LINETypes.getRecentMessagesV2_result["success"]> {
+		return await this.client.request.request(
+			LINEStruct.getRecentMessagesV2_args(...param),
+			"getRecentMessagesV2",
+			this.protocolType,
+			true,
+			this.requestPath,
+		);
+	}
+
+	/**
 	 * @description Gets the server time
 	 */
 	public async getServerTime(): Promise<number> {
