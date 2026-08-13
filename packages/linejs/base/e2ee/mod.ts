@@ -16,6 +16,29 @@ interface GroupKey {
 	keyId: number;
 }
 
+/**
+ * Picks the key-chain entry a decoded E2EE key belongs to.
+ *
+ * The chain LINE hands over on QR login holds every key the account has ever
+ * registered, oldest first, while `keyId` names the one currently in use. On
+ * an account that has rotated its key, taking the first entry yields real
+ * key material filed under the wrong id: the pair is internally consistent,
+ * so `derivedPub === pubKey` still passes, but nothing it decrypts will ever
+ * authenticate.
+ *
+ * Falls back to the first entry when no id matches, which is the behaviour
+ * callers had before and is still right for a single-entry chain.
+ */
+export function selectKeyChainEntry(
+	chain: LooseType,
+	keyId?: LooseType,
+): LooseType {
+	if (!Array.isArray(chain)) return chain?.[0];
+	if (keyId === undefined || keyId === null) return chain[0];
+	const wanted = String(keyId);
+	return chain.find((entry) => String(entry?.[2]) === wanted) ?? chain[0];
+}
+
 export class E2EE {
 	readonly client: BaseClient;
 	constructor(client: BaseClient) {
@@ -358,6 +381,7 @@ export class E2EE {
 				publicKey,
 				secret,
 				encryptedKeyChain,
+				keyId,
 			);
 			this.e2eeLog("decodeE2EEKeyV1E2EEKeyInfo", {
 				e2eeKey: {
@@ -418,6 +442,7 @@ export class E2EE {
 		publicKey: Buffer,
 		privateKey: Buffer,
 		encryptedKeyChain: Buffer,
+		keyId?: LooseType,
 	): Buffer[] {
 		this.e2eeLog("decryptKeyChainKeyInfo", {
 			decryptKeyChain: {
@@ -440,9 +465,10 @@ export class E2EE {
 		this.e2eeLog("decryptKeyChainBinKeyInfo", {
 			binkey: keychainData.toString("hex"),
 		});
-		const key = this.client.thrift.readThriftStruct(keychainData)[1];
-		const publicKeyBytes = Buffer.from(key[0][4]);
-		const privateKeyBytes = Buffer.from(key[0][5]);
+		const chain = this.client.thrift.readThriftStruct(keychainData)[1];
+		const entry = selectKeyChainEntry(chain, keyId);
+		const publicKeyBytes = Buffer.from(entry[4]);
+		const privateKeyBytes = Buffer.from(entry[5]);
 		return [privateKeyBytes, publicKeyBytes];
 	}
 
