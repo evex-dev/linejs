@@ -124,15 +124,18 @@ export class Polling {
 						response.operationResponse.individualEvents
 							.lastRevision;
 				}
+				// Only iterate operations when present; falling through to the
+				// shared sleep/abort tail is required — an early `continue` here
+				// used to busy-loop without delay and made the AbortSignal
+				// unobservable.
 				if (
-					!(response.operationResponse &&
-						response.operationResponse.operations)
+					response.operationResponse &&
+					response.operationResponse.operations
 				) {
-					continue;
-				}
-				for (const event of response.operationResponse.operations) {
-					this.sync.talk.revision = event.revision;
-					yield event;
+					for (const event of response.operationResponse.operations) {
+						this.sync.talk.revision = event.revision;
+						yield event;
+					}
 				}
 			} catch (error) {
 				if (onError) {
