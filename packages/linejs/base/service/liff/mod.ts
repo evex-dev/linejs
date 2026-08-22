@@ -117,14 +117,13 @@ export class LiffService implements BaseService {
 				const error = e as InternalError;
 
 				this.client.log("liff-error", { ...error.data });
+				const liffException = error.data
+					.liffException as LINETypes.LiffException | undefined;
 				if (
-					(error.data.liffException as LINETypes.LiffException)
-							.code ===
-						"CONSENT_REQUIRED" &&
+					liffException?.code === "CONSENT_REQUIRED" &&
 					tryConsent
 				) {
-					const data = error
-						.data.liffException as LINETypes.LiffException;
+					const data = liffException;
 					const payload = data.payload;
 					const { channelId, consentUrl } = payload.consentRequired;
 					const toType = chatMid && this.client.getToType(chatMid);
@@ -168,7 +167,7 @@ export class LiffService implements BaseService {
 		const {
 			to,
 			messages,
-			tryConsent: _tryConsent,
+			tryConsent,
 			forceIssue,
 		} = {
 			tryConsent: true,
@@ -179,6 +178,7 @@ export class LiffService implements BaseService {
 			token = await this.getLiffToken({
 				chatMid: to,
 				liffId: this.liffId,
+				tryConsent,
 			});
 		} else {
 			token = this.liffTokenCache[to];
@@ -277,7 +277,7 @@ export class LiffService implements BaseService {
 								.join("&")
 						}&${
 							approvedPermission.map((e) => "approvedPermission=" + e).join("&")
-						}&__WLS=&channelId=2006747340&__csrf=${csrfToken}&allow=true`,
+						}&__WLS=&channelId=${channelId}&__csrf=${csrfToken}&allow=true`,
 						headers,
 					},
 				);
