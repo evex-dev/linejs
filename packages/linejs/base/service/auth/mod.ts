@@ -24,6 +24,12 @@ export class AuthService implements BaseService {
 			const RATR = await this.refresh({ request: { refreshToken } });
 			this.client.authToken = RATR.accessToken;
 			this.client.emit("update:authtoken", RATR.accessToken);
+			// The server may rotate the refresh token; persisting it is
+			// required, otherwise the next refresh reuses a stale token and
+			// fails.
+			if (RATR.refreshToken) {
+				await this.client.storage.set("refreshToken", RATR.refreshToken);
+			}
 			await this.client.storage.set(
 				"expire",
 				(RATR.tokenIssueTimeEpochSec as number) +
