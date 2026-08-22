@@ -114,8 +114,15 @@ export class TalkMessage {
 	 * Read the message.
 	 */
 	async read(): Promise<void> {
+		// `chatMid` must be the chat id. In group/room chats `from` is the
+		// sender's USER mid, not the chat, so mark the chat itself read.
+		const chatMid = this.to.type === "GROUP" || this.to.type === "ROOM"
+			? this.to.id
+			: this.isMyMessage
+			? this.to.id
+			: this.from.id;
 		await this.#client.base.talk.sendChatChecked({
-			chatMid: this.isMyMessage ? this.to.id : this.from.id,
+			chatMid,
 			lastMessageId: this.raw.id,
 			seq: await this.#client.base.getReqseq(),
 		});
