@@ -1346,11 +1346,24 @@ export class E2EE {
 			keyMaterial = Buffer.from(keyMaterial, "base64");
 		}
 		const keys = await this.deriveKeyMaterial(keyMaterial);
-		return (await this.___decryptAESCTR(keys.encKey, keys.nonce, rawData))
-			.slice(
-				0,
-				-32,
+		if (rawData.length < 32) {
+			throw new InternalError(
+				"E2EEMediaError",
+				`encrypted data too short (${rawData.length} bytes) to contain HMAC`,
 			);
+		}
+		const encData = rawData.subarray(0, -32);
+		const sign = rawData.subarray(-32);
+		const expected = this.signData(encData, keys.macKey);
+		if (
+			!crypto.timingSafeEqual(sign, expected)
+		) {
+			throw new InternalError(
+				"E2EEMediaError",
+				"HMAC verification failed: ciphertext was tampered with or keyMaterial is wrong",
+			);
+		}
+		return await this.___decryptAESCTR(keys.encKey, keys.nonce, encData);
 	}
 
 	/**
