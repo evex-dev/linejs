@@ -109,11 +109,15 @@ export class E2EE {
 		const toType = this.client.getToType(mid);
 
 		if (toType === LINETypes.enums.MIDType.USER) {
+			// Cache keys must include the mid: LINE key ids are small
+			// per-account counters (each user's first key is typically 1 or 2),
+			// so a keyId-only cache key collides across contacts and returns
+			// one contact's public key for another — producing wrong ECDH
+			// shared secrets and undecryptable messages.
+			const cacheKey = `e2eePublicKeys:${mid}:${keyId}`;
 			let key: string | undefined = undefined;
 			if (keyId !== undefined) {
-				key = (await this.client.storage.get(
-					`e2eePublicKeys:${keyId}`,
-				)) as string;
+				key = (await this.client.storage.get(cacheKey)) as string;
 			}
 			let receiverKeyData: LINETypes.E2EENegotiationResult;
 			if (!key) {
@@ -126,10 +130,10 @@ export class E2EE {
 				}
 				const publicKey = receiverKeyData.publicKey;
 				const receiverKeyId = publicKey.keyId;
-				if (receiverKeyId == keyId) {
+				if (keyId === undefined || receiverKeyId == keyId) {
 					key = Buffer.from(publicKey.keyData).toString("base64");
 					await this.client.storage.set(
-						`e2eePublicKeys:${keyId}`,
+						`e2eePublicKeys:${mid}:${receiverKeyId}`,
 						key,
 					);
 				} else {
