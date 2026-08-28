@@ -1159,7 +1159,7 @@ export class E2EE {
 				publicKey: {
 					version: 1,
 					keyId: 0,
-					keyData: pubKey.toString("base64"),
+					keyData: pubKey,
 					createdTime: 0,
 				},
 			});

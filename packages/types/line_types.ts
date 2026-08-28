@@ -12697,7 +12697,7 @@ export interface Pb1_C13070l5 {
 export interface Pb1_C13097n4 {
 	version: number;
 	keyId: number;
-	keyData: string;
+	keyData: string | Buffer;
 	createdTime: Int64;
 }
 
