@@ -70,6 +70,12 @@ export interface ListenOptions {
 }
 export type ClientEvents = {
 	message: (message: TalkMessage) => void;
+	/**
+	 * Fired when a talk message is edited.
+	 * The message keeps the id of the original message, so consumers can
+	 * replace their cached copy by id.
+	 */
+	"message:edit": (message: TalkMessage) => void;
 	event: (event: LINETypes.Operation) => void;
 	"square:message": (message: SquareMessage) => void;
 	"square:event": (event: LINETypes.SquareEvent) => void;
@@ -138,6 +144,23 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 					) {
 						this.emit(
 							"message",
+							new TalkMessage({
+								raw: await this.base.e2ee.decryptE2EEMessage(
+									event.message,
+								),
+								client: this,
+							}),
+						);
+					} else if (
+						// 159: someone else edited a message in a chat we are in.
+						event.type === "NOTIFIED_EDIT_MESSAGE" ||
+						// 158: we edited a message ourselves, synced from another
+						// device. Both are surfaced for the same reason
+						// SEND_MESSAGE and RECEIVE_MESSAGE both emit "message".
+						event.type === "EDIT_MESSAGE"
+					) {
+						this.emit(
+							"message:edit",
 							new TalkMessage({
 								raw: await this.base.e2ee.decryptE2EEMessage(
 									event.message,

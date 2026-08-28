@@ -84,6 +84,29 @@ That's all!\
 There are also `send`, `reaction`, etc.\
 Let me explain all the methods in other chapters.
 
+## Edited messages
+
+When a message is edited, LINE does not send it again through `message`. Listen
+to `message:edit` instead.
+
+```ts
+client.on("message:edit", (message) => {
+    console.log(message.raw.id, "was edited to:", message.text);
+});
+```
+
+The edited message keeps the **id of the original message**, so you can replace
+your cached copy by id. `message.isEdited` is `true` and
+`message.updatedTime` holds the time of the edit.
+
+The event fires both when someone else edits a message and when you edit one
+from another device.
+
+:::warning
+Only receiving edits is supported. Editing a message *from* linejs is not
+implemented.
+:::
+
 ## Square
 
 So what should we do with Square (OpenChat)? Basically the same thing.
