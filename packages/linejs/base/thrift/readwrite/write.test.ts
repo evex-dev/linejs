@@ -1,6 +1,6 @@
 import { assertEquals } from "@std/assert";
 import { writeStruct, writeThrift } from "./write.ts";
-import { readThrift } from "./read.ts";
+import { readThrift, readThriftStruct } from "./read.ts";
 import { type NestedArray, Protocols } from "./declares.ts";
 
 // Thrift type id for I64.
@@ -45,4 +45,54 @@ Deno.test("writeThrift round-trips a small bigint I64", () => {
 	const bytes = writeThrift(i64Field(1, 5n), "x", Protocols[4]);
 	const parsed = readThrift(bytes, Protocols[4]);
 	assertEquals(parsed.data[1], 5);
+});
+
+// Regression: the reader interpreted raw two's-complement octets as an
+// unsigned hex number, so negative I64 values came back as huge positives.
+Deno.test("writeThrift round-trips a negative I64", () => {
+	for (const protocol of [Protocols[3], Protocols[4]]) {
+		const bytes = writeThrift(i64Field(1, -5n), "x", protocol);
+		const parsed = readThrift(bytes, protocol);
+		assertEquals(parsed.data[1], -5);
+	}
+});
+
+// Regression: bigint I64 was only accepted for top-level fields; list/set/map
+// elements went through writeValue_, which rejected them with a TypeError.
+Deno.test("writeStruct encodes bigint I64 inside collections", () => {
+	const bytes = writeStruct(
+		[[15, 1, [10, [618946633287860670n]]]] as NestedArray,
+		Protocols[3],
+	);
+	const parsed = readThriftStruct(bytes, Protocols[3]);
+	assertEquals(parsed[1], [618946633287860670n]);
+});
+
+Deno.test("writeStruct encodes BYTE and I16 fields", () => {
+	// Binary protocol: field header (03/06 + fid) then value bytes.
+	const bytes = writeStruct(
+		[[3, 1, 255], [6, 2, 300], [8, 3, 7]] as NestedArray,
+		Protocols[3],
+	);
+	assertEquals(hex(bytes), "030001ff" + "060002012c" + "08000300000007" + "00");
+});
+
+Deno.test("writeStruct round-trips BYTE and I16 collection elements", () => {
+	const bytes = writeStruct(
+		[[15, 1, [3, [1, 2, 3]]], [14, 2, [6, [300, -1]]]] as NestedArray,
+		Protocols[3],
+	);
+	const parsed = readThriftStruct(bytes, Protocols[3]);
+	assertEquals(parsed[1], [1, 2, 3]);
+	assertEquals(parsed[2], [300, -1]);
+});
+
+Deno.test("writeStruct accepts numeric BOOL fields and elements", () => {
+	const bytes = writeStruct(
+		[[2, 1, 1], [14, 2, [2, [true, 0]]]] as NestedArray,
+		Protocols[3],
+	);
+	const parsed = readThriftStruct(bytes, Protocols[3]);
+	assertEquals(parsed[1], true);
+	assertEquals(parsed[2], [true, false]);
 });

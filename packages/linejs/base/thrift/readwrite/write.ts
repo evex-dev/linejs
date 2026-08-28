@@ -124,6 +124,24 @@ function writeValue(
 			}
 			break;
 
+		case Thrift.Type.BYTE:
+			if (typeof val !== "number") {
+				throw new TypeError(`ftype=${ftype}: value is not number`);
+			}
+			output.writeFieldBegin("", Thrift.Type.BYTE, fid);
+			output.writeByte(val);
+			output.writeFieldEnd();
+			break;
+
+		case Thrift.Type.I16:
+			if (typeof val !== "number") {
+				throw new TypeError(`ftype=${ftype}: value is not number`);
+			}
+			output.writeFieldBegin("", Thrift.Type.I16, fid);
+			output.writeI16(val);
+			output.writeFieldEnd();
+			break;
+
 		case Thrift.Type.DOUBLE:
 			if (typeof val !== "number") {
 				throw new TypeError(`ftype=${ftype}: value is not number`);
@@ -232,13 +250,13 @@ function writeValue(
 			}
 			output.writeFieldBegin("", Thrift.Type.LIST, fid);
 			{
-                const arr = val[1] as LooseType[];
-                output.writeListBegin(val[0], arr.length);
-                for (let i = 0, L = arr.length; i < L; i++) {
-                    writeValue_(output, val[0], arr[i]);
-                }
-                output.writeListEnd();
-            }
+				const arr = val[1] as LooseType[];
+				output.writeListBegin(val[0], arr.length);
+				for (let i = 0, L = arr.length; i < L; i++) {
+					writeValue_(output, val[0], arr[i]);
+				}
+				output.writeListEnd();
+			}
 			output.writeFieldEnd();
 			break;
 		case Thrift.Type.SET:
@@ -248,13 +266,13 @@ function writeValue(
 			}
 			output.writeFieldBegin("", Thrift.Type.SET, fid);
 			{
-                const arr = val[1] as LooseType[];
-                output.writeSetBegin(val[0], arr.length);
-                for (let i = 0, L = arr.length; i < L; i++) {
-                    writeValue_(output, val[0], arr[i]);
-                }
-                output.writeSetEnd();
-            }
+				const arr = val[1] as LooseType[];
+				output.writeSetBegin(val[0], arr.length);
+				for (let i = 0, L = arr.length; i < L; i++) {
+					writeValue_(output, val[0], arr[i]);
+				}
+				output.writeSetEnd();
+			}
 			output.writeFieldEnd();
 			break;
 		default:
@@ -300,10 +318,21 @@ function writeValue_(
 			break;
 
 		case Thrift.Type.I64:
-			if (typeof val !== "number") {
+			if (typeof val === "bigint") {
+				// Mirror the field-level encoding: node-int64 parses a bare
+				// string as hex, so pass the full 64-bit two's-complement
+				// value as a padded hex string (`asUintN` keeps negatives
+				// correct).
+				output.writeI64(
+					new Int64(
+						"0x" + BigInt.asUintN(64, val).toString(16).padStart(16, "0"),
+					),
+				);
+			} else if (typeof val !== "number") {
 				throw new TypeError(`ftype=${ftype}: value is not number`);
+			} else {
+				output.writeI64(val);
 			}
-			output.writeI64(val);
 			break;
 
 		case Thrift.Type.I32:
@@ -314,10 +343,24 @@ function writeValue_(
 			break;
 
 		case Thrift.Type.BOOL:
-			if (typeof val !== "boolean") {
+			if (typeof val !== "boolean" && typeof val !== "number") {
 				throw new TypeError(`ftype=${ftype}: value is not boolean`);
 			}
-			output.writeBool(val);
+			output.writeBool(Boolean(val));
+			break;
+
+		case Thrift.Type.BYTE:
+			if (typeof val !== "number") {
+				throw new TypeError(`ftype=${ftype}: value is not number`);
+			}
+			output.writeByte(val);
+			break;
+
+		case Thrift.Type.I16:
+			if (typeof val !== "number") {
+				throw new TypeError(`ftype=${ftype}: value is not number`);
+			}
+			output.writeI16(val);
 			break;
 
 		case Thrift.Type.STRUCT:
