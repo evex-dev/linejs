@@ -417,6 +417,28 @@ export class TalkMessage {
 	get text(): string {
 		return this.raw.text;
 	}
+	/**
+	 * Whether the message has been edited.
+	 */
+	get isEdited(): boolean {
+		// EDIT_MESSAGE / NOTIFIED_EDIT_MESSAGE operations carry the marker in
+		// contentMetadata; `updatedTime` is only set on messages fetched from
+		// the message box.
+		return this.raw.contentMetadata?.EDITED === "true" ||
+			Boolean(this.raw.updatedTime);
+	}
+	/**
+	 * Time the message was last edited, or `null` when it has never been
+	 * edited.
+	 */
+	get updatedTime(): number | bigint | null {
+		const fromMetadata = this.raw.contentMetadata?.UPDATED_TIME;
+		if (fromMetadata) {
+			const parsed = Number(fromMetadata);
+			if (!Number.isNaN(parsed)) return parsed;
+		}
+		return this.raw.updatedTime || null;
+	}
 	/*
 	static fromSource(
 		source: SourceEvent & { type: "talk" },
