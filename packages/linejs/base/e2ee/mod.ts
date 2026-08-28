@@ -830,14 +830,23 @@ export class E2EE {
 	}
 	public async decryptE2EELocationMessage(
 		messageObj: Message,
-		isSelf = true,
+		isSelf = false,
 	): Promise<Location> {
 		const _from = messageObj.from;
+		if (_from === this.client.profile?.mid) {
+			isSelf = true;
+		}
 		const to = messageObj.to;
 		const toType = messageObj.toType;
 		const metadata = messageObj.contentMetadata;
 		const specVersion = metadata.e2eeVersion || "2";
-		const contentType = messageObj.contentType;
+		// Incoming messages carry the enum *name* (e.g. "LOCATION") because
+		// rename_thrift maps numeric enums back to strings. The AAD needs the
+		// numeric value (LOCATION = 15) — passing the string through produced
+		// NaN → 0 in getIntBytes, so decryption always failed GCM auth.
+		const contentType = typeof messageObj.contentType === "string"
+			? LINETypes.enums.ContentType[messageObj.contentType]
+			: messageObj.contentType;
 		const chunks = messageObj.chunks.map((chunk) =>
 			typeof chunk === "string" ? Buffer.from(chunk, "utf-8") : chunk
 		);
@@ -847,18 +856,27 @@ export class E2EE {
 		this.e2eeLog("decryptE2EELocationMessageSenderKeyId", senderKeyId);
 		this.e2eeLog("decryptE2EELocationMessageReceiverKeyId", receiverKeyId);
 
-		const selfKey = await this.getE2EESelfKeyData(
-			this.client.profile?.mid as string,
-		);
-		let privK = Buffer.from(selfKey.privKey, "base64");
+		let privK: Buffer;
 		let pubK: LooseType;
 
 		if (toType === LINETypes.enums.MIDType.USER || toType === "USER") {
+			// #88: pin self-key by id from envelope.
+			const selfKeyId = isSelf ? senderKeyId : receiverKeyId;
+			let selfKey = await this.getE2EESelfKeyDataByKeyId(selfKeyId);
+			if (!selfKey) {
+				selfKey = await this.getE2EESelfKeyData(
+					this.client.profile!.mid as string,
+				);
+			}
+			privK = Buffer.from(selfKey.privKey, "base64");
 			pubK = await this.getE2EELocalPublicKey(
-				to,
+				isSelf ? to : _from,
 				isSelf ? receiverKeyId : senderKeyId,
 			);
 		} else {
+			const selfKey = await this.getE2EESelfKeyData(
+				this.client.profile?.mid as string,
+			);
 			const groupK = await this.getE2EELocalPublicKey(
 				to,
 				receiverKeyId,
