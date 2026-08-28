@@ -1,4 +1,5 @@
 import * as LINETypes from "@evex/linejs-types";
+import type { Buffer } from "node:buffer";
 import { type NestedArray } from "../mod.ts";
 function map(
 	call: ((v: any) => NestedArray) | ((v: any) => number),
@@ -5388,7 +5389,7 @@ export function Pb1_C13097n4(
 	return typeof param === "undefined" ? [] : [
 		[8, 1, param.version],
 		[8, 2, param.keyId],
-		[11, 4, param.keyData],
+		[11, 4, param.keyData as string | Buffer | undefined],
 		[10, 5, param.createdTime],
 	];
 }

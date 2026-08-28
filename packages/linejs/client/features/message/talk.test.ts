@@ -4,10 +4,7 @@ import type { Client } from "../../client.ts";
 import { TalkMessage } from "./talk.ts";
 
 function message(raw: Partial<Message>): TalkMessage {
-	return new TalkMessage({
-		client: {} as Client,
-		raw: raw as Message,
-	});
+	return new TalkMessage({ client: {} as Client, raw: raw as Message });
 }
 
 Deno.test("TalkMessage.isEdited — never edited", () => {
@@ -20,9 +17,6 @@ Deno.test("TalkMessage.isEdited — never edited", () => {
 	);
 });
 
-// EDIT_MESSAGE / NOTIFIED_EDIT_MESSAGE operations mark the edit in
-// contentMetadata, not in the `updatedTime` field. Shape taken from a live
-// op 158 payload.
 Deno.test("TalkMessage.isEdited — edit operation metadata", () => {
 	const m = message({
 		id: "1234567890123456789",
@@ -54,7 +48,6 @@ Deno.test("TalkMessage.updatedTime", () => {
 		message({ text: "hi", updatedTime: 1700000000000 }).updatedTime,
 		1700000000000,
 	);
-	// metadata wins over the field
 	assertEquals(
 		message({
 			updatedTime: 1700000000000,
@@ -62,4 +55,63 @@ Deno.test("TalkMessage.updatedTime", () => {
 		}).updatedTime,
 		1787927539000,
 	);
+});
+
+function makeClient() {
+	const chatCheckedCalls: unknown[] = [];
+	const client = {
+		base: {
+			profile: { mid: "u-self" },
+			getReqseq: () => Promise.resolve(1),
+			talk: {
+				sendChatChecked(opts: unknown) {
+					chatCheckedCalls.push(opts);
+					return Promise.resolve({});
+				},
+			},
+		},
+	} as never as Client;
+	return { client, chatCheckedCalls };
+}
+
+function makeRaw(
+	opts: { to: string; from: string; toType: string; id?: string },
+) {
+	return {
+		id: opts.id ?? "msg-1",
+		to: opts.to,
+		from: opts.from,
+		toType: opts.toType,
+		contentType: "NONE",
+		contentMetadata: {},
+		text: "hi",
+	} as never;
+}
+
+Deno.test("read marks the group chat itself as read for received group messages", async () => {
+	const { client, chatCheckedCalls } = makeClient();
+	const msg = new TalkMessage({
+		client,
+		raw: makeRaw({ to: "g-group", from: "u-them", toType: "GROUP" }),
+	});
+	await msg.read();
+	assertEquals(chatCheckedCalls[0], {
+		chatMid: "g-group",
+		lastMessageId: "msg-1",
+		seq: 1,
+	});
+});
+
+Deno.test("read keeps 1:1 behavior (counterpart mid) for received DMs", async () => {
+	const { client, chatCheckedCalls } = makeClient();
+	const msg = new TalkMessage({
+		client,
+		raw: makeRaw({ to: "u-self", from: "u-them", toType: "USER" }),
+	});
+	await msg.read();
+	assertEquals(chatCheckedCalls[0], {
+		chatMid: "u-them",
+		lastMessageId: "msg-1",
+		seq: 1,
+	});
 });

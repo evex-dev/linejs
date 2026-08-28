@@ -142,7 +142,7 @@ export class SquareMessage {
 	 * Unsends the message.
 	 */
 	async unsend(): Promise<void> {
-		if (!this.isMyMessage) {
+		if (!(await this.isMyMessage())) {
 			throw new TypeError(
 				"Cannot unsend the message which is not yours.",
 			);
@@ -451,7 +451,7 @@ export class SquareThreadMessage extends SquareMessage {
 	#authorIsMe?: boolean;
 
 	constructor(init: SquareThreadMessageInit) {
-		super(init)
+		super(init);
 		this.#client = init.client;
 		this.raw = init.raw;
 	}
@@ -588,7 +588,7 @@ export class SquareThreadMessage extends SquareMessage {
 	 * Unsends the message.
 	 */
 	override async unsend() {
-		if (!this.isMyMessage) {
+		if (!(await this.isMyMessage())) {
 			throw new TypeError(
 				"Cannot unsend the message which is not yours.",
 			);
@@ -611,7 +611,10 @@ export class SquareThreadMessage extends SquareMessage {
 		});
 	}
 
-	static override fromSource(source: SquareEvent, client: Client): SquareThreadMessage {
+	static override fromSource(
+		source: SquareEvent,
+		client: Client,
+	): SquareThreadMessage {
 		return new SquareThreadMessage({
 			client,
 			raw: source.payload.notificationThreadMessage.squareMessage,
