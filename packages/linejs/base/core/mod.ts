@@ -20,6 +20,7 @@ import {
 	CallService,
 	ChannelService,
 	LiffService,
+	MoaService,
 	RelationService,
 	SquareLiveTalkService,
 	SquareService,
@@ -129,6 +130,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	readonly call: CallService;
 	readonly channel: ChannelService;
 	readonly liff: LiffService;
+	readonly moa: MoaService;
 	readonly relation: RelationService;
 	readonly livetalk: SquareLiveTalkService;
 	readonly square: SquareService;
@@ -203,6 +205,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		this.channel = new ChannelService(this);
 		this.liff = new LiffService(this);
 		this.livetalk = new SquareLiveTalkService(this);
+		this.moa = new MoaService(this);
 		this.relation = new RelationService(this);
 		this.square = new SquareService(this);
 		this.talk = new TalkService(this);

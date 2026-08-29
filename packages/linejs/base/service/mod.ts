@@ -11,6 +11,7 @@ export { DeviceAttestationService } from "./deviceattestation/mod.ts";
 export { E2EEKeyBackupService } from "./e2eekeybackup/mod.ts";
 export { HomeSafetyCheckService } from "./homesafetycheck/mod.ts";
 export { LiffService } from "./liff/mod.ts";
+export { MoaService } from "./moa/mod.ts";
 export { MultiProfileService } from "./multiprofile/mod.ts";
 export { OaChatService } from "./oachat/mod.ts";
 export { OaMembershipService } from "./oamembership/mod.ts";
