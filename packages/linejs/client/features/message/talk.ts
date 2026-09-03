@@ -428,11 +428,14 @@ export class TalkMessage {
 	 * Whether the message has been edited.
 	 */
 	get isEdited(): boolean {
-		// EDIT_MESSAGE / NOTIFIED_EDIT_MESSAGE operations carry the marker in
-		// contentMetadata; `updatedTime` is only set on messages fetched from
-		// the message box.
+		// Where the marker lives depends on where the message came from:
+		// EDIT_MESSAGE / NOTIFIED_EDIT_MESSAGE operations set both `EDITED` and
+		// `UPDATED_TIME` in contentMetadata, while messages fetched from the
+		// message box carry only `UPDATED_TIME`. The `updatedTime` field is
+		// kept as a fallback. Any edit time means the message was edited, so
+		// defer to `updatedTime` rather than repeating its lookup here.
 		return this.raw.contentMetadata?.EDITED === "true" ||
-			Boolean(this.raw.updatedTime);
+			this.updatedTime !== null;
 	}
 	/**
 	 * Time the message was last edited, or `null` when it has never been

@@ -41,6 +41,18 @@ Deno.test("TalkMessage.isEdited — updatedTime field", () => {
 	);
 });
 
+// Messages fetched from the message box (getRecentMessagesV2 and friends) carry
+// only UPDATED_TIME — no EDITED flag and no `updatedTime` field. Shape taken
+// from a live getRecentMessagesV2 response.
+Deno.test("TalkMessage.isEdited — message box metadata (UPDATED_TIME only)", () => {
+	const m = message({
+		id: "1234567890123456789",
+		contentMetadata: { UPDATED_TIME: "1788432321630" },
+	});
+	assertEquals(m.isEdited, true);
+	assertEquals(m.updatedTime, 1788432321630);
+});
+
 Deno.test("TalkMessage.updatedTime", () => {
 	assertEquals(message({ text: "hi" }).updatedTime, null);
 	assertEquals(message({ text: "hi", updatedTime: 0 }).updatedTime, null);
