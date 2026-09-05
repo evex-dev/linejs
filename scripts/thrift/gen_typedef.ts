@@ -76,9 +76,7 @@ export function main(
 		for (const e of input) {
 			if (typeof e.type !== "undefined") {
 				defs.push(
-					`${e.name}: ${
-						e.binary ? "(string|Buffer)" : toType(e.type)
-					};`,
+					`${e.name}: ${e.binary ? "(string|Buffer)" : toType(e.type)};`,
 				);
 			} else if (typeof e.struct !== "undefined") {
 				defs.push(`${e.name}: ${toType(e.struct)};`);
