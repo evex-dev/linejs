@@ -40,15 +40,27 @@
  *   deno run -A scripts/apk/extract_thrift.ts --smali <dir> [--apply]
  *                                              [--report <out>]
  *                                              [--match-threshold <0..1>]
+ *                                              [--min-overlap <0..1>]
+ *                                              [--enum-add-min-members <N>]
  *                                              [--include-pkg <regex>]
  *                                              [--limit <N>]    # cap files for debugging
+ *
+ *   --min-overlap            content floor a non-canonical pairing must clear
+ *                            before anything is written on its authority
+ *                            (default 0.6). See scripts/apk/gates.ts.
+ *   --enum-add-min-members   smallest linejs enum that may take value adds
+ *                            from a content-matched pairing (default 16).
  */
 import { walk } from "https://deno.land/std@0.224.0/fs/walk.ts";
 import { fromFileUrl } from "https://deno.land/std@0.224.0/path/mod.ts";
 
 import {
+	acceptEnumValueAdd,
+	acceptRewrite,
+	acceptStructFieldAdd,
 	classifyPair,
 	DEFAULT_GATE_OPTIONS,
+	type GateOptions,
 	type Pairing,
 } from "./gates.ts";
 
@@ -84,6 +96,7 @@ interface Args {
 	rewriteMismatches: boolean;
 	rewriteEnums: boolean;
 	servicesReport: string;
+	gates: GateOptions;
 }
 
 function parseArgs(argv: string[]): Args {
@@ -98,6 +111,7 @@ function parseArgs(argv: string[]): Args {
 		rewriteMismatches: false,
 		rewriteEnums: false,
 		servicesReport: "",
+		gates: { ...DEFAULT_GATE_OPTIONS },
 	};
 	for (let i = 0; i < argv.length; i++) {
 		const a = argv[i];
@@ -131,6 +145,12 @@ function parseArgs(argv: string[]): Args {
 				break;
 			case "--services-report":
 				out.servicesReport = argv[++i];
+				break;
+			case "--min-overlap":
+				out.gates.minOverlap = Number(argv[++i]);
+				break;
+			case "--enum-add-min-members":
+				out.gates.enumAddMinMembers = Number(argv[++i]);
 				break;
 			default:
 				throw new Error(`unknown arg: ${a}`);
@@ -1854,7 +1874,12 @@ async function main() {
 	if (args.servicesReport) {
 		try {
 			const svcJson = JSON.parse(await Deno.readTextFile(args.servicesReport));
-			overrides = buildRpcCrossRefOverrides(svcJson, thrift, idl);
+			overrides = buildRpcCrossRefOverrides(
+				svcJson,
+				thrift,
+				idl,
+				args.gates.minOverlap,
+			);
 			console.log(
 				`RPC cross-reference: ${Object.keys(overrides).length} obfuscated class(es) bound to linejs names via wire RPC`,
 			);
@@ -1904,11 +1929,71 @@ async function main() {
 	const droppedNewTypes = rawDiff.newTypes.filter((nt) =>
 		isR8SyntheticName(nt.canonicalName)
 	);
+	const gatedNewTypes = rawDiff.newTypes.filter((nt) =>
+		!isR8SyntheticName(nt.canonicalName)
+	);
+
+	// Gate the additive diff on the same pairing evidence the rewrites use.
+	// computeDiff is additive, which used to read as "therefore safe" — but an
+	// add invents a field slot purely on the strength of the pairing, and a bad
+	// pairing writes a field no LINE build ever sent. Against 26.14.0 the
+	// ungated path proposed coin balances for `establishE2EESession_args` and a
+	// `success` field at fid 0 on two `_args` structs.
+	const heldAdds: Array<
+		{ kind: "enum" | "field"; entry: string; detail: string; reason: string }
+	> = [];
+	const enumValueAdds = rawDiff.enumValueAdds.filter((a) => {
+		const apkEnum = idl.enums.get(a.canonicalName);
+		const linejsEnum = thrift[a.enumName];
+		if (!apkEnum || !linejsEnum || Array.isArray(linejsEnum)) return false;
+		const members = Object.values(linejsEnum as LineEnum);
+		const p = classifyPair(
+			a.canonicalName,
+			a.enumName,
+			apkEnum.members.map((m) => m.name),
+			members,
+			overrides,
+		);
+		const v = acceptEnumValueAdd(p, members.length, args.gates);
+		if (!v.ok) {
+			heldAdds.push({
+				kind: "enum",
+				entry: a.enumName,
+				detail: `${a.value}=${a.memberName}`,
+				reason: v.reason,
+			});
+		}
+		return v.ok;
+	});
+	const structFieldAdds = rawDiff.structFieldAdds.filter((a) => {
+		const apkStruct = idl.structs.get(a.canonicalName);
+		const linejsStruct = thrift[a.structName];
+		if (!apkStruct || !linejsStruct || !Array.isArray(linejsStruct)) {
+			return false;
+		}
+		const p = classifyPair(
+			a.canonicalName,
+			a.structName,
+			apkStruct.fields.map((f) => f.name),
+			(linejsStruct as LineStruct).map((f) => f.name),
+			overrides,
+		);
+		const v = acceptStructFieldAdd(p, args.gates);
+		if (!v.ok) {
+			heldAdds.push({
+				kind: "field",
+				entry: a.structName,
+				detail: `fid${a.field.fid}=${a.field.name}`,
+				reason: v.reason,
+			});
+		}
+		return v.ok;
+	});
+
 	const diff = {
-		...rawDiff,
-		newTypes: rawDiff.newTypes.filter((nt) =>
-			!isR8SyntheticName(nt.canonicalName)
-		),
+		enumValueAdds,
+		structFieldAdds,
+		newTypes: gatedNewTypes,
 	};
 	if (droppedNewTypes.length) {
 		console.log(
@@ -1923,6 +2008,19 @@ async function main() {
 	console.log(`enum value adds:   ${diff.enumValueAdds.length}`);
 	console.log(`struct field adds: ${diff.structFieldAdds.length}`);
 	console.log(`new types:         ${diff.newTypes.length}`);
+	if (heldAdds.length) {
+		const heldEnum = heldAdds.filter((h) => h.kind === "enum").length;
+		const heldField = heldAdds.length - heldEnum;
+		console.log(
+			`held for review:   ${heldEnum} enum value(s) + ${heldField} struct field(s) — pairing evidence too weak`,
+		);
+		for (const h of heldAdds.slice(0, 15)) {
+			console.log(`  ${h.entry}: ${h.detail} — ${h.reason}`);
+		}
+		if (heldAdds.length > 15) {
+			console.log(`  ... (+${heldAdds.length - 15} more; see the report)`);
+		}
+	}
 
 	const head = <T>(arr: T[], n: number): string =>
 		arr.slice(0, n).map((x) => String(x)).join(", ") +
@@ -1971,7 +2069,7 @@ async function main() {
 	if (args.report) {
 		await Deno.writeTextFile(
 			args.report,
-			JSON.stringify({ diff, mismatches }, null, 2),
+			JSON.stringify({ diff, heldAdds, mismatches }, null, 2),
 		);
 		console.log(`\nReport written: ${args.report}`);
 	}
@@ -2008,6 +2106,12 @@ async function main() {
 			//                         producing oscillating false-positive
 			//                         fid-rewrites between builds.
 			//
+			// Uniqueness alone turned out not to be enough: two structs with
+			// *disjoint* field names are each unique, so tier C waved through
+			// pairings with nothing in common. Tiers B and C therefore also
+			// have to clear a content floor (--min-overlap), and no tier may
+			// rewrite across disjoint field-name sets. See scripts/apk/gates.ts.
+			//
 			// Anything still ambiguous after all three gates is skipped.
 			//
 			// Enum value-name rewrites stay behind --rewrite-enums because
@@ -2043,22 +2147,32 @@ async function main() {
 				return (apkShapeCount.get(aKey) ?? 0) === 1;
 			};
 
-			const safeFieldMismatches = mismatches.fieldMismatches.filter((m) =>
-				m.struct.canonical === m.struct.linejs ||
-				overrides[m.struct.canonical] === m.struct.linejs ||
-				isUniqueShape(m.struct.linejs, m.struct.canonical)
-			);
+			const skippedReasons: string[] = [];
+			const safeFieldMismatches = mismatches.fieldMismatches.filter((m) => {
+				const v = acceptRewrite(
+					m.match,
+					isUniqueShape(m.struct.linejs, m.struct.canonical),
+					args.gates,
+				);
+				if (!v.ok) {
+					skippedReasons.push(
+						`${m.struct.linejs} (apk ${m.struct.canonical}) — ${v.reason}`,
+					);
+				}
+				return v.ok;
+			});
 			const safeEnumMismatches = args.rewriteEnums
 				? mismatches.enumMismatches.filter((m) =>
 					m.enum.canonical === m.enum.linejs
 				)
 				: [];
-			const skippedField = mismatches.fieldMismatches.length -
-				safeFieldMismatches.length;
-			if (skippedField > 0) {
+			if (skippedReasons.length > 0) {
 				console.log(
-					`  (${skippedField} field mismatch(es) skipped — Jaccard-only match on a non-unique linejs shape)`,
+					`  (${skippedReasons.length} field mismatch(es) skipped — pairing evidence too weak)`,
 				);
+				for (const r of [...new Set(skippedReasons)].slice(0, 15)) {
+					console.log(`    ${r}`);
+				}
 			}
 			const result = applyRewrites(
 				patched,

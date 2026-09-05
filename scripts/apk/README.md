@@ -46,20 +46,37 @@ deno run -A scripts\apk\sync_from_apk.ts --apk apks\jp.naver.line.android\<versi
 
 ## What the extractor does and does _not_ auto-apply
 
-| change kind                                                         | auto-applied                                  | rationale                                                                                                                                        |
-| ------------------------------------------------------------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| new enum value                                                      | yes                                           | additive, safe                                                                                                                                   |
-| new struct field                                                    | yes                                           | additive, safe                                                                                                                                   |
-| new type (enum / struct)                                            | yes (canonical names only)                    | additive                                                                                                                                         |
-| field ttype change _on direct-name match_                           | yes                                           | high confidence                                                                                                                                  |
-| field fid renumber _on direct-name match_                           | yes                                           | high confidence                                                                                                                                  |
-| field rename _on direct-name match_                                 | yes                                           | high confidence                                                                                                                                  |
-| field change on Jaccard-only match                                  | **no** (reported)                             | the obfuscated APK class might map to the wrong linejs entry; small structs (`{request}`, `{success}`) are particularly prone to false positives |
-| enum value rename                                                   | **no** by default (`--rewrite-enums` opts in) | high false-positive rate on small enums                                                                                                          |
-| obfuscated R8-synthetic class names (`a`, `j4`, …) as _new_ entries | **no**                                        | adds noise without a canonical name                                                                                                              |
+Everything the extractor proposes rests on one _pairing_ — "this APK class is
+that linejs entry" — and how much that pairing is worth decides what may be
+written without review. After R8 the APK class is usually called `h` or `e0`, so
+there are three grades of evidence:
 
-The full mismatch list — both applied and skipped — is dumped to
-`<decompiled-dir>/extract_report.json`.
+| tier | how the pairing was made | worth                                                                                                                                                                 |
+| ---- | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A    | canonical name           | an identity — LINE does not obfuscate `com.linecorp.square.protocol.thrift.*`                                                                                         |
+| B    | wire RPC string          | strong, but keyed by the R8 short name, and short names collide across the whole app — so the binding is only kept when the two classes' field names actually overlap |
+| C    | field-name overlap       | good on a 100-member enum, worthless on a `{request}`-shaped `_args`                                                                                                  |
+
+| change kind                                                         | auto-applied                                                                                      | rationale                                                                                                                                                                       |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| new enum value, enum matched at tier A                              | yes                                                                                               | additive, and the pairing is an identity                                                                                                                                        |
+| new enum value, enum matched at tier B/C                            | only if the enum has ≥ `--enum-add-min-members` (16)                                              | on a 112-member enum a name overlap cannot be coincidence; on a 6-member one it means nothing                                                                                   |
+| new struct field, struct matched at tier A or B                     | yes                                                                                               | additive on a pairing that is an identity or content-confirmed                                                                                                                  |
+| new struct field, struct matched at tier C                          | **no** (reported)                                                                                 | an add invents a slot on the pairing alone. A wrong one writes a field no LINE build ever sent — this is how `establishE2EESession_args` was proposed three coin-balance fields |
+| new type (enum / struct)                                            | yes (canonical names only)                                                                        | additive                                                                                                                                                                        |
+| field ttype / fid / name change at tier A                           | yes                                                                                               | high confidence                                                                                                                                                                 |
+| field change at tier B/C                                            | only above `--min-overlap` (0.6), and tier C also needs a field-name set unique on **both** sides | uniqueness alone is not enough: two structs with disjoint field names are each unique                                                                                           |
+| any field change across disjoint field-name sets                    | **no**, at every tier                                                                             | disjoint names refute the premise that these are the same struct                                                                                                                |
+| enum value rename                                                   | **no** by default (`--rewrite-enums` opts in)                                                     | high false-positive rate on small enums                                                                                                                                         |
+| obfuscated R8-synthetic class names (`a`, `j4`, …) as _new_ entries | **no**                                                                                            | adds noise without a canonical name                                                                                                                                             |
+
+The gates live in `gates.ts` and are unit-tested against real pairings from the
+26.14.0 extraction; `--min-overlap` and `--enum-add-min-members` move the two
+floors if you want to see more (or less) applied.
+
+The full picture — what was applied, what was held and why, and the pairing
+behind each mismatch — is dumped to `<decompiled-dir>/extract_report.json`
+(`diff`, `heldAdds`, `mismatches`).
 
 ## Robustness against R8/ProGuard shading
 
