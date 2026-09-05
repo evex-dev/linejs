@@ -53,6 +53,10 @@ export function main(
 		data: {
 			fid: string;
 			name: string;
+			/** Thrift `binary`: declared in thrift.ts, see gen_typedef.ts. The
+			 *  generated LINETypes field is `(string|Buffer)`, so the writer
+			 *  needs the widened cast or `deno check` rejects Buffer callers. */
+			binary?: boolean;
 			type?: number;
 			struct?: string;
 			list?: string | number;
@@ -62,7 +66,9 @@ export function main(
 		},
 	): string {
 		if (typeof data.type !== "undefined") {
-			return `[${data.type}, ${data.fid}, param.${data.name}]`;
+			return data.binary
+				? `[${data.type}, ${data.fid}, param.${data.name} as string | Buffer | undefined]`
+				: `[${data.type}, ${data.fid}, param.${data.name}]`;
 		} else if (typeof data.struct !== "undefined" && isExist(data.struct)) {
 			return isStruct(data.struct)
 				? `[12, ${data.fid}, ${data.struct}(param.${data.name})]`
@@ -116,10 +122,21 @@ export function main(
 
 	const args = argList.map((e) => struct(e));
 
+	let src = result.join("") + args.join("");
+	// Only pull Buffer in when a binary field actually widened a writer's
+	// parameter type — an unused type import would otherwise ship on every
+	// schema that has none.
+	if (src.includes("as string | Buffer | undefined")) {
+		src = src.replace(
+			`import * as LINETypes from "@evex/linejs-types"`,
+			`import * as LINETypes from "@evex/linejs-types"\n    import type { Buffer } from "node:buffer";`,
+		);
+	}
+
 	Deno.writeTextFileSync(
 		path || path_.fromFileUrl(import.meta.resolve(
 			"../../packages/linejs/base/thrift/readwrite/struct.ts",
 		)),
-		result.join("") + args.join(""),
+		src,
 	);
 }
