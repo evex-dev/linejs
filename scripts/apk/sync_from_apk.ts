@@ -233,14 +233,23 @@ if (import.meta.main) {
 		],
 		{ cwd: linejsRoot },
 	);
-	await runStep("deno fmt", "deno", ["fmt", "packages/types", "packages/linejs"], {
-		cwd: linejsRoot,
-	});
+	// Format only what the previous two steps wrote. `deno fmt packages/linejs`
+	// reformats every file that predates the current formatter settings, which
+	// buries a two-file schema diff under an unrelated repo-wide reformat.
+	await runStep("deno fmt (generated files)", "deno", [
+		"fmt",
+		"packages/types/thrift.ts",
+		"packages/types/line_types.ts",
+		"packages/linejs/base/thrift/readwrite/struct.ts",
+	], { cwd: linejsRoot });
 	await runStep("deno check (entry point)", "deno", [
 		"check",
 		"packages/linejs/client/mod.ts",
 	], { cwd: linejsRoot });
-	await runStep("deno test", "deno", ["test", "--no-check"], {
+	// `-A` for the same reason CI uses it (see .github/workflows/ci.yml):
+	// transitive deps read env vars at module init, so without full permissions
+	// the runner fails before any test body runs and the gate is meaningless.
+	await runStep("deno test", "deno", ["test", "-A"], {
 		cwd: linejsRoot,
 	});
 
