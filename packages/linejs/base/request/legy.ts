@@ -88,6 +88,13 @@ export class LegyEncryptedTransport {
 			new Request(options.endpoint ?? this.endpoint, {
 				method: "POST",
 				headers: this.#outerHeaders(request, options),
+				// The outer request is the one that reaches the network, so it has
+				// to carry the caller's signal. Without it the
+				// `AbortSignal.timeout()` set in packages/linejs/base/request/mod.ts
+				// never applied to encrypted calls, and a keep-alive connection that
+				// died while the host was suspended hung the call for the whole TCP
+				// retry window.
+				signal: request.signal,
 				body: new Uint8Array(encrypted),
 			}),
 		);
