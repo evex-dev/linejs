@@ -42,6 +42,7 @@
  *                                              [--match-threshold <0..1>]
  *                                              [--min-overlap <0..1>]
  *                                              [--enum-add-min-members <N>]
+ *                                              [--min-shared-fields <N>]
  *                                              [--include-pkg <regex>]
  *                                              [--limit <N>]    # cap files for debugging
  *
@@ -50,6 +51,11 @@
  *                            (default 0.6). See scripts/apk/gates.ts.
  *   --enum-add-min-members   smallest linejs enum that may take value adds
  *                            from a content-matched pairing (default 16).
+ *   --min-shared-fields      how many field names a non-canonical struct
+ *                            pairing must share before it may drive a write
+ *                            (default 3). A ratio cannot tell two wide structs
+ *                            agreeing from two narrow ones both called
+ *                            `{request}`.
  */
 import { walk } from "https://deno.land/std@0.224.0/fs/walk.ts";
 import { fromFileUrl } from "https://deno.land/std@0.224.0/path/mod.ts";
@@ -151,6 +157,9 @@ function parseArgs(argv: string[]): Args {
 				break;
 			case "--enum-add-min-members":
 				out.gates.enumAddMinMembers = Number(argv[++i]);
+				break;
+			case "--min-shared-fields":
+				out.gates.minSharedFields = Number(argv[++i]);
 				break;
 			default:
 				throw new Error(`unknown arg: ${a}`);

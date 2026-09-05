@@ -39,6 +39,10 @@ export interface Pairing {
 	via: PairVia;
 	/** Jaccard overlap of the two sides' field (or enum member) name sets. */
 	score: number;
+	/** How many names the two sides actually have in common. A ratio hides the
+	 *  difference between two wide structs agreeing and two narrow ones both
+	 *  being called `{request}`. */
+	shared: number;
 }
 
 export interface GateOptions {
@@ -63,11 +67,29 @@ export interface GateOptions {
 	 * adds survived review has 112 or more. 16 sits in that gap.
 	 */
 	enumAddMinMembers: number;
+	/**
+	 * Minimum number of field names a non-canonical struct pairing must have in
+	 * common before it may drive a write.
+	 *
+	 * A ratio alone cannot carry this. `{request}` overlaps `{request}` at 1.0,
+	 * and so does `{language, country}` — LINE ships many one- and two-field
+	 * structs with exactly those generic names, so a perfect score on them says
+	 * only "both are small", not "both are the same type". Every rewrite the
+	 * 26.14.0 run proposed that we would not sign off on sat at score 1.00 on a
+	 * struct of three fields or fewer: `getProductV2_args` {request},
+	 * `getModulesV4WithStatus_result` {success, e}, `Locale` {language,
+	 * country}. The rewrites worth having were on wide structs — `PurchaseOrder`
+	 * at 0.75 across a dozen shared names.
+	 *
+	 * This is the same argument as `enumAddMinMembers`, in field space.
+	 */
+	minSharedFields: number;
 }
 
 export const DEFAULT_GATE_OPTIONS: GateOptions = {
 	minOverlap: 0.6,
 	enumAddMinMembers: 16,
+	minSharedFields: 3,
 };
 
 /** Overlap of two name sets, 0..1. Two empty sets count as identical. */
@@ -91,13 +113,17 @@ export function classifyPair(
 	linejsNames: Iterable<string>,
 	overrides: Record<string, string>,
 ): Pairing {
-	const score = jaccard(apkNames, linejsNames);
+	const A = new Set(apkNames);
+	const B = new Set(linejsNames);
+	let shared = 0;
+	for (const x of A) if (B.has(x)) shared++;
+	const score = jaccard(A, B);
 	const via: PairVia = apk === linejs
 		? "canonical"
 		: overrides[apk] === linejs
 		? "rpc"
 		: "jaccard";
-	return { apk, linejs, via, score };
+	return { apk, linejs, via, score, shared };
 }
 
 export interface Verdict {
@@ -130,6 +156,13 @@ export function acceptRewrite(
 			reason: `overlap ${
 				p.score.toFixed(2)
 			} below ${opts.minOverlap} (via ${p.via})`,
+		};
+	}
+	if (p.shared < opts.minSharedFields) {
+		return {
+			ok: false,
+			reason:
+				`only ${p.shared} shared field name(s), below ${opts.minSharedFields} (via ${p.via})`,
 		};
 	}
 	if (p.via === "rpc") {
@@ -166,6 +199,13 @@ export function acceptStructFieldAdd(
 				reason: `tier B: overlap ${
 					p.score.toFixed(2)
 				} below ${opts.minOverlap}`,
+			};
+		}
+		if (p.shared < opts.minSharedFields) {
+			return {
+				ok: false,
+				reason:
+					`tier B: only ${p.shared} shared field name(s), below ${opts.minSharedFields}`,
 			};
 		}
 		return {

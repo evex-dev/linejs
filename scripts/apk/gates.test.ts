@@ -23,6 +23,9 @@ const pair = (p: Partial<Pairing>): Pairing => ({
 	linejs: "Y",
 	via: "jaccard",
 	score: 1,
+	// Wide enough that the absolute floor is not what a case is testing unless
+	// it says so.
+	shared: 8,
 	...p,
 });
 
@@ -107,6 +110,50 @@ Deno.test("rewrite: tier C additionally needs a shape unique on both sides", () 
 	);
 	assertEquals(
 		acceptRewrite(pair({ via: "jaccard", score: 0.9 }), true).ok,
+		true,
+	);
+});
+
+Deno.test("rewrite: a perfect ratio on a tiny struct is not evidence", () => {
+	// `{request}` overlaps `{request}` at 1.0 and means nothing. This is what
+	// moved `Locale`'s field ids and repointed `getProductV2_args.request`.
+	const { minSharedFields } = DEFAULT_GATE_OPTIONS;
+	for (const via of ["rpc", "jaccard"] as const) {
+		const v = acceptRewrite(
+			pair({ via, score: 1, shared: minSharedFields - 1 }),
+			true,
+		);
+		assertEquals(v.ok, false, `via=${via} at ${minSharedFields - 1} shared`);
+		assert(v.reason.includes("shared field name"));
+	}
+	assertEquals(
+		acceptRewrite(
+			pair({ via: "jaccard", score: 0.75, shared: minSharedFields }),
+			true,
+		)
+			.ok,
+		true,
+	);
+	// A canonical name is an identity and does not need corroboration.
+	assertEquals(
+		acceptRewrite(pair({ via: "canonical", score: 1, shared: 1 }), true).ok,
+		true,
+	);
+});
+
+Deno.test("struct field add: tier B also needs enough shared names", () => {
+	const { minSharedFields } = DEFAULT_GATE_OPTIONS;
+	assertEquals(
+		acceptStructFieldAdd(
+			pair({ via: "rpc", score: 1, shared: minSharedFields - 1 }),
+		)
+			.ok,
+		false,
+	);
+	assertEquals(
+		acceptStructFieldAdd(
+			pair({ via: "rpc", score: 1, shared: minSharedFields }),
+		).ok,
 		true,
 	);
 });
@@ -263,14 +310,18 @@ Deno.test("26.14.0 pairings: enum value add verdicts", () => {
 	}
 });
 
-Deno.test("26.14.0 pairings: every collision in the fixture is content-disjoint", () => {
-	// The property that makes these detectable at all. If a future change lets
-	// a rewrite through on one of them, this says why it should not have.
+Deno.test("26.14.0 pairings: every refusal is structural, not incidental", () => {
+	// Each pairing we refuse to rewrite is refused for a reason visible in the
+	// two name sets alone: they share nothing, or they share too little for the
+	// overlap to mean anything. If a future change refuses one for some other
+	// reason, that is a gate doing something we did not intend.
+	const { minSharedFields } = DEFAULT_GATE_OPTIONS;
 	for (const c of fixture.structPairings.filter((x) => !x.expectRewrite)) {
-		assertEquals(
-			jaccard(c.apkNames, c.linejsNames),
-			0,
-			`${c.linejs} <- ${c.apk} was expected to share no field names`,
+		const p = classifyPair(c.apk, c.linejs, c.apkNames, c.linejsNames, {});
+		assert(
+			p.shared === 0 || p.shared < minSharedFields,
+			`${c.linejs} <- ${c.apk}: refused with ${p.shared} shared name(s) at ` +
+				`overlap ${p.score.toFixed(2)} — neither disjoint nor too narrow`,
 		);
 	}
 });

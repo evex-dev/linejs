@@ -94,16 +94,75 @@
 			"apkNames": [
 				"notificationEnable",
 				"e2eeEnable",
+				"privacyProfileHistory",
+				"contactMyTicket",
 				"securityCardRequired"
 			],
 			"linejsNames": [
 				"notificationEnable",
-				"e2eeEnable"
+				"e2eeEnable",
+				"privacyProfileHistory",
+				"contactMyTicket"
 			],
 			"uniqueShape": true,
 			"expectRewrite": true,
 			"expectFieldAdd": false,
-			"why": "A content-only pairing at high overlap. Trusted enough to correct a slot both sides already have, not enough to invent one."
+			"why": "A content-only pairing on a wide struct: high overlap across many shared names. Trusted enough to correct a slot both sides already have, not enough to invent one."
+		},
+		{
+			"apk": "d3",
+			"linejs": "Locale",
+			"via": "jaccard",
+			"apkNames": [
+				"language",
+				"country"
+			],
+			"linejsNames": [
+				"language",
+				"country"
+			],
+			"uniqueShape": true,
+			"expectRewrite": false,
+			"expectFieldAdd": false,
+			"why": "Overlap 1.00 on two generic names. LINE ships many {language, country} structs, so a perfect score here says 'both are small', not 'both are Locale'. Applying it moved Locale's field ids."
+		},
+		{
+			"apk": "p0",
+			"linejs": "getProductV2_args",
+			"via": "rpc",
+			"apkNames": [
+				"request"
+			],
+			"linejsNames": [
+				"request"
+			],
+			"uniqueShape": true,
+			"expectRewrite": false,
+			"expectFieldAdd": false,
+			"why": "One shared name, and that name is `request`. Every _args struct in LINE matches this at 1.00."
+		},
+		{
+			"apk": "n3",
+			"linejs": "PurchaseOrder",
+			"via": "jaccard",
+			"apkNames": [
+				"orderId",
+				"productId",
+				"currency",
+				"price",
+				"enablePointAutoExchange"
+			],
+			"linejsNames": [
+				"orderId",
+				"productId",
+				"currency",
+				"price",
+				"enableLinePointAutoExchange"
+			],
+			"uniqueShape": true,
+			"expectRewrite": true,
+			"expectFieldAdd": false,
+			"why": "A field renamed at the same id and type on a wide struct — real drift, corroborated by everything around it."
 		}
 	],
 	"enumPairings": [
@@ -183,5 +242,5 @@
 			"why": "A two-member {ANDROID, IOS} enum matches every other two-member {ANDROID, IOS} enum at Jaccard 1.0 — and this one had the ordinals swapped."
 		}
 	],
-	"_names": "apkNames/linejsNames are representative samples, not the full sets: each keeps the observed overlap ratio so the gates see the same evidence without 100+ literals per case."
+	"_names": "apkNames/linejsNames are representative samples, not the full sets: each keeps the observed overlap ratio and enough of the shared names to land in the same band as the real pairing, so the gates see equivalent evidence without 100+ literals per case."
 }

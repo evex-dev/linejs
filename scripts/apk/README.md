@@ -71,8 +71,10 @@ there are three grades of evidence:
 | obfuscated R8-synthetic class names (`a`, `j4`, …) as _new_ entries | **no**                                                                                            | adds noise without a canonical name                                                                                                                                             |
 
 The gates live in `gates.ts` and are unit-tested against real pairings from the
-26.14.0 extraction; `--min-overlap` and `--enum-add-min-members` move the two
-floors if you want to see more (or less) applied.
+26.14.0 extraction. `--min-overlap`, `--min-shared-fields` and
+`--enum-add-min-members` move the floors if you want to see more (or less)
+applied. The two struct floors work as a pair: the ratio catches pairings that
+disagree, the absolute count catches pairings too small to agree about anything.
 
 The full picture — what was applied, what was held and why, and the pairing
 behind each mismatch — is dumped to `<decompiled-dir>/extract_report.json`
