@@ -7859,6 +7859,7 @@ export const Thrift: LooseType = {
 			"fid": 3,
 			"name": "chunks",
 			"list": 11,
+			"binary": true,
 		},
 	],
 	"E2EEMetadata": [
@@ -15151,6 +15152,7 @@ export const Thrift: LooseType = {
 			"fid": 20,
 			"name": "chunks",
 			"list": 11,
+			"binary": true,
 		},
 		{
 			"fid": 21,
@@ -16800,6 +16802,7 @@ export const Thrift: LooseType = {
 			"fid": 4,
 			"name": "keyData",
 			"type": 11,
+			"binary": true,
 		},
 		{
 			"fid": 5,
@@ -36320,6 +36323,7 @@ export const Thrift: LooseType = {
 			"fid": 6,
 			"name": "encryptedSharedKeys",
 			"list": 11,
+			"binary": true,
 		},
 	],
 	"registerE2EEGroupKey_result": [

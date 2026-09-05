@@ -23,7 +23,7 @@
  *   --apk <path>        APK to ingest. Use the base.apk extracted from an
  *                       APKMirror APK Bundle.
  *   --out <dir>         Where to put decompiled output (smali + java).
- *                       Defaults to <workspace>/decompiled/<apk-stem>/.
+ *                       Defaults to <linejs>/apks/decompiled/<apk-stem>/.
  *   --skip-decompile    Reuse an existing smali tree at --out (saves the
  *                       expensive apktool run when re-iterating).
  *   --dry-run           Report what would change without modifying
@@ -37,6 +37,7 @@ import {
 	fromFileUrl,
 	resolve as pathResolve,
 } from "https://deno.land/std@0.224.0/path/mod.ts";
+import { defaultDecompileRoot } from "./decompile.ts";
 
 interface Args {
 	apk: string;
@@ -104,13 +105,11 @@ if (import.meta.main) {
 	const args = parseArgs(Deno.args);
 	const here = pathResolve(fromFileUrl(import.meta.url), "..");
 	const linejsRoot = await findUpDir(here, "deno.json");
-	const workspaceRoot = await findUpDir(linejsRoot, "bin");
 
 	const apkAbs = pathResolve(args.apk);
-	const apkStem = (apkAbs.split(/[/\\]/).pop() ?? "apk").replace(/\.apk$/i, "");
 	const decompileOut = args.out
 		? pathResolve(args.out)
-		: `${workspaceRoot}/decompiled/${apkStem}`;
+		: defaultDecompileRoot(linejsRoot, apkAbs);
 	const smaliDir = `${decompileOut}/smali`;
 
 	console.log(`apk:            ${apkAbs}`);
@@ -234,14 +233,23 @@ if (import.meta.main) {
 		],
 		{ cwd: linejsRoot },
 	);
-	await runStep("deno fmt", "deno", ["fmt", "packages/types", "packages/linejs"], {
-		cwd: linejsRoot,
-	});
+	// Format only what the previous two steps wrote. `deno fmt packages/linejs`
+	// reformats every file that predates the current formatter settings, which
+	// buries a two-file schema diff under an unrelated repo-wide reformat.
+	await runStep("deno fmt (generated files)", "deno", [
+		"fmt",
+		"packages/types/thrift.ts",
+		"packages/types/line_types.ts",
+		"packages/linejs/base/thrift/readwrite/struct.ts",
+	], { cwd: linejsRoot });
 	await runStep("deno check (entry point)", "deno", [
 		"check",
 		"packages/linejs/client/mod.ts",
 	], { cwd: linejsRoot });
-	await runStep("deno test", "deno", ["test", "--no-check"], {
+	// `-A` for the same reason CI uses it (see .github/workflows/ci.yml):
+	// transitive deps read env vars at module init, so without full permissions
+	// the runner fails before any test body runs and the gate is meaningless.
+	await runStep("deno test", "deno", ["test", "-A"], {
 		cwd: linejsRoot,
 	});
 

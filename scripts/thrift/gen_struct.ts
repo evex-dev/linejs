@@ -53,6 +53,10 @@ export function main(
 		data: {
 			fid: string;
 			name: string;
+			/** Thrift `binary`: declared in thrift.ts, see gen_typedef.ts. The
+			 *  generated LINETypes field is `(string|Buffer)`, so the writer
+			 *  needs the widened cast or `deno check` rejects Buffer callers. */
+			binary?: boolean;
 			type?: number;
 			struct?: string;
 			list?: string | number;
@@ -62,12 +66,22 @@ export function main(
 		},
 	): string {
 		if (typeof data.type !== "undefined") {
-			return `[${data.type}, ${data.fid}, param.${data.name}]`;
+			return data.binary
+				? `[${data.type}, ${data.fid}, param.${data.name} as string | Buffer | undefined]`
+				: `[${data.type}, ${data.fid}, param.${data.name}]`;
 		} else if (typeof data.struct !== "undefined" && isExist(data.struct)) {
 			return isStruct(data.struct)
 				? `[12, ${data.fid}, ${data.struct}(param.${data.name})]`
 				: `[8, ${data.fid}, ${data.struct}(param.${data.name})]`;
 		} else if (typeof data.list === "number") {
+			// No `binary` cast on the container branches, deliberately. The
+			// scalar arm of NestedArray is written out as
+			// `[11, number, string | Buffer | undefined]`, and PartialDeep
+			// distributes over Buffer's properties, so the widened scalar needs
+			// the cast to be assignable. The list/set/map arms end in
+			// `unknown[]` / `Record<string | number, unknown>`, which accept any
+			// element type — `chunks` and `encryptedSharedKeys`, the binary
+			// containers in the schema, emit uncast and type-check.
 			return `[15, ${data.fid}, [${data.list}, param.${data.name}]]`;
 		} else if (typeof data.list === "string" && isExist(data.list)) {
 			return isStruct(data.list)
@@ -116,10 +130,21 @@ export function main(
 
 	const args = argList.map((e) => struct(e));
 
+	let src = result.join("") + args.join("");
+	// Only pull Buffer in when a binary field actually widened a writer's
+	// parameter type — an unused type import would otherwise ship on every
+	// schema that has none.
+	if (src.includes("as string | Buffer | undefined")) {
+		src = src.replace(
+			`import * as LINETypes from "@evex/linejs-types"`,
+			`import * as LINETypes from "@evex/linejs-types"\n    import type { Buffer } from "node:buffer";`,
+		);
+	}
+
 	Deno.writeTextFileSync(
 		path || path_.fromFileUrl(import.meta.resolve(
 			"../../packages/linejs/base/thrift/readwrite/struct.ts",
 		)),
-		result.join("") + args.join(""),
+		src,
 	);
 }

@@ -1,0 +1,246 @@
+{
+	"_source": "LINE Android 26.14.0, base.apk sha256 a18265a37b97f8522278b1d4776f210fd8b52f14b80ebd6c9d5532c3b6189af5",
+	"_what": "Real (APK class, linejs entry) pairings the ungated extractor acted on, with both sides' field or member names as extracted. `expect` is the verdict the gates must reach; `why` records what the pairing really was.",
+	"structPairings": [
+		{
+			"apk": "h",
+			"linejs": "getChatapp_result",
+			"via": "rpc",
+			"apkNames": [
+				"productId",
+				"country",
+				"currency",
+				"price",
+				"appStoreCode",
+				"language",
+				"pgCode",
+				"redirectUrl"
+			],
+			"linejsNames": [
+				"hwid",
+				"secureMessage",
+				"applicationType",
+				"applicationVersion",
+				"userSessionId",
+				"actionId",
+				"screen",
+				"bannerStartedAt"
+			],
+			"uniqueShape": true,
+			"expectRewrite": false,
+			"expectFieldAdd": false,
+			"why": "R8 named a shop-product class and a chatapp result class both `h`; the RPC binding is keyed by short name and picked the wrong one. Eight field renames followed."
+		},
+		{
+			"apk": "r3",
+			"linejs": "acquireGroupCallRoute_args",
+			"via": "rpc",
+			"apkNames": [
+				"subscriptionService",
+				"storeCode",
+				"storeOrderId",
+				"outsideAppPurchase"
+			],
+			"linejsNames": [
+				"chatMid",
+				"mediaType",
+				"isInitialHost",
+				"capabilities"
+			],
+			"uniqueShape": true,
+			"expectRewrite": false,
+			"expectFieldAdd": false,
+			"why": "Same collision: a billing struct bound onto a group-call route, which then acquired billingItemId and unavailableItemPurchase."
+		},
+		{
+			"apk": "v3",
+			"linejs": "acquirePaidCallRoute_args",
+			"via": "rpc",
+			"apkNames": [
+				"paidCallType",
+				"networkCode"
+			],
+			"linejsNames": [
+				"productId",
+				"recipientMid"
+			],
+			"uniqueShape": true,
+			"expectRewrite": false,
+			"expectFieldAdd": false,
+			"why": "Disjoint two-field structs. Unique on both sides, so shape uniqueness alone let this through before the content floor existed."
+		},
+		{
+			"apk": "ProductSearchSummary",
+			"linejs": "ProductSearchSummary",
+			"via": "canonical",
+			"apkNames": [
+				"productId",
+				"name",
+				"periodEnd"
+			],
+			"linejsNames": [
+				"productId",
+				"name"
+			],
+			"uniqueShape": true,
+			"expectRewrite": true,
+			"expectFieldAdd": true,
+			"why": "LINE does not obfuscate this package, so the name is an identity. The one struct field add that survived gating on 26.14.0."
+		},
+		{
+			"apk": "ah",
+			"linejs": "Settings",
+			"via": "jaccard",
+			"apkNames": [
+				"notificationEnable",
+				"e2eeEnable",
+				"privacyProfileHistory",
+				"contactMyTicket",
+				"securityCardRequired"
+			],
+			"linejsNames": [
+				"notificationEnable",
+				"e2eeEnable",
+				"privacyProfileHistory",
+				"contactMyTicket"
+			],
+			"uniqueShape": true,
+			"expectRewrite": true,
+			"expectFieldAdd": false,
+			"why": "A content-only pairing on a wide struct: high overlap across many shared names. Trusted enough to correct a slot both sides already have, not enough to invent one."
+		},
+		{
+			"apk": "d3",
+			"linejs": "Locale",
+			"via": "jaccard",
+			"apkNames": [
+				"language",
+				"country"
+			],
+			"linejsNames": [
+				"language",
+				"country"
+			],
+			"uniqueShape": true,
+			"expectRewrite": false,
+			"expectFieldAdd": false,
+			"why": "Overlap 1.00 on two generic names. LINE ships many {language, country} structs, so a perfect score here says 'both are small', not 'both are Locale'. Applying it moved Locale's field ids."
+		},
+		{
+			"apk": "p0",
+			"linejs": "getProductV2_args",
+			"via": "rpc",
+			"apkNames": [
+				"request"
+			],
+			"linejsNames": [
+				"request"
+			],
+			"uniqueShape": true,
+			"expectRewrite": false,
+			"expectFieldAdd": false,
+			"why": "One shared name, and that name is `request`. Every _args struct in LINE matches this at 1.00."
+		},
+		{
+			"apk": "n3",
+			"linejs": "PurchaseOrder",
+			"via": "jaccard",
+			"apkNames": [
+				"orderId",
+				"productId",
+				"currency",
+				"price",
+				"enablePointAutoExchange"
+			],
+			"linejsNames": [
+				"orderId",
+				"productId",
+				"currency",
+				"price",
+				"enableLinePointAutoExchange"
+			],
+			"uniqueShape": true,
+			"expectRewrite": true,
+			"expectFieldAdd": false,
+			"why": "A field renamed at the same id and type on a wide struct — real drift, corroborated by everything around it."
+		}
+	],
+	"enumPairings": [
+		{
+			"apk": "m9",
+			"linejs": "ErrorCode",
+			"via": "jaccard",
+			"linejsMemberCount": 123,
+			"apkNames": [
+				"ILLEGAL_ARGUMENT",
+				"AUTHENTICATION_FAILED",
+				"INTERNAL_SERVER_ERROR",
+				"SERVICE_UNAVAILABLE",
+				"NOT_LAB_ENABLED"
+			],
+			"linejsNames": [
+				"ILLEGAL_ARGUMENT",
+				"AUTHENTICATION_FAILED",
+				"INTERNAL_SERVER_ERROR",
+				"SERVICE_UNAVAILABLE"
+			],
+			"expectValueAdd": true,
+			"why": "123 members. No second enum in LINE shares this many member names by accident."
+		},
+		{
+			"apk": "bh",
+			"linejs": "SettingsAttributeEx",
+			"via": "jaccard",
+			"linejsMemberCount": 112,
+			"apkNames": [
+				"CONTACT_MY_TICKET",
+				"NOTIFICATION_ENABLE",
+				"E2EE_ENABLE",
+				"PRIVACY_PROFILE_HISTORY",
+				"SECURITY_CARD_REQUIRED"
+			],
+			"linejsNames": [
+				"CONTACT_MY_TICKET",
+				"NOTIFICATION_ENABLE",
+				"E2EE_ENABLE",
+				"PRIVACY_PROFILE_HISTORY"
+			],
+			"expectValueAdd": true,
+			"why": "112 members."
+		},
+		{
+			"apk": "a",
+			"linejs": "T70_C",
+			"via": "jaccard",
+			"linejsMemberCount": 6,
+			"apkNames": [
+				"UNKNOWN",
+				"READY",
+				"INITIAL_BACKUP_STATE_RESET"
+			],
+			"linejsNames": [
+				"UNKNOWN",
+				"READY"
+			],
+			"expectValueAdd": false,
+			"why": "6 members. Held for review: too small for a name overlap to mean anything."
+		},
+		{
+			"apk": "q",
+			"linejs": "Uf_EnumC14873o",
+			"via": "jaccard",
+			"linejsMemberCount": 2,
+			"apkNames": [
+				"IOS",
+				"ANDROID"
+			],
+			"linejsNames": [
+				"ANDROID",
+				"IOS"
+			],
+			"expectValueAdd": false,
+			"why": "A two-member {ANDROID, IOS} enum matches every other two-member {ANDROID, IOS} enum at Jaccard 1.0 — and this one had the ordinals swapped."
+		}
+	],
+	"_names": "apkNames/linejsNames are representative samples, not the full sets: each keeps the observed overlap ratio and enough of the shared names to land in the same band as the real pairing, so the gates see equivalent evidence without 100+ literals per case."
+}
