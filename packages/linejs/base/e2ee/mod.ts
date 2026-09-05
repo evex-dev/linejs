@@ -145,25 +145,58 @@ export class E2EE {
 			}
 			return Buffer.from(key, "base64");
 		} else {
-			let key: string | undefined;
-			key = (await this.client.storage.get(
-				`e2eeGroupKeys:${mid}`,
-			)) as string;
-			if (keyId && key) {
-				const keyData = JSON.parse(key);
-				if (keyId !== keyData["keyId"]) {
-					this.e2eeLog("getE2EELocalPublicKeykeyIdMismatch", mid);
-					key = undefined;
-				} else {
-					return keyData;
-				}
-			} else {
-				key = undefined;
+			// `keyId` is the groupKeyId taken from the message envelope; the
+			// signature also allows the string form, so normalise it once.
+			let requestedKeyId = keyId === undefined ? undefined : Number(keyId);
+			if (
+				requestedKeyId !== undefined &&
+				!Number.isFinite(requestedKeyId)
+			) {
+				// A key id that is not a number names no generation, and
+				// passing it on would put NaN on the wire; ask for the current
+				// key instead, which is what happened before key ids were used
+				// to pick the generation.
+				this.e2eeLog("getE2EELocalPublicKeyInvalidGroupKeyId", mid);
+				requestedKeyId = undefined;
 			}
-			if (!key) {
-				let e2eeGroupSharedKey:
-					| LINETypes.Pb1_U3
-					| undefined;
+			const cached = await this.getCachedE2EEGroupKey(
+				mid,
+				requestedKeyId,
+			);
+			if (cached) {
+				return cached;
+			}
+			let e2eeGroupSharedKey: LINETypes.Pb1_U3 | undefined;
+			if (requestedKeyId !== undefined) {
+				// LINE rotates a group's shared key whenever the membership
+				// changes, so a message must be decrypted with the generation
+				// it was encrypted under. Asking for the last key here decrypts
+				// every older message with the wrong key and the GCM tag check
+				// fails ("unable to authenticate data") for the whole group.
+				try {
+					e2eeGroupSharedKey = await this.client.talk
+						.getE2EEGroupSharedKey({
+							keyVersion: 2,
+							chatMid: mid,
+							groupKeyId: requestedKeyId,
+						});
+				} catch (error) {
+					if (
+						error instanceof InternalError &&
+						error.data.code == "NOT_FOUND"
+					) {
+						// The server no longer serves that generation; the last
+						// key is still the best guess, as it was before.
+						this.e2eeLog(
+							"getE2EELocalPublicKeyGroupKeyIdNotFound",
+							mid,
+						);
+					} else {
+						throw error;
+					}
+				}
+			}
+			if (!e2eeGroupSharedKey) {
 				try {
 					e2eeGroupSharedKey = await this.client.talk
 						.getLastE2EEGroupSharedKey({
@@ -182,63 +215,110 @@ export class E2EE {
 						throw error;
 					}
 				}
-				const groupKeyId = e2eeGroupSharedKey.groupKeyId;
-				const creator = e2eeGroupSharedKey.creator;
-				const creatorKeyId = e2eeGroupSharedKey.creatorKeyId;
-				const receiverKeyId = e2eeGroupSharedKey.receiverKeyId;
-				const encryptedSharedKey = Buffer.from(
-					e2eeGroupSharedKey.encryptedSharedKey,
-				);
-				const selfKey = Buffer.from(
-					(await this.getE2EESelfKeyDataByKeyId(
-						receiverKeyId,
-					))["privKey"],
-					"base64",
-				);
-				const creatorKey = await this.getE2EELocalPublicKey(
-					creator,
-					creatorKeyId,
-				);
-
-				const aesKey = this.generateSharedSecret(
-					selfKey,
-					creatorKey as Buffer,
-				);
-				const aes_key = this.getSHA256Sum(Buffer.from(aesKey), "Key");
-				const aes_iv = this.xor(
-					this.getSHA256Sum(Buffer.from(aesKey), "IV"),
-				);
-
-				this.e2eeLog("getE2EELocalPublicKeyAESInfo", {
-					aes_key,
-					aes_iv,
-					encryptedSharedKey,
-				});
-				const decipher = crypto.createDecipheriv(
-					"aes-256-cbc",
-					aes_key,
-					aes_iv,
-				);
-				const plainText = Buffer.concat([
-					decipher.update(encryptedSharedKey),
-					decipher.final(),
-				]);
-				this.e2eeLog(
-					"getE2EELocalPublicKeyDecryptedLength",
-					plainText.length,
-				);
-				const decrypted = plainText.toString("base64");
-				this.e2eeLog("getE2EELocalPublicKeyDecrypted", decrypted);
-				const data = {
-					privKey: decrypted,
-					keyId: groupKeyId,
-				};
-				key = JSON.stringify(data);
-				await this.client.storage.set(`e2eeGroupKeys:${mid}`, key);
-				return data;
 			}
-			return JSON.parse(key);
+			return await this.unwrapE2EEGroupSharedKey(mid, e2eeGroupSharedKey);
 		}
+	}
+
+	private async getCachedE2EEGroupKey(
+		mid: string,
+		keyId: number | undefined,
+	): Promise<GroupKey | undefined> {
+		// Without a requested generation the caller wants whatever key is
+		// current, and only the server knows that.
+		if (keyId === undefined) {
+			return undefined;
+		}
+		// `e2eeGroupKeys:${mid}` held a single key per group, so two
+		// generations of a rotated key kept evicting each other and every
+		// lookup went back to the server for the wrong one. The per-keyId slot
+		// is the real cache; the unsuffixed one is read for storages written
+		// by earlier versions.
+		for (
+			const cacheKey of [
+				`e2eeGroupKeys:${mid}:${keyId}`,
+				`e2eeGroupKeys:${mid}`,
+			]
+		) {
+			const cached = (await this.client.storage.get(cacheKey)) as string;
+			if (!cached) {
+				continue;
+			}
+			const groupKey = JSON.parse(cached) as GroupKey;
+			if (Number(groupKey.keyId) === keyId) {
+				return groupKey;
+			}
+			this.e2eeLog("getE2EELocalPublicKeykeyIdMismatch", mid);
+		}
+		return undefined;
+	}
+
+	/** ECDH against the key creator's public key, then AES-256-CBC over the
+	 *  wrapped shared key — the same for a keyed and for a last-key fetch. */
+	private async unwrapE2EEGroupSharedKey(
+		mid: string,
+		e2eeGroupSharedKey: LINETypes.Pb1_U3,
+	): Promise<GroupKey> {
+		const groupKeyId = e2eeGroupSharedKey.groupKeyId;
+		const creator = e2eeGroupSharedKey.creator;
+		const creatorKeyId = e2eeGroupSharedKey.creatorKeyId;
+		const receiverKeyId = e2eeGroupSharedKey.receiverKeyId;
+		const encryptedSharedKey = Buffer.from(
+			e2eeGroupSharedKey.encryptedSharedKey,
+		);
+		const selfKey = Buffer.from(
+			(await this.getE2EESelfKeyDataByKeyId(
+				receiverKeyId,
+			))["privKey"],
+			"base64",
+		);
+		const creatorKey = await this.getE2EELocalPublicKey(
+			creator,
+			creatorKeyId,
+		);
+
+		const aesKey = this.generateSharedSecret(
+			selfKey,
+			creatorKey as Buffer,
+		);
+		const aes_key = this.getSHA256Sum(Buffer.from(aesKey), "Key");
+		const aes_iv = this.xor(
+			this.getSHA256Sum(Buffer.from(aesKey), "IV"),
+		);
+
+		this.e2eeLog("getE2EELocalPublicKeyAESInfo", {
+			aes_key,
+			aes_iv,
+			encryptedSharedKey,
+		});
+		const decipher = crypto.createDecipheriv(
+			"aes-256-cbc",
+			aes_key,
+			aes_iv,
+		);
+		const plainText = Buffer.concat([
+			decipher.update(encryptedSharedKey),
+			decipher.final(),
+		]);
+		this.e2eeLog(
+			"getE2EELocalPublicKeyDecryptedLength",
+			plainText.length,
+		);
+		const decrypted = plainText.toString("base64");
+		this.e2eeLog("getE2EELocalPublicKeyDecrypted", decrypted);
+		const data: GroupKey = {
+			privKey: decrypted,
+			keyId: groupKeyId,
+		};
+		const key = JSON.stringify(data);
+		await this.client.storage.set(
+			`e2eeGroupKeys:${mid}:${groupKeyId}`,
+			key,
+		);
+		// Consumers that predate the per-keyId slot only know the unsuffixed
+		// one, so keep it pointing at the key used most recently.
+		await this.client.storage.set(`e2eeGroupKeys:${mid}`, key);
+		return data;
 	}
 	public async tryRegisterE2EEGroupKey(
 		chatMid: string,
