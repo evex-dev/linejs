@@ -53,6 +53,25 @@ export class LineObs {
 	}
 
 	/**
+	 * Obs answers a failed download with a plain HTTP error status and an empty,
+	 * HTML or JSON error body. Passing that body on as if it were the object
+	 * turns an expired (FILE_EXPIRE_TIMESTAMP) or unsent object into an
+	 * unrelated "encrypted data too short" / "Unexpected end of JSON input", so
+	 * every download stops at the status instead. The body is left out of the
+	 * message on purpose: obs error pages embed signed urls.
+	 */
+	#ensureOk(response: Response, what: string): Response {
+		if (!response.ok) {
+			throw new InternalError(
+				"ObsError",
+				`${what}: HTTP ${response.status}`,
+				{ status: response.status },
+			);
+		}
+		return response;
+	}
+
+	/**
 	 * Gets a message image URI by appending the given message ID to the prefixSticker
 	 * @param {string} [messageId] - The message ID to use in the URLSticker
 	 * @param {boolean} [isPreview=false] - Whether to append '/preview' to the URL.
@@ -101,7 +120,7 @@ export class LineObs {
 			isSquare: false,
 			...options,
 		};
-		const blob = await (await this.client.fetch(
+		const response = await this.client.fetch(
 			this.getMessageDataUrl(messageId, isPreview, isSquare),
 			{
 				headers: {
@@ -110,7 +129,11 @@ export class LineObs {
 					"x-Line-access": this.client.authToken,
 				},
 			},
-		)).blob();
+		);
+		const blob = await this.#ensureOk(
+			response,
+			"Message data download failed",
+		).blob();
 		const fileInfo = await this.getMessageObsMetadata({
 			messageId,
 			isSquare,
@@ -145,7 +168,7 @@ export class LineObs {
 				},
 			},
 		);
-		return r.json();
+		return this.#ensureOk(r, "Message metadata request failed").json();
 	}
 
 	/**
@@ -247,7 +270,7 @@ export class LineObs {
 		};
 
 		params = { ...baseParams, ...(params || {}) };
-		
+
 		if (!data || data.size === 0) {
 			throw new InternalError("ObsError", "No data to send.");
 		}
@@ -301,7 +324,7 @@ export class LineObs {
 			this.prefix + obsPathFinal,
 			{ method: "GET", headers },
 		);
-		return response.blob();
+		return this.#ensureOk(response, "Object download failed").blob();
 	}
 
 	public async uploadMediaByE2EE(options: {
