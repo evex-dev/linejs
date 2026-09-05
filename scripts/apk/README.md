@@ -5,6 +5,16 @@ Pull a fresh LINE Android APK and refresh `packages/types/thrift.ts` +
 non-destructive: anything it can't auto-resolve safely is reported (not
 applied), and re-running on a future APK should always succeed.
 
+## Requirements
+
+`apktool` and (optionally) `jadx` on `PATH` — on Arch, `android-apktool` (AUR)
+and `jadx` (extra); elsewhere, point `APKTOOL_JAR` / `JADX_BIN` at your own
+copies. Java 17+ and Deno 2.x. `fetch_line_apk.py` is stdlib-only, so any Python
+3 works.
+
+Decompiled output defaults to `apks/decompiled/<apk-stem>/`, which the repo's
+`apks/` ignore rule already covers — a LINE smali tree is ~1.3 GB.
+
 ## Quickstart
 
 ```powershell

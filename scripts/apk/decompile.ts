@@ -12,7 +12,7 @@
  *                                         [--threads N]
  *
  *   --apk <path>     APK file (typically base.apk)
- *   --out <dir>      Output root. Default: <workspace>/decompiled/<apk-stem>/
+ *   --out <dir>      Output root. Default: <linejs>/apks/decompiled/<apk-stem>/
  *                    Inside: smali/  java/  (each is one of the tool's roots)
  *   --apktool-only   Skip jadx
  *   --jadx-only      Skip apktool
@@ -21,9 +21,15 @@
  * The two tools run concurrently when both are requested. Stdout/stderr are
  * streamed line-by-line with a per-tool prefix so the combined log is readable.
  *
- * The script resolves apktool.jar / jadx.bat by walking parents of this file
- * looking for a `bin/` directory — i.e. the android-reverse workspace root.
- * Override via env vars APKTOOL_JAR / JADX_BIN if you place them elsewhere.
+ * Tool resolution, in order:
+ *   1. env `APKTOOL_JAR` / `JADX_BIN` — an explicit path always wins.
+ *   2. a `bin/` ancestor directory holding `apktool.jar` / `jadx/bin/jadx[.bat]`
+ *      — the original android-reverse workspace layout.
+ *   3. `apktool` / `jadx` on PATH — how the distro packages ship them
+ *      (Arch: `android-apktool`, `jadx`).
+ *
+ * Only the tool that is actually going to run has to resolve: `--apktool-only`
+ * does not require jadx to be installed.
  */
 import {
 	fromFileUrl,
@@ -81,42 +87,151 @@ function parseArgs(argv: string[]): Args {
 	return out;
 }
 
-/** Walk up from `start` looking for a directory that contains a child named `marker`. */
+/** Walk up from `start` looking for a directory that contains a child named
+ *  `marker`. `kind` distinguishes the `bin/` workspace probe (a directory)
+ *  from the `deno.json` repo-root probe (a file) — without it the repo-root
+ *  walk runs off the end and lands on `/`. */
 async function findUpDir(
 	start: string,
 	marker: string,
+	kind: "dir" | "file" = "dir",
 ): Promise<string | null> {
 	let dir = start;
 	while (true) {
-		if (await exists(`${dir}/${marker}`, { isDirectory: true })) return dir;
+		const opts = kind === "dir" ? { isDirectory: true } : { isFile: true };
+		if (await exists(`${dir}/${marker}`, opts)) return dir;
 		const parent = pathResolve(dir, "..");
 		if (parent === dir) return null;
 		dir = parent;
 	}
 }
 
-interface Toolchain {
-	apktoolJar: string;
-	jadxBin: string;
-	workspaceRoot: string;
+/** How to invoke one tool: a program plus the arguments that must precede the
+ *  tool's own. `java -jar apktool.jar` and a packaged `apktool` launcher differ
+ *  only in this prefix, so callers can stay ignorant of which one we found. */
+export interface ToolInvocation {
+	cmd: string;
+	prefixArgs: string[];
+	/** Human-readable provenance, for the log line. */
+	source: string;
 }
 
-async function resolveToolchain(): Promise<Toolchain> {
-	const here = pathResolve(fromFileUrl(import.meta.url), "..");
-	const workspaceRoot = await findUpDir(here, "bin");
-	if (!workspaceRoot) {
-		throw new Error("could not find workspace root (no `bin/` ancestor)");
+export interface Toolchain {
+	apktool: ToolInvocation | null;
+	jadx: ToolInvocation | null;
+}
+
+/** `exists()` that answers "no" instead of throwing. Probing a speculative
+ *  path like `<root>/bin/jadx/bin/jadx` can traverse *through* a regular file
+ *  (`/bin/jadx` is the packaged binary on Arch), and stat then fails with
+ *  ENOTDIR rather than reporting absence. */
+async function safeExists(path: string): Promise<boolean> {
+	try {
+		return await exists(path);
+	} catch {
+		return false;
 	}
-	const apktoolJar = Deno.env.get("APKTOOL_JAR") ??
-		`${workspaceRoot}/bin/apktool.jar`;
-	const jadxBin = Deno.env.get("JADX_BIN") ??
-		`${workspaceRoot}/bin/jadx/bin/jadx.bat`;
-	for (const [name, path] of [["apktool.jar", apktoolJar], ["jadx", jadxBin]]) {
-		if (!(await exists(path))) {
-			throw new Error(`${name} not found at ${path}`);
+}
+
+/** Is `name` an executable we can reach through PATH? */
+async function onPath(name: string): Promise<boolean> {
+	try {
+		// `--version` is the one flag both apktool and jadx accept; apktool
+		// exits non-zero on an unknown flag, so only spawn success matters.
+		const proc = new Deno.Command(name, {
+			args: ["--version"],
+			stdout: "null",
+			stderr: "null",
+		}).spawn();
+		await proc.status;
+		return true;
+	} catch {
+		return false;
+	}
+}
+
+async function resolveApktool(workspaceRoot: string | null): Promise<
+	ToolInvocation | null
+> {
+	const fromEnv = Deno.env.get("APKTOOL_JAR");
+	if (fromEnv) {
+		if (!(await safeExists(fromEnv))) {
+			throw new Error(`APKTOOL_JAR is set but not found at ${fromEnv}`);
+		}
+		return {
+			cmd: "java",
+			prefixArgs: ["-jar", fromEnv],
+			source: "APKTOOL_JAR",
+		};
+	}
+	if (workspaceRoot) {
+		const jar = `${workspaceRoot}/bin/apktool.jar`;
+		if (await safeExists(jar)) {
+			return { cmd: "java", prefixArgs: ["-jar", jar], source: jar };
 		}
 	}
-	return { apktoolJar, jadxBin, workspaceRoot };
+	if (await onPath("apktool")) {
+		return { cmd: "apktool", prefixArgs: [], source: "PATH" };
+	}
+	return null;
+}
+
+async function resolveJadx(workspaceRoot: string | null): Promise<
+	ToolInvocation | null
+> {
+	const fromEnv = Deno.env.get("JADX_BIN");
+	if (fromEnv) {
+		if (!(await safeExists(fromEnv))) {
+			throw new Error(`JADX_BIN is set but not found at ${fromEnv}`);
+		}
+		return { cmd: fromEnv, prefixArgs: [], source: "JADX_BIN" };
+	}
+	if (workspaceRoot) {
+		for (const rel of ["bin/jadx/bin/jadx", "bin/jadx/bin/jadx.bat"]) {
+			const p = `${workspaceRoot}/${rel}`;
+			if (await safeExists(p)) return { cmd: p, prefixArgs: [], source: p };
+		}
+	}
+	if (await onPath("jadx")) {
+		return { cmd: "jadx", prefixArgs: [], source: "PATH" };
+	}
+	return null;
+}
+
+/** Resolve only the tools that are going to be used. `need` says which. */
+export async function resolveToolchain(
+	need: { apktool: boolean; jadx: boolean },
+): Promise<Toolchain> {
+	const here = pathResolve(fromFileUrl(import.meta.url), "..");
+	// A `bin/` hit at the filesystem root is `/bin`, not a checkout — ignore it.
+	const found = await findUpDir(here, "bin");
+	const workspaceRoot = found === null || found === pathResolve(found, "..")
+		? null
+		: found;
+	const apktool = need.apktool ? await resolveApktool(workspaceRoot) : null;
+	const jadx = need.jadx ? await resolveJadx(workspaceRoot) : null;
+	if (need.apktool && !apktool) {
+		throw new Error(
+			"apktool not found: set APKTOOL_JAR, or install it on PATH (Arch: `pacman -S --needed base-devel && yay -S android-apktool`)",
+		);
+	}
+	if (need.jadx && !jadx) {
+		throw new Error(
+			"jadx not found: set JADX_BIN, or install it on PATH (Arch: `pacman -S jadx`)",
+		);
+	}
+	return { apktool, jadx };
+}
+
+/** Default decompile root for an APK, alongside the APKs themselves so a
+ *  single ignore rule (`apks/`) keeps multi-GB smali trees out of git. */
+export function defaultDecompileRoot(
+	linejsRoot: string,
+	apkPath: string,
+): string {
+	const apkName = apkPath.split(/[/\\]/).pop() ?? "apk";
+	const stem = apkName.replace(/\.apk$/i, "");
+	return `${linejsRoot}/apks/decompiled/${stem}`;
 }
 
 /** Spawn a process and stream its stdout/stderr line-by-line with a prefix. */
@@ -167,9 +282,9 @@ async function runApktool(
 	// apktool d <apk> -o <out> --no-res --force
 	//   --no-res: skip resource decoding (we only need smali for code analysis)
 	//   --force:  overwrite existing output
-	return runStreamed("apktool", "java", [
-		"-jar",
-		toolchain.apktoolJar,
+	const tool = toolchain.apktool!;
+	return runStreamed("apktool", tool.cmd, [
+		...tool.prefixArgs,
 		"d",
 		apk,
 		"-o",
@@ -189,7 +304,9 @@ async function runJadx(
 	//   --no-res:        skip resources
 	//   --show-bad-code: emit decompile-failed methods as comments rather than
 	//                    dropping them silently (useful for completeness)
-	return runStreamed("jadx", toolchain.jadxBin, [
+	const tool = toolchain.jadx!;
+	return runStreamed("jadx", tool.cmd, [
+		...tool.prefixArgs,
 		"-d",
 		outDir,
 		"-j",
@@ -202,18 +319,27 @@ async function runJadx(
 
 if (import.meta.main) {
 	const args = parseArgs(Deno.args);
-	const toolchain = await resolveToolchain();
+	const toolchain = await resolveToolchain({
+		apktool: !args.jadxOnly,
+		jadx: !args.apktoolOnly,
+	});
 	const apkPath = pathResolve(args.apk);
 	if (!(await exists(apkPath))) {
 		console.error(`apk not found: ${apkPath}`);
 		Deno.exit(2);
 	}
 
-	const apkName = apkPath.split(/[/\\]/).pop() ?? "apk";
-	const stem = apkName.replace(/\.apk$/i, "");
+	const here = pathResolve(fromFileUrl(import.meta.url), "..");
+	const linejsRoot = await findUpDir(here, "deno.json", "file");
+	if (!linejsRoot && !args.out) {
+		console.error(
+			"could not locate the linejs root (no deno.json ancestor); pass --out",
+		);
+		Deno.exit(2);
+	}
 	const outRoot = args.out
 		? pathResolve(args.out)
-		: pathResolve(toolchain.workspaceRoot, "decompiled", stem);
+		: defaultDecompileRoot(linejsRoot!, apkPath);
 	const smaliRoot = `${outRoot}/smali`;
 	const javaRoot = `${outRoot}/java`;
 
@@ -221,7 +347,10 @@ if (import.meta.main) {
 
 	console.log(`apk:       ${apkPath}`);
 	console.log(`out:       ${outRoot}`);
-	console.log(`workspace: ${toolchain.workspaceRoot}`);
+	if (toolchain.apktool) {
+		console.log(`apktool:   ${toolchain.apktool.source}`);
+	}
+	if (toolchain.jadx) console.log(`jadx:      ${toolchain.jadx.source}`);
 
 	const tasks: Promise<{ name: string; code: number }>[] = [];
 	if (!args.jadxOnly) {
