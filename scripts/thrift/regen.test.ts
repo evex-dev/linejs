@@ -103,4 +103,11 @@ Deno.test("thrift.ts binary markers survive into both generated artefacts", asyn
 		writers.includes("param.keyData as string | Buffer | undefined"),
 		true,
 	);
+	// Binary *containers* deliberately carry no cast: NestedArray's list/set/map
+	// arms end in `unknown[]`, so the element type is unconstrained, while the
+	// scalar arm is `string | Buffer | undefined` and PartialDeep breaks Buffer
+	// assignability. If someone narrows those arms, deno check will fail here
+	// rather than in a generated file nobody reads.
+	assertEquals(writers.includes("[11, param.chunks]"), true);
+	assertEquals(writers.includes("[11, param.encryptedSharedKeys]"), true);
 });

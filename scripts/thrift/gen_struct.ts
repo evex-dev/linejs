@@ -74,6 +74,14 @@ export function main(
 				? `[12, ${data.fid}, ${data.struct}(param.${data.name})]`
 				: `[8, ${data.fid}, ${data.struct}(param.${data.name})]`;
 		} else if (typeof data.list === "number") {
+			// No `binary` cast on the container branches, deliberately. The
+			// scalar arm of NestedArray is written out as
+			// `[11, number, string | Buffer | undefined]`, and PartialDeep
+			// distributes over Buffer's properties, so the widened scalar needs
+			// the cast to be assignable. The list/set/map arms end in
+			// `unknown[]` / `Record<string | number, unknown>`, which accept any
+			// element type — `chunks` and `encryptedSharedKeys`, the binary
+			// containers in the schema, emit uncast and type-check.
 			return `[15, ${data.fid}, [${data.list}, param.${data.name}]]`;
 		} else if (typeof data.list === "string" && isExist(data.list)) {
 			return isStruct(data.list)
