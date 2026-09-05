@@ -212,6 +212,61 @@ Deno.test("group key — two generations of one group stay cached side by side",
 	assertEquals(cachedAt(store, `e2eeGroupKeys:${GROUP_MID}:9`), newer);
 });
 
+Deno.test("group key — generation 0 is fetched by id like any other", async () => {
+	// The key id used to be tested for truthiness, so generation 0 silently
+	// took the last-key path.
+	const { e2ee, store, calls } = makeFixture({
+		served: [0, 9],
+		lastKeyId: 9,
+	});
+
+	const key = await e2ee.getE2EELocalPublicKey(GROUP_MID, 0);
+
+	assertEquals(calls, [{
+		name: "getE2EEGroupSharedKey",
+		args: { keyVersion: 2, chatMid: GROUP_MID, groupKeyId: 0 },
+	}]);
+	assertEquals(key, { privKey: expectedPrivKey(0), keyId: 0 });
+	assertEquals(cachedAt(store, `e2eeGroupKeys:${GROUP_MID}:0`), key);
+});
+
+Deno.test("group key — generation 0 falls back to the last key when unserved", async () => {
+	const { e2ee, calls } = makeFixture({
+		served: [9], // generation 0 is not served
+		lastKeyId: 9,
+	});
+
+	const key = await e2ee.getE2EELocalPublicKey(GROUP_MID, 0);
+
+	assertEquals(calls, [
+		{
+			name: "getE2EEGroupSharedKey",
+			args: { keyVersion: 2, chatMid: GROUP_MID, groupKeyId: 0 },
+		},
+		{
+			name: "getLastE2EEGroupSharedKey",
+			args: { keyVersion: 2, chatMid: GROUP_MID },
+		},
+	]);
+	assertEquals(key, { privKey: expectedPrivKey(9), keyId: 9 });
+});
+
+Deno.test("group key — a key id that is not a number never reaches the wire", async () => {
+	const { e2ee, calls } = makeFixture({
+		served: [9],
+		lastKeyId: 9,
+	});
+
+	// `Number("nonsense")` is NaN; it must not be sent as a groupKeyId.
+	const key = await e2ee.getE2EELocalPublicKey(GROUP_MID, "nonsense");
+
+	assertEquals(calls, [{
+		name: "getLastE2EEGroupSharedKey",
+		args: { keyVersion: 2, chatMid: GROUP_MID },
+	}]);
+	assertEquals(key, { privKey: expectedPrivKey(9), keyId: 9 });
+});
+
 Deno.test("group key — a generation the server dropped falls back to the last key", async () => {
 	const { e2ee, store, calls } = makeFixture({
 		served: [9], // generation 7 is no longer served

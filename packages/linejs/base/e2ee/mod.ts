@@ -147,7 +147,18 @@ export class E2EE {
 		} else {
 			// `keyId` is the groupKeyId taken from the message envelope; the
 			// signature also allows the string form, so normalise it once.
-			const requestedKeyId = keyId === undefined ? undefined : Number(keyId);
+			let requestedKeyId = keyId === undefined ? undefined : Number(keyId);
+			if (
+				requestedKeyId !== undefined &&
+				!Number.isFinite(requestedKeyId)
+			) {
+				// A key id that is not a number names no generation, and
+				// passing it on would put NaN on the wire; ask for the current
+				// key instead, which is what happened before key ids were used
+				// to pick the generation.
+				this.e2eeLog("getE2EELocalPublicKeyInvalidGroupKeyId", mid);
+				requestedKeyId = undefined;
+			}
 			const cached = await this.getCachedE2EEGroupKey(
 				mid,
 				requestedKeyId,
