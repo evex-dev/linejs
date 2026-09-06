@@ -57,9 +57,10 @@ Deno.test("regenerating the Thrift artefacts on a clean tree is a no-op", async 
 				],
 			]
 		) {
+			const normalizeNewlines = (text: string) => text.replaceAll("\r\n", "\n");
 			assertEquals(
-				await Deno.readTextFile(generated),
-				await Deno.readTextFile(committed),
+				normalizeNewlines(await Deno.readTextFile(generated)),
+				normalizeNewlines(await Deno.readTextFile(committed)),
 				`${committed} differs from what the generators produce — re-run\n` +
 					`  deno run -A --allow-write scripts/thrift/gen_typedef.ts\n` +
 					`  deno run -A --allow-write scripts/thrift/gen_struct.ts\n` +
