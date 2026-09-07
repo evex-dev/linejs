@@ -231,19 +231,27 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		return typeMapping[mid[0]] ?? null;
 	}
 	reqseqs?: Record<string, number>;
+	#reqseqQueue: Promise<void> = Promise.resolve();
 	async getReqseq(name: string = "talk"): Promise<number> {
-		if (!this.reqseqs) {
-			this.reqseqs = JSON.parse(
-				((await this.storage.get("reqseq")) ?? "{}").toString(),
-			) as Record<string, number>;
-		}
-		if (!this.reqseqs[name]) {
-			this.reqseqs[name] = 0;
-		}
-		const seq = this.reqseqs[name];
-		this.reqseqs[name]++;
-		await this.storage.set("reqseq", JSON.stringify(this.reqseqs));
-		return seq;
+		// Serialize initialization and persistence, including the first parallel
+		// requests. Otherwise each storage read can reset the counter to zero.
+		const next = this.#reqseqQueue.then(async () => {
+			if (!this.reqseqs) {
+				this.reqseqs = JSON.parse(
+					((await this.storage.get("reqseq")) ?? "{}").toString(),
+				) as Record<string, number>;
+			}
+			if (!this.reqseqs[name]) {
+				this.reqseqs[name] = 0;
+			}
+			const seq = this.reqseqs[name];
+			this.reqseqs[name]++;
+			await this.storage.set("reqseq", JSON.stringify(this.reqseqs));
+			return seq;
+		});
+		// A failed storage operation must not poison subsequent allocations.
+		this.#reqseqQueue = next.then(() => {}, () => {});
+		return await next;
 	}
 
 	// NOTE: use allow function.

@@ -1,5 +1,5 @@
 import { assertEquals, assertRejects, assertStrictEquals } from "@std/assert";
-import { InternalError } from "../../core/mod.ts";
+import { BaseClient, InternalError } from "../../core/mod.ts";
 import {
 	type NestedArray,
 	Protocols,
@@ -71,6 +71,26 @@ Deno.test("sendMessage rethrows an error that carries no code", async () => {
 	assertEquals(stub.encryptedFor, []);
 });
 
+Deno.test("concurrent reactions allocate distinct persisted sequences on a fresh client", async () => {
+	const base = new BaseClient({ device: "IOSIPAD" });
+	const sequences: number[] = [];
+	base.request.request = ((value: unknown) => {
+		const decoded = decodeReactRequest(value);
+		sequences.push(decoded[1][1]);
+		return Promise.resolve();
+	}) as typeof base.request.request;
+	await Promise.all(
+		Array.from(
+			{ length: 5 },
+			() => base.talk.react({ id: 42n, reaction: "NICE" }),
+		),
+	);
+	assertEquals(sequences, [0, 1, 2, 3, 4]);
+	assertEquals(JSON.parse(String(await base.storage.get("reqseq"))), {
+		talk: 5,
+	});
+});
+
 Deno.test("sendMessage retries with E2EE when the server asks for it", async () => {
 	const stub = makeStubClient((call) =>
 		call === 1
@@ -136,5 +156,65 @@ Deno.test("react uses a caller-supplied sequence number", async () => {
 	assertEquals(stub.reqseqBuckets, []);
 	assertEquals(decodeReactRequest(stub.calls[0]!.value), {
 		1: { 1: 1234, 2: 42, 3: { 1: 2 } },
+	});
+});
+
+for (const code of [undefined, null, 5]) {
+	Deno.test(`sendMessage preserves non-E2EE error code ${code}`, async () => {
+		const failure = new InternalError("RequestError", "original", { code });
+		const stub = makeStubClient(() => Promise.reject(failure));
+		const error = await assertRejects(() =>
+			new TalkService(stub.client as never).sendMessage({
+				to: "u0",
+				text: "hi",
+			})
+		);
+		assertStrictEquals(error, failure);
+		assertEquals(stub.calls.length, 1);
+	});
+}
+
+for (const e2ee of [false, true]) {
+	Deno.test(`sendMessage does not retry indefinitely with explicit e2ee=${e2ee}`, async () => {
+		const failure = new InternalError("RequestError", "original", {
+			code: "E2EE_RETRY_ENCRYPT",
+		});
+		const stub = makeStubClient(() => Promise.reject(failure));
+		const error = await assertRejects(() =>
+			new TalkService(stub.client as never).sendMessage({
+				to: "u0",
+				text: "hi",
+				e2ee,
+			})
+		);
+		assertStrictEquals(error, failure);
+		assertEquals(stub.calls.length, 1);
+	});
+}
+
+Deno.test("react preserves an explicit zero sequence and a large message ID", async () => {
+	const stub = makeStubClient(() => Promise.resolve({}));
+	await new TalkService(stub.client as never).react({
+		id: 9007199254740993n,
+		reaction: "NICE",
+		reqSeq: 0,
+	});
+	assertEquals(stub.reqseqBuckets, []);
+	assertEquals(decodeReactRequest(stub.calls[0].value), {
+		1: { 1: 0, 2: 9007199254740993n, 3: { 1: 2 } },
+	});
+});
+
+Deno.test("sequence allocation recovers from failed persistence without reusing an allocated ID", async () => {
+	const base = new BaseClient({ device: "IOSIPAD" });
+	const set = base.storage.set.bind(base.storage);
+	base.storage.set = () => Promise.reject(new Error("storage unavailable"));
+	await assertRejects(() => base.getReqseq(), Error, "storage unavailable");
+	base.storage.set = set;
+	assertEquals(await base.getReqseq(), 1);
+	assertEquals(await base.getReqseq("square"), 0);
+	assertEquals(JSON.parse(String(await base.storage.get("reqseq"))), {
+		talk: 2,
+		square: 1,
 	});
 });

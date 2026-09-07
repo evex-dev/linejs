@@ -1,4 +1,10 @@
-import { assert, assertEquals } from "@std/assert";
+import {
+	assert,
+	assertEquals,
+	assertRejects,
+	assertStrictEquals,
+} from "@std/assert";
+import { BaseClient } from "../core/mod.ts";
 import { Polling } from "./mod.ts";
 
 // A response without `operationResponse.operations` used to hit an early
@@ -37,6 +43,47 @@ Deno.test("_listenTalkEvents sleeps between polls and honors abort", async () =>
 		`expected a bounded number of polls, got ${syncCalls}`,
 	);
 	assert(elapsed >= 100, `loop ended too early (${elapsed}ms)`);
+});
+
+Deno.test("failed pusher initialization resets listening state for retry", async () => {
+	const failure = new Error("connection failed");
+	const base = new BaseClient({ device: "IOSIPAD" });
+	base.authToken = "token";
+	let attempts = 0;
+	base.push.initializeConn = () => {
+		attempts++;
+		return Promise.reject(failure);
+	};
+	const polling = new Polling(base);
+	await assertRejects(() => polling.initLegyPusher());
+	assertEquals(polling.islisten, false);
+	await assertRejects(() => polling.initLegyPusher());
+	assertEquals(attempts, 2);
+});
+
+Deno.test("pusher failure reaches the stream reader instead of hanging", async () => {
+	const failure = new Error("connection failed");
+	const base = new BaseClient({ device: "IOSIPAD" });
+	base.authToken = "token";
+	base.push.initializeConn = () => Promise.reject(failure);
+	const polling = new Polling(base);
+	const reader = polling.listenTalkEvents().getReader();
+	let timer: ReturnType<typeof setTimeout> | undefined;
+	try {
+		const error = await assertRejects(() =>
+			Promise.race([
+				reader.read(),
+				new Promise((_, reject) => {
+					timer = setTimeout(() => reject(new Error("reader hung")), 100);
+				}),
+			])
+		);
+		assertStrictEquals(error, failure);
+	} finally {
+		clearTimeout(timer);
+		await reader.cancel().catch(() => {});
+		reader.releaseLock();
+	}
 });
 
 // `listenTalkEvents` starts the pusher loop and hands back a stream without
@@ -99,4 +146,33 @@ Deno.test("listenSquareEvents survives a log listener that throws", async () => 
 	await reported;
 
 	assertEquals(logs, ["LegyPusherError_cannot_init", "LegyPusherError"]);
+});
+
+Deno.test("shared pusher failure rejects both streams even when logging throws", async () => {
+	const failure = new Error("original connect failure");
+	const base = new BaseClient({ device: "IOSIPAD" });
+	base.authToken = "token";
+	base.on("log", () => {
+		throw new Error("log failure");
+	});
+	let attempts = 0;
+	base.push.initializeConn = () => {
+		attempts++;
+		return Promise.reject(failure);
+	};
+	const polling = new Polling(base);
+	const talk = polling.listenTalkEvents().getReader();
+	const square = polling.listenSquareEvents().getReader();
+	try {
+		const errors = await Promise.all([
+			assertRejects(() => talk.read()),
+			assertRejects(() => square.read()),
+		]);
+		for (const error of errors) assertStrictEquals(error, failure);
+		assertEquals(polling.islisten, false);
+		assertEquals(attempts, 1);
+	} finally {
+		talk.releaseLock();
+		square.releaseLock();
+	}
 });

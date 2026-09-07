@@ -119,7 +119,9 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	}
 
 	/**
-	 * Listens events.
+	 * Listens for events. Synchronous handler and decryption failures are logged
+	 * and skip that event; stream failures are logged and stop that stream.
+	 * Async event/log handlers must catch their own rejected promises.
 	 * @param opts Options
 	 * @returns TypedEventEmitter
 	 */
@@ -135,8 +137,8 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		// Nothing awaits the loops below, so a throw from the event stream, from
 		// decryptE2EEMessage or from one of the user's own listeners used to
 		// surface as an unhandled rejection and take the host process down.
-		// Report it the way the pusher reports its failures and stop that loop
-		// only; the other loop and the process keep running.
+		// Catch per-event failures inside the loop, and terminal stream failures
+		// outside it. A bad message must not disable subsequent event delivery.
 		const reportListenFailure = (error: unknown) => {
 			try {
 				this.base.log("LegyPusherError", { error });
@@ -151,41 +153,45 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 				for await (
 					const event of polling.listenTalkEvents()
 				) {
-					this.emit("event", event);
-					if (
-						event.type === "SEND_MESSAGE" ||
-						event.type === "RECEIVE_MESSAGE"
-					) {
-						this.emit(
-							"message",
-							new TalkMessage({
-								raw: await this.base.e2ee.decryptE2EEMessage(
-									event.message,
-								),
-								client: this,
-							}),
-						);
-					} else if (
-						// 159: someone else edited a message in a chat we are in.
-						event.type === "NOTIFIED_EDIT_MESSAGE" ||
-						// 158: we edited a message ourselves, synced from another
-						// device. Both are surfaced for the same reason
-						// SEND_MESSAGE and RECEIVE_MESSAGE both emit "message".
-						event.type === "EDIT_MESSAGE"
-					) {
-						this.emit(
-							"message:edit",
-							new TalkMessage({
-								raw: await this.base.e2ee.decryptE2EEMessage(
-									event.message,
-								),
-								client: this,
-							}),
-						);
-					} else if (event.type === "NOTIFIED_RECEIVED_CALL") {
-						this.emit("call:incoming", parseIncomingCall(event));
-					} else if (event.type === "CANCEL_CALL") {
-						this.emit("call:cancel", parseCancelCall(event));
+					try {
+						this.emit("event", event);
+						if (
+							event.type === "SEND_MESSAGE" ||
+							event.type === "RECEIVE_MESSAGE"
+						) {
+							this.emit(
+								"message",
+								new TalkMessage({
+									raw: await this.base.e2ee.decryptE2EEMessage(
+										event.message,
+									),
+									client: this,
+								}),
+							);
+						} else if (
+							// 159: someone else edited a message in a chat we are in.
+							event.type === "NOTIFIED_EDIT_MESSAGE" ||
+							// 158: we edited a message ourselves, synced from another
+							// device. Both are surfaced for the same reason
+							// SEND_MESSAGE and RECEIVE_MESSAGE both emit "message".
+							event.type === "EDIT_MESSAGE"
+						) {
+							this.emit(
+								"message:edit",
+								new TalkMessage({
+									raw: await this.base.e2ee.decryptE2EEMessage(
+										event.message,
+									),
+									client: this,
+								}),
+							);
+						} else if (event.type === "NOTIFIED_RECEIVED_CALL") {
+							this.emit("call:incoming", parseIncomingCall(event));
+						} else if (event.type === "CANCEL_CALL") {
+							this.emit("call:cancel", parseCancelCall(event));
+						}
+					} catch (error) {
+						reportListenFailure(error);
 					}
 				}
 			})().catch(reportListenFailure);
@@ -195,16 +201,20 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 				for await (
 					const event of polling.listenSquareEvents()
 				) {
-					this.emit("square:event", event);
-					if (event.type === "NOTIFICATION_MESSAGE") {
-						this.emit(
-							"square:message",
-							new SquareMessage({
-								raw: event.payload.notificationMessage
-									.squareMessage,
-								client: this,
-							}),
-						);
+					try {
+						this.emit("square:event", event);
+						if (event.type === "NOTIFICATION_MESSAGE") {
+							this.emit(
+								"square:message",
+								new SquareMessage({
+									raw: event.payload.notificationMessage
+										.squareMessage,
+									client: this,
+								}),
+							);
+						}
+					} catch (error) {
+						reportListenFailure(error);
 					}
 				}
 			})().catch(reportListenFailure);

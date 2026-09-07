@@ -66,6 +66,69 @@ Deno.test("listen reports a talk stream failure instead of crashing", async () =
 	assertInstanceOf(stub.logs[0].data.error, TypeError);
 });
 
+Deno.test("listen continues after one event handler failure", async () => {
+	let finished!: () => void;
+	const done = new Promise<void>((resolve) => finished = resolve);
+	const stub = stubBase({
+		async *talk() {
+			try {
+				yield { type: "NOTIFIED_READ_MESSAGE" };
+				yield { type: "NOTIFIED_READ_MESSAGE" };
+			} finally {
+				finished();
+			}
+		},
+	});
+	const client = new Client(stub.base as never);
+	let count = 0;
+	client.on("event", () => {
+		if (++count === 1) throw new Error("bad event");
+	});
+	client.listen({ talk: true });
+	await done;
+	assertEquals(count, 2);
+});
+
+Deno.test("listen continues after a decrypt failure and leaves Square running", async () => {
+	let finished!: () => void;
+	const done = new Promise<void>((resolve) => finished = resolve);
+	let squareFinished!: () => void;
+	const squareDone = new Promise<void>((resolve) => squareFinished = resolve);
+	const stub = stubBase({
+		async *talk() {
+			try {
+				yield { type: "RECEIVE_MESSAGE", message: {} };
+				yield { type: "NOTIFIED_READ_MESSAGE" };
+			} finally {
+				finished();
+			}
+		},
+		async *square() {
+			try {
+				yield { type: "OTHER" };
+			} finally {
+				squareFinished();
+			}
+		},
+	});
+	stub.base.e2ee.decryptE2EEMessage = () =>
+		Promise.reject(new Error("bad ciphertext"));
+	const client = new Client(stub.base as never);
+	let talkEvents = 0;
+	let squareEvents = 0;
+	client.on("event", () => {
+		talkEvents++;
+	});
+	client.on("square:event", () => {
+		squareEvents++;
+	});
+	client.listen({ talk: true, square: true });
+	await Promise.all([done, squareDone]);
+	assertEquals(talkEvents, 2);
+	assertEquals(squareEvents, 1);
+	assertEquals(stub.logs.length, 1);
+});
+
 Deno.test("listen reports a square stream failure instead of crashing", async () => {
 	const stub = stubBase({
 		// deno-lint-ignore require-yield
@@ -127,4 +190,31 @@ Deno.test("listen survives a log listener that throws", async () => {
 	// The listener was still called; only its own failure was swallowed.
 	assertEquals(stub.logs.map((entry) => entry.type), ["LegyPusherError"]);
 	assertInstanceOf(stub.logs[0].data.error, TypeError);
+});
+
+Deno.test("Square continues after a handler failure even when its error logger throws", async () => {
+	let finished!: () => void;
+	const done = new Promise<void>((resolve) => finished = resolve);
+	const stub = stubBase({
+		async *square() {
+			try {
+				yield { type: "OTHER" };
+				yield { type: "OTHER" };
+			} finally {
+				finished();
+			}
+		},
+		onLog() {
+			throw new Error("logger failed");
+		},
+	});
+	const client = new Client(stub.base as never);
+	let count = 0;
+	client.on("square:event", () => {
+		if (++count === 1) throw new Error("handler failed");
+	});
+	client.listen({ square: true });
+	await done;
+	assertEquals(count, 2);
+	assertEquals(stub.logs.length, 1);
 });
