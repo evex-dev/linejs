@@ -5334,7 +5334,7 @@ export function PurchaseOrder(
 		[11, 2, param.productId],
 		[11, 5, param.recipientMid],
 		[12, 11, Price(param.price)],
-		[2, 12, param.enablePointAutoExchange],
+		[2, 12, param.enableLinePointAutoExchange],
 		[12, 21, Locale(param.locale)],
 		[13, 31, [11, 11, param.presentAttributes]],
 	];

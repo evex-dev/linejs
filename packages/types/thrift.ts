@@ -18451,7 +18451,9 @@ export const Thrift: LooseType = {
 		},
 		{
 			"fid": 12,
-			"name": "enablePointAutoExchange",
+			// Android 26.14.0 calls this enablePointAutoExchange. Keep the
+			// published API name: only fid/type are serialized on the wire.
+			"name": "enableLinePointAutoExchange",
 			"type": 2,
 		},
 		{

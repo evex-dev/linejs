@@ -13303,7 +13303,7 @@ export interface PurchaseOrder {
 	productId: string;
 	recipientMid: string;
 	price: Price;
-	enablePointAutoExchange: boolean;
+	enableLinePointAutoExchange: boolean;
 	locale: Locale;
 	presentAttributes: Record<string, string>;
 }
