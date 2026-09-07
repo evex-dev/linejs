@@ -80,3 +80,39 @@ for await (const operation of polling.listenTalkEvents()) {
 for await (const event of polling.listenSquareEvents()) {
 }
 ```
+
+# Calling LINE REST endpoints directly
+
+Some LINE subsystems (Album/Moa, Timeline REST helpers, ...) speak JSON over
+HTTPS through the LEGY proxy rather than Thrift, but LINEJS's default
+`getHeader("GET")` helper is tuned for Thrift and sets
+`accept: application/x-thrift` and `content-type: application/x-thrift`. If you
+call a JSON REST endpoint with those defaults you may get
+`{"code":102001,"message":"一時的なエラーが発生しました。"}` back with HTTP 200.
+
+When you hand-craft a REST request, **override both headers to
+`application/json`**:
+
+```ts
+const headers = {
+  ...client.base.request.getHeader("GET"),
+  accept: "application/json",
+  "content-type": "application/json; charset=UTF-8",
+  "X-Line-ChannelToken": token,
+  "X-Line-Mid": client.base.profile!.mid,
+};
+const res = await client.base.fetch(url, {
+  method: "POST",
+  headers,
+  body: new Uint8Array(),
+  signal: AbortSignal.timeout(client.base.config.timeout),
+});
+if (!res.ok) throw new Error(`REST request failed: HTTP ${res.status}`);
+const data = await res.json();
+if (data.code !== undefined && data.code !== 0) {
+  throw new Error(`REST request failed: code ${data.code}`);
+}
+```
+
+Use `client.base.moa` for [album operations](./moa.md); it handles these headers
+and checks HTTP and application errors for you.
