@@ -174,15 +174,32 @@ export class Polling {
 		this.islisten = false;
 	}
 
+	// The pusher loop outlives the call that starts it and nobody awaits it, so
+	// its rejection — `initializeConn` failing on the first connect rethrows
+	// one — used to surface as an unhandled rejection and take the host process
+	// down. Report it on the log channel instead; the stream handed back to the
+	// caller simply stays empty.
+	#startLegyPusher(): void {
+		this.initLegyPusher().catch((error) => {
+			try {
+				this.client.log("LegyPusherError", { error });
+			} catch {
+				// `log` fans out to user-supplied listeners. Letting one throw
+				// here would put back the unhandled rejection this guard exists
+				// to prevent.
+			}
+		});
+	}
+
 	listenSquareEvents(): ReadableStream<SquareEvent> {
 		this.client.push.sqStream.renew();
-		this.initLegyPusher();
+		this.#startLegyPusher();
 		return this.client.push.sqStream.stream;
 	}
 
 	listenTalkEvents(): ReadableStream<Operation> {
 		this.client.push.opStream.renew();
-		this.initLegyPusher();
+		this.#startLegyPusher();
 		return this.client.push.opStream.stream;
 	}
 }

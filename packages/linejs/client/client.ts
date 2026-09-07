@@ -132,6 +132,20 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			this.base.push.opStream.close();
 			this.base.push.sqStream.close();
 		});
+		// Nothing awaits the loops below, so a throw from the event stream, from
+		// decryptE2EEMessage or from one of the user's own listeners used to
+		// surface as an unhandled rejection and take the host process down.
+		// Report it the way the pusher reports its failures and stop that loop
+		// only; the other loop and the process keep running.
+		const reportListenFailure = (error: unknown) => {
+			try {
+				this.base.log("LegyPusherError", { error });
+			} catch {
+				// `log` fans out to user-supplied listeners. Letting one throw
+				// here would put back the unhandled rejection this handler
+				// exists to prevent.
+			}
+		};
 		if (opts.talk) {
 			(async () => {
 				for await (
@@ -174,7 +188,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 						this.emit("call:cancel", parseCancelCall(event));
 					}
 				}
-			})();
+			})().catch(reportListenFailure);
 		}
 		if (opts.square) {
 			(async () => {
@@ -193,7 +207,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 						);
 					}
 				}
-			})();
+			})().catch(reportListenFailure);
 		}
 	}
 
