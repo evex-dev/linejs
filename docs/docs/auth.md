@@ -65,43 +65,47 @@ const client = await loginWithAuthToken("YOUR_AUTH_TOKEN", {
 `FileStorage` automatically persists things like `cert`, `refreshToken` and
 `expire`, but **the `authToken` itself is not one of them** — you need to save
 it yourself if you want to reuse it on the next run. LINEJS emits an
-`update:authtoken` event every time the token is issued or refreshed, so the
-recommended pattern is:
+`update:authtoken` events when tokens are issued or refreshed. Attach the
+listener **before login**, since login itself can rotate the token:
 
 ```ts
-import {
-  loginWithAuthToken,
-  loginWithPassword,
-} from "@evex/linejs";
+import { Client } from "@evex/linejs";
+import { BaseClient } from "@evex/linejs/base";
 import { FileStorage } from "@evex/linejs/storage";
 
 const storage = new FileStorage("./session.json");
 const TOKEN_KEY = "userAuthToken";
+const base = new BaseClient({ device: "IOSIPAD", storage });
+
+// Event listeners are not awaited by the emitter. Queue writes in order and
+// handle failures without creating an unhandled rejection.
+let pendingSave = Promise.resolve();
+base.on("update:authtoken", (token) => {
+  base.authToken = token;
+  pendingSave = pendingSave.then(() => storage.set(TOKEN_KEY, token)).catch(() => {
+    console.error("Could not persist the LINE session token.");
+  });
+});
+base.on("pincall", (pin) => console.log("Enter this pincode:", pin));
 
 const saved = await storage.get(TOKEN_KEY);
 
-const client = typeof saved === "string" && saved
-  // Prefer authToken login to reduce ban risk.
-  ? await loginWithAuthToken(saved, { device: "IOSIPAD", storage })
-  : await loginWithPassword({
+await base.loginProcess.login(typeof saved === "string" && saved
+  ? { authToken: saved }
+  : {
     email: "you@example.com",
     password: "password",
-    onPincodeRequest(pin) {
-      console.log("Enter this pincode:", pin);
-    },
-  }, { device: "IOSIPAD", storage });
-
-// Persist token whenever LINEJS issues or refreshes it.
-client.base.on("update:authtoken", async (tok) => {
-  await storage.set(TOKEN_KEY, tok);
-});
-
-// Save the current token immediately in case the event fires before this handler
-// is attached (e.g. right after a fresh password login).
-if (client.base.authToken) {
-  await storage.set(TOKEN_KEY, client.base.authToken);
-}
+  });
+await pendingSave;
+const client = new Client(base);
+// Use client here. Also await pendingSave before an explicit process exit.
 ```
 
-With this pattern, the first run uses email + password (and PIN) and every
-subsequent run reuses the saved token silently.
+The first run uses email + password (and PIN); later runs attempt to reuse the
+saved token. Expired or revoked credentials can still require manual login.
+Do not automatically loop password logins on every error.
+
+`session.json` contains plaintext credentials and E2EE key material. Exclude it
+from version control, restrict file access to your user, and do not log or share
+its contents. Load your password from a private configuration or environment
+variable rather than committing it. Token reuse does not guarantee account safety.

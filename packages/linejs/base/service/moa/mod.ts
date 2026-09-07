@@ -62,7 +62,7 @@ export interface AlbumPhotosResponse {
  *
  * @example
  * ```ts
- * buildMoaUrl("/moa/v2/albums", { cursor: "", orderBy: "createTimeDesc" })
+ * buildMoaUrl("legy.line-apps.com", "/moa/v2/albums", { cursor: "", orderBy: "createTimeDesc" })
  * // -> "https://legy.line-apps.com/ext/album/moa/v2/albums?cursor=&orderBy=createTimeDesc"
  * ```
  */
@@ -88,7 +88,7 @@ export function buildMoaUrl(
 /**
  * Client for the LINE Album (Moa) REST API.
  *
- * Unlike Talk / Square, Moa speaks plain HTTP JSON on top of the LEGY proxy
+ * Unlike Talk / Square, Moa speaks JSON over HTTPS through the LEGY proxy
  * — not Thrift — so this service uses `client.fetch` directly with an
  * `X-Line-ChannelToken` obtained from `channel.approveChannelAndIssueChannelToken`.
  *
@@ -102,10 +102,20 @@ export function buildMoaUrl(
  */
 export class MoaService {
 	client: BaseClient;
-	#cachedChannelToken: string | undefined;
+	#channelToken: {
+		authToken: string;
+		mid: string;
+		endpoint: string;
+		value: Promise<string>;
+	} | undefined;
 
 	constructor(client: BaseClient) {
 		this.client = client;
+	}
+
+	/** Clear the cached channel token after expiry or revocation, then retry explicitly. */
+	clearAlbumChannelToken(): void {
+		this.#channelToken = undefined;
 	}
 
 	/**
@@ -113,19 +123,45 @@ export class MoaService {
 	 * call uses this token via the `X-Line-ChannelToken` header.
 	 */
 	async getAlbumChannelToken(): Promise<string> {
-		if (this.#cachedChannelToken) return this.#cachedChannelToken;
-		const resp = await this.client.channel.approveChannelAndIssueChannelToken({
-			channelId: MOA_CHANNEL_ID,
-		});
-		const token = resp?.channelAccessToken;
-		if (!token) {
+		const { authToken, endpoint } = this.client;
+		const mid = this.client.profile?.mid;
+		if (!authToken || !mid) {
 			throw new InternalError(
 				"MoaError",
-				"approveChannelAndIssueChannelToken returned no channelAccessToken",
+				"login must complete before calling Moa",
 			);
 		}
-		this.#cachedChannelToken = token;
-		return token;
+		const cached = this.#channelToken;
+		if (
+			cached?.authToken === authToken && cached.mid === mid &&
+			cached.endpoint === endpoint
+		) {
+			return await cached.value;
+		}
+		const entry = {
+			authToken,
+			mid,
+			endpoint,
+			value: (async () => {
+				const resp = await this.client.channel
+					.approveChannelAndIssueChannelToken({ channelId: MOA_CHANNEL_ID });
+				const token = resp?.channelAccessToken;
+				if (typeof token !== "string" || !token) {
+					throw new InternalError(
+						"MoaError",
+						"channelAccessToken missing from channel response",
+					);
+				}
+				return token;
+			})(),
+		};
+		this.#channelToken = entry;
+		try {
+			return await entry.value;
+		} catch (error) {
+			if (this.#channelToken === entry) this.clearAlbumChannelToken();
+			throw error;
+		}
 	}
 
 	async #fetch<T extends { code?: number; message?: string }>(
@@ -157,6 +193,7 @@ export class MoaService {
 			method: "POST",
 			headers,
 			body: new Uint8Array(),
+			signal: AbortSignal.timeout(this.client.config.timeout),
 		});
 		if (!res.ok) {
 			throw new InternalError(
@@ -165,7 +202,19 @@ export class MoaService {
 				{ status: res.status },
 			);
 		}
-		const json = (await res.json()) as T;
+		let json: T;
+		try {
+			json = await res.json();
+		} catch (error) {
+			if (!(error instanceof SyntaxError)) throw error;
+			throw new InternalError("MoaError", "Moa returned invalid JSON");
+		}
+		if (!json || typeof json !== "object" || Array.isArray(json)) {
+			throw new InternalError(
+				"MoaError",
+				"Moa returned an invalid response object",
+			);
+		}
 		if (json.code !== undefined && json.code !== 0) {
 			throw new InternalError(
 				"MoaError",
@@ -205,7 +254,7 @@ export class MoaService {
 		targetUser?: string;
 	}): Promise<AlbumPhotosResponse> {
 		return this.#fetch<AlbumPhotosResponse>(
-			`/api/v6/albums/${options.albumId}/photos`,
+			`/api/v6/albums/${encodePathId(options.albumId)}/photos`,
 			{
 				cursor: options.cursor ?? "",
 				pageSize: options.pageSize ?? 100,
@@ -229,8 +278,13 @@ export class MoaService {
 		chatId: string;
 		albumId: string | number;
 		oid: string;
-		prefix?: string;
+		prefix?: "album/a" | "album/v";
 	}): Promise<Uint8Array> {
+		const prefix = options.prefix ?? "album/a";
+		if (prefix !== "album/a" && prefix !== "album/v") {
+			throw new InternalError("MoaError", "unsupported album resource prefix");
+		}
+		const oid = encodePathId(options.oid);
 		const token = await this.getAlbumChannelToken();
 		const headers: Record<string, string> = {
 			...this.client.request.getHeader("GET"),
@@ -238,13 +292,12 @@ export class MoaService {
 			"X-Line-Album": String(options.albumId),
 			"X-Line-Mid": options.chatId,
 		};
-		const prefix = options.prefix ?? "album/a";
-		const url =
-			`https://${this.client.endpoint}/oa/r/${prefix}/${options.oid}`;
+		const url = `https://${this.client.endpoint}/oa/r/${prefix}/${oid}`;
 		const res = await this.client.fetch(url, {
 			method: "POST",
 			headers,
 			body: new Uint8Array(),
+			signal: AbortSignal.timeout(this.client.config.timeout),
 		});
 		if (!res.ok) {
 			throw new InternalError(
@@ -255,4 +308,15 @@ export class MoaService {
 		}
 		return new Uint8Array(await res.arrayBuffer());
 	}
+}
+
+function encodePathId(value: string | number): string {
+	const id = String(value);
+	if (!id || id === "." || id === "..") {
+		throw new InternalError(
+			"MoaError",
+			"album and object IDs must be nonempty path segments",
+		);
+	}
+	return encodeURIComponent(id);
 }

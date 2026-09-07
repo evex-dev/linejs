@@ -1,8 +1,8 @@
 # Album (Moa)
 
 `MoaService` exposes the LINE Album (Moa) REST API on `client.base.moa`. Unlike
-Talk / Square, Moa speaks plain HTTP JSON on top of the LEGY proxy, so this
-service uses `client.fetch` directly with a channel token issued for the album
+Talk / Square, Moa speaks JSON over HTTPS through the LEGY proxy, so this
+service uses `client.base.fetch` directly with a channel token issued for the album
 channel (`1375220249`).
 
 ## Listing albums
@@ -21,8 +21,9 @@ while (true) {
   for (const album of result?.albums ?? []) {
     console.log(`[${album.albumId}] ${album.title} (${album.photoCount} photos)`);
   }
-  cursor = result?.nextCursor ?? result?.cursor ?? "";
-  if (!cursor || !(result?.hasMore ?? true)) break;
+  const next = result?.nextCursor ?? result?.cursor ?? "";
+  if (!next || next === cursor || !(result?.hasMore ?? true)) break;
+  cursor = next;
 }
 ```
 
@@ -40,8 +41,9 @@ while (true) {
   for (const photo of resp.result?.photos ?? []) {
     console.log(photo.oid, "shot at", photo.shotTime);
   }
-  cursor = resp.result?.nextCursor ?? "";
-  if (!cursor) break;
+  const next = resp.result?.nextCursor ?? "";
+  if (!next || next === cursor) break;
+  cursor = next;
 }
 ```
 
@@ -77,8 +79,11 @@ const bytes = await client.base.moa.downloadPhoto({
 ## Notes
 
 - The channel token issued for `1375220249` is memoised inside the service and
-  reused for every subsequent call. If the token is rejected (server-side
-  expiry, revocation, ...) create a fresh `BaseClient` to reset the cache.
+  reused within the same session. Changing the access token, MID or endpoint
+  invalidates it. If the token is rejected (expiry or revocation), call
+  `client.base.moa.clearAlbumChannelToken()` before an explicit retry. Requests
+  are not automatically retried. REST requests and downloads use
+  `client.base.config.timeout`.
 - Moa uses `X-Line-ChannelToken`, `X-Line-Mid` (your MID) and — for photo
   fetches — `X-Line-Album` (the album id) and `X-Line-Mid` set to the *chat*
   id. All of these are set for you automatically.
