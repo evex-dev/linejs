@@ -334,8 +334,14 @@ export class LineObs {
 		filename?: string;
 		/** Optional thumbnail; encrypted with the same keyMaterial. #103. */
 		preview?: Blob;
+		/**
+		 * Clip length in milliseconds, rounded to an integer for video `DURATION`.
+		 * Omitted unless the rounded value is a positive safe integer. Ignored for
+		 * other media types. The duration is caller-supplied, not inferred from data.
+		 */
+		durationMs?: number;
 	}): Promise<Message> {
-		const { data, oType, to, filename, preview } = options;
+		const { data, oType, to, filename, preview, durationMs } = options;
 		const typeSet: {
 			image: [string, 1];
 			video: [string, 2];
@@ -412,6 +418,18 @@ export class LineObs {
 			contentType,
 		);
 
+		// obs only ever sees the encrypted blob here, so it cannot read the length
+		// out of the container the way it does for a plain upload; without this
+		// LINE clients render the video as a 0:00 clip.
+		const roundedDuration = typeof durationMs === "number"
+			? Math.round(durationMs)
+			: NaN;
+		const durationMetadata: Record<string, string> =
+			oType === "video" && Number.isSafeInteger(roundedDuration) &&
+				roundedDuration > 0
+				? { DURATION: roundedDuration.toString() }
+				: {};
+
 		return await this.client.talk.sendMessage({
 			to,
 			chunks,
@@ -433,6 +451,7 @@ export class LineObs {
 						),
 					}
 					: {},
+				...durationMetadata,
 			},
 		});
 	}
