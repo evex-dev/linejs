@@ -384,6 +384,13 @@ export const Thrift: LooseType = {
 		"126": "BITMAX_ACCOUNT_EXIST",
 		"127": "MESSAGE_NOT_EDITABLE",
 		"128": "MESSAGE_NOT_EDITABLE_TIMELIMIT",
+		"129": "SCHEDULED_MESSAGE_TIMELIMIT",
+		"130": "SCHEDULED_MESSAGE_SERVER_TIMESLOT_LIMIT",
+		"131": "SCHEDULED_MESSAGE_USER_TOTAL_LIMIT",
+		"132": "SCHEDULED_MESSAGE_USER_TIMESLOT_LIMIT",
+		"133": "SCHEDULED_MESSAGE_UPDATE_TIMELIMIT",
+		"134": "SCHEDULED_MESSAGE_RESCHEDULE_TIMELIMIT",
+		"135": "NOT_LAB_ENABLED",
 	},
 	"Fg_a": {
 		"0": "INTERNAL_ERROR",
@@ -925,6 +932,7 @@ export const Thrift: LooseType = {
 		"166": "UPDATE_SERVICE_CHAT",
 		"167": "MARK_SERVICE_CHAT_AS_READ",
 		"168": "UPDATE_SERVICE_CHAT_NOTIFICATION_TEXT",
+		"169": "LINE_AUTH_NOTIFICATION",
 	},
 	"P70_g": {
 		"1000": "INVALID_REQUEST",
@@ -1695,6 +1703,15 @@ export const Thrift: LooseType = {
 		"108": "NOTIFICATION_NOTE_COMMENT_LIKE",
 		"109": "NOTIFICATION_NOTE_MENTION",
 		"110": "NOTIFICATION_ALBUM_LIKE",
+		"112": "AGREEMENT_LYP_PREMIUM_MESSAGE_SCHEDULING",
+		"113": "AGREEMENT_LYP_PREMIUM_MESSAGE_SCHEDULING_VERSION",
+		"114": "SECURITY_CARD_REQUIRED",
+		"115": "AGREEMENT_LYP_PREMIUM_MESSAGE_SCHEDULING_PREMIUM_TYPE",
+		"116": "LAB_MESSAGE_EDIT",
+		"117": "LAB_FRIENDS_MANAGEMENT",
+		"118": "AGREEMENT_LYP_PREMIUM_MUTE_MESSAGE",
+		"119": "AGREEMENT_LYP_PREMIUM_MUTE_MESSAGE_VERSION",
+		"120": "AGREEMENT_LYP_PREMIUM_MUTE_MESSAGE_PREMIUM_TYPE",
 	},
 	"SnsIdType": {
 		"1": "FACEBOOK",
@@ -17798,6 +17815,11 @@ export const Thrift: LooseType = {
 			"name": "editorsPickIds",
 			"set": 11,
 		},
+		{
+			"fid": 22,
+			"name": "periodEnd",
+			"type": 10,
+		},
 	],
 	"ProductSubscriptionProperty": [
 		{
@@ -18429,6 +18451,8 @@ export const Thrift: LooseType = {
 		},
 		{
 			"fid": 12,
+			// Android 26.14.0 calls this enablePointAutoExchange. Keep the
+			// published API name: only fid/type are serialized on the wire.
 			"name": "enableLinePointAutoExchange",
 			"type": 2,
 		},
@@ -24108,7 +24132,7 @@ export const Thrift: LooseType = {
 		{
 			"fid": 2,
 			"name": "subscriptionService",
-			"struct": "Ob1_S1",
+			"type": 8,
 		},
 		{
 			"fid": 3,
