@@ -40,6 +40,7 @@ export default defineConfig({
 					// { text: "Utils", link: "/docs/utils" },
 					{ text: "Client Methods", link: "/docs/methods" },
 					{ text: "Calls", link: "/docs/call" },
+					{ text: "Album (Moa)", link: "/docs/moa" },
 				],
 			},
 			{
