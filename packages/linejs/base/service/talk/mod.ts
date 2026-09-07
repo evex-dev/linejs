@@ -172,7 +172,10 @@ export class TalkService implements BaseService {
 		} catch (error) {
 			if (
 				error instanceof InternalError &&
-				(error.data?.code.toString()).includes("E2EE") &&
+				// `data` defaults to `{}` and only some throw sites fill in a
+				// code, so reading `.toString()` off it threw a TypeError from
+				// inside this handler and buried the error it was inspecting.
+				String(error.data?.code ?? "").includes("E2EE") &&
 				typeof e2ee === "undefined"
 			) {
 				options.e2ee = true;
