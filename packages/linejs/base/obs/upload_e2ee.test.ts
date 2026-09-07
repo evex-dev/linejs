@@ -112,3 +112,56 @@ Deno.test("uploadMediaByE2EE — file type → no preview upload at all", async 
 	});
 	assertEquals(fake.records.length, 1);
 });
+
+/** contentMetadata of the one sendMessage the upload ends with. */
+function sentMetadata(
+	fake: ReturnType<typeof fakeClient>,
+): Record<string, string> {
+	assertEquals(fake.sendMessageCalls.length, 1);
+	return (fake.sendMessageCalls[0] as {
+		contentMetadata: Record<string, string>;
+	}).contentMetadata;
+}
+
+Deno.test("uploadMediaByE2EE — a video carries its length as DURATION", async () => {
+	const { obs, fake } = makeObs();
+	await obs.uploadMediaByE2EE({
+		data: new Blob([new Uint8Array(1_000)]),
+		oType: "video",
+		to: "u-recipient",
+		durationMs: 4200.4,
+	});
+	assertEquals(sentMetadata(fake).DURATION, "4200");
+});
+
+Deno.test("uploadMediaByE2EE — no DURATION when omitted, none on an image", async () => {
+	const video = makeObs();
+	await video.obs.uploadMediaByE2EE({
+		data: new Blob([new Uint8Array(1_000)]),
+		oType: "video",
+		to: "u-recipient",
+	});
+	assertEquals(sentMetadata(video.fake).DURATION, undefined);
+
+	const image = makeObs();
+	await image.obs.uploadMediaByE2EE({
+		data: new Blob([new Uint8Array(1_000)]),
+		oType: "image",
+		to: "u-recipient",
+		durationMs: 4200,
+	});
+	assertEquals(sentMetadata(image.fake).DURATION, undefined);
+});
+
+Deno.test("uploadMediaByE2EE — a non-positive or non-finite duration is dropped", async () => {
+	for (const durationMs of [0, -1, NaN, Infinity]) {
+		const { obs, fake } = makeObs();
+		await obs.uploadMediaByE2EE({
+			data: new Blob([new Uint8Array(1_000)]),
+			oType: "video",
+			to: "u-recipient",
+			durationMs,
+		});
+		assertEquals(sentMetadata(fake).DURATION, undefined);
+	}
+});
