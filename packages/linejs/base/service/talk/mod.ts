@@ -840,14 +840,28 @@ export class TalkService implements BaseService {
 		);
 	}
 
+	/**
+	 * Reacts to a message.
+	 *
+	 * @param options - The options for the reaction.
+	 * @param options.id - The id of the message to react to.
+	 * @param options.reaction - The reaction to send.
+	 * @param options.reqSeq - The request sequence number. Defaults to the
+	 * client's next talk sequence number.
+	 */
 	async react(options: {
 		id: bigint | number;
 		reaction: LINETypes.MessageReactionType;
+		reqSeq?: number;
 	}): Promise<void> {
+		// Every other talk request carries the client's monotonic sequence
+		// number; a hardcoded 0 made every reaction of a session look to the
+		// server like the same request being retried.
+		const reqSeq = options.reqSeq ?? await this.client.getReqseq();
 		return await this.client.request.request(
 			LINEStruct.react_args({
 				reactRequest: {
-					reqSeq: 0,
+					reqSeq,
 					messageId: options.id,
 					reactionType: {
 						predefinedReactionType: options.reaction,

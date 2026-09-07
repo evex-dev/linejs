@@ -1,5 +1,11 @@
 import { assertEquals, assertRejects, assertStrictEquals } from "@std/assert";
 import { InternalError } from "../../core/mod.ts";
+import {
+	type NestedArray,
+	Protocols,
+} from "../../thrift/readwrite/declares.ts";
+import { readThrift } from "../../thrift/readwrite/read.ts";
+import { writeThrift } from "../../thrift/readwrite/write.ts";
 import { TalkService } from "./mod.ts";
 
 interface RequestCall {
@@ -10,11 +16,16 @@ interface RequestCall {
 function makeStubClient(respond: (call: number) => Promise<unknown>) {
 	const calls: RequestCall[] = [];
 	const encryptedFor: string[] = [];
+	const reqseqBuckets: (string | undefined)[] = [];
 	return {
 		calls,
 		encryptedFor,
+		reqseqBuckets,
 		client: {
-			getReqseq: () => Promise.resolve(7),
+			getReqseq: (name?: string) => {
+				reqseqBuckets.push(name);
+				return Promise.resolve(7);
+			},
 			e2ee: {
 				encryptE2EEMessage: (to: string) => {
 					encryptedFor.push(to);
@@ -29,6 +40,13 @@ function makeStubClient(respond: (call: number) => Promise<unknown>) {
 			},
 		},
 	};
+}
+
+function decodeReactRequest(value: unknown) {
+	return readThrift(
+		writeThrift(value as NestedArray, "react", Protocols[4]),
+		Protocols[4],
+	).data;
 }
 
 // `InternalError.data` defaults to `{}`, and throw sites such as the
@@ -88,4 +106,35 @@ Deno.test("sendMessage rethrows a non-E2EE code without retrying", async () => {
 	assertStrictEquals(error, failure);
 	assertEquals(stub.calls.length, 1);
 	assertEquals(stub.encryptedFor, []);
+});
+
+// `reqSeq` was hardcoded to 0, so every reaction of a session carried the
+// sequence number of the first one.
+Deno.test("react takes its sequence number from the talk bucket", async () => {
+	const stub = makeStubClient(() => Promise.resolve({}));
+	const talk = new TalkService(stub.client as never);
+
+	await talk.react({ id: 42n, reaction: "NICE" });
+
+	assertEquals(stub.reqseqBuckets, [undefined]);
+	assertEquals(
+		stub.calls.map((call) => call.methodName),
+		["react"],
+	);
+	assertEquals(decodeReactRequest(stub.calls[0]!.value), {
+		1: { 1: 7, 2: 42, 3: { 1: 2 } },
+	});
+});
+
+Deno.test("react uses a caller-supplied sequence number", async () => {
+	const stub = makeStubClient(() => Promise.resolve({}));
+	const talk = new TalkService(stub.client as never);
+
+	await talk.react({ id: 42n, reaction: "NICE", reqSeq: 1234 });
+
+	// The caller owns the sequence; the client's own one is left untouched.
+	assertEquals(stub.reqseqBuckets, []);
+	assertEquals(decodeReactRequest(stub.calls[0]!.value), {
+		1: { 1: 1234, 2: 42, 3: { 1: 2 } },
+	});
 });
