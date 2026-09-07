@@ -154,35 +154,66 @@ export class Polling {
 			cb && cb();
 			return;
 		}
-		while (this.client.authToken) {
-			this.islisten = true;
-			try {
-				await this.client.push.initializeConn(1, this.listenTarget);
-			} catch (error) {
-				this.client.log("LegyPusherError_cannot_init", { error });
-				throw error;
+		try {
+			while (this.client.authToken) {
+				this.islisten = true;
+				try {
+					await this.client.push.initializeConn(1, this.listenTarget);
+				} catch (error) {
+					this.#reportFailure("LegyPusherError_cannot_init", error);
+					throw error;
+				}
+				try {
+					cb && cb();
+					await this.client.push.InitAndRead(this.listenTarget);
+					await sleep(4000);
+				} catch (error) {
+					this.#reportFailure("LegyPusherError", error);
+					await sleep(4000);
+				}
 			}
-			try {
-				cb && cb();
-				await this.client.push.InitAndRead(this.listenTarget);
-				await sleep(4000);
-			} catch (error) {
-				this.client.log("LegyPusherError", { error });
-				await sleep(4000);
-			}
+		} finally {
+			this.islisten = false;
 		}
-		this.islisten = false;
+	}
+
+	#reportFailure(type: string, error: unknown): void {
+		try {
+			this.client.log(type, { error });
+		} catch {
+			// A synchronous log listener must not replace the original error.
+		}
+	}
+
+	// The pusher loop outlives the call that starts it and nobody awaits it, so
+	// its rejection — `initializeConn` failing on the first connect rethrows
+	// one — used to surface as an unhandled rejection and take the host process
+	// down. Terminate both shared streams with the original error so pending
+	// readers can observe failure, then report it. A new listen call may retry.
+	#startLegyPusher(): void {
+		this.initLegyPusher().catch((error) => {
+			for (
+				const stream of [this.client.push.opStream, this.client.push.sqStream]
+			) {
+				try {
+					stream.error(error);
+				} catch {
+					// Failure to terminate one stream must not strand the other.
+				}
+			}
+			this.#reportFailure("LegyPusherError", error);
+		});
 	}
 
 	listenSquareEvents(): ReadableStream<SquareEvent> {
 		this.client.push.sqStream.renew();
-		this.initLegyPusher();
+		this.#startLegyPusher();
 		return this.client.push.sqStream.stream;
 	}
 
 	listenTalkEvents(): ReadableStream<Operation> {
 		this.client.push.opStream.renew();
-		this.initLegyPusher();
+		this.#startLegyPusher();
 		return this.client.push.opStream.stream;
 	}
 }
