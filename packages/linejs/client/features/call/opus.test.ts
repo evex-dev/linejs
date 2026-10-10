@@ -1,5 +1,6 @@
 import { assert, assertEquals, assertThrows } from "@std/assert";
 import { opusCodecFactory } from "./opus.ts";
+import { packetizeNativeGroupOpusPairs } from "./audio.ts";
 
 Deno.test("opusCodecFactory: encodes + decodes a 20ms 48kHz mono frame", async () => {
 	const factory = await opusCodecFactory();
@@ -36,6 +37,63 @@ Deno.test("opusCodecFactory: encodes + decodes a 20ms 48kHz mono frame", async (
 
 	enc.close?.();
 	dec.close?.();
+});
+
+Deno.test("group EAS2 depacketization preserves stock Opus decode for CBR and VBR", async () => {
+	const factory = await opusCodecFactory();
+	for (const vbr of [false, true]) {
+		const enc = factory.newEncoder({
+			sampleRate: 48000,
+			channels: 1,
+			frameDurationMs: 20,
+			signal: "music",
+			bitrate: 128000,
+			vbr,
+		});
+		const reference = factory.newDecoder({ sampleRate: 48000, channels: 1 });
+		const grouped = factory.newDecoder({ sampleRate: 48000, channels: 1 });
+		try {
+			const packets: Uint8Array[] = [];
+			const expected: number[] = [];
+			for (let f = 0; f < 4; f++) {
+				const samples = Int16Array.from(
+					{ length: 960 },
+					(_, i) =>
+						Math.round(
+							6000 * Math.sin(2 * Math.PI * 440 * (i + f * 960) / 48000),
+						),
+				);
+				const packet = enc.encode({ samples, sampleRate: 48000, channels: 1 });
+				assert(packet);
+				assertEquals(packet[0], 0xf8); // mono CELT 20ms, one frame
+				packets.push(packet);
+				expected.push(...reference.decode(packet)!.samples);
+			}
+			const actual: number[] = [];
+			for (
+				const payload of packetizeNativeGroupOpusPairs(packets, {
+					inputPrefixBytes: 0,
+					frameActivity: [true, true, true, true],
+				})
+			) {
+				assertEquals(payload[3], 0xc0);
+				// Depacketize EAS2 first: strip native prefix and the CELT SAD bitmap.
+				// Passing EAS2 straight into a stock Opus decoder tests the wrong format.
+				const opus = new Uint8Array(payload.length - 2);
+				opus.set(payload.subarray(1, 3));
+				opus.set(payload.subarray(4), 2);
+				const frame = grouped.decode(opus);
+				assert(frame);
+				assertEquals(frame.samples.length, 1920);
+				actual.push(...frame.samples);
+			}
+			assertEquals(actual, expected);
+		} finally {
+			enc.close?.();
+			reference.close?.();
+			grouped.close?.();
+		}
+	}
 });
 
 Deno.test("opusCodecFactory rejects an oversized code-2 frame and accepts variable PCM length", async () => {

@@ -142,6 +142,7 @@ export interface PlanetTransportOpts {
 	mediaKeyMode?: PlanetMediaKeyMode;
 	rtpTimestampStep?: number;
 	preferIpv6?: boolean;
+	/** @deprecated Ignored: registration requires the final relay answer. */
 	groupDataSessionAfterProvisional?: boolean;
 	wireSend?: (
 		packet: Uint8Array,
@@ -800,12 +801,6 @@ function putU32(out: Uint8Array, off: number, value: number): void {
 	out[off + 1] = (value >>> 16) & 0xff;
 	out[off + 2] = (value >>> 8) & 0xff;
 	out[off + 3] = value & 0xff;
-}
-
-function randomSsrcBase(): number {
-	let base = randomU32() & 0xffff_ff00;
-	if (base === 0) base = 0x100;
-	return base >>> 0;
 }
 
 function buildGroupRtcpFeedback(opts: {
@@ -2180,17 +2175,31 @@ export class PlanetTransport implements CallTransport {
 		this.#groupJoined = true;
 	}
 
-	async #sendGroupDataSessionOpen(dstChanId: bigint): Promise<void> {
+	async #sendGroupDataSessionOpen(
+		dstChanId: bigint,
+		answer: NativeSetupOffer | undefined,
+	): Promise<void> {
 		if (!this.#route) throw new Error("connect first");
 		if (this.#groupDataSessionSent) return;
 		const cid = this.#callUuid!;
-		const base = randomSsrcBase();
-		const rxAudioSsrc = addU32(base, 0x79);
-		const txAudioSsrc = addU32(base, 0x7d);
-		const rxVideoSsrc = addU32(base, 0xd9);
-		const txVideoSsrc = addU32(base, 0xdd);
-		const rxDataSsrc = addU32(base, 0xa9);
-		const txDataSsrc = addU32(base, 0xad);
+		// The final group answer allocates receive (field 11) and transmit
+		// (field 61) source IDs. Do not invent IDs or use the 1:1 orientation.
+		const [audio, video, dataStream] = ["A", "V", "D"].map((name) => {
+			const stream = answer?.media.find((m) => m.name === name);
+			const rx = stream?.rtpPort;
+			const tx = stream?.rtcpId;
+			if (
+				rx === undefined || tx === undefined ||
+				!Number.isInteger(rx) || rx <= 0 || rx > 0xffffffff ||
+				!Number.isInteger(tx) || tx <= 0 || tx > 0xffffffff
+			) {
+				throw new Error("group answer stream IDs missing or invalid");
+			}
+			return { rx, tx };
+		});
+		const { rx: rxAudioSsrc, tx: txAudioSsrc } = audio;
+		const { rx: rxVideoSsrc, tx: txVideoSsrc } = video;
+		const { rx: rxDataSsrc, tx: txDataSsrc } = dataStream;
 		this.#groupAudioSsrc = txAudioSsrc;
 		this.#groupRxAudioSsrc = rxAudioSsrc;
 		this.#groupDataSsrc = txDataSsrc;
@@ -2297,15 +2306,6 @@ export class PlanetTransport implements CallTransport {
 				answerBytes: participateRsp.answer?.length,
 				contentsBytes: participateRsp.contents?.length,
 			});
-			const remoteChanId = reply.message.cc?.hdr?.srcChanId;
-			if (
-				this.#opts.groupDataSessionAfterProvisional &&
-				!this.#groupDataSessionSent && remoteChanId !== undefined &&
-				participateRsp.relCode === undefined &&
-				(participateRsp.result === undefined || participateRsp.result === 0)
-			) {
-				await this.#sendGroupDataSessionOpen(remoteChanId);
-			}
 			if (
 				participateRsp.result !== undefined ||
 				participateRsp.relCode !== undefined ||
@@ -2316,13 +2316,19 @@ export class PlanetTransport implements CallTransport {
 			}
 			if (Date.now() >= deadline) throw new Error("PLANET reply timeout");
 		}
-		this.#remoteCcChanId = reply.message.cc?.hdr?.srcChanId ?? 0n;
-		this.#remoteMediaChanId = participateRsp.mChanId ?? 0n;
-		const mcDstChanId = this.#remoteMediaChanId || this.#remoteCcChanId;
-		if (!this.#groupDataSessionSent && mcDstChanId !== 0n) {
-			await this.#sendGroupDataSessionOpen(mcDstChanId);
+		if (
+			participateRsp.result !== 0 || participateRsp.relCode ||
+			!participateRsp.mChanId
+		) {
+			throw new Error("group participation rejected or incomplete");
 		}
 		const peerAnswerOffer = tryDecodeNativeSetupOffer(participateRsp.answer);
+		this.#remoteCcChanId = reply.message.cc?.hdr?.srcChanId ?? 0n;
+		this.#remoteMediaChanId = participateRsp.mChanId;
+		await this.#sendGroupDataSessionOpen(
+			this.#remoteMediaChanId,
+			peerAnswerOffer,
+		);
 		const bridgeAddr = bridgeInfoAddr(participateRsp.bridgeInfo);
 		if (bridgeAddr) {
 			this.#debug({

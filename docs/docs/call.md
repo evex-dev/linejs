@@ -746,28 +746,50 @@ if (!joined.mediaReady) {
 }
 ```
 
-After `mediaReady`, group-call audio is still Opus over SRTP, but the native
-payload shape is not the same as the 1:1 `00 + 20 ms Opus` payload. Native group
-calls combine two 20 ms Opus frames into one 40 ms Opus code-3 packet. The first
-two media payloads use native prefix `00`; later payloads use `10`.
+Registration waits for a successful final PARTICIPATE answer with a nonzero
+media channel and valid AUDIO, VIDEO, and DATA source IDs. It uses the answer's
+field 11 IDs for receive streams and field 61 IDs for transmit streams, including
+the AUDIO and DATA RTP SSRCs. A provisional response cannot allocate streams;
+`groupDataSessionAfterProvisional` is deprecated and ignored. Failed or incomplete
+answers throw instead of falling back to the control channel.
 
-`packetizeNativeGroupOpusPairs()` converts the same prefixed 20 ms packets used
-by 1:1 examples into the native group-call payload shape:
+After `mediaReady`, use `packetizeNativeGroupOpusPairs()` for the group-specific
+**EAS2** payload, not a generic Opus packetizer. It combines two matching mono
+20 ms code-0 Opus frames into one 40 ms code-3 payload. For CELT, EAS2 adds an
+MSB-first activity bitmap after the TOC/count and before any VBR lengths or frame
+data. Each bit means **non-silence**, including unvoiced audio, not just speech.
+SILK/hybrid do not need this external bitmap.
+
+The helper accepts the same prefixed 20 ms packets used by 1:1 examples. Supply
+one activity boolean per input frame when using CELT:
 
 ```ts
 import { packetizeNativeGroupOpusPairs } from "@evex/linejs/call";
 
-const groupPackets = packetizeNativeGroupOpusPairs(oneToOneStylePackets);
+const groupPackets = packetizeNativeGroupOpusPairs(oneToOneStylePackets, {
+	frameActivity, // boolean[] from your encoder or a PCM non-silence meter
+});
 for (const packet of groupPackets) {
 	await transport.send(packet, { timestampStep: 1920 });
 	await sleep(40);
 }
 ```
 
-The helper strips the 1:1 prefix, reuses the Opus TOC configuration, writes the
-correct code-3 frame count/header, and preserves VBR frame lengths when the two
-frames differ in size. Use `timestampStep: 1920` because each output packet
-carries 40 ms at 48 kHz.
+The helper strips `inputPrefixBytes` (default `1`; use `0` for raw Opus), writes
+CBR or VBR framing, and uses native prefix `00` for the first two output payloads
+and `10` thereafter. Pass the complete clip in one call so that prefix progression
+is preserved. Use `timestampStep: 1920` and 40 ms pacing at 48 kHz.
+
+Odd frame counts, empty/oversize frames, stereo, non-20 ms frames, non-code-0
+inputs, mismatched TOCs within a pair, and missing CELT activity now throw rather
+than producing malformed payloads or silently dropping audio. Pad the last input
+pair if necessary. The command example does this and derives activity from a
+simple PCM nonzero-sample meter, **not** the native encoder's VAD. It requires
+`LINE_CALL_FRAME_MS=20` for group playback.
+
+EAS2 output must be depacketized before a stock Opus decoder can consume it:
+remove the native prefix and, for CELT, the activity bitmap. The ordinary codec,
+`CallSession`, and 1:1 packet semantics are unchanged.
 
 Group-call URL and membership APIs are also available:
 

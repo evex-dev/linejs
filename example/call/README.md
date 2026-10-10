@@ -49,6 +49,12 @@ Useful environment variables:
 | `LINE_CALL_OPUS_SIGNAL`        |               `music` | Opus signal hint: `music`, `voice`, or `auto`.                                             |
 | `LINE_CALL_OPUS_VBR`           |               `false` | Enable Opus VBR.                                                                           |
 
+Group playback requires `LINE_CALL_FRAME_MS=20`. The script pads the last pair
+with silence and uses `packetizeNativeGroupOpusPairs()` with per-frame PCM
+non-silence activity. This meter is not the native encoder's VAD. The output is
+LINE group EAS2, not directly decodable stock Opus; see the
+[group-call payload contract](../../docs/docs/call.md#group-calls).
+
 The bundled sample WAV is credited in `CREDITS.md`.
 
 V3 credential JSON can be the raw result containing `accessToken` and

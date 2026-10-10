@@ -23,6 +23,8 @@ export interface NativeGroupOpusPacketizeOptions {
 	 * PLANET 1:1 examples usually pass packets shaped as `00 + opus`.
 	 */
 	inputPrefixBytes?: number;
+	/** Per-frame non-silence activity (including unvoiced audio). Required for CELT. */
+	frameActivity?: readonly boolean[];
 }
 
 export function streamSource(
@@ -121,6 +123,11 @@ export function streamSink(
 	};
 }
 
+/**
+ * Combine matching mono 20 ms code-0 Opus frames into 40 ms LINE group EAS2
+ * payloads, not standard Opus packets. CELT needs explicit non-silence activity;
+ * SILK/hybrid carry their own activity. Unsupported layouts throw.
+ */
 export function packetizeNativeGroupOpusPairs(
 	packets: Uint8Array[],
 	opts: NativeGroupOpusPacketizeOptions = {},
@@ -129,25 +136,71 @@ export function packetizeNativeGroupOpusPairs(
 	if (!Number.isInteger(inputPrefixBytes) || inputPrefixBytes < 0) {
 		throw new Error("packetizeNativeGroupOpusPairs: invalid inputPrefixBytes");
 	}
+	if (packets.length % 2) {
+		throw new Error("packetizeNativeGroupOpusPairs: complete pairs required");
+	}
+	const activity = opts.frameActivity;
+	if (
+		activity !== undefined && (activity.length !== packets.length ||
+			Array.from(activity).some((value) => typeof value !== "boolean"))
+	) {
+		throw new Error("packetizeNativeGroupOpusPairs: invalid frameActivity");
+	}
 	const out: Uint8Array[] = [];
-	for (let i = 0; i + 1 < packets.length; i += 2) {
+	for (let i = 0; i < packets.length; i += 2) {
 		const left = packets[i];
 		const right = packets[i + 1];
-		if (
-			left.length <= inputPrefixBytes || right.length <= inputPrefixBytes
-		) continue;
+		for (const packet of [left, right]) {
+			if (
+				packet.length <= inputPrefixBytes + 1 ||
+				packet.length > inputPrefixBytes + 1276
+			) {
+				throw new Error(
+					"packetizeNativeGroupOpusPairs: invalid Opus frame size",
+				);
+			}
+			if (packet[inputPrefixBytes] & 3) {
+				throw new Error(
+					"packetizeNativeGroupOpusPairs: single-frame code-0 input required",
+				);
+			}
+		}
+		if (left[inputPrefixBytes] !== right[inputPrefixBytes]) {
+			throw new Error("packetizeNativeGroupOpusPairs: matching TOC required");
+		}
+		const config = left[inputPrefixBytes] >>> 3;
+		const is20ms = config >= 16
+			? config % 4 === 3
+			: config >= 12
+			? config % 2 === 1
+			: config % 4 === 1;
+		if ((left[inputPrefixBytes] & 4) || !is20ms) {
+			throw new Error(
+				"packetizeNativeGroupOpusPairs: mono 20ms frames required",
+			);
+		}
+		if (config >= 16 && activity === undefined) {
+			throw new Error(
+				"packetizeNativeGroupOpusPairs: CELT frameActivity required",
+			);
+		}
 		const nativePrefix = out.length < 2 ? 0x00 : 0x10;
 		const toc = (left[inputPrefixBytes] & 0xfc) | 0x03;
 		const leftFrame = left.subarray(inputPrefixBytes + 1);
 		const rightFrame = right.subarray(inputPrefixBytes + 1);
-		const header = leftFrame.length === rightFrame.length
-			? new Uint8Array([nativePrefix, toc, 0x02])
-			: new Uint8Array([
-				nativePrefix,
-				toc,
-				0x82,
-				...opusFrameSizeBytes(leftFrame.length),
-			]);
+		const vbr = leftFrame.length !== rightFrame.length;
+		// EAS2 CELT SAD: ceil(frameCount / 8) bytes, MSB first, before lengths.
+		// A set bit means non-silence, including unvoiced audio, not speech-only VAD.
+		const sad = config >= 16
+			? [(activity![i] ? 0x80 : 0) | (activity![i + 1] ? 0x40 : 0)]
+			: [];
+		const header = new Uint8Array([
+			nativePrefix,
+			toc,
+			vbr ? 0x82 : 0x02,
+			...sad,
+			...(vbr ? opusFrameSizeBytes(leftFrame.length) : []),
+		]);
 		const packet = new Uint8Array(
 			header.length + leftFrame.length + rightFrame.length,
 		);
@@ -164,7 +217,8 @@ function opusFrameSizeBytes(size: number): number[] {
 		throw new Error("packetizeNativeGroupOpusPairs: invalid Opus frame size");
 	}
 	if (size < 252) return [size];
-	return [252 + (size & 0x03), size >>> 2];
+	const first = 252 + (size & 0x03);
+	return [first, (size - first) >>> 2];
 }
 
 export interface AudioEncoder {

@@ -21,6 +21,7 @@ import {
 	CC_MSG,
 	decodeCcConnReq,
 	decodeFields,
+	decodeMcDataReq,
 	decodeMcDataRsp,
 	decodeNativeSetupOffer,
 	decodePlanetMsg,
@@ -41,6 +42,7 @@ import {
 	wrapMcMsg,
 } from "./schema.ts";
 import { PlanetTransport } from "./transport.ts";
+import { packetizeNativeGroupOpusPairs } from "../audio.ts";
 import { createCallClient, parseIncomingCall } from "../mod.ts";
 import { parseIncomingAudioCall } from "../incoming.ts";
 import {
@@ -318,6 +320,236 @@ function withTimeout<T>(
 		);
 	});
 }
+
+// Synthetic relay fields: no account routes, captured packets, or keys.
+function groupField(tag: number, value: number | Uint8Array): Uint8Array {
+	return value instanceof Uint8Array
+		? concatBytes([
+			encodeVarint((tag << 3) | 2),
+			encodeVarint(value.length),
+			value,
+		])
+		: concatBytes([encodeVarint(tag << 3), encodeVarint(value)]);
+}
+
+function groupAnswer(invalidStream = false): Uint8Array {
+	return concatBytes([
+		...["A", "V", "D"].map((name, index) =>
+			groupField(
+				1,
+				concatBytes([
+					groupField(
+						1,
+						concatBytes([
+							groupField(1, new TextEncoder().encode(name)),
+							groupField(3, 1),
+						]),
+					),
+					groupField(
+						2,
+						concatBytes([
+							groupField(1, 96 + index),
+							groupField(11, 1001 + index),
+							groupField(61, invalidStream && index === 2 ? 0 : 2001 + index),
+						]),
+					),
+				]),
+			)
+		),
+		groupField(2, groupField(2, groupField(1, new Uint8Array(30).fill(7)))),
+	]);
+}
+
+function groupRelay(responseBody: Uint8Array, afterProvisional = false) {
+	const peer = generateEphemeralKeypair();
+	const registrations: ReturnType<typeof decodePlanetMsg>[] = [];
+	const media: Uint8Array[] = [];
+	let receiveKeys: TransportKeys;
+	const transport = new PlanetTransport({
+		localMid: "u-local",
+		timeoutMs: 30,
+		groupDataSessionAfterProvisional: afterProvisional,
+		wireSend(wire, endpoint) {
+			if (endpoint.bootstrap) {
+				const request = decodePlanetMsg(endpoint.plaintext);
+				assertEquals(request.cc?.bodyTag, CC_MSG.PARTICIPATE_REQ);
+				const clientPub = extractBootstrapClientPub(wire);
+				const label = extractBootstrapClientLabel(wire);
+				const seed = extractBootstrapClientSeed(wire);
+				receiveKeys = deriveCallKeys({
+					mpkey: clientPub,
+					local: peer,
+					bootstrapSeed: seed,
+					sendLabel: label,
+					recvLabel: label,
+				}).recv;
+				const replySeed = new Uint8Array(16).fill(3);
+				const replyLabel = 2;
+				const sendKeys = deriveCallKeys({
+					mpkey: clientPub,
+					local: peer,
+					bootstrapSeed: replySeed,
+					sendLabel: replyLabel,
+					recvLabel: replyLabel,
+				}).send;
+				return buildServerWire(
+					sendKeys,
+					buildControlPlain({
+						bodyTag: CC_MSG.PARTICIPATE_RSP,
+						bodyBytes: responseBody,
+						msgId: 1,
+						sessId: new Uint8Array(16).fill(4),
+						locNonce: 9n,
+						cid: request.cc!.hdr!.cid!,
+						srcChanId: 77n,
+					}),
+					1,
+					{
+						bootstrap: {
+							label: replyLabel,
+							seed: replySeed,
+							pub: peer.publicKey,
+						},
+					},
+				);
+			}
+			if (isRtpLike(wire)) {
+				media.push(new Uint8Array(wire));
+				return;
+			}
+			const plain = decryptRegularWire(receiveKeys, wire);
+			assert(plain, "outbound control authenticates");
+			// Pinhole probes are raw transport payloads rather than protobuf.
+			if (plain.length === 519 || plain.length === 10) return;
+			const msg = decodePlanetMsg(plain);
+			if (msg.mc?.bodyTag === MC_MSG.DATA_REQ) registrations.push(msg);
+		},
+	});
+	const oneToOneRoute = makeRoute(peer);
+	assert("toMid" in oneToOneRoute);
+	const { toMid: _toMid, ...baseRoute } = oneToOneRoute;
+	// Only route fields consumed by the transport are needed by this fake relay.
+	const route = {
+		...baseRoute,
+		token: "synthetic-group-token",
+	} as unknown as CallRouteLike;
+	return { transport, route, registrations, media };
+}
+
+Deno.test("group final answer binds registration and AUDIO/DATA wire SSRCs", async () => {
+	const relay = groupRelay(
+		concatBytes([
+			groupField(1, 0),
+			groupField(6, groupAnswer()),
+			groupField(7, 88),
+		]),
+	);
+	const { transport } = relay;
+	try {
+		await transport.connect({ route: relay.route });
+		const joined = await transport.joinGroupDetailed({ roomId: "c-room" });
+		assert(joined.mediaReady);
+		assertEquals(relay.registrations.length, 1);
+		const registration = relay.registrations[0].mc!;
+		assertEquals(registration.hdr?.dstChanId, 88n); // media, not CC channel 77
+		const data = decodeMcDataReq(registration.bodyBytes!).data!;
+		const specLength = (data[4] << 8) | data[5];
+		const fields = decodeFields(data.subarray(8, 8 + specLength));
+		const sources = (tag: number) =>
+			fields.filter((f) => f.tag === tag).map((f) => {
+				assert(f.value instanceof Uint8Array);
+				return Number(decodeFields(f.value).find((v) => v.tag === 1)?.value);
+			});
+		assertEquals(sources(1), [1001, 1002, 1003]);
+		assertEquals(sources(6), [2001, 2002]);
+		const local = transport.localMediaOffer!;
+		const audioContext = await deriveSrtpContext(
+			derivePlanetMediaStreamKeying(local.material.mediaSecret, "AUDIO"),
+		);
+		const dataContext = await deriveSrtpContext(
+			derivePlanetMediaStreamKeying(local.material.mediaSecret, "DATA"),
+		);
+		const [payload] = packetizeNativeGroupOpusPairs([
+			new Uint8Array([0xf8, 1]),
+			new Uint8Array([0xf8, 2]),
+		], { inputPrefixBytes: 0, frameActivity: [true, true] });
+		for (let i = 0; i < 6; i++) {
+			await transport.send(payload, { timestampStep: 1920 });
+		}
+		const audio = relay.media.filter((wire) => (wire[1] & 0x7f) === 96);
+		assertEquals(audio.length, 6);
+		for (const [i, wire] of audio.entries()) {
+			const packet = parseRtp(await srtpDecrypt(audioContext, wire));
+			assertEquals(packet.ssrc, 2001);
+			assertEquals(packet.timestamp, 960 + i * 1920);
+			assertEquals(packet.payload, payload);
+		}
+		const dataPackets = relay.media.filter((wire) => (wire[1] & 0x7f) === 101);
+		assertEquals(dataPackets.length, 1);
+		assertEquals(
+			parseRtp(await srtpDecrypt(dataContext, dataPackets[0])).ssrc,
+			2003,
+		);
+	} finally {
+		await transport.close();
+	}
+});
+
+Deno.test("group rejects failed/incomplete answers without registering or sending media", async (t) => {
+	const answer = groupField(6, groupAnswer());
+	const channel = groupField(7, 88);
+	for (
+		const [name, fields, error] of [
+			[
+				"failure",
+				[groupField(1, 1), answer, channel],
+				"group participation rejected or incomplete",
+			],
+			[
+				"release",
+				[groupField(1, 0), groupField(2, 1), answer, channel],
+				"group participation rejected or incomplete",
+			],
+			[
+				"missing result",
+				[answer, channel],
+				"group participation rejected or incomplete",
+			],
+			[
+				"missing media channel",
+				[groupField(1, 0), answer],
+				"group participation rejected or incomplete",
+			],
+			[
+				"missing answer",
+				[groupField(1, 0), channel],
+				"group answer stream IDs missing",
+			],
+			["invalid DATA source", [
+				groupField(1, 0),
+				groupField(6, groupAnswer(true)),
+				channel,
+			], "group answer stream IDs missing"],
+			["provisional only", [channel], "PLANET reply timeout"],
+		] as const
+	) {
+		await t.step(name, async () => {
+			const relay = groupRelay(concatBytes([...fields]), true);
+			try {
+				await relay.transport.connect({ route: relay.route });
+				await assertRejects(
+					() => relay.transport.joinGroupDetailed({ roomId: "c-room" }),
+					Error,
+					error,
+				);
+				assertEquals(relay.registrations.length, 0);
+				assertEquals(relay.media.length, 0);
+			} finally {
+				await relay.transport.close();
+			}
+		});
+	}
+});
 
 Deno.test("PlanetTransport.close does not send REL before SETUP/INVITE", async () => {
 	let sends = 0;

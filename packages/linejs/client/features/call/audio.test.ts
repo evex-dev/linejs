@@ -142,6 +142,94 @@ Deno.test("packetizeNativeGroupOpusPairs writes VBR frame-size headers", () => {
 	]);
 });
 
+Deno.test("group CELT EAS2 puts MSB-first activity before CBR/VBR frames", () => {
+	const frame = (bytes: number[]) => new Uint8Array([0, 0xf8, ...bytes]);
+	const packets = [
+		frame([1, 2]),
+		frame([3, 4]),
+		frame([5]),
+		frame([6, 7]),
+		frame([8]),
+		frame([9]),
+	];
+	assertEquals(
+		packetizeNativeGroupOpusPairs(packets, {
+			frameActivity: [true, false, false, true, true, true],
+		}),
+		[
+			new Uint8Array([0, 0xfb, 2, 0x80, 1, 2, 3, 4]),
+			new Uint8Array([0, 0xfb, 0x82, 0x40, 1, 5, 6, 7]),
+			new Uint8Array([0x10, 0xfb, 2, 0xc0, 8, 9]),
+		],
+	);
+});
+
+Deno.test("group VBR two-byte sizes preserve frame boundaries", () => {
+	for (const size of [252, 253, 255, 256, 1275]) {
+		const left = new Uint8Array(size + 1).fill(0x11);
+		left[0] = 0x78;
+		const [packet] = packetizeNativeGroupOpusPairs([
+			left,
+			new Uint8Array([0x78, 0x22]),
+		], { inputPrefixBytes: 0 });
+		assertEquals(packet[2], 0x82);
+		const decodedSize = packet[3] + 4 * packet[4];
+		assertEquals(decodedSize, size);
+		assertEquals(packet.subarray(5, 5 + decodedSize), left.subarray(1));
+		assertEquals(packet.subarray(5 + decodedSize), new Uint8Array([0x22]));
+	}
+});
+
+Deno.test("group packetizer rejects unsupported layouts and missing CELT activity", () => {
+	const f = new Uint8Array([0xf8, 1]);
+	const opts = { inputPrefixBytes: 0, frameActivity: [true, false] };
+	assertThrows(
+		() => packetizeNativeGroupOpusPairs([f], opts),
+		Error,
+		"complete pairs",
+	);
+	assertThrows(
+		() => packetizeNativeGroupOpusPairs([f, f], { inputPrefixBytes: 0 }),
+		Error,
+		"CELT frameActivity required",
+	);
+	assertThrows(
+		() => packetizeNativeGroupOpusPairs([f, f], { ...opts, frameActivity: [] }),
+		Error,
+		"invalid frameActivity",
+	);
+	assertThrows(
+		() => packetizeNativeGroupOpusPairs([f, new Uint8Array([0x78, 1])], opts),
+		Error,
+		"matching TOC",
+	);
+	for (const toc of [0xf9, 0xfa, 0xfb]) {
+		const p = new Uint8Array([toc, 1]);
+		assertThrows(
+			() => packetizeNativeGroupOpusPairs([p, p], opts),
+			Error,
+			"code-0",
+		);
+	}
+	for (const toc of [0xfc, 0xf0, 0x70, 0x00]) {
+		const p = new Uint8Array([toc, 1]);
+		assertThrows(
+			() => packetizeNativeGroupOpusPairs([p, p], opts),
+			Error,
+			"mono 20ms",
+		);
+	}
+	for (
+		const p of [new Uint8Array(), new Uint8Array([0xf8]), new Uint8Array(1277)]
+	) {
+		assertThrows(
+			() => packetizeNativeGroupOpusPairs([p, p], opts),
+			Error,
+			"invalid Opus frame size",
+		);
+	}
+});
+
 Deno.test("resampleLinear: identity when rates match", () => {
 	const s = new Int16Array([1, 2, 3, 4]);
 	const out = resampleLinear(s, 48000, 48000, 1);

@@ -186,6 +186,9 @@ async function streamOpus(
 	repeats: number,
 	opts: { nativeGroupPacketize?: boolean } = {},
 ): Promise<void> {
+	if (opts.nativeGroupPacketize && frameMs !== 20) {
+		throw new Error("group audio requires LINE_CALL_FRAME_MS=20");
+	}
 	const codec = await opusCodecFactory();
 	const encoder = codec.newEncoder({
 		sampleRate: SAMPLE_RATE,
@@ -201,7 +204,7 @@ async function streamOpus(
 	let sentBytes = 0;
 	try {
 		if (opts.nativeGroupPacketize) {
-			const packets = encodeOpusPackets(
+			const { packets, frameActivity } = encodeOpusPackets(
 				encoder,
 				samples,
 				repeats,
@@ -210,6 +213,7 @@ async function streamOpus(
 			for (
 				const payload of packetizeNativeGroupOpusPairs(packets, {
 					inputPrefixBytes: payloadPrefix.length,
+					frameActivity,
 				})
 			) {
 				await transport.send(payload, {
@@ -254,10 +258,14 @@ function encodeOpusPackets(
 	samples: Int16Array,
 	repeats: number,
 	frameSamples: number,
-): Uint8Array[] {
+): { packets: Uint8Array[]; frameActivity: boolean[] } {
 	const packets: Uint8Array[] = [];
+	const frameActivity: boolean[] = [];
+	// Pad the last pair with silence rather than dropping an unpaired frame.
+	const paddedLength = Math.ceil(samples.length / (frameSamples * 2)) *
+		frameSamples * 2;
 	for (let repeat = 0; repeat < repeats; repeat++) {
-		for (let offset = 0; offset < samples.length; offset += frameSamples) {
+		for (let offset = 0; offset < paddedLength; offset += frameSamples) {
 			const frame = new Int16Array(frameSamples);
 			frame.set(samples.subarray(offset, offset + frameSamples));
 			const packet = encoder.encode({
@@ -265,10 +273,16 @@ function encodeOpusPackets(
 				sampleRate: SAMPLE_RATE,
 				channels: 1,
 			});
-			if (packet) packets.push(prepend(packet, payloadPrefix));
+			if (!packet) {
+				throw new Error("encoder did not produce a complete group frame");
+			}
+			packets.push(prepend(packet, payloadPrefix));
+			// Simple PCM non-silence meter, not the native encoder's VAD.
+			// Unvoiced audio is active too; never use a speech-only classifier here.
+			frameActivity.push(frame.some((sample) => sample !== 0));
 		}
 	}
-	return packets;
+	return { packets, frameActivity };
 }
 
 async function loadWavForCall(
