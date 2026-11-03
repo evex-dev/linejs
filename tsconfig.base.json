@@ -12,7 +12,6 @@
 		"resolveJsonModule": true,
 		"isolatedModules": true,
 		"forceConsistentCasingInFileNames": true,
-		"types": ["node"],
-		"useUnknownInCatchVariables": false
+		"types": ["node"]
 	}
 }

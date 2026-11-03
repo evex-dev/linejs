@@ -24,12 +24,13 @@ import { Buffer } from "node:buffer";
 
 // ─── varint + wire-type encoding ────────────────────────────────────────
 
-export const enum WireType {
-	Varint = 0,
-	Fixed64 = 1,
-	LengthDelim = 2,
-	Fixed32 = 5,
-}
+export const WireType = {
+	Varint: 0,
+	Fixed64: 1,
+	LengthDelim: 2,
+	Fixed32: 5,
+} as const;
+export type WireType = (typeof WireType)[keyof typeof WireType];
 
 export function encodeVarint(v: bigint | number): Uint8Array {
 	let x = typeof v === "bigint" ? v : BigInt(v);

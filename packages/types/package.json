@@ -43,10 +43,13 @@
 	"scripts": {
 		"build": "vp pack",
 		"test": "vp test --passWithNoTests",
-		"prepublishOnly": "pnpm -w run check && pnpm run build"
+		"prepublishOnly": "pnpm -w run check && pnpm run build",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@types/node": "^24.10.0"
 	},
 	"devDependencies": {
-		"@types/node": "^24.10.0",
 		"typescript": "^5.9.3",
 		"vite-plus": "^1.4.0"
 	},

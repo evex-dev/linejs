@@ -33,12 +33,13 @@
 import { Buffer } from "node:buffer";
 
 /** Protobuf wire type tags. */
-export const enum WireType {
-	Varint = 0,
-	Fixed64 = 1,
-	LengthDelim = 2,
-	Fixed32 = 5,
-}
+export const WireType = {
+	Varint: 0,
+	Fixed64: 1,
+	LengthDelim: 2,
+	Fixed32: 5,
+} as const;
+export type WireType = (typeof WireType)[keyof typeof WireType];
 
 /** Encode a protobuf varint. */
 export function encodeVarint(n: number | bigint): Uint8Array {
@@ -158,15 +159,15 @@ export interface CassiniHeader {
 	sessionId: bigint;
 }
 
-const enum HDR_TAG {
-	USER_ID = 1,
-	MSG_ID = 2,
-	CALL_UUID = 3,
-	MSG_NONCE = 4,
-	COUNTER = 5,
-	SUBSCRIPTION_ID = 6,
-	SESSION_ID = 7,
-}
+const HDR_TAG = {
+	USER_ID: 1,
+	MSG_ID: 2,
+	CALL_UUID: 3,
+	MSG_NONCE: 4,
+	COUNTER: 5,
+	SUBSCRIPTION_ID: 6,
+	SESSION_ID: 7,
+} as const;
 
 /** Envelope-body tag varies by message class. Observed values from a
  *  native LINE call: */
@@ -277,12 +278,12 @@ export interface CassiniBody {
 	extra?: PbField[];
 }
 
-const enum BODY_TAG {
-	CALL_UUID = 1,
-	MSG_TYPE = 2,
-	JSON_PARAMS = 4,
-	DEVICE_INFO = 13,
-}
+const BODY_TAG = {
+	CALL_UUID: 1,
+	MSG_TYPE: 2,
+	JSON_PARAMS: 4,
+	DEVICE_INFO: 13,
+} as const;
 
 export function packCassiniBody(b: CassiniBody): Uint8Array {
 	const enc = new TextEncoder();

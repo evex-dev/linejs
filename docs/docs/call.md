@@ -5,7 +5,7 @@ into two layers:
 
 - `client.call.*` wraps LINE's call control APIs, such as route acquisition and
   group-call URL management.
-- `@evex/linejs/call` contains the call media building blocks: PLANET
+- `@evex-dev/linejs/call` contains the call media building blocks: PLANET
   signaling, SRTP, RTP, Opus, WAV/PCM helpers, and the transport-neutral
   `CallSession` wrapper.
 

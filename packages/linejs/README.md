@@ -107,6 +107,7 @@ Requires Node.js 22.18+ (or 24.11+) and pnpm.
 ```sh
 pnpm install
 pnpm run build
+pnpm run check
 pnpm test
 ```
 

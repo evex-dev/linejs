@@ -34,7 +34,7 @@ Implementation details live in
 
 ## Storage
 
-Storage helpers are exported from `@evex/linejs/storage`:
+Storage helpers are exported from `@evex-dev/linejs/storage`:
 
 ```ts
 import { FileStorage, MemoryStorage } from "@evex-dev/linejs/storage";
@@ -48,7 +48,7 @@ survive process restarts. Use `MemoryStorage` only for short-lived clients.
 ## Base Helpers
 
 Low-level helpers that are part of the public base package are exported from
-`@evex/linejs/base`:
+`@evex-dev/linejs/base`:
 
 ```ts
 import { BaseClient, continueRequest, InternalError } from "@evex-dev/linejs/base";

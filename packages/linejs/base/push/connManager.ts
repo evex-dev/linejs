@@ -294,12 +294,12 @@ export class ConnManager {
 				let detectedMethod = methodName;
 				try {
 					const proto = new TMoreCompactProtocol(Buffer.from(data));
-					parsed = <LooseType>{
+					parsed = {
 						data: proto.res,
 						_info: {
 							fname: detectedMethod,
 						},
-					};
+					} as LooseType;
 					cl.thrift.rename_data(parsed!);
 
 					if (parsed!.data.e) {

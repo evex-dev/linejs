@@ -1,14 +1,16 @@
-export enum LegyH2PingFrameType {
-	NONE = 0,
-	ACK = 1,
-	ACK_REQUIRED = 2,
-}
+export const LegyH2PingFrameType = {
+	NONE: 0,
+	ACK: 1,
+	ACK_REQUIRED: 2,
+} as const;
+export type LegyH2PingFrameType = (typeof LegyH2PingFrameType)[keyof typeof LegyH2PingFrameType];
 
-export enum LegyH2PushFrameType {
-	NONE = 0,
-	ACK = 1,
-	ACK_REQUIRED = 2,
-}
+export const LegyH2PushFrameType = {
+	NONE: 0,
+	ACK: 1,
+	ACK_REQUIRED: 2,
+} as const;
+export type LegyH2PushFrameType = (typeof LegyH2PushFrameType)[keyof typeof LegyH2PushFrameType];
 
 export class LegyH2Frame {
 	frameType: number;
@@ -28,7 +30,7 @@ export class LegyH2Frame {
 }
 
 export class LegyH2PingFrame extends LegyH2Frame {
-	pingType?: LegyH2PingFrameType;
+	pingType?: number;
 	pingId?: number;
 	constructor(pingType?: number, pingId?: number) {
 		super(1);
@@ -57,7 +59,7 @@ export class LegyH2SignOnResponseFrame extends LegyH2Frame {
 }
 
 export class LegyH2PushFrame extends LegyH2Frame {
-	pushType?: LegyH2PushFrameType;
+	pushType?: number;
 	serviceType?: number;
 	pushId?: number;
 	pushPayload?: Uint8Array;

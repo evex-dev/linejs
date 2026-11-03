@@ -1,12 +1,21 @@
 name: release
 
-# JSR publishing stays tag-driven: publish.yml pushes the release tag after npm
-# confirms the publish, and this workflow then publishes the same sources to JSR
-# with OIDC (no long-lived tokens).
+# Manual recovery / human-pushed tags: publish a released tag to JSR.
+#
+# The automated release in publish.yml publishes JSR itself, because tags
+# pushed with GITHUB_TOKEN do not trigger `push: tags` workflows. This workflow
+# is still useful for retrying JSR (workflow_dispatch) or for tags pushed by a
+# maintainer with their own credentials.
 on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing v<version> tag to publish to JSR"
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -18,20 +27,49 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+          fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 12.16.1
+
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
+          cache: pnpm
 
-      # The JSR CLI runs on Node and authenticates with GitHub OIDC.
+      - name: Install dependencies
+        # `npx jsr publish` resolves npm dependencies from node_modules, so the
+        # workspace must be installed before publishing @evex/linejs.
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify the tag matches the package versions
+        env:
+          TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          set -euo pipefail
+          TYPES_VERSION=$(node -p "require('./packages/types/jsr.json').version")
+          LINEJS_VERSION=$(node -p "require('./packages/linejs/jsr.json').version")
+          if [ "$TYPES_VERSION" != "$LINEJS_VERSION" ]; then
+            echo "::error::jsr.json versions differ: $TYPES_VERSION vs $LINEJS_VERSION" >&2
+            exit 1
+          fi
+          if [ "v$TYPES_VERSION" != "$TAG" ]; then
+            echo "::error::Tag $TAG does not match package version $TYPES_VERSION" >&2
+            exit 1
+          fi
+
       - name: Publish linejs-types to JSR
         working-directory: packages/types
-        run: npx --yes jsr publish
+        run: npx --yes jsr@0.14.3 publish
 
       - name: Publish linejs to JSR
         working-directory: packages/linejs
-        run: npx --yes jsr publish
+        run: npx --yes jsr@0.14.3 publish
 
       - name: Publish linejs-agent to JSR
         # The package must first be created at
@@ -40,4 +78,4 @@ jobs:
         # to fail; don't fail the release for it.
         continue-on-error: true
         working-directory: packages/agent
-        run: npx --yes jsr publish
+        run: npx --yes jsr@0.14.3 publish

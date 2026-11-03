@@ -271,7 +271,10 @@ export class Conn {
 			const pushPayload = dd.subarray(6);
 			const packet = new LegyH2PushFrame(pushType, serviceType, pushId, pushPayload);
 			this.manager.log(`[PUSH] receives push frame. service:${packet.serviceType}`, debugOnly);
-			if ([LegyH2PushFrameType.NONE, LegyH2PushFrameType.ACK_REQUIRED].includes(packet.pushType!)) {
+			if (
+				packet.pushType === LegyH2PushFrameType.NONE ||
+				packet.pushType === LegyH2PushFrameType.ACK_REQUIRED
+			) {
 				if (packet.pushType === LegyH2PushFrameType.ACK_REQUIRED) {
 					this.writeByte(packet.ackPacket());
 					this.manager.log(`[PUSH] send push ack. service:${serviceType}`, debugOnly);

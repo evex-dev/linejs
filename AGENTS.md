@@ -20,16 +20,18 @@ This repository is a pnpm + [Vite+](https://viteplus.dev/) monorepo.
 - `pnpm run build`: build every publishable package with `vp pack`.
 - `pnpm test`: run `vp test` in every package.
 - `pnpm run test:scripts`: run the repository-script tests under `scripts/`.
-- `pnpm run check`: run Vite+ format/lint checks for the whole repository (root-only config).
+- `pnpm run check`: run Vite+ format/lint checks and TypeScript type-checking for the whole repository (root-only lint/fmt config).
+- `pnpm run typecheck`: run `tsc --noEmit` in every package.
 - `pnpm run format`: format the whole repository with `vp fmt . --write`.
 - `pnpm docs:dev` / `pnpm docs:build`: run the VitePress site from `docs`.
 - `cd packages/linejs && pnpm exec vp test`: package-scoped test run.
+- `node example/<name>.ts`: run an example with plain Node 24; the root devDependencies link the workspace packages and the sources are strip-only-compatible TypeScript.
 - `node sandbox/main.ts`: run the local (gitignored) sandbox on Node.
 
 ## Release
 
 - `.github/workflows/publish.yml` is a manual `workflow_dispatch` release with a `major` / `minor` / `patch` choice. It reads the latest npm version, bumps it, publishes `@evex-dev/linejs-types` and `@evex-dev/linejs` with npm Trusted Publishing (OIDC), then pushes the release commit/tag and creates the GitHub Release.
-- `.github/workflows/release.yml` publishes the same tag to JSR with OIDC.
+- `publish.yml` also publishes the tag to JSR with OIDC (tags pushed with `GITHUB_TOKEN` do not trigger other workflows). `.github/workflows/release.yml` remains for a maintainer-pushed tag or a manual JSR retry via `workflow_dispatch`.
 - Never add `NPM_TOKEN`/`NODE_AUTH_TOKEN`; trusted publishing supplies credentials.
 
 ## Coding Style & Naming Conventions

@@ -7,6 +7,7 @@ import { BaseStorage, type Storage } from "./base.ts";
  */
 export class FileStorage extends BaseStorage {
 	private writeLock: Promise<void> = Promise.resolve();
+	private path: string;
 
 	/**
 	 * @description Construct a FileStorage with the given path and data.
@@ -14,11 +15,9 @@ export class FileStorage extends BaseStorage {
 	 * @param {string} path - The path to the file.
 	 * @param {string} [extendData] - The data to extend the file with. If the file does not exist, it will be created with the given data. If the file does exist, the data will be appended to the file. If no data is given, the file will be created with an empty object.
 	 */
-	constructor(
-		private path: string,
-		extendData?: string,
-	) {
+	constructor(path: string, extendData?: string) {
 		super();
+		this.path = path;
 
 		try {
 			fs.readFileSync(this.path, "utf-8");

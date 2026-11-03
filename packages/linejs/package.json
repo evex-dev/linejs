@@ -64,11 +64,15 @@
 	"scripts": {
 		"build": "vp pack",
 		"test": "vp test",
-		"prepublishOnly": "pnpm -w run check && pnpm run build"
+		"prepublishOnly": "pnpm -w run check && pnpm run build",
+		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
 		"@evex-dev/linejs-types": "^3.6.0",
 		"@noble/ciphers": "^2.2.0",
+		"@types/crypto-js": "^4.2.2",
+		"@types/node": "^24.10.0",
+		"@types/thrift": "^0.10.17",
 		"crypto-js": "^4.2.0",
 		"curve25519-js": "^0.0.4",
 		"node-bignumber": "^1.2.2",
@@ -79,9 +83,6 @@
 		"undici": "^7.16.0"
 	},
 	"devDependencies": {
-		"@types/crypto-js": "^4.2.2",
-		"@types/node": "^24.10.0",
-		"@types/thrift": "^0.10.17",
 		"typescript": "^5.9.3",
 		"vite-plus": "^1.4.0"
 	},

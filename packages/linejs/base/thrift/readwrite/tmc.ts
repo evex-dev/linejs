@@ -60,7 +60,7 @@ export class TMoreCompactProtocol {
 			this.currentPosition += 1;
 			result |= BigInt(byte & 127) << BigInt(shift);
 			if ((byte & 128) !== 128) {
-				return result > Number.MAX_SAFE_INTEGER ? <LooseType>result : Number(result);
+				return result > Number.MAX_SAFE_INTEGER ? (result as LooseType) : Number(result);
 			}
 			shift += 7;
 		}
@@ -159,7 +159,7 @@ export class TMoreCompactProtocol {
 
 			for (const fid of fieldIds) {
 				const [_, fieldValue] = this.readDataByType(this.getNextType(), fid);
-				(<LooseType>valData)[fid] = fieldValue;
+				(valData as LooseType)[fid] = fieldValue;
 			}
 		} else if (typeId === 13) {
 			// MAP
@@ -176,7 +176,7 @@ export class TMoreCompactProtocol {
 				for (let i = 0; i < mapSize; i++) {
 					const [, kVal] = this.readDataByType(keyType);
 					const [, vVal] = this.readDataByType(valueType);
-					(<LooseType>valData)[kVal] = vVal;
+					(valData as LooseType)[kVal] = vVal;
 				}
 			}
 		} else if (typeId === 14 || typeId === 15) {
@@ -197,7 +197,7 @@ export class TMoreCompactProtocol {
 
 			for (let i = 0; i < count; i++) {
 				const [, val] = this.readDataByType(this.convertCompactTypeToTType(elementType));
-				(<Array<LooseType>>valData).push(val);
+				(valData as Array<LooseType>).push(val);
 			}
 		} else if (typeId === 16) {
 			// STRING (string ID delta)

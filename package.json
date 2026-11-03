@@ -6,17 +6,24 @@
 		"build": "pnpm --filter './packages/*' -r run build",
 		"test": "pnpm --filter './packages/*' -r run test",
 		"test:scripts": "vp test",
-		"check": "vp check",
+		"check": "vp check && pnpm run typecheck",
 		"format": "vp fmt . --write",
 		"docs:dev": "pnpm --filter linejs-docs run dev",
-		"docs:build": "pnpm --filter linejs-docs run build"
+		"docs:build": "pnpm --filter linejs-docs run build",
+		"typecheck": "pnpm --filter \"./packages/*\" -r run typecheck"
 	},
 	"devDependencies": {
+		"@evex-dev/linejs": "workspace:*",
+		"@evex-dev/linejs-types": "workspace:*",
+		"jsdom": "^25.0.0",
+		"thrift": "^0.20.0",
 		"typescript": "^5.9.3",
-		"vite-plus": "^1.4.0"
+		"undici": "^7.16.0",
+		"vite-plus": "^1.4.0",
+		"xxhash-wasm": "^1.1.0"
 	},
 	"engines": {
 		"node": "^22.18.0 || ^24.11.0 || >=26.0.0"
 	},
-	"packageManager": "pnpm@12.6.0"
+	"packageManager": "pnpm@12.16.1"
 }

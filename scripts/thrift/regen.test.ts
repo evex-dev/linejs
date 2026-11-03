@@ -26,10 +26,11 @@ import { Thrift } from "../../packages/types/thrift.ts";
 const linejsRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 
 /** Format `paths` with the repo's own Vite+ formatter settings (tabs, double
- *  quotes, semicolons). The generators emit deliberately sloppy source and the
- *  pipeline formats afterwards, so the committed files can only be compared
- *  post-fmt. `vp` is run from `packages/linejs` so it picks up that package's
- *  formatter config, which is the repo's canonical one. */
+ *  quotes, semicolons) from the root vite.config.ts. The generators emit
+ *  deliberately sloppy source and the pipeline formats afterwards, so the
+ *  committed files can only be compared post-fmt. `vp` runs from
+ *  `packages/linejs` so relative paths keep their usual meaning; the fmt
+ *  settings themselves come from the workspace root. */
 async function vpFmt(paths: string[]): Promise<void> {
 	const result = spawnSync(
 		process.platform === "win32" ? "pnpm.cmd" : "pnpm",

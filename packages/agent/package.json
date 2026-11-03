@@ -8,6 +8,10 @@
 		"url": "git+https://github.com/evex-dev/linejs.git",
 		"directory": "packages/agent"
 	},
+	"files": [
+		"dist",
+		"README.md"
+	],
 	"type": "module",
 	"main": "./mod.ts",
 	"module": "./mod.ts",
@@ -34,7 +38,8 @@
 	},
 	"scripts": {
 		"build": "vp pack",
-		"test": "vp test"
+		"test": "vp test",
+		"typecheck": "tsc --noEmit"
 	},
 	"devDependencies": {
 		"@types/node": "^24.10.0",
