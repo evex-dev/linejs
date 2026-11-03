@@ -3,6 +3,17 @@ import { Square, SquareChat } from "./features/square/mod.ts";
 import { continueRequest } from "../base/mod.ts";
 import { Chat } from "./features/chat/mod.ts";
 import { User } from "./features/user/mod.ts";
+import {
+	type BirthdayBoardClient,
+	createBirthdayBoardClient,
+} from "./features/birthday_board.ts";
+export * as birthdayBoard from "./features/birthday_board.ts";
+export type {
+	BirthdayBoardCardInput,
+	BirthdayBoardClient,
+	BirthdayBoardPageOptions,
+	BirthdayBoardRestResponse,
+} from "./features/birthday_board.ts";
 import { TypedEventEmitter } from "../base/core/typed-event-emitter/index.ts";
 import { SquareMessage, TalkMessage } from "./features/message/mod.ts";
 import type * as LINETypes from "@evex/linejs-types";
@@ -90,6 +101,7 @@ function isApiNotCapable(e: unknown): boolean {
 
 export class Client extends TypedEventEmitter<ClientEvents> {
 	readonly base: BaseClient;
+	#birthdayBoard?: BirthdayBoardClient;
 	#liff?: LiffClient;
 	constructor(base: BaseClient) {
 		super();
@@ -109,6 +121,14 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	get voom(): VoomClient {
 		if (!this.#voom) this.#voom = createVoomClient(this);
 		return this.#voom;
+	}
+
+	/** Birthday Board APIs backed by the LINE Android BDB endpoints. */
+	get birthdayBoard(): BirthdayBoardClient {
+		if (!this.#birthdayBoard) {
+			this.#birthdayBoard = createBirthdayBoardClient(this);
+		}
+		return this.#birthdayBoard;
 	}
 
 	#call?: CallClient;
