@@ -138,6 +138,11 @@ jobs:
       - name: Sync the lockfile
         run: pnpm install --no-frozen-lockfile
 
+      - name: Format the bumped manifests
+        # `npm version`/`npm pkg set` may rewrite JSON indentation; keep the
+        # format check in prepublishOnly green.
+        run: pnpm run format
+
       - name: Build and test
         env:
           VERSION: ${{ steps.version.outputs.version }}
@@ -146,6 +151,7 @@ jobs:
           pnpm run build
           pnpm test
           pnpm run test:scripts
+          pnpm run check
 
       - name: Refuse to reuse an existing version
         env:
