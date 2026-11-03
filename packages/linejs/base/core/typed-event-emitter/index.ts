@@ -1,11 +1,8 @@
-import type { LooseType } from "@evex/loose-types";
+import type { LooseType } from "../../types.ts";
 
 type RecordEvent = Record<string, (...args: LooseType[]) => LooseType>;
 
-export class TypedEventEmitter<
-	T extends RecordEvent,
-	E extends keyof T = keyof T,
-> {
+export class TypedEventEmitter<T extends RecordEvent, E extends keyof T = keyof T> {
 	public listeners: Map<E, T[E][]> = new Map();
 
 	public on<E2 extends E>(event: E2, ...listeners: T[E2][]): this {
@@ -14,8 +11,8 @@ export class TypedEventEmitter<
 		}
 
 		for (const listener of listeners) {
-			if(!(listener instanceof Function)){
-				throw new TypeError("listeners is not function")
+			if (!(listener instanceof Function)) {
+				throw new TypeError("listeners is not function");
 			}
 			this.listeners.get(event)?.push(listener);
 		}
@@ -28,12 +25,7 @@ export class TypedEventEmitter<
 			for (const listener of listeners) {
 				if (!this.listeners.get(event)?.includes(listener)) continue;
 
-				this.listeners
-					.get(event)
-					?.splice(
-						this.listeners.get(event)?.indexOf(listener) ?? 0,
-						1,
-					);
+				this.listeners.get(event)?.splice(this.listeners.get(event)?.indexOf(listener) ?? 0, 1);
 			}
 		}
 

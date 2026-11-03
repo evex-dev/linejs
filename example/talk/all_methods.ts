@@ -2,8 +2,8 @@ import {
 	loginWithAuthToken,
 	loginWithPassword,
 	loginWithQR,
-} from "@evex/linejs";
-import { FileStorage } from "@evex/linejs/storage";
+} from "@evex-dev/linejs";
+import { FileStorage } from "@evex-dev/linejs/storage";
 import { Buffer } from "node:buffer";
 
 const client = await loginWithAuthToken(

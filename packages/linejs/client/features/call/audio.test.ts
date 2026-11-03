@@ -1,4 +1,4 @@
-import { assert, assertEquals, assertRejects, assertThrows } from "@std/assert";
+import { assert, test } from "vite-plus/test";
 import {
 	bufferSink,
 	bufferSource,
@@ -11,20 +11,20 @@ import {
 	streamSource,
 } from "./audio.ts";
 
-Deno.test("bufferSource chunks 1s @ 16kHz mono into 20ms frames", async () => {
+test("bufferSource chunks 1s @ 16kHz mono into 20ms frames", async () => {
 	const samples = new Int16Array(16000); // 1 second
 	samples.fill(1234);
 	const src = bufferSource({ samples, sampleRate: 16000 });
 	const frames: PcmFrame[] = [];
 	for await (const f of src.frames()) frames.push(f);
-	assertEquals(frames.length, 50); // 1s / 20ms = 50 frames
-	assertEquals(frames[0].samples.length, 320); // 16000 * 0.02
-	assertEquals(frames[0].sampleRate, 16000);
-	assertEquals(frames[0].channels, 1);
-	assertEquals(frames[0].samples[0], 1234);
+	assert.deepEqual(frames.length, 50); // 1s / 20ms = 50 frames
+	assert.deepEqual(frames[0].samples.length, 320); // 16000 * 0.02
+	assert.deepEqual(frames[0].sampleRate, 16000);
+	assert.deepEqual(frames[0].channels, 1);
+	assert.deepEqual(frames[0].samples[0], 1234);
 });
 
-Deno.test("bufferSource frameDurationMs respected", async () => {
+test("bufferSource frameDurationMs respected", async () => {
 	const src = bufferSource({
 		samples: new Int16Array(4800),
 		sampleRate: 48000,
@@ -32,11 +32,11 @@ Deno.test("bufferSource frameDurationMs respected", async () => {
 	});
 	const frames: PcmFrame[] = [];
 	for await (const f of src.frames()) frames.push(f);
-	assertEquals(frames.length, 10);
-	assertEquals(frames[0].samples.length, 480);
+	assert.deepEqual(frames.length, 10);
+	assert.deepEqual(frames[0].samples.length, 480);
 });
 
-Deno.test("bufferSource respects abort signal", async () => {
+test("bufferSource respects abort signal", async () => {
 	const src = bufferSource({
 		samples: new Int16Array(48000),
 		sampleRate: 48000,
@@ -47,10 +47,10 @@ Deno.test("bufferSource respects abort signal", async () => {
 		n++;
 		if (n === 3) ctrl.abort();
 	}
-	assertEquals(n, 3);
+	assert.deepEqual(n, 3);
 });
 
-Deno.test("streamSource forwards frames from a ReadableStream", async () => {
+test("streamSource forwards frames from a ReadableStream", async () => {
 	const f1: PcmFrame = {
 		samples: new Int16Array([1, 2]),
 		sampleRate: 48000,
@@ -70,18 +70,18 @@ Deno.test("streamSource forwards frames from a ReadableStream", async () => {
 	});
 	const collected: PcmFrame[] = [];
 	for await (const f of streamSource(stream).frames()) collected.push(f);
-	assertEquals(collected.length, 2);
-	assertEquals(Array.from(collected[0].samples), [1, 2]);
+	assert.deepEqual(collected.length, 2);
+	assert.deepEqual(Array.from(collected[0].samples), [1, 2]);
 });
 
-Deno.test("bufferSink collects every write", () => {
+test("bufferSink collects every write", () => {
 	const sink = bufferSink();
 	sink.write({ samples: new Int16Array([1]), sampleRate: 48000, channels: 1 });
 	sink.write({ samples: new Int16Array([2]), sampleRate: 48000, channels: 1 });
-	assertEquals(sink.frames.length, 2);
+	assert.deepEqual(sink.frames.length, 2);
 });
 
-Deno.test("streamSink writes through to underlying WritableStream", async () => {
+test("streamSink writes through to underlying WritableStream", async () => {
 	const written: PcmFrame[] = [];
 	const ws = new WritableStream<PcmFrame>({
 		write(f) {
@@ -95,10 +95,10 @@ Deno.test("streamSink writes through to underlying WritableStream", async () => 
 		channels: 1,
 	});
 	await sink.end?.();
-	assertEquals(written.length, 1);
+	assert.deepEqual(written.length, 1);
 });
 
-Deno.test("packetizeNativeGroupOpusPairs combines prefixed 20ms Opus frames", () => {
+test("packetizeNativeGroupOpusPairs combines prefixed 20ms Opus frames", () => {
 	const packets = [
 		new Uint8Array([0x00, 0x78, 0x11, 0x12]),
 		new Uint8Array([0x00, 0x78, 0x21, 0x22]),
@@ -110,49 +110,25 @@ Deno.test("packetizeNativeGroupOpusPairs combines prefixed 20ms Opus frames", ()
 
 	const grouped = packetizeNativeGroupOpusPairs(packets);
 
-	assertEquals(grouped.length, 3);
-	assertEquals(Array.from(grouped[0]), [
-		0x00,
-		0x7b,
-		0x02,
-		0x11,
-		0x12,
-		0x21,
-		0x22,
-	]);
-	assertEquals(Array.from(grouped[1]), [0x00, 0x7b, 0x02, 0x31, 0x41]);
-	assertEquals(Array.from(grouped[2]), [0x10, 0x7b, 0x02, 0x51, 0x61]);
+	assert.deepEqual(grouped.length, 3);
+	assert.deepEqual(Array.from(grouped[0]), [0x00, 0x7b, 0x02, 0x11, 0x12, 0x21, 0x22]);
+	assert.deepEqual(Array.from(grouped[1]), [0x00, 0x7b, 0x02, 0x31, 0x41]);
+	assert.deepEqual(Array.from(grouped[2]), [0x10, 0x7b, 0x02, 0x51, 0x61]);
 });
 
-Deno.test("packetizeNativeGroupOpusPairs writes VBR frame-size headers", () => {
+test("packetizeNativeGroupOpusPairs writes VBR frame-size headers", () => {
 	const grouped = packetizeNativeGroupOpusPairs([
 		new Uint8Array([0x00, 0x78, 0x11, 0x12, 0x13]),
 		new Uint8Array([0x00, 0x78, 0x21]),
 	]);
 
-	assertEquals(Array.from(grouped[0]), [
-		0x00,
-		0x7b,
-		0x82,
-		0x03,
-		0x11,
-		0x12,
-		0x13,
-		0x21,
-	]);
+	assert.deepEqual(Array.from(grouped[0]), [0x00, 0x7b, 0x82, 0x03, 0x11, 0x12, 0x13, 0x21]);
 });
 
-Deno.test("group CELT EAS2 puts MSB-first activity before CBR/VBR frames", () => {
+test("group CELT EAS2 puts MSB-first activity before CBR/VBR frames", () => {
 	const frame = (bytes: number[]) => new Uint8Array([0, 0xf8, ...bytes]);
-	const packets = [
-		frame([1, 2]),
-		frame([3, 4]),
-		frame([5]),
-		frame([6, 7]),
-		frame([8]),
-		frame([9]),
-	];
-	assertEquals(
+	const packets = [frame([1, 2]), frame([3, 4]), frame([5]), frame([6, 7]), frame([8]), frame([9])];
+	assert.deepEqual(
 		packetizeNativeGroupOpusPairs(packets, {
 			frameActivity: [true, false, false, true, true, true],
 		}),
@@ -164,65 +140,50 @@ Deno.test("group CELT EAS2 puts MSB-first activity before CBR/VBR frames", () =>
 	);
 });
 
-Deno.test("group VBR two-byte sizes preserve frame boundaries", () => {
+test("group VBR two-byte sizes preserve frame boundaries", () => {
 	for (const size of [252, 253, 255, 256, 1275]) {
 		const left = new Uint8Array(size + 1).fill(0x11);
 		left[0] = 0x78;
-		const [packet] = packetizeNativeGroupOpusPairs([
-			left,
-			new Uint8Array([0x78, 0x22]),
-		], { inputPrefixBytes: 0 });
-		assertEquals(packet[2], 0x82);
+		const [packet] = packetizeNativeGroupOpusPairs([left, new Uint8Array([0x78, 0x22])], {
+			inputPrefixBytes: 0,
+		});
+		assert.deepEqual(packet[2], 0x82);
 		const decodedSize = packet[3] + 4 * packet[4];
-		assertEquals(decodedSize, size);
-		assertEquals(packet.subarray(5, 5 + decodedSize), left.subarray(1));
-		assertEquals(packet.subarray(5 + decodedSize), new Uint8Array([0x22]));
+		assert.deepEqual(decodedSize, size);
+		assert.deepEqual(packet.subarray(5, 5 + decodedSize), left.subarray(1));
+		assert.deepEqual(packet.subarray(5 + decodedSize), new Uint8Array([0x22]));
 	}
 });
 
-Deno.test("group packetizer rejects unsupported layouts and missing CELT activity", () => {
+test("group packetizer rejects unsupported layouts and missing CELT activity", () => {
 	const f = new Uint8Array([0xf8, 1]);
 	const opts = { inputPrefixBytes: 0, frameActivity: [true, false] };
-	assertThrows(
-		() => packetizeNativeGroupOpusPairs([f], opts),
-		Error,
-		"complete pairs",
-	);
-	assertThrows(
+	assert.throws(() => packetizeNativeGroupOpusPairs([f], opts), Error, "complete pairs");
+	assert.throws(
 		() => packetizeNativeGroupOpusPairs([f, f], { inputPrefixBytes: 0 }),
 		Error,
 		"CELT frameActivity required",
 	);
-	assertThrows(
+	assert.throws(
 		() => packetizeNativeGroupOpusPairs([f, f], { ...opts, frameActivity: [] }),
 		Error,
 		"invalid frameActivity",
 	);
-	assertThrows(
+	assert.throws(
 		() => packetizeNativeGroupOpusPairs([f, new Uint8Array([0x78, 1])], opts),
 		Error,
 		"matching TOC",
 	);
 	for (const toc of [0xf9, 0xfa, 0xfb]) {
 		const p = new Uint8Array([toc, 1]);
-		assertThrows(
-			() => packetizeNativeGroupOpusPairs([p, p], opts),
-			Error,
-			"code-0",
-		);
+		assert.throws(() => packetizeNativeGroupOpusPairs([p, p], opts), Error, "code-0");
 	}
 	for (const toc of [0xfc, 0xf0, 0x70, 0x00]) {
 		const p = new Uint8Array([toc, 1]);
-		assertThrows(
-			() => packetizeNativeGroupOpusPairs([p, p], opts),
-			Error,
-			"mono 20ms",
-		);
+		assert.throws(() => packetizeNativeGroupOpusPairs([p, p], opts), Error, "mono 20ms");
 	}
-	for (
-		const p of [new Uint8Array(), new Uint8Array([0xf8]), new Uint8Array(1277)]
-	) {
-		assertThrows(
+	for (const p of [new Uint8Array(), new Uint8Array([0xf8]), new Uint8Array(1277)]) {
+		assert.throws(
 			() => packetizeNativeGroupOpusPairs([p, p], opts),
 			Error,
 			"invalid Opus frame size",
@@ -230,27 +191,27 @@ Deno.test("group packetizer rejects unsupported layouts and missing CELT activit
 	}
 });
 
-Deno.test("resampleLinear: identity when rates match", () => {
+test("resampleLinear: identity when rates match", () => {
 	const s = new Int16Array([1, 2, 3, 4]);
 	const out = resampleLinear(s, 48000, 48000, 1);
-	assertEquals(out, s);
+	assert.deepEqual(out, s);
 });
 
-Deno.test("resampleLinear: 48k → 24k halves length", () => {
+test("resampleLinear: 48k → 24k halves length", () => {
 	const s = new Int16Array([0, 100, 200, 300, 400, 500, 600, 700]);
 	const out = resampleLinear(s, 48000, 24000, 1);
-	assertEquals(out.length, 4);
+	assert.deepEqual(out.length, 4);
 });
 
-Deno.test("resampleLinear: 16k → 48k triples length", () => {
+test("resampleLinear: 16k → 48k triples length", () => {
 	const s = new Int16Array([100, 200, 300, 400]);
 	const out = resampleLinear(s, 16000, 48000, 1);
-	assertEquals(out.length, 12);
+	assert.deepEqual(out.length, 12);
 	// First sample preserved, interpolation between
-	assertEquals(out[0], 100);
+	assert.deepEqual(out[0], 100);
 });
 
-Deno.test("decodeWavSync: minimal 16-bit PCM mono WAV", () => {
+test("decodeWavSync: minimal 16-bit PCM mono WAV", () => {
 	// hand-built RIFF/WAVE header + 4 PCM samples (8 bytes)
 	const samples = [10, 20, 30, 40];
 	const dataLen = samples.length * 2;
@@ -276,12 +237,12 @@ Deno.test("decodeWavSync: minimal 16-bit PCM mono WAV", () => {
 		dv.setInt16(44 + i * 2, samples[i], true);
 	}
 	const out = decodeWavSync(buf);
-	assertEquals(out.sampleRate, 16000);
-	assertEquals(out.channels, 1);
-	assertEquals(Array.from(out.samples), samples);
+	assert.deepEqual(out.sampleRate, 16000);
+	assert.deepEqual(out.channels, 1);
+	assert.deepEqual(Array.from(out.samples), samples);
 });
 
-Deno.test("decodeWavSync: accepts streamed WAV with placeholder data size", () => {
+test("decodeWavSync: accepts streamed WAV with placeholder data size", () => {
 	const samples = [10, 20, 30, 40];
 	const dataLen = samples.length * 2;
 	const buf = new Uint8Array(44 + dataLen);
@@ -303,12 +264,12 @@ Deno.test("decodeWavSync: accepts streamed WAV with placeholder data size", () =
 		dv.setInt16(44 + i * 2, samples[i], true);
 	}
 	const out = decodeWavSync(buf);
-	assertEquals(out.sampleRate, 48000);
-	assertEquals(out.channels, 1);
-	assertEquals(Array.from(out.samples), samples);
+	assert.deepEqual(out.sampleRate, 48000);
+	assert.deepEqual(out.channels, 1);
+	assert.deepEqual(Array.from(out.samples), samples);
 });
 
-Deno.test("decodeWavSync: rejects non-PCM (e.g. μ-law audioFormat=7)", () => {
+test("decodeWavSync: rejects non-PCM (e.g. μ-law audioFormat=7)", () => {
 	const buf = new Uint8Array(44);
 	const dv = new DataView(buf.buffer);
 	buf.set([0x52, 0x49, 0x46, 0x46], 0);
@@ -324,29 +285,29 @@ Deno.test("decodeWavSync: rejects non-PCM (e.g. μ-law audioFormat=7)", () => {
 	dv.setUint16(34, 8, true);
 	buf.set([0x64, 0x61, 0x74, 0x61], 36);
 	dv.setUint32(40, 0, true);
-	assertThrows(() => decodeWavSync(buf), Error, "not PCM");
+	assert.throws(() => decodeWavSync(buf), Error, "not PCM");
 });
 
-Deno.test("defaultCodecFactory throws on use (caller must plug in Opus)", () => {
-	assertThrows(
+test("defaultCodecFactory throws on use (caller must plug in Opus)", () => {
+	assert.throws(
 		() => defaultCodecFactory.newEncoder({ sampleRate: 48000, channels: 1 }),
 		Error,
 		"no audio encoder configured",
 	);
-	assertThrows(
+	assert.throws(
 		() => defaultCodecFactory.newDecoder({ sampleRate: 48000, channels: 1 }),
 		Error,
 		"no audio decoder configured",
 	);
 });
 
-Deno.test("end-to-end: bufferSource → bufferSink piped manually", async () => {
+test("end-to-end: bufferSource → bufferSink piped manually", async () => {
 	const samples = new Int16Array(1600); // 100ms @ 16kHz
 	for (let i = 0; i < samples.length; i++) samples[i] = i & 0xff;
 	const src = bufferSource({ samples, sampleRate: 16000 });
 	const sink = bufferSink();
 	for await (const f of src.frames()) await sink.write(f);
-	assertEquals(sink.frames.length, 5); // 100ms / 20ms
+	assert.deepEqual(sink.frames.length, 5); // 100ms / 20ms
 	// Reassemble + verify
 	const reassembled = new Int16Array(1600);
 	let o = 0;
@@ -354,10 +315,10 @@ Deno.test("end-to-end: bufferSource → bufferSink piped manually", async () => 
 		reassembled.set(f.samples, o);
 		o += f.samples.length;
 	}
-	assertEquals(reassembled, samples);
+	assert.deepEqual(reassembled, samples);
 });
 
-Deno.test("stub assertions: streamSource cancels when aborted", async () => {
+test("stub assertions: streamSource cancels when aborted", async () => {
 	let cancelled = false;
 	const stream = new ReadableStream<PcmFrame>({
 		pull(c) {
@@ -377,5 +338,5 @@ Deno.test("stub assertions: streamSource cancels when aborted", async () => {
 		if (++n === 2) ctrl.abort();
 		if (n > 10) break;
 	}
-	assert(cancelled);
+	assert.isOk(cancelled);
 });

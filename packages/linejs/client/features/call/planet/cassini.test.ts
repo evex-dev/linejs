@@ -1,4 +1,4 @@
-import { assertEquals } from "@std/assert";
+import { assert, test } from "vite-plus/test";
 import {
 	buildExchangeAppStrData,
 	buildRelReq,
@@ -17,22 +17,22 @@ import {
 	WireType,
 } from "./cassini.ts";
 
-Deno.test("encodeVarint matches well-known protobuf encodings", () => {
-	assertEquals(encodeVarint(0), new Uint8Array([0]));
-	assertEquals(encodeVarint(150), new Uint8Array([0x96, 0x01]));
-	assertEquals(encodeVarint(4353), new Uint8Array([0x81, 0x22]));
+test("encodeVarint matches well-known protobuf encodings", () => {
+	assert.deepEqual(encodeVarint(0), new Uint8Array([0]));
+	assert.deepEqual(encodeVarint(150), new Uint8Array([0x96, 0x01]));
+	assert.deepEqual(encodeVarint(4353), new Uint8Array([0x81, 0x22]));
 });
 
-Deno.test("encodeVarint + decodeVarint roundtrip", () => {
+test("encodeVarint + decodeVarint roundtrip", () => {
 	for (const v of [0, 1, 127, 128, 4353, 0x1d5, 1_000_000_000, 0x7fffffff]) {
 		const e = encodeVarint(v);
 		const [d, n] = decodeVarint(e, 0);
-		assertEquals(Number(d), v);
-		assertEquals(n, e.length);
+		assert.deepEqual(Number(d), v);
+		assert.deepEqual(n, e.length);
 	}
 });
 
-Deno.test("encodePb + decodePb roundtrip", () => {
+test("encodePb + decodePb roundtrip", () => {
 	const fields = [
 		{
 			tag: 1,
@@ -48,47 +48,19 @@ Deno.test("encodePb + decodePb roundtrip", () => {
 	];
 	const wire = encodePb(fields);
 	const back = decodePb(wire);
-	assertEquals(back.length, fields.length);
+	assert.deepEqual(back.length, fields.length);
 });
 
-Deno.test("Cassini envelope roundtrip with the observed 7-field header", () => {
+test("Cassini envelope roundtrip with the observed 7-field header", () => {
 	const hdr = {
 		userId: "u00000000000000000000000000000000",
 		msgId: 4353,
 		callUuid16: new Uint8Array([
-			0xb0,
-			0xc2,
-			0xa7,
-			0x4c,
-			0xe7,
-			0xcd,
-			0x45,
-			0x02,
-			0xa0,
-			0xfa,
-			0x32,
-			0x58,
-			0x6d,
-			0xa9,
-			0x0e,
+			0xb0, 0xc2, 0xa7, 0x4c, 0xe7, 0xcd, 0x45, 0x02, 0xa0, 0xfa, 0x32, 0x58, 0x6d, 0xa9, 0x0e,
 			0x54,
 		]),
 		msgNonce: new Uint8Array([
-			0xfc,
-			0x4e,
-			0xd0,
-			0x77,
-			0xd5,
-			0xe2,
-			0x41,
-			0x75,
-			0xab,
-			0x59,
-			0x6e,
-			0xda,
-			0x73,
-			0x51,
-			0xcb,
+			0xfc, 0x4e, 0xd0, 0x77, 0xd5, 0xe2, 0x41, 0x75, 0xab, 0x59, 0x6e, 0xda, 0x73, 0x51, 0xcb,
 			0xe3,
 		]),
 		counter: 797128754n,
@@ -98,11 +70,11 @@ Deno.test("Cassini envelope roundtrip with the observed 7-field header", () => {
 	const body = new Uint8Array([0x0a, 0x0b, 0x09]);
 	const wire = packCassini({ header: hdr, body }, ENVELOPE_BODY_TAG.KA);
 	const back = unpackCassini(wire);
-	assertEquals(back.bodyTag, ENVELOPE_BODY_TAG.KA);
-	assertEquals(back.header, hdr);
+	assert.deepEqual(back.bodyTag, ENVELOPE_BODY_TAG.KA);
+	assert.deepEqual(back.header, hdr);
 });
 
-Deno.test("packCassini against an observed msg_pack header shape", () => {
+test("packCassini against an observed msg_pack header shape", () => {
 	// Reproduce the first 96 bytes of an observed msg_pack header shape.
 	const expectedHeaderBytes = new Uint8Array([
 		// field 1 (user_id, 33 chars)
@@ -186,10 +158,10 @@ Deno.test("packCassini against an observed msg_pack header shape", () => {
 		subscriptionId: 290579788n,
 		sessionId: 7642030284661133203n,
 	});
-	assertEquals(produced, expectedHeaderBytes);
+	assert.deepEqual(produced, expectedHeaderBytes);
 });
 
-Deno.test("Cassini body roundtrip preserves typed fields", () => {
+test("Cassini body roundtrip preserves typed fields", () => {
 	const wire = packCassiniBody({
 		callUuid: "c5cd3923-5d89-45d6-a0bf-e8175e0c7757",
 		msgTypeName: "exchange_app_str_data",
@@ -197,12 +169,12 @@ Deno.test("Cassini body roundtrip preserves typed fields", () => {
 		deviceInfo: "Android..36..Pixel 6a",
 	});
 	const back = unpackCassiniBody(wire);
-	assertEquals(back.callUuid, "c5cd3923-5d89-45d6-a0bf-e8175e0c7757");
-	assertEquals(back.msgTypeName, "exchange_app_str_data");
-	assertEquals(back.jsonParams, '{"csv":1}');
+	assert.deepEqual(back.callUuid, "c5cd3923-5d89-45d6-a0bf-e8175e0c7757");
+	assert.deepEqual(back.msgTypeName, "exchange_app_str_data");
+	assert.deepEqual(back.jsonParams, '{"csv":1}');
 });
 
-Deno.test("buildSetupReq emits an envelope with STATE-class body tag (= 4)", () => {
+test("buildSetupReq emits an envelope with STATE-class body tag (= 4)", () => {
 	const session: CassiniSession = {
 		fromMid: "u00000000000000000000000000000000",
 		callUuid16: new Uint8Array(16),
@@ -210,34 +182,19 @@ Deno.test("buildSetupReq emits an envelope with STATE-class body tag (= 4)", () 
 		subscriptionId: 290579788n,
 		sessionId: 7642030284661133203n,
 	};
-	const back = unpackCassini(buildSetupReq({
-		session,
-		msgId: 1,
-		counter: 1n,
-		deviceInfo: "linejs",
-	}));
-	assertEquals(back.bodyTag, ENVELOPE_BODY_TAG.STATE);
-	assertEquals(unpackCassiniBody(back.body).msgTypeName, "setup_req");
+	const back = unpackCassini(
+		buildSetupReq({
+			session,
+			msgId: 1,
+			counter: 1n,
+			deviceInfo: "linejs",
+		}),
+	);
+	assert.deepEqual(back.bodyTag, ENVELOPE_BODY_TAG.STATE);
+	assert.deepEqual(unpackCassiniBody(back.body).msgTypeName, "setup_req");
 });
 
-Deno.test("buildExchangeAppStrData uses CONTROL-class body tag (= 3)", () => {
-	const session: CassiniSession = {
-		fromMid: "u1",
-		callUuid16: new Uint8Array(16),
-		callUuidString: "uuid",
-		subscriptionId: 1n,
-		sessionId: 1n,
-	};
-	const back = unpackCassini(buildExchangeAppStrData({
-		session,
-		msgId: 1,
-		counter: 1n,
-		json: '{"csv":1}',
-	}));
-	assertEquals(back.bodyTag, ENVELOPE_BODY_TAG.CONTROL);
-});
-
-Deno.test("buildRelReq uses CONTROL-class body tag", () => {
+test("buildExchangeAppStrData uses CONTROL-class body tag (= 3)", () => {
 	const session: CassiniSession = {
 		fromMid: "u1",
 		callUuid16: new Uint8Array(16),
@@ -246,8 +203,25 @@ Deno.test("buildRelReq uses CONTROL-class body tag", () => {
 		sessionId: 1n,
 	};
 	const back = unpackCassini(
-		buildRelReq({ session, msgId: 1, counter: 1n, reason: "x" }),
+		buildExchangeAppStrData({
+			session,
+			msgId: 1,
+			counter: 1n,
+			json: '{"csv":1}',
+		}),
 	);
-	assertEquals(back.bodyTag, ENVELOPE_BODY_TAG.CONTROL);
-	assertEquals(unpackCassiniBody(back.body).msgTypeName, "rel_req");
+	assert.deepEqual(back.bodyTag, ENVELOPE_BODY_TAG.CONTROL);
+});
+
+test("buildRelReq uses CONTROL-class body tag", () => {
+	const session: CassiniSession = {
+		fromMid: "u1",
+		callUuid16: new Uint8Array(16),
+		callUuidString: "uuid",
+		subscriptionId: 1n,
+		sessionId: 1n,
+	};
+	const back = unpackCassini(buildRelReq({ session, msgId: 1, counter: 1n, reason: "x" }));
+	assert.deepEqual(back.bodyTag, ENVELOPE_BODY_TAG.CONTROL);
+	assert.deepEqual(unpackCassiniBody(back.body).msgTypeName, "rel_req");
 });

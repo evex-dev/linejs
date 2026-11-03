@@ -46,10 +46,7 @@ export class FileStorage extends BaseStorage {
 		}
 	}
 
-	public async set(
-		key: Storage["Key"],
-		value: Storage["Value"],
-	): Promise<void> {
+	public async set(key: Storage["Key"], value: Storage["Value"]): Promise<void> {
 		await this.withLock(async () => {
 			const data = await this.getAll();
 			data[key] = value;
@@ -59,9 +56,7 @@ export class FileStorage extends BaseStorage {
 		});
 	}
 
-	public async get(
-		key: Storage["Key"],
-	): Promise<Storage["Value"] | undefined> {
+	public async get(key: Storage["Key"]): Promise<Storage["Value"] | undefined> {
 		const data = await this.getAll();
 		return data[key];
 	}

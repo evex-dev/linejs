@@ -1,7 +1,7 @@
 // End-to-end: PCM → codec → SRTP wire → SRTP receive → codec → PCM,
 // using a loopback transport. Proves the audio plumbing carries
 // samples bit-identical without needing a real Opus impl.
-import { assertEquals } from "@std/assert";
+import { assert, test } from "vite-plus/test";
 import { CallSession, type CallTransport } from "./session.ts";
 import {
 	type AudioDecoder,
@@ -11,7 +11,14 @@ import {
 	type CodecFactory,
 	type PcmFrame,
 } from "./audio.ts";
-import { deriveSrtpContext, SRTP_KEYING_LEN, srtpDecrypt, srtpEncrypt, buildRtp, parseRtp } from "./srtp.ts";
+import {
+	deriveSrtpContext,
+	SRTP_KEYING_LEN,
+	srtpDecrypt,
+	srtpEncrypt,
+	buildRtp,
+	parseRtp,
+} from "./srtp.ts";
 
 /** Identity codec — encodes a PCM frame to a binary packet that
  *  encloses the raw samples. */
@@ -58,7 +65,9 @@ function loopbackTransport(): CallTransport {
 			sendCtx = await deriveSrtpContext(keying);
 			recvCtx = await deriveSrtpContext(keying);
 		},
-		close() { return Promise.resolve(); },
+		close() {
+			return Promise.resolve();
+		},
 		async send(opusPacket: Uint8Array) {
 			const rtp = buildRtp({
 				payloadType: 96,
@@ -86,7 +95,7 @@ function loopbackTransport(): CallTransport {
 	};
 }
 
-Deno.test("e2e: PCM → codec → SRTP → loopback → SRTP → codec → PCM (byte-identical)", async () => {
+test("e2e: PCM → codec → SRTP → loopback → SRTP → codec → PCM (byte-identical)", async () => {
 	const session = new CallSession(
 		{
 			call: {
@@ -134,11 +143,13 @@ Deno.test("e2e: PCM → codec → SRTP → loopback → SRTP → codec → PCM (
 		}
 	})();
 
-	await session.sendStream(bufferSource({
-		samples,
-		sampleRate: 16000,
-		frameDurationMs: 20,
-	}));
+	await session.sendStream(
+		bufferSource({
+			samples,
+			sampleRate: 16000,
+			frameDurationMs: 20,
+		}),
+	);
 	await recvPromise;
 	await session.end();
 
@@ -150,6 +161,6 @@ Deno.test("e2e: PCM → codec → SRTP → loopback → SRTP → codec → PCM (
 		recovered.set(f.samples, o);
 		o += f.samples.length;
 	}
-	assertEquals(recovered.length, samples.length);
-	assertEquals(recovered, samples);
+	assert.deepEqual(recovered.length, samples.length);
+	assert.deepEqual(recovered, samples);
 });

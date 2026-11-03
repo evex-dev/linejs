@@ -7,7 +7,7 @@
  *   2. extract Thrift type defs from smali → diff against linejs thrift.ts
  *      → apply additive diff + safe in-place rewrites (direct-name matches)
  *   3. regenerate packages/types/line_types.ts via gen_typedef.ts
- *   4. deno fmt + deno check (sanity)
+ *   4. vp fmt + tsc check (sanity)
  *
  * Anything risky (Jaccard-only mismatches, enum value renames) is *reported*
  * but not applied — the user reviews the report and decides. This keeps the
@@ -15,10 +15,10 @@
  * APK should always succeed, and never invalidate hand-written linejs code.
  *
  * Usage:
- *   deno run -A scripts/apk/sync_from_apk.ts --apk <path>
- *                                            [--out <decompile-dir>]
- *                                            [--skip-decompile]
- *                                            [--dry-run]
+ *   node scripts/apk/sync_from_apk.ts --apk <path>
+ *                                      [--out <decompile-dir>]
+ *                                      [--skip-decompile]
+ *                                      [--dry-run]
  *
  *   --apk <path>        APK to ingest. Use the base.apk extracted from an
  *                       APKMirror APK Bundle.
@@ -32,12 +32,13 @@
  * Idempotence: re-running with the same APK produces zero diff (modulo any
  * Jaccard-only mismatches that were filtered out).
  */
-import { exists } from "https://deno.land/std@0.224.0/fs/exists.ts";
-import {
-	fromFileUrl,
-	resolve as pathResolve,
-} from "https://deno.land/std@0.224.0/path/mod.ts";
+import { spawnSync } from "node:child_process";
+import { existsSync } from "node:fs";
+import { dirname, resolve as pathResolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { defaultDecompileRoot } from "./decompile.ts";
+
+const scriptDir = dirname(fileURLToPath(import.meta.url));
 
 interface Args {
 	apk: string;
@@ -74,7 +75,7 @@ function parseArgs(argv: string[]): Args {
 async function findUpDir(start: string, marker: string): Promise<string> {
 	let dir = start;
 	while (true) {
-		if (await exists(`${dir}/${marker}`)) return dir;
+		if (existsSync(`${dir}/${marker}`)) return dir;
 		const parent = pathResolve(dir, "..");
 		if (parent === dir) throw new Error(`not found: ${marker}`);
 		dir = parent;
@@ -89,22 +90,19 @@ async function runStep(
 ): Promise<void> {
 	console.log(`\n=== ${label} ===`);
 	console.log(`$ ${cmd} ${args.join(" ")}`);
-	const proc = new Deno.Command(cmd, {
-		args,
-		stdout: "inherit",
-		stderr: "inherit",
+	const result = spawnSync(cmd, args, {
+		stdio: "inherit",
 		cwd: opts.cwd,
-	}).spawn();
-	const status = await proc.status;
-	if (status.code !== 0) {
-		throw new Error(`${label} failed (exit ${status.code})`);
+	});
+	if (result.error) throw result.error;
+	if (result.status !== 0) {
+		throw new Error(`${label} failed (exit ${result.status})`);
 	}
 }
 
 if (import.meta.main) {
-	const args = parseArgs(Deno.args);
-	const here = pathResolve(fromFileUrl(import.meta.url), "..");
-	const linejsRoot = await findUpDir(here, "deno.json");
+	const args = parseArgs(process.argv.slice(2));
+	const linejsRoot = await findUpDir(scriptDir, "pnpm-workspace.yaml");
 
 	const apkAbs = pathResolve(args.apk);
 	const decompileOut = args.out
@@ -116,14 +114,16 @@ if (import.meta.main) {
 	console.log(`decompile out:  ${decompileOut}`);
 	console.log(`linejs root:    ${linejsRoot}`);
 
+	const node = process.execPath;
+	const pnpm = process.platform === "win32" ? "pnpm.cmd" : "pnpm";
+	const packageRoot = pathResolve(linejsRoot, "packages/linejs");
+
 	if (!args.skipDecompile) {
 		await runStep(
 			"decompile (apktool only)",
-			"deno",
+			node,
 			[
-				"run",
-				"-A",
-				`${linejsRoot}/scripts/apk/decompile.ts`,
+				pathResolve(linejsRoot, "scripts/apk/decompile.ts"),
 				"--apk",
 				apkAbs,
 				"--out",
@@ -131,18 +131,16 @@ if (import.meta.main) {
 				"--apktool-only",
 			],
 		);
-	} else if (!(await exists(smaliDir))) {
+	} else if (!existsSync(smaliDir)) {
 		throw new Error(`--skip-decompile passed but ${smaliDir} doesn't exist`);
 	}
 
 	const servicesReport = `${decompileOut}/services.json`;
 	await runStep(
 		"extract Thrift service catalog (for RPC cross-reference)",
-		"deno",
+		node,
 		[
-			"run",
-			"-A",
-			`${linejsRoot}/scripts/apk/extract_services.ts`,
+			pathResolve(linejsRoot, "scripts/apk/extract_services.ts"),
 			"--smali",
 			smaliDir,
 			"--report",
@@ -165,8 +163,11 @@ if (import.meta.main) {
 	if (args.dryRun) {
 		await runStep(
 			"extract Thrift diff (dry-run)",
-			"deno",
-			["run", "-A", `${linejsRoot}/scripts/apk/extract_thrift.ts`, ...baseFlags],
+			node,
+			[
+				pathResolve(linejsRoot, "scripts/apk/extract_thrift.ts"),
+				...baseFlags,
+			],
 		);
 	} else {
 		// Iterate apply passes. Each pass can expose new pairings because
@@ -176,21 +177,24 @@ if (import.meta.main) {
 		for (let pass = 1; pass <= 5; pass++) {
 			console.log(`\n=== extract + apply Thrift diff (pass ${pass}) ===`);
 			const applyArgs = [
-				"run",
-				"-A",
-				`${linejsRoot}/scripts/apk/extract_thrift.ts`,
+				pathResolve(linejsRoot, "scripts/apk/extract_thrift.ts"),
 				...baseFlags,
 				"--apply",
 				"--rewrite-mismatches",
 			];
-			console.log(`$ deno ${applyArgs.join(" ")}`);
-			const applyProc = new Deno.Command("deno", {
-				args: applyArgs,
-				stdout: "piped",
-				stderr: "piped",
-			}).spawn();
-			const applyOut = new TextDecoder().decode((await applyProc.output()).stdout);
+			console.log(`$ node ${applyArgs.join(" ")}`);
+			const applyProc = spawnSync(node, applyArgs, {
+				cwd: linejsRoot,
+				encoding: "utf8",
+			});
+			if (applyProc.error) throw applyProc.error;
+			const applyOut = `${applyProc.stdout ?? ""}${
+				applyProc.stderr ?? ""
+			}`;
 			console.log(applyOut.split("\n").slice(-20).join("\n"));
+			if (applyProc.status !== 0) {
+				throw new Error(`extract_thrift failed (exit ${applyProc.status})`);
+			}
 
 			const adds =
 				/enum value adds:\s+(\d+)[^]*?struct field adds:\s+(\d+)[^]*?new types:\s+(\d+)/m
@@ -208,49 +212,43 @@ if (import.meta.main) {
 
 	if (args.dryRun) {
 		console.log(`\n(dry-run — packages/types/ left untouched)`);
-		Deno.exit(0);
+		process.exit(0);
 	}
 
-	// Use relative imports inside the inline eval so Windows backslashes
-	// don't trip Deno's URL parser. cwd is already linejsRoot.
 	await runStep(
 		"regenerate line_types.ts",
-		"deno",
-		[
-			"eval",
-			"--ext=ts",
-			`import { main } from "./scripts/thrift/gen_typedef.ts"; main();`,
-		],
+		node,
+		[pathResolve(linejsRoot, "scripts/thrift/gen_typedef.ts")],
 		{ cwd: linejsRoot },
 	);
 	await runStep(
 		"regenerate struct.ts (Thrift wire writers)",
-		"deno",
-		[
-			"eval",
-			"--ext=ts",
-			`import { main } from "./scripts/thrift/gen_struct.ts"; main();`,
-		],
+		node,
+		[pathResolve(linejsRoot, "scripts/thrift/gen_struct.ts")],
 		{ cwd: linejsRoot },
 	);
-	// Format only what the previous two steps wrote. `deno fmt packages/linejs`
+	// Format only what the previous two steps wrote. `vp fmt packages/linejs`
 	// reformats every file that predates the current formatter settings, which
 	// buries a two-file schema diff under an unrelated repo-wide reformat.
-	await runStep("deno fmt (generated files)", "deno", [
+	await runStep("vp fmt (generated files)", pnpm, [
+		"exec",
+		"vp",
 		"fmt",
-		"packages/types/thrift.ts",
-		"packages/types/line_types.ts",
-		"packages/linejs/base/thrift/readwrite/struct.ts",
-	], { cwd: linejsRoot });
-	await runStep("deno check (entry point)", "deno", [
-		"check",
-		"packages/linejs/client/mod.ts",
-	], { cwd: linejsRoot });
-	// `-A` for the same reason CI uses it (see .github/workflows/ci.yml):
-	// transitive deps read env vars at module init, so without full permissions
-	// the runner fails before any test body runs and the gate is meaningless.
-	await runStep("deno test", "deno", ["test", "-A"], {
-		cwd: linejsRoot,
+		pathResolve(linejsRoot, "packages/types/thrift.ts"),
+		pathResolve(linejsRoot, "packages/types/line_types.ts"),
+		pathResolve(
+			linejsRoot,
+			"packages/linejs/base/thrift/readwrite/struct.ts",
+		),
+		"--write",
+	], { cwd: packageRoot });
+	await runStep("type check (entry point)", pnpm, [
+		"exec",
+		"tsc",
+		"--noEmit",
+	], { cwd: packageRoot });
+	await runStep("package tests", pnpm, ["exec", "vp", "test"], {
+		cwd: packageRoot,
 	});
 
 	console.log(`\n=== sync complete ===`);

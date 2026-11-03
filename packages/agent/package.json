@@ -1,0 +1,30 @@
+{
+	"name": "@evex/linejs-agent",
+	"version": "0.1.0",
+	"description": "LINE Agent I / LINE AI REST helpers used by @evex-dev/linejs",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/evex-dev/linejs.git",
+		"directory": "packages/agent"
+	},
+	"type": "module",
+	"exports": {
+		".": "./dist/mod.js",
+		"./client": "./dist/client.js"
+	},
+	"scripts": {
+		"build": "vp pack",
+		"test": "vp test",
+		"check": "vp check",
+		"format": "vp fmt . --write"
+	},
+	"devDependencies": {
+		"@types/node": "^24.10.0",
+		"typescript": "^5.9.3",
+		"vite-plus": "^1.4.0"
+	},
+	"engines": {
+		"node": "^22.18.0 || ^24.11.0 || >=26.0.0"
+	}
+}

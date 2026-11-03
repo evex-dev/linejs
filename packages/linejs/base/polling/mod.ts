@@ -1,5 +1,5 @@
 import type { BaseClient } from "../core/mod.ts";
-import type { Operation, SquareEvent } from "@evex/linejs-types";
+import type { Operation, SquareEvent } from "@evex-dev/linejs-types";
 
 export interface SyncData {
 	square?: string;
@@ -38,11 +38,13 @@ export class Polling {
 	 *
 	 * @deprecated
 	 */
-	async *_listenSquareEvents(options: {
-		signal?: AbortSignal;
-		onError?: (error: unknown) => void;
-		pollingInterval?: number;
-	} = {}): AsyncGenerator<SquareEvent, void, unknown> {
+	async *_listenSquareEvents(
+		options: {
+			signal?: AbortSignal;
+			onError?: (error: unknown) => void;
+			pollingInterval?: number;
+		} = {},
+	): AsyncGenerator<SquareEvent, void, unknown> {
 		const { signal, onError, pollingInterval } = {
 			pollingInterval: 1000,
 			...options,
@@ -86,11 +88,13 @@ export class Polling {
 	 *
 	 * @deprecated
 	 */
-	async *_listenTalkEvents(options: {
-		signal?: AbortSignal;
-		onError?: (error: unknown) => void;
-		pollingInterval?: number;
-	} = {}): AsyncGenerator<Operation, void, unknown> {
+	async *_listenTalkEvents(
+		options: {
+			signal?: AbortSignal;
+			onError?: (error: unknown) => void;
+			pollingInterval?: number;
+		} = {},
+	): AsyncGenerator<Operation, void, unknown> {
 		const { signal, onError, pollingInterval } = {
 			pollingInterval: 100,
 			...options,
@@ -101,10 +105,7 @@ export class Polling {
 					...this.sync.talk,
 					limit: 100,
 				});
-				if (
-					response.fullSyncResponse &&
-					response.fullSyncResponse.nextRevision
-				) {
+				if (response.fullSyncResponse && response.fullSyncResponse.nextRevision) {
 					this.sync.talk.revision = response.fullSyncResponse.nextRevision;
 				}
 				if (
@@ -112,26 +113,20 @@ export class Polling {
 					response.operationResponse.globalEvents &&
 					response.operationResponse.globalEvents.lastRevision
 				) {
-					this.sync.talk.globalRev =
-						response.operationResponse.globalEvents.lastRevision;
+					this.sync.talk.globalRev = response.operationResponse.globalEvents.lastRevision;
 				}
 				if (
 					response.operationResponse &&
 					response.operationResponse.individualEvents &&
 					response.operationResponse.individualEvents.lastRevision
 				) {
-					this.sync.talk.individualRev =
-						response.operationResponse.individualEvents
-							.lastRevision;
+					this.sync.talk.individualRev = response.operationResponse.individualEvents.lastRevision;
 				}
 				// Only iterate operations when present; falling through to the
 				// shared sleep/abort tail is required — an early `continue` here
 				// used to busy-loop without delay and made the AbortSignal
 				// unobservable.
-				if (
-					response.operationResponse &&
-					response.operationResponse.operations
-				) {
+				if (response.operationResponse && response.operationResponse.operations) {
 					for (const event of response.operationResponse.operations) {
 						this.sync.talk.revision = event.revision;
 						yield event;
@@ -192,9 +187,7 @@ export class Polling {
 	// readers can observe failure, then report it. A new listen call may retry.
 	#startLegyPusher(): void {
 		this.initLegyPusher().catch((error) => {
-			for (
-				const stream of [this.client.push.opStream, this.client.push.sqStream]
-			) {
+			for (const stream of [this.client.push.opStream, this.client.push.sqStream]) {
 				try {
 					stream.error(error);
 				} catch {

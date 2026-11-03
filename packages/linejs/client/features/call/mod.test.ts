@@ -1,4 +1,4 @@
-import { assertEquals } from "@std/assert";
+import { assert, test } from "vite-plus/test";
 import {
 	createCallClient,
 	defaultCallFromEnvInfo,
@@ -8,10 +8,12 @@ import {
 
 function fakeBaseClient() {
 	const calls: { method: string; args: unknown[] }[] = [];
-	const record = (method: string) => (...args: unknown[]) => {
-		calls.push({ method, args });
-		return Promise.resolve({ ok: true, method });
-	};
+	const record =
+		(method: string) =>
+		(...args: unknown[]) => {
+			calls.push({ method, args });
+			return Promise.resolve({ ok: true, method });
+		};
 	const base = {
 		deviceDetails: {
 			device: "ANDROID",
@@ -37,47 +39,40 @@ function fakeBaseClient() {
 	return { client: { base } as never, calls, base };
 }
 
-Deno.test("call.acquireRoute defaults callType=AUDIO", async () => {
+test("call.acquireRoute defaults callType=AUDIO", async () => {
 	const { client, calls } = fakeBaseClient();
 	const cc = createCallClient(client);
 	await cc.acquireRoute({ to: "u-peer" });
-	assertEquals(calls[0].method, "acquireCallRoute");
-	assertEquals(
-		(calls[0].args[0] as { callType: string }).callType,
-		"AUDIO",
-	);
-	assertEquals((calls[0].args[0] as { to: string }).to, "u-peer");
-	assertEquals(
-		(calls[0].args[0] as { fromEnvInfo: Record<string, string> })
-			.fromEnvInfo,
-		{ devname: "Android" },
-	);
+	assert.deepEqual(calls[0].method, "acquireCallRoute");
+	assert.deepEqual((calls[0].args[0] as { callType: string }).callType, "AUDIO");
+	assert.deepEqual((calls[0].args[0] as { to: string }).to, "u-peer");
+	assert.deepEqual((calls[0].args[0] as { fromEnvInfo: Record<string, string> }).fromEnvInfo, {
+		devname: "Android",
+	});
 });
 
-Deno.test("call.acquireRoute respects explicit callType", async () => {
+test("call.acquireRoute respects explicit callType", async () => {
 	const { client, calls } = fakeBaseClient();
 	await createCallClient(client).acquireRoute({
 		to: "u-peer",
 		callType: "VIDEO",
 	});
-	assertEquals((calls[0].args[0] as { callType: string }).callType, "VIDEO");
+	assert.deepEqual((calls[0].args[0] as { callType: string }).callType, "VIDEO");
 });
 
-Deno.test("call.acquireRoute respects explicit fromEnvInfo", async () => {
+test("call.acquireRoute respects explicit fromEnvInfo", async () => {
 	const { client, calls } = fakeBaseClient();
 	await createCallClient(client).acquireRoute({
 		to: "u-peer",
 		fromEnvInfo: { devname: "Pixel 8" },
 	});
-	assertEquals(
-		(calls[0].args[0] as { fromEnvInfo: Record<string, string> })
-			.fromEnvInfo,
-		{ devname: "Pixel 8" },
-	);
+	assert.deepEqual((calls[0].args[0] as { fromEnvInfo: Record<string, string> }).fromEnvInfo, {
+		devname: "Pixel 8",
+	});
 });
 
-Deno.test("defaultCallFromEnvInfo returns native-shaped devname values", () => {
-	assertEquals(
+test("defaultCallFromEnvInfo returns native-shaped devname values", () => {
+	assert.deepEqual(
 		defaultCallFromEnvInfo({
 			device: "IOSIPAD",
 			appVersion: "26.7.2",
@@ -88,55 +83,53 @@ Deno.test("defaultCallFromEnvInfo returns native-shaped devname values", () => {
 	);
 });
 
-Deno.test("call.getGroupCall + URL CRUD route to right base methods", async () => {
+test("call.getGroupCall + URL CRUD route to right base methods", async () => {
 	const { client, calls } = fakeBaseClient();
 	const cc = createCallClient(client);
 	await cc.getGroupCall("c-chat");
 	await cc.getGroupCallUrl("ticket-1");
 	await cc.listGroupCallUrls();
 	await cc.joinChatByUrl("ticket-2");
-	assertEquals(calls.map((c) => c.method), [
-		"getGroupCall",
-		"getGroupCallUrlInfo",
-		"getGroupCallUrls",
-		"joinChatByCallUrl",
-	]);
-	assertEquals(
+	assert.deepEqual(
+		calls.map((c) => c.method),
+		["getGroupCall", "getGroupCallUrlInfo", "getGroupCallUrls", "joinChatByCallUrl"],
+	);
+	assert.deepEqual(
 		(calls[1].args[0] as { groupCallUrlTicket: string }).groupCallUrlTicket,
 		"ticket-1",
 	);
 });
 
-Deno.test("parseIncomingCall pulls callMid/from/kind out of Operation params", () => {
+test("parseIncomingCall pulls callMid/from/kind out of Operation params", () => {
 	const e = parseIncomingCall({
 		param1: "ccall-1",
 		param2: "u-caller",
 		param3: "VIDEO",
 		type: "NOTIFIED_RECEIVED_CALL",
 	} as never);
-	assertEquals(e.callMid, "ccall-1");
-	assertEquals(e.from, "u-caller");
-	assertEquals(e.kind, "VIDEO");
+	assert.deepEqual(e.callMid, "ccall-1");
+	assert.deepEqual(e.from, "u-caller");
+	assert.deepEqual(e.kind, "VIDEO");
 });
 
-Deno.test("parseCancelCall pulls fields out of CANCEL_CALL op", () => {
+test("parseCancelCall pulls fields out of CANCEL_CALL op", () => {
 	const e = parseCancelCall({
 		param1: "ccall-1",
 		param2: "u-caller",
 		param3: "DECLINED",
 		type: "CANCEL_CALL",
 	} as never);
-	assertEquals(e.callMid, "ccall-1");
-	assertEquals(e.from, "u-caller");
-	assertEquals(e.reason, "DECLINED");
+	assert.deepEqual(e.callMid, "ccall-1");
+	assert.deepEqual(e.from, "u-caller");
+	assert.deepEqual(e.reason, "DECLINED");
 });
 
-Deno.test("parseIncomingCall handles missing param2/param3", () => {
+test("parseIncomingCall handles missing param2/param3", () => {
 	const e = parseIncomingCall({
 		param1: "ccall-1",
 		type: "NOTIFIED_RECEIVED_CALL",
 	} as never);
-	assertEquals(e.callMid, "ccall-1");
-	assertEquals(e.from, "");
-	assertEquals(e.kind, undefined);
+	assert.deepEqual(e.callMid, "ccall-1");
+	assert.deepEqual(e.from, "");
+	assert.deepEqual(e.kind, undefined);
 });

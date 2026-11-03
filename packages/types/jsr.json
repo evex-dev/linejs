@@ -1,12 +1,11 @@
 {
 	"name": "@evex/linejs-types",
-	"version": "0.0.0",
-	"license": "MIT",
+	"version": "3.6.0",
 	"exports": {
 		".": "./line_types.ts",
 		"./thrift": "./thrift.ts"
 	},
-	"imports": {
-		"@evex/loose-types": "jsr:@evex/loose-types@^1.0.1"
+	"publish": {
+		"exclude": ["vite.config.ts", "tsconfig.json"]
 	}
 }

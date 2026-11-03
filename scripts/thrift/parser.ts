@@ -2,7 +2,6 @@
  * @description generate `ThriftRenameParser.def` from thrift IDL
  */
 
-// deno-lint-ignore-file no-explicit-any
 import thriftIdl from "./thrift-idl.js";
 
 const TYPE: Record<string, number> = {

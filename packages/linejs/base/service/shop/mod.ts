@@ -7,7 +7,7 @@ import { type BaseClient } from "../../core/mod.ts";
 import type { ProtocolKey } from "../../thrift/mod.ts";
 import type { BaseService } from "../types.ts";
 import { LINEStruct } from "../../thrift/mod.ts";
-import type * as LINETypes from "@evex/linejs-types";
+import type * as LINETypes from "@evex-dev/linejs-types";
 
 export class ShopService implements BaseService {
 	client: BaseClient;
@@ -91,9 +91,7 @@ export class ShopService implements BaseService {
 	}
 
 	async placePurchaseOrderForFreeProduct(
-		...param: Parameters<
-			typeof LINEStruct.placePurchaseOrderForFreeProduct_args
-		>
+		...param: Parameters<typeof LINEStruct.placePurchaseOrderForFreeProduct_args>
 	): Promise<LINETypes.placePurchaseOrderForFreeProduct_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.placePurchaseOrderForFreeProduct_args(...param),

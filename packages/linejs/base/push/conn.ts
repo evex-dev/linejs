@@ -7,7 +7,7 @@ import {
 	LegyH2SignOnResponseFrame,
 } from "./connData.ts";
 import type { ConnManager, ReadableStreamWriter } from "./connManager.ts";
-import type { LooseType } from "@evex/loose-types";
+import type { LooseType } from "../types.ts";
 
 export class Conn {
 	manager: ConnManager;
@@ -40,24 +40,27 @@ export class Conn {
 
 		const chunks: Uint8Array[] = [];
 		const encoder = new TextEncoder();
-		const stream = new ReadableStream<Uint8Array>({
-			start(c) {
-				controller = c;
+		const stream = new ReadableStream<Uint8Array>(
+			{
+				start(c) {
+					controller = c;
+				},
+				pull(c) {
+					if (chunks.length) {
+						c.enqueue(chunks.shift()!);
+					}
+				},
+				cancel() {
+					controller = null;
+				},
 			},
-			pull(c) {
-				if (chunks.length) {
-					c.enqueue(chunks.shift()!);
-				}
+			{
+				highWaterMark: 200,
+				size() {
+					return 1;
+				},
 			},
-			cancel() {
-				controller = null;
-			},
-		}, {
-			highWaterMark: 200,
-			size() {
-				return 1;
-			},
-		});
+		);
 
 		return {
 			stream,
@@ -78,34 +81,32 @@ export class Conn {
 				controller = null;
 			},
 			renew() {
-				new ReadableStream<Uint8Array>({
-					start(c) {
-						controller = c;
+				new ReadableStream<Uint8Array>(
+					{
+						start(c) {
+							controller = c;
+						},
+						pull(c) {
+							if (chunks.length) {
+								c.enqueue(chunks.shift()!);
+							}
+						},
+						cancel() {
+							controller = null;
+						},
 					},
-					pull(c) {
-						if (chunks.length) {
-							c.enqueue(chunks.shift()!);
-						}
+					{
+						highWaterMark: 200,
+						size() {
+							return 1;
+						},
 					},
-					cancel() {
-						controller = null;
-					},
-				}, {
-					highWaterMark: 200,
-					size() {
-						return 1;
-					},
-				});
+				);
 			},
 		};
 	}
 
-	async new(
-		host: string,
-		_port: number,
-		path: string,
-		headers: Record<string, string> = {},
-	) {
+	async new(host: string, _port: number, path: string, headers: Record<string, string> = {}) {
 		// BaseClient scopes Node's HTTP/2 dispatcher and connect timeout.
 		const fetchFn = this.client.fetchPush ?? this.client.fetch;
 		const bodystream = this.createAsyncReadableStream();
@@ -187,9 +188,7 @@ export class Conn {
 		return false;
 	}
 
-	readPacketHeader(
-		data: Uint8Array,
-	): { dt: number; dd: Uint8Array; dl: number } {
+	readPacketHeader(data: Uint8Array): { dt: number; dd: Uint8Array; dl: number } {
 		const dl = (data[0] << 8) | data[1];
 		const dt = data[2];
 		const dd = data.subarray(3); // WHAT:
@@ -203,10 +202,7 @@ export class Conn {
 			concat.set(data, this.cacheData.length);
 			data = concat;
 		}
-		this.manager.log(
-			`[H2][PUSH] receives packet. raw:${bytesToHex(data)}`,
-			true,
-		);
+		this.manager.log(`[H2][PUSH] receives packet. raw:${bytesToHex(data)}`, true);
 		const { dt, dd, dl } = this.readPacketHeader(data);
 		if (dl > dd.length) {
 			this.isNotFinished = true;
@@ -217,10 +213,7 @@ export class Conn {
 			if (dd.length > dl) {
 				this.onPacketReceived(dt, dd.subarray(0, dl));
 				const rest = dd.subarray(dl);
-				this.manager.log(
-					`[PUSH] extra data ${bytesToHex(rest).slice(0, 50)}...`,
-					true,
-				);
+				this.manager.log(`[PUSH] extra data ${bytesToHex(rest).slice(0, 50)}...`, true);
 				return this.onDataReceived(rest);
 			}
 		}
@@ -233,10 +226,7 @@ export class Conn {
 			const pingType = dd[0];
 			const pingId = (dd[1] << 8) | dd[2];
 			const packet = new LegyH2PingFrame(pingType, pingId);
-			this.manager.log(
-				`[PUSH] receives ping frame. pingId:${packet.pingId}`,
-				debugOnly,
-			);
+			this.manager.log(`[PUSH] receives ping frame. pingId:${packet.pingId}`, debugOnly);
 			if (packet.pingType === LegyH2PingFrameType.ACK_REQUIRED) {
 				this.writeByte(packet.ackPacket());
 				this.manager.log(`[PUSH] send ping ack. pingId:${pingId}`, debugOnly);
@@ -249,11 +239,7 @@ export class Conn {
 			const requestId = req & 0x7fff;
 			const isFin = (req & 0x8000) !== 0;
 			let responsePayload = dd.subarray(2);
-			const packet = new LegyH2SignOnResponseFrame(
-				requestId,
-				isFin,
-				responsePayload,
-			);
+			const packet = new LegyH2SignOnResponseFrame(requestId, isFin, responsePayload);
 			if (packet.isFin) {
 				if (this.notFinPayloads[requestId]) {
 					const a = this.notFinPayloads[requestId];
@@ -283,27 +269,12 @@ export class Conn {
 			const serviceType = dd[1];
 			const pushId = (dd[2] << 24) | (dd[3] << 16) | (dd[4] << 8) | dd[5];
 			const pushPayload = dd.subarray(6);
-			const packet = new LegyH2PushFrame(
-				pushType,
-				serviceType,
-				pushId,
-				pushPayload,
-			);
-			this.manager.log(
-				`[PUSH] receives push frame. service:${packet.serviceType}`,
-				debugOnly,
-			);
-			if (
-				[LegyH2PushFrameType.NONE, LegyH2PushFrameType.ACK_REQUIRED].includes(
-					packet.pushType!,
-				)
-			) {
+			const packet = new LegyH2PushFrame(pushType, serviceType, pushId, pushPayload);
+			this.manager.log(`[PUSH] receives push frame. service:${packet.serviceType}`, debugOnly);
+			if ([LegyH2PushFrameType.NONE, LegyH2PushFrameType.ACK_REQUIRED].includes(packet.pushType!)) {
 				if (packet.pushType === LegyH2PushFrameType.ACK_REQUIRED) {
 					this.writeByte(packet.ackPacket());
-					this.manager.log(
-						`[PUSH] send push ack. service:${serviceType}`,
-						debugOnly,
-					);
+					this.manager.log(`[PUSH] send push ack. service:${serviceType}`, debugOnly);
 				}
 				this.manager.onPushResponse(packet);
 			} else {
@@ -311,9 +282,10 @@ export class Conn {
 			}
 		} else {
 			throw new Error(
-				`PUSH not Implemented: type:${dt}, payloads:${
-					bytesToHex(dd).slice(0, 30)
-				}, len:${dd.length}`,
+				`PUSH not Implemented: type:${dt}, payloads:${bytesToHex(dd).slice(
+					0,
+					30,
+				)}, len:${dd.length}`,
 			);
 		}
 	}
@@ -332,5 +304,7 @@ export class Conn {
 
 /* helpers */
 function bytesToHex(b: Uint8Array) {
-	return Array.from(b).map((x) => x.toString(16).padStart(2, "0")).join("");
+	return Array.from(b)
+		.map((x) => x.toString(16).padStart(2, "0"))
+		.join("");
 }

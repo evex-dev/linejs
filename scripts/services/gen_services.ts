@@ -25,11 +25,15 @@
  * running the generator is safe.
  *
  * Usage:
- *   deno run -A scripts/services/gen_services.ts [--apply]
- *                                                 [--service <Name>]
- *                                                 [--manifest <path>]
+ *   node scripts/services/gen_services.ts [--apply]
+ *                                        [--service <Name>]
+ *                                        [--manifest <path>]
  */
-import { fromFileUrl, resolve as pathResolve } from "https://deno.land/std@0.224.0/path/mod.ts";
+import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
+import { dirname, resolve as pathResolve } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
+
+const scriptDir = dirname(fileURLToPath(import.meta.url));
 
 interface Args {
 	apply: boolean;
@@ -136,7 +140,7 @@ import { type BaseClient } from "../../core/mod.ts";
 import type { ProtocolKey } from "../../thrift/mod.ts";
 import type { BaseService } from "../types.ts";
 import { LINEStruct } from "../../thrift/mod.ts";
-import type * as LINETypes from "@evex/linejs-types";
+import type * as LINETypes from "@evex-dev/linejs-types";
 
 export class ${serviceClassName} implements BaseService {
 	client: BaseClient;
@@ -155,16 +159,16 @@ ${methodBodies}
 
 async function loadThrift(linejsRoot: string): Promise<Record<string, unknown>> {
 	const thriftPath = `${linejsRoot}/packages/types/thrift.ts`;
-	const mod = await import(`file://${thriftPath.replaceAll("\\", "/")}`);
+	const mod = await import(pathToFileURL(thriftPath).href);
 	return mod.Thrift as Record<string, unknown>;
 }
 
 async function findLinejsRoot(): Promise<string> {
-	const here = pathResolve(fromFileUrl(import.meta.url), "..");
+	const here = scriptDir;
 	let cur = here;
 	while (true) {
 		try {
-			await Deno.stat(`${cur}/packages/linejs/deno.json`);
+			await stat(`${cur}/pnpm-workspace.yaml`);
 			return cur;
 		} catch {
 			const parent = pathResolve(cur, "..");
@@ -175,7 +179,7 @@ async function findLinejsRoot(): Promise<string> {
 }
 
 async function main() {
-	const args = parseArgs(Deno.args);
+	const args = parseArgs(process.argv.slice(2));
 	const linejsRoot = await findLinejsRoot();
 	const manifestPath = args.manifest
 		? pathResolve(args.manifest)
@@ -186,7 +190,7 @@ async function main() {
 	console.log(`manifest:    ${manifestPath}`);
 
 	const manifest = JSON.parse(
-		await Deno.readTextFile(manifestPath),
+		await readFile(manifestPath, "utf8"),
 	) as EndpointManifest;
 	const thrift = await loadThrift(linejsRoot);
 
@@ -229,8 +233,8 @@ async function main() {
 		totalIncluded += included.length;
 		totalSkipped += skipped.length;
 		if (args.apply) {
-			await Deno.mkdir(dir, { recursive: true });
-			await Deno.writeTextFile(file, content);
+			await mkdir(dir, { recursive: true });
+			await writeFile(file, content);
 			touched++;
 		}
 	}

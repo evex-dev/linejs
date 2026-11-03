@@ -1,5 +1,5 @@
-import { BaseClient } from "@evex/linejs/base";
-import { LINEStruct } from "@evex/linejs/thrift";
+import { BaseClient } from "@evex-dev/linejs/base";
+import { LINEStruct } from "@evex-dev/linejs/thrift";
 import crypto from "node:crypto";
 import https from "node:https";
 import xxhashInit from "xxhash-wasm";

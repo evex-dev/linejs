@@ -1,3 +1,4 @@
+import { readFile, writeFile } from "node:fs/promises";
 import { Thrift } from "../../packages/types/thrift.ts";
 
 const used: string[] = [];
@@ -106,12 +107,13 @@ const service = [
 ];
 for (const s of service) {
 	const functions = getFunctions(
-		await Deno.readTextFile(
+		await readFile(
 			`../../../_CHRLINE/CHRLINE/services/${s}.py`,
+			"utf8",
 		),
 	);
 	if (functions.length) {
-		await Deno.writeTextFile(`${s}.txt`, functions.join("\n\n"));
+		await writeFile(`${s}.txt`, functions.join("\n\n"));
 	}
 }
 Object.keys(Thrift).forEach((e) => {

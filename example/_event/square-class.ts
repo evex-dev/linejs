@@ -3,12 +3,12 @@
  * @experimental
  * for square
  */
-import * as LINETypes from "@evex/linejs-types";
+import * as LINETypes from "@evex-dev/linejs-types";
 import { type BaseClient, continueRequest } from "../core/mod.ts";
 import { TypedEventEmitter } from "../core/typed-event-emitter/index.ts";
 import { SquareMessage } from "./message-class.ts";
 import { Note } from "./talk-class.ts";
-import type { LooseType } from "@evex/loose-types";
+import type { LooseType } from "@evex-dev/linejs-types/loose";
 
 type SquareEvents = {
 	"update:feature": (feature: LINETypes.SquareFeatureSet) => void;

@@ -1,4 +1,4 @@
-// deno-lint-ignore-file no-explicit-any
+// oxlint-disable no-explicit-any
 // @ts-types="thrift-types"
 import * as thrift from "thrift";
 
@@ -8,9 +8,7 @@ import type { ParsedThrift } from "./declares.ts";
 /**
  * @returns {any}
  */
-function readStruct(
-	input: thrift.TCompactProtocol | thrift.TBinaryProtocol,
-): any {
+function readStruct(input: thrift.TCompactProtocol | thrift.TBinaryProtocol): any {
 	const Thrift = thrift.Thrift;
 	const returnData: Record<PropertyKey, any> = {};
 	input.readStructBegin();
@@ -43,10 +41,7 @@ function bigInt(bin: Buffer): number | bigint {
 	if (bin.length === 8 && bin[0] & 0x80) {
 		value -= BigInt(1) << 64n;
 	}
-	if (
-		value >= BigInt(Number.MIN_SAFE_INTEGER) &&
-		value <= BigInt(Number.MAX_SAFE_INTEGER)
-	) {
+	if (value >= BigInt(Number.MIN_SAFE_INTEGER) && value <= BigInt(Number.MAX_SAFE_INTEGER)) {
 		return Number(value);
 	}
 	return value;
@@ -118,12 +113,11 @@ function readValue(
 
 function _readThrift(
 	data: Uint8Array | Buffer,
-	Protocol: typeof thrift.TCompactProtocol | typeof thrift.TBinaryProtocol =
-		thrift.TCompactProtocol,
+	Protocol:
+		| typeof thrift.TCompactProtocol
+		| typeof thrift.TBinaryProtocol = thrift.TCompactProtocol,
 ): ParsedThrift {
-	const bufTrans = new thrift.TFramedTransport(
-		data instanceof Buffer ? data : Buffer.from(data),
-	);
+	const bufTrans = new thrift.TFramedTransport(data instanceof Buffer ? data : Buffer.from(data));
 	const proto = new Protocol(bufTrans);
 	const msg_info = proto.readMessageBegin();
 	const tdata = readStruct(proto);
@@ -133,20 +127,20 @@ function _readThrift(
 
 export function readThrift(
 	data: Uint8Array | Buffer,
-	Protocol: typeof thrift.TCompactProtocol | typeof thrift.TBinaryProtocol =
-		thrift.TCompactProtocol,
+	Protocol:
+		| typeof thrift.TCompactProtocol
+		| typeof thrift.TBinaryProtocol = thrift.TCompactProtocol,
 ): ParsedThrift {
 	return _readThrift(data, Protocol);
 }
 
 export function readThriftStruct(
 	data: Uint8Array | Buffer,
-	Protocol: typeof thrift.TCompactProtocol | typeof thrift.TBinaryProtocol =
-		thrift.TCompactProtocol,
+	Protocol:
+		| typeof thrift.TCompactProtocol
+		| typeof thrift.TBinaryProtocol = thrift.TCompactProtocol,
 ): any {
-	const bufTrans = new thrift.TFramedTransport(
-		data instanceof Buffer ? data : Buffer.from(data),
-	);
+	const bufTrans = new thrift.TFramedTransport(data instanceof Buffer ? data : Buffer.from(data));
 	const proto = new Protocol(bufTrans);
 	return readStruct(proto);
 }

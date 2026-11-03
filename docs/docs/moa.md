@@ -8,7 +8,7 @@ channel (`1375220249`).
 ## Listing albums
 
 ```ts
-import { loginWithAuthToken } from "@evex/linejs";
+import { loginWithAuthToken } from "@evex-dev/linejs";
 
 const client = await loginWithAuthToken("YOUR_AUTH_TOKEN", {
   device: "IOSIPAD",

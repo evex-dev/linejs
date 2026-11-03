@@ -73,11 +73,10 @@ export class LineAiClient {
 		this.#accessToken = opts.accessToken;
 		this.#lineVersion = opts.lineVersion ?? LINE_AI_DEFAULT_LINE_VERSION;
 		this.#lineOs = opts.lineOs ?? LINE_AI_DEFAULT_LINE_OS;
-		this.#acceptLanguage = opts.acceptLanguage ??
-			LINE_AI_DEFAULT_ACCEPT_LANGUAGE;
+		this.#acceptLanguage = opts.acceptLanguage ?? LINE_AI_DEFAULT_ACCEPT_LANGUAGE;
 		this.#fetch = opts.fetch ?? fetch;
-		this.#userAgent = opts.userAgent ??
-			`LINE/${this.#lineVersion} CFNetwork/3860.200.71 Darwin/25.1.0`;
+		this.#userAgent =
+			opts.userAgent ?? `LINE/${this.#lineVersion} CFNetwork/3860.200.71 Darwin/25.1.0`;
 	}
 
 	/** GET /v2/service-info — list of AI services + help URLs. */
@@ -93,12 +92,9 @@ export class LineAiClient {
 		contextType: LineAiPromptContext | string;
 		acceptLanguage?: string;
 	}): Promise<LineAiResponse> {
-		return this.#get(
-			`/v2/${encodeURIComponent(opts.contextType)}/prompt-preset`,
-			{
-				"accept-language": opts.acceptLanguage ?? this.#acceptLanguage,
-			},
-		);
+		return this.#get(`/v2/${encodeURIComponent(opts.contextType)}/prompt-preset`, {
+			"accept-language": opts.acceptLanguage ?? this.#acceptLanguage,
+		});
 	}
 
 	/** POST /v2/thread (empty body) — create a new conversation thread. */
@@ -113,10 +109,7 @@ export class LineAiClient {
 
 	/** DELETE /v2/thread/{id} */
 	deleteThread(threadId: string): Promise<LineAiResponse> {
-		return this.#req(
-			`/v2/thread/${encodeURIComponent(threadId)}`,
-			"DELETE",
-		);
+		return this.#req(`/v2/thread/${encodeURIComponent(threadId)}`, "DELETE");
 	}
 
 	/** POST /v2/user/agreement (empty body) — one-time consent. */
@@ -139,9 +132,7 @@ export class LineAiClient {
 		if (!res.ok || !res.body) {
 			const errBody = await res.text();
 			throw new Error(
-				`LineAi.query: ${res.status} ${res.statusText} body=${
-					errBody.slice(0, 200)
-				}`,
+				`LineAi.query: ${res.status} ${res.statusText} body=${errBody.slice(0, 200)}`,
 			);
 		}
 		yield* parseSseStream(res.body);
@@ -166,10 +157,7 @@ export class LineAiClient {
 		};
 	}
 
-	async #get(
-		path: string,
-		extra?: Record<string, string>,
-	): Promise<LineAiResponse> {
+	async #get(path: string, extra?: Record<string, string>): Promise<LineAiResponse> {
 		return this.#req(path, "GET", undefined, extra);
 	}
 	async #postEmpty(path: string): Promise<LineAiResponse> {
@@ -225,7 +213,14 @@ async function wrapResponse(res: Response): Promise<LineAiResponse> {
 async function* parseSseStream(
 	stream: ReadableStream<Uint8Array>,
 ): AsyncGenerator<LineAiQueryChunk> {
-	const reader = stream.pipeThrough(new TextDecoderStream()).getReader();
+	const reader = stream
+		.pipeThrough(
+			new TextDecoderStream() as unknown as ReadableWritablePair<
+				string,
+				Uint8Array<ArrayBufferLike>
+			>,
+		)
+		.getReader();
 	let buffer = "";
 	try {
 		while (true) {
@@ -257,7 +252,9 @@ function parseSseBlock(block: string): LineAiQueryChunk {
 	if (raw) {
 		try {
 			data = JSON.parse(raw);
-		} catch { /* keep raw */ }
+		} catch {
+			/* keep raw */
+		}
 	}
 	return { event, data };
 }

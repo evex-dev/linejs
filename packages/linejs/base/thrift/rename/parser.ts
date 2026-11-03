@@ -1,4 +1,4 @@
-// deno-lint-ignore-file no-explicit-any
+// oxlint-disable no-explicit-any
 import type { ParsedThrift } from "../readwrite/declares.ts";
 
 // const TYPE: Record<string, number> = {
@@ -77,45 +77,26 @@ export class ThriftRenameParser {
 			if (typeof value === "undefined") {
 				continue;
 			}
-			if (
-				finfo.struct &&
-				(typeof value === "object" || typeof value === "number")
-			) {
+			if (finfo.struct && (typeof value === "object" || typeof value === "number")) {
 				if (isStruct(this.def[finfo.struct])) {
-					newObject[finfo.name] = this.rename_thrift(
-						finfo.struct,
-						value,
-					);
+					newObject[finfo.name] = this.rename_thrift(finfo.struct, value);
 				} else if (this.def[finfo.struct]) {
-					newObject[finfo.name] = (this.def[finfo.struct] as any)[value] ||
-						value;
+					newObject[finfo.name] = (this.def[finfo.struct] as any)[value] || value;
 				} else {
 					newObject[finfo.name] = value;
 				}
-			} else if (
-				typeof finfo.list === "string" && typeof value === "object"
-			) {
+			} else if (typeof finfo.list === "string" && typeof value === "object") {
 				newObject[finfo.name] = [];
 				value.forEach((e: any, i: number) => {
-					newObject[finfo.name][i] = this.rename_thrift(
-						finfo.list,
-						e,
-					);
+					newObject[finfo.name][i] = this.rename_thrift(finfo.list, e);
 				});
-			} else if (
-				typeof finfo.map === "string" && typeof value === "object"
-			) {
+			} else if (typeof finfo.map === "string" && typeof value === "object") {
 				newObject[finfo.name] = {};
 				for (const key in value) {
 					const e = value[key];
-					newObject[finfo.name][key] = this.rename_thrift(
-						finfo.map,
-						e,
-					);
+					newObject[finfo.name][key] = this.rename_thrift(finfo.map, e);
 				}
-			} else if (
-				typeof finfo.set === "string" && typeof value === "object"
-			) {
+			} else if (typeof finfo.set === "string" && typeof value === "object") {
 				newObject[finfo.name] = [];
 				value.forEach((e: any, i: number) => {
 					newObject[finfo.name][i] = this.rename_thrift(finfo.set, e);

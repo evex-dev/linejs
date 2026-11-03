@@ -2,8 +2,13 @@
 sandbox
 .env
 node_modules
-deno.lock
-docs/vitepress/cache
+dist
+coverage
+*.tsbuildinfo
+*.tgz
+.vp
+docs/.vitepress/cache
+docs/.vitepress/dist
 verify_v2_7.ts
 qr_login.png
 apks/

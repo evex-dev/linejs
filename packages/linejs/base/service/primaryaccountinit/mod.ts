@@ -7,7 +7,7 @@ import { type BaseClient } from "../../core/mod.ts";
 import type { ProtocolKey } from "../../thrift/mod.ts";
 import type { BaseService } from "../types.ts";
 import { LINEStruct } from "../../thrift/mod.ts";
-import type * as LINETypes from "@evex/linejs-types";
+import type * as LINETypes from "@evex-dev/linejs-types";
 
 export class PrimaryAccountInitService implements BaseService {
 	client: BaseClient;
@@ -103,9 +103,7 @@ export class PrimaryAccountInitService implements BaseService {
 	}
 
 	async registerPrimaryUsingPhoneWithTokenV3(
-		...param: Parameters<
-			typeof LINEStruct.registerPrimaryUsingPhoneWithTokenV3_args
-		>
+		...param: Parameters<typeof LINEStruct.registerPrimaryUsingPhoneWithTokenV3_args>
 	): Promise<LINETypes.registerPrimaryUsingPhoneWithTokenV3_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.registerPrimaryUsingPhoneWithTokenV3_args(...param),
@@ -165,9 +163,7 @@ export class PrimaryAccountInitService implements BaseService {
 	}
 
 	async getPhoneVerifMethodForRegistration(
-		...param: Parameters<
-			typeof LINEStruct.getPhoneVerifMethodForRegistration_args
-		>
+		...param: Parameters<typeof LINEStruct.getPhoneVerifMethodForRegistration_args>
 	): Promise<LINETypes.getPhoneVerifMethodForRegistration_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.getPhoneVerifMethodForRegistration_args(...param),
@@ -191,12 +187,8 @@ export class PrimaryAccountInitService implements BaseService {
 	}
 
 	async getPasswordHashingParametersForPwdReg(
-		...param: Parameters<
-			typeof LINEStruct.getPasswordHashingParametersForPwdReg_args
-		>
-	): Promise<
-		LINETypes.getPasswordHashingParametersForPwdReg_result["success"]
-	> {
+		...param: Parameters<typeof LINEStruct.getPasswordHashingParametersForPwdReg_args>
+	): Promise<LINETypes.getPasswordHashingParametersForPwdReg_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.getPasswordHashingParametersForPwdReg_args(...param),
 			"getPasswordHashingParametersForPwdReg",

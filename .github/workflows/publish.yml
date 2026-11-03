@@ -1,0 +1,199 @@
+name: publish
+
+# Manual release: reads the latest published version from npm, bumps it by the
+# selected semver level, publishes both packages with npm Trusted Publishing
+# (OIDC provenance), then pushes the release commit/tag and creates the GitHub
+# Release. JSR is published by release.yml from the pushed tag.
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: "Semver level to release"
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  publish:
+    name: release and publish to npm
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 12.6.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
+          cache: pnpm
+
+      - name: Use a current npm (Trusted Publishing needs >= 11.5.1)
+        run: npm install --global npm@latest
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Compute the next version
+        id: version
+        env:
+          BUMP: ${{ inputs.bump }}
+          npm_config_package_lock: "false"
+        run: |
+          set -euo pipefail
+
+          case "$BUMP" in
+            major|minor|patch) ;;
+            *)
+              echo "::error::Invalid bump input: $BUMP"
+              exit 1
+              ;;
+          esac
+
+          TYPES_NAME=$(node -p "require('./packages/types/package.json').name")
+          LINEJS_NAME=$(node -p "require('./packages/linejs/package.json').name")
+
+          latest_version() {
+            local name="$1" version=""
+            if ! version=$(npm view "$name" version 2>/dev/null); then
+              echo "::error::$name has no published version on npm. Publish it once manually, then configure Trusted Publishing for this repository/workflow before dispatching this workflow." >&2
+              return 1
+            fi
+            version=$(printf '%s' "$version" | tr -d '[:space:]')
+            if ! printf '%s' "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+              echo "::error::npm returned an invalid semver for $name: $version" >&2
+              return 1
+            fi
+            printf '%s' "$version"
+          }
+
+          TYPES_LATEST=$(latest_version "$TYPES_NAME")
+          LINEJS_LATEST=$(latest_version "$LINEJS_NAME")
+
+          if [ "$TYPES_LATEST" != "$LINEJS_LATEST" ]; then
+            echo "::error::$TYPES_NAME@$TYPES_LATEST and $LINEJS_NAME@$LINEJS_LATEST have drifted apart. Align them with a manual publish before releasing." >&2
+            exit 1
+          fi
+
+          # Start from the published version, then bump it locally so npm version
+          # computes the semver step without touching git yet.
+          (cd packages/types && npm version "$TYPES_LATEST" --no-git-tag-version >/dev/null)
+          (cd packages/types && npm version "$BUMP" --no-git-tag-version >/dev/null)
+          (cd packages/linejs && npm version "$LINEJS_LATEST" --no-git-tag-version >/dev/null)
+          (cd packages/linejs && npm version "$BUMP" --no-git-tag-version >/dev/null)
+
+          VERSION=$(node -p "require('./packages/linejs/package.json').version")
+          if [ "$VERSION" != "$(node -p "require('./packages/types/package.json').version")" ]; then
+            echo "::error::linejs and linejs-types resolved to different versions" >&2
+            exit 1
+          fi
+          if ! printf '%s' "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::Computed an invalid version: $VERSION" >&2
+            exit 1
+          fi
+
+          # Keep JSR metadata in lockstep with package.json. JSR publishing itself
+          # stays in release.yml, and depends on the npm package published here.
+          VERSION="$VERSION" node -e '
+            const fs = require("node:fs");
+            const version = process.env.VERSION;
+            for (const file of ["packages/types/jsr.json", "packages/linejs/jsr.json"]) {
+              const config = JSON.parse(fs.readFileSync(file, "utf8"));
+              config.version = version;
+              if (config.imports?.["@evex-dev/linejs-types"]) {
+                config.imports["@evex-dev/linejs-types"] = `npm:@evex-dev/linejs-types@^${version}`;
+              }
+              fs.writeFileSync(file, `${JSON.stringify(config, null, "\t")}\n`);
+            }
+          '
+
+          # npm publish does not understand the pnpm workspace protocol, so the
+          # released linejs manifest pins the concrete (workspace-satisfiable) range.
+          (cd packages/linejs && npm pkg set "dependencies.@evex-dev/linejs-types=^$VERSION")
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+          echo "types_name=$TYPES_NAME" >> "$GITHUB_OUTPUT"
+          echo "linejs_name=$LINEJS_NAME" >> "$GITHUB_OUTPUT"
+
+      - name: Sync the lockfile
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Build and test
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          pnpm run build
+          pnpm test
+          pnpm run test:scripts
+
+      - name: Refuse to reuse an existing version
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          TAG: ${{ steps.version.outputs.tag }}
+          TYPES_NAME: ${{ steps.version.outputs.types_name }}
+          LINEJS_NAME: ${{ steps.version.outputs.linejs_name }}
+        run: |
+          set -euo pipefail
+          if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+            echo "::error::Tag $TAG already exists" >&2
+            exit 1
+          fi
+          for name in "$TYPES_NAME" "$LINEJS_NAME"; do
+            if npm view "$name@$VERSION" version >/dev/null 2>&1; then
+              echo "::error::$name@$VERSION is already published" >&2
+              exit 1
+            fi
+          done
+
+      - name: Create the release commit and tag locally
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --all
+          git commit -m "chore(release): $TAG"
+          git tag -a "$TAG" -m "$TAG"
+
+      - name: Publish to npm with Trusted Publishing
+        run: |
+          set -euo pipefail
+          (cd packages/types && npm publish --access public)
+          (cd packages/linejs && npm publish --access public)
+
+      - name: Push the release commit and tag
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          set -euo pipefail
+          git push origin HEAD:main
+          git push origin "$TAG"
+
+      - name: Create the GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: gh release create "$TAG" --verify-tag --generate-notes --title "$TAG"

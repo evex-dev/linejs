@@ -9,8 +9,8 @@ applied), and re-running on a future APK should always succeed.
 
 `apktool` and (optionally) `jadx` on `PATH` — on Arch, `android-apktool` (AUR)
 and `jadx` (extra); elsewhere, point `APKTOOL_JAR` / `JADX_BIN` at your own
-copies. Java 17+ and Deno 2.x. `fetch_line_apk.py` is stdlib-only, so any Python
-3 works.
+copies. Java 17+ and Node.js 24+. `fetch_line_apk.py` is stdlib-only, so any
+Python 3 works.
 
 Decompiled output defaults to `apks/decompiled/<apk-stem>/`, which the repo's
 `apks/` ignore rule already covers — a LINE smali tree is ~1.3 GB.
@@ -31,7 +31,7 @@ python scripts\fetch_line_apk.py
 #   adb pull <that path> base.apk
 
 # 2. sync linejs's Thrift schema from that base.apk
-deno run -A scripts\apk\sync_from_apk.ts --apk apks\jp.naver.line.android\<version>\base.apk
+node scripts\apk\sync_from_apk.ts --apk apks\jp.naver.line.android\<version>\base.apk
 ```
 
 `sync_from_apk.ts` runs five steps:
@@ -123,7 +123,7 @@ After LINE ships a new APK:
 
 ```powershell
 python scripts\fetch_line_apk.py
-deno run -A scripts\apk\sync_from_apk.ts --apk apks\jp.naver.line.android\<new-version>\base.apk
+node scripts\apk\sync_from_apk.ts --apk apks\jp.naver.line.android\<new-version>\base.apk
 ```
 
 The diff against the previous run is purely additive in the common case (new

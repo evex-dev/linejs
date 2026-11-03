@@ -1,4 +1,4 @@
-import { assert, assertEquals } from "@std/assert";
+import { assert, test } from "vite-plus/test";
 import { Buffer } from "node:buffer";
 import { E2EE } from "./mod.ts";
 
@@ -46,28 +46,28 @@ function makeE2EE() {
 	return { e2ee: new E2EE(fakeBase as never), store, negotiatedFor };
 }
 
-Deno.test("getE2EELocalPublicKey — same keyId on two contacts does not cross-contaminate", async () => {
+test("getE2EELocalPublicKey — same keyId on two contacts does not cross-contaminate", async () => {
 	const { e2ee, negotiatedFor } = makeE2EE();
 
 	const keyA = await e2ee.getE2EELocalPublicKey("u-a", 1);
-	assertEquals(keyA.toString(), "pub-of-u-a");
-	assert(negotiatedFor.includes("u-a"));
+	assert.deepEqual(keyA.toString(), "pub-of-u-a");
+	assert.isOk(negotiatedFor.includes("u-a"));
 
 	// Contact B has the same keyId=1 — must NOT be served A's cached key.
 	const keyB = await e2ee.getE2EELocalPublicKey("u-b", 1);
-	assertEquals(keyB.toString(), "pub-of-u-b");
-	assert(negotiatedFor.includes("u-b"));
+	assert.deepEqual(keyB.toString(), "pub-of-u-b");
+	assert.isOk(negotiatedFor.includes("u-b"));
 
 	// And repeated lookups still hit the (per-mid) cache.
 	const keyA2 = await e2ee.getE2EELocalPublicKey("u-a", 1);
-	assertEquals(keyA2.toString(), "pub-of-u-a");
-	assertEquals(negotiatedFor.filter((m) => m === "u-a").length, 1);
+	assert.deepEqual(keyA2.toString(), "pub-of-u-a");
+	assert.deepEqual(negotiatedFor.filter((m) => m === "u-a").length, 1);
 });
 
-Deno.test("getE2EELocalPublicKey — omitted keyId accepts the negotiated key", async () => {
+test("getE2EELocalPublicKey — omitted keyId accepts the negotiated key", async () => {
 	const { e2ee } = makeE2EE();
 	// Previously this threw `E2EE key id undefined not found` even though
 	// negotiation succeeded.
 	const key = await e2ee.getE2EELocalPublicKey("u-a");
-	assertEquals(key.toString(), "pub-of-u-a");
+	assert.deepEqual(key.toString(), "pub-of-u-a");
 });

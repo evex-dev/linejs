@@ -1,9 +1,4 @@
-import type {
-	ContentType,
-	Location,
-	Message,
-	MessageReactionType,
-} from "@evex/linejs-types";
+import type { ContentType, Location, Message, MessageReactionType } from "@evex-dev/linejs-types";
 import type { Client } from "../../client.ts";
 
 import type {
@@ -39,12 +34,14 @@ export class TalkMessage {
 	 * Replys to message.
 	 */
 	async reply(
-		input: string | {
-			e2ee?: boolean;
-			text?: string;
-			contentType?: ContentType;
-			contentMetadata?: Record<string, string>;
-		},
+		input:
+			| string
+			| {
+					e2ee?: boolean;
+					text?: string;
+					contentType?: ContentType;
+					contentMetadata?: Record<string, string>;
+			  },
 	): Promise<void> {
 		if (typeof input === "string") {
 			return this.reply({
@@ -72,14 +69,16 @@ export class TalkMessage {
 	 * Sends to message.
 	 */
 	async send(
-		input: string | {
-			e2ee?: boolean;
-			text?: string;
-			contentType?: ContentType;
-			contentMetadata?: Record<string, string>;
-			relatedMessageId?: string;
-			location?: Location;
-		},
+		input:
+			| string
+			| {
+					e2ee?: boolean;
+					text?: string;
+					contentType?: ContentType;
+					contentMetadata?: Record<string, string>;
+					relatedMessageId?: string;
+					location?: Location;
+			  },
 	): Promise<void> {
 		if (typeof input === "string") {
 			return this.reply({
@@ -116,11 +115,12 @@ export class TalkMessage {
 	async read(): Promise<void> {
 		// `chatMid` must be the chat id. In group/room chats `from` is the
 		// sender's USER mid, not the chat, so mark the chat itself read.
-		const chatMid = this.to.type === "GROUP" || this.to.type === "ROOM"
-			? this.to.id
-			: this.isMyMessage
-			? this.to.id
-			: this.from.id;
+		const chatMid =
+			this.to.type === "GROUP" || this.to.type === "ROOM"
+				? this.to.id
+				: this.isMyMessage
+					? this.to.id
+					: this.from.id;
 		await this.#client.base.talk.sendChatChecked({
 			chatMid,
 			lastMessageId: this.raw.id,
@@ -153,9 +153,7 @@ export class TalkMessage {
 	 */
 	async unsend() {
 		if (!this.isMyMessage) {
-			throw new TypeError(
-				"Cannot unsend the message which is not yours.",
-			);
+			throw new TypeError("Cannot unsend the message which is not yours.");
 		}
 		await this.#client.base.talk.unsendMessage({
 			messageId: this.raw.id,
@@ -170,8 +168,7 @@ export class TalkMessage {
 		if (this.raw.contentType !== "STICKER") {
 			throw new TypeError("The message is not sticker.");
 		}
-		const stickerMetadata = this.raw
-			.contentMetadata as unknown as StickerMetadata;
+		const stickerMetadata = this.raw.contentMetadata as unknown as StickerMetadata;
 		if (stickerMetadata.STKOPT === "A") {
 			return `https://stickershop.line-scdn.net/stickershop/v1/sticker/${stickerMetadata.STKID}/android/sticker_animation.png`;
 		} else {
@@ -190,7 +187,7 @@ export class TalkMessage {
 		const emojiUrls: string[] = [];
 		const emojiData = this.raw.contentMetadata;
 		const replace = emojiData?.REPLACE
-			? JSON.parse(emojiData?.REPLACE) as EmojiMeta["REPLACE"]
+			? (JSON.parse(emojiData?.REPLACE) as EmojiMeta["REPLACE"])
 			: undefined;
 		const emojiResources = replace?.sticon?.resources ?? [];
 		for (const emoji of emojiResources) {
@@ -212,19 +209,19 @@ export class TalkMessage {
 		const mentionees: MentionTarget[] = [];
 		const mentionData = content.metadata;
 		const mention = mentionData?.MENTION
-			? JSON.parse(mentionData.MENTION) as MentionMeta["MENTION"]
+			? (JSON.parse(mentionData.MENTION) as MentionMeta["MENTION"])
 			: undefined;
 		const mentions = mention?.MENTIONEES ?? [];
 		for (const mention of mentions) {
 			mentionees.push(
 				mention.A
 					? {
-						all: true,
-					}
+							all: true,
+						}
 					: {
-						all: false,
-						mid: mention.M as string,
-					},
+							all: false,
+							mid: mention.M as string,
+						},
 			);
 		}
 		return mentionees;
@@ -249,7 +246,7 @@ export class TalkMessage {
 		const mentionData = content.metadata;
 		const emojiData = content.metadata;
 		const mention = mentionData?.MENTION
-			? JSON.parse(mentionData.MENTION) as MentionMeta["MENTION"]
+			? (JSON.parse(mentionData.MENTION) as MentionMeta["MENTION"])
 			: undefined;
 		const mentions = mention?.MENTIONEES ?? [];
 		mentions.forEach((e, i) => {
@@ -260,7 +257,7 @@ export class TalkMessage {
 			});
 		});
 		const replace = emojiData?.REPLACE
-			? JSON.parse(emojiData?.REPLACE) as EmojiMeta["REPLACE"]
+			? (JSON.parse(emojiData?.REPLACE) as EmojiMeta["REPLACE"])
 			: undefined;
 		const emojiResources = replace?.sticon?.resources ?? [];
 		emojiResources.forEach((e, i) => {
@@ -272,10 +269,7 @@ export class TalkMessage {
 			.forEach((e) => {
 				if (lastSplit - e.start) {
 					texts.push({
-						text: this.raw.text?.substring(
-							lastSplit,
-							e.start,
-						) as string,
+						text: this.raw.text?.substring(lastSplit, e.start) as string,
 					});
 				}
 				const content: DecorationsData = {
@@ -283,21 +277,18 @@ export class TalkMessage {
 				};
 				if (typeof e.emoji === "number") {
 					const emoji = emojiResources[e.emoji];
-					const url =
-						`https://stickershop.line-scdn.net/sticonshop/v1/sticon/${emoji.productId}/android/${emoji.sticonId}.png`;
+					const url = `https://stickershop.line-scdn.net/sticonshop/v1/sticon/${emoji.productId}/android/${emoji.sticonId}.png`;
 					content.emoji = {
 						...emoji,
 						url,
 					};
 				} else if (typeof e.mention === "number") {
 					const _mention = mentionData?.MENTION
-						? JSON.parse(mentionData.MENTION) as MentionMeta["MENTION"]
+						? (JSON.parse(mentionData.MENTION) as MentionMeta["MENTION"])
 						: undefined;
 					const mentions = _mention?.MENTIONEES ?? [];
 					const mention = mentions[e.mention];
-					content.mention = mention.M
-						? { mid: mention.M }
-						: { all: !!mention.A };
+					content.mention = mention.M ? { mid: mention.M } : { all: !!mention.A };
 				}
 				texts.push(content);
 				lastSplit = e.end;
@@ -313,9 +304,7 @@ export class TalkMessage {
 	 */
 	getSharedContact(): ContactMeta {
 		if (this.#content.type !== "CONTACT") {
-			throw new TypeError(
-				"The message does not share contact infomation.",
-			);
+			throw new TypeError("The message does not share contact infomation.");
 		}
 		const contactData = this.#content.metadata as unknown as ContactMeta;
 		return { mid: contactData.mid, displayName: contactData.displayName };
@@ -350,13 +339,9 @@ export class TalkMessage {
 	getReplyTarget(): UnresolvedTalkMessage | null {
 		if (
 			this.raw.relatedMessageId &&
-			(this.raw.messageRelationType === 3 ||
-				this.raw.messageRelationType === "REPLY")
+			(this.raw.messageRelationType === 3 || this.raw.messageRelationType === "REPLY")
 		) {
-			return new UnresolvedTalkMessage(
-				this.raw.relatedMessageId,
-				this.#client,
-			);
+			return new UnresolvedTalkMessage(this.raw.relatedMessageId, this.#client);
 		}
 		return null;
 	}
@@ -366,25 +351,19 @@ export class TalkMessage {
 	 */
 	async getData(preview?: boolean): Promise<Blob> {
 		if (!hasContents.includes(this.#content.type as string)) {
-			throw new TypeError(
-				"message have no contents",
-			);
+			throw new TypeError("message have no contents");
 		}
 		if (this.raw.contentMetadata.DOWNLOAD_URL) {
 			if (preview) {
-				const r = await this.#client.base
-					.fetch(this.raw.contentMetadata.PREVIEW_URL);
+				const r = await this.#client.base.fetch(this.raw.contentMetadata.PREVIEW_URL);
 				return await r.blob();
 			} else {
-				const r = await this.#client.base
-					.fetch(this.raw.contentMetadata.DOWNLOAD_URL);
+				const r = await this.#client.base.fetch(this.raw.contentMetadata.DOWNLOAD_URL);
 				return await r.blob();
 			}
 		}
 		if (this.raw.chunks) {
-			const file = await this.#client.base.obs.downloadMediaByE2EE(
-				this.raw,
-			);
+			const file = await this.#client.base.obs.downloadMediaByE2EE(this.raw);
 			if (!file) {
 				throw new InternalError("ObsError", "Download failed");
 			}
@@ -434,8 +413,7 @@ export class TalkMessage {
 		// message box carry only `UPDATED_TIME`. The `updatedTime` field is
 		// kept as a fallback. Any edit time means the message was edited, so
 		// defer to `updatedTime` rather than repeating its lookup here.
-		return this.raw.contentMetadata?.EDITED === "true" ||
-			this.updatedTime !== null;
+		return this.raw.contentMetadata?.EDITED === "true" || this.updatedTime !== null;
 	}
 	/**
 	 * Time the message was last edited, or `null` when it has never been
@@ -457,10 +435,7 @@ export class TalkMessage {
 		return this.fromRawTalk(source.event.message, client);
 	}
 	*/
-	static async fromRawTalk(
-		raw: Message,
-		client: Client,
-	): Promise<TalkMessage> {
+	static async fromRawTalk(raw: Message, client: Client): Promise<TalkMessage> {
 		if (raw.contentMetadata.e2eeVersion) {
 			raw = await client.base.e2ee.decryptE2EEMessage(raw);
 		}

@@ -11,7 +11,7 @@ options, including the device to emulate.
 
 Here is an example:
 ```ts
-import { loginWithPassword } from "@evex/linejs";
+import { loginWithPassword } from "@evex-dev/linejs";
 
 const client = await loginWithPassword({
   email: 'you@example.com', // e-mail address
@@ -32,7 +32,7 @@ email and password are required. On first login, you have to enter pincode on mo
 In this way, email and password is not needed.
 
 ```ts
-import { loginWithQR } from "@evex/linejs";
+import { loginWithQR } from "@evex-dev/linejs";
 
 const client = await loginWithQR({
   onReceiveQRUrl(url) {
@@ -53,7 +53,7 @@ The function gives an url to read on mobile. You have to create QR with yourself
 There is a possibility to banned your account if you tried login many times, so you should use authToken to get authenticated.
 
 ```ts
-import { loginWithAuthToken } from "@evex/linejs";
+import { loginWithAuthToken } from "@evex-dev/linejs";
 
 const client = await loginWithAuthToken("YOUR_AUTH_TOKEN", {
   device: "IOSIPAD",
@@ -69,9 +69,9 @@ it yourself if you want to reuse it on the next run. LINEJS emits an
 listener **before login**, since login itself can rotate the token:
 
 ```ts
-import { Client } from "@evex/linejs";
-import { BaseClient } from "@evex/linejs/base";
-import { FileStorage } from "@evex/linejs/storage";
+import { Client } from "@evex-dev/linejs";
+import { BaseClient } from "@evex-dev/linejs/base";
+import { FileStorage } from "@evex-dev/linejs/storage";
 
 const storage = new FileStorage("./session.json");
 const TOKEN_KEY = "userAuthToken";

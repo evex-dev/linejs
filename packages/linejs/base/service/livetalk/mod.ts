@@ -1,7 +1,7 @@
 // For SquareLiveTalk (live, etc)
 
 import { LINEStruct, type ProtocolKey } from "../../thrift/mod.ts";
-import type * as LINETypes from "@evex/linejs-types";
+import type * as LINETypes from "@evex-dev/linejs-types";
 import type { BaseClient } from "../../core/mod.ts";
 import type { BaseService } from "../types.ts";
 export class SquareLiveTalkService implements BaseService {
@@ -13,9 +13,7 @@ export class SquareLiveTalkService implements BaseService {
 		this.client = client;
 	}
 	async acceptSpeakers(
-		...param: Parameters<
-			typeof LINEStruct.SquareService_acceptSpeakers_args
-		>
+		...param: Parameters<typeof LINEStruct.SquareService_acceptSpeakers_args>
 	): Promise<LINETypes.SquareService_acceptSpeakers_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.SquareService_acceptSpeakers_args(...param),
@@ -27,9 +25,7 @@ export class SquareLiveTalkService implements BaseService {
 	}
 
 	async acceptToChangeRole(
-		...param: Parameters<
-			typeof LINEStruct.SquareService_acceptToChangeRole_args
-		>
+		...param: Parameters<typeof LINEStruct.SquareService_acceptToChangeRole_args>
 	): Promise<LINETypes.SquareService_acceptToChangeRole_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.SquareService_acceptToChangeRole_args(...param),
@@ -41,9 +37,7 @@ export class SquareLiveTalkService implements BaseService {
 	}
 
 	async acceptToListen(
-		...param: Parameters<
-			typeof LINEStruct.SquareService_acceptToListen_args
-		>
+		...param: Parameters<typeof LINEStruct.SquareService_acceptToListen_args>
 	): Promise<LINETypes.SquareService_acceptToListen_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.SquareService_acceptToListen_args(...param),
@@ -79,9 +73,7 @@ export class SquareLiveTalkService implements BaseService {
 	}
 
 	async fetchLiveTalkEvents(
-		...param: Parameters<
-			typeof LINEStruct.SquareService_fetchLiveTalkEvents_args
-		>
+		...param: Parameters<typeof LINEStruct.SquareService_fetchLiveTalkEvents_args>
 	): Promise<LINETypes.SquareService_fetchLiveTalkEvents_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.SquareService_fetchLiveTalkEvents_args(...param),
@@ -93,16 +85,10 @@ export class SquareLiveTalkService implements BaseService {
 	}
 
 	async findLiveTalkByInvitationTicket(
-		...param: Parameters<
-			typeof LINEStruct.SquareService_findLiveTalkByInvitationTicket_args
-		>
-	): Promise<
-		LINETypes.SquareService_findLiveTalkByInvitationTicket_result["success"]
-	> {
+		...param: Parameters<typeof LINEStruct.SquareService_findLiveTalkByInvitationTicket_args>
+	): Promise<LINETypes.SquareService_findLiveTalkByInvitationTicket_result["success"]> {
 		return await this.client.request.request(
-			LINEStruct.SquareService_findLiveTalkByInvitationTicket_args(
-				...param,
-			),
+			LINEStruct.SquareService_findLiveTalkByInvitationTicket_args(...param),
 			"findLiveTalkByInvitationTicket",
 			this.protocolType,
 			true,
@@ -111,9 +97,7 @@ export class SquareLiveTalkService implements BaseService {
 	}
 
 	async forceEndLiveTalk(
-		...param: Parameters<
-			typeof LINEStruct.SquareService_forceEndLiveTalk_args
-		>
+		...param: Parameters<typeof LINEStruct.SquareService_forceEndLiveTalk_args>
 	): Promise<LINETypes.SquareService_forceEndLiveTalk_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.SquareService_forceEndLiveTalk_args(...param),
@@ -125,12 +109,8 @@ export class SquareLiveTalkService implements BaseService {
 	}
 
 	async getLiveTalkInfoForNonMember(
-		...param: Parameters<
-			typeof LINEStruct.SquareService_getLiveTalkInfoForNonMember_args
-		>
-	): Promise<
-		LINETypes.SquareService_getLiveTalkInfoForNonMember_result["success"]
-	> {
+		...param: Parameters<typeof LINEStruct.SquareService_getLiveTalkInfoForNonMember_args>
+	): Promise<LINETypes.SquareService_getLiveTalkInfoForNonMember_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.SquareService_getLiveTalkInfoForNonMember_args(...param),
 			"getLiveTalkInfoForNonMember",
@@ -141,12 +121,8 @@ export class SquareLiveTalkService implements BaseService {
 	}
 
 	async getLiveTalkInvitationUrl(
-		...param: Parameters<
-			typeof LINEStruct.SquareService_getLiveTalkInvitationUrl_args
-		>
-	): Promise<
-		LINETypes.SquareService_getLiveTalkInvitationUrl_result["success"]
-	> {
+		...param: Parameters<typeof LINEStruct.SquareService_getLiveTalkInvitationUrl_args>
+	): Promise<LINETypes.SquareService_getLiveTalkInvitationUrl_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.SquareService_getLiveTalkInvitationUrl_args(...param),
 			"getLiveTalkInvitationUrl",
@@ -157,18 +133,10 @@ export class SquareLiveTalkService implements BaseService {
 	}
 
 	async getLiveTalkSpeakersForNonMember(
-		...param: Parameters<
-			typeof LINEStruct.SquareService_getLiveTalkSpeakersForNonMember_args
-		>
-	): Promise<
-		LINETypes.SquareService_getLiveTalkSpeakersForNonMember_result[
-			"success"
-		]
-	> {
+		...param: Parameters<typeof LINEStruct.SquareService_getLiveTalkSpeakersForNonMember_args>
+	): Promise<LINETypes.SquareService_getLiveTalkSpeakersForNonMember_result["success"]> {
 		return await this.client.request.request(
-			LINEStruct.SquareService_getLiveTalkSpeakersForNonMember_args(
-				...param,
-			),
+			LINEStruct.SquareService_getLiveTalkSpeakersForNonMember_args(...param),
 			"getLiveTalkSpeakersForNonMember",
 			this.protocolType,
 			true,
@@ -177,12 +145,8 @@ export class SquareLiveTalkService implements BaseService {
 	}
 
 	async getSquareInfoByChatMid(
-		...param: Parameters<
-			typeof LINEStruct.SquareService_getSquareInfoByChatMid_args
-		>
-	): Promise<
-		LINETypes.SquareService_getSquareInfoByChatMid_result["success"]
-	> {
+		...param: Parameters<typeof LINEStruct.SquareService_getSquareInfoByChatMid_args>
+	): Promise<LINETypes.SquareService_getSquareInfoByChatMid_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.SquareService_getSquareInfoByChatMid_args(...param),
 			"getSquareInfoByChatMid",
@@ -193,9 +157,7 @@ export class SquareLiveTalkService implements BaseService {
 	}
 
 	async inviteToChangeRole(
-		...param: Parameters<
-			typeof LINEStruct.SquareService_inviteToChangeRole_args
-		>
+		...param: Parameters<typeof LINEStruct.SquareService_inviteToChangeRole_args>
 	): Promise<LINETypes.SquareService_inviteToChangeRole_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.SquareService_inviteToChangeRole_args(...param),
@@ -207,9 +169,7 @@ export class SquareLiveTalkService implements BaseService {
 	}
 
 	async inviteToListen(
-		...param: Parameters<
-			typeof LINEStruct.SquareService_inviteToListen_args
-		>
+		...param: Parameters<typeof LINEStruct.SquareService_inviteToListen_args>
 	): Promise<LINETypes.SquareService_inviteToListen_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.SquareService_inviteToListen_args(...param),
@@ -221,9 +181,7 @@ export class SquareLiveTalkService implements BaseService {
 	}
 
 	async inviteToLiveTalk(
-		...param: Parameters<
-			typeof LINEStruct.SquareService_inviteToLiveTalk_args
-		>
+		...param: Parameters<typeof LINEStruct.SquareService_inviteToLiveTalk_args>
 	): Promise<LINETypes.SquareService_inviteToLiveTalk_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.SquareService_inviteToLiveTalk_args(...param),
@@ -259,12 +217,8 @@ export class SquareLiveTalkService implements BaseService {
 	}
 
 	async kickOutLiveTalkParticipants(
-		...param: Parameters<
-			typeof LINEStruct.SquareService_kickOutLiveTalkParticipants_args
-		>
-	): Promise<
-		LINETypes.SquareService_kickOutLiveTalkParticipants_result["success"]
-	> {
+		...param: Parameters<typeof LINEStruct.SquareService_kickOutLiveTalkParticipants_args>
+	): Promise<LINETypes.SquareService_kickOutLiveTalkParticipants_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.SquareService_kickOutLiveTalkParticipants_args(...param),
 			"kickOutLiveTalkParticipants",
@@ -275,9 +229,7 @@ export class SquareLiveTalkService implements BaseService {
 	}
 
 	async rejectSpeakers(
-		...param: Parameters<
-			typeof LINEStruct.SquareService_rejectSpeakers_args
-		>
+		...param: Parameters<typeof LINEStruct.SquareService_rejectSpeakers_args>
 	): Promise<LINETypes.SquareService_rejectSpeakers_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.SquareService_rejectSpeakers_args(...param),
@@ -301,9 +253,7 @@ export class SquareLiveTalkService implements BaseService {
 	}
 
 	async reportLiveTalk(
-		...param: Parameters<
-			typeof LINEStruct.SquareService_reportLiveTalk_args
-		>
+		...param: Parameters<typeof LINEStruct.SquareService_reportLiveTalk_args>
 	): Promise<LINETypes.SquareService_reportLiveTalk_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.SquareService_reportLiveTalk_args(...param),
@@ -315,12 +265,8 @@ export class SquareLiveTalkService implements BaseService {
 	}
 
 	async reportLiveTalkSpeaker(
-		...param: Parameters<
-			typeof LINEStruct.SquareService_reportLiveTalkSpeaker_args
-		>
-	): Promise<
-		LINETypes.SquareService_reportLiveTalkSpeaker_result["success"]
-	> {
+		...param: Parameters<typeof LINEStruct.SquareService_reportLiveTalkSpeaker_args>
+	): Promise<LINETypes.SquareService_reportLiveTalkSpeaker_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.SquareService_reportLiveTalkSpeaker_args(...param),
 			"reportLiveTalkSpeaker",
@@ -331,9 +277,7 @@ export class SquareLiveTalkService implements BaseService {
 	}
 
 	async requestToListen(
-		...param: Parameters<
-			typeof LINEStruct.SquareService_requestToListen_args
-		>
+		...param: Parameters<typeof LINEStruct.SquareService_requestToListen_args>
 	): Promise<LINETypes.SquareService_requestToListen_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.SquareService_requestToListen_args(...param),
@@ -345,9 +289,7 @@ export class SquareLiveTalkService implements BaseService {
 	}
 
 	async requestToSpeak(
-		...param: Parameters<
-			typeof LINEStruct.SquareService_requestToSpeak_args
-		>
+		...param: Parameters<typeof LINEStruct.SquareService_requestToSpeak_args>
 	): Promise<LINETypes.SquareService_requestToSpeak_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.SquareService_requestToSpeak_args(...param),
@@ -359,9 +301,7 @@ export class SquareLiveTalkService implements BaseService {
 	}
 
 	async updateLiveTalkAttrs(
-		...param: Parameters<
-			typeof LINEStruct.SquareService_updateLiveTalkAttrs_args
-		>
+		...param: Parameters<typeof LINEStruct.SquareService_updateLiveTalkAttrs_args>
 	): Promise<LINETypes.SquareService_updateLiveTalkAttrs_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.SquareService_updateLiveTalkAttrs_args(...param),
@@ -373,9 +313,7 @@ export class SquareLiveTalkService implements BaseService {
 	}
 
 	async acquireLiveTalk(
-		...param: Parameters<
-			typeof LINEStruct.SquareService_acquireLiveTalk_args
-		>
+		...param: Parameters<typeof LINEStruct.SquareService_acquireLiveTalk_args>
 	): Promise<LINETypes.SquareService_acquireLiveTalk_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.SquareService_acquireLiveTalk_args(...param),

@@ -1,4 +1,4 @@
-import { assertEquals } from "@std/assert";
+import { assert, test } from "vite-plus/test";
 import { Buffer } from "node:buffer";
 import crypto from "node:crypto";
 import nacl from "tweetnacl";
@@ -49,11 +49,7 @@ function makeFixture(opts: { served: number[]; lastKeyId: number }) {
 				calls.push({ name: "getE2EEGroupSharedKey", args });
 				const shared = sharedKeys.get(args.groupKeyId);
 				if (!shared) {
-					throw new InternalError(
-						"TalkException",
-						"group key not found",
-						{ code: "NOT_FOUND" },
-					);
+					throw new InternalError("TalkException", "group key not found", { code: "NOT_FOUND" });
 				}
 				return Promise.resolve(shared);
 			},
@@ -122,7 +118,7 @@ function cachedAt(store: Map<string, string>, key: string) {
 	return raw === undefined ? undefined : JSON.parse(raw);
 }
 
-Deno.test("group key — a cached generation is returned without any RPC", async () => {
+test("group key — a cached generation is returned without any RPC", async () => {
 	const { e2ee, store, calls } = makeFixture({
 		served: [7],
 		lastKeyId: 7,
@@ -134,11 +130,11 @@ Deno.test("group key — a cached generation is returned without any RPC", async
 
 	const key = await e2ee.getE2EELocalPublicKey(GROUP_MID, 7);
 
-	assertEquals(key, { privKey: expectedPrivKey(7), keyId: 7 });
-	assertEquals(calls, []);
+	assert.deepEqual(key, { privKey: expectedPrivKey(7), keyId: 7 });
+	assert.deepEqual(calls, []);
 });
 
-Deno.test("group key — the legacy single slot is still honoured when it matches", async () => {
+test("group key — the legacy single slot is still honoured when it matches", async () => {
 	const { e2ee, store, calls } = makeFixture({
 		served: [7],
 		lastKeyId: 7,
@@ -151,11 +147,11 @@ Deno.test("group key — the legacy single slot is still honoured when it matche
 
 	const key = await e2ee.getE2EELocalPublicKey(GROUP_MID, 7);
 
-	assertEquals(key, { privKey: expectedPrivKey(7), keyId: 7 });
-	assertEquals(calls, []);
+	assert.deepEqual(key, { privKey: expectedPrivKey(7), keyId: 7 });
+	assert.deepEqual(calls, []);
 });
 
-Deno.test("group key — a requested generation is fetched by id, not as the last key", async () => {
+test("group key — a requested generation is fetched by id, not as the last key", async () => {
 	const { e2ee, store, calls } = makeFixture({
 		served: [7, 9],
 		lastKeyId: 9,
@@ -168,16 +164,18 @@ Deno.test("group key — a requested generation is fetched by id, not as the las
 
 	const key = await e2ee.getE2EELocalPublicKey(GROUP_MID, 7);
 
-	assertEquals(calls, [{
-		name: "getE2EEGroupSharedKey",
-		args: { keyVersion: 2, chatMid: GROUP_MID, groupKeyId: 7 },
-	}]);
-	assertEquals(key, { privKey: expectedPrivKey(7), keyId: 7 });
-	assertEquals(cachedAt(store, `e2eeGroupKeys:${GROUP_MID}:7`), key);
-	assertEquals(cachedAt(store, `e2eeGroupKeys:${GROUP_MID}`), key);
+	assert.deepEqual(calls, [
+		{
+			name: "getE2EEGroupSharedKey",
+			args: { keyVersion: 2, chatMid: GROUP_MID, groupKeyId: 7 },
+		},
+	]);
+	assert.deepEqual(key, { privKey: expectedPrivKey(7), keyId: 7 });
+	assert.deepEqual(cachedAt(store, `e2eeGroupKeys:${GROUP_MID}:7`), key);
+	assert.deepEqual(cachedAt(store, `e2eeGroupKeys:${GROUP_MID}`), key);
 });
 
-Deno.test("group key — an omitted key id still asks for the last key", async () => {
+test("group key — an omitted key id still asks for the last key", async () => {
 	const { e2ee, store, calls } = makeFixture({
 		served: [9],
 		lastKeyId: 9,
@@ -185,15 +183,17 @@ Deno.test("group key — an omitted key id still asks for the last key", async (
 
 	const key = await e2ee.getE2EELocalPublicKey(GROUP_MID, undefined);
 
-	assertEquals(calls, [{
-		name: "getLastE2EEGroupSharedKey",
-		args: { keyVersion: 2, chatMid: GROUP_MID },
-	}]);
-	assertEquals(key, { privKey: expectedPrivKey(9), keyId: 9 });
-	assertEquals(cachedAt(store, `e2eeGroupKeys:${GROUP_MID}:9`), key);
+	assert.deepEqual(calls, [
+		{
+			name: "getLastE2EEGroupSharedKey",
+			args: { keyVersion: 2, chatMid: GROUP_MID },
+		},
+	]);
+	assert.deepEqual(key, { privKey: expectedPrivKey(9), keyId: 9 });
+	assert.deepEqual(cachedAt(store, `e2eeGroupKeys:${GROUP_MID}:9`), key);
 });
 
-Deno.test("group key — two generations of one group stay cached side by side", async () => {
+test("group key — two generations of one group stay cached side by side", async () => {
 	const { e2ee, store, calls } = makeFixture({
 		served: [7, 9],
 		lastKeyId: 9,
@@ -204,15 +204,15 @@ Deno.test("group key — two generations of one group stay cached side by side",
 	// The older generation must not have been evicted by the newer one.
 	const olderAgain = await e2ee.getE2EELocalPublicKey(GROUP_MID, 7);
 
-	assertEquals(older, { privKey: expectedPrivKey(7), keyId: 7 });
-	assertEquals(newer, { privKey: expectedPrivKey(9), keyId: 9 });
-	assertEquals(olderAgain, older);
-	assertEquals(calls.length, 2);
-	assertEquals(cachedAt(store, `e2eeGroupKeys:${GROUP_MID}:7`), older);
-	assertEquals(cachedAt(store, `e2eeGroupKeys:${GROUP_MID}:9`), newer);
+	assert.deepEqual(older, { privKey: expectedPrivKey(7), keyId: 7 });
+	assert.deepEqual(newer, { privKey: expectedPrivKey(9), keyId: 9 });
+	assert.deepEqual(olderAgain, older);
+	assert.deepEqual(calls.length, 2);
+	assert.deepEqual(cachedAt(store, `e2eeGroupKeys:${GROUP_MID}:7`), older);
+	assert.deepEqual(cachedAt(store, `e2eeGroupKeys:${GROUP_MID}:9`), newer);
 });
 
-Deno.test("group key — generation 0 is fetched by id like any other", async () => {
+test("group key — generation 0 is fetched by id like any other", async () => {
 	// The key id used to be tested for truthiness, so generation 0 silently
 	// took the last-key path.
 	const { e2ee, store, calls } = makeFixture({
@@ -222,15 +222,17 @@ Deno.test("group key — generation 0 is fetched by id like any other", async ()
 
 	const key = await e2ee.getE2EELocalPublicKey(GROUP_MID, 0);
 
-	assertEquals(calls, [{
-		name: "getE2EEGroupSharedKey",
-		args: { keyVersion: 2, chatMid: GROUP_MID, groupKeyId: 0 },
-	}]);
-	assertEquals(key, { privKey: expectedPrivKey(0), keyId: 0 });
-	assertEquals(cachedAt(store, `e2eeGroupKeys:${GROUP_MID}:0`), key);
+	assert.deepEqual(calls, [
+		{
+			name: "getE2EEGroupSharedKey",
+			args: { keyVersion: 2, chatMid: GROUP_MID, groupKeyId: 0 },
+		},
+	]);
+	assert.deepEqual(key, { privKey: expectedPrivKey(0), keyId: 0 });
+	assert.deepEqual(cachedAt(store, `e2eeGroupKeys:${GROUP_MID}:0`), key);
 });
 
-Deno.test("group key — generation 0 falls back to the last key when unserved", async () => {
+test("group key — generation 0 falls back to the last key when unserved", async () => {
 	const { e2ee, calls } = makeFixture({
 		served: [9], // generation 0 is not served
 		lastKeyId: 9,
@@ -238,7 +240,7 @@ Deno.test("group key — generation 0 falls back to the last key when unserved",
 
 	const key = await e2ee.getE2EELocalPublicKey(GROUP_MID, 0);
 
-	assertEquals(calls, [
+	assert.deepEqual(calls, [
 		{
 			name: "getE2EEGroupSharedKey",
 			args: { keyVersion: 2, chatMid: GROUP_MID, groupKeyId: 0 },
@@ -248,10 +250,10 @@ Deno.test("group key — generation 0 falls back to the last key when unserved",
 			args: { keyVersion: 2, chatMid: GROUP_MID },
 		},
 	]);
-	assertEquals(key, { privKey: expectedPrivKey(9), keyId: 9 });
+	assert.deepEqual(key, { privKey: expectedPrivKey(9), keyId: 9 });
 });
 
-Deno.test("group key — a key id that is not a number never reaches the wire", async () => {
+test("group key — a key id that is not a number never reaches the wire", async () => {
 	const { e2ee, calls } = makeFixture({
 		served: [9],
 		lastKeyId: 9,
@@ -260,14 +262,16 @@ Deno.test("group key — a key id that is not a number never reaches the wire", 
 	// `Number("nonsense")` is NaN; it must not be sent as a groupKeyId.
 	const key = await e2ee.getE2EELocalPublicKey(GROUP_MID, "nonsense");
 
-	assertEquals(calls, [{
-		name: "getLastE2EEGroupSharedKey",
-		args: { keyVersion: 2, chatMid: GROUP_MID },
-	}]);
-	assertEquals(key, { privKey: expectedPrivKey(9), keyId: 9 });
+	assert.deepEqual(calls, [
+		{
+			name: "getLastE2EEGroupSharedKey",
+			args: { keyVersion: 2, chatMid: GROUP_MID },
+		},
+	]);
+	assert.deepEqual(key, { privKey: expectedPrivKey(9), keyId: 9 });
 });
 
-Deno.test("group key — a generation the server dropped falls back to the last key", async () => {
+test("group key — a generation the server dropped falls back to the last key", async () => {
 	const { e2ee, store, calls } = makeFixture({
 		served: [9], // generation 7 is no longer served
 		lastKeyId: 9,
@@ -275,7 +279,7 @@ Deno.test("group key — a generation the server dropped falls back to the last 
 
 	const key = await e2ee.getE2EELocalPublicKey(GROUP_MID, 7);
 
-	assertEquals(calls, [
+	assert.deepEqual(calls, [
 		{
 			name: "getE2EEGroupSharedKey",
 			args: { keyVersion: 2, chatMid: GROUP_MID, groupKeyId: 7 },
@@ -285,6 +289,6 @@ Deno.test("group key — a generation the server dropped falls back to the last 
 			args: { keyVersion: 2, chatMid: GROUP_MID },
 		},
 	]);
-	assertEquals(key, { privKey: expectedPrivKey(9), keyId: 9 });
-	assertEquals(cachedAt(store, `e2eeGroupKeys:${GROUP_MID}:9`), key);
+	assert.deepEqual(key, { privKey: expectedPrivKey(9), keyId: 9 });
+	assert.deepEqual(cachedAt(store, `e2eeGroupKeys:${GROUP_MID}:9`), key);
 });

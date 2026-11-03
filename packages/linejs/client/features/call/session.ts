@@ -1,6 +1,6 @@
 // CallSession — control plane is real, transport is pluggable.
 import type { Client } from "../../mod.ts";
-import type * as LINETypes from "@evex/linejs-types";
+import type * as LINETypes from "@evex-dev/linejs-types";
 import type {
 	AudioDecoder,
 	AudioEncoder,
@@ -55,7 +55,9 @@ export const stubTransport: CallTransport = {
 	send() {
 		throw new Error("stubTransport.send");
 	},
-	async *receive() {/* */},
+	async *receive() {
+		/* */
+	},
 };
 
 export type CallSessionEvents = {
@@ -134,10 +136,7 @@ export class CallSession extends TypedEventEmitter<CallSessionEvents> {
 		}
 	}
 
-	async sendStream(
-		source: AudioSource,
-		opts: { signal?: AbortSignal } = {},
-	): Promise<void> {
+	async sendStream(source: AudioSource, opts: { signal?: AbortSignal } = {}): Promise<void> {
 		if (this.#state !== "in-call") {
 			throw new Error(`sendStream: session not in-call (state=${this.#state})`);
 		}
@@ -145,10 +144,10 @@ export class CallSession extends TypedEventEmitter<CallSessionEvents> {
 		const signal = opts.signal
 			? mergeSignals(opts.signal, this.#sendAbort.signal)
 			: this.#sendAbort.signal;
-		const enc = this.#encoder ??= this.#codecs.newEncoder({
+		const enc = (this.#encoder ??= this.#codecs.newEncoder({
 			sampleRate: 48000,
 			channels: 1,
-		});
+		}));
 		for await (const frame of source.frames({ signal })) {
 			if (signal.aborted) break;
 			const packet = enc.encode(frame);
@@ -169,10 +168,10 @@ export class CallSession extends TypedEventEmitter<CallSessionEvents> {
 		bytes: Uint8Array;
 		decode: (b: Uint8Array) =>
 			| Promise<{
-				samples: Int16Array;
-				sampleRate: number;
-				channels: number;
-			}>
+					samples: Int16Array;
+					sampleRate: number;
+					channels: number;
+			  }>
 			| { samples: Int16Array; sampleRate: number; channels: number };
 	}): Promise<void> {
 		const decoded = await opts.decode(opts.bytes);
@@ -181,15 +180,13 @@ export class CallSession extends TypedEventEmitter<CallSessionEvents> {
 
 	async receiveInto(sink: AudioSink): Promise<void> {
 		if (this.#state !== "in-call") {
-			throw new Error(
-				`receiveInto: session not in-call (state=${this.#state})`,
-			);
+			throw new Error(`receiveInto: session not in-call (state=${this.#state})`);
 		}
 		this.#receiveSink = sink;
-		const dec = this.#decoder ??= this.#codecs.newDecoder({
+		const dec = (this.#decoder ??= this.#codecs.newDecoder({
 			sampleRate: 48000,
 			channels: 1,
-		});
+		}));
 		for await (const packet of this.#transport.receive()) {
 			const frame = dec.decode(packet);
 			if (frame) await sink.write(frame);
@@ -201,10 +198,10 @@ export class CallSession extends TypedEventEmitter<CallSessionEvents> {
 		if (this.#state !== "in-call") {
 			throw new Error(`received: session not in-call (state=${this.#state})`);
 		}
-		const dec = this.#decoder ??= this.#codecs.newDecoder({
+		const dec = (this.#decoder ??= this.#codecs.newDecoder({
 			sampleRate: 48000,
 			channels: 1,
-		});
+		}));
 		for await (const packet of this.#transport.receive()) {
 			const frame = dec.decode(packet);
 			if (frame) yield frame;
@@ -217,7 +214,9 @@ export class CallSession extends TypedEventEmitter<CallSessionEvents> {
 		this.#sendAbort?.abort();
 		try {
 			await this.#transport.close();
-		} catch { /* */ }
+		} catch {
+			/* */
+		}
 		this.#encoder?.close?.();
 		this.#decoder?.close?.();
 		await this.#receiveSink?.end?.();

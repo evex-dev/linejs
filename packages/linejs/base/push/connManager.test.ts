@@ -1,4 +1,4 @@
-import { assertEquals, assertStrictEquals } from "@std/assert";
+import { assert, test } from "vite-plus/test";
 import { ConnManager } from "./connManager.ts";
 
 interface LogEntry {
@@ -7,10 +7,7 @@ interface LogEntry {
 }
 
 function timeoutError(): DOMException {
-	return new DOMException(
-		"The operation was aborted due to timeout",
-		"TimeoutError",
-	);
+	return new DOMException("The operation was aborted due to timeout", "TimeoutError");
 }
 
 function stubClient(options: {
@@ -32,8 +29,8 @@ function stubClient(options: {
 			noop: options.noop ?? (() => Promise.resolve()),
 		},
 		square: {
-			fetchMyEvents: options.fetchMyEvents ??
-				(() => Promise.reject(new Error("unexpected fetchMyEvents"))),
+			fetchMyEvents:
+				options.fetchMyEvents ?? (() => Promise.reject(new Error("unexpected fetchMyEvents"))),
 		},
 		thrift: {
 			readThriftStruct: () => ({ 1: 1 }),
@@ -63,7 +60,7 @@ function throwOnFailureReport(type: string): void {
 	}
 }
 
-// Gives a stray rejection a macrotask turn to surface, so Deno.test's
+// Gives a stray rejection a macrotask turn to surface, so test's
 // sanitizers can report it as "Uncaught (in promise)" before the test ends.
 function nextTask(): Promise<void> {
 	return new Promise((resolve) => setTimeout(resolve, 0));
@@ -78,7 +75,7 @@ const squarePush = {
 // it. A timed-out noop used to reject with nobody watching, which Deno
 // reports as "Uncaught (in promise) TimeoutError" and which takes the host
 // process down.
-Deno.test("_OnPingCallback reports a failed noop instead of crashing", async () => {
+test("_OnPingCallback reports a failed noop instead of crashing", async () => {
 	const error = timeoutError();
 	const stub = stubClient({ noop: () => Promise.reject(error) });
 	const manager = new ConnManager(stub.client as never);
@@ -87,15 +84,16 @@ Deno.test("_OnPingCallback reports a failed noop instead of crashing", async () 
 	await stub.logged;
 	await nextTask();
 
-	assertEquals(stub.logs.map((entry) => entry.type), [
-		"[LEGY/PUSH] noop failed",
-	]);
-	assertStrictEquals(stub.logs[0].data.error, error);
+	assert.deepEqual(
+		stub.logs.map((entry) => entry.type),
+		["[LEGY/PUSH] noop failed"],
+	);
+	assert.strictEqual(stub.logs[0].data.error, error);
 });
 
 // `log` fans out to user-supplied listeners, so it can throw. That throw must
 // not reject the handler that exists to stop an unhandled rejection.
-Deno.test("_OnPingCallback survives a log listener that throws", async () => {
+test("_OnPingCallback survives a log listener that throws", async () => {
 	const stub = stubClient({
 		noop: () => Promise.reject(timeoutError()),
 		onLog: throwOnFailureReport,
@@ -106,14 +104,15 @@ Deno.test("_OnPingCallback survives a log listener that throws", async () => {
 	await stub.logged;
 	await nextTask();
 
-	assertEquals(stub.logs.map((entry) => entry.type), [
-		"[LEGY/PUSH] noop failed",
-	]);
+	assert.deepEqual(
+		stub.logs.map((entry) => entry.type),
+		["[LEGY/PUSH] noop failed"],
+	);
 });
 
 // Conn calls `_OnPushResponse` without awaiting it, so a failed
 // fetchMyEvents used to become an unhandled rejection as well.
-Deno.test("_OnPushResponse reports a failed fetchMyEvents instead of crashing", async () => {
+test("_OnPushResponse reports a failed fetchMyEvents instead of crashing", async () => {
 	const error = timeoutError();
 	const stub = stubClient({ fetchMyEvents: () => Promise.reject(error) });
 	const manager = new ConnManager(stub.client as never);
@@ -122,18 +121,18 @@ Deno.test("_OnPushResponse reports a failed fetchMyEvents instead of crashing", 
 	await stub.logged;
 	await nextTask();
 
-	assertEquals(stub.logs.map((entry) => entry.type), [
-		"[LEGY/PUSH] _OnPushResponse",
-		"[LEGY/PUSH] fetchMyEvents failed",
-	]);
-	assertStrictEquals(stub.logs[1].data.error, error);
+	assert.deepEqual(
+		stub.logs.map((entry) => entry.type),
+		["[LEGY/PUSH] _OnPushResponse", "[LEGY/PUSH] fetchMyEvents failed"],
+	);
+	assert.strictEqual(stub.logs[1].data.error, error);
 	// The sync state is left as it was, so the next push retries from there.
-	assertEquals(stub.client.poll.sync.square, "before");
-	assertEquals(manager.subscriptionId, 1);
-	assertEquals(stub.emitted, []);
+	assert.deepEqual(stub.client.poll.sync.square, "before");
+	assert.deepEqual(manager.subscriptionId, 1);
+	assert.deepEqual(stub.emitted, []);
 });
 
-Deno.test("_OnPushResponse survives a log listener that throws", async () => {
+test("_OnPushResponse survives a log listener that throws", async () => {
 	const stub = stubClient({
 		fetchMyEvents: () => Promise.reject(timeoutError()),
 		onLog: throwOnFailureReport,
@@ -144,13 +143,13 @@ Deno.test("_OnPushResponse survives a log listener that throws", async () => {
 	await stub.logged;
 	await nextTask();
 
-	assertEquals(stub.logs.map((entry) => entry.type), [
-		"[LEGY/PUSH] _OnPushResponse",
-		"[LEGY/PUSH] fetchMyEvents failed",
-	]);
+	assert.deepEqual(
+		stub.logs.map((entry) => entry.type),
+		["[LEGY/PUSH] _OnPushResponse", "[LEGY/PUSH] fetchMyEvents failed"],
+	);
 });
 
-Deno.test("_OnPushResponse still delivers events when fetchMyEvents succeeds", async () => {
+test("_OnPushResponse still delivers events when fetchMyEvents succeeds", async () => {
 	const event = { type: "NOTIFICATION_MESSAGE" };
 	const stub = stubClient({
 		fetchMyEvents: () =>
@@ -166,13 +165,13 @@ Deno.test("_OnPushResponse still delivers events when fetchMyEvents succeeds", a
 	manager._OnPushResponse(squarePush);
 	await stub.logged;
 
-	assertEquals(await reader.read(), { value: event as never, done: false });
+	assert.deepEqual(await reader.read(), { value: event as never, done: false });
 	reader.releaseLock();
-	assertEquals(stub.client.poll.sync.square, "after");
-	assertEquals(manager.subscriptionId, 42);
-	assertEquals(stub.emitted, ["update:syncdata"]);
-	assertEquals(stub.logs.map((entry) => entry.type), [
-		"[LEGY/PUSH] _OnPushResponse",
-		"[LEGY/PUSH] SQ_fetchMyEvents",
-	]);
+	assert.deepEqual(stub.client.poll.sync.square, "after");
+	assert.deepEqual(manager.subscriptionId, 42);
+	assert.deepEqual(stub.emitted, ["update:syncdata"]);
+	assert.deepEqual(
+		stub.logs.map((entry) => entry.type),
+		["[LEGY/PUSH] _OnPushResponse", "[LEGY/PUSH] SQ_fetchMyEvents"],
+	);
 });

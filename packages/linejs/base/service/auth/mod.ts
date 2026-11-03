@@ -2,7 +2,7 @@
 
 import { LINEStruct, type ProtocolKey, Protocols } from "../../thrift/mod.ts";
 import { Buffer } from "node:buffer";
-import type * as LINETypes from "@evex/linejs-types";
+import type * as LINETypes from "@evex-dev/linejs-types";
 import { type BaseClient, InternalError } from "../../core/mod.ts";
 import type { BaseService } from "../types.ts";
 
@@ -32,8 +32,8 @@ export class AuthService implements BaseService {
 			}
 			await this.client.storage.set(
 				"expire",
-				(RATR.tokenIssueTimeEpochSec as number) +
-				(RATR.durationUntilRefreshInSec as number) as number,
+				((RATR.tokenIssueTimeEpochSec as number) +
+					(RATR.durationUntilRefreshInSec as number)) as number,
 			);
 		} else {
 			throw new InternalError("RefreshError", "refreshToken not found");
@@ -137,12 +137,8 @@ export class AuthService implements BaseService {
 	}
 
 	async issueTokenForAccountMigrationSettings(
-		...param: Parameters<
-			typeof LINEStruct.issueTokenForAccountMigrationSettings_args
-		>
-	): Promise<
-		LINETypes.issueTokenForAccountMigrationSettings_result["success"]
-	> {
+		...param: Parameters<typeof LINEStruct.issueTokenForAccountMigrationSettings_args>
+	): Promise<LINETypes.issueTokenForAccountMigrationSettings_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.issueTokenForAccountMigrationSettings_args(...param),
 			"issueTokenForAccountMigrationSettings",
@@ -201,9 +197,7 @@ export class AuthService implements BaseService {
 	}
 
 	async resendIdentifierConfirmation(
-		...param: Parameters<
-			typeof LINEStruct.resendIdentifierConfirmation_args
-		>
+		...param: Parameters<typeof LINEStruct.resendIdentifierConfirmation_args>
 	): Promise<LINETypes.resendIdentifierConfirmation_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.resendIdentifierConfirmation_args(...param),
@@ -252,29 +246,15 @@ export class AuthService implements BaseService {
 
 	async logoutZ(...param: any[]): Promise<any> {
 		const payload = Buffer.from([
-			0x82,
-			0x21,
-			0x00,
-			0x07,
-			0x6C,
-			0x6F,
-			0x67,
-			0x6F,
-			0x75,
-			0x74,
-			0x5A,
-			0x00,
+			0x82, 0x21, 0x00, 0x07, 0x6c, 0x6f, 0x67, 0x6f, 0x75, 0x74, 0x5a, 0x00,
 		]);
 		const reqClient = this.client.request;
 		const path = "/RS4";
-		const response = await this.client.fetch(
-			`https://${reqClient.endpoint}${path}`,
-			{
-				method: "POST",
-				headers: reqClient.getHeader("POST"),
-				body: payload,
-			},
-		);
+		const response = await this.client.fetch(`https://${reqClient.endpoint}${path}`, {
+			method: "POST",
+			headers: reqClient.getHeader("POST"),
+			body: payload,
+		});
 		const nextToken = response.headers.get("x-line-next-access");
 		if (nextToken) this.client.emit("update:authtoken", nextToken);
 		const buf = await response.arrayBuffer();
@@ -286,15 +266,16 @@ export class AuthService implements BaseService {
 		} catch (_) {
 			throw new InternalError(
 				"RequestError",
-				`Invalid response buffer for logoutZ: <${
-					[...parsedBody].map((v) => v.toString(16)).join(" ")
-				}>`,
+				`Invalid response buffer for logoutZ: <${[...parsedBody]
+					.map((v) => v.toString(16))
+					.join(" ")}>`,
 			);
 		}
 		this.client.thrift.rename_data(res, false);
 		const isRefresh = Boolean(
-			res.data.e && res.data.e.code === "MUST_REFRESH_V3_TOKEN" &&
-				await this.client.storage.get("refreshToken"),
+			res.data.e &&
+			res.data.e.code === "MUST_REFRESH_V3_TOKEN" &&
+			(await this.client.storage.get("refreshToken")),
 		);
 		if (res.data.e && !isRefresh) {
 			throw new InternalError(
@@ -303,9 +284,7 @@ export class AuthService implements BaseService {
 				res.data.e,
 			);
 		}
-		const result = typeof res.data.success !== "undefined"
-			? res.data.success
-			: true;
+		const result = typeof res.data.success !== "undefined" ? res.data.success : true;
 		const base = this.client;
 		if (base) {
 			base.disabled = true;

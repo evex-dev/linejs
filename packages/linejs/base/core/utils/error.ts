@@ -1,4 +1,4 @@
-import type { LooseType } from "@evex/loose-types";
+import type { LooseType } from "../../types.ts";
 
 export class InternalError extends Error {
 	constructor(

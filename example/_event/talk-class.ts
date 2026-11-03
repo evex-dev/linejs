@@ -3,14 +3,14 @@
  * @experimental
  * for talk
  */
-import type * as LINETypes from "@evex/linejs-types";
-import { parseEnum } from "@evex/linejs-types/thrift";
+import type * as LINETypes from "@evex-dev/linejs-types";
+import { parseEnum } from "@evex-dev/linejs-types/thrift";
 import type { BaseClient } from "../core/mod.ts";
 import type { Buffer } from "node:buffer";
 import { TypedEventEmitter } from "../core/typed-event-emitter/index.ts";
 import { TalkMessage } from "./message-class.ts";
 import type { TimelineResponse } from "../timeline/mod.ts";
-import type { LooseType } from "@evex/loose-types";
+import type { LooseType } from "@evex-dev/linejs-types/loose";
 
 type GroupEvents = {
 	message: (message: TalkMessage) => void;

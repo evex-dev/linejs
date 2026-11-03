@@ -1,4 +1,4 @@
-import { assert, assertEquals } from "@std/assert";
+import { assert, test } from "vite-plus/test";
 import { Buffer } from "node:buffer";
 import dgram from "node:dgram";
 import { AndromedaTransport } from "./andromeda.ts";
@@ -17,33 +17,33 @@ async function spawnMockCscf(): Promise<{
 		const sip = parseSip(new Uint8Array(buf));
 		const hadAuth = !!sip.headers["Authorization"];
 		registers.push({ hadAuth, raw: buf.toString() });
-		const reply = phase === "challenge"
-			? buildSip({
-				startLine: "SIP/2.0 401 Unauthorized",
-				headers: {
-					Via: sip.headers["Via"],
-					From: sip.headers["From"],
-					To: `${sip.headers["To"]};tag=mockserver`,
-					"Call-ID": sip.headers["Call-ID"],
-					CSeq: sip.headers["CSeq"],
-					"WWW-Authenticate":
-						`Digest realm="mock", nonce="abcd1234", qop="auth", algorithm=MD5`,
-					"Content-Length": "0",
-				},
-				body: "",
-			})
-			: buildSip({
-				startLine: "SIP/2.0 200 OK",
-				headers: {
-					Via: sip.headers["Via"],
-					From: sip.headers["From"],
-					To: `${sip.headers["To"]};tag=mockserver`,
-					"Call-ID": sip.headers["Call-ID"],
-					CSeq: sip.headers["CSeq"],
-					"Content-Length": "0",
-				},
-				body: "",
-			});
+		const reply =
+			phase === "challenge"
+				? buildSip({
+						startLine: "SIP/2.0 401 Unauthorized",
+						headers: {
+							Via: sip.headers["Via"],
+							From: sip.headers["From"],
+							To: `${sip.headers["To"]};tag=mockserver`,
+							"Call-ID": sip.headers["Call-ID"],
+							CSeq: sip.headers["CSeq"],
+							"WWW-Authenticate": `Digest realm="mock", nonce="abcd1234", qop="auth", algorithm=MD5`,
+							"Content-Length": "0",
+						},
+						body: "",
+					})
+				: buildSip({
+						startLine: "SIP/2.0 200 OK",
+						headers: {
+							Via: sip.headers["Via"],
+							From: sip.headers["From"],
+							To: `${sip.headers["To"]};tag=mockserver`,
+							"Call-ID": sip.headers["Call-ID"],
+							CSeq: sip.headers["CSeq"],
+							"Content-Length": "0",
+						},
+						body: "",
+					});
 		sock.send(Buffer.from(reply), rinfo.port, rinfo.address);
 		if (phase === "challenge") phase = "ok";
 	});
@@ -60,7 +60,7 @@ async function spawnMockCscf(): Promise<{
 	};
 }
 
-Deno.test("AndromedaTransport.register: 401 → digest → 200 against mock cscf", async () => {
+test("AndromedaTransport.register: 401 → digest → 200 against mock cscf", async () => {
 	const mock = await spawnMockCscf();
 	const t = new AndromedaTransport({ localMid: "u-test-mid" });
 	try {
@@ -71,11 +71,11 @@ Deno.test("AndromedaTransport.register: 401 → digest → 200 against mock cscf
 				fromToken: "secret-pw",
 			} as never,
 		});
-		assertEquals(mock.registers.length, 2);
-		assertEquals(mock.registers[0].hadAuth, false);
-		assertEquals(mock.registers[1].hadAuth, true);
-		assert(/response="[0-9a-f]{32}"/.test(mock.registers[1].raw));
-		assert(/realm="mock"/.test(mock.registers[1].raw));
+		assert.deepEqual(mock.registers.length, 2);
+		assert.deepEqual(mock.registers[0].hadAuth, false);
+		assert.deepEqual(mock.registers[1].hadAuth, true);
+		assert.isOk(/response="[0-9a-f]{32}"/.test(mock.registers[1].raw));
+		assert.isOk(/realm="mock"/.test(mock.registers[1].raw));
 	} finally {
 		await t.close();
 		await mock.stop();
@@ -174,7 +174,7 @@ async function spawnMockUas(): Promise<{
 	};
 }
 
-Deno.test("AndromedaTransport.invite: REGISTER + INVITE + ACK against mock UAS", async () => {
+test("AndromedaTransport.invite: REGISTER + INVITE + ACK against mock UAS", async () => {
 	const mock = await spawnMockUas();
 	const t = new AndromedaTransport({ localMid: "u-test-mid" });
 	try {
@@ -186,19 +186,19 @@ Deno.test("AndromedaTransport.invite: REGISTER + INVITE + ACK against mock UAS",
 			} as never,
 		});
 		const res = await t.invite({ to: "u-peer" });
-		assertEquals(res.status, 200);
-		assertEquals(res.remoteKey.length, 30);
+		assert.deepEqual(res.status, 200);
+		assert.deepEqual(res.remoteKey.length, 30);
 		// allow the ACK datagram to arrive at the mock
 		await new Promise((r) => setTimeout(r, 50));
 		const verbs = mock.exchanges.map((l) => l.split(" ")[0]);
-		assertEquals(verbs, ["REGISTER", "REGISTER", "INVITE", "ACK"]);
+		assert.deepEqual(verbs, ["REGISTER", "REGISTER", "INVITE", "ACK"]);
 	} finally {
 		await t.close();
 		await mock.stop();
 	}
 });
 
-Deno.test("AndromedaTransport.register: throws on missing voipAddress", async () => {
+test("AndromedaTransport.register: throws on missing voipAddress", async () => {
 	const t = new AndromedaTransport({ localMid: "u-test-mid" });
 	let err: unknown;
 	try {
@@ -207,6 +207,6 @@ Deno.test("AndromedaTransport.register: throws on missing voipAddress", async ()
 		err = e;
 	}
 	await t.close().catch(() => {});
-	assert(err instanceof Error);
-	assertEquals(/no voipAddress/.test((err as Error).message), true);
+	assert.isOk(err instanceof Error);
+	assert.deepEqual(/no voipAddress/.test((err as Error).message), true);
 });

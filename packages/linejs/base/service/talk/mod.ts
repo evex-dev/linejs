@@ -1,11 +1,11 @@
 import { type BaseClient, InternalError } from "../../core/mod.ts";
 import type { ProtocolKey } from "../../thrift/mod.ts";
 import type { BaseService } from "../types.ts";
-import type * as LINETypes from "@evex/linejs-types";
+import type * as LINETypes from "@evex-dev/linejs-types";
 import { LINEStruct } from "../../thrift/mod.ts";
 import type { Buffer } from "node:buffer";
 import { ContentType } from "../../thrift/readwrite/struct.ts";
-import type { LooseType } from "@evex/loose-types";
+import type { LooseType } from "../../types.ts";
 import {
 	COMPACT_E2EE_MESSAGE_ENDPOINT,
 	COMPACT_PLAIN_MESSAGE_ENDPOINT,
@@ -99,16 +99,7 @@ export class TalkService implements BaseService {
 		chunks?: string[] | Buffer[];
 		e2ee?: boolean;
 	}): Promise<LINETypes.Message> {
-		const {
-			to,
-			text,
-			contentType,
-			contentMetadata,
-			relatedMessageId,
-			location,
-			e2ee,
-			chunks,
-		} = {
+		const { to, text, contentType, contentMetadata, relatedMessageId, location, e2ee, chunks } = {
 			contentType: "NONE" as LINETypes.ContentType,
 			contentMetadata: {},
 			...options,
@@ -153,12 +144,12 @@ export class TalkService implements BaseService {
 				location,
 				chunks,
 				relatedMessageId,
-				...relatedMessageId
+				...(relatedMessageId
 					? {
-						messageRelationType: "REPLY",
-						relatedMessageServiceCode: "TALK",
-					}
-					: {},
+							messageRelationType: "REPLY",
+							relatedMessageServiceCode: "TALK",
+						}
+					: {}),
 			},
 		});
 		try {
@@ -186,9 +177,7 @@ export class TalkService implements BaseService {
 		}
 	}
 
-	async sendCompactMessage(
-		options: SendCompactMessageOptions,
-	): Promise<CompactMessageResponse> {
+	async sendCompactMessage(options: SendCompactMessageOptions): Promise<CompactMessageResponse> {
 		if (options.chunks || options.e2ee === true) {
 			return this.sendCompactE2EEMessage(options);
 		}
@@ -218,11 +207,7 @@ export class TalkService implements BaseService {
 	}): Promise<CompactMessageResponse> {
 		const seqId = await this.client.getReqseq();
 		const body = packCompactPlainMessage(seqId, options.to, options.text);
-		return await this.#requestCompactMessage(
-			COMPACT_PLAIN_MESSAGE_ENDPOINT,
-			seqId,
-			body,
-		);
+		return await this.#requestCompactMessage(COMPACT_PLAIN_MESSAGE_ENDPOINT, seqId, body);
 	}
 
 	async sendCompactE2EEMessage(options: {
@@ -235,18 +220,11 @@ export class TalkService implements BaseService {
 			if (options.text === undefined) {
 				throw new TypeError("sendCompactE2EEMessage requires text or chunks");
 			}
-			chunks = await this.client.e2ee.encryptE2EEMessage(
-				options.to,
-				options.text,
-			);
+			chunks = await this.client.e2ee.encryptE2EEMessage(options.to, options.text);
 		}
 		const seqId = await this.client.getReqseq();
 		const body = packCompactE2EEMessage(seqId, options.to, chunks);
-		return await this.#requestCompactMessage(
-			COMPACT_E2EE_MESSAGE_ENDPOINT,
-			seqId,
-			body,
-		);
+		return await this.#requestCompactMessage(COMPACT_E2EE_MESSAGE_ENDPOINT, seqId, body);
 	}
 
 	async #requestCompactMessage(
@@ -271,15 +249,12 @@ export class TalkService implements BaseService {
 			body,
 		});
 		const requestBody = Uint8Array.from(body).buffer as ArrayBuffer;
-		const response = await this.client.fetch(
-			`https://${this.client.request.endpoint}${path}`,
-			{
-				method: "POST",
-				headers,
-				signal: AbortSignal.timeout(this.client.config.timeout),
-				body: requestBody,
-			},
-		);
+		const response = await this.client.fetch(`https://${this.client.request.endpoint}${path}`, {
+			method: "POST",
+			headers,
+			signal: AbortSignal.timeout(this.client.config.timeout),
+			body: requestBody,
+		});
 		const nextToken = response.headers.get("x-line-next-access");
 		if (nextToken) {
 			this.client.emit("update:authtoken", nextToken);
@@ -301,11 +276,7 @@ export class TalkService implements BaseService {
 			return decodeCompactMessageResponse(parsedBody);
 		} catch (error) {
 			const code = compactMessageErrorCode(error);
-			if (
-				code === 119 &&
-				!isRetry &&
-				await this.client.storage.get("refreshToken")
-			) {
+			if (code === 119 && !isRetry && (await this.client.storage.get("refreshToken"))) {
 				await this.client.auth.tryRefreshToken();
 				return await this.#requestCompactMessage(path, seqId, body, true);
 			}
@@ -349,9 +320,7 @@ export class TalkService implements BaseService {
 		);
 	}
 
-	async unsendMessage(
-		...param: Parameters<typeof LINEStruct.unsendMessage_args>
-	): Promise<void> {
+	async unsendMessage(...param: Parameters<typeof LINEStruct.unsendMessage_args>): Promise<void> {
 		return await this.client.request.request(
 			LINEStruct.unsendMessage_args(...param),
 			"unsendMessage",
@@ -373,12 +342,10 @@ export class TalkService implements BaseService {
 		);
 	}
 
-	async inviteIntoChat(
-		options: {
-			chatMid: string;
-			targetUserMids: string[];
-		},
-	): Promise<LINETypes.inviteIntoChat_result["success"]> {
+	async inviteIntoChat(options: {
+		chatMid: string;
+		targetUserMids: string[];
+	}): Promise<LINETypes.inviteIntoChat_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.inviteIntoChat_args({
 				request: {
@@ -454,9 +421,7 @@ export class TalkService implements BaseService {
 	}
 
 	async acceptChatInvitationByTicket(
-		...param: Parameters<
-			typeof LINEStruct.acceptChatInvitationByTicket_args
-		>
+		...param: Parameters<typeof LINEStruct.acceptChatInvitationByTicket_args>
 	): Promise<LINETypes.acceptChatInvitationByTicket_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.acceptChatInvitationByTicket_args(...param),
@@ -515,9 +480,7 @@ export class TalkService implements BaseService {
 		);
 	}
 
-	async sendPostback(
-		...param: Parameters<typeof LINEStruct.sendPostback_args>
-	): Promise<void> {
+	async sendPostback(...param: Parameters<typeof LINEStruct.sendPostback_args>): Promise<void> {
 		return await this.client.request.request(
 			LINEStruct.sendPostback_args(...param),
 			"sendPostback",
@@ -540,9 +503,7 @@ export class TalkService implements BaseService {
 	}
 
 	async getChatRoomAnnouncementsBulk(
-		...param: Parameters<
-			typeof LINEStruct.getChatRoomAnnouncementsBulk_args
-		>
+		...param: Parameters<typeof LINEStruct.getChatRoomAnnouncementsBulk_args>
 	): Promise<void> {
 		return await this.client.request.request(
 			LINEStruct.getChatRoomAnnouncementsBulk_args(...param),
@@ -589,9 +550,7 @@ export class TalkService implements BaseService {
 		);
 	}
 
-	async leaveRoom(
-		...param: Parameters<typeof LINEStruct.leaveRoom_args>
-	): Promise<void> {
+	async leaveRoom(...param: Parameters<typeof LINEStruct.leaveRoom_args>): Promise<void> {
 		return await this.client.request.request(
 			LINEStruct.leaveRoom_args(...param),
 			"leaveRoom",
@@ -649,9 +608,7 @@ export class TalkService implements BaseService {
 		);
 	}
 
-	async blockContact(
-		...param: Parameters<typeof LINEStruct.blockContact_args>
-	): Promise<void> {
+	async blockContact(...param: Parameters<typeof LINEStruct.blockContact_args>): Promise<void> {
 		return await this.client.request.request(
 			LINEStruct.blockContact_args(...param),
 			"blockContact",
@@ -661,9 +618,7 @@ export class TalkService implements BaseService {
 		);
 	}
 
-	async unblockContact(
-		...param: Parameters<typeof LINEStruct.unblockContact_args>
-	): Promise<void> {
+	async unblockContact(...param: Parameters<typeof LINEStruct.unblockContact_args>): Promise<void> {
 		return await this.client.request.request(
 			LINEStruct.unblockContact_args(...param),
 			"unblockContact",
@@ -756,9 +711,7 @@ export class TalkService implements BaseService {
 			this.requestPath,
 		);
 	}
-	public async getE2EEPublicKeys(): Promise<
-		LINETypes.getE2EEPublicKeys_result["success"]
-	> {
+	public async getE2EEPublicKeys(): Promise<LINETypes.getE2EEPublicKeys_result["success"]> {
 		return await this.client.request.request(
 			[],
 			"getE2EEPublicKeys",
@@ -857,7 +810,7 @@ export class TalkService implements BaseService {
 		// Every other talk request carries the client's monotonic sequence
 		// number; a hardcoded 0 made every reaction of a session look to the
 		// server like the same request being retried.
-		const reqSeq = options.reqSeq ?? await this.client.getReqseq();
+		const reqSeq = options.reqSeq ?? (await this.client.getReqseq());
 		return await this.client.request.request(
 			LINEStruct.react_args({
 				reactRequest: {
@@ -923,9 +876,7 @@ export class TalkService implements BaseService {
 		);
 	}
 
-	async removeFollower(
-		...param: Parameters<typeof LINEStruct.removeFollower_args>
-	): Promise<void> {
+	async removeFollower(...param: Parameters<typeof LINEStruct.removeFollower_args>): Promise<void> {
 		return await this.client.request.request(
 			LINEStruct.removeFollower_args(...param),
 			"removeFollower",
@@ -935,9 +886,7 @@ export class TalkService implements BaseService {
 		);
 	}
 
-	async follow(
-		...param: Parameters<typeof LINEStruct.follow_args>
-	): Promise<void> {
+	async follow(...param: Parameters<typeof LINEStruct.follow_args>): Promise<void> {
 		return await this.client.request.request(
 			LINEStruct.follow_args(...param),
 			"follow",
@@ -947,9 +896,7 @@ export class TalkService implements BaseService {
 		);
 	}
 
-	async unfollow(
-		...param: Parameters<typeof LINEStruct.unfollow_args>
-	): Promise<void> {
+	async unfollow(...param: Parameters<typeof LINEStruct.unfollow_args>): Promise<void> {
 		return await this.client.request.request(
 			LINEStruct.unfollow_args(...param),
 			"unfollow",
@@ -1068,9 +1015,7 @@ export class TalkService implements BaseService {
 	}
 
 	async updateExtendedProfileAttribute(
-		...param: Parameters<
-			typeof LINEStruct.updateExtendedProfileAttribute_args
-		>
+		...param: Parameters<typeof LINEStruct.updateExtendedProfileAttribute_args>
 	): Promise<void> {
 		return await this.client.request.request(
 			LINEStruct.updateExtendedProfileAttribute_args(...param),
@@ -1237,9 +1182,7 @@ export class TalkService implements BaseService {
 		);
 	}
 
-	async resendPinCode(
-		...param: Parameters<typeof LINEStruct.resendPinCode_args>
-	): Promise<void> {
+	async resendPinCode(...param: Parameters<typeof LINEStruct.resendPinCode_args>): Promise<void> {
 		return await this.client.request.request(
 			LINEStruct.resendPinCode_args(...param),
 			"resendPinCode",
@@ -1345,9 +1288,7 @@ export class TalkService implements BaseService {
 		);
 	}
 
-	async inviteIntoRoom(
-		...param: Parameters<typeof LINEStruct.inviteIntoRoom_args>
-	): Promise<void> {
+	async inviteIntoRoom(...param: Parameters<typeof LINEStruct.inviteIntoRoom_args>): Promise<void> {
 		return await this.client.request.request(
 			LINEStruct.inviteIntoRoom_args(...param),
 			"inviteIntoRoom",
@@ -1369,9 +1310,7 @@ export class TalkService implements BaseService {
 		);
 	}
 
-	async reportProfile(
-		...param: Parameters<typeof LINEStruct.reportProfile_args>
-	): Promise<void> {
+	async reportProfile(...param: Parameters<typeof LINEStruct.reportProfile_args>): Promise<void> {
 		return await this.client.request.request(
 			LINEStruct.reportProfile_args(...param),
 			"reportProfile",
@@ -1405,9 +1344,7 @@ export class TalkService implements BaseService {
 		);
 	}
 
-	async reportSettings(
-		...param: Parameters<typeof LINEStruct.reportSettings_args>
-	): Promise<void> {
+	async reportSettings(...param: Parameters<typeof LINEStruct.reportSettings_args>): Promise<void> {
 		return await this.client.request.request(
 			LINEStruct.reportSettings_args(...param),
 			"reportSettings",
@@ -1465,9 +1402,7 @@ export class TalkService implements BaseService {
 		);
 	}
 
-	async clearRingtone(
-		...param: Parameters<typeof LINEStruct.clearRingtone_args>
-	): Promise<void> {
+	async clearRingtone(...param: Parameters<typeof LINEStruct.clearRingtone_args>): Promise<void> {
 		return await this.client.request.request(
 			LINEStruct.clearRingtone_args(...param),
 			"clearRingtone",
@@ -1477,9 +1412,7 @@ export class TalkService implements BaseService {
 		);
 	}
 
-	async notifyUpdated(
-		...param: Parameters<typeof LINEStruct.notifyUpdated_args>
-	): Promise<void> {
+	async notifyUpdated(...param: Parameters<typeof LINEStruct.notifyUpdated_args>): Promise<void> {
 		return await this.client.request.request(
 			LINEStruct.notifyUpdated_args(...param),
 			"notifyUpdated",
@@ -1573,9 +1506,7 @@ export class TalkService implements BaseService {
 		);
 	}
 
-	async cancelReaction(
-		...param: Parameters<typeof LINEStruct.cancelReaction_args>
-	): Promise<void> {
+	async cancelReaction(...param: Parameters<typeof LINEStruct.cancelReaction_args>): Promise<void> {
 		return await this.client.request.request(
 			LINEStruct.cancelReaction_args(...param),
 			"cancelReaction",
@@ -1597,13 +1528,11 @@ export class TalkService implements BaseService {
 		);
 	}
 
-	async getChats(
-		options: {
-			chatMids: string[];
-			withInvitees?: boolean;
-			withMembers?: boolean;
-		},
-	): Promise<LINETypes.getChats_result["success"]> {
+	async getChats(options: {
+		chatMids: string[];
+		withInvitees?: boolean;
+		withMembers?: boolean;
+	}): Promise<LINETypes.getChats_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.getChats_args({
 				request: {
@@ -1646,9 +1575,7 @@ export class TalkService implements BaseService {
 	}
 
 	async getPreviousMessagesV2WithRequest(
-		...param: Parameters<
-			typeof LINEStruct.getPreviousMessagesV2WithRequest_args
-		>
+		...param: Parameters<typeof LINEStruct.getPreviousMessagesV2WithRequest_args>
 	): Promise<LINETypes.getPreviousMessagesV2WithRequest_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.getPreviousMessagesV2WithRequest_args(...param),
@@ -1694,11 +1621,7 @@ export class TalkService implements BaseService {
 	/**
 	 * @description Get user information from mid.
 	 */
-	async getContact(
-		options: {
-			mid: string;
-		},
-	): Promise<LINETypes.Contact> {
+	async getContact(options: { mid: string }): Promise<LINETypes.Contact> {
 		const { mid } = { ...options };
 		return await this.client.request.request(
 			[[11, 2, mid]],
@@ -1711,47 +1634,35 @@ export class TalkService implements BaseService {
 	/**
 	 * @description Get users information from mids.
 	 */
-	public async getContacts(
-		options: {
-			mids: string[];
-		},
-	): Promise<LINETypes.Contact[]> {
+	public async getContacts(options: { mids: string[] }): Promise<LINETypes.Contact[]> {
 		const { mids } = { ...options };
-		const response = (await this.client.request.request<LooseType[]>(
-			[[15, 2, [11, mids]]],
-			"getContacts",
-			this.protocolType,
-			false,
-			this.requestPath,
-		)).map((e) =>
-			this.client.thrift.rename_thrift("Contact", e)
-		) as LINETypes.Contact[];
+		const response = (
+			await this.client.request.request<LooseType[]>(
+				[[15, 2, [11, mids]]],
+				"getContacts",
+				this.protocolType,
+				false,
+				this.requestPath,
+			)
+		).map((e) => this.client.thrift.rename_thrift("Contact", e)) as LINETypes.Contact[];
 		return response;
 	}
-	public async getContactsV2(
-		options: {
-			mids: string[];
-		},
-	): Promise<LINETypes.GetContactsV2Response> {
+	public async getContactsV2(options: {
+		mids: string[];
+	}): Promise<LINETypes.GetContactsV2Response> {
 		const { mids } = { ...options };
 
-		return (await this.client.request.request(
+		return await this.client.request.request(
 			[[12, 1, [[15, 1, [11, mids]]]]],
 			"getContactsV2",
 			this.protocolType,
 			"GetContactsV2Response",
 			this.requestPath,
-		));
+		);
 	}
 
 	async noop(): Promise<void> {
-		return await this.client.request.request(
-			[],
-			"noop",
-			this.protocolType,
-			true,
-			this.requestPath,
-		);
+		return await this.client.request.request([], "noop", this.protocolType, true, this.requestPath);
 	}
 }
 

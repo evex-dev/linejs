@@ -18,24 +18,7 @@ const LEGY_ENDPOINT = "https://gf.line.naver.jp/enc";
 const LEGY_LE = "7";
 const LEGY_LAP = "5";
 const LEGY_LCS_PREFIX = "0008";
-const LEGY_IV = Buffer.from([
-	78,
-	9,
-	72,
-	62,
-	56,
-	245,
-	255,
-	114,
-	128,
-	18,
-	123,
-	158,
-	251,
-	92,
-	45,
-	51,
-]);
+const LEGY_IV = Buffer.from([78, 9, 72, 62, 56, 245, 255, 114, 128, 18, 123, 158, 251, 92, 45, 51]);
 const LINE_PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsMC6HAYeMq4R59e2yRw6
 W1OWT2t9aepiAp4fbSCXzRj7A29BOAFAvKlzAub4oxN13Nt8dbcB+ICAufyDnN5N
@@ -68,20 +51,13 @@ export class LegyEncryptedTransport {
 		if (access) {
 			innerHeaders["x-lt"] = resolveLineAccessToken(access);
 		}
-		const plaintext = Buffer.concat([
-			encodeLegyHeaders(innerHeaders),
-			body,
-		]);
+		const plaintext = Buffer.concat([encodeLegyHeaders(innerHeaders), body]);
 		const leInt = Number.parseInt(LEGY_LE, 10);
-		const payload = (leInt & 4) === 4
-			? Buffer.concat([Buffer.from([leInt]), plaintext])
-			: plaintext;
+		const payload =
+			(leInt & 4) === 4 ? Buffer.concat([Buffer.from([leInt]), plaintext]) : plaintext;
 		let encrypted = this.#encrypt(payload);
 		if ((leInt & 2) === 2) {
-			encrypted = Buffer.concat([
-				encrypted,
-				legyHmac(this.#aesKey, encrypted),
-			]);
+			encrypted = Buffer.concat([encrypted, legyHmac(this.#aesKey, encrypted)]);
 		}
 
 		const response = await fetcher(
@@ -110,10 +86,10 @@ export class LegyEncryptedTransport {
 		let decrypted = this.#decrypt(responseBody);
 		if ((leInt & 4) === 4) decrypted = decrypted.subarray(1);
 		const decoded = decodeLegyHeaders(decrypted);
-		const status = decoded.headers["x-lc"] &&
-				decoded.headers["x-lc"] !== "200"
-			? Number.parseInt(decoded.headers["x-lc"], 10)
-			: response.status;
+		const status =
+			decoded.headers["x-lc"] && decoded.headers["x-lc"] !== "200"
+				? Number.parseInt(decoded.headers["x-lc"], 10)
+				: response.status;
 		const headers = new Headers(response.headers);
 		for (const [key, value] of Object.entries(decoded.headers)) {
 			headers.set(key, value);
@@ -125,10 +101,7 @@ export class LegyEncryptedTransport {
 		});
 	}
 
-	#outerHeaders(
-		request: Request,
-		options: LegyEncryptedFetchOptions,
-	): Headers {
+	#outerHeaders(request: Request, options: LegyEncryptedFetchOptions): Headers {
 		const headers = new Headers();
 		headers.set("x-line-application", options.application);
 		headers.set("x-le", LEGY_LE);
@@ -136,10 +109,7 @@ export class LegyEncryptedTransport {
 		headers.set("x-lpv", request.headers.get("x-lpv") ?? "1");
 		headers.set("x-lcs", this.#getXLcs());
 		headers.set("user-agent", options.userAgent);
-		headers.set(
-			"content-type",
-			request.headers.get("content-type") ?? "application/x-thrift",
-		);
+		headers.set("content-type", request.headers.get("content-type") ?? "application/x-thrift");
 		headers.set("x-lal", request.headers.get("x-lal") ?? "ja_JP");
 		headers.set("x-lhm", request.headers.get("x-lhm") ?? request.method);
 		headers.set("accept", request.headers.get("accept") ?? "*/*");
@@ -150,14 +120,16 @@ export class LegyEncryptedTransport {
 
 	#getXLcs(): string {
 		if (!this.#xLcs) {
-			this.#xLcs = LEGY_LCS_PREFIX + publicEncrypt(
-				{
-					key: LINE_PUBLIC_KEY,
-					padding: constants.RSA_PKCS1_OAEP_PADDING,
-					oaepHash: "sha1",
-				},
-				this.#aesKey,
-			).toString("base64");
+			this.#xLcs =
+				LEGY_LCS_PREFIX +
+				publicEncrypt(
+					{
+						key: LINE_PUBLIC_KEY,
+						padding: constants.RSA_PKCS1_OAEP_PADDING,
+						oaepHash: "sha1",
+					},
+					this.#aesKey,
+				).toString("base64");
 		}
 		return this.#xLcs;
 	}
@@ -172,10 +144,7 @@ export class LegyEncryptedTransport {
 		const padded = pkcs7Pad(ciphertext, 16);
 		const decipher = createDecipheriv("aes-128-cbc", this.#aesKey, LEGY_IV);
 		decipher.setAutoPadding(false);
-		const decrypted = Buffer.concat([
-			decipher.update(padded),
-			decipher.final(),
-		]);
+		const decrypted = Buffer.concat([decipher.update(padded), decipher.final()]);
 		return pkcs7Unpad(decrypted.subarray(0, decrypted.length - 16));
 	}
 }
@@ -243,25 +212,18 @@ export function xxhash32(data: Uint8Array, seed = 0): number {
 			v4 = xxhRound(v4, readU32LE(data, offset));
 			offset += 4;
 		}
-		h32 = (
-			rotl(v1, 1) + rotl(v2, 7) + rotl(v3, 12) + rotl(v4, 18)
-		) >>> 0;
+		h32 = (rotl(v1, 1) + rotl(v2, 7) + rotl(v3, 12) + rotl(v4, 18)) >>> 0;
 	} else {
 		h32 = (seed + PRIME5) >>> 0;
 	}
 	h32 = (h32 + len) >>> 0;
 	while (offset <= len - 4) {
-		h32 = Math.imul(
-			rotl((h32 + Math.imul(readU32LE(data, offset), PRIME3)) >>> 0, 17),
-			PRIME4,
-		) >>> 0;
+		h32 =
+			Math.imul(rotl((h32 + Math.imul(readU32LE(data, offset), PRIME3)) >>> 0, 17), PRIME4) >>> 0;
 		offset += 4;
 	}
 	while (offset < len) {
-		h32 = Math.imul(
-			rotl((h32 + Math.imul(data[offset], PRIME5)) >>> 0, 11),
-			PRIME1,
-		) >>> 0;
+		h32 = Math.imul(rotl((h32 + Math.imul(data[offset], PRIME5)) >>> 0, 11), PRIME1) >>> 0;
 		offset++;
 	}
 	h32 ^= h32 >>> 15;
@@ -289,19 +251,17 @@ function legyHmac(key: Buffer, data: Buffer): Buffer {
 }
 
 function xxhRound(acc: number, input: number): number {
-	return Math.imul(
-		rotl((acc + Math.imul(input, 0x85ebca77)) >>> 0, 13),
-		0x9e3779b1,
-	) >>> 0;
+	return Math.imul(rotl((acc + Math.imul(input, 0x85ebca77)) >>> 0, 13), 0x9e3779b1) >>> 0;
 }
 
 function readU32LE(data: Uint8Array, offset: number): number {
 	return (
-		data[offset] |
-		(data[offset + 1] << 8) |
-		(data[offset + 2] << 16) |
-		(data[offset + 3] << 24)
-	) >>> 0;
+		(data[offset] |
+			(data[offset + 1] << 8) |
+			(data[offset + 2] << 16) |
+			(data[offset + 3] << 24)) >>>
+		0
+	);
 }
 
 function rotl(value: number, bits: number): number {

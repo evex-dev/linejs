@@ -1,10 +1,11 @@
+import { readFile } from "node:fs/promises";
 import {
 	loginWithAuthToken,
 	loginWithQR,
 	type TalkMessage,
-} from "@evex/linejs";
-import type { Device } from "@evex/linejs/base";
-import { FileStorage } from "@evex/linejs/storage";
+} from "@evex-dev/linejs";
+import type { Device } from "@evex-dev/linejs/base";
+import { FileStorage } from "@evex-dev/linejs/storage";
 import {
 	decodeWavSync,
 	opusCodecFactory,
@@ -12,21 +13,21 @@ import {
 	PlanetTransport,
 	type PlanetTransportOpts,
 	resampleLinear,
-} from "@evex/linejs/call";
+} from "@evex-dev/linejs/call";
 
 type PlanetMediaKeyMode = NonNullable<PlanetTransportOpts["mediaKeyMode"]>;
 
-const COMMAND = Deno.env.get("LINE_CALL_COMMAND") ?? "!call";
+const COMMAND = process.env.LINE_CALL_COMMAND ?? "!call";
 const SAMPLE_RATE = 48_000;
-const wavPath = Deno.args[0] ?? Deno.env.get("LINE_CALL_WAV") ??
+const wavPath = process.argv[2] ?? process.env.LINE_CALL_WAV ??
 	new URL("./unity.wav", import.meta.url);
-const configuredDevice = Deno.env.get("LINE_DEVICE")?.trim() as
+const configuredDevice = process.env.LINE_DEVICE?.trim() as
 	| Device
 	| undefined;
-const version = Deno.env.get("LINE_VERSION") ?? undefined;
+const version = process.env.LINE_VERSION ?? undefined;
 const fromEnvInfo = readFromEnvInfo();
-const storagePath = Deno.env.get("LINE_STORAGE_FILE");
-const configuredMediaKeyMode = Deno.env.get("LINE_CALL_MEDIA_KEY_MODE")
+const storagePath = process.env.LINE_STORAGE_FILE;
+const configuredMediaKeyMode = process.env.LINE_CALL_MEDIA_KEY_MODE
 	?.trim() as PlanetMediaKeyMode | undefined;
 const oneToOneMediaKeyMode = configuredMediaKeyMode ?? "audio-reverse-stage";
 const groupMediaKeyMode = configuredMediaKeyMode ?? "audio-secret-sender";
@@ -40,7 +41,7 @@ const repeatCount = Math.max(
 const timeoutMs = readNumberEnv("LINE_CALL_TIMEOUT_MS", 10_000);
 const answerTimeoutMs = readNumberEnv("LINE_CALL_ANSWER_TIMEOUT_MS", 60_000);
 const bitrate = readOptionalNumberEnv("LINE_CALL_OPUS_BITRATE");
-const bandwidth = Deno.env.get("LINE_CALL_OPUS_BANDWIDTH") as
+const bandwidth = process.env.LINE_CALL_OPUS_BANDWIDTH as
 	| "narrowband"
 	| "mediumband"
 	| "wideband"
@@ -50,7 +51,7 @@ const bandwidth = Deno.env.get("LINE_CALL_OPUS_BANDWIDTH") as
 const opusSignal = readOpusSignalEnv();
 const opusVbr = readBooleanEnv("LINE_CALL_OPUS_VBR", false);
 const payloadPrefix = hexToBytes(
-	Deno.env.get("LINE_CALL_PAYLOAD_PREFIX_HEX") ?? "00",
+	process.env.LINE_CALL_PAYLOAD_PREFIX_HEX ?? "00",
 );
 
 const authToken = await readAuthToken();
@@ -289,7 +290,7 @@ async function loadWavForCall(
 	path: string | URL,
 	audioGain: number,
 ): Promise<Int16Array> {
-	const wav = decodeWavSync(await Deno.readFile(path));
+	const wav = decodeWavSync(await readFile(path));
 	let samples = wav.samples;
 	if (wav.sampleRate !== SAMPLE_RATE) {
 		samples = resampleLinear(
@@ -336,7 +337,7 @@ function downmixToMono(samples: Int16Array, channels: number): Int16Array {
 }
 
 function readFromEnvInfo(): Record<string, string> | undefined {
-	const json = Deno.env.get("LINE_CALL_FROM_ENV_INFO")?.trim();
+	const json = process.env.LINE_CALL_FROM_ENV_INFO?.trim();
 	if (json) {
 		const parsed = JSON.parse(json) as unknown;
 		if (!isStringRecord(parsed)) {
@@ -344,12 +345,12 @@ function readFromEnvInfo(): Record<string, string> | undefined {
 		}
 		return parsed;
 	}
-	const devname = Deno.env.get("LINE_CALL_DEVNAME")?.trim();
+	const devname = process.env.LINE_CALL_DEVNAME?.trim();
 	return devname ? { devname } : undefined;
 }
 
 function readDeviceInfo(): string | undefined {
-	const direct = Deno.env.get("LINE_CALL_DEVICE_INFO")?.trim();
+	const direct = process.env.LINE_CALL_DEVICE_INFO?.trim();
 	if (direct) return direct;
 	if (device === "ANDROID" || device === "ANDROIDSECONDARY") {
 		return `ANDROID\t${version ?? "26.6.2"}\tAndroid OS\t16`;
@@ -416,11 +417,11 @@ function hexToBytes(hex: string): Uint8Array {
 }
 
 async function readAuthToken(): Promise<string | undefined> {
-	const direct = Deno.env.get("LINE_AUTH_TOKEN");
+	const direct = process.env.LINE_AUTH_TOKEN;
 	if (direct) return direct.trim();
-	const file = Deno.env.get("LINE_AUTH_TOKEN_FILE");
+	const file = process.env.LINE_AUTH_TOKEN_FILE;
 	if (!file) return undefined;
-	return (await Deno.readTextFile(file)).trim();
+	return (await readFile(file, "utf8")).trim();
 }
 
 function readNumberEnv(name: string, fallback: number): number {
@@ -428,7 +429,7 @@ function readNumberEnv(name: string, fallback: number): number {
 }
 
 function readOptionalNumberEnv(name: string): number | undefined {
-	const value = Deno.env.get(name);
+	const value = process.env[name];
 	if (value === undefined || value === "") return undefined;
 	const number = Number(value);
 	if (!Number.isFinite(number)) throw new Error(`${name} must be a number`);
@@ -436,7 +437,7 @@ function readOptionalNumberEnv(name: string): number | undefined {
 }
 
 function readBooleanEnv(name: string, fallback: boolean): boolean {
-	const value = Deno.env.get(name);
+	const value = process.env[name];
 	if (value === undefined || value === "") return fallback;
 	if (value === "true" || value === "1") return true;
 	if (value === "false" || value === "0") return false;
@@ -444,7 +445,7 @@ function readBooleanEnv(name: string, fallback: boolean): boolean {
 }
 
 function readOpusSignalEnv(): "auto" | "voice" | "music" {
-	const value = Deno.env.get("LINE_CALL_OPUS_SIGNAL") ?? "music";
+	const value = process.env.LINE_CALL_OPUS_SIGNAL ?? "music";
 	if (value === "auto" || value === "voice" || value === "music") return value;
 	throw new Error("LINE_CALL_OPUS_SIGNAL must be one of auto, voice, music");
 }

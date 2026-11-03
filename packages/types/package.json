@@ -1,0 +1,48 @@
+{
+	"name": "@evex-dev/linejs-types",
+	"version": "3.6.0",
+	"description": "LINE Thrift type definitions used by @evex-dev/linejs",
+	"homepage": "https://linejs.evex.land",
+	"bugs": {
+		"url": "https://github.com/evex-dev/linejs/issues"
+	},
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/evex-dev/linejs.git",
+		"directory": "packages/types"
+	},
+	"files": [
+		"dist",
+		"README.md"
+	],
+	"type": "module",
+	"main": "./dist/line_types.mjs",
+	"module": "./dist/line_types.mjs",
+	"types": "./dist/line_types.d.mts",
+	"exports": {
+		".": {
+			"types": "./dist/line_types.d.mts",
+			"import": "./dist/line_types.mjs"
+		},
+		"./thrift": {
+			"types": "./dist/thrift.d.mts",
+			"import": "./dist/thrift.mjs"
+		}
+	},
+	"scripts": {
+		"build": "vp pack",
+		"test": "vp test --passWithNoTests",
+		"check": "vp check",
+		"format": "vp fmt . --write",
+		"prepublishOnly": "pnpm run check && pnpm run build"
+	},
+	"devDependencies": {
+		"@types/node": "^24.10.0",
+		"typescript": "^5.9.3",
+		"vite-plus": "^1.4.0"
+	},
+	"engines": {
+		"node": "^22.18.0 || ^24.11.0 || >=26.0.0"
+	}
+}

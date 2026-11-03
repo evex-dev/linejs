@@ -2,7 +2,7 @@
 // SDP + SRTP + Opus call against a mock UAS that echoes Opus-encoded
 // audio. Proves every layer in the call stack interoperates.
 
-import { assert, assertEquals } from "@std/assert";
+import { assert, test } from "vite-plus/test";
 import { Buffer } from "node:buffer";
 import dgram from "node:dgram";
 import { AndromedaTransport } from "./andromeda.ts";
@@ -34,9 +34,11 @@ async function spawnEchoCallServer(): Promise<{
 			const reply = buildSip({
 				startLine: "SIP/2.0 401 Unauthorized",
 				headers: {
-					Via: sip.headers["Via"], From: sip.headers["From"],
+					Via: sip.headers["Via"],
+					From: sip.headers["From"],
 					To: `${sip.headers["To"]};tag=uas`,
-					"Call-ID": sip.headers["Call-ID"], CSeq: sip.headers["CSeq"],
+					"Call-ID": sip.headers["Call-ID"],
+					CSeq: sip.headers["CSeq"],
 					"WWW-Authenticate": `Digest realm="echo", nonce="n1", qop="auth", algorithm=MD5`,
 					"Content-Length": "0",
 				},
@@ -48,9 +50,11 @@ async function spawnEchoCallServer(): Promise<{
 			const reply = buildSip({
 				startLine: "SIP/2.0 200 OK",
 				headers: {
-					Via: sip.headers["Via"], From: sip.headers["From"],
+					Via: sip.headers["Via"],
+					From: sip.headers["From"],
 					To: `${sip.headers["To"]};tag=uas`,
-					"Call-ID": sip.headers["Call-ID"], CSeq: sip.headers["CSeq"],
+					"Call-ID": sip.headers["Call-ID"],
+					CSeq: sip.headers["CSeq"],
 					"Content-Length": "0",
 				},
 				body: "",
@@ -64,19 +68,25 @@ async function spawnEchoCallServer(): Promise<{
 			for (let i = 0; i < remoteKey.length; i++) s += String.fromCharCode(remoteKey[i]);
 			const port = (sock.address() as { port: number }).port;
 			const answer = [
-				"v=0", "o=uas 1 1 IN IP4 127.0.0.1", "s=-",
-				`c=IN IP4 127.0.0.1`, "t=0 0",
+				"v=0",
+				"o=uas 1 1 IN IP4 127.0.0.1",
+				"s=-",
+				`c=IN IP4 127.0.0.1`,
+				"t=0 0",
 				`m=audio ${port} RTP/SAVP 96`,
 				"a=rtpmap:96 opus/48000/2",
 				`a=crypto:1 AES_CM_128_HMAC_SHA1_80 inline:${btoa(s)}`,
-				"a=sendrecv", "",
+				"a=sendrecv",
+				"",
 			].join("\r\n");
 			const reply = buildSip({
 				startLine: "SIP/2.0 200 OK",
 				headers: {
-					Via: sip.headers["Via"], From: sip.headers["From"],
+					Via: sip.headers["Via"],
+					From: sip.headers["From"],
 					To: `${sip.headers["To"]};tag=callee`,
-					"Call-ID": sip.headers["Call-ID"], CSeq: sip.headers["CSeq"],
+					"Call-ID": sip.headers["Call-ID"],
+					CSeq: sip.headers["CSeq"],
 					"Content-Type": "application/sdp",
 					"Content-Length": String(answer.length),
 				},
@@ -88,9 +98,12 @@ async function spawnEchoCallServer(): Promise<{
 			const reply = buildSip({
 				startLine: "SIP/2.0 200 OK",
 				headers: {
-					Via: sip.headers["Via"], From: sip.headers["From"],
-					To: sip.headers["To"], "Call-ID": sip.headers["Call-ID"],
-					CSeq: sip.headers["CSeq"], "Content-Length": "0",
+					Via: sip.headers["Via"],
+					From: sip.headers["From"],
+					To: sip.headers["To"],
+					"Call-ID": sip.headers["Call-ID"],
+					CSeq: sip.headers["CSeq"],
+					"Content-Length": "0",
 				},
 				body: "",
 			});
@@ -99,7 +112,7 @@ async function spawnEchoCallServer(): Promise<{
 	});
 	const port = await new Promise<number>((res) => {
 		sock.bind({ address: "127.0.0.1", port: 0 }, () =>
-			res((sock.address() as { port: number }).port)
+			res((sock.address() as { port: number }).port),
 		);
 	});
 	return {
@@ -110,7 +123,7 @@ async function spawnEchoCallServer(): Promise<{
 	};
 }
 
-Deno.test("Full call: REGISTER+INVITE+ACK+SRTP-Opus echo+BYE against mock UAS â€” peer key recovered, audio survives round-trip", async () => {
+test("Full call: REGISTER+INVITE+ACK+SRTP-Opus echo+BYE against mock UAS â€” peer key recovered, audio survives round-trip", async () => {
 	const mock = await spawnEchoCallServer();
 	const codecs = await opusCodecFactory();
 	const transport = new AndromedaTransport({ localMid: "u-test-mid" });
@@ -162,11 +175,13 @@ Deno.test("Full call: REGISTER+INVITE+ACK+SRTP-Opus echo+BYE against mock UAS â€
 			}
 		})();
 
-		await session.sendStream(bufferSource({
-			samples,
-			sampleRate: 48000,
-			frameDurationMs: 20,
-		}));
+		await session.sendStream(
+			bufferSource({
+				samples,
+				sampleRate: 48000,
+				frameDurationMs: 20,
+			}),
+		);
 
 		await recvPromise;
 	} finally {
@@ -174,5 +189,8 @@ Deno.test("Full call: REGISTER+INVITE+ACK+SRTP-Opus echo+BYE against mock UAS â€
 		await mock.stop();
 	}
 
-	assert(mock.rtpEchoCount() >= 5, `expected at least 5 SRTP echo packets, got ${mock.rtpEchoCount()}`);
+	assert.isOk(
+		mock.rtpEchoCount() >= 5,
+		`expected at least 5 SRTP echo packets, got ${mock.rtpEchoCount()}`,
+	);
 });

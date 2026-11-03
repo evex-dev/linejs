@@ -1,7 +1,7 @@
-import { assertEquals } from "@std/assert";
+import { assert, test } from "vite-plus/test";
 import { TypedEventEmitter } from "./index.ts";
 
-Deno.test("promise() should be vaild", async () => {
+test("promise() should be vaild", async () => {
 	type Events = {
 		example: (v: number) => void;
 	};
@@ -14,5 +14,5 @@ Deno.test("promise() should be vaild", async () => {
 
 	const [v] = await promise;
 
-	assertEquals(v, 123456);
+	assert.deepEqual(v, 123456);
 });

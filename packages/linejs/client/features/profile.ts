@@ -1,4 +1,4 @@
-import type * as line from "@evex/linejs-types";
+import type * as line from "@evex-dev/linejs-types";
 import type { Client } from "../mod.ts";
 
 /**
@@ -95,9 +95,7 @@ export async function uploadMyProfileImage(
 ): Promise<{ objId: string; objHash: string }> {
 	const mid = client.base.profile?.mid;
 	if (!mid) {
-		throw new Error(
-			"uploadMyProfileImage requires client to be logged in (no profile.mid)",
-		);
+		throw new Error("uploadMyProfileImage requires client to be logged in (no profile.mid)");
 	}
 	const result = await client.base.obs.uploadObjectForService({
 		data,
@@ -138,10 +136,7 @@ export async function uploadMyProfileBackground(
  * @example
  *   await client.updateMyProfile({ statusMessage: "離席中" });
  */
-export async function updateMyProfile(
-	client: Client,
-	update: MyProfileUpdate,
-): Promise<void> {
+export async function updateMyProfile(client: Client, update: MyProfileUpdate): Promise<void> {
 	const profileAttributes = buildAttrMap(update);
 	if (Object.keys(profileAttributes).length === 0) return;
 	await client.base.talk.updateProfileAttributes({

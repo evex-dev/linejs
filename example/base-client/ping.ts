@@ -1,6 +1,6 @@
-import { BaseClient } from "@evex/linejs/base";
-import { FileStorage } from "@evex/linejs/storage";
-import type * as LINETypes from "@evex/linejs-types";
+import { BaseClient } from "@evex-dev/linejs/base";
+import { FileStorage } from "@evex-dev/linejs/storage";
+import type * as LINETypes from "@evex-dev/linejs-types";
 
 const storage = new FileStorage("./storage.json");
 

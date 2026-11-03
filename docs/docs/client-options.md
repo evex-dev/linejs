@@ -33,7 +33,7 @@ from the beginning.
 You can use `FileStorage` there.
 
 ```ts
-import { FileStorage } from "@evex/linejs/storage";
+import { FileStorage } from "@evex-dev/linejs/storage";
 
 const client = await loginWithPassword({
     email: "",

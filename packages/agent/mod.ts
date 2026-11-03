@@ -44,11 +44,7 @@
  *     process.stdout.write(chunk.text ?? "");
  *   }
  */
-export {
-	type AgentIChunk,
-	AgentIClient,
-	type AgentIOptions,
-} from "./client.ts";
+export { type AgentIChunk, AgentIClient, type AgentIOptions } from "./client.ts";
 export {
 	type AgentISource,
 	type AgentRole,

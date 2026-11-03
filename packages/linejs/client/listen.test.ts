@@ -1,4 +1,4 @@
-import { assertEquals, assertInstanceOf } from "@std/assert";
+import { assert, test } from "vite-plus/test";
 import { Client } from "./client.ts";
 
 interface LogEntry {
@@ -42,9 +42,9 @@ function stubBase(options: {
 
 // The listen loops are floating IIFEs: a throw from the event stream used to
 // reject one with nobody watching, which Deno reports as "Uncaught (in
-// promise)" and which takes the host process down. Deno.test's default
+// promise)" and which takes the host process down. test's default
 // sanitizers turn that same unhandled rejection into a test failure.
-Deno.test("listen reports a talk stream failure instead of crashing", async () => {
+test("listen reports a talk stream failure instead of crashing", async () => {
 	const seen: unknown[] = [];
 	const stub = stubBase({
 		async *talk() {
@@ -61,14 +61,17 @@ Deno.test("listen reports a talk stream failure instead of crashing", async () =
 	await stub.logged;
 
 	// Events delivered before the failure still reached the consumer.
-	assertEquals(seen.length, 1);
-	assertEquals(stub.logs.map((entry) => entry.type), ["LegyPusherError"]);
-	assertInstanceOf(stub.logs[0].data.error, TypeError);
+	assert.deepEqual(seen.length, 1);
+	assert.deepEqual(
+		stub.logs.map((entry) => entry.type),
+		["LegyPusherError"],
+	);
+	assert.instanceOf(stub.logs[0].data.error, TypeError);
 });
 
-Deno.test("listen continues after one event handler failure", async () => {
+test("listen continues after one event handler failure", async () => {
 	let finished!: () => void;
-	const done = new Promise<void>((resolve) => finished = resolve);
+	const done = new Promise<void>((resolve) => (finished = resolve));
 	const stub = stubBase({
 		async *talk() {
 			try {
@@ -86,14 +89,14 @@ Deno.test("listen continues after one event handler failure", async () => {
 	});
 	client.listen({ talk: true });
 	await done;
-	assertEquals(count, 2);
+	assert.deepEqual(count, 2);
 });
 
-Deno.test("listen continues after a decrypt failure and leaves Square running", async () => {
+test("listen continues after a decrypt failure and leaves Square running", async () => {
 	let finished!: () => void;
-	const done = new Promise<void>((resolve) => finished = resolve);
+	const done = new Promise<void>((resolve) => (finished = resolve));
 	let squareFinished!: () => void;
-	const squareDone = new Promise<void>((resolve) => squareFinished = resolve);
+	const squareDone = new Promise<void>((resolve) => (squareFinished = resolve));
 	const stub = stubBase({
 		async *talk() {
 			try {
@@ -111,8 +114,7 @@ Deno.test("listen continues after a decrypt failure and leaves Square running", 
 			}
 		},
 	});
-	stub.base.e2ee.decryptE2EEMessage = () =>
-		Promise.reject(new Error("bad ciphertext"));
+	stub.base.e2ee.decryptE2EEMessage = () => Promise.reject(new Error("bad ciphertext"));
 	const client = new Client(stub.base as never);
 	let talkEvents = 0;
 	let squareEvents = 0;
@@ -124,14 +126,14 @@ Deno.test("listen continues after a decrypt failure and leaves Square running", 
 	});
 	client.listen({ talk: true, square: true });
 	await Promise.all([done, squareDone]);
-	assertEquals(talkEvents, 2);
-	assertEquals(squareEvents, 1);
-	assertEquals(stub.logs.length, 1);
+	assert.deepEqual(talkEvents, 2);
+	assert.deepEqual(squareEvents, 1);
+	assert.deepEqual(stub.logs.length, 1);
 });
 
-Deno.test("listen reports a square stream failure instead of crashing", async () => {
+test("listen reports a square stream failure instead of crashing", async () => {
 	const stub = stubBase({
-		// deno-lint-ignore require-yield
+		// oxlint-disable-next-line require-yield
 		async *square() {
 			throw new TypeError("stream failed");
 		},
@@ -141,13 +143,16 @@ Deno.test("listen reports a square stream failure instead of crashing", async ()
 	client.listen({ square: true });
 	await stub.logged;
 
-	assertEquals(stub.logs.map((entry) => entry.type), ["LegyPusherError"]);
-	assertInstanceOf(stub.logs[0].data.error, TypeError);
+	assert.deepEqual(
+		stub.logs.map((entry) => entry.type),
+		["LegyPusherError"],
+	);
+	assert.instanceOf(stub.logs[0].data.error, TypeError);
 });
 
 // `emit` calls listeners synchronously and does not guard them, so a consumer
 // that throws rejects the loop just like a transport failure does.
-Deno.test("listen reports a throwing event listener instead of crashing", async () => {
+test("listen reports a throwing event listener instead of crashing", async () => {
 	const stub = stubBase({
 		async *talk() {
 			yield { type: "NOTIFIED_READ_MESSAGE" };
@@ -161,20 +166,20 @@ Deno.test("listen reports a throwing event listener instead of crashing", async 
 	client.listen({ talk: true });
 	await stub.logged;
 
-	assertEquals(stub.logs.map((entry) => entry.type), ["LegyPusherError"]);
-	assertInstanceOf(stub.logs[0].data.error, Error);
-	assertEquals(
-		(stub.logs[0].data.error as Error).message,
-		"listener failed",
+	assert.deepEqual(
+		stub.logs.map((entry) => entry.type),
+		["LegyPusherError"],
 	);
+	assert.instanceOf(stub.logs[0].data.error, Error);
+	assert.deepEqual((stub.logs[0].data.error as Error).message, "listener failed");
 });
 
 // `log` fans out to user-supplied listeners too. Reporting outside a guard
 // would let one of those throws reject the very handler that exists to stop an
 // unhandled rejection.
-Deno.test("listen survives a log listener that throws", async () => {
+test("listen survives a log listener that throws", async () => {
 	const stub = stubBase({
-		// deno-lint-ignore require-yield
+		// oxlint-disable-next-line require-yield
 		async *talk() {
 			throw new TypeError("stream failed");
 		},
@@ -188,13 +193,16 @@ Deno.test("listen survives a log listener that throws", async () => {
 	await stub.logged;
 
 	// The listener was still called; only its own failure was swallowed.
-	assertEquals(stub.logs.map((entry) => entry.type), ["LegyPusherError"]);
-	assertInstanceOf(stub.logs[0].data.error, TypeError);
+	assert.deepEqual(
+		stub.logs.map((entry) => entry.type),
+		["LegyPusherError"],
+	);
+	assert.instanceOf(stub.logs[0].data.error, TypeError);
 });
 
-Deno.test("Square continues after a handler failure even when its error logger throws", async () => {
+test("Square continues after a handler failure even when its error logger throws", async () => {
 	let finished!: () => void;
-	const done = new Promise<void>((resolve) => finished = resolve);
+	const done = new Promise<void>((resolve) => (finished = resolve));
 	const stub = stubBase({
 		async *square() {
 			try {
@@ -215,6 +223,6 @@ Deno.test("Square continues after a handler failure even when its error logger t
 	});
 	client.listen({ square: true });
 	await done;
-	assertEquals(count, 2);
-	assertEquals(stub.logs.length, 1);
+	assert.deepEqual(count, 2);
+	assert.deepEqual(stub.logs.length, 1);
 });

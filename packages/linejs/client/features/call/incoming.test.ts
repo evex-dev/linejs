@@ -1,11 +1,11 @@
-import { assert, assertEquals } from "@std/assert";
+import { assert, test } from "vite-plus/test";
 import { parseIncomingAudioCall } from "./incoming.ts";
 import { generateEphemeralKeypair, sha256 } from "./planet/crypto.ts";
 
 const caller = `u${"1".repeat(32)}`;
 const self = `u${"2".repeat(32)}`;
 
-Deno.test("incoming audio binds native operation identity, CID and credential", () => {
+test("incoming audio binds native operation identity, CID and credential", () => {
 	const params = {
 		k: "CA",
 		n: "synthetic-token",
@@ -26,50 +26,43 @@ Deno.test("incoming audio binds native operation identity, CID and credential", 
 		createdTime: 1,
 	};
 	const call = parseIncomingAudioCall(operation, self);
-	assert(call);
-	assertEquals(call.callId, params.vs);
-	assertEquals(call.callerMid, caller);
-	assertEquals(call.localMid, self);
-	assertEquals(call.route.toMid, caller);
-	assertEquals(
+	assert.isOk(call);
+	assert.deepEqual(call.callId, params.vs);
+	assert.deepEqual(call.callerMid, caller);
+	assert.deepEqual(call.localMid, self);
+	assert.deepEqual(call.route.toMid, caller);
+	assert.deepEqual(
 		call.credential,
-		sha256(
-			new TextEncoder().encode([caller, self, params.n, params.vs].join("::")),
-		),
+		sha256(new TextEncoder().encode([caller, self, params.n, params.vs].join("::"))),
 	);
-	for (
-		const patch of [
-			{ k: "CV" },
-			{ k: undefined },
-			{ g: "group" },
-			{ sei: "group" },
-			{ n: "other" },
-			{ vs: "" },
-			{ p: "0" },
-			{ h: "bad/host" },
-			{ vc: "{}" },
-			{ vc: "not-json" },
-		]
-	) {
-		assertEquals(
-			parseIncomingAudioCall({
-				...operation,
-				param3: JSON.stringify({ ...params, ...patch }),
-			}, self),
+	for (const patch of [
+		{ k: "CV" },
+		{ k: undefined },
+		{ g: "group" },
+		{ sei: "group" },
+		{ n: "other" },
+		{ vs: "" },
+		{ p: "0" },
+		{ h: "bad/host" },
+		{ vc: "{}" },
+		{ vc: "not-json" },
+	]) {
+		assert.deepEqual(
+			parseIncomingAudioCall(
+				{
+					...operation,
+					param3: JSON.stringify({ ...params, ...patch }),
+				},
+				self,
+			),
 			undefined,
 		);
 	}
-	assertEquals(parseIncomingAudioCall(operation, caller), undefined);
-	assertEquals(parseIncomingAudioCall(operation, ""), undefined);
-	assertEquals(
-		parseIncomingAudioCall(
-			{ ...operation, param1: `c${"1".repeat(32)}` },
-			self,
-		),
+	assert.deepEqual(parseIncomingAudioCall(operation, caller), undefined);
+	assert.deepEqual(parseIncomingAudioCall(operation, ""), undefined);
+	assert.deepEqual(
+		parseIncomingAudioCall({ ...operation, param1: `c${"1".repeat(32)}` }, self),
 		undefined,
 	);
-	assertEquals(
-		parseIncomingAudioCall({ ...operation, type: "CANCEL_CALL" }, self),
-		undefined,
-	);
+	assert.deepEqual(parseIncomingAudioCall({ ...operation, type: "CANCEL_CALL" }, self), undefined);
 });

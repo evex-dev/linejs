@@ -1,5 +1,6 @@
 # LINEJS
 
+[![npm](https://img.shields.io/npm/v/@evex-dev/linejs?logo=npm)](https://www.npmjs.com/package/@evex-dev/linejs)
 [![JSR](https://jsr.io/badges/@evex/linejs?from=github)](https://jsr.io/@evex/linejs)
 [![JSR Score](https://jsr.io/badges/@evex/linejs/score?from=github)](https://jsr.io/@evex/linejs)
 [![JSR Scope](https://jsr.io/badges/@evex?from=github)](https://jsr.io/@evex)
@@ -25,12 +26,20 @@
 
 ## Installation
 
-Supports all runtimes (Node.js, Deno, and Bun) and Typescript.
+Supports Node.js (22.18+ or 24.11+), Bun, and Deno, with TypeScript types included.
 
-```llvm
+```sh
+npm install @evex-dev/linejs
+pnpm add @evex-dev/linejs
+yarn add @evex-dev/linejs
+bun add @evex-dev/linejs
+```
+
+The library is also published to JSR as `@evex/linejs` for Deno and JSR users:
+
+```sh
 npx jsr add @evex/linejs
-bunx --bun jsr add @evex/linejs
-deno add @evex/linejs
+deno add jsr:@evex/linejs
 ```
 
 ### For AI coding agents
@@ -42,14 +51,13 @@ agents know how to work with the library:
 npx skills add evex-dev/linejs --skill linejs
 ```
 
-You can use `git clone` to download the latest development version and use it in
-Deno.
+You can `git clone` the latest development version and link it locally:
 
-```llvm
+```sh
 git clone https://github.com/evex-dev/linejs.git
 cd linejs
-touch main.js
-deno run main.js
+pnpm install
+pnpm run build
 ```
 
 ##### Documentation is [https://linejs.evex.land](https://linejs.evex.land/)
@@ -57,40 +65,50 @@ deno run main.js
 ## Migrating from v1
 
 The v1 → v2 surface change is large enough that a step-by-step manual
-diff isn't worth maintaining.  Install the agent skill (see
+diff isn't worth maintaining. Install the agent skill (see
 [Installation](#installation)) and ask your coding agent to migrate
 the affected files — it will read the skill's roadmap, pull the
 current API shapes, and rewrite call sites against the live source.
 
 ## Browser Support
 
-For now, please use "https://esm.sh/jsr/@evex/linejs".
+For now, please use "https://esm.sh/@evex-dev/linejs".
 
 Example is [here](./example/browser).
 
 ## LINEJS Types
 
-Please see [@evex/linejs-types](https://jsr.io/@evex/linejs-types).\
+Please see [@evex-dev/linejs-types](https://www.npmjs.com/package/@evex-dev/linejs-types) (JSR: [@evex/linejs-types](https://jsr.io/@evex/linejs-types)).\
 In short, TypeScript types and enums (such as ReactionType (0, 1, 2, 3),
 MessageType, etc.) are provided.
 
 ## Provided Packages
 
-- client - (@evex/linejs)
+- client - (@evex-dev/linejs)
   - Client - LINE SelfBot Client
-- base - (@evex/linejs/base)
+- base - (@evex-dev/linejs/base)
   - BaseClient - LINE SelfBot API Client
-- call - (@evex/linejs/call)
+- call - (@evex-dev/linejs/call)
   - Call control-plane and media helpers
   - [Explicit incoming 1:1 audio answering](../../docs/INCOMING_AUDIO.md)
-- thrift - (@evex/linejs/thrift)
+- thrift - (@evex-dev/linejs/thrift)
   - Thrift - Thrift read/write
-- storage - (@evex/linejs/storage)
+- storage - (@evex-dev/linejs/storage)
   - BaseStorage - LINE Client Storage Type
   - MemoryStorage - LINE Client Memory Storage
   - FileStorage - LINE Client File Storage
-- types - (@evex/linejs-types)
+- types - (@evex-dev/linejs-types)
   - All Types for LINE
+
+## Development
+
+Requires Node.js 22.18+ (or 24.11+) and pnpm.
+
+```sh
+pnpm install
+pnpm run build
+pnpm test
+```
 
 ## Authors
 

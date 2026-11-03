@@ -7,9 +7,9 @@
  * (extract_thrift.ts) can pick whichever surface is convenient.
  *
  * Usage:
- *   deno run -A scripts/apk/decompile.ts --apk <path> [--out <dir>]
- *                                         [--apktool-only | --jadx-only]
- *                                         [--threads N]
+ *   node scripts/apk/decompile.ts --apk <path> [--out <dir>]
+ *                                 [--apktool-only | --jadx-only]
+ *                                 [--threads N]
  *
  *   --apk <path>     APK file (typically base.apk)
  *   --out <dir>      Output root. Default: <linejs>/apks/decompiled/<apk-stem>/
@@ -31,12 +31,31 @@
  * Only the tool that is actually going to run has to resolve: `--apktool-only`
  * does not require jadx to be installed.
  */
-import {
-	fromFileUrl,
-	resolve as pathResolve,
-} from "https://deno.land/std@0.224.0/path/mod.ts";
-import { exists } from "https://deno.land/std@0.224.0/fs/exists.ts";
-import { TextLineStream } from "https://deno.land/std@0.224.0/streams/text_line_stream.ts";
+import { spawn, spawnSync } from "node:child_process";
+import { existsSync, statSync } from "node:fs";
+import { mkdir } from "node:fs/promises";
+import { dirname, resolve as pathResolve } from "node:path";
+import { createInterface } from "node:readline";
+import type { Readable } from "node:stream";
+import { fileURLToPath } from "node:url";
+
+const scriptDir = dirname(fileURLToPath(import.meta.url));
+
+function isDirectory(path: string): boolean {
+	try {
+		return statSync(path).isDirectory();
+	} catch {
+		return false;
+	}
+}
+
+function isFile(path: string): boolean {
+	try {
+		return statSync(path).isFile();
+	} catch {
+		return false;
+	}
+}
 
 interface Args {
 	apk: string;
@@ -75,7 +94,7 @@ function parseArgs(argv: string[]): Args {
 			case "--help":
 			case "-h":
 				console.log(import.meta.url);
-				Deno.exit(0);
+				process.exit(0);
 			default:
 				throw new Error(`unknown arg: ${a}`);
 		}
@@ -89,8 +108,8 @@ function parseArgs(argv: string[]): Args {
 
 /** Walk up from `start` looking for a directory that contains a child named
  *  `marker`. `kind` distinguishes the `bin/` workspace probe (a directory)
- *  from the `deno.json` repo-root probe (a file) — without it the repo-root
- *  walk runs off the end and lands on `/`. */
+ *  from the `pnpm-workspace.yaml` repo-root probe (a file) — without it the
+ *  repo-root walk runs off the end and lands on `/`. */
 async function findUpDir(
 	start: string,
 	marker: string,
@@ -98,8 +117,10 @@ async function findUpDir(
 ): Promise<string | null> {
 	let dir = start;
 	while (true) {
-		const opts = kind === "dir" ? { isDirectory: true } : { isFile: true };
-		if (await exists(`${dir}/${marker}`, opts)) return dir;
+		const found = kind === "dir"
+			? isDirectory(`${dir}/${marker}`)
+			: isFile(`${dir}/${marker}`);
+		if (found) return dir;
 		const parent = pathResolve(dir, "..");
 		if (parent === dir) return null;
 		dir = parent;
@@ -127,7 +148,7 @@ export interface Toolchain {
  *  ENOTDIR rather than reporting absence. */
 async function safeExists(path: string): Promise<boolean> {
 	try {
-		return await exists(path);
+		return existsSync(path);
 	} catch {
 		return false;
 	}
@@ -135,25 +156,16 @@ async function safeExists(path: string): Promise<boolean> {
 
 /** Is `name` an executable we can reach through PATH? */
 async function onPath(name: string): Promise<boolean> {
-	try {
-		// `--version` is the one flag both apktool and jadx accept; apktool
-		// exits non-zero on an unknown flag, so only spawn success matters.
-		const proc = new Deno.Command(name, {
-			args: ["--version"],
-			stdout: "null",
-			stderr: "null",
-		}).spawn();
-		await proc.status;
-		return true;
-	} catch {
-		return false;
-	}
+	// `--version` is the one flag both apktool and jadx accept; apktool
+	// exits non-zero on an unknown flag, so only spawn success matters.
+	const result = spawnSync(name, ["--version"], { stdio: "ignore" });
+	return result.error === undefined;
 }
 
 async function resolveApktool(workspaceRoot: string | null): Promise<
 	ToolInvocation | null
 > {
-	const fromEnv = Deno.env.get("APKTOOL_JAR");
+	const fromEnv = process.env.APKTOOL_JAR;
 	if (fromEnv) {
 		if (!(await safeExists(fromEnv))) {
 			throw new Error(`APKTOOL_JAR is set but not found at ${fromEnv}`);
@@ -179,7 +191,7 @@ async function resolveApktool(workspaceRoot: string | null): Promise<
 async function resolveJadx(workspaceRoot: string | null): Promise<
 	ToolInvocation | null
 > {
-	const fromEnv = Deno.env.get("JADX_BIN");
+	const fromEnv = process.env.JADX_BIN;
 	if (fromEnv) {
 		if (!(await safeExists(fromEnv))) {
 			throw new Error(`JADX_BIN is set but not found at ${fromEnv}`);
@@ -202,7 +214,7 @@ async function resolveJadx(workspaceRoot: string | null): Promise<
 export async function resolveToolchain(
 	need: { apktool: boolean; jadx: boolean },
 ): Promise<Toolchain> {
-	const here = pathResolve(fromFileUrl(import.meta.url), "..");
+	const here = scriptDir;
 	// A `bin/` hit at the filesystem root is `/bin`, not a checkout — ignore it.
 	const found = await findUpDir(here, "bin");
 	const workspaceRoot = found === null || found === pathResolve(found, "..")
@@ -243,35 +255,36 @@ async function runStreamed(
 ): Promise<number> {
 	const t0 = performance.now();
 	console.log(`[${prefix}] $ ${cmd} ${args.join(" ")}`);
-	const proc = new Deno.Command(cmd, {
-		args,
-		stdout: "piped",
-		stderr: "piped",
-		env: opts.env,
-	}).spawn();
+	const proc = spawn(cmd, args, {
+		env: opts.env ? { ...process.env, ...opts.env } : process.env,
+		stdio: ["ignore", "pipe", "pipe"],
+	});
 
 	const pipe = async (
-		stream: ReadableStream<Uint8Array>,
+		stream: Readable,
 		channel: "stdout" | "stderr",
 	) => {
-		const lines = stream
-			.pipeThrough(new TextDecoderStream("utf-8", { fatal: false }))
-			.pipeThrough(new TextLineStream());
+		const lines = createInterface({ input: stream, crlfDelay: Infinity });
 		for await (const line of lines) {
 			const sink = channel === "stderr" ? console.error : console.log;
 			sink(`[${prefix}] ${line}`);
 		}
 	};
 
+	const closed = new Promise<number>((resolvePromise, reject) => {
+		proc.on("error", reject);
+		proc.on("close", (code) => resolvePromise(code ?? 1));
+	});
+
 	await Promise.all([
-		pipe(proc.stdout, "stdout"),
-		pipe(proc.stderr, "stderr"),
+		pipe(proc.stdout!, "stdout"),
+		pipe(proc.stderr!, "stderr"),
 	]);
 
-	const status = await proc.status;
+	const code = await closed;
 	const dt = ((performance.now() - t0) / 1000).toFixed(1);
-	console.log(`[${prefix}] exit=${status.code}  ${dt}s`);
-	return status.code;
+	console.log(`[${prefix}] exit=${code}  ${dt}s`);
+	return code;
 }
 
 async function runApktool(
@@ -318,24 +331,23 @@ async function runJadx(
 }
 
 if (import.meta.main) {
-	const args = parseArgs(Deno.args);
+	const args = parseArgs(process.argv.slice(2));
 	const toolchain = await resolveToolchain({
 		apktool: !args.jadxOnly,
 		jadx: !args.apktoolOnly,
 	});
 	const apkPath = pathResolve(args.apk);
-	if (!(await exists(apkPath))) {
+	if (!existsSync(apkPath)) {
 		console.error(`apk not found: ${apkPath}`);
-		Deno.exit(2);
+		process.exit(2);
 	}
 
-	const here = pathResolve(fromFileUrl(import.meta.url), "..");
-	const linejsRoot = await findUpDir(here, "deno.json", "file");
+	const linejsRoot = await findUpDir(scriptDir, "pnpm-workspace.yaml", "file");
 	if (!linejsRoot && !args.out) {
 		console.error(
-			"could not locate the linejs root (no deno.json ancestor); pass --out",
+			"could not locate the linejs root (no pnpm-workspace.yaml ancestor); pass --out",
 		);
-		Deno.exit(2);
+		process.exit(2);
 	}
 	const outRoot = args.out
 		? pathResolve(args.out)
@@ -343,7 +355,7 @@ if (import.meta.main) {
 	const smaliRoot = `${outRoot}/smali`;
 	const javaRoot = `${outRoot}/java`;
 
-	await Deno.mkdir(outRoot, { recursive: true });
+	await mkdir(outRoot, { recursive: true });
 
 	console.log(`apk:       ${apkPath}`);
 	console.log(`out:       ${outRoot}`);
@@ -379,5 +391,5 @@ if (import.meta.main) {
 	console.log(`smali root: ${smaliRoot}`);
 	console.log(`java root:  ${javaRoot}`);
 
-	Deno.exit(failed === 0 ? 0 : 1);
+	process.exit(failed === 0 ? 0 : 1);
 }

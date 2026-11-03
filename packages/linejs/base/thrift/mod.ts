@@ -16,9 +16,7 @@ export class Thrift extends ThriftRenameParser {
 	constructor() {
 		super();
 	}
-	readThrift(
-		...params: Parameters<typeof readThrift>
-	): ReturnType<typeof readThrift> {
+	readThrift(...params: Parameters<typeof readThrift>): ReturnType<typeof readThrift> {
 		return readThrift(...params);
 	}
 
@@ -28,9 +26,7 @@ export class Thrift extends ThriftRenameParser {
 		return readThriftStruct(...params);
 	}
 
-	writeThrift(
-		...params: Parameters<typeof writeThrift>
-	): ReturnType<typeof writeThrift> {
+	writeThrift(...params: Parameters<typeof writeThrift>): ReturnType<typeof writeThrift> {
 		return writeThrift(...params);
 	}
 }

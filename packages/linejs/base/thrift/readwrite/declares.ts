@@ -1,7 +1,7 @@
 // @ts-types="thrift-types"
 import * as thrift from "thrift";
 import { Buffer } from "node:buffer";
-import type { LooseType } from "@evex/loose-types";
+import type { LooseType } from "../../types.ts";
 
 export const genHeader = {
 	3: (name: string) => {
@@ -9,16 +9,7 @@ export const genHeader = {
 		if (nameBuf.length > 0xff) {
 			throw new RangeError("genHeader v3: name too long");
 		}
-		const prefix = Buffer.from([
-			0x80,
-			0x01,
-			0x00,
-			0x01,
-			0x00,
-			0x00,
-			0x00,
-			nameBuf.length,
-		]);
+		const prefix = Buffer.from([0x80, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, nameBuf.length]);
 		const suffix = Buffer.from([0x00, 0x00, 0x00, 0x00]);
 		return Buffer.concat([prefix, nameBuf, suffix]);
 	},
@@ -58,18 +49,14 @@ export type NestedArray = Array<
 	| [11, number, string | Buffer | undefined]
 	| [12, number, NestedArray?]
 	| [
-		13,
-		number,
-		[
+			13,
 			number,
-			number,
-			(
-				| Record<string | number, NestedArray>
-				| Record<string | number, unknown>
-				| undefined
-			),
-		]?,
-	]
+			[
+				number,
+				number,
+				Record<string | number, NestedArray> | Record<string | number, unknown> | undefined,
+			]?,
+	  ]
 	| [14, number, [number, NestedArray[] | unknown[] | undefined]?]
 	| [15, number, [number, NestedArray[] | unknown[] | undefined]?]
 >;

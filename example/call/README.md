@@ -13,7 +13,7 @@ joins the group call and streams the same audio over the group media path.
 ```sh
 LINE_AUTH_TOKEN_FILE=/path/to/auth-token.txt \
 LINE_DEVICE=ANDROID \
-deno run -A example/call/call_on_command.ts
+node example/call/call_on_command.ts
 ```
 
 You can also pass your own 16-bit PCM WAV file:
@@ -21,7 +21,7 @@ You can also pass your own 16-bit PCM WAV file:
 ```sh
 LINE_AUTH_TOKEN_FILE=/path/to/auth-token.txt \
 LINE_DEVICE=ANDROID \
-deno run -A example/call/call_on_command.ts ./voice.wav
+node example/call/call_on_command.ts ./voice.wav
 ```
 
 Useful environment variables:

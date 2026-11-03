@@ -1,3 +1,7 @@
 {
-	"deno.enable": true
+	"editor.insertSpaces": false,
+	"editor.tabSize": 4,
+	"editor.defaultFormatter": "oxc.oxc-vscode",
+	"oxc.enable": true,
+	"files.eol": "\n"
 }

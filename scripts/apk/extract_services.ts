@@ -25,10 +25,11 @@
  * call. The Java method signature gives the request and response types.
  *
  * Usage:
- *   deno run -A scripts/apk/extract_services.ts --smali <dir> [--report <path>]
+ *   node scripts/apk/extract_services.ts --smali <dir> [--report <path>]
  *                                                [--include-pkg <regex>]
  */
-import { walk } from "https://deno.land/std@0.224.0/fs/walk.ts";
+import { readFile, readdir, writeFile } from "node:fs/promises";
+import { walk } from "../utils/walk.ts";
 
 interface Args {
 	smaliDir: string;
@@ -310,10 +311,10 @@ async function locateThriftServiceClient(dir: string): Promise<string | null> {
 	];
 	for (const d of tryDirs) {
 		try {
-			for await (const e of Deno.readDir(d)) {
-				if (!e.isFile || !e.name.endsWith(".smali")) continue;
+			for (const e of await readdir(d, { withFileTypes: true })) {
+				if (!e.isFile() || !e.name.endsWith(".smali")) continue;
 				const path = `${d}/${e.name}`;
-				const src = await Deno.readTextFile(path);
+				const src = await readFile(path, "utf8");
 				const sendRecvCount = [...src.matchAll(
 					/^\.method\s+(?:[\w]+\s+)*\w+\(Ljava\/lang\/String;L[^;]+;\)V$/gm,
 				)].length;
@@ -353,7 +354,7 @@ async function walkServices(dir: string, opts: Args): Promise<ServiceDef[]> {
 		const entry of walk(dir, { exts: [".smali"], includeDirs: false })
 	) {
 		if (opts.includePkg && !opts.includePkg.test(entry.path)) continue;
-		const src = await Deno.readTextFile(entry.path);
+		const src = await readFile(entry.path, "utf8");
 
 		const canonicalClient = entry.path.endsWith("$Client.smali");
 		const structuralClient = tServiceClient
@@ -386,7 +387,7 @@ async function walkServices(dir: string, opts: Args): Promise<ServiceDef[]> {
 // =========================================================================
 
 if (import.meta.main) {
-	const args = parseArgs(Deno.args);
+	const args = parseArgs(process.argv.slice(2));
 	console.log(`smali root: ${args.smaliDir}`);
 
 	const services = await walkServices(args.smaliDir, args);
@@ -404,7 +405,7 @@ if (import.meta.main) {
 	}
 
 	if (args.report) {
-		await Deno.writeTextFile(args.report, JSON.stringify(services, null, 2));
+		await writeFile(args.report, JSON.stringify(services, null, 2));
 		console.log(`\nReport written: ${args.report}`);
 	}
 }

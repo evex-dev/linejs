@@ -5,7 +5,7 @@ import {
 	type MessageReactionType,
 	type SquareEvent,
 	type SquareMessage as Message,
-} from "@evex/linejs-types";
+} from "@evex-dev/linejs-types";
 import type { Client } from "../../client.ts";
 import type {
 	EmojiMeta,
@@ -47,11 +47,13 @@ export class SquareMessage {
 	 * Replys to message.
 	 */
 	async reply(
-		input: string | {
-			text?: string;
-			contentType?: ContentType;
-			contentMetadata?: Record<string, string>;
-		},
+		input:
+			| string
+			| {
+					text?: string;
+					contentType?: ContentType;
+					contentMetadata?: Record<string, string>;
+			  },
 	): Promise<void> {
 		if (typeof input === "string") {
 			return this.reply({
@@ -70,13 +72,15 @@ export class SquareMessage {
 	 * Sends to message.
 	 */
 	async send(
-		input: string | {
-			text?: string;
-			contentType?: ContentType;
-			contentMetadata?: Record<string, string>;
-			relatedMessageId?: string;
-			location?: Location;
-		},
+		input:
+			| string
+			| {
+					text?: string;
+					contentType?: ContentType;
+					contentMetadata?: Record<string, string>;
+					relatedMessageId?: string;
+					location?: Location;
+			  },
 	): Promise<void> {
 		if (typeof input === "string") {
 			return this.send({
@@ -96,9 +100,7 @@ export class SquareMessage {
 	 */
 	async react(type: MessageReactionType): Promise<void> {
 		if (typeof type === "string") {
-			type = enums.MessageReactionType[
-				type
-			] as MessageReactionType & number;
+			type = enums.MessageReactionType[type] as MessageReactionType & number;
 		}
 		await this.#client.base.square.reactToMessage({
 			request: {
@@ -143,9 +145,7 @@ export class SquareMessage {
 	 */
 	async unsend(): Promise<void> {
 		if (!(await this.isMyMessage())) {
-			throw new TypeError(
-				"Cannot unsend the message which is not yours.",
-			);
+			throw new TypeError("Cannot unsend the message which is not yours.");
 		}
 		await this.#client.base.square.unsendMessage({
 			messageId: this.raw.message.id,
@@ -171,8 +171,7 @@ export class SquareMessage {
 		if (this.raw.message.contentType !== "STICKER") {
 			throw new TypeError("The message is not sticker.");
 		}
-		const stickerMetadata = this.raw.message
-			.contentMetadata as unknown as StickerMetadata;
+		const stickerMetadata = this.raw.message.contentMetadata as unknown as StickerMetadata;
 		if (stickerMetadata.STKOPT === "A") {
 			return `https://stickershop.line-scdn.net/stickershop/v1/sticker/${stickerMetadata.STKID}/android/sticker_animation.png`;
 		} else {
@@ -189,10 +188,9 @@ export class SquareMessage {
 			throw new TypeError("The message is not text message.");
 		}
 		const emojiUrls: string[] = [];
-		const emojiData = this.raw.message
-			.contentMetadata;
+		const emojiData = this.raw.message.contentMetadata;
 		const replace = emojiData?.REPLACE
-			? JSON.parse(emojiData?.REPLACE) as EmojiMeta["REPLACE"]
+			? (JSON.parse(emojiData?.REPLACE) as EmojiMeta["REPLACE"])
 			: undefined;
 		const emojiResources = replace?.sticon?.resources ?? [];
 		for (const emoji of emojiResources) {
@@ -214,19 +212,19 @@ export class SquareMessage {
 		const mentionees: MentionTarget[] = [];
 		const mentionData = content.metadata;
 		const mention = mentionData?.MENTION
-			? JSON.parse(mentionData.MENTION) as MentionMeta["MENTION"]
+			? (JSON.parse(mentionData.MENTION) as MentionMeta["MENTION"])
 			: undefined;
 		const mentions = mention?.MENTIONEES ?? [];
 		for (const mention of mentions) {
 			mentionees.push(
 				mention.A
 					? {
-						all: true,
-					}
+							all: true,
+						}
 					: {
-						all: false,
-						mid: mention.M as string,
-					},
+							all: false,
+							mid: mention.M as string,
+						},
 			);
 		}
 		return mentionees;
@@ -251,7 +249,7 @@ export class SquareMessage {
 		const mentionData = content.metadata;
 		const emojiData = content.metadata;
 		const mention = mentionData?.MENTION
-			? JSON.parse(mentionData.MENTION) as MentionMeta["MENTION"]
+			? (JSON.parse(mentionData.MENTION) as MentionMeta["MENTION"])
 			: undefined;
 		const mentions = mention?.MENTIONEES ?? [];
 		mentions.forEach((e, i) => {
@@ -262,7 +260,7 @@ export class SquareMessage {
 			});
 		});
 		const replace = emojiData?.REPLACE
-			? JSON.parse(emojiData?.REPLACE) as EmojiMeta["REPLACE"]
+			? (JSON.parse(emojiData?.REPLACE) as EmojiMeta["REPLACE"])
 			: undefined;
 		const emojiResources = replace?.sticon?.resources ?? [];
 		emojiResources.forEach((e, i) => {
@@ -274,10 +272,7 @@ export class SquareMessage {
 			.forEach((e) => {
 				if (lastSplit - e.start) {
 					texts.push({
-						text: this.raw.message.text?.substring(
-							lastSplit,
-							e.start,
-						) as string,
+						text: this.raw.message.text?.substring(lastSplit, e.start) as string,
 					});
 				}
 				const content: DecorationsData = {
@@ -285,21 +280,18 @@ export class SquareMessage {
 				};
 				if (typeof e.emoji === "number") {
 					const emoji = emojiResources[e.emoji];
-					const url =
-						`https://stickershop.line-scdn.net/sticonshop/v1/sticon/${emoji.productId}/android/${emoji.sticonId}.png`;
+					const url = `https://stickershop.line-scdn.net/sticonshop/v1/sticon/${emoji.productId}/android/${emoji.sticonId}.png`;
 					content.emoji = {
 						...emoji,
 						url,
 					};
 				} else if (typeof e.mention === "number") {
 					const _mention = mentionData?.MENTION
-						? JSON.parse(mentionData.MENTION) as MentionMeta["MENTION"]
+						? (JSON.parse(mentionData.MENTION) as MentionMeta["MENTION"])
 						: undefined;
 					const mentions = _mention?.MENTIONEES ?? [];
 					const mention = mentions[e.mention];
-					content.mention = mention.M
-						? { mid: mention.M }
-						: { all: !!mention.A };
+					content.mention = mention.M ? { mid: mention.M } : { all: !!mention.A };
 				}
 				texts.push(content);
 				lastSplit = e.end;
@@ -342,10 +334,7 @@ export class SquareMessage {
 			(this.raw.message.messageRelationType === 3 ||
 				this.raw.message.messageRelationType === "REPLY")
 		) {
-			return new UnresolvedMessage(
-				this.raw.message.relatedMessageId,
-				this.#client,
-			);
+			return new UnresolvedMessage(this.raw.message.relatedMessageId, this.#client);
 		}
 		return null;
 	}
@@ -375,18 +364,14 @@ export class SquareMessage {
 	 */
 	async getData(preview?: boolean): Promise<Blob> {
 		if (!hasContents.includes(this.raw.message.contentType as string)) {
-			throw new TypeError(
-				"message have no contents",
-			);
+			throw new TypeError("message have no contents");
 		}
 		if (this.raw.message.contentMetadata.DOWNLOAD_URL) {
 			if (preview) {
-				const r = await this.#client.base
-					.fetch(this.raw.message.contentMetadata.PREVIEW_URL);
+				const r = await this.#client.base.fetch(this.raw.message.contentMetadata.PREVIEW_URL);
 				return await r.blob();
 			} else {
-				const r_1 = await this.#client.base
-					.fetch(this.raw.message.contentMetadata.DOWNLOAD_URL);
+				const r_1 = await this.#client.base.fetch(this.raw.message.contentMetadata.DOWNLOAD_URL);
 				return await r_1.blob();
 			}
 		}
@@ -401,10 +386,13 @@ export class SquareMessage {
 		if (typeof this.#authorIsMe === "boolean") {
 			return this.#authorIsMe;
 		}
-		this.#authorIsMe = this.from.id ===
-			(await this.#client.base.square.getSquareChat({
-				squareChatMid: this.to.id,
-			})).squareChatMember.squareMemberMid;
+		this.#authorIsMe =
+			this.from.id ===
+			(
+				await this.#client.base.square.getSquareChat({
+					squareChatMid: this.to.id,
+				})
+			).squareChatMember.squareMemberMid;
 		return this.#authorIsMe;
 	}
 
@@ -459,14 +447,12 @@ export class SquareThreadMessage extends SquareMessage {
 	/**
 	 * Replys to message.
 	 */
-	override async reply(
-		input: {
-			text?: string;
-			contentType?: ContentType;
-			contentMetadata?: Record<string, string>;
-			location?: Location;
-		},
-	): Promise<void> {
+	override async reply(input: {
+		text?: string;
+		contentType?: ContentType;
+		contentMetadata?: Record<string, string>;
+		location?: Location;
+	}): Promise<void> {
 		if (typeof input === "string") {
 			return this.reply({
 				text: input,
@@ -483,13 +469,15 @@ export class SquareThreadMessage extends SquareMessage {
 	 * Sends to message.
 	 */
 	override async send(
-		input: string | {
-			text?: string;
-			contentType?: ContentType;
-			contentMetadata?: Record<string, string>;
-			relatedMessageId?: string;
-			location?: Location;
-		},
+		input:
+			| string
+			| {
+					text?: string;
+					contentType?: ContentType;
+					contentMetadata?: Record<string, string>;
+					relatedMessageId?: string;
+					location?: Location;
+			  },
 	): Promise<void> {
 		if (typeof input === "string") {
 			return this.send({
@@ -499,15 +487,13 @@ export class SquareThreadMessage extends SquareMessage {
 		await this.#sendSquareThreadMessage(input);
 	}
 
-	async #sendSquareThreadMessage(
-		input: {
-			text?: string;
-			contentType?: ContentType;
-			contentMetadata?: Record<string, string>;
-			relatedMessageId?: string;
-			location?: Location;
-		},
-	): Promise<void> {
+	async #sendSquareThreadMessage(input: {
+		text?: string;
+		contentType?: ContentType;
+		contentMetadata?: Record<string, string>;
+		relatedMessageId?: string;
+		location?: Location;
+	}): Promise<void> {
 		await this.#client.base.square.sendSquareThreadMessage({
 			request: {
 				reqSeq: await this.#client.base.getReqseq("sq"),
@@ -519,13 +505,13 @@ export class SquareThreadMessage extends SquareMessage {
 						text: input.text,
 						contentType: "NONE",
 						toType: "SQUARE_THREAD",
-						...input.relatedMessageId
+						...(input.relatedMessageId
 							? {
-								relatedMessageId: input.relatedMessageId,
-								relatedMessageServiceCode: "SQUARE",
-								messageRelationType: "REPLY",
-							}
-							: {},
+									relatedMessageId: input.relatedMessageId,
+									relatedMessageServiceCode: "SQUARE",
+									messageRelationType: "REPLY",
+								}
+							: {}),
 					},
 				},
 			},
@@ -538,9 +524,7 @@ export class SquareThreadMessage extends SquareMessage {
 	 */
 	override async react(type: MessageReactionType): Promise<void> {
 		if (typeof type === "string") {
-			type = enums.MessageReactionType[
-				type
-			] as MessageReactionType & number;
+			type = enums.MessageReactionType[type] as MessageReactionType & number;
 		}
 		await this.#client.base.square.reactToMessage({
 			request: {
@@ -589,9 +573,7 @@ export class SquareThreadMessage extends SquareMessage {
 	 */
 	override async unsend() {
 		if (!(await this.isMyMessage())) {
-			throw new TypeError(
-				"Cannot unsend the message which is not yours.",
-			);
+			throw new TypeError("Cannot unsend the message which is not yours.");
 		}
 		await this.#client.base.square.unsendMessage({
 			messageId: this.raw.message.id,
@@ -611,20 +593,14 @@ export class SquareThreadMessage extends SquareMessage {
 		});
 	}
 
-	static override fromSource(
-		source: SquareEvent,
-		client: Client,
-	): SquareThreadMessage {
+	static override fromSource(source: SquareEvent, client: Client): SquareThreadMessage {
 		return new SquareThreadMessage({
 			client,
 			raw: source.payload.notificationThreadMessage.squareMessage,
 		});
 	}
 
-	static override fromRawTalk(
-		raw: Message,
-		client: Client,
-	): SquareThreadMessage {
+	static override fromRawTalk(raw: Message, client: Client): SquareThreadMessage {
 		return new SquareThreadMessage({
 			client,
 			raw,

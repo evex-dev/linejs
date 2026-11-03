@@ -1,14 +1,9 @@
 // @ts-types="thrift-types"
 import * as thrift from "thrift";
 import { Buffer } from "node:buffer";
-import {
-	genHeader,
-	type NestedArray,
-	type ProtocolKey,
-	type Protocols,
-} from "./declares.ts";
+import { genHeader, type NestedArray, type ProtocolKey, type Protocols } from "./declares.ts";
 import Int64 from "node-int64";
-import type { LooseType } from "@evex/loose-types";
+import type { LooseType } from "../../types.ts";
 
 const Thrift = thrift.Thrift;
 export function writeThrift(
@@ -18,13 +13,10 @@ export function writeThrift(
 ): Uint8Array {
 	const chunks: Buffer[] = [];
 	// 初期バッファは空にして、コールバックでチャンクを集める
-	const buftra = new thrift.TBufferedTransport(
-		Buffer.from([]),
-		function (outBuf?: Buffer) {
-			if (!outBuf) return;
-			chunks.push(outBuf);
-		},
-	);
+	const buftra = new thrift.TBufferedTransport(Buffer.from([]), function (outBuf?: Buffer) {
+		if (!outBuf) return;
+		chunks.push(outBuf);
+	});
 	const myprot = new Protocol(buftra);
 	_writeStruct(myprot, value);
 	myprot.flush();
@@ -49,13 +41,10 @@ export function writeStruct(
 	Protocol: (typeof Protocols)[ProtocolKey],
 ): Uint8Array {
 	const chunks: Buffer[] = [];
-	const buftra = new thrift.TBufferedTransport(
-		Buffer.from([]),
-		function (outBuf?: Buffer) {
-			if (!outBuf) return;
-			chunks.push(outBuf);
-		},
-	);
+	const buftra = new thrift.TBufferedTransport(Buffer.from([]), function (outBuf?: Buffer) {
+		if (!outBuf) return;
+		chunks.push(outBuf);
+	});
 	const myprot = new Protocol(buftra);
 	_writeStruct(myprot, value);
 	myprot.flush();
@@ -160,11 +149,7 @@ function writeValue(
 				// makes the LINE server reject message IDs (MESSAGE_NOT_FOUND).
 				// Encode the full 64-bit two's-complement value as a padded hex
 				// string instead; `asUintN` keeps negative I64 values correct.
-				output.writeI64(
-					new Int64(
-						"0x" + BigInt.asUintN(64, val).toString(16).padStart(16, "0"),
-					),
-				);
+				output.writeI64(new Int64("0x" + BigInt.asUintN(64, val).toString(16).padStart(16, "0")));
 				output.writeFieldEnd();
 			} else if (typeof val !== "number") {
 				throw new TypeError(`ftype=${ftype}: value is not number`);
@@ -323,11 +308,7 @@ function writeValue_(
 				// string as hex, so pass the full 64-bit two's-complement
 				// value as a padded hex string (`asUintN` keeps negatives
 				// correct).
-				output.writeI64(
-					new Int64(
-						"0x" + BigInt.asUintN(64, val).toString(16).padStart(16, "0"),
-					),
-				);
+				output.writeI64(new Int64("0x" + BigInt.asUintN(64, val).toString(16).padStart(16, "0")));
 			} else if (typeof val !== "number") {
 				throw new TypeError(`ftype=${ftype}: value is not number`);
 			} else {

@@ -3,8 +3,12 @@
  * Warning: messy code
  */
 
-import * as path_ from "https://deno.land/std@0.79.0/path/mod.ts";
+import { writeFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { Thrift as _Thrift } from "../../packages/types/thrift.ts";
+
+const scriptDir = dirname(fileURLToPath(import.meta.url));
 
 export function main(
 	Thrift: Record<string, any[] | Record<string, string>> = _Thrift,
@@ -133,7 +137,7 @@ export function main(
 			}
 		}
 	}
-	out.push(`// deno-lint-ignore-file
+	out.push(`// oxlint-disable
 	/*
 	 * @module
 	 * LINEJS Types
@@ -151,11 +155,12 @@ export function main(
 	);
 	out.push(types.join("\n\n"));
 
-	Deno.writeTextFileSync(
-		path || path_.fromFileUrl(import.meta.resolve(
-			"../../packages/types/line_types.ts",
-		)),
+	writeFileSync(
+		path || resolve(scriptDir, "../../packages/types/line_types.ts"),
 		out.join("\n"),
-		{ create: true },
 	);
+}
+
+if (import.meta.main) {
+	main();
 }

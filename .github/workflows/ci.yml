@@ -11,42 +11,33 @@ on:
   push:
 
 jobs:
-  jsr-dry-run:
-    name: "Checking if it's valid for JSR"
+  test:
+    name: "Build and test"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v1
-        with:
-          deno-version: v2.x
-      - run: deno publish --dry-run
-        working-directory: ./packages/linejs
-      - run: deno publish --dry-run
-        working-directory: ./packages/types
 
-  deno:
-    name: "Testing"
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v1
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
-          deno-version: v2.x
-      # `-A` because transitive deps (e.g. the `q` promise lib reachable
-      # through Buffer) read env vars at module init.  Without env access
-      # the test runner fails before any test body runs.
-      - run: deno test -A
+          version: 12.6.0
+
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - run: node scripts/test_node_transport.mts
+          cache: pnpm
 
-#  format:
-#    name: "Format Check"
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v4
-#      - uses: denoland/setup-deno@v1
-#        with:
-#          deno-version: v2.x
-#      - run: deno fmt --check
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm run build
+
+      - name: Check formatting, lint, and types
+        run: pnpm run check
+
+      - name: Test packages
+        run: pnpm test
+
+      - name: Test repository scripts
+        run: pnpm run test:scripts

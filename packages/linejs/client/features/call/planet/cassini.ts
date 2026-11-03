@@ -217,21 +217,23 @@ export function packCassini(
 	]);
 }
 
-export function unpackCassini(
-	wire: Uint8Array,
-): CassiniEnvelope & { bodyTag: number } {
+export function unpackCassini(wire: Uint8Array): CassiniEnvelope & { bodyTag: number } {
 	const fields = decodePb(wire);
 	const hdrField = fields.find((f) => f.tag === ENV_HDR_TAG);
-	const bodyField = fields.find((f) =>
-		f.tag !== ENV_HDR_TAG && f.wireType === WireType.LengthDelim
+	const bodyField = fields.find(
+		(f) => f.tag !== ENV_HDR_TAG && f.wireType === WireType.LengthDelim,
 	);
 	if (!hdrField || !bodyField) {
 		throw new Error("unpackCassini: missing header/body");
 	}
 	const hdrParts = decodePb(new Uint8Array(hdrField.value as Uint8Array));
-	let userId = "", msgId = 0;
-	let callUuid16 = new Uint8Array(0), msgNonce = new Uint8Array(0);
-	let counter = 0n, subscriptionId = 0n, sessionId = 0n;
+	let userId = "",
+		msgId = 0;
+	let callUuid16 = new Uint8Array(0),
+		msgNonce = new Uint8Array(0);
+	let counter = 0n,
+		subscriptionId = 0n,
+		sessionId = 0n;
 	for (const f of hdrParts) {
 		if (f.tag === HDR_TAG.USER_ID) {
 			userId = new TextDecoder().decode(new Uint8Array(f.value as Uint8Array));
@@ -365,18 +367,21 @@ export function buildSetupReq(opts: {
 		msgTypeName: "setup_req",
 		deviceInfo: opts.deviceInfo,
 	});
-	return packCassini({
-		header: {
-			userId: opts.session.fromMid,
-			msgId: opts.msgId,
-			callUuid16: opts.session.callUuid16,
-			msgNonce: nextNonce16(),
-			counter: opts.counter,
-			subscriptionId: opts.session.subscriptionId,
-			sessionId: opts.session.sessionId,
+	return packCassini(
+		{
+			header: {
+				userId: opts.session.fromMid,
+				msgId: opts.msgId,
+				callUuid16: opts.session.callUuid16,
+				msgNonce: nextNonce16(),
+				counter: opts.counter,
+				subscriptionId: opts.session.subscriptionId,
+				sessionId: opts.session.sessionId,
+			},
+			body,
 		},
-		body,
-	}, ENVELOPE_BODY_TAG.STATE);
+		ENVELOPE_BODY_TAG.STATE,
+	);
 }
 
 /** Build a Cassini "exchange_app_str_data" — used mid-call for app-level
@@ -392,18 +397,21 @@ export function buildExchangeAppStrData(opts: {
 		msgTypeName: "exchange_app_str_data",
 		jsonParams: opts.json,
 	});
-	return packCassini({
-		header: {
-			userId: opts.session.fromMid,
-			msgId: opts.msgId,
-			callUuid16: opts.session.callUuid16,
-			msgNonce: nextNonce16(),
-			counter: opts.counter,
-			subscriptionId: opts.session.subscriptionId,
-			sessionId: opts.session.sessionId,
+	return packCassini(
+		{
+			header: {
+				userId: opts.session.fromMid,
+				msgId: opts.msgId,
+				callUuid16: opts.session.callUuid16,
+				msgNonce: nextNonce16(),
+				counter: opts.counter,
+				subscriptionId: opts.session.subscriptionId,
+				sessionId: opts.session.sessionId,
+			},
+			body,
 		},
-		body,
-	}, ENVELOPE_BODY_TAG.CONTROL);
+		ENVELOPE_BODY_TAG.CONTROL,
+	);
 }
 
 /** Build a Cassini REL (release / BYE-equivalent). control-class body. */
@@ -416,20 +424,21 @@ export function buildRelReq(opts: {
 	const body = packCassiniBody({
 		callUuid: opts.session.callUuidString,
 		msgTypeName: "rel_req",
-		jsonParams: opts.reason
-			? JSON.stringify({ reason: opts.reason })
-			: undefined,
+		jsonParams: opts.reason ? JSON.stringify({ reason: opts.reason }) : undefined,
 	});
-	return packCassini({
-		header: {
-			userId: opts.session.fromMid,
-			msgId: opts.msgId,
-			callUuid16: opts.session.callUuid16,
-			msgNonce: nextNonce16(),
-			counter: opts.counter,
-			subscriptionId: opts.session.subscriptionId,
-			sessionId: opts.session.sessionId,
+	return packCassini(
+		{
+			header: {
+				userId: opts.session.fromMid,
+				msgId: opts.msgId,
+				callUuid16: opts.session.callUuid16,
+				msgNonce: nextNonce16(),
+				counter: opts.counter,
+				subscriptionId: opts.session.subscriptionId,
+				sessionId: opts.session.sessionId,
+			},
+			body,
 		},
-		body,
-	}, ENVELOPE_BODY_TAG.CONTROL);
+		ENVELOPE_BODY_TAG.CONTROL,
+	);
 }

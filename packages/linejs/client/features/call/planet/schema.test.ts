@@ -1,4 +1,4 @@
-import { assertEquals } from "@std/assert";
+import { assert, test } from "vite-plus/test";
 import {
 	CC_MSG,
 	decodeCcConnReq,
@@ -45,7 +45,7 @@ import {
 	wrapMcMsg,
 } from "./schema.ts";
 
-Deno.test("packPlanetMsgHdr matches an observed 96-byte header shape", () => {
+test("packPlanetMsgHdr matches an observed 96-byte header shape", () => {
 	// Reproduce an observed msg_pack header shape without account-specific
 	// identifiers.
 	const expected = new Uint8Array([
@@ -130,10 +130,10 @@ Deno.test("packPlanetMsgHdr matches an observed 96-byte header shape", () => {
 		locNonce: 290579788n,
 		rmtNonce: 7642030284661133203n,
 	});
-	assertEquals(got, expected);
+	assert.deepEqual(got, expected);
 });
 
-Deno.test("decodeFields parses the captured header into the expected fields", () => {
+test("decodeFields parses the captured header into the expected fields", () => {
 	const captured = new Uint8Array([
 		0x0a,
 		0x21,
@@ -201,20 +201,20 @@ Deno.test("decodeFields parses the captured header into the expected fields", ()
 		0x6a,
 	]);
 	const f = decodeFields(captured);
-	assertEquals(f.length, 7);
-	assertEquals(
+	assert.deepEqual(f.length, 7);
+	assert.deepEqual(
 		new TextDecoder().decode(f[0].value as Uint8Array),
 		"u00000000000000000000000000000000",
 	);
-	assertEquals(f[1].value, 4353n);
-	assertEquals((f[2].value as Uint8Array).length, 16);
-	assertEquals((f[3].value as Uint8Array).length, 16);
-	assertEquals(f[4].value, 797128754n);
-	assertEquals(f[5].value, 290579788n);
-	assertEquals(f[6].value, 7642030284661133203n);
+	assert.deepEqual(f[1].value, 4353n);
+	assert.deepEqual((f[2].value as Uint8Array).length, 16);
+	assert.deepEqual((f[3].value as Uint8Array).length, 16);
+	assert.deepEqual(f[4].value, 797128754n);
+	assert.deepEqual(f[5].value, 290579788n);
+	assert.deepEqual(f[6].value, 7642030284661133203n);
 });
 
-Deno.test("packCcSetupReq emits initiator + responder + svc_key in tag order", () => {
+test("packCcSetupReq emits initiator + responder + svc_key in tag order", () => {
 	const wire = packCcSetupReq({
 		initiator: "uA",
 		responder: "uB",
@@ -223,22 +223,13 @@ Deno.test("packCcSetupReq emits initiator + responder + svc_key in tag order", (
 	});
 	const fields = decodeFields(wire);
 	const byTag = new Map(fields.map((f) => [f.tag, f]));
-	assertEquals(
-		new TextDecoder().decode(byTag.get(1)!.value as Uint8Array),
-		"uA",
-	);
-	assertEquals(
-		new TextDecoder().decode(byTag.get(2)!.value as Uint8Array),
-		"uB",
-	);
-	assertEquals(
-		new TextDecoder().decode(byTag.get(12)!.value as Uint8Array),
-		"BASE64PUBKEY==",
-	);
-	assertEquals(byTag.get(10)!.value, new Uint8Array([1, 2, 3]));
+	assert.deepEqual(new TextDecoder().decode(byTag.get(1)!.value as Uint8Array), "uA");
+	assert.deepEqual(new TextDecoder().decode(byTag.get(2)!.value as Uint8Array), "uB");
+	assert.deepEqual(new TextDecoder().decode(byTag.get(12)!.value as Uint8Array), "BASE64PUBKEY==");
+	assert.deepEqual(byTag.get(10)!.value, new Uint8Array([1, 2, 3]));
 });
 
-Deno.test("packCcSetupRsp round-trips setup response fields", () => {
+test("packCcSetupRsp round-trips setup response fields", () => {
 	const wire = packCcSetupRsp({
 		result: 0,
 		aliveRptInterval: 5,
@@ -248,31 +239,46 @@ Deno.test("packCcSetupRsp round-trips setup response fields", () => {
 		interDomain: true,
 	});
 	const decoded = decodeCcSetupRsp(wire);
-	assertEquals(decoded.result, 0);
-	assertEquals(decoded.aliveRptInterval, 5);
-	assertEquals(decoded.noAnsToSec, 30);
-	assertEquals(decoded.svcId, "svc");
-	assertEquals(decoded.tgtSvcId, "target");
-	assertEquals(decoded.interDomain, true);
+	assert.deepEqual(decoded.result, 0);
+	assert.deepEqual(decoded.aliveRptInterval, 5);
+	assert.deepEqual(decoded.noAnsToSec, 30);
+	assert.deepEqual(decoded.svcId, "svc");
+	assert.deepEqual(decoded.tgtSvcId, "target");
+	assert.deepEqual(decoded.interDomain, true);
 });
 
-Deno.test("packNativeGroupParticipateOffer emits group media records", () => {
+test("packNativeGroupParticipateOffer emits group media records", () => {
 	const offer = packNativeGroupParticipateOffer({
 		mediaSecret: new Uint8Array(30).fill(7),
 	});
-	assertEquals(offer.length, 265);
+	assert.deepEqual(offer.length, 265);
 	const decoded = decodeNativeSetupOffer(offer);
-	assertEquals(decoded.media.map((m) => m.name), ["A", "V", "D"]);
-	assertEquals(decoded.media.map((m) => m.kind), [1, 7, 6]);
-	assertEquals(decoded.media.map((m) => m.enabled), [1, 0, 1]);
-	assertEquals(decoded.media.map((m) => m.rtpPort), [103, 113, 123]);
-	assertEquals(decoded.media.map((m) => m.rtcpId), [203, 213, 223]);
-	assertEquals(decoded.mediaSecret, new Uint8Array(30).fill(7));
-	assertEquals(decoded.mediaPubKey, undefined);
-	assertEquals(decoded.version, { major: 0, mode: 3 });
+	assert.deepEqual(
+		decoded.media.map((m) => m.name),
+		["A", "V", "D"],
+	);
+	assert.deepEqual(
+		decoded.media.map((m) => m.kind),
+		[1, 7, 6],
+	);
+	assert.deepEqual(
+		decoded.media.map((m) => m.enabled),
+		[1, 0, 1],
+	);
+	assert.deepEqual(
+		decoded.media.map((m) => m.rtpPort),
+		[103, 113, 123],
+	);
+	assert.deepEqual(
+		decoded.media.map((m) => m.rtcpId),
+		[203, 213, 223],
+	);
+	assert.deepEqual(decoded.mediaSecret, new Uint8Array(30).fill(7));
+	assert.deepEqual(decoded.mediaPubKey, undefined);
+	assert.deepEqual(decoded.version, { major: 0, mode: 3 });
 });
 
-Deno.test("packCcParticipateReq emits native group join field order", () => {
+test("packCcParticipateReq emits native group join field order", () => {
 	const wire = packCcParticipateReq({
 		participant: "u00000000000000000000000000000000",
 		roomId: "c00000000000000000000000000000000",
@@ -294,10 +300,7 @@ Deno.test("packCcParticipateReq emits native group join field order", () => {
 		netType: 1,
 		mChanId: 0x7d3158f8n,
 		mixPort: 33828,
-		features: [
-			packPlanetFeatureRegister(16, true, 0),
-			packPlanetFeatureRegister(17, false, 0),
-		],
+		features: [packPlanetFeatureRegister(16, true, 0), packPlanetFeatureRegister(17, false, 0)],
 		roomAttrs: [1],
 		recvRtp: 2,
 		maxChanCnt: 30,
@@ -307,77 +310,40 @@ Deno.test("packCcParticipateReq emits native group join field order", () => {
 		pathCheck: false,
 	});
 	const fields = decodeFields(wire);
-	assertEquals(fields.map((f) => f.tag), [
-		1,
-		2,
-		3,
-		4,
-		5,
-		6,
-		7,
-		8,
-		9,
-		10,
-		10,
-		10,
-		10,
-		10,
-		10,
-		11,
-		12,
-		13,
-		14,
-		15,
-		17,
-		18,
-		18,
-		19,
-		20,
-		22,
-		23,
-		24,
-		53,
-		102,
-	]);
-	assertEquals(
-		new TextDecoder().decode(
-			fields.find((f) => f.tag === 13)!.value as Uint8Array,
-		),
+	assert.deepEqual(
+		fields.map((f) => f.tag),
+		[
+			1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 10, 10, 11, 12, 13, 14, 15, 17, 18, 18, 19, 20, 22,
+			23, 24, 53, 102,
+		],
+	);
+	assert.deepEqual(
+		new TextDecoder().decode(fields.find((f) => f.tag === 13)!.value as Uint8Array),
 		"groupcall.audio",
 	);
 });
 
-Deno.test("decodeCcParticipateRsp and decodeCcRelReq parse group replies", () => {
-	const rsp = decodeCcParticipateRsp(
-		new Uint8Array([
-			0x08,
-			0x00,
-			0x32,
-			0x03,
-			1,
-			2,
-			3,
-			0x40,
-			0x01,
-		]),
-	);
-	assertEquals(rsp.result, 0);
-	assertEquals(rsp.answer, new Uint8Array([1, 2, 3]));
-	assertEquals(rsp.contentsType, 1);
+test("decodeCcParticipateRsp and decodeCcRelReq parse group replies", () => {
+	const rsp = decodeCcParticipateRsp(new Uint8Array([0x08, 0x00, 0x32, 0x03, 1, 2, 3, 0x40, 0x01]));
+	assert.deepEqual(rsp.result, 0);
+	assert.deepEqual(rsp.answer, new Uint8Array([1, 2, 3]));
+	assert.deepEqual(rsp.contentsType, 1);
 
-	const rel = decodeCcRelReq(packCcRelReq({
-		relCode: 219,
-		relPhrase: "closed",
-		releaser: "participant",
-		commMediaFlags: 1,
-	}));
-	assertEquals(rel.relCode, 219);
-	assertEquals(rel.relPhrase, "closed");
-	assertEquals(rel.releaser, "participant");
-	assertEquals(rel.commMediaFlags, 1);
+	const rel = decodeCcRelReq(
+		packCcRelReq({
+			relCode: 219,
+			relPhrase: "closed",
+			releaser: "participant",
+			commMediaFlags: 1,
+		}),
+	);
+	assert.deepEqual(rel.relCode, 219);
+	assert.deepEqual(rel.relPhrase, "closed");
+	assert.deepEqual(rel.releaser, "participant");
+	assert.deepEqual(rel.commMediaFlags, 1);
 });
 
-Deno.test("packStrmSpec matches native group mc_data_req payload", () => {
+test("packStrmSpec matches native group mc_data_req payload", () => {
 	const base = 0xe3530100;
 	const state = { paused: false, code: 0 };
 	const spec = packStrmSpec({
@@ -427,177 +393,31 @@ Deno.test("packStrmSpec matches native group mc_data_req payload", () => {
 			probeBrMaxKbps: 200,
 		},
 	});
-	assertEquals(
+	assert.deepEqual(
 		spec,
 		new Uint8Array([
-			0x0a,
-			0x20,
-			0x08,
-			0xf9,
-			0x82,
-			0xcc,
-			0x9a,
-			0x0e,
-			0x12,
-			0x02,
-			0x18,
-			0x20,
-			0x1a,
-			0x04,
-			0x08,
-			0x00,
-			0x10,
-			0x00,
-			0x28,
-			0x28,
-			0x32,
-			0x0a,
-			0x08,
-			0x01,
-			0x10,
-			0x28,
-			0x18,
-			0x00,
-			0x18,
-			0x00,
-			0x18,
-			0x14,
-			0x3a,
-			0x00,
-			0x0a,
-			0x22,
-			0x08,
-			0xd9,
-			0x83,
-			0xcc,
-			0x9a,
-			0x0e,
-			0x12,
-			0x08,
-			0x08,
-			0x64,
-			0x10,
-			0xb0,
-			0x09,
-			0x18,
-			0xa0,
-			0x06,
-			0x1a,
-			0x04,
-			0x08,
-			0x00,
-			0x10,
-			0x00,
-			0x32,
-			0x02,
-			0x08,
-			0x00,
-			0x3a,
-			0x06,
-			0x08,
-			0x00,
-			0x08,
-			0x01,
-			0x08,
-			0x0a,
-			0x0a,
-			0x17,
-			0x08,
-			0xa9,
-			0x83,
-			0xcc,
-			0x9a,
-			0x0e,
-			0x12,
-			0x03,
-			0x10,
-			0xd0,
-			0x0f,
-			0x1a,
-			0x04,
-			0x08,
-			0x00,
-			0x10,
-			0x00,
-			0x32,
-			0x02,
-			0x08,
-			0x00,
-			0x3a,
-			0x00,
-			0x10,
-			0xc8,
-			0x01,
-			0x18,
-			0x01,
-			0x28,
-			0x01,
-			0x32,
-			0x13,
-			0x08,
-			0xfd,
-			0x82,
-			0xcc,
-			0x9a,
-			0x0e,
-			0x12,
-			0x04,
-			0x08,
-			0x00,
-			0x10,
-			0x00,
-			0x1a,
-			0x05,
-			0x08,
-			0x01,
-			0x10,
-			0xac,
-			0x02,
-			0x32,
-			0x10,
-			0x08,
-			0xdd,
-			0x83,
-			0xcc,
-			0x9a,
-			0x0e,
-			0x12,
-			0x04,
-			0x08,
-			0x00,
-			0x10,
-			0x00,
-			0x1a,
-			0x02,
-			0x08,
-			0x00,
-			0x3a,
-			0x0e,
-			0x08,
-			0xb0,
-			0x09,
-			0x10,
-			0xb8,
-			0x17,
-			0x1d,
-			0xcd,
-			0xcc,
-			0x4c,
-			0x3e,
-			0x20,
-			0xc8,
-			0x01,
+			0x0a, 0x20, 0x08, 0xf9, 0x82, 0xcc, 0x9a, 0x0e, 0x12, 0x02, 0x18, 0x20, 0x1a, 0x04, 0x08,
+			0x00, 0x10, 0x00, 0x28, 0x28, 0x32, 0x0a, 0x08, 0x01, 0x10, 0x28, 0x18, 0x00, 0x18, 0x00,
+			0x18, 0x14, 0x3a, 0x00, 0x0a, 0x22, 0x08, 0xd9, 0x83, 0xcc, 0x9a, 0x0e, 0x12, 0x08, 0x08,
+			0x64, 0x10, 0xb0, 0x09, 0x18, 0xa0, 0x06, 0x1a, 0x04, 0x08, 0x00, 0x10, 0x00, 0x32, 0x02,
+			0x08, 0x00, 0x3a, 0x06, 0x08, 0x00, 0x08, 0x01, 0x08, 0x0a, 0x0a, 0x17, 0x08, 0xa9, 0x83,
+			0xcc, 0x9a, 0x0e, 0x12, 0x03, 0x10, 0xd0, 0x0f, 0x1a, 0x04, 0x08, 0x00, 0x10, 0x00, 0x32,
+			0x02, 0x08, 0x00, 0x3a, 0x00, 0x10, 0xc8, 0x01, 0x18, 0x01, 0x28, 0x01, 0x32, 0x13, 0x08,
+			0xfd, 0x82, 0xcc, 0x9a, 0x0e, 0x12, 0x04, 0x08, 0x00, 0x10, 0x00, 0x1a, 0x05, 0x08, 0x01,
+			0x10, 0xac, 0x02, 0x32, 0x10, 0x08, 0xdd, 0x83, 0xcc, 0x9a, 0x0e, 0x12, 0x04, 0x08, 0x00,
+			0x10, 0x00, 0x1a, 0x02, 0x08, 0x00, 0x3a, 0x0e, 0x08, 0xb0, 0x09, 0x10, 0xb8, 0x17, 0x1d,
+			0xcd, 0xcc, 0x4c, 0x3e, 0x20, 0xc8, 0x01,
 		]),
 	);
 
 	const data = packMcDataSessionPayload(spec);
-	assertEquals(data.length, 168);
-	assertEquals(
+	assert.deepEqual(data.length, 168);
+	assert.deepEqual(
 		data.subarray(0, 8),
 		new Uint8Array([0x00, 0x02, 0x00, 0x00, 0x00, 0x9d, 0x00, 0x00]),
 	);
-	assertEquals(data.subarray(8, 8 + spec.length), spec);
-	assertEquals(data.subarray(8 + spec.length), new Uint8Array([0, 0, 0]));
+	assert.deepEqual(data.subarray(8, 8 + spec.length), spec);
+	assert.deepEqual(data.subarray(8 + spec.length), new Uint8Array([0, 0, 0]));
 
 	const dataReq = packMcDataReq({
 		srcType: 0,
@@ -605,26 +425,34 @@ Deno.test("packStrmSpec matches native group mc_data_req payload", () => {
 		dispatchId: 2,
 		data,
 	});
-	assertEquals(decodeFields(dataReq).map((f) => f.tag), [1, 2, 3, 4]);
+	assert.deepEqual(
+		decodeFields(dataReq).map((f) => f.tag),
+		[1, 2, 3, 4],
+	);
 
 	const mc = packPlanetMcMsg(
 		{ cid: crypto.randomUUID(), srcChanId: 1n, dstChanId: 2n },
 		wrapMcMsg(MC_MSG.DATA_REQ, dataReq),
 	);
-	assertEquals(decodeFields(mc).map((f) => f.tag), [1, 2]);
+	assert.deepEqual(
+		decodeFields(mc).map((f) => f.tag),
+		[1, 2],
+	);
 });
 
-Deno.test("packMcDataRsp and packPlanetUeInfo match post-answer control shapes", () => {
+test("packMcDataRsp and packPlanetUeInfo match post-answer control shapes", () => {
 	const data = packMcDataSessionPayload(
 		packStrmSpec({
-			strms: [{
-				ssrc: 102,
-				bitrate: { target: 32 },
-				state: { paused: false, code: 0 },
-				ptime: 40,
-				retx: { periOn: true, periIntvMs: 40, periLossThre: [0, 0, 20] },
-				fecLossThre: [],
-			}],
+			strms: [
+				{
+					ssrc: 102,
+					bitrate: { target: 32 },
+					state: { paused: false, code: 0 },
+					ptime: 40,
+					retx: { periOn: true, periIntvMs: 40, periLossThre: [0, 0, 20] },
+					fecLossThre: [],
+				},
+			],
 			fbIntv: 200,
 			tp: 1,
 			fbOn: true,
@@ -636,12 +464,15 @@ Deno.test("packMcDataRsp and packPlanetUeInfo match post-answer control shapes",
 		dispatchId: 2,
 		data,
 	});
-	assertEquals(decodeFields(rsp).map((f) => f.tag), [1, 2, 4, 5]);
+	assert.deepEqual(
+		decodeFields(rsp).map((f) => f.tag),
+		[1, 2, 4, 5],
+	);
 	const decoded = decodeMcDataRsp(rsp);
-	assertEquals(decoded.result, 0);
-	assertEquals(decoded.relCode, 0);
-	assertEquals(decoded.dispatchId, 2);
-	assertEquals(decoded.data, data);
+	assert.deepEqual(decoded.result, 0);
+	assert.deepEqual(decoded.relCode, 0);
+	assert.deepEqual(decoded.dispatchId, 2);
+	assert.deepEqual(decoded.data, data);
 
 	const req = packMcDataReq({
 		srcType: 0,
@@ -649,7 +480,7 @@ Deno.test("packMcDataRsp and packPlanetUeInfo match post-answer control shapes",
 		dispatchId: 2,
 		data: new Uint8Array([1, 2, 3]),
 	});
-	assertEquals(decodeMcDataReq(req), {
+	assert.deepEqual(decodeMcDataReq(req), {
 		srcType: 0,
 		dstType: 0,
 		dispatchId: 2,
@@ -657,10 +488,13 @@ Deno.test("packMcDataRsp and packPlanetUeInfo match post-answer control shapes",
 	});
 
 	const ue = packPlanetUeInfo({ userId: "u00000000000000000000000000000000" });
-	assertEquals(decodeFields(ue).map((f) => f.tag), [1]);
+	assert.deepEqual(
+		decodeFields(ue).map((f) => f.tag),
+		[1],
+	);
 });
 
-Deno.test("packPlanetUserAgent emits the native Android UA field layout", () => {
+test("packPlanetUserAgent emits the native Android UA field layout", () => {
 	const wire = packPlanetUserAgent({
 		osName: "Android",
 		osVersion: "36",
@@ -671,37 +505,31 @@ Deno.test("packPlanetUserAgent emits the native Android UA field layout", () => 
 		manufacturer: "google",
 	});
 	const fields = decodeFields(wire);
-	assertEquals(fields.map((f) => f.tag), [1, 2, 3, 5, 6, 7, 8]);
-	assertEquals(
-		new TextDecoder().decode(fields[0].value as Uint8Array),
-		"Android",
+	assert.deepEqual(
+		fields.map((f) => f.tag),
+		[1, 2, 3, 5, 6, 7, 8],
 	);
-	assertEquals(
-		new TextDecoder().decode(fields[2].value as Uint8Array),
-		"Pixel 6a",
-	);
-	assertEquals(
-		new TextDecoder().decode(fields[6].value as Uint8Array),
-		"google",
-	);
+	assert.deepEqual(new TextDecoder().decode(fields[0].value as Uint8Array), "Android");
+	assert.deepEqual(new TextDecoder().decode(fields[2].value as Uint8Array), "Pixel 6a");
+	assert.deepEqual(new TextDecoder().decode(fields[6].value as Uint8Array), "google");
 });
 
-Deno.test("packPlanetFeatureRegister matches captured feature records", () => {
-	assertEquals(
+test("packPlanetFeatureRegister matches captured feature records", () => {
+	assert.deepEqual(
 		packPlanetFeatureRegister(16, true, 0),
 		new Uint8Array([0x08, 0x10, 0x10, 0x01, 0x18, 0x00]),
 	);
-	assertEquals(
+	assert.deepEqual(
 		packPlanetFeatureRegister(17, false, 0),
 		new Uint8Array([0x08, 0x11, 0x10, 0x00, 0x18, 0x00]),
 	);
-	assertEquals(
+	assert.deepEqual(
 		packPlanetFeatureRegister(0, false, 0),
 		new Uint8Array([0x08, 0x00, 0x10, 0x00, 0x18, 0x00]),
 	);
 });
 
-Deno.test("packNativeSetupOffer emits the 311-byte native media offer shape", () => {
+test("packNativeSetupOffer emits the 311-byte native media offer shape", () => {
 	const pub = new Uint8Array(33);
 	pub[0] = 0x02;
 	for (let i = 1; i < pub.length; i++) pub[i] = i;
@@ -716,54 +544,56 @@ Deno.test("packNativeSetupOffer emits the 311-byte native media offer shape", ()
 		mediaNonce: nonce,
 		mediaSecret: secret,
 	});
-	assertEquals(offer.length, 311);
+	assert.deepEqual(offer.length, 311);
 	const top = decodeFields(offer);
-	assertEquals(top.map((f) => f.tag), [1, 1, 1, 2, 2, 3]);
-	assertEquals(top.map((f) => (f.value as Uint8Array).length), [
-		74,
-		79,
-		47,
-		61,
-		34,
-		4,
-	]);
+	assert.deepEqual(
+		top.map((f) => f.tag),
+		[1, 1, 1, 2, 2, 3],
+	);
+	assert.deepEqual(
+		top.map((f) => (f.value as Uint8Array).length),
+		[74, 79, 47, 61, 34, 4],
+	);
 
 	const names = top.slice(0, 3).map((f) => {
 		const media = decodeFields(f.value as Uint8Array);
 		const codec = decodeFields(media[0].value as Uint8Array);
 		return new TextDecoder().decode(codec[0].value as Uint8Array);
 	});
-	assertEquals(names, ["A", "V", "D"]);
+	assert.deepEqual(names, ["A", "V", "D"]);
 
 	const securityA = decodeFields(top[3].value as Uint8Array);
 	const securityAInner = decodeFields(securityA[0].value as Uint8Array);
-	assertEquals(securityA[0].tag, 3);
-	assertEquals(securityAInner[0].value, pub);
-	assertEquals(securityAInner[1].value, 0x572ff1a1n);
-	assertEquals(securityAInner[2].value, nonce);
+	assert.deepEqual(securityA[0].tag, 3);
+	assert.deepEqual(securityAInner[0].value, pub);
+	assert.deepEqual(securityAInner[1].value, 0x572ff1a1n);
+	assert.deepEqual(securityAInner[2].value, nonce);
 
 	const securityB = decodeFields(top[4].value as Uint8Array);
 	const securityBInner = decodeFields(securityB[0].value as Uint8Array);
-	assertEquals(securityB[0].tag, 2);
-	assertEquals(securityBInner[0].value, secret);
+	assert.deepEqual(securityB[0].tag, 2);
+	assert.deepEqual(securityBInner[0].value, secret);
 
 	const decoded = decodeNativeSetupOffer(offer);
-	assertEquals(decoded.media.map((m) => m.name), ["A", "V", "D"]);
-	assertEquals(decoded.media.map((m) => m.rtpPort), [101, 111, 121]);
-	assertEquals(decoded.mediaPubKey, pub);
-	assertEquals(decoded.mediaKeyId, 0x572ff1a1);
-	assertEquals(decoded.mediaNonce, nonce);
-	assertEquals(decoded.mediaSecret, secret);
-	assertEquals(decoded.version, { major: 0, mode: 3 });
+	assert.deepEqual(
+		decoded.media.map((m) => m.name),
+		["A", "V", "D"],
+	);
+	assert.deepEqual(
+		decoded.media.map((m) => m.rtpPort),
+		[101, 111, 121],
+	);
+	assert.deepEqual(decoded.mediaPubKey, pub);
+	assert.deepEqual(decoded.mediaKeyId, 0x572ff1a1);
+	assert.deepEqual(decoded.mediaNonce, nonce);
+	assert.deepEqual(decoded.mediaSecret, secret);
+	assert.deepEqual(decoded.version, { major: 0, mode: 3 });
 });
 
-Deno.test("wrapCcMsg/packPlanetCcMsg/packPlanetMsg nest a SETUP_REQ properly", () => {
+test("wrapCcMsg/packPlanetCcMsg/packPlanetMsg nest a SETUP_REQ properly", () => {
 	const setup = packCcSetupReq({ initiator: "uA", responder: "uB" });
 	const ccBody = wrapCcMsg(CC_MSG.SETUP_REQ, setup);
-	const ccMsg = packPlanetCcMsg(
-		{ cid: "call-001", srcChanId: 1n, dstChanId: 2n },
-		ccBody,
-	);
+	const ccMsg = packPlanetCcMsg({ cid: "call-001", srcChanId: 1n, dstChanId: 2n }, ccBody);
 	const wire = packPlanetMsg(
 		{
 			userId: "uA",
@@ -778,11 +608,11 @@ Deno.test("wrapCcMsg/packPlanetCcMsg/packPlanetMsg nest a SETUP_REQ properly", (
 	);
 	// Outer must have field 1 (hdr) and field 3 (cc_msg as bytes)
 	const outerFields = decodeFields(wire);
-	assertEquals(outerFields[0].tag, 1);
-	assertEquals(outerFields[1].tag, 3);
+	assert.deepEqual(outerFields[0].tag, 1);
+	assert.deepEqual(outerFields[1].tag, 3);
 });
 
-Deno.test("decodePlanetMsg unwraps cc setup_rsp", () => {
+test("decodePlanetMsg unwraps cc setup_rsp", () => {
 	const setupRsp = new Uint8Array([
 		0x08,
 		0x00, // result = 0
@@ -811,16 +641,16 @@ Deno.test("decodePlanetMsg unwraps cc setup_rsp", () => {
 	);
 
 	const decoded = decodePlanetMsg(wire);
-	assertEquals(decoded.hdr?.msgId, 2);
-	assertEquals(decoded.hdr?.sessId, new Uint8Array(16).fill(0xaa));
-	assertEquals(decoded.cc?.hdr?.cid, "call-001");
-	assertEquals(decoded.cc?.bodyTag, CC_MSG.SETUP_RSP);
-	assertEquals(decoded.cc?.bodyName, "setup_rsp");
-	assertEquals(decodeCcSetupRsp(decoded.cc!.bodyBytes!).aliveRptInterval, 30);
-	assertEquals(decodeCcSetupRsp(decoded.cc!.bodyBytes!).noAnsToSec, 120);
+	assert.deepEqual(decoded.hdr?.msgId, 2);
+	assert.deepEqual(decoded.hdr?.sessId, new Uint8Array(16).fill(0xaa));
+	assert.deepEqual(decoded.cc?.hdr?.cid, "call-001");
+	assert.deepEqual(decoded.cc?.bodyTag, CC_MSG.SETUP_RSP);
+	assert.deepEqual(decoded.cc?.bodyName, "setup_rsp");
+	assert.deepEqual(decodeCcSetupRsp(decoded.cc!.bodyBytes!).aliveRptInterval, 30);
+	assert.deepEqual(decodeCcSetupRsp(decoded.cc!.bodyBytes!).noAnsToSec, 120);
 });
 
-Deno.test("packCcConnReq/packCcConnRsp round-trip answered-call media fields", () => {
+test("packCcConnReq/packCcConnRsp round-trip answered-call media fields", () => {
 	const answer = new Uint8Array([1, 2, 3]);
 	const ua = packPlanetUserAgent({
 		osName: "Android",
@@ -839,21 +669,21 @@ Deno.test("packCcConnReq/packCcConnRsp round-trip answered-call media fields", (
 		reqRec: false,
 	});
 	const decodedReq = decodeCcConnReq(req);
-	assertEquals(decodedReq.answer, answer);
-	assertEquals(decodedReq.mChanId, 0x11223344n);
-	assertEquals(decodedReq.netType, 1);
-	assertEquals(decodedReq.unavailToSec, 120);
-	assertEquals(decodedReq.oCapas, [1, 2, 7]);
-	assertEquals(decodedReq.features.length, 1);
-	assertEquals(decodedReq.ua, ua);
-	assertEquals(decodedReq.mAddr, {
+	assert.deepEqual(decodedReq.answer, answer);
+	assert.deepEqual(decodedReq.mChanId, 0x11223344n);
+	assert.deepEqual(decodedReq.netType, 1);
+	assert.deepEqual(decodedReq.unavailToSec, 120);
+	assert.deepEqual(decodedReq.oCapas, [1, 2, 7]);
+	assert.deepEqual(decodedReq.features.length, 1);
+	assert.deepEqual(decodedReq.ua, ua);
+	assert.deepEqual(decodedReq.mAddr, {
 		ver: 4,
 		trpt: 1,
 		ip: "203.0.113.10",
 		ports: undefined,
 		port: 12345,
 	});
-	assertEquals(decodedReq.reqRec, false);
+	assert.deepEqual(decodedReq.reqRec, false);
 
 	const rsp = packCcConnRsp({
 		result: 0,
@@ -863,14 +693,14 @@ Deno.test("packCcConnReq/packCcConnRsp round-trip answered-call media fields", (
 		ua,
 	});
 	const decodedRsp = decodeCcConnRsp(rsp);
-	assertEquals(decodedRsp.result, 0);
-	assertEquals(decodedRsp.mChanId, 0x55667788n);
-	assertEquals(decodedRsp.netType, 1);
-	assertEquals(decodedRsp.unavailToSec, 120);
-	assertEquals(decodedRsp.ua, ua);
+	assert.deepEqual(decodedRsp.result, 0);
+	assert.deepEqual(decodedRsp.mChanId, 0x55667788n);
+	assert.deepEqual(decodedRsp.netType, 1);
+	assert.deepEqual(decodedRsp.unavailToSec, 120);
+	assert.deepEqual(decodedRsp.ua, ua);
 });
 
-Deno.test("packCcInfoReq/packCcInfoRsp round-trip info exchange fields", () => {
+test("packCcInfoReq/packCcInfoRsp round-trip info exchange fields", () => {
 	const body = new Uint8Array([1, 2, 3]);
 	const ue = new Uint8Array([4, 5]);
 	const req = packCcInfoReq({
@@ -886,16 +716,16 @@ Deno.test("packCcInfoReq/packCcInfoRsp round-trip info exchange fields", () => {
 		interDomain: false,
 	});
 	const decodedReq = decodeCcInfoReq(req);
-	assertEquals(decodedReq.bodyType, "profile");
-	assertEquals(decodedReq.body, body);
-	assertEquals(decodedReq.targets, ["callee"]);
-	assertEquals(decodedReq.source, "caller");
-	assertEquals(decodedReq.sourceSvcId, "freecall.audio");
-	assertEquals(decodedReq.tgtUe, [ue]);
-	assertEquals(decodedReq.trxOrigin, "origin");
-	assertEquals(decodedReq.svcId, "svc");
-	assertEquals(decodedReq.tgtSvcId, "target");
-	assertEquals(decodedReq.interDomain, false);
+	assert.deepEqual(decodedReq.bodyType, "profile");
+	assert.deepEqual(decodedReq.body, body);
+	assert.deepEqual(decodedReq.targets, ["callee"]);
+	assert.deepEqual(decodedReq.source, "caller");
+	assert.deepEqual(decodedReq.sourceSvcId, "freecall.audio");
+	assert.deepEqual(decodedReq.tgtUe, [ue]);
+	assert.deepEqual(decodedReq.trxOrigin, "origin");
+	assert.deepEqual(decodedReq.svcId, "svc");
+	assert.deepEqual(decodedReq.tgtSvcId, "target");
+	assert.deepEqual(decodedReq.interDomain, false);
 
 	const rsp = packCcInfoRsp({
 		result: 0,
@@ -906,22 +736,22 @@ Deno.test("packCcInfoReq/packCcInfoRsp round-trip info exchange fields", () => {
 		interDomain: true,
 	});
 	const decodedRsp = decodeCcInfoRsp(rsp);
-	assertEquals(decodedRsp.result, 0);
-	assertEquals(decodedRsp.bodyType, "profile");
-	assertEquals(decodedRsp.body, body);
-	assertEquals(decodedRsp.svcId, "svc");
-	assertEquals(decodedRsp.tgtSvcId, "target");
-	assertEquals(decodedRsp.interDomain, true);
+	assert.deepEqual(decodedRsp.result, 0);
+	assert.deepEqual(decodedRsp.bodyType, "profile");
+	assert.deepEqual(decodedRsp.body, body);
+	assert.deepEqual(decodedRsp.svcId, "svc");
+	assert.deepEqual(decodedRsp.tgtSvcId, "target");
+	assert.deepEqual(decodedRsp.interDomain, true);
 });
 
-Deno.test("packCcRelReq matches the observed local-hangup field shape", () => {
+test("packCcRelReq matches the observed local-hangup field shape", () => {
 	const wire = packCcRelReq({
 		relCode: 2,
 		releaser: "initiator",
 		commMediaFlags: 1,
 	});
 	const fields = decodeFields(wire);
-	assertEquals(
+	assert.deepEqual(
 		fields.map((f) => [f.tag, f.wireType]),
 		[
 			[1, WireType.Varint],
@@ -929,46 +759,29 @@ Deno.test("packCcRelReq matches the observed local-hangup field shape", () => {
 			[4, WireType.Varint],
 		],
 	);
-	assertEquals(fields[0].value, 2n);
-	assertEquals(
-		new TextDecoder().decode(fields[1].value as Uint8Array),
-		"initiator",
-	);
-	assertEquals(fields[2].value, 1n);
+	assert.deepEqual(fields[0].value, 2n);
+	assert.deepEqual(new TextDecoder().decode(fields[1].value as Uint8Array), "initiator");
+	assert.deepEqual(fields[2].value, 1n);
 });
 
-Deno.test("packKeepaliveReq produces the captured msg #1 body (13 bytes)", () => {
+test("packKeepaliveReq produces the captured msg #1 body (13 bytes)", () => {
 	// captured ka_req inner body was `09 80 ee 7a 46 dc 56 b1 18 10 00`
 	const ts = 0x18b156dc467aee80n;
 	const inner = packKeepaliveReq(ts, false);
-	assertEquals(
+	assert.deepEqual(
 		inner,
-		new Uint8Array([
-			0x09,
-			0x80,
-			0xee,
-			0x7a,
-			0x46,
-			0xdc,
-			0x56,
-			0xb1,
-			0x18,
-			0x10,
-			0x00,
-		]),
+		new Uint8Array([0x09, 0x80, 0xee, 0x7a, 0x46, 0xdc, 0x56, 0xb1, 0x18, 0x10, 0x00]),
 	);
 	const decoded = decodeFields(inner);
-	assertEquals(decoded[0].tag, 1);
-	assertEquals(decoded[0].wireType, WireType.Fixed64);
-	assertEquals(decoded[0].value, ts);
-	assertEquals(decoded[1].tag, 2);
-	assertEquals(decoded[1].value, 0n);
+	assert.deepEqual(decoded[0].tag, 1);
+	assert.deepEqual(decoded[0].wireType, WireType.Fixed64);
+	assert.deepEqual(decoded[0].value, ts);
+	assert.deepEqual(decoded[1].tag, 2);
+	assert.deepEqual(decoded[1].value, 0n);
 });
 
-Deno.test("extractRmtNonceFromReply pulls loc_nonce (field 6) out", async () => {
-	const { extractRmtNonceFromReply, packPlanetMsgHdr } = await import(
-		"./schema.ts"
-	);
+test("extractRmtNonceFromReply pulls loc_nonce (field 6) out", async () => {
+	const { extractRmtNonceFromReply, packPlanetMsgHdr } = await import("./schema.ts");
 	// Build a reply header where the server's loc_nonce = 0x6a0e122c0e9d22ac
 	const expected = 0x6a0e122c0e9d22acn;
 	const hdr = packPlanetMsgHdr({
@@ -981,13 +794,13 @@ Deno.test("extractRmtNonceFromReply pulls loc_nonce (field 6) out", async () => 
 		rmtNonce: 199820756n, // cscf knows our loc_nonce → echoes it back
 	});
 	const recovered = extractRmtNonceFromReply(hdr);
-	assertEquals(recovered, expected);
+	assert.deepEqual(recovered, expected);
 });
 
-Deno.test("encodeVarint matches well-known protobuf encodings", () => {
-	assertEquals(encodeVarint(150), new Uint8Array([0x96, 0x01]));
-	assertEquals(encodeVarint(4353), new Uint8Array([0x81, 0x22]));
+test("encodeVarint matches well-known protobuf encodings", () => {
+	assert.deepEqual(encodeVarint(150), new Uint8Array([0x96, 0x01]));
+	assert.deepEqual(encodeVarint(4353), new Uint8Array([0x81, 0x22]));
 	const [v, n] = decodeVarint(encodeVarint(7642030284661133203n), 0);
-	assertEquals(v, 7642030284661133203n);
-	assertEquals(n, 9);
+	assert.deepEqual(v, 7642030284661133203n);
+	assert.deepEqual(n, 9);
 });

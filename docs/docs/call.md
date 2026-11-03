@@ -29,7 +29,7 @@ command example:
 ```sh
 LINE_AUTH_TOKEN_FILE=/path/to/auth-token.txt \
 LINE_DEVICE=ANDROID \
-deno run -A example/call/call_on_command.ts ./voice.wav
+node example/call/call_on_command.ts ./voice.wav
 ```
 
 Then send `!call` to that account in a 1:1 chat. The example will:
@@ -112,13 +112,14 @@ PLANET.
 Most applications only need these exports:
 
 ```ts
-import { loginWithAuthToken } from "@evex/linejs";
+import { readFileSync } from "node:fs";
+import { loginWithAuthToken } from "@evex-dev/linejs";
 import {
 	decodeWavSync,
 	opusCodecFactory,
 	PlanetTransport,
 	resampleLinear,
-} from "@evex/linejs/call";
+} from "@evex-dev/linejs/call";
 ```
 
 Useful call APIs:
@@ -140,19 +141,20 @@ This is the explicit low-level flow. It is intentionally verbose so each
 protocol step is visible.
 
 ```ts
-import { loginWithAuthToken } from "@evex/linejs";
+import { readFileSync } from "node:fs";
+import { loginWithAuthToken } from "@evex-dev/linejs";
 import {
 	decodeWavSync,
 	opusCodecFactory,
 	PlanetTransport,
 	resampleLinear,
-} from "@evex/linejs/call";
+} from "@evex-dev/linejs/call";
 
-const client = await loginWithAuthToken(Deno.env.get("LINE_AUTH_TOKEN")!, {
+const client = await loginWithAuthToken(process.env.LINE_AUTH_TOKEN!, {
 	device: "ANDROID",
 });
 
-const to = Deno.env.get("LINE_CALL_TO")!;
+const to = process.env.LINE_CALL_TO!;
 const localMid = client.base.profile?.mid;
 if (!localMid) throw new Error("profile is not ready");
 
@@ -179,7 +181,7 @@ try {
 		throw new Error("peer answered, but media keys were not established");
 	}
 
-	const wav = decodeWavSync(await Deno.readFile("./audio.wav"));
+	const wav = decodeWavSync(readFileSync("./audio.wav"));
 	let samples = wav.samples;
 	if (wav.sampleRate !== 48_000) {
 		samples = resampleLinear(samples, wav.sampleRate, 48_000, wav.channels);
@@ -258,7 +260,7 @@ all handled by the library.
 ```sh
 LINE_AUTH_TOKEN_FILE=/path/to/auth-token.txt \
 LINE_DEVICE=ANDROID \
-deno run -A example/call/call_on_command.ts
+node example/call/call_on_command.ts
 ```
 
 You can replace the bundled audio with any 16-bit PCM WAV:
@@ -266,7 +268,7 @@ You can replace the bundled audio with any 16-bit PCM WAV:
 ```sh
 LINE_AUTH_TOKEN_FILE=/path/to/auth-token.txt \
 LINE_DEVICE=ANDROID \
-deno run -A example/call/call_on_command.ts ./voice.wav
+node example/call/call_on_command.ts ./voice.wav
 ```
 
 The example intentionally keeps account-specific material outside the
@@ -696,7 +698,7 @@ material in public examples and issue reports.
 | Call ends after audio finishes | Script closed the transport. | Increase hold time or keep the transport open. |
 | Terminal call code after close | The script initiated release. | Expected for short scripted calls. |
 | `decodeWavSync` rejects the file | File is compressed or not 16-bit PCM WAV. | Convert with ffmpeg to `-ac 1 -ar 48000 -sample_fmt s16`. |
-| Permission error in Deno | Missing runtime permission. | Use `deno run -A` for examples or grant `--allow-net --allow-read --allow-env --allow-run` as needed. |
+| `EACCES` / missing file error | The process cannot read the token or audio file. | Run the examples with `node` and make sure `LINE_AUTH_TOKEN_FILE` and the WAV path are readable. |
 
 ## E2EE and Privacy Notes
 
@@ -764,7 +766,7 @@ The helper accepts the same prefixed 20 ms packets used by 1:1 examples. Supply
 one activity boolean per input frame when using CELT:
 
 ```ts
-import { packetizeNativeGroupOpusPairs } from "@evex/linejs/call";
+import { packetizeNativeGroupOpusPairs } from "@evex-dev/linejs/call";
 
 const groupPackets = packetizeNativeGroupOpusPairs(oneToOneStylePackets, {
 	frameActivity, // boolean[] from your encoder or a PCM non-silence meter

@@ -1,11 +1,13 @@
-import type { MIDType } from "@evex/linejs-types";
+import type { MIDType } from "@evex-dev/linejs-types";
 
-export type MentionTarget = {
-	all: true;
-} | {
-	all: false;
-	mid: string;
-};
+export type MentionTarget =
+	| {
+			all: true;
+	  }
+	| {
+			all: false;
+			mid: string;
+	  };
 export type DecorationsData = {
 	text: string;
 	emoji?: {
@@ -17,13 +19,13 @@ export type DecorationsData = {
 	};
 	mention?:
 		| {
-			mid: string;
-			all?: undefined;
-		}
+				mid: string;
+				all?: undefined;
+		  }
 		| {
-			mid?: undefined;
-			all: boolean;
-		};
+				mid?: undefined;
+				all: boolean;
+		  };
 };
 export interface Mid {
 	id: string;

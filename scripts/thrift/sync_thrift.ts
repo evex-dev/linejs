@@ -3,9 +3,9 @@
  *              tree (CHRLINE-Thrift or any IDL-conformant source).
  *
  * Usage:
- *   deno run -A scripts/thrift/sync_thrift.ts --idl <path> [--apply] [--report <out>]
- *                                              [--match-threshold <0..1>]
- *                                              [--map <name-map.json>]
+ *   node scripts/thrift/sync_thrift.ts --idl <path> [--apply] [--report <out>]
+ *                                        [--match-threshold <0..1>]
+ *                                        [--map <name-map.json>]
  *
  *   --idl <path>           Directory containing *.thrift files (scanned recursively)
  *   --apply                Write changes back to packages/types/thrift.ts (default: dry-run)
@@ -33,8 +33,12 @@
  * The diff is *additive only*: no entry is renamed, deleted, or reordered.
  * Emitted patches preserve the existing file's tab indentation and trailing-comma style.
  */
-import { walk } from "https://deno.land/std@0.224.0/fs/walk.ts";
-import { fromFileUrl } from "https://deno.land/std@0.224.0/path/mod.ts";
+import { readFile, writeFile } from "node:fs/promises";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { walk } from "../utils/walk.ts";
+
+const scriptDir = dirname(fileURLToPath(import.meta.url));
 
 // =========================================================================
 // IDL AST
@@ -126,19 +130,43 @@ export type Literal =
 	| { kind: "list"; items: Literal[] }
 	| { kind: "map"; entries: Array<{ key: Literal; value: Literal }> };
 
-export enum TType {
-	BOOL = 2,
-	BYTE = 3,
-	DOUBLE = 4,
-	I16 = 6,
-	I32 = 8,
-	I64 = 10,
-	STRING = 11,
-	STRUCT = 12,
-	MAP = 13,
-	SET = 14,
-	LIST = 15,
-}
+export const TType = {
+	BOOL: 2,
+	BYTE: 3,
+	DOUBLE: 4,
+	I16: 6,
+	I32: 8,
+	I64: 10,
+	STRING: 11,
+	STRUCT: 12,
+	MAP: 13,
+	SET: 14,
+	LIST: 15,
+	2: "BOOL",
+	3: "BYTE",
+	4: "DOUBLE",
+	6: "I16",
+	8: "I32",
+	10: "I64",
+	11: "STRING",
+	12: "STRUCT",
+	13: "MAP",
+	14: "SET",
+	15: "LIST",
+} as const;
+
+export type TType =
+	| typeof TType.BOOL
+	| typeof TType.BYTE
+	| typeof TType.DOUBLE
+	| typeof TType.I16
+	| typeof TType.I32
+	| typeof TType.I64
+	| typeof TType.STRING
+	| typeof TType.STRUCT
+	| typeof TType.MAP
+	| typeof TType.SET
+	| typeof TType.LIST;
 
 export interface IDL {
 	enums: Map<string, EnumDef>;
@@ -425,7 +453,12 @@ const PRIMITIVES: Record<string, TType> = {
 
 class Parser {
 	pos = 0;
-	constructor(public toks: Tok[], public filename: string) {}
+	toks: Tok[];
+	filename: string;
+	constructor(toks: Tok[], filename: string) {
+		this.toks = toks;
+		this.filename = filename;
+	}
 
 	peek(k = 0): Tok | undefined {
 		return this.toks[this.pos + k];
@@ -785,7 +818,7 @@ async function parseIDLDir(dir: string): Promise<IDL> {
 	};
 	let fileCount = 0;
 	for await (const entry of walk(dir, { exts: [".thrift"] })) {
-		const src = await Deno.readTextFile(entry.path);
+		const src = await readFile(entry.path, "utf8");
 		fileCount++;
 		const parser = new Parser(tokenize(src, entry.path), entry.path);
 		parser.parseFile(idl);
@@ -1277,11 +1310,11 @@ export function applyDiff(originalSrc: string, diff: Diff): string {
 // =========================================================================
 
 async function main() {
-	const args = parseArgs(Deno.args);
+	const args = parseArgs(process.argv.slice(2));
 
 	let overrides: Record<string, string> = {};
 	if (args.mapPath) {
-		overrides = JSON.parse(await Deno.readTextFile(args.mapPath));
+		overrides = JSON.parse(await readFile(args.mapPath, "utf8"));
 	}
 
 	console.log(`Parsing IDL: ${args.idl}`);
@@ -1291,10 +1324,11 @@ async function main() {
 	console.log(`  services:  ${idl.services.size}`);
 	console.log(`  typedefs:  ${idl.typedefs.size}`);
 
-	const thriftPath = fromFileUrl(
-		import.meta.resolve("../../packages/types/thrift.ts"),
+	const thriftPath = resolve(
+		scriptDir,
+		"../../packages/types/thrift.ts",
 	);
-	const mod = await import(`file://${thriftPath.replaceAll("\\", "/")}`);
+	const mod = await import(pathToFileURL(thriftPath).href);
 	const thrift = mod.Thrift as LineThrift;
 	console.log(`linejs Thrift entries: ${Object.keys(thrift).length}`);
 
@@ -1338,14 +1372,14 @@ async function main() {
 	}
 
 	if (args.report) {
-		await Deno.writeTextFile(args.report, JSON.stringify(diff, null, 2));
+		await writeFile(args.report, JSON.stringify(diff, null, 2));
 		console.log(`\nReport written: ${args.report}`);
 	}
 
 	if (args.apply) {
-		const orig = await Deno.readTextFile(thriftPath);
+		const orig = await readFile(thriftPath, "utf8");
 		const patched = applyDiff(orig, diff);
-		await Deno.writeTextFile(thriftPath, patched);
+		await writeFile(thriftPath, patched);
 		console.log(`\nApplied changes to ${thriftPath}`);
 	} else {
 		console.log(`\n(dry-run; pass --apply to write changes to thrift.ts)`);

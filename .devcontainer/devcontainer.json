@@ -8,13 +8,11 @@
   "customizations": {
     "vscode": {
       "settings": {
-        "deno.enable": false,
-        "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
-        "editor.codeActionsOnSave": {
-          "source.fixAll.eslint": "explicit"
-        }
+        "editor.insertSpaces": false,
+        "editor.tabSize": 4,
+        "oxc.enable": true
       },
-      "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+      "extensions": ["oxc.oxc-vscode"]
     }
   }
 }

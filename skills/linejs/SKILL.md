@@ -1,29 +1,31 @@
 ---
 name: linejs
-description: Helps a coding agent build LINE bots / clients with the `@evex/linejs` library — JSR package, Deno-first, runs on Node/Bun too. Use when the user asks to write LINE bots, automate LINE accounts, work with LINE Thrift APIs, or wrap the AI "Agent I" feature.
+description: Helps a coding agent build LINE bots / clients with the `@evex-dev/linejs` library — npm and JSR package, Node-first, runs on Deno/Bun too. Use when the user asks to write LINE bots, automate LINE accounts, work with LINE Thrift APIs, or wrap the AI "Agent I" feature.
 ---
 
 # linejs
 
-`@evex/linejs` is a TypeScript-first client library for the LINE Messenger protocol. It speaks LINE's Thrift binary wire format directly, supports E2EE, polling for events, and ships hand-written wrappers for the methods CHRLINE-Patch covers.
+`@evex-dev/linejs` is a TypeScript-first client library for the LINE Messenger protocol. It speaks LINE's Thrift binary wire format directly, supports E2EE, polling for events, and ships hand-written wrappers for the methods CHRLINE-Patch covers.
 
 This skill is a **roadmap**, not a manual. The library moves fast; rather than freezing details that will rot, this file points the agent at the canonical sources to read on demand.
 
 ## Install
 
 ```sh
-deno add jsr:@evex/linejs
+npm install @evex-dev/linejs
 # Types are also available standalone:
-deno add jsr:@evex/linejs-types
+npm install @evex-dev/linejs-types
 ```
 
-Latest release: check JSR — `https://jsr.io/@evex/linejs` or `curl -s https://jsr.io/@evex/linejs/meta.json | jq -r .latest`. The skill prompt does **not** pin a version; pin in user code.
+On Deno/JSR, install `jsr:@evex/linejs` and `jsr:@evex/linejs-types` instead.
+
+Latest release: check npm — `npm view @evex-dev/linejs version` — or JSR, `https://jsr.io/@evex/linejs`. The skill prompt does **not** pin a version; pin in user code.
 
 ## Minimum-viable bot
 
 ```ts
-import { BaseClient } from "@evex/linejs/base";
-import { FileStorage } from "@evex/linejs/storage";
+import { BaseClient } from "@evex-dev/linejs/base";
+import { FileStorage } from "@evex-dev/linejs/storage";
 
 const storage = new FileStorage("./storage.json");
 const client = new BaseClient({ device: "DESKTOPWIN", storage });
@@ -51,7 +53,7 @@ for await (const op of client.createPolling().listenTalkEvents()) {
 }
 ```
 
-That's the smallest useful bot. For richer surfaces start with the `Client` wrapper in `@evex/linejs` (it builds on `BaseClient`) — it has `getMyProfile()`, `updateMy{DisplayName,StatusMessage,Profile}()`, `fetchJoinedChats()`, `getChat()`, `getUser()`, `uploadMyProfileImage()`, `uploadMyProfileBackground()` and more.
+That's the smallest useful bot. For richer surfaces start with the `Client` wrapper in `@evex-dev/linejs` (it builds on `BaseClient`) — it has `getMyProfile()`, `updateMy{DisplayName,StatusMessage,Profile}()`, `fetchJoinedChats()`, `getChat()`, `getUser()`, `uploadMyProfileImage()`, `uploadMyProfileBackground()` and more.
 
 ## Roadmap — where to look for what
 
@@ -73,7 +75,7 @@ https://github.com/evex-dev/linejs
 | upload profile picture / cover | `client.uploadMyProfileImage(blob)` / `client.uploadMyProfileBackground(blob)` |
 | **Agent I** (LINE's chat-tab AI search) | `@evex/linejs-agent` — wraps Yahoo's search-agent SSE backend that LINE Android opens in a WebView. Requires Yahoo session cookies; LINE does not mint them. |
 | E2EE primitives | `packages/linejs/base/e2ee/mod.ts` — AES-GCM-SIV, ECDH, decrypt encrypted QR identifier, key chain etc. |
-| Thrift schema | `packages/types/thrift.ts` (data) + `packages/types/line_types.ts` (TS interfaces). Both auto-synced from LINE Android APK by `deno task apk:sync`. |
+| Thrift schema | `packages/types/thrift.ts` (data) + `packages/types/line_types.ts` (TS interfaces). Both auto-synced from LINE Android APK by `node scripts/apk/sync_from_apk.ts`. |
 
 When in doubt, **read the source** under `packages/linejs/client/features/` — feature classes are short and read like documentation.
 
@@ -89,7 +91,7 @@ When in doubt, **read the source** under `packages/linejs/client/features/` — 
 
 Report to **https://github.com/evex-dev/linejs/issues**. Useful context to include:
 
-- linejs version (`deno info jsr:@evex/linejs` shows resolved version)
+- linejs version (`npm ls @evex-dev/linejs` or `npm view @evex-dev/linejs version`)
 - device type and LINE app version you're targeting
 - minimal repro: the smallest snippet that reproduces, plus the error from `Request internal failed: status=… headers=… body=<…>` (v2.7+ includes the HTTP status / headers in the thrown message — very helpful for triage)
 - if QR login–related: which step (`createSession`, `createQrCodeForSecure`, `checkQrCodeVerified`, `qrCodeLoginV2ForSecure`) and the `[login] ForSecure: maxCount=… intervalSec=… nonce=…` debug line if it printed.

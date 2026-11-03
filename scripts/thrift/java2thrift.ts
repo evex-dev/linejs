@@ -4,6 +4,7 @@
  * Depending on the version of LINE, you may need to change Regexp value.
  * Warning: messy code
  */
+import { readFile } from "node:fs/promises";
 
 let includeComment = false;
 
@@ -681,7 +682,9 @@ class TEnum {
 	memo: string = "";
 	package: string = "";
 	realname?: string;
-	constructor(public name: string) {
+	name: string;
+	constructor(name: string) {
+		this.name = name;
 	}
 
 	toString() {
@@ -750,15 +753,15 @@ ${this.value.map((e) => `${e.name} = ${e.value};`).join("\n")}
 	}
 }
 
-const _line = await Deno.readTextFile("./_line.thrift");
+const _line = await readFile("./_line.thrift", "utf8");
 
 const exists: string[] = [];
 
 const thrift: (TEnum | TStruct)[] = [];
-for (const fpath of (await Deno.readTextFile("./memo.txt")).split("\n")) {
+for (const fpath of (await readFile("./memo.txt", "utf8")).split("\n")) {
 	try {
 		if (fpath.endsWith("Service.java")) {
-			const f = await Deno.readTextFile(fpath);
+			const f = await readFile(fpath, "utf8");
 			const structs = TStruct.loadSquareServices(f);
 			structs.forEach((e) => {
 				e.memo += " @" + fpath;
@@ -767,7 +770,7 @@ for (const fpath of (await Deno.readTextFile("./memo.txt")).split("\n")) {
 			exists.push(fpath);
 			continue;
 		}
-		const f = await Deno.readTextFile(fpath);
+		const f = await readFile(fpath, "utf8");
 		const struct = TStruct.load(f);
 		if (struct) {
 			struct.memo += " @" + fpath;

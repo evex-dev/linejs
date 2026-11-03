@@ -37,14 +37,14 @@
  *      APK's (different) obfuscated names.
  *
  * Usage:
- *   deno run -A scripts/apk/extract_thrift.ts --smali <dir> [--apply]
- *                                              [--report <out>]
- *                                              [--match-threshold <0..1>]
- *                                              [--min-overlap <0..1>]
- *                                              [--enum-add-min-members <N>]
- *                                              [--min-shared-fields <N>]
- *                                              [--include-pkg <regex>]
- *                                              [--limit <N>]    # cap files for debugging
+ *   node scripts/apk/extract_thrift.ts --smali <dir> [--apply]
+ *                                      [--report <out>]
+ *                                      [--match-threshold <0..1>]
+ *                                      [--min-overlap <0..1>]
+ *                                      [--enum-add-min-members <N>]
+ *                                      [--min-shared-fields <N>]
+ *                                      [--include-pkg <regex>]
+ *                                      [--limit <N>]    # cap files for debugging
  *
  *   --min-overlap            content floor a non-canonical pairing must clear
  *                            before anything is written on its authority
@@ -57,8 +57,10 @@
  *                            agreeing from two narrow ones both called
  *                            `{request}`.
  */
-import { walk } from "https://deno.land/std@0.224.0/fs/walk.ts";
-import { fromFileUrl } from "https://deno.land/std@0.224.0/path/mod.ts";
+import { readFile, readdir, writeFile } from "node:fs/promises";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { walk } from "../utils/walk.ts";
 
 import {
 	acceptEnumValueAdd,
@@ -86,6 +88,8 @@ import {
 	TType,
 	type TypeExpr,
 } from "../thrift/sync_thrift.ts";
+
+const scriptDir = dirname(fileURLToPath(import.meta.url));
 
 // =========================================================================
 // CLI
@@ -689,7 +693,7 @@ async function loadAllClasses(dir: string, opts: Args): Promise<SmaliClass[]> {
 		const entry of walk(dir, { exts: [".smali"], includeDirs: false })
 	) {
 		if (opts.includePkg && !opts.includePkg.test(entry.path)) continue;
-		const src = await Deno.readTextFile(entry.path);
+		const src = await readFile(entry.path, "utf8");
 		// Cheap pre-filter: skip files that obviously don't touch Thrift.
 		// We only need files that either have an `<init>(Ljava/lang/String;BS)V`
 		// (TField call) or `Lorg/apache/thrift/` (TBase/TEnum implementation).
@@ -950,8 +954,8 @@ async function inferStandardSchemeElements(
 	// Candidate scheme files: first the canonical `<stem>$<stem>StandardScheme`,
 	// then every other sibling `<stem>$*.smali`.
 	const candidates: string[] = [`${dir}/${tail}$${tail}StandardScheme.smali`];
-	for await (const entry of Deno.readDir(dir)) {
-		if (!entry.isFile) continue;
+	for (const entry of await readdir(dir, { withFileTypes: true })) {
+		if (!entry.isFile()) continue;
 		if (!entry.name.endsWith(".smali")) continue;
 		const prefix = `${tail}$`;
 		if (!entry.name.startsWith(prefix)) continue;
@@ -962,7 +966,7 @@ async function inferStandardSchemeElements(
 	for (const candidate of candidates) {
 		let src: string;
 		try {
-			src = await Deno.readTextFile(candidate);
+			src = await readFile(candidate, "utf8");
 		} catch {
 			continue;
 		}
@@ -1826,7 +1830,7 @@ function buildRpcCrossRefOverrides(
 }
 
 async function main() {
-	const args = parseArgs(Deno.args);
+	const args = parseArgs(process.argv.slice(2));
 	console.log(`smali root: ${args.smaliDir}`);
 	console.log(`match threshold: ${args.matchThreshold}`);
 
@@ -1863,10 +1867,11 @@ async function main() {
 	);
 
 	// Load linejs Thrift dict via dynamic import.
-	const thriftPath = fromFileUrl(
-		import.meta.resolve("../../packages/types/thrift.ts"),
+	const thriftPath = resolve(
+		scriptDir,
+		"../../packages/types/thrift.ts",
 	);
-	const mod = await import(`file://${thriftPath.replaceAll("\\", "/")}`);
+	const mod = await import(pathToFileURL(thriftPath).href);
 	const thrift = mod.Thrift as LineThrift;
 	console.log(`linejs Thrift entries: ${Object.keys(thrift).length}`);
 
@@ -1882,7 +1887,9 @@ async function main() {
 	let overrides: Record<string, string> = {};
 	if (args.servicesReport) {
 		try {
-			const svcJson = JSON.parse(await Deno.readTextFile(args.servicesReport));
+			const svcJson = JSON.parse(
+				await readFile(args.servicesReport, "utf8"),
+			);
 			overrides = buildRpcCrossRefOverrides(
 				svcJson,
 				thrift,
@@ -2076,7 +2083,7 @@ async function main() {
 	}
 
 	if (args.report) {
-		await Deno.writeTextFile(
+		await writeFile(
 			args.report,
 			JSON.stringify({ diff, heldAdds, mismatches }, null, 2),
 		);
@@ -2085,7 +2092,7 @@ async function main() {
 
 	const wantWrite = args.apply || args.rewriteMismatches;
 	if (wantWrite) {
-		const orig = await Deno.readTextFile(thriftPath);
+		const orig = await readFile(thriftPath, "utf8");
 		let patched = orig;
 		if (args.apply) {
 			patched = applyDiff(patched, diff);
@@ -2202,7 +2209,7 @@ async function main() {
 				}
 			}
 		}
-		await Deno.writeTextFile(thriftPath, patched);
+		await writeFile(thriftPath, patched);
 	} else {
 		console.log(
 			`\n(dry-run; pass --apply and/or --rewrite-mismatches to write)`,
@@ -2211,7 +2218,7 @@ async function main() {
 
 	if (args.strict && totalMismatch > 0 && !args.rewriteMismatches) {
 		console.error(`\n--strict: failing due to ${totalMismatch} mismatch(es)`);
-		Deno.exit(1);
+		process.exit(1);
 	}
 }
 

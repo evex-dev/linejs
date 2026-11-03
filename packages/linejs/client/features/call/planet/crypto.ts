@@ -72,16 +72,10 @@ export function decodeMpKey(b64: string): Uint8Array {
 	const out = new Uint8Array(bin.length);
 	for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
 	if (out.length !== 33) {
-		throw new Error(
-			`decodeMpKey: expected 33 bytes (P-256 compressed), got ${out.length}`,
-		);
+		throw new Error(`decodeMpKey: expected 33 bytes (P-256 compressed), got ${out.length}`);
 	}
 	if (out[0] !== 0x02 && out[0] !== 0x03) {
-		throw new Error(
-			`decodeMpKey: unexpected parity byte 0x${
-				out[0].toString(16)
-			}, want 0x02/0x03`,
-		);
+		throw new Error(`decodeMpKey: unexpected parity byte 0x${out[0].toString(16)}, want 0x02/0x03`);
 	}
 	return out;
 }
@@ -102,9 +96,7 @@ export function decodeStnpkPublicKey(b64: string): Uint8Array {
 	if (raw.length >= 65 && raw[raw.length - 65] === 0x04) {
 		return raw.subarray(raw.length - 65);
 	}
-	throw new Error(
-		`decodeStnpkPublicKey: unsupported key material length ${raw.length}`,
-	);
+	throw new Error(`decodeStnpkPublicKey: unsupported key material length ${raw.length}`);
 }
 
 /** A freshly-generated local ephemeral P-256 keypair, with the public
@@ -124,10 +116,7 @@ export function generateEphemeralKeypair(): EphemeralKeypair {
 }
 
 /** Compute the ECDH shared secret (32-byte X coordinate of dH*P). */
-export function ecdh(
-	localPriv: Uint8Array,
-	peerPub: Uint8Array,
-): Uint8Array {
+export function ecdh(localPriv: Uint8Array, peerPub: Uint8Array): Uint8Array {
 	const ec = createECDH("prime256v1");
 	ec.setPrivateKey(Buffer.from(localPriv));
 	return new Uint8Array(ec.computeSecret(Buffer.from(peerPub)));
@@ -267,9 +256,7 @@ export function derivePlanetMediaStreamKeying(
 		);
 	}
 	if (!MEDIA_STREAM_KEY_NAMES.has(streamName)) {
-		throw new Error(
-			`derivePlanetMediaStreamKeying: invalid stream ${streamName}`,
-		);
+		throw new Error(`derivePlanetMediaStreamKeying: invalid stream ${streamName}`);
 	}
 	const streamKey = new TextEncoder().encode(streamName);
 	return hmacDigest("sha256", streamKey, baseKeying).subarray(0, 30);
@@ -314,18 +301,12 @@ export function derivePlanetMediaKeyingVariants(opts: {
 	peer: PlanetMediaKeyPeer;
 }): PlanetMediaKeyingVariants {
 	if (opts.local.privateKey.length !== 32) {
-		throw new Error(
-			"derivePlanetMediaKeys: local private key must be 32 bytes",
-		);
+		throw new Error("derivePlanetMediaKeys: local private key must be 32 bytes");
 	}
 	if (opts.local.publicKey.length !== 33 || opts.peer.publicKey.length !== 33) {
-		throw new Error(
-			"derivePlanetMediaKeys: media public keys must be 33 bytes",
-		);
+		throw new Error("derivePlanetMediaKeys: media public keys must be 33 bytes");
 	}
-	if (
-		opts.local.mediaNonce.length !== 16 || opts.peer.mediaNonce.length !== 16
-	) {
+	if (opts.local.mediaNonce.length !== 16 || opts.peer.mediaNonce.length !== 16) {
 		throw new Error("derivePlanetMediaKeys: media nonces must be 16 bytes");
 	}
 	const ecdhSecret = ecdh(opts.local.privateKey, opts.peer.publicKey);
@@ -424,10 +405,7 @@ export function planetHkdfStage2(
  * Native code copies the 16-byte base at transport offset `0x1180` and XORs
  * alternating bytes with the clear packet sequence high and low bytes.
  */
-export function buildPlanetCtrIv(
-	ctrBase: Uint8Array,
-	sequence: number,
-): Uint8Array {
+export function buildPlanetCtrIv(ctrBase: Uint8Array, sequence: number): Uint8Array {
 	if (ctrBase.length !== 16) {
 		throw new Error("buildPlanetCtrIv: ctrBase must be 16 bytes");
 	}
@@ -453,20 +431,12 @@ export function buildCtrIv(ivNonce: Uint8Array, counter: number): Uint8Array {
 }
 
 /** AES-256-CTR encrypt. */
-export function aesCtrEncrypt(
-	key: Uint8Array,
-	iv: Uint8Array,
-	plaintext: Uint8Array,
-): Uint8Array {
+export function aesCtrEncrypt(key: Uint8Array, iv: Uint8Array, plaintext: Uint8Array): Uint8Array {
 	const c = createCipheriv(aesCtrAlgorithm(key), key, iv);
 	return new Uint8Array(Buffer.concat([c.update(plaintext), c.final()]));
 }
 
-export function aesCtrDecrypt(
-	key: Uint8Array,
-	iv: Uint8Array,
-	ciphertext: Uint8Array,
-): Uint8Array {
+export function aesCtrDecrypt(key: Uint8Array, iv: Uint8Array, ciphertext: Uint8Array): Uint8Array {
 	const c = createDecipheriv(aesCtrAlgorithm(key), key, iv);
 	return new Uint8Array(Buffer.concat([c.update(ciphertext), c.final()]));
 }
@@ -524,16 +494,8 @@ export function deriveCallKeys(opts: {
 	ecdhSecret: Uint8Array;
 } {
 	const ecdhSecret = ecdh(opts.local.privateKey, opts.mpkey);
-	const sendStage1 = planetHkdfStage1(
-		ecdhSecret,
-		opts.mpkey,
-		opts.local.publicKey,
-	);
-	const recvStage1 = planetHkdfStage1(
-		ecdhSecret,
-		opts.local.publicKey,
-		opts.mpkey,
-	);
+	const sendStage1 = planetHkdfStage1(ecdhSecret, opts.mpkey, opts.local.publicKey);
+	const recvStage1 = planetHkdfStage1(ecdhSecret, opts.local.publicKey, opts.mpkey);
 	const send = planetHkdfStage2(
 		sendStage1,
 		opts.bootstrapSeed,

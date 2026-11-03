@@ -1,5 +1,5 @@
 import { Key } from "node-bignumber";
-import type { RSAKey } from "@evex/linejs-types";
+import type { RSAKey } from "@evex-dev/linejs-types";
 
 export function getRSACrypto(message: string, json: RSAKey) {
 	const rsa = new Key();
@@ -12,7 +12,7 @@ export function getRSACrypto(message: string, json: RSAKey) {
 /*
 import crypto from "node:crypto";
 import { Buffer } from "node:buffer";
-import type { RSAKey } from "@evex/linejs-types";
+import type { RSAKey } from "@evex-dev/linejs-types";
 
 function encodeLength(len: number) {
 	// short form

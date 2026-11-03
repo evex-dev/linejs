@@ -1,4 +1,4 @@
-// Run with Node >= 22.18 after `deno install`: node scripts/test_node_transport.mts
+// Run with Node >= 22.18 after `pnpm install`: node scripts/test_node_transport.mts
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import net from "node:net";

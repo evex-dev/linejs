@@ -235,7 +235,11 @@ async function hmacSha1(key: Uint8Array, data: Uint8Array): Promise<Uint8Array> 
 }
 
 /** MIKEY-1 PRF (RFC 3830 §4.1.4). Simplified: HKDF-SHA1-style key derive. */
-async function deriveMikeyKey(envKey: Uint8Array, csbId: number, label: number): Promise<Uint8Array> {
+async function deriveMikeyKey(
+	envKey: Uint8Array,
+	csbId: number,
+	label: number,
+): Promise<Uint8Array> {
 	const info = new Uint8Array(8);
 	writeU32(info, 0, csbId);
 	writeU32(info, 4, label);
@@ -252,11 +256,7 @@ async function rsaOaepEncrypt(spki: Uint8Array, plaintext: Uint8Array): Promise<
 		false,
 		["encrypt"],
 	);
-	const ct = await crypto.subtle.encrypt(
-		{ name: "RSA-OAEP" },
-		key,
-		toArrayBuffer(plaintext),
-	);
+	const ct = await crypto.subtle.encrypt({ name: "RSA-OAEP" }, key, toArrayBuffer(plaintext));
 	return new Uint8Array(ct);
 }
 
@@ -349,7 +349,9 @@ export function parseMikey(buf: Uint8Array): MikeyParsed {
 	return out;
 }
 
-function readU16(b: Uint8Array, o: number): number { return (b[o] << 8) | b[o + 1]; }
+function readU16(b: Uint8Array, o: number): number {
+	return (b[o] << 8) | b[o + 1];
+}
 function readU32(b: Uint8Array, o: number): number {
 	return ((b[o] << 24) | (b[o + 1] << 16) | (b[o + 2] << 8) | b[o + 3]) >>> 0;
 }

@@ -7,13 +7,12 @@ import { type BaseClient } from "../../core/mod.ts";
 import type { ProtocolKey } from "../../thrift/mod.ts";
 import type { BaseService } from "../types.ts";
 import { LINEStruct } from "../../thrift/mod.ts";
-import type * as LINETypes from "@evex/linejs-types";
+import type * as LINETypes from "@evex-dev/linejs-types";
 
 export class PrimaryAccountSmartSwitchRestoreService implements BaseService {
 	client: BaseClient;
 	protocolType: ProtocolKey = 4;
-	requestPath =
-		"/ext/auth/feature-guest/thrift/account/v1/restore/smart-switch";
+	requestPath = "/ext/auth/feature-guest/thrift/account/v1/restore/smart-switch";
 	errorName = "PrimaryAccountSmartSwitchRestoreServiceError";
 	constructor(client: BaseClient) {
 		this.client = client;
@@ -32,12 +31,8 @@ export class PrimaryAccountSmartSwitchRestoreService implements BaseService {
 	}
 
 	async checkIfPasswordSetVerificationEmailVerified(
-		...param: Parameters<
-			typeof LINEStruct.checkIfPasswordSetVerificationEmailVerified_args
-		>
-	): Promise<
-		LINETypes.checkIfPasswordSetVerificationEmailVerified_result["success"]
-	> {
+		...param: Parameters<typeof LINEStruct.checkIfPasswordSetVerificationEmailVerified_args>
+	): Promise<LINETypes.checkIfPasswordSetVerificationEmailVerified_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.checkIfPasswordSetVerificationEmailVerified_args(...param),
 			"checkIfPasswordSetVerificationEmailVerified",
@@ -84,12 +79,8 @@ export class PrimaryAccountSmartSwitchRestoreService implements BaseService {
 	}
 
 	async getPasswordHashingParametersForPwdReg(
-		...param: Parameters<
-			typeof LINEStruct.getPasswordHashingParametersForPwdReg_args
-		>
-	): Promise<
-		LINETypes.getPasswordHashingParametersForPwdReg_result["success"]
-	> {
+		...param: Parameters<typeof LINEStruct.getPasswordHashingParametersForPwdReg_args>
+	): Promise<LINETypes.getPasswordHashingParametersForPwdReg_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.getPasswordHashingParametersForPwdReg_args(...param),
 			"getPasswordHashingParametersForPwdReg",
@@ -100,12 +91,8 @@ export class PrimaryAccountSmartSwitchRestoreService implements BaseService {
 	}
 
 	async getPasswordHashingParametersForPwdVerif(
-		...param: Parameters<
-			typeof LINEStruct.getPasswordHashingParametersForPwdVerif_args
-		>
-	): Promise<
-		LINETypes.getPasswordHashingParametersForPwdVerif_result["success"]
-	> {
+		...param: Parameters<typeof LINEStruct.getPasswordHashingParametersForPwdVerif_args>
+	): Promise<LINETypes.getPasswordHashingParametersForPwdVerif_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.getPasswordHashingParametersForPwdVerif_args(...param),
 			"getPasswordHashingParametersForPwdVerif",
@@ -128,12 +115,8 @@ export class PrimaryAccountSmartSwitchRestoreService implements BaseService {
 	}
 
 	async requestToSendPasswordSetVerificationEmail(
-		...param: Parameters<
-			typeof LINEStruct.requestToSendPasswordSetVerificationEmail_args
-		>
-	): Promise<
-		LINETypes.requestToSendPasswordSetVerificationEmail_result["success"]
-	> {
+		...param: Parameters<typeof LINEStruct.requestToSendPasswordSetVerificationEmail_args>
+	): Promise<LINETypes.requestToSendPasswordSetVerificationEmail_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.requestToSendPasswordSetVerificationEmail_args(...param),
 			"requestToSendPasswordSetVerificationEmail",

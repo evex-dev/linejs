@@ -1,4 +1,4 @@
-import type { LooseType } from "@evex/loose-types";
+import type { LooseType } from "../../types.ts";
 
 export type Continuable = { continuationToken?: string; [k: string]: LooseType };
 
@@ -6,10 +6,7 @@ export async function continueRequest<
 	P extends Continuable,
 	R extends Continuable,
 	H extends (param: P) => Promise<R>,
->(options: {
-	handler: H;
-	arg: P;
-}): Promise<ReturnType<H>> {
+>(options: { handler: H; arg: P }): Promise<ReturnType<H>> {
 	function objectSum<O>(base: O, add: O): O {
 		for (const key in add) {
 			if (Object.prototype.hasOwnProperty.call(add, key)) {
@@ -19,10 +16,7 @@ export async function continueRequest<
 						base[key] = value;
 					} else {
 						if (Array.isArray(value)) {
-							(base[key] as LooseType) = [
-								...value,
-								...base[key] as LooseType,
-							] as LooseType;
+							(base[key] as LooseType) = [...value, ...(base[key] as LooseType)] as LooseType;
 						} else {
 							base[key] = objectSum(base[key], value);
 						}

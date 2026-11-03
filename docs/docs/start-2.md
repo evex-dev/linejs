@@ -6,7 +6,7 @@ It's easy.
 
 All you have to do is call the client's method as follows.
 ```ts
-import { loginWithPassword } from "@evex/linejs";
+import { loginWithPassword } from "@evex-dev/linejs";
 
 const client = await loginWithPassword({
   email: 'you@example.com', // e-mail address
@@ -66,7 +66,7 @@ AuthToken **********.********
 This is the auth token. It can be used as follows
 
 ```ts
-import { loginWithAuthToken } from "@evex/linejs";
+import { loginWithAuthToken } from "@evex-dev/linejs";
 const client = await loginWithAuthToken(authtoken, { device: "IOSIPAD" });
 ```
 
@@ -91,7 +91,7 @@ By default, it is `MemoryStorage`, and it all disappears after one execution.
 This can be `FileStorage`. As follows.
 
 ```ts
-import { FileStorage } from "@evex/linejs/storage";
+import { FileStorage } from "@evex-dev/linejs/storage";
 
 const client = await loginWithAuthToken(authtoken, {
 	  device: "IOSIPAD",

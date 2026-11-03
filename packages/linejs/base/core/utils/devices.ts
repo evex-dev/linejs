@@ -17,19 +17,10 @@ export interface DeviceDetails {
 }
 export function isV3Support(
 	device: Device,
-): device is
-	| "DESKTOPWIN"
-	| "DESKTOPMAC"
-	| "IOS"
-	| "ANDROID"
-	| "ANDROIDSECONDARY" {
-	return ["DESKTOPWIN", "DESKTOPMAC", "IOS", "ANDROID", "ANDROIDSECONDARY"]
-		.includes(device);
+): device is "DESKTOPWIN" | "DESKTOPMAC" | "IOS" | "ANDROID" | "ANDROIDSECONDARY" {
+	return ["DESKTOPWIN", "DESKTOPMAC", "IOS", "ANDROID", "ANDROIDSECONDARY"].includes(device);
 }
-export function getDeviceDetails(
-	device: Device,
-	version?: string,
-): DeviceDetails | null {
+export function getDeviceDetails(device: Device, version?: string): DeviceDetails | null {
 	let appVersion;
 	let systemName;
 	let systemVersion;

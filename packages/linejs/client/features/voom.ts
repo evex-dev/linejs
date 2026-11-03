@@ -90,10 +90,7 @@ export async function voomRest<T = unknown>(
 	return JSON.parse(text) as VoomRestResponse<T>;
 }
 
-export async function getChannelToken(
-	client: Client,
-	channelId: string,
-): Promise<string> {
+export async function getChannelToken(client: Client, channelId: string): Promise<string> {
 	const r = await client.base.channel.issueChannelToken({ channelId });
 	const t = (r as unknown as { token?: string }).token;
 	if (!t) throw new Error("issueChannelToken returned no token");
@@ -175,8 +172,7 @@ class ClientVoom implements VoomClient {
 		const followingMaxPage = opts.followingMaxPage ?? 2;
 		return await this.call("TIMELINE", {
 			routing: "MYHOME",
-			path:
-				`${VoomEndpoints.feed}?postLimit=${postLimit}&followingMaxPage=${followingMaxPage}`,
+			path: `${VoomEndpoints.feed}?postLimit=${postLimit}&followingMaxPage=${followingMaxPage}`,
 		});
 	}
 	async timelineStatus() {

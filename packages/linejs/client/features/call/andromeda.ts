@@ -3,7 +3,7 @@
 
 import { Buffer } from "node:buffer";
 import type { Socket as DgramSocket } from "node:dgram";
-import type * as LINETypes from "@evex/linejs-types";
+import type * as LINETypes from "@evex-dev/linejs-types";
 import type { CallTransport } from "./session.ts";
 import {
 	buildSip,
@@ -14,13 +14,7 @@ import {
 	parseSip,
 	randomCallId,
 } from "./sip.ts";
-import {
-	buildAudioOffer,
-	buildAudioOfferMikey,
-	parseSdp,
-	readCrypto,
-	readKeyMgmt,
-} from "./sdp.ts";
+import { buildAudioOffer, buildAudioOfferMikey, parseSdp, readCrypto, readKeyMgmt } from "./sdp.ts";
 import { buildMikeyPke, mikeyFromBase64, mikeyToBase64, parseMikey } from "./mikey.ts";
 import {
 	buildRtp,
@@ -114,9 +108,9 @@ export class AndromedaTransport implements CallTransport {
 		sock.on("message", (buf, rinfo) => {
 			const u8 = new Uint8Array(buf);
 			// Route SIP (text, starts with method/SIP/2.0) vs RTP (binary, v=2)
-			const isSip = u8.length > 4 &&
-				(u8[0] === 0x53 /* S */ ||
-					/[A-Z]/.test(String.fromCharCode(u8[0])) && u8.includes(0x20));
+			const isSip =
+				u8.length > 4 &&
+				(u8[0] === 0x53 /* S */ || (/[A-Z]/.test(String.fromCharCode(u8[0])) && u8.includes(0x20)));
 			if (isSip) {
 				const w = this.#pending.shift();
 				if (w) w(u8);
@@ -141,7 +135,11 @@ export class AndromedaTransport implements CallTransport {
 	}
 
 	async close(): Promise<void> {
-		try { await this.bye(); } catch { /* dialog may not exist */ }
+		try {
+			await this.bye();
+		} catch {
+			/* dialog may not exist */
+		}
 		if (this.#refreshTimer !== undefined) clearTimeout(this.#refreshTimer);
 		if (this.#keepaliveTimer !== undefined) clearTimeout(this.#keepaliveTimer);
 		await new Promise<void>((res) => this.#sock?.close(() => res()));
@@ -153,20 +151,23 @@ export class AndromedaTransport implements CallTransport {
 		const ep = routeEndpoint(this.#route!);
 		const ua = this.#opts.userAgent ?? "Line/26.6.2";
 		this.#cseq++;
-		await this.#sendTo({ host: ep.host, port: ep.port }, {
-			startLine: `BYE ${this.#peerTarget} SIP/2.0`,
-			headers: {
-				"Via": `SIP/2.0/UDP ${this.#opts.localMid}.invalid;branch=${newBranch()};rport`,
-				"Max-Forwards": "70",
-				"From": `${this.#sipFrom};tag=${this.#sipFromTag}`,
-				"To": `<${this.#peerTarget}>;tag=${this.#peerToTag}`,
-				"Call-ID": this.#callId,
-				"CSeq": `${this.#cseq} BYE`,
-				"User-Agent": ua,
-				"Content-Length": "0",
+		await this.#sendTo(
+			{ host: ep.host, port: ep.port },
+			{
+				startLine: `BYE ${this.#peerTarget} SIP/2.0`,
+				headers: {
+					Via: `SIP/2.0/UDP ${this.#opts.localMid}.invalid;branch=${newBranch()};rport`,
+					"Max-Forwards": "70",
+					From: `${this.#sipFrom};tag=${this.#sipFromTag}`,
+					To: `<${this.#peerTarget}>;tag=${this.#peerToTag}`,
+					"Call-ID": this.#callId,
+					CSeq: `${this.#cseq} BYE`,
+					"User-Agent": ua,
+					"Content-Length": "0",
+				},
+				body: "",
 			},
-			body: "",
-		});
+		);
 		// Best-effort: ignore the 200 reply
 	}
 
@@ -175,12 +176,14 @@ export class AndromedaTransport implements CallTransport {
 	 * with 100 Trying → 180 Ringing → 200 OK + SDP answer, then ACK.
 	 * Sets up SRTP contexts the same way `invite()` does.
 	 */
-	async answer(opts: {
-		localHost?: string;
-		localPort?: number;
-		decryptKey?: Uint8Array;
-		ringMs?: number;
-	} = {}): Promise<{ remoteKey: Uint8Array; mix: { host: string; port: number } }> {
+	async answer(
+		opts: {
+			localHost?: string;
+			localPort?: number;
+			decryptKey?: Uint8Array;
+			ringMs?: number;
+		} = {},
+	): Promise<{ remoteKey: Uint8Array; mix: { host: string; port: number } }> {
 		const ep = routeEndpoint(this.#route!);
 		const invite = parseSip(await this.#receive());
 		if (!invite.startLine.startsWith("INVITE")) {
@@ -193,26 +196,32 @@ export class AndromedaTransport implements CallTransport {
 		const cseq = invite.headers["CSeq"];
 		const toTag = newBranch().slice(7, 15);
 		const respHeaders = (status: string): Record<string, string> => ({
-			"Via": via,
-			"From": from,
-			"To": `${to};tag=${toTag}`,
+			Via: via,
+			From: from,
+			To: `${to};tag=${toTag}`,
 			"Call-ID": callId,
-			"CSeq": cseq,
+			CSeq: cseq,
 			"User-Agent": this.#opts.userAgent ?? "Line/26.6.2",
 			"Content-Length": "0",
 		});
 		// 100 Trying immediately
-		await this.#sendTo({ host: ep.host, port: ep.port }, {
-			startLine: "SIP/2.0 100 Trying",
-			headers: respHeaders("100"),
-			body: "",
-		});
+		await this.#sendTo(
+			{ host: ep.host, port: ep.port },
+			{
+				startLine: "SIP/2.0 100 Trying",
+				headers: respHeaders("100"),
+				body: "",
+			},
+		);
 		// 180 Ringing
-		await this.#sendTo({ host: ep.host, port: ep.port }, {
-			startLine: "SIP/2.0 180 Ringing",
-			headers: respHeaders("180"),
-			body: "",
-		});
+		await this.#sendTo(
+			{ host: ep.host, port: ep.port },
+			{
+				startLine: "SIP/2.0 180 Ringing",
+				headers: respHeaders("180"),
+				body: "",
+			},
+		);
 		if (opts.ringMs) await new Promise((r) => setTimeout(r, opts.ringMs));
 
 		// Parse offer SDP, build answer
@@ -246,15 +255,18 @@ export class AndromedaTransport implements CallTransport {
 			username: this.#opts.localMid,
 		});
 
-		await this.#sendTo({ host: ep.host, port: ep.port }, {
-			startLine: "SIP/2.0 200 OK",
-			headers: {
-				...respHeaders("200"),
-				"Content-Type": "application/sdp",
-				"Content-Length": String(answerSdp.length),
+		await this.#sendTo(
+			{ host: ep.host, port: ep.port },
+			{
+				startLine: "SIP/2.0 200 OK",
+				headers: {
+					...respHeaders("200"),
+					"Content-Type": "application/sdp",
+					"Content-Length": String(answerSdp.length),
+				},
+				body: answerSdp,
 			},
-			body: answerSdp,
-		});
+		);
 
 		// Wait for ACK
 		await this.#receive();
@@ -285,20 +297,23 @@ export class AndromedaTransport implements CallTransport {
 		const ep = routeEndpoint(this.#route!);
 		const ua = this.#opts.userAgent ?? "Line/26.6.2";
 		this.#cseq++;
-		await this.#sendTo({ host: ep.host, port: ep.port }, {
-			startLine: `OPTIONS sip:${ep.host} SIP/2.0`,
-			headers: {
-				"Via": `SIP/2.0/UDP ${this.#opts.localMid}.invalid;branch=${newBranch()};rport`,
-				"Max-Forwards": "70",
-				"From": `${this.#sipFrom};tag=${this.#sipFromTag}`,
-				"To": `<sip:${ep.host}>`,
-				"Call-ID": this.#callId ?? randomCallId(this.#opts.localMid),
-				"CSeq": `${this.#cseq} OPTIONS`,
-				"User-Agent": ua,
-				"Content-Length": "0",
+		await this.#sendTo(
+			{ host: ep.host, port: ep.port },
+			{
+				startLine: `OPTIONS sip:${ep.host} SIP/2.0`,
+				headers: {
+					Via: `SIP/2.0/UDP ${this.#opts.localMid}.invalid;branch=${newBranch()};rport`,
+					"Max-Forwards": "70",
+					From: `${this.#sipFrom};tag=${this.#sipFromTag}`,
+					To: `<sip:${ep.host}>`,
+					"Call-ID": this.#callId ?? randomCallId(this.#opts.localMid),
+					CSeq: `${this.#cseq} OPTIONS`,
+					"User-Agent": ua,
+					"Content-Length": "0",
+				},
+				body: "",
 			},
-			body: "",
-		});
+		);
 	}
 
 	async send(opusPacket: Uint8Array): Promise<void> {
@@ -314,7 +329,7 @@ export class AndromedaTransport implements CallTransport {
 		});
 		const wire = await srtpEncrypt(this.#srtpSend, rtp);
 		await new Promise<void>((res, rj) => {
-			this.#sock!.send(wire, this.#rtp!.port, this.#rtp!.host, (e) => e ? rj(e) : res());
+			this.#sock!.send(wire, this.#rtp!.port, this.#rtp!.host, (e) => (e ? rj(e) : res()));
 		});
 	}
 
@@ -328,7 +343,9 @@ export class AndromedaTransport implements CallTransport {
 			try {
 				const rtp = await srtpDecrypt(this.#srtpRecv, wire);
 				yield parseRtp(rtp).payload;
-			} catch { /* drop bad packet */ }
+			} catch {
+				/* drop bad packet */
+			}
 		}
 	}
 
@@ -345,17 +362,17 @@ export class AndromedaTransport implements CallTransport {
 		const ua = this.#opts.userAgent ?? "Line/26.6.2";
 
 		const baseHeaders = (cseq: number, auth?: string): Record<string, string> => ({
-			"Via": `SIP/2.0/UDP ${this.#opts.localMid}.invalid;branch=${newBranch()};rport`,
+			Via: `SIP/2.0/UDP ${this.#opts.localMid}.invalid;branch=${newBranch()};rport`,
 			"Max-Forwards": "70",
-			"From": `<sip:${this.#opts.localMid}@${ep.host}>;tag=${fromTag}`,
-			"To": `<sip:${this.#opts.localMid}@${ep.host}>`,
+			From: `<sip:${this.#opts.localMid}@${ep.host}>;tag=${fromTag}`,
+			To: `<sip:${this.#opts.localMid}@${ep.host}>`,
 			"Call-ID": callId,
-			"CSeq": `${cseq} REGISTER`,
+			CSeq: `${cseq} REGISTER`,
 			"User-Agent": ua,
-			"Contact": `<sip:${this.#opts.localMid}@invalid:0>`,
-			"Expires": "300",
+			Contact: `<sip:${this.#opts.localMid}@invalid:0>`,
+			Expires: "300",
 			"Content-Length": "0",
-			...(auth ? { "Authorization": auth } : {}),
+			...(auth ? { Authorization: auth } : {}),
 		});
 
 		const dst = { host: ep.host, port: ep.port };
@@ -371,8 +388,8 @@ export class AndromedaTransport implements CallTransport {
 		if (status !== 401 && status !== 407) {
 			throw new Error(`REGISTER unexpected status: ${challenge.startLine}`);
 		}
-		const wwwAuth = challenge.headers["WWW-Authenticate"] ??
-			challenge.headers["Proxy-Authenticate"] ?? "";
+		const wwwAuth =
+			challenge.headers["WWW-Authenticate"] ?? challenge.headers["Proxy-Authenticate"] ?? "";
 		const d = parseDigestChallenge(wwwAuth);
 		const auth = await digestResponse({
 			username: this.#opts.localMid,
@@ -423,44 +440,47 @@ export class AndromedaTransport implements CallTransport {
 		const stnpk = ep.stnpk;
 		const offerSdp = stnpk
 			? buildAudioOfferMikey({
-				host: localHost,
-				port: localPort,
-				mikeyBase64: mikeyToBase64(
-					await buildMikeyPke({
-						peerPublicKey: stnpk,
-						tgk: localKey,
-						initiatorId: this.#opts.localMid,
-						responderId: opts.to,
-					}),
-				),
-				username: this.#opts.localMid,
-			})
+					host: localHost,
+					port: localPort,
+					mikeyBase64: mikeyToBase64(
+						await buildMikeyPke({
+							peerPublicKey: stnpk,
+							tgk: localKey,
+							initiatorId: this.#opts.localMid,
+							responderId: opts.to,
+						}),
+					),
+					username: this.#opts.localMid,
+				})
 			: buildAudioOffer({
-				host: localHost,
-				port: localPort,
-				crypto: { suite: "AES_CM_128_HMAC_SHA1_80", key: localKey },
-				username: this.#opts.localMid,
-			});
+					host: localHost,
+					port: localPort,
+					crypto: { suite: "AES_CM_128_HMAC_SHA1_80", key: localKey },
+					username: this.#opts.localMid,
+				});
 
 		const target = `sip:${opts.to}@${ep.host}`;
 		this.#cseq++;
 		const ua = this.#opts.userAgent ?? "Line/26.6.2";
-		await this.#sendTo({ host: ep.host, port: ep.port }, {
-			startLine: `INVITE ${target} SIP/2.0`,
-			headers: {
-				"Via": `SIP/2.0/UDP ${this.#opts.localMid}.invalid;branch=${newBranch()};rport`,
-				"Max-Forwards": "70",
-				"From": `${this.#sipFrom};tag=${this.#sipFromTag}`,
-				"To": `<${target}>`,
-				"Call-ID": this.#callId!,
-				"CSeq": `${this.#cseq} INVITE`,
-				"User-Agent": ua,
-				"Contact": `<sip:${this.#opts.localMid}@invalid:0>`,
-				"Content-Type": "application/sdp",
-				"Content-Length": String(offerSdp.length),
+		await this.#sendTo(
+			{ host: ep.host, port: ep.port },
+			{
+				startLine: `INVITE ${target} SIP/2.0`,
+				headers: {
+					Via: `SIP/2.0/UDP ${this.#opts.localMid}.invalid;branch=${newBranch()};rport`,
+					"Max-Forwards": "70",
+					From: `${this.#sipFrom};tag=${this.#sipFromTag}`,
+					To: `<${target}>`,
+					"Call-ID": this.#callId!,
+					CSeq: `${this.#cseq} INVITE`,
+					"User-Agent": ua,
+					Contact: `<sip:${this.#opts.localMid}@invalid:0>`,
+					"Content-Type": "application/sdp",
+					"Content-Length": String(offerSdp.length),
+				},
+				body: offerSdp,
 			},
-			body: offerSdp,
-		});
+		);
 
 		// Read responses until we get a final (not 1xx).
 		let response = parseSip(await this.#receive());
@@ -487,9 +507,7 @@ export class AndromedaTransport implements CallTransport {
 				const mk = parseMikey(mikeyFromBase64(km.data));
 				if (!mk.kemacEncrypted) throw new Error("INVITE: MIKEY answer has no KEMAC");
 				if (!opts.decryptKey) {
-					throw new Error(
-						"INVITE: peer sent MIKEY-PKE answer but no decryptKey supplied",
-					);
+					throw new Error("INVITE: peer sent MIKEY-PKE answer but no decryptKey supplied");
 				}
 				remoteKey = await decryptMikeyKemac(mk, opts.decryptKey);
 			}
@@ -516,20 +534,23 @@ export class AndromedaTransport implements CallTransport {
 
 		// ACK to complete the 3-way handshake
 		this.#cseq++;
-		await this.#sendTo({ host: ep.host, port: ep.port }, {
-			startLine: `ACK ${target} SIP/2.0`,
-			headers: {
-				"Via": `SIP/2.0/UDP ${this.#opts.localMid}.invalid;branch=${newBranch()};rport`,
-				"Max-Forwards": "70",
-				"From": `${this.#sipFrom};tag=${this.#sipFromTag}`,
-				"To": response.headers["To"] ?? `<${target}>`,
-				"Call-ID": this.#callId!,
-				"CSeq": `${this.#cseq} ACK`,
-				"User-Agent": ua,
-				"Content-Length": "0",
+		await this.#sendTo(
+			{ host: ep.host, port: ep.port },
+			{
+				startLine: `ACK ${target} SIP/2.0`,
+				headers: {
+					Via: `SIP/2.0/UDP ${this.#opts.localMid}.invalid;branch=${newBranch()};rport`,
+					"Max-Forwards": "70",
+					From: `${this.#sipFrom};tag=${this.#sipFromTag}`,
+					To: response.headers["To"] ?? `<${target}>`,
+					"Call-ID": this.#callId!,
+					CSeq: `${this.#cseq} ACK`,
+					"User-Agent": ua,
+					"Content-Length": "0",
+				},
+				body: "",
 			},
-			body: "",
-		});
+		);
 
 		return {
 			status: finalStatus,
@@ -543,7 +564,7 @@ export class AndromedaTransport implements CallTransport {
 		msg: { startLine: string; headers: Record<string, string>; body: string },
 	) {
 		return new Promise<void>((res, rj) => {
-			this.#sock!.send(buildSip(msg), dst.port, dst.host, (e) => e ? rj(e) : res());
+			this.#sock!.send(buildSip(msg), dst.port, dst.host, (e) => (e ? rj(e) : res()));
 		});
 	}
 
@@ -551,7 +572,10 @@ export class AndromedaTransport implements CallTransport {
 		const timeout = this.#opts.timeoutMs ?? 5000;
 		return new Promise<Uint8Array>((res, rj) => {
 			const t = setTimeout(() => rj(new Error("SIP receive timeout")), timeout);
-			this.#pending.push((buf) => { clearTimeout(t); res(buf); });
+			this.#pending.push((buf) => {
+				clearTimeout(t);
+				res(buf);
+			});
 		});
 	}
 }

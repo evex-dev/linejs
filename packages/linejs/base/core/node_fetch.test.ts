@@ -1,13 +1,14 @@
-import { assertEquals } from "@std/assert";
+import { assert, test } from "vite-plus/test";
 import { BaseClient } from "./mod.ts";
-import { createNodeFetch } from "./node_fetch.ts";
+import { createNodeFetch, isNodeRuntime } from "./node_fetch.ts";
 
-Deno.test("Node dispatchers are not used on Deno", async () => {
-	assertEquals(await createNodeFetch(false)(30_000), null);
-	assertEquals(await createNodeFetch(true)(30_000), null);
+test("Node dispatchers are used on Node", async () => {
+	assert.deepEqual(isNodeRuntime(), true);
+	assert.deepEqual(typeof (await createNodeFetch(false)(30_000)), "function");
+	assert.deepEqual(typeof (await createNodeFetch(true)(30_000)), "function");
 });
 
-Deno.test("custom fetch handles both RPC and PUSH with cancellation intact", async () => {
+test("custom fetch handles both RPC and PUSH with cancellation intact", async () => {
 	const requests: Request[] = [];
 	const client = new BaseClient({
 		device: "DESKTOPWIN",
@@ -23,7 +24,10 @@ Deno.test("custom fetch handles both RPC and PUSH with cancellation intact", asy
 	await client.fetchPush("https://example.invalid/push", {
 		signal: controller.signal,
 	});
-	assertEquals(requests.length, 2);
+	assert.deepEqual(requests.length, 2);
 	controller.abort();
-	assertEquals(requests.map((r) => r.signal.aborted), [true, true]);
+	assert.deepEqual(
+		requests.map((r) => r.signal.aborted),
+		[true, true],
+	);
 });

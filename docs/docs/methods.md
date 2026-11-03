@@ -40,7 +40,7 @@ If you just want simple api access or custom event handlers, you can use `BaseCl
 For example:
 
 ```ts
-import { BaseClient } from "@evex/linejs/base";
+import { BaseClient } from "@evex-dev/linejs/base";
 
 
 const client = new BaseClient({ device: "DESKTOPWIN", version: "9.7.0.3556" });

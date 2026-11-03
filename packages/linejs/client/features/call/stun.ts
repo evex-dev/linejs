@@ -200,21 +200,24 @@ function require_node_crypto(): typeof import("node:crypto") {
 	if (!_crypto) {
 		// dynamic require via the CJS shim that node:crypto exposes
 		// — at runtime in Deno/Node, this loads instantly the first call.
-		_crypto = (globalThis as { require?: (m: string) => unknown }).require?.("node:crypto") as
-			typeof import("node:crypto");
+		_crypto = (globalThis as { require?: (m: string) => unknown }).require?.(
+			"node:crypto",
+		) as typeof import("node:crypto");
 		if (!_crypto) {
-			throw new Error(
-				"STUN: node:crypto unavailable. Use buildBindingRequestAsync() instead.",
-			);
+			throw new Error("STUN: node:crypto unavailable. Use buildBindingRequestAsync() instead.");
 		}
 	}
 	return _crypto;
 }
 
 /** Async variant that doesn't require sync require(). */
-export async function buildBindingRequestAsync(opts: Parameters<typeof buildBindingRequest>[0]): Promise<Uint8Array> {
+export async function buildBindingRequestAsync(
+	opts: Parameters<typeof buildBindingRequest>[0],
+): Promise<Uint8Array> {
 	// Just defer to sync version using dynamic import to warm crypto.
-	await import("node:crypto").then((c) => { _crypto = c; });
+	await import("node:crypto").then((c) => {
+		_crypto = c;
+	});
 	return buildBindingRequest(opts);
 }
 

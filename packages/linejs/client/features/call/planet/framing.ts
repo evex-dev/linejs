@@ -44,12 +44,12 @@ export function makeChunkHdr(logical: number): number {
 	const w9 = (w9a | ((w8 << 12) >>> 0)) >>> 0;
 	const w8b = (w9 | (w8 >>> 5)) >>> 0;
 	// 32-bit byte reverse
-	const rev = (
-		((w8b & 0xff) << 24) |
-		((w8b & 0xff00) << 8) |
-		((w8b & 0xff0000) >>> 8) |
-		((w8b >>> 24) & 0xff)
-	) >>> 0;
+	const rev =
+		(((w8b & 0xff) << 24) |
+			((w8b & 0xff00) << 8) |
+			((w8b & 0xff0000) >>> 8) |
+			((w8b >>> 24) & 0xff)) >>>
+		0;
 	return (rev >>> 16) & 0xffff;
 }
 
@@ -69,10 +69,7 @@ export function parseChunkHdr(wire: number): number {
 	// w1 = wire (16-bit but in 32-bit register, upper bits zero)
 	// rev reverses 4 bytes; if upper bits are zero we get wire-bytes shifted to top
 	const w1 = wire & 0xffff;
-	const w8a = (
-		((w1 & 0xff) << 24) |
-		((w1 & 0xff00) << 8)
-	) >>> 0;
+	const w8a = (((w1 & 0xff) << 24) | ((w1 & 0xff00) << 8)) >>> 0;
 	let w9 = (w8a >>> 0x17) & 0x10;
 	// bfxil w9, w8, #0x1c, #4 — extract bits 28..31 of w8 into bits 0..3 of w9,
 	// preserving the bit 4 we just set.
@@ -122,12 +119,7 @@ export function makeFixedHdr(hdr: PlanetFixedHdr): Uint8Array {
 
 export function parseFixedHdr(wire: Uint8Array): PlanetFixedHdr {
 	if (wire.length < 4) throw new Error("parseFixedHdr: need 4 bytes");
-	const word = (
-		(wire[0] << 24) |
-		(wire[1] << 16) |
-		(wire[2] << 8) |
-		wire[3]
-	) >>> 0;
+	const word = ((wire[0] << 24) | (wire[1] << 16) | (wire[2] << 8) | wire[3]) >>> 0;
 	return {
 		type: (word >>> 28) & 0x3,
 		flagA: (word & 0x08000000) !== 0,
@@ -138,10 +130,7 @@ export function parseFixedHdr(wire: Uint8Array): PlanetFixedHdr {
 }
 
 /** Build a complete PLANET datagram header (chunk + fixed). */
-export function buildFrameHeader(
-	chunkLogical: number,
-	fixed: PlanetFixedHdr,
-): Uint8Array {
+export function buildFrameHeader(chunkLogical: number, fixed: PlanetFixedHdr): Uint8Array {
 	const chunk = makeChunkHdr(chunkLogical);
 	const fx = makeFixedHdr(fixed);
 	const out = new Uint8Array(6);

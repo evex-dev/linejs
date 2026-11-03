@@ -1,5 +1,5 @@
 /** Unit tests for PLANET framing — match values observed in live wire capture. */
-import { assertEquals } from "@std/assert";
+import { assert, test } from "vite-plus/test";
 import {
 	buildFrameHeader,
 	makeChunkHdr,
@@ -9,31 +9,31 @@ import {
 	parseFrameHeader,
 } from "./framing.ts";
 
-Deno.test("chunk hdr is invertible across all 16-bit values", () => {
+test("chunk hdr is invertible across all 16-bit values", () => {
 	for (let i = 0; i < 0x10000; i++) {
 		const wire = makeChunkHdr(i);
 		const back = parseChunkHdr(wire);
-		assertEquals(back, i, `roundtrip fail at i=0x${i.toString(16)}`);
+		assert.deepEqual(back, i, `roundtrip fail at i=0x${i.toString(16)}`);
 	}
 });
 
-Deno.test("chunk hdr is bijective (each input -> unique output)", () => {
+test("chunk hdr is bijective (each input -> unique output)", () => {
 	const seen = new Set<number>();
 	for (let i = 0; i < 0x10000; i++) {
 		const w = makeChunkHdr(i);
 		if (seen.has(w)) {
 			throw new Error(
-				`collision: input 0x${i.toString(16)} -> wire 0x${
-					w.toString(16)
-				} (also produced by another input)`,
+				`collision: input 0x${i.toString(16)} -> wire 0x${w.toString(
+					16,
+				)} (also produced by another input)`,
 			);
 		}
 		seen.add(w);
 	}
-	assertEquals(seen.size, 0x10000);
+	assert.deepEqual(seen.size, 0x10000);
 });
 
-Deno.test("fixed hdr roundtrip", () => {
+test("fixed hdr roundtrip", () => {
 	const cases = [
 		{ type: 0, flagA: false, length: 535, flagB: false, sequence: 0x1d5 },
 		{ type: 1, flagA: true, length: 100, flagB: false, sequence: 0x7fff },
@@ -43,11 +43,11 @@ Deno.test("fixed hdr roundtrip", () => {
 	for (const c of cases) {
 		const wire = makeFixedHdr(c);
 		const back = parseFixedHdr(wire);
-		assertEquals(back, c, `roundtrip fail ${JSON.stringify(c)}`);
+		assert.deepEqual(back, c, `roundtrip fail ${JSON.stringify(c)}`);
 	}
 });
 
-Deno.test("buildFrameHeader + parseFrameHeader roundtrip", () => {
+test("buildFrameHeader + parseFrameHeader roundtrip", () => {
 	const fixed = {
 		type: 0,
 		flagA: false,
@@ -56,13 +56,13 @@ Deno.test("buildFrameHeader + parseFrameHeader roundtrip", () => {
 		sequence: 0x1d5,
 	};
 	const wire = buildFrameHeader(0x10de, fixed);
-	assertEquals(wire.length, 6);
+	assert.deepEqual(wire.length, 6);
 	const parsed = parseFrameHeader(wire);
-	assertEquals(parsed.chunkLogical, 0x10de);
-	assertEquals(parsed.fixed, fixed);
+	assert.deepEqual(parsed.chunkLogical, 0x10de);
+	assert.deepEqual(parsed.fixed, fixed);
 });
 
-Deno.test("observed wire bytes — sequence in BE bytes 2..3 of frame", () => {
+test("observed wire bytes — sequence in BE bytes 2..3 of frame", () => {
 	// Captured live during a native LINE call. The transaction counter
 	// pattern (01d5, 01d6, 01d7, ..., 01e6, 01e7, 01e8) lives in BE
 	// bytes [2..3] of the datagram (= bytes [0..1] of the fixed header).
@@ -77,6 +77,6 @@ Deno.test("observed wire bytes — sequence in BE bytes 2..3 of frame", () => {
 	];
 	for (const c of observed) {
 		const seq = (c.pkt[2] << 8) | c.pkt[3];
-		assertEquals(seq, c.seq);
+		assert.deepEqual(seq, c.seq);
 	}
 });

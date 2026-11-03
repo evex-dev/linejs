@@ -1,4 +1,4 @@
-import { assert, assertEquals } from "@std/assert";
+import { assert, test } from "vite-plus/test";
 import { createVoomClient, VoomChannelId } from "./voom.ts";
 
 function makeFake() {
@@ -35,68 +35,68 @@ function makeFake() {
 	};
 }
 
-Deno.test("VoomClient.getToken — mints via issueChannelToken with object arg", async () => {
+test("VoomClient.getToken — mints via issueChannelToken with object arg", async () => {
 	const { client, issued } = makeFake();
 	const vc = createVoomClient(client);
 	const t = await vc.getToken("TIMELINE");
-	assertEquals(t, "tok-1341209950");
-	assertEquals(issued, [VoomChannelId.TIMELINE]);
+	assert.deepEqual(t, "tok-1341209950");
+	assert.deepEqual(issued, [VoomChannelId.TIMELINE]);
 });
 
-Deno.test("VoomClient.getToken — caches per-channel", async () => {
+test("VoomClient.getToken — caches per-channel", async () => {
 	const { client, issued } = makeFake();
 	const vc = createVoomClient(client);
 	await vc.getToken("TIMELINE");
 	await vc.getToken("TIMELINE");
 	await vc.getToken("NOTE");
-	assertEquals(issued.length, 2);
-	assertEquals(issued, [VoomChannelId.TIMELINE, VoomChannelId.NOTE]);
+	assert.deepEqual(issued.length, 2);
+	assert.deepEqual(issued, [VoomChannelId.TIMELINE, VoomChannelId.NOTE]);
 });
 
-Deno.test("VoomClient.call — X-Line-ChannelToken + X-Line-Mid headers (live-verified)", async () => {
+test("VoomClient.call — X-Line-ChannelToken + X-Line-Mid headers (live-verified)", async () => {
 	const { client, fetched } = makeFake();
 	const vc = createVoomClient(client);
 	const r = await vc.call("TIMELINE", { path: "/api/v57/post/list.json" });
-	assertEquals(r.code, 200);
-	assert(r.result);
-	assertEquals(fetched.length, 1);
-	assertEquals(fetched[0].url, "https://gw.line.naver.jp/mh/api/v57/post/list.json");
-	assertEquals(fetched[0].headers["X-Line-ChannelToken"], "tok-1341209950");
-	assertEquals(fetched[0].headers["X-Line-Mid"], "u-test-mid");
+	assert.deepEqual(r.code, 200);
+	assert.isOk(r.result);
+	assert.deepEqual(fetched.length, 1);
+	assert.deepEqual(fetched[0].url, "https://gw.line.naver.jp/mh/api/v57/post/list.json");
+	assert.deepEqual(fetched[0].headers["X-Line-ChannelToken"], "tok-1341209950");
+	assert.deepEqual(fetched[0].headers["X-Line-Mid"], "u-test-mid");
 });
 
-Deno.test("VoomClient.feed — default postLimit/followingMaxPage", async () => {
+test("VoomClient.feed — default postLimit/followingMaxPage", async () => {
 	const { client, fetched } = makeFake();
 	const vc = createVoomClient(client);
 	await vc.feed();
 	const u = new URL(fetched[0].url);
-	assertEquals(u.pathname, "/mh/api/v57/post/list.json");
-	assertEquals(u.searchParams.get("postLimit"), "10");
-	assertEquals(u.searchParams.get("followingMaxPage"), "2");
+	assert.deepEqual(u.pathname, "/mh/api/v57/post/list.json");
+	assert.deepEqual(u.searchParams.get("postLimit"), "10");
+	assert.deepEqual(u.searchParams.get("followingMaxPage"), "2");
 });
 
-Deno.test("VoomClient.feed — custom limits", async () => {
+test("VoomClient.feed — custom limits", async () => {
 	const { client, fetched } = makeFake();
 	const vc = createVoomClient(client);
 	await vc.feed({ postLimit: 25, followingMaxPage: 5 });
 	const u = new URL(fetched[0].url);
-	assertEquals(u.searchParams.get("postLimit"), "25");
-	assertEquals(u.searchParams.get("followingMaxPage"), "5");
+	assert.deepEqual(u.searchParams.get("postLimit"), "25");
+	assert.deepEqual(u.searchParams.get("followingMaxPage"), "5");
 });
 
-Deno.test("VoomClient.timelineStatus — uses /tl prefix + TIMELINE channel token (live-verified)", async () => {
+test("VoomClient.timelineStatus — uses /tl prefix + TIMELINE channel token (live-verified)", async () => {
 	const { client, fetched, issued } = makeFake();
 	const vc = createVoomClient(client);
 	await vc.timelineStatus();
-	assertEquals(issued, [VoomChannelId.TIMELINE]);
+	assert.deepEqual(issued, [VoomChannelId.TIMELINE]);
 	const u = new URL(fetched[0].url);
-	assertEquals(u.pathname, "/tl/api/v57/timeline/tab/status.json");
-	assertEquals(fetched[0].headers["X-Line-ChannelToken"], `tok-${VoomChannelId.TIMELINE}`);
+	assert.deepEqual(u.pathname, "/tl/api/v57/timeline/tab/status.json");
+	assert.deepEqual(fetched[0].headers["X-Line-ChannelToken"], `tok-${VoomChannelId.TIMELINE}`);
 });
 
-Deno.test("VoomClient.call — routing prefix selects the right gateway path", async () => {
+test("VoomClient.call — routing prefix selects the right gateway path", async () => {
 	const { client, fetched } = makeFake();
 	const vc = createVoomClient(client);
 	await vc.call("ALBUM", { routing: "ALBUM", path: "/api/v1.0/initialize" });
-	assertEquals(new URL(fetched[0].url).pathname, "/ext/album/api/v1.0/initialize");
+	assert.deepEqual(new URL(fetched[0].url).pathname, "/ext/album/api/v1.0/initialize");
 });

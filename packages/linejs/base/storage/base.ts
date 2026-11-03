@@ -1,4 +1,4 @@
-import type { LooseType } from "@evex/loose-types";
+import type { LooseType } from "../types.ts";
 
 export interface Storage {
 	Key: string;
@@ -15,10 +15,7 @@ export abstract class BaseStorage {
 	 * @param {Storage["Key"]} key
 	 * @param {Storage["Value"]} value
 	 */
-	public abstract set(
-		key: Storage["Key"],
-		value: Storage["Value"],
-	): Promise<void>;
+	public abstract set(key: Storage["Key"], value: Storage["Value"]): Promise<void>;
 
 	/**
 	 * @description Get a value.
@@ -27,9 +24,7 @@ export abstract class BaseStorage {
 	 *
 	 * @returns {Promise<Storage["Value"] | undefined>} value
 	 */
-	public abstract get(
-		key: Storage["Key"],
-	): Promise<Storage["Value"] | undefined>;
+	public abstract get(key: Storage["Key"]): Promise<Storage["Value"] | undefined>;
 
 	/**
 	 * @description Delete a value.

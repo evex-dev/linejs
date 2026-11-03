@@ -3,10 +3,7 @@ import { Square, SquareChat } from "./features/square/mod.ts";
 import { continueRequest } from "../base/mod.ts";
 import { Chat } from "./features/chat/mod.ts";
 import { User } from "./features/user/mod.ts";
-import {
-	type BirthdayBoardClient,
-	createBirthdayBoardClient,
-} from "./features/birthday_board.ts";
+import { type BirthdayBoardClient, createBirthdayBoardClient } from "./features/birthday_board.ts";
 export * as birthdayBoard from "./features/birthday_board.ts";
 export type {
 	BirthdayBoardCardInput,
@@ -16,7 +13,7 @@ export type {
 } from "./features/birthday_board.ts";
 import { TypedEventEmitter } from "../base/core/typed-event-emitter/index.ts";
 import { SquareMessage, TalkMessage } from "./features/message/mod.ts";
-import type * as LINETypes from "@evex/linejs-types";
+import type * as LINETypes from "@evex-dev/linejs-types";
 import type {
 	CompactMessageResponse,
 	SendCompactMessageOptions,
@@ -145,15 +142,14 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 * @param opts Options
 	 * @returns TypedEventEmitter
 	 */
-	listen(
-		opts: ListenOptions = { talk: true, square: true },
-	): void {
+	listen(opts: ListenOptions = { talk: true, square: true }): void {
 		const polling = this.base.createPolling();
 		const signal = opts.signal;
-		signal && signal.addEventListener("abort", () => {
-			this.base.push.opStream.close();
-			this.base.push.sqStream.close();
-		});
+		signal &&
+			signal.addEventListener("abort", () => {
+				this.base.push.opStream.close();
+				this.base.push.sqStream.close();
+			});
 		// Nothing awaits the loops below, so a throw from the event stream, from
 		// decryptE2EEMessage or from one of the user's own listeners used to
 		// surface as an unhandled rejection and take the host process down.
@@ -170,21 +166,14 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		};
 		if (opts.talk) {
 			(async () => {
-				for await (
-					const event of polling.listenTalkEvents()
-				) {
+				for await (const event of polling.listenTalkEvents()) {
 					try {
 						this.emit("event", event);
-						if (
-							event.type === "SEND_MESSAGE" ||
-							event.type === "RECEIVE_MESSAGE"
-						) {
+						if (event.type === "SEND_MESSAGE" || event.type === "RECEIVE_MESSAGE") {
 							this.emit(
 								"message",
 								new TalkMessage({
-									raw: await this.base.e2ee.decryptE2EEMessage(
-										event.message,
-									),
+									raw: await this.base.e2ee.decryptE2EEMessage(event.message),
 									client: this,
 								}),
 							);
@@ -199,17 +188,12 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 							this.emit(
 								"message:edit",
 								new TalkMessage({
-									raw: await this.base.e2ee.decryptE2EEMessage(
-										event.message,
-									),
+									raw: await this.base.e2ee.decryptE2EEMessage(event.message),
 									client: this,
 								}),
 							);
 						} else if (event.type === "NOTIFIED_RECEIVED_CALL") {
-							this.emit(
-								"call:incoming",
-								parseIncomingCall(event, this.base.profile?.mid),
-							);
+							this.emit("call:incoming", parseIncomingCall(event, this.base.profile?.mid));
 						} else if (event.type === "CANCEL_CALL") {
 							this.emit("call:cancel", parseCancelCall(event));
 						}
@@ -221,17 +205,14 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		}
 		if (opts.square) {
 			(async () => {
-				for await (
-					const event of polling.listenSquareEvents()
-				) {
+				for await (const event of polling.listenSquareEvents()) {
 					try {
 						this.emit("square:event", event);
 						if (event.type === "NOTIFICATION_MESSAGE") {
 							this.emit(
 								"square:message",
 								new SquareMessage({
-									raw: event.payload.notificationMessage
-										.squareMessage,
+									raw: event.payload.notificationMessage.squareMessage,
 									client: this,
 								}),
 							);
@@ -291,9 +272,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 * Uploads a new profile picture for the signed-in user (the avatar
 	 * shown in chats).  Returns the OBS object id + hash.
 	 */
-	uploadMyProfileImage(
-		data: Blob,
-	): Promise<{ objId: string; objHash: string }> {
+	uploadMyProfileImage(data: Blob): Promise<{ objId: string; objHash: string }> {
 		return uploadMyProfileImage(this, data);
 	}
 
@@ -301,9 +280,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 	 * Uploads a new profile background (the cover photo behind the
 	 * profile picture on the user's profile page).
 	 */
-	uploadMyProfileBackground(
-		data: Blob,
-	): Promise<{ objId: string; objHash: string }> {
+	uploadMyProfileBackground(data: Blob): Promise<{ objId: string; objHash: string }> {
 		return uploadMyProfileBackground(this, data);
 	}
 
@@ -359,7 +336,9 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		for (const mid of userFriendMids) {
 			try {
 				out.push(await this.getUser(mid));
-			} catch { /* skip unreachable */ }
+			} catch {
+				/* skip unreachable */
+			}
 		}
 		return out;
 	}
@@ -383,9 +362,7 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 		});
 		const squareChats: SquareChat[] = [];
 		for (const event of response.events) {
-			if (
-				event.payload.notifiedCreateSquareChatMember
-			) {
+			if (event.payload.notifiedCreateSquareChatMember) {
 				squareChats.push(
 					new SquareChat({
 						client: this,

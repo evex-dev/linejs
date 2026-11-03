@@ -1,4 +1,5 @@
-import { assert, assertEquals, assertRejects } from "@std/assert";
+import { assert, test } from "vite-plus/test";
+import { assertRejects } from "../../../../test/assert.ts";
 import { Buffer } from "node:buffer";
 import { createSocket, type RemoteInfo, type Socket } from "node:dgram";
 import {
@@ -45,13 +46,7 @@ import { PlanetTransport } from "./transport.ts";
 import { packetizeNativeGroupOpusPairs } from "../audio.ts";
 import { createCallClient, parseIncomingCall } from "../mod.ts";
 import { parseIncomingAudioCall } from "../incoming.ts";
-import {
-	buildRtp,
-	deriveSrtpContext,
-	parseRtp,
-	srtpDecrypt,
-	srtpEncrypt,
-} from "../srtp.ts";
+import { buildRtp, deriveSrtpContext, parseRtp, srtpDecrypt, srtpEncrypt } from "../srtp.ts";
 
 type CallRouteLike = Parameters<PlanetTransport["connect"]>[0]["route"];
 
@@ -93,19 +88,10 @@ function concatBytes(parts: Uint8Array[]): Uint8Array {
 }
 
 function buildBootstrapSecHeader(plaintextLen: number): Uint8Array {
-	return new Uint8Array([
-		0,
-		0,
-		0,
-		0x28 | ((plaintextLen >>> 8) & 0x07),
-		plaintextLen & 0xff,
-	]);
+	return new Uint8Array([0, 0, 0, 0x28 | ((plaintextLen >>> 8) & 0x07), plaintextLen & 0xff]);
 }
 
-function buildBootstrapFrameHeader(
-	totalLen: number,
-	sequence: number,
-): Uint8Array {
+function buildBootstrapFrameHeader(totalLen: number, sequence: number): Uint8Array {
 	const chunkLogical = ((((totalLen - 4) << 5) | 0x1d) & 0xffff) >>> 0;
 	const chunk = makeChunkHdr(chunkLogical);
 	return new Uint8Array([
@@ -125,8 +111,9 @@ function buildRegularFrameHeader(
 ): Uint8Array {
 	const chunkLogical = ((((totalLen - 4) << 5) | 0x0d) & 0xffff) >>> 0;
 	const chunk = makeChunkHdr(chunkLogical);
-	const tail16 = (((REGULAR_TAIL_CONTROL_BASE |
-		((plaintextLen >>> 8) & 0x07)) << 8) | (plaintextLen & 0xff)) & 0xffff;
+	const tail16 =
+		(((REGULAR_TAIL_CONTROL_BASE | ((plaintextLen >>> 8) & 0x07)) << 8) | (plaintextLen & 0xff)) &
+		0xffff;
 	return new Uint8Array([
 		chunk & 0xff,
 		(chunk >>> 8) & 0xff,
@@ -141,14 +128,9 @@ function buildServerWire(
 	keys: TransportKeys,
 	plaintext: Uint8Array,
 	sequence: number,
-	opts: { bootstrap?: { label: number; seed: Uint8Array; pub: Uint8Array } } =
-		{},
+	opts: { bootstrap?: { label: number; seed: Uint8Array; pub: Uint8Array } } = {},
 ): Uint8Array {
-	const ct = aesCtrEncrypt(
-		keys.encKey,
-		buildPlanetCtrIv(keys.ctrBase, sequence),
-		plaintext,
-	);
+	const ct = aesCtrEncrypt(keys.encKey, buildPlanetCtrIv(keys.ctrBase, sequence), plaintext);
 	const tagLen = 16;
 	if (opts.bootstrap) {
 		const prefix = concatBytes([
@@ -156,11 +138,10 @@ function buildServerWire(
 			opts.bootstrap.seed,
 			opts.bootstrap.pub,
 		]);
-		assertEquals(prefix.length, BOOTSTRAP_PREFIX_LEN);
+		assert.deepEqual(prefix.length, BOOTSTRAP_PREFIX_LEN);
 		const sec = buildBootstrapSecHeader(plaintext.length);
-		assertEquals(sec.length, BOOTSTRAP_SEC_HEADER_LEN);
-		const totalLen = HEADER_LEN + prefix.length + sec.length + ct.length +
-			tagLen;
+		assert.deepEqual(sec.length, BOOTSTRAP_SEC_HEADER_LEN);
+		const totalLen = HEADER_LEN + prefix.length + sec.length + ct.length + tagLen;
 		const hdr = buildBootstrapFrameHeader(totalLen, sequence);
 		const macInput = concatBytes([hdr, prefix, sec, ct]);
 		return concatBytes([macInput, hmacTag(keys.macKey, macInput)]);
@@ -244,10 +225,7 @@ function buildMediaControlPlain(opts: {
 }
 
 function extractBootstrapClientPub(wire: Uint8Array): Uint8Array {
-	return wire.subarray(
-		HEADER_LEN + 2 + 16,
-		HEADER_LEN + 2 + 16 + 33,
-	);
+	return wire.subarray(HEADER_LEN + 2 + 16, HEADER_LEN + 2 + 16 + 33);
 }
 
 function extractBootstrapClientLabel(wire: Uint8Array): number {
@@ -258,10 +236,7 @@ function extractBootstrapClientSeed(wire: Uint8Array): Uint8Array {
 	return new Uint8Array(wire.subarray(HEADER_LEN + 2, HEADER_LEN + 18));
 }
 
-function decryptRegularWire(
-	keys: TransportKeys,
-	wire: Uint8Array,
-): Uint8Array | undefined {
+function decryptRegularWire(keys: TransportKeys, wire: Uint8Array): Uint8Array | undefined {
 	const tag = wire.subarray(wire.length - 16);
 	const macInput = wire.subarray(0, wire.length - 16);
 	const expected = hmacTag(keys.macKey, macInput);
@@ -278,36 +253,22 @@ function isRtpLike(wire: Uint8Array): boolean {
 async function bindUdpServer(): Promise<Socket> {
 	const server = createSocket("udp4");
 	await new Promise<void>((resolve) =>
-		server.bind({ address: "127.0.0.1", port: 0 }, () => resolve())
+		server.bind({ address: "127.0.0.1", port: 0 }, () => resolve()),
 	);
 	return server;
 }
 
-async function sendUdp(
-	server: Socket,
-	packet: Uint8Array,
-	rinfo: RemoteInfo,
-): Promise<void> {
+async function sendUdp(server: Socket, packet: Uint8Array, rinfo: RemoteInfo): Promise<void> {
 	await new Promise<void>((resolve, reject) =>
-		server.send(
-			Buffer.from(packet),
-			rinfo.port,
-			rinfo.address,
-			(err) => err ? reject(err) : resolve(),
-		)
+		server.send(Buffer.from(packet), rinfo.port, rinfo.address, (err) =>
+			err ? reject(err) : resolve(),
+		),
 	);
 }
 
-function withTimeout<T>(
-	promise: Promise<T>,
-	timeoutMs: number,
-	label: string,
-): Promise<T> {
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, label: string): Promise<T> {
 	return new Promise((resolve, reject) => {
-		const timeout = setTimeout(
-			() => reject(new Error(`${label} timeout`)),
-			timeoutMs,
-		);
+		const timeout = setTimeout(() => reject(new Error(`${label} timeout`)), timeoutMs);
 		promise.then(
 			(value) => {
 				clearTimeout(timeout);
@@ -324,11 +285,7 @@ function withTimeout<T>(
 // Synthetic relay fields: no account routes, captured packets, or keys.
 function groupField(tag: number, value: number | Uint8Array): Uint8Array {
 	return value instanceof Uint8Array
-		? concatBytes([
-			encodeVarint((tag << 3) | 2),
-			encodeVarint(value.length),
-			value,
-		])
+		? concatBytes([encodeVarint((tag << 3) | 2), encodeVarint(value.length), value])
 		: concatBytes([encodeVarint(tag << 3), encodeVarint(value)]);
 }
 
@@ -340,10 +297,7 @@ function groupAnswer(invalidStream = false): Uint8Array {
 				concatBytes([
 					groupField(
 						1,
-						concatBytes([
-							groupField(1, new TextEncoder().encode(name)),
-							groupField(3, 1),
-						]),
+						concatBytes([groupField(1, new TextEncoder().encode(name)), groupField(3, 1)]),
 					),
 					groupField(
 						2,
@@ -354,7 +308,7 @@ function groupAnswer(invalidStream = false): Uint8Array {
 						]),
 					),
 				]),
-			)
+			),
 		),
 		groupField(2, groupField(2, groupField(1, new Uint8Array(30).fill(7)))),
 	]);
@@ -372,7 +326,7 @@ function groupRelay(responseBody: Uint8Array, afterProvisional = false) {
 		wireSend(wire, endpoint) {
 			if (endpoint.bootstrap) {
 				const request = decodePlanetMsg(endpoint.plaintext);
-				assertEquals(request.cc?.bodyTag, CC_MSG.PARTICIPATE_REQ);
+				assert.deepEqual(request.cc?.bodyTag, CC_MSG.PARTICIPATE_REQ);
 				const clientPub = extractBootstrapClientPub(wire);
 				const label = extractBootstrapClientLabel(wire);
 				const seed = extractBootstrapClientSeed(wire);
@@ -418,7 +372,7 @@ function groupRelay(responseBody: Uint8Array, afterProvisional = false) {
 				return;
 			}
 			const plain = decryptRegularWire(receiveKeys, wire);
-			assert(plain, "outbound control authenticates");
+			assert.isOk(plain, "outbound control authenticates");
 			// Pinhole probes are raw transport payloads rather than protobuf.
 			if (plain.length === 519 || plain.length === 10) return;
 			const msg = decodePlanetMsg(plain);
@@ -426,7 +380,7 @@ function groupRelay(responseBody: Uint8Array, afterProvisional = false) {
 		},
 	});
 	const oneToOneRoute = makeRoute(peer);
-	assert("toMid" in oneToOneRoute);
+	assert.isOk("toMid" in oneToOneRoute);
 	const { toMid: _toMid, ...baseRoute } = oneToOneRoute;
 	// Only route fields consumed by the transport are needed by this fake relay.
 	const route = {
@@ -436,32 +390,30 @@ function groupRelay(responseBody: Uint8Array, afterProvisional = false) {
 	return { transport, route, registrations, media };
 }
 
-Deno.test("group final answer binds registration and AUDIO/DATA wire SSRCs", async () => {
+test("group final answer binds registration and AUDIO/DATA wire SSRCs", async () => {
 	const relay = groupRelay(
-		concatBytes([
-			groupField(1, 0),
-			groupField(6, groupAnswer()),
-			groupField(7, 88),
-		]),
+		concatBytes([groupField(1, 0), groupField(6, groupAnswer()), groupField(7, 88)]),
 	);
 	const { transport } = relay;
 	try {
 		await transport.connect({ route: relay.route });
 		const joined = await transport.joinGroupDetailed({ roomId: "c-room" });
-		assert(joined.mediaReady);
-		assertEquals(relay.registrations.length, 1);
+		assert.isOk(joined.mediaReady);
+		assert.deepEqual(relay.registrations.length, 1);
 		const registration = relay.registrations[0].mc!;
-		assertEquals(registration.hdr?.dstChanId, 88n); // media, not CC channel 77
+		assert.deepEqual(registration.hdr?.dstChanId, 88n); // media, not CC channel 77
 		const data = decodeMcDataReq(registration.bodyBytes!).data!;
 		const specLength = (data[4] << 8) | data[5];
 		const fields = decodeFields(data.subarray(8, 8 + specLength));
 		const sources = (tag: number) =>
-			fields.filter((f) => f.tag === tag).map((f) => {
-				assert(f.value instanceof Uint8Array);
-				return Number(decodeFields(f.value).find((v) => v.tag === 1)?.value);
-			});
-		assertEquals(sources(1), [1001, 1002, 1003]);
-		assertEquals(sources(6), [2001, 2002]);
+			fields
+				.filter((f) => f.tag === tag)
+				.map((f) => {
+					assert.isOk(f.value instanceof Uint8Array);
+					return Number(decodeFields(f.value).find((v) => v.tag === 1)?.value);
+				});
+		assert.deepEqual(sources(1), [1001, 1002, 1003]);
+		assert.deepEqual(sources(6), [2001, 2002]);
 		const local = transport.localMediaOffer!;
 		const audioContext = await deriveSrtpContext(
 			derivePlanetMediaStreamKeying(local.material.mediaSecret, "AUDIO"),
@@ -469,89 +421,70 @@ Deno.test("group final answer binds registration and AUDIO/DATA wire SSRCs", asy
 		const dataContext = await deriveSrtpContext(
 			derivePlanetMediaStreamKeying(local.material.mediaSecret, "DATA"),
 		);
-		const [payload] = packetizeNativeGroupOpusPairs([
-			new Uint8Array([0xf8, 1]),
-			new Uint8Array([0xf8, 2]),
-		], { inputPrefixBytes: 0, frameActivity: [true, true] });
+		const [payload] = packetizeNativeGroupOpusPairs(
+			[new Uint8Array([0xf8, 1]), new Uint8Array([0xf8, 2])],
+			{ inputPrefixBytes: 0, frameActivity: [true, true] },
+		);
 		for (let i = 0; i < 6; i++) {
 			await transport.send(payload, { timestampStep: 1920 });
 		}
 		const audio = relay.media.filter((wire) => (wire[1] & 0x7f) === 96);
-		assertEquals(audio.length, 6);
+		assert.deepEqual(audio.length, 6);
 		for (const [i, wire] of audio.entries()) {
 			const packet = parseRtp(await srtpDecrypt(audioContext, wire));
-			assertEquals(packet.ssrc, 2001);
-			assertEquals(packet.timestamp, 960 + i * 1920);
-			assertEquals(packet.payload, payload);
+			assert.deepEqual(packet.ssrc, 2001);
+			assert.deepEqual(packet.timestamp, 960 + i * 1920);
+			assert.deepEqual(packet.payload, payload);
 		}
 		const dataPackets = relay.media.filter((wire) => (wire[1] & 0x7f) === 101);
-		assertEquals(dataPackets.length, 1);
-		assertEquals(
-			parseRtp(await srtpDecrypt(dataContext, dataPackets[0])).ssrc,
-			2003,
-		);
+		assert.deepEqual(dataPackets.length, 1);
+		assert.deepEqual(parseRtp(await srtpDecrypt(dataContext, dataPackets[0])).ssrc, 2003);
 	} finally {
 		await transport.close();
 	}
 });
 
-Deno.test("group rejects failed/incomplete answers without registering or sending media", async (t) => {
-	const answer = groupField(6, groupAnswer());
-	const channel = groupField(7, 88);
-	for (
-		const [name, fields, error] of [
-			[
-				"failure",
-				[groupField(1, 1), answer, channel],
-				"group participation rejected or incomplete",
-			],
-			[
-				"release",
-				[groupField(1, 0), groupField(2, 1), answer, channel],
-				"group participation rejected or incomplete",
-			],
-			[
-				"missing result",
-				[answer, channel],
-				"group participation rejected or incomplete",
-			],
-			[
-				"missing media channel",
-				[groupField(1, 0), answer],
-				"group participation rejected or incomplete",
-			],
-			[
-				"missing answer",
-				[groupField(1, 0), channel],
-				"group answer stream IDs missing",
-			],
-			["invalid DATA source", [
-				groupField(1, 0),
-				groupField(6, groupAnswer(true)),
-				channel,
-			], "group answer stream IDs missing"],
-			["provisional only", [channel], "PLANET reply timeout"],
-		] as const
-	) {
-		await t.step(name, async () => {
-			const relay = groupRelay(concatBytes([...fields]), true);
-			try {
-				await relay.transport.connect({ route: relay.route });
-				await assertRejects(
-					() => relay.transport.joinGroupDetailed({ roomId: "c-room" }),
-					Error,
-					error,
-				);
-				assertEquals(relay.registrations.length, 0);
-				assertEquals(relay.media.length, 0);
-			} finally {
-				await relay.transport.close();
-			}
-		});
-	}
-});
+const answer = groupField(6, groupAnswer());
+const channel = groupField(7, 88);
+for (const [name, fields, error] of [
+	["failure", [groupField(1, 1), answer, channel], "group participation rejected or incomplete"],
+	[
+		"release",
+		[groupField(1, 0), groupField(2, 1), answer, channel],
+		"group participation rejected or incomplete",
+	],
+	["missing result", [answer, channel], "group participation rejected or incomplete"],
+	[
+		"missing media channel",
+		[groupField(1, 0), answer],
+		"group participation rejected or incomplete",
+	],
+	["missing answer", [groupField(1, 0), channel], "group answer stream IDs missing"],
+	[
+		"invalid DATA source",
+		[groupField(1, 0), groupField(6, groupAnswer(true)), channel],
+		"group answer stream IDs missing",
+	],
+	["provisional only", [channel], "PLANET reply timeout"],
+] as const) {
+	test(`group rejects failed/incomplete answers (${name})`, async () => {
+		const relay = groupRelay(concatBytes([...fields]), true);
+		try {
+			await relay.transport.connect({ route: relay.route });
+			await assertRejects(
+				() => relay.transport.joinGroupDetailed({ roomId: "c-room" }),
+				Error,
+				error,
+			);
+			assert.deepEqual(relay.registrations.length, 0);
+			assert.deepEqual(relay.media.length, 0);
+		} finally {
+			await relay.transport.close();
+		}
+	});
+}
 
-Deno.test("PlanetTransport.close does not send REL before SETUP/INVITE", async () => {
+test("PlanetTransport.close does not send REL before SETUP/INVITE", async () => {
 	let sends = 0;
 	const transport = new PlanetTransport({
 		localMid: "u-local",
@@ -563,10 +496,10 @@ Deno.test("PlanetTransport.close does not send REL before SETUP/INVITE", async (
 	await transport.connect({ route: makeRoute() });
 	await transport.close();
 
-	assertEquals(sends, 0);
+	assert.deepEqual(sends, 0);
 });
 
-Deno.test("PlanetTransport retains generated media offer material for SRTP setup", async () => {
+test("PlanetTransport retains generated media offer material for SRTP setup", async () => {
 	let sends = 0;
 	let setupMsgId = 0;
 	const transport = new PlanetTransport({
@@ -584,20 +517,20 @@ Deno.test("PlanetTransport retains generated media offer material for SRTP setup
 	try {
 		await transport.invite({ to: "u-peer" });
 	} catch (e) {
-		assert(e instanceof Error);
-		assert(e.message.includes("PLANET reply timeout"));
+		assert.isOk(e instanceof Error);
+		assert.isOk(e.message.includes("PLANET reply timeout"));
 	}
 
 	const media = transport.localMediaOffer;
-	assert(media);
-	assertEquals(sends, 1);
-	assertEquals(setupMsgId, 0x2141);
-	assertEquals(media.keypair.publicKey.length, 33);
-	assertEquals(media.keypair.privateKey.length, 32);
-	assertEquals(media.material.mediaPubKey.length, 33);
-	assertEquals(media.material.mediaNonce.length, 16);
-	assertEquals(media.material.mediaSecret.length, 30);
-	assertEquals(media.offer.length, 311);
+	assert.isOk(media);
+	assert.deepEqual(sends, 1);
+	assert.deepEqual(setupMsgId, 0x2141);
+	assert.deepEqual(media.keypair.publicKey.length, 33);
+	assert.deepEqual(media.keypair.privateKey.length, 32);
+	assert.deepEqual(media.material.mediaPubKey.length, 33);
+	assert.deepEqual(media.material.mediaNonce.length, 16);
+	assert.deepEqual(media.material.mediaSecret.length, 30);
+	assert.deepEqual(media.offer.length, 311);
 });
 
 async function exerciseMediaCall(remoteRelease: boolean, ringing = false) {
@@ -708,9 +641,11 @@ async function exerciseMediaCall(remoteRelease: boolean, ringing = false) {
 	});
 	let resolveInfoReq!: (bodyTag: number) => void;
 	let resolveInfoRsp!: (bodyTag: number) => void;
-	let resolveMcDataRsp!: (
-		rsp: { dispatchId: number; dataLength: number; bodyLength: number },
-	) => void;
+	let resolveMcDataRsp!: (rsp: {
+		dispatchId: number;
+		dataLength: number;
+		bodyLength: number;
+	}) => void;
 	let resolveRelReq!: (req: { bodyTag: number; dstChanId: string }) => void;
 	let resolveKeepalive!: (bodyTag: number) => void;
 	const mediaWire = new Promise<Uint8Array>((resolve) => {
@@ -728,16 +663,14 @@ async function exerciseMediaCall(remoteRelease: boolean, ringing = false) {
 	const infoRsp = new Promise<number>((resolve) => {
 		resolveInfoRsp = resolve;
 	});
-	const mcDataRsp = new Promise<
-		{ dispatchId: number; dataLength: number; bodyLength: number }
-	>((resolve) => {
-		resolveMcDataRsp = resolve;
-	});
-	const relReq = new Promise<{ bodyTag: number; dstChanId: string }>(
+	const mcDataRsp = new Promise<{ dispatchId: number; dataLength: number; bodyLength: number }>(
 		(resolve) => {
-			resolveRelReq = resolve;
+			resolveMcDataRsp = resolve;
 		},
 	);
+	const relReq = new Promise<{ bodyTag: number; dstChanId: string }>((resolve) => {
+		resolveRelReq = resolve;
+	});
 	const keepalive = new Promise<number>((resolve) => {
 		resolveKeepalive = resolve;
 	});
@@ -763,9 +696,7 @@ async function exerciseMediaCall(remoteRelease: boolean, ringing = false) {
 				}
 				const msg = decodePlanetMsg(plain);
 				outbound.push(msg);
-				if (
-					outbound.filter((m) => m.cc?.bodyTag === CC_MSG.REL_RSP).length === 2
-				) resolveRelRsps();
+				if (outbound.filter((m) => m.cc?.bodyTag === CC_MSG.REL_RSP).length === 2) resolveRelRsps();
 				if (msg.cc?.bodyTag === CC_MSG.CONN_RSP) {
 					connRspCount++;
 					if (connRspCount >= 2) resolveSecondConnRsp();
@@ -788,7 +719,7 @@ async function exerciseMediaCall(remoteRelease: boolean, ringing = false) {
 					resolveMcDataRsp({
 						dispatchId: rsp.dispatchId ?? 0,
 						dataLength: data.length,
-						bodyLength: data.length >= 6 ? ((data[4] << 8) | data[5]) : 0,
+						bodyLength: data.length >= 6 ? (data[4] << 8) | data[5] : 0,
 					});
 				}
 				if (msg.scBytes) {
@@ -816,30 +747,24 @@ async function exerciseMediaCall(remoteRelease: boolean, ringing = false) {
 				sendLabel: clientLabel,
 				recvLabel: clientLabel,
 			}).recv;
-			const setupRspWire = buildServerWire(
-				serverKeys,
-				setupRspPlain,
-				0x5101,
-				{
-					bootstrap: {
-						label: replyLabel,
-						seed: replySeed,
-						pub: routePeer.publicKey,
-					},
+			const setupRspWire = buildServerWire(serverKeys, setupRspPlain, 0x5101, {
+				bootstrap: {
+					label: replyLabel,
+					seed: replySeed,
+					pub: routePeer.publicKey,
 				},
-			);
+			});
 			const connReqWire = buildServerWire(serverKeys, connReqPlain, 0x5102);
 			connReqWireForRetry = connReqWire;
 			const infoReqWire = buildServerWire(serverKeys, infoReqPlain, 0x5103);
 			const mcDataReqWire = buildServerWire(serverKeys, mcDataReqPlain, 0x5104);
-			void sendUdp(server, setupRspWire, rinfo).then(() =>
-				new Promise((resolve) => setTimeout(resolve, 5))
-			).then(() => ringing ? undefined : sendUdp(server, connReqWire, rinfo))
-				.then(() => new Promise((resolve) => setTimeout(resolve, 5))).then(() =>
-					ringing ? undefined : sendUdp(server, infoReqWire, rinfo)
-				).then(() => new Promise((resolve) => setTimeout(resolve, 5))).then(
-					() => ringing ? undefined : sendUdp(server, mcDataReqWire, rinfo),
-				);
+			void sendUdp(server, setupRspWire, rinfo)
+				.then(() => new Promise((resolve) => setTimeout(resolve, 5)))
+				.then(() => (ringing ? undefined : sendUdp(server, connReqWire, rinfo)))
+				.then(() => new Promise((resolve) => setTimeout(resolve, 5)))
+				.then(() => (ringing ? undefined : sendUdp(server, infoReqWire, rinfo)))
+				.then(() => new Promise((resolve) => setTimeout(resolve, 5)))
+				.then(() => (ringing ? undefined : sendUdp(server, mcDataReqWire, rinfo)));
 		} catch (e) {
 			serverError = e;
 		}
@@ -848,21 +773,17 @@ async function exerciseMediaCall(remoteRelease: boolean, ringing = false) {
 	let transportClosed = false;
 	try {
 		await transport.connect({ route });
-		const invite = await transport.inviteDetailed({ to: "u-peer" }).catch(
-			(e) => {
-				throw new Error(
-					`invite failed after ${serverMessages} server messages: ${
-						serverError instanceof Error
-							? serverError.message
-							: String(serverError ?? e)
-					}`,
-				);
-			},
-		);
-		assertEquals(invite.setupRsp?.result, 0);
+		const invite = await transport.inviteDetailed({ to: "u-peer" }).catch((e) => {
+			throw new Error(
+				`invite failed after ${serverMessages} server messages: ${
+					serverError instanceof Error ? serverError.message : String(serverError ?? e)
+				}`,
+			);
+		});
+		assert.deepEqual(invite.setupRsp?.result, 0);
 		if (ringing) {
-			assert(serverSendKeys);
-			assert(clientRinfo);
+			assert.isOk(serverSendKeys);
+			assert.isOk(clientRinfo);
 			const answer = assertRejects(
 				() => transport.waitForAnswerDetailed({ timeoutMs: 5000 }),
 				Error,
@@ -877,51 +798,42 @@ async function exerciseMediaCall(remoteRelease: boolean, ringing = false) {
 				cid,
 				srcChanId: 0x1001n,
 			});
-			await sendUdp(
-				server,
-				buildServerWire(serverSendKeys, release, 0x6101),
-				clientRinfo,
-			);
+			await sendUdp(server, buildServerWire(serverSendKeys, release, 0x6101), clientRinfo);
 			await withTimeout(answer, 300, "ringing release");
-			assertEquals(await transport.ended, {
+			assert.deepEqual(await transport.ended, {
 				by: "remote",
 				relCode: 3,
 				releaser: "responder",
 			});
 			await transport.close();
 			transportClosed = true;
-			assertEquals(
-				outbound.filter((m) => m.cc?.bodyTag === CC_MSG.REL_REQ).length,
-				0,
-			);
+			assert.deepEqual(outbound.filter((m) => m.cc?.bodyTag === CC_MSG.REL_REQ).length, 0);
 			return;
 		}
 		const answer = await transport.waitForAnswerDetailed({ timeoutMs: 1000 });
-		assert(answer.mediaReady);
-		assertEquals(answer.connRspSent, true);
+		assert.isOk(answer.mediaReady);
+		assert.deepEqual(answer.connRspSent, true);
 		await withTimeout(pinholeReport, 1000, "pinhole_report");
-		assertEquals(pinholePlainLengths.filter((len) => len === 519).length, 16);
-		assertEquals(pinholePlainLengths.filter((len) => len === 10).length, 1);
-		assertEquals(await withTimeout(infoReq, 1000, "info_req"), CC_MSG.INFO_REQ);
-		assertEquals(await withTimeout(infoRsp, 1000, "info_rsp"), CC_MSG.INFO_RSP);
-		assertEquals(await withTimeout(mcDataRsp, 1000, "mc_data_rsp"), {
+		assert.deepEqual(pinholePlainLengths.filter((len) => len === 519).length, 16);
+		assert.deepEqual(pinholePlainLengths.filter((len) => len === 10).length, 1);
+		assert.deepEqual(await withTimeout(infoReq, 1000, "info_req"), CC_MSG.INFO_REQ);
+		assert.deepEqual(await withTimeout(infoRsp, 1000, "info_rsp"), CC_MSG.INFO_RSP);
+		assert.deepEqual(await withTimeout(mcDataRsp, 1000, "mc_data_rsp"), {
 			dispatchId: 2,
 			dataLength: 148,
 			bodyLength: 139,
 		});
-		assertEquals(await withTimeout(keepalive, 1000, "keepalive"), 1);
-		assert(clientRinfo);
-		assert(connReqWireForRetry);
+		assert.deepEqual(await withTimeout(keepalive, 1000, "keepalive"), 1);
+		assert.isOk(clientRinfo);
+		assert.isOk(connReqWireForRetry);
 		await sendUdp(server, connReqWireForRetry, clientRinfo);
 		await withTimeout(secondConnRsp, 1000, "duplicate_conn_rsp");
 		if (!remoteRelease) {
 			const req = decodePlanetMsg(connReqPlain);
-			for (
-				const rsp of outbound.filter((m) => m.cc?.bodyTag === CC_MSG.CONN_RSP)
-			) {
-				assertEquals(rsp.hdr?.tranId, req.hdr?.tranId);
-				assertEquals(rsp.hdr?.tranSeq, req.hdr?.tranSeq);
-				assertEquals(rsp.hdr?.sessId, req.hdr?.sessId);
+			for (const rsp of outbound.filter((m) => m.cc?.bodyTag === CC_MSG.CONN_RSP)) {
+				assert.deepEqual(rsp.hdr?.tranId, req.hdr?.tranId);
+				assert.deepEqual(rsp.hdr?.tranSeq, req.hdr?.tranSeq);
+				assert.deepEqual(rsp.hdr?.sessId, req.hdr?.sessId);
 			}
 		}
 		await sendUdp(
@@ -932,7 +844,7 @@ async function exerciseMediaCall(remoteRelease: boolean, ringing = false) {
 		await new Promise((resolve) => setTimeout(resolve, 10));
 
 		const localMedia = transport.localMediaOffer;
-		assert(localMedia);
+		assert.isOk(localMedia);
 		const peerKeys = derivePlanetMediaKeys({
 			local: {
 				privateKey: peerMedia.privateKey,
@@ -951,9 +863,9 @@ async function exerciseMediaCall(remoteRelease: boolean, ringing = false) {
 		await transport.send(opus);
 		const receivedWire = await withTimeout(mediaWire, 1000, "media");
 		const rtp = await srtpDecrypt(peerRecv, receivedWire);
-		assertEquals(parseRtp(rtp).payload, opus);
+		assert.deepEqual(parseRtp(rtp).payload, opus);
 		if (remoteRelease) {
-			assert(serverSendKeys);
+			assert.isOk(serverSendKeys);
 			const frames = transport.receive()[Symbol.asyncIterator]();
 			const firstFrame = frames.next();
 			const peerSend = await deriveSrtpContext(peerKeys.sendKeying);
@@ -971,10 +883,7 @@ async function exerciseMediaCall(remoteRelease: boolean, ringing = false) {
 				),
 				clientRinfo,
 			);
-			assertEquals(
-				(await withTimeout(firstFrame, 300, "received audio")).value,
-				opus,
-			);
+			assert.deepEqual((await withTimeout(firstFrame, 300, "received audio")).value, opus);
 			const pendingFrame = frames.next();
 			await transport.waitForAnswerDetailed({
 				autoConnRsp: false,
@@ -997,23 +906,15 @@ async function exerciseMediaCall(remoteRelease: boolean, ringing = false) {
 					srcChanId: 0x1001n,
 					dstChanId: 0x2002n,
 				});
-				await sendUdp(
-					server,
-					buildServerWire(serverSendKeys, release, msgId),
-					clientRinfo,
-				);
+				await sendUdp(server, buildServerWire(serverSendKeys, release, msgId), clientRinfo);
 			}
-			assertEquals(await withTimeout(pendingFrame, 300, "released receive"), {
+			assert.deepEqual(await withTimeout(pendingFrame, 300, "released receive"), {
 				done: true,
 				value: undefined,
 			});
 			await pendingAnswer;
-			await assertRejects(
-				() => transport.send(opus),
-				Error,
-				"released by remote",
-			);
-			assertEquals(await transport.ended, {
+			await assertRejects(() => transport.send(opus), Error, "released by remote");
+			assert.deepEqual(await transport.ended, {
 				by: "remote",
 				relCode: 1,
 				releaser: "responder",
@@ -1022,44 +923,34 @@ async function exerciseMediaCall(remoteRelease: boolean, ringing = false) {
 			await withTimeout(relRspsReceived, 300, "duplicate release reply");
 			const replies = outbound.filter((m) => m.cc?.bodyTag === CC_MSG.REL_RSP);
 			for (const [i, rsp] of replies.entries()) {
-				assertEquals(rsp.hdr?.msgId, 0x2245);
-				assertEquals(rsp.hdr?.tranSeq, 0x2145 + i);
-				assertEquals(rsp.hdr?.tranId, new Uint8Array(16).fill(0x45 + i));
-				assertEquals(rsp.hdr?.sessId, sessId);
-				assertEquals(rsp.cc?.hdr?.cid, cid);
-				assertEquals(rsp.cc?.hdr?.srcChanId, 0x2002n);
-				assertEquals(rsp.cc?.hdr?.dstChanId, 0x1001n);
-				assertEquals(rsp.cc?.bodyBytes, new Uint8Array([8, 0]));
+				assert.deepEqual(rsp.hdr?.msgId, 0x2245);
+				assert.deepEqual(rsp.hdr?.tranSeq, 0x2145 + i);
+				assert.deepEqual(rsp.hdr?.tranId, new Uint8Array(16).fill(0x45 + i));
+				assert.deepEqual(rsp.hdr?.sessId, sessId);
+				assert.deepEqual(rsp.cc?.hdr?.cid, cid);
+				assert.deepEqual(rsp.cc?.hdr?.srcChanId, 0x2002n);
+				assert.deepEqual(rsp.cc?.hdr?.dstChanId, 0x1001n);
+				assert.deepEqual(rsp.cc?.bodyBytes, new Uint8Array([8, 0]));
 			}
 			const count = outbound.length;
 			await new Promise((resolve) => setTimeout(resolve, 50));
-			assertEquals(outbound.length, count, "keepalive stops on remote release");
+			assert.deepEqual(outbound.length, count, "keepalive stops on remote release");
 		}
 		await Promise.all([transport.close(), transport.close()]);
 		await transport.close();
 		transportClosed = true;
 		if (remoteRelease) {
-			assertEquals(
-				outbound.filter((m) => m.cc?.bodyTag === CC_MSG.REL_REQ).length,
-				0,
-			);
-			assertEquals(transport.endReason?.by, "remote");
+			assert.deepEqual(outbound.filter((m) => m.cc?.bodyTag === CC_MSG.REL_REQ).length, 0);
+			assert.deepEqual(transport.endReason?.by, "remote");
 			return;
 		}
-		assertEquals(await withTimeout(relReq, 1000, "rel_req"), {
+		assert.deepEqual(await withTimeout(relReq, 1000, "rel_req"), {
 			bodyTag: CC_MSG.REL_REQ,
 			dstChanId: String(0x1001n),
 		});
-		assertEquals(
-			outbound.filter((m) => m.cc?.bodyTag === CC_MSG.REL_REQ).length,
-			1,
-		);
-		assertEquals(await transport.ended, { by: "local" });
-		await assertRejects(
-			() => transport.send(opus),
-			Error,
-			"PlanetTransport closed",
-		);
+		assert.deepEqual(outbound.filter((m) => m.cc?.bodyTag === CC_MSG.REL_REQ).length, 1);
+		assert.deepEqual(await transport.ended, { by: "local" });
+		await assertRejects(() => transport.send(opus), Error, "PlanetTransport closed");
 	} finally {
 		if (!transportClosed) await transport.close();
 		await new Promise<void>((resolve) => server.close(() => resolve()));
@@ -1067,15 +958,15 @@ async function exerciseMediaCall(remoteRelease: boolean, ringing = false) {
 	}
 }
 
-Deno.test("PlanetTransport learns RTP source and sends decryptable SRTP media", () =>
+test("PlanetTransport learns RTP source and sends decryptable SRTP media", () =>
 	exerciseMediaCall(false));
-Deno.test("PlanetTransport remote release ends media and waiters and replies to duplicates", () =>
+test("PlanetTransport remote release ends media and waiters and replies to duplicates", () =>
 	exerciseMediaCall(true));
 
-Deno.test("PlanetTransport remote release rejects a pending ringing answer", () =>
+test("PlanetTransport remote release rejects a pending ringing answer", () =>
 	exerciseMediaCall(true, true));
 
-Deno.test("PlanetTransport replies preserve each request transaction across interleaved sessions", async () => {
+test("PlanetTransport replies preserve each request transaction across interleaved sessions", async () => {
 	const peer = generateEphemeralKeypair();
 	const seed = new Uint8Array(16).fill(0x32);
 	const sessId = new Uint8Array(16).fill(0x51);
@@ -1180,23 +1071,21 @@ Deno.test("PlanetTransport replies preserve each request transaction across inte
 	for (const [i, plain] of requests.entries()) {
 		const req = decodePlanetMsg(plain);
 		const replies = outbound.filter((m) => m.hdr?.msgId === expectedIds[i]);
-		assertEquals(replies.length, 1);
+		assert.deepEqual(replies.length, 1);
 		for (const rsp of replies) {
-			assertEquals(rsp.hdr?.tranId, req.hdr?.tranId);
-			assertEquals(rsp.hdr?.tranSeq, req.hdr?.tranSeq);
-			assertEquals(rsp.hdr?.sessId, req.hdr?.sessId);
-			assertEquals(rsp.hdr?.locNonce, localNonce);
-			assertEquals(rsp.hdr?.rmtNonce, 123n);
+			assert.deepEqual(rsp.hdr?.tranId, req.hdr?.tranId);
+			assert.deepEqual(rsp.hdr?.tranSeq, req.hdr?.tranSeq);
+			assert.deepEqual(rsp.hdr?.sessId, req.hdr?.sessId);
+			assert.deepEqual(rsp.hdr?.locNonce, localNonce);
+			assert.deepEqual(rsp.hdr?.rmtNonce, 123n);
 		}
 	}
-	const fresh = outbound.filter((m) =>
-		!expectedIds.includes(m.hdr?.msgId ?? 0)
-	);
-	assertEquals(
+	const fresh = outbound.filter((m) => !expectedIds.includes(m.hdr?.msgId ?? 0));
+	assert.deepEqual(
 		fresh.map((m) => (m.hdr?.tranSeq ?? 0) - (fresh[0].hdr?.tranSeq ?? 0)),
 		fresh.map((_, i) => i),
 	);
-	assertEquals(
+	assert.deepEqual(
 		new Set(fresh.map((m) => Array.from(m.hdr?.tranId ?? []).join(","))).size,
 		fresh.length,
 	);
@@ -1204,16 +1093,15 @@ Deno.test("PlanetTransport replies preserve each request transaction across inte
 
 // Reuse the encrypted loopback helpers above; no account, captured material or
 // test-only transport hooks. Exercise the public client answer path as well.
-async function exerciseIncoming(
-	mode: "media" | "timeout" | "abort" | "bad-address" | "bad-offer",
-) {
+async function exerciseIncoming(mode: "media" | "timeout" | "abort" | "bad-address" | "bad-offer") {
 	const relay = await bindUdpServer();
 	const attacker = await bindUdpServer();
 	const routeKey = generateEphemeralKeypair();
 	const peerKey = generateEphemeralKeypair();
-	const self = `u${"2".repeat(32)}`, caller = `u${"1".repeat(32)}`;
+	const self = `u${"2".repeat(32)}`,
+		caller = `u${"1".repeat(32)}`;
 	const address = relay.address();
-	assert(typeof address !== "string");
+	assert.isOk(typeof address !== "string");
 	const peerMaterial: PlanetSetupOfferMaterial = {
 		mediaPubKey: peerKey.publicKey,
 		mediaKeyId: 345,
@@ -1238,38 +1126,33 @@ async function exerciseIncoming(
 	};
 	const call = parseIncomingAudioCall(operation, self)!;
 	const event = parseIncomingCall(operation as never, self);
-	assertEquals(event.from, caller);
-	assertEquals(event.callMid, call.callId);
-	const client = createCallClient(
-		{
-			base: {
-				profile: { mid: self },
-				deviceDetails: {
-					device: "DESKTOPWIN",
-					appVersion: "1",
-					systemName: "Windows",
-					systemVersion: "1",
-				},
+	assert.deepEqual(event.from, caller);
+	assert.deepEqual(event.callMid, call.callId);
+	const client = createCallClient({
+		base: {
+			profile: { mid: self },
+			deviceDetails: {
+				device: "DESKTOPWIN",
+				appVersion: "1",
+				systemName: "Windows",
+				systemVersion: "1",
 			},
-		} as never,
-	);
+		},
+	} as never);
 	const abort = new AbortController();
 	const identity = {
 		deviceId: bytesToBase64(new Uint8Array(32).fill(7)),
 		signal: abort.signal,
 		timeoutMs: 300,
 	};
-	const sessId = new Uint8Array(16).fill(8), seed = new Uint8Array(16).fill(9);
+	const sessId = new Uint8Array(16).fill(8),
+		seed = new Uint8Array(16).fill(9);
 	let recvKeys: TransportKeys, sendKeys: TransportKeys, remote: RemoteInfo;
 	let sequence = 1;
 	const outgoing: ReturnType<typeof decodePlanetMsg>[] = [];
-	const answerSeen = Promise.withResolvers<
-		ReturnType<typeof decodePlanetMsg>
-	>();
+	const answerSeen = Promise.withResolvers<ReturnType<typeof decodePlanetMsg>>();
 	const mediaSeen = Promise.withResolvers<Uint8Array>();
-	const releaseSeen = Promise.withResolvers<
-		ReturnType<typeof decodePlanetMsg>
-	>();
+	const releaseSeen = Promise.withResolvers<ReturnType<typeof decodePlanetMsg>>();
 	let serverError: unknown;
 	let transport: PlanetTransport | undefined;
 	const field = (bytes: Uint8Array, tag: number) =>
@@ -1282,31 +1165,35 @@ async function exerciseIncoming(
 		options: { foreign?: boolean; bootstrap?: boolean; socket?: Socket } = {},
 	) => {
 		const h = request.hdr!;
-		const plain = packPlanetMsg({
-			userId: self,
-			msgId,
-			sessId,
-			locNonce: 555n,
-			rmtNonce: h.locNonce!,
-			tranId: options.foreign ? new Uint8Array(16).fill(99) : h.tranId!,
-			tranSeq: h.tranSeq!,
-		}, {
-			kind: "cc",
-			data: packPlanetCcMsg({
-				cid: call.callId,
-				srcChanId: 444n,
-				dstChanId: request.cc!.hdr!.srcChanId!,
-			}, wrapCcMsg(bodyTag, bodyBytes)),
-		});
+		const plain = packPlanetMsg(
+			{
+				userId: self,
+				msgId,
+				sessId,
+				locNonce: 555n,
+				rmtNonce: h.locNonce!,
+				tranId: options.foreign ? new Uint8Array(16).fill(99) : h.tranId!,
+				tranSeq: h.tranSeq!,
+			},
+			{
+				kind: "cc",
+				data: packPlanetCcMsg(
+					{
+						cid: call.callId,
+						srcChanId: 444n,
+						dstChanId: request.cc!.hdr!.srcChanId!,
+					},
+					wrapCcMsg(bodyTag, bodyBytes),
+				),
+			},
+		);
 		await sendUdp(
 			options.socket ?? relay,
 			buildServerWire(
 				sendKeys,
 				plain,
 				sequence++,
-				options.bootstrap
-					? { bootstrap: { label: 7, seed, pub: routeKey.publicKey } }
-					: {},
+				options.bootstrap ? { bootstrap: { label: 7, seed, pub: routeKey.publicKey } } : {},
 			),
 			remote,
 		);
@@ -1337,45 +1224,32 @@ async function exerciseIncoming(
 					sendLabel: 7,
 					recvLabel: 7,
 				}).send;
-				assert(
-					tagEquals(
-						wire.subarray(-16),
-						hmacTag(recvKeys.macKey, wire.subarray(0, -16)),
-					),
-				);
+				assert.isOk(tagEquals(wire.subarray(-16), hmacTag(recvKeys.macKey, wire.subarray(0, -16))));
 				plain = aesCtrDecrypt(
 					recvKeys.encKey,
 					buildPlanetCtrIv(recvKeys.ctrBase, (wire[2] << 8) | wire[3]),
 					wire.subarray(62, -16),
 				);
 			} else plain = decryptRegularWire(recvKeys, wire);
-			assert(plain);
+			assert.isOk(plain);
 			const msg = decodePlanetMsg(plain);
 			outgoing.push(msg);
 			if (msg.cc?.bodyTag === CC_MSG.VERIFY_REQ) {
-				assertEquals(msg.hdr?.msgId, 0x2142);
-				assertEquals(msg.hdr?.sessId?.length ?? 0, 0);
-				assertEquals(
+				assert.deepEqual(msg.hdr?.msgId, 0x2142);
+				assert.deepEqual(msg.hdr?.sessId?.length ?? 0, 0);
+				assert.deepEqual(
 					new TextDecoder().decode(field(msg.cc.bodyBytes!, 1) as Uint8Array),
 					caller,
 				);
-				assertEquals(
-					new TextDecoder().decode(field(msg.cc.bodyBytes!, 2) as Uint8Array),
-					self,
-				);
-				assertEquals(field(msg.cc.bodyBytes!, 9), call.credential);
-				assertEquals(
+				assert.deepEqual(new TextDecoder().decode(field(msg.cc.bodyBytes!, 2) as Uint8Array), self);
+				assert.deepEqual(field(msg.cc.bodyBytes!, 9), call.credential);
+				assert.deepEqual(
 					new TextDecoder().decode(field(msg.cc.bodyBytes!, 10) as Uint8Array),
 					"freecall.audio",
 				);
-				const offer = mode === "bad-offer"
-					? new Uint8Array([0])
-					: packNativeSetupOffer(peerMaterial);
-				const body = concatBytes([
-					new Uint8Array([8, 0, 50]),
-					encodeVarint(offer.length),
-					offer,
-				]);
+				const offer =
+					mode === "bad-offer" ? new Uint8Array([0]) : packNativeSetupOffer(peerMaterial);
+				const body = concatBytes([new Uint8Array([8, 0, 50]), encodeVarint(offer.length), offer]);
 				// Authenticated but unrelated traffic must not bind the endpoint/session.
 				await reply(msg, CC_MSG.VERIFY_RSP, body, 0x2242, {
 					bootstrap: true,
@@ -1384,26 +1258,16 @@ async function exerciseIncoming(
 				});
 				await reply(msg, CC_MSG.VERIFY_RSP, body, 0x2242, { bootstrap: true });
 			} else if (msg.cc?.bodyTag === CC_MSG.CONN_REQ) {
-				assertEquals(msg.hdr?.msgId, 0x2144);
-				assertEquals(msg.hdr?.sessId, sessId);
-				assertEquals(msg.cc.hdr?.dstChanId, 444n);
-				await reply(
-					msg,
-					CC_MSG.CONN_RSP,
-					packCcConnRsp({ mChanId: 666n }),
-					0x2344,
-				);
-				await reply(
-					msg,
-					CC_MSG.CONN_RSP,
-					packCcConnRsp({ result: 0, mChanId: 666n }),
-					0x2244,
-					{ foreign: true },
-				);
+				assert.deepEqual(msg.hdr?.msgId, 0x2144);
+				assert.deepEqual(msg.hdr?.sessId, sessId);
+				assert.deepEqual(msg.cc.hdr?.dstChanId, 444n);
+				await reply(msg, CC_MSG.CONN_RSP, packCcConnRsp({ mChanId: 666n }), 0x2344);
+				await reply(msg, CC_MSG.CONN_RSP, packCcConnRsp({ result: 0, mChanId: 666n }), 0x2244, {
+					foreign: true,
+				});
 				answerSeen.resolve(msg);
-			} else if (
-				msg.cc?.bodyTag === CC_MSG.REL_REQ || msg.cc?.bodyTag === CC_MSG.REL_RSP
-			) releaseSeen.resolve(msg);
+			} else if (msg.cc?.bodyTag === CC_MSG.REL_REQ || msg.cc?.bodyTag === CC_MSG.REL_RSP)
+				releaseSeen.resolve(msg);
 		})().catch((e) => {
 			serverError = e;
 			answerSeen.reject(e);
@@ -1411,26 +1275,27 @@ async function exerciseIncoming(
 	});
 	try {
 		const accepting = client.answerIncoming(event, identity);
-		const failure = mode !== "media"
-			? assertRejects(
-				() => accepting,
-				Error,
-				mode === "timeout"
-					? "timeout"
-					: mode === "bad-address"
-					? "endpoint unresolved"
-					: mode === "bad-offer"
-					? "unsupported incoming media offer"
-					: undefined,
-			)
-			: undefined;
+		const failure =
+			mode !== "media"
+				? assertRejects(
+						() => accepting,
+						Error,
+						mode === "timeout"
+							? "timeout"
+							: mode === "bad-address"
+								? "endpoint unresolved"
+								: mode === "bad-offer"
+									? "unsupported incoming media offer"
+									: undefined,
+					)
+				: undefined;
 		if (mode === "bad-offer") {
 			await failure;
-			assertEquals(
+			assert.deepEqual(
 				outgoing.some((m) => m.cc?.bodyTag === CC_MSG.CONN_REQ),
 				false,
 			);
-			assertEquals(serverError, undefined);
+			assert.deepEqual(serverError, undefined);
 			return;
 		}
 		const conn = await withTimeout(answerSeen.promise, 1000, "CONN request");
@@ -1461,11 +1326,7 @@ async function exerciseIncoming(
 				accepted = true;
 			});
 			await new Promise((r) => setTimeout(r, 15));
-			assertEquals(
-				accepted,
-				false,
-				"provisional/foreign CONN must not enable media",
-			);
+			assert.deepEqual(accepted, false, "provisional/foreign CONN must not enable media");
 			await reply(
 				conn,
 				CC_MSG.CONN_RSP,
@@ -1477,12 +1338,10 @@ async function exerciseIncoming(
 				0x2244,
 			);
 			transport = await accepting;
-			const answer = decodeNativeSetupOffer(
-				decodeCcConnReq(conn.cc!.bodyBytes!).answer!,
-			);
-			assertEquals(answer.mediaSecret, undefined);
-			assertEquals(answer.media.find((m) => m.name === "V")?.enabled, 0);
-			assert(!tagEquals(answer.mediaPubKey!, peerMaterial.mediaPubKey));
+			const answer = decodeNativeSetupOffer(decodeCcConnReq(conn.cc!.bodyBytes!).answer!);
+			assert.deepEqual(answer.mediaSecret, undefined);
+			assert.deepEqual(answer.media.find((m) => m.name === "V")?.enabled, 0);
+			assert.isOk(!tagEquals(answer.mediaPubKey!, peerMaterial.mediaPubKey));
 			const keys = derivePlanetMediaKeyingVariants({
 				local: {
 					privateKey: peerKey.privateKey,
@@ -1497,16 +1356,10 @@ async function exerciseIncoming(
 				},
 			});
 			const peerRecv = await deriveSrtpContext(
-				derivePlanetMediaStreamKeying(
-					keys.variants["local-peer/peer"],
-					"AUDIO",
-				),
+				derivePlanetMediaStreamKeying(keys.variants["local-peer/peer"], "AUDIO"),
 			);
 			const peerSend = await deriveSrtpContext(
-				derivePlanetMediaStreamKeying(
-					keys.variants["peer-local/local"],
-					"AUDIO",
-				),
+				derivePlanetMediaStreamKeying(keys.variants["peer-local/local"], "AUDIO"),
 			);
 			const frames = transport.receive()[Symbol.asyncIterator]();
 			const next = frames.next();
@@ -1535,24 +1388,21 @@ async function exerciseIncoming(
 				),
 				remote!,
 			);
-			assertEquals(
+			assert.deepEqual(
 				(await withTimeout(next, 1000, "callee receive")).value,
 				new Uint8Array([1, 2]),
 			);
 			await transport.send(new Uint8Array([3, 4]));
 			const audio = parseRtp(
-				await srtpDecrypt(
-					peerRecv,
-					await withTimeout(mediaSeen.promise, 1000, "callee send"),
-				),
+				await srtpDecrypt(peerRecv, await withTimeout(mediaSeen.promise, 1000, "callee send")),
 			);
-			assertEquals(audio.payload, new Uint8Array([3, 4]));
-			assertEquals(
+			assert.deepEqual(audio.payload, new Uint8Array([3, 4]));
+			assert.deepEqual(
 				audio.ssrc,
 				answer.media.find((m) => m.name === "A")!.rtpPort,
 				"send uses local answer field 11",
 			);
-			assertEquals(audio.ssrc, 102);
+			assert.deepEqual(audio.ssrc, 102);
 			const pending = frames.next();
 			await reply(
 				conn,
@@ -1560,33 +1410,26 @@ async function exerciseIncoming(
 				packCcRelReq({ relCode: 1, releaser: "initiator" }),
 				0x2145,
 			);
-			assertEquals((await transport.ended).by, "remote");
-			assertEquals((await pending).done, true);
-			await assertRejects(
-				() => transport!.send(new Uint8Array([1])),
-				Error,
-				"released by remote",
-			);
+			assert.deepEqual((await transport.ended).by, "remote");
+			assert.deepEqual((await pending).done, true);
+			await assertRejects(() => transport!.send(new Uint8Array([1])), Error, "released by remote");
 		}
 		const release = await withTimeout(releaseSeen.promise, 1000, "release");
-		assertEquals(
-			release.cc?.bodyTag,
-			mode === "media" ? CC_MSG.REL_RSP : CC_MSG.REL_REQ,
-		);
+		assert.deepEqual(release.cc?.bodyTag, mode === "media" ? CC_MSG.REL_RSP : CC_MSG.REL_REQ);
 		if (mode === "media") {
-			assertEquals(release.hdr?.tranId, conn.hdr?.tranId);
-			assertEquals(release.hdr?.tranSeq, conn.hdr?.tranSeq);
-		} else {assertEquals(
-				new TextDecoder().decode(
-					field(release.cc!.bodyBytes!, 3) as Uint8Array,
-				),
+			assert.deepEqual(release.hdr?.tranId, conn.hdr?.tranId);
+			assert.deepEqual(release.hdr?.tranSeq, conn.hdr?.tranSeq);
+		} else {
+			assert.deepEqual(
+				new TextDecoder().decode(field(release.cc!.bodyBytes!, 3) as Uint8Array),
 				"responder",
-			);}
-		assertEquals(
+			);
+		}
+		assert.deepEqual(
 			outgoing.some((m) => m.cc?.bodyTag === CC_MSG.SETUP_REQ),
 			false,
 		);
-		assertEquals(serverError, undefined);
+		assert.deepEqual(serverError, undefined);
 	} finally {
 		abort.abort();
 		await transport?.close();
@@ -1595,13 +1438,13 @@ async function exerciseIncoming(
 	}
 }
 
-Deno.test("incoming public answer authenticates UDP session, sends local SSRC and ends on release", () =>
+test("incoming public answer authenticates UDP session, sends local SSRC and ends on release", () =>
 	exerciseIncoming("media"));
-Deno.test("incoming provisional-only timeout releases responder and closes socket", () =>
+test("incoming provisional-only timeout releases responder and closes socket", () =>
 	exerciseIncoming("timeout"));
-Deno.test("incoming abort while answering releases responder and closes socket", () =>
+test("incoming abort while answering releases responder and closes socket", () =>
 	exerciseIncoming("abort"));
-Deno.test("incoming explicit malformed media address never falls back", () =>
+test("incoming explicit malformed media address never falls back", () =>
 	exerciseIncoming("bad-address"));
-Deno.test("incoming malformed verified offer cannot send an answer", () =>
+test("incoming malformed verified offer cannot send an answer", () =>
 	exerciseIncoming("bad-offer"));
