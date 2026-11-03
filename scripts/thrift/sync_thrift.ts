@@ -101,25 +101,25 @@ export interface ConstDef extends AnnotatedNode {
 
 export type TypeExpr =
 	| {
-		kind: "primitive";
-		ttype: TType;
-		raw: string;
-		annotations?: Record<string, string | true>;
-	}
+			kind: "primitive";
+			ttype: TType;
+			raw: string;
+			annotations?: Record<string, string | true>;
+	  }
 	| { kind: "ref"; name: string; annotations?: Record<string, string | true> }
 	| {
-		kind: "list" | "set";
-		elem: TypeExpr;
-		cppType?: string;
-		annotations?: Record<string, string | true>;
-	}
+			kind: "list" | "set";
+			elem: TypeExpr;
+			cppType?: string;
+			annotations?: Record<string, string | true>;
+	  }
 	| {
-		kind: "map";
-		key: TypeExpr;
-		value: TypeExpr;
-		cppType?: string;
-		annotations?: Record<string, string | true>;
-	};
+			kind: "map";
+			key: TypeExpr;
+			value: TypeExpr;
+			cppType?: string;
+			annotations?: Record<string, string | true>;
+	  };
 
 export type Literal =
 	| { kind: "int"; value: number }
@@ -610,10 +610,7 @@ class Parser {
 		this.expectPunct(":");
 		let requiredness: Requiredness = "default";
 		const r = this.peek();
-		if (
-			r && r.kind === "ident" &&
-			(r.value === "required" || r.value === "optional")
-		) {
+		if (r && r.kind === "ident" && (r.value === "required" || r.value === "optional")) {
 			requiredness = r.value;
 			this.pos++;
 		}
@@ -803,9 +800,7 @@ class Parser {
 }
 
 function tokStr(t: Tok): string {
-	return `${t.kind}:${
-		JSON.stringify((t as { value: unknown }).value)
-	}@${t.line}`;
+	return `${t.kind}:${JSON.stringify((t as { value: unknown }).value)}@${t.line}`;
 }
 
 async function parseIDLDir(dir: string): Promise<IDL> {
@@ -856,7 +851,10 @@ export function indexLineThrift(thrift: LineThrift): LineIndex {
 			}
 			idx.enumNamesByMembers.get(hash)!.push(name);
 		} else {
-			const hash = v.map((f) => f.name).sort().join("|");
+			const hash = v
+				.map((f) => f.name)
+				.sort()
+				.join("|");
 			if (!idx.structNamesByFields.has(hash)) {
 				idx.structNamesByFields.set(hash, []);
 			}
@@ -921,7 +919,10 @@ function findStructMatch(
 	let best: { name: string; score: number } | null = null;
 	for (const [name, v] of idx.byName) {
 		if (isLineEnum(v)) continue;
-		const score = jaccard(myFields, (v as LineStruct).map((f) => f.name));
+		const score = jaccard(
+			myFields,
+			(v as LineStruct).map((f) => f.name),
+		);
 		if (!best || score > best.score) best = { name, score };
 	}
 	if (best && best.score >= threshold) return best.name;
@@ -1042,12 +1043,7 @@ export function computeDiff(
 		for (const f of canonical.fields) {
 			if (existingFids.has(f.fid)) continue;
 			if (existingNames.has(f.name)) continue;
-			const resolved = resolveRefName(
-				f.typeExpr,
-				enumMap,
-				structMap,
-				idl.typedefs,
-			);
+			const resolved = resolveRefName(f.typeExpr, enumMap, structMap, idl.typedefs);
 			diff.structFieldAdds.push({
 				structName: matched,
 				canonicalName: canonical.name,
@@ -1100,40 +1096,21 @@ function typeRefOut(t: TypeExpr): TypeRefOut {
 export function emitFieldEntry(f: FieldDef, indent = "\t\t"): string {
 	const ref = typeRefOut(f.typeExpr);
 	const inner = `${indent}\t`;
-	const lines: string[] = [
-		`${inner}"fid": ${f.fid},`,
-		`${inner}"name": "${f.name}",`,
-	];
+	const lines: string[] = [`${inner}"fid": ${f.fid},`, `${inner}"name": "${f.name}",`];
 	if (ref.type !== undefined) lines.push(`${inner}"type": ${ref.type},`);
 	if (ref.struct !== undefined) {
 		lines.push(`${inner}"struct": "${ref.struct}",`);
 	}
 	if (ref.list !== undefined) {
-		lines.push(
-			`${inner}"list": ${
-				typeof ref.list === "number" ? ref.list : `"${ref.list}"`
-			},`,
-		);
+		lines.push(`${inner}"list": ${typeof ref.list === "number" ? ref.list : `"${ref.list}"`},`);
 	}
 	if (ref.set !== undefined) {
-		lines.push(
-			`${inner}"set": ${
-				typeof ref.set === "number" ? ref.set : `"${ref.set}"`
-			},`,
-		);
+		lines.push(`${inner}"set": ${typeof ref.set === "number" ? ref.set : `"${ref.set}"`},`);
 	}
 	if (ref.map !== undefined) {
-		lines.push(
-			`${inner}"map": ${
-				typeof ref.map === "number" ? ref.map : `"${ref.map}"`
-			},`,
-		);
+		lines.push(`${inner}"map": ${typeof ref.map === "number" ? ref.map : `"${ref.map}"`},`);
 		if (ref.key !== undefined) {
-			lines.push(
-				`${inner}"key": ${
-					typeof ref.key === "number" ? ref.key : `"${ref.key}"`
-				},`,
-			);
+			lines.push(`${inner}"key": ${typeof ref.key === "number" ? ref.key : `"${ref.key}"`},`);
 		}
 	}
 	return `${indent}{\n${lines.join("\n")}\n${indent}},`;
@@ -1165,11 +1142,7 @@ interface BlockSpan {
 	singleLine: boolean; // true when opener and closer are on the same source line (e.g. `[],`)
 }
 
-function findBlock(
-	src: string,
-	name: string,
-	opener: "[" | "{",
-): BlockSpan | null {
+function findBlock(src: string, name: string, opener: "[" | "{"): BlockSpan | null {
 	const closer = opener === "[" ? "]" : "}";
 	const marker = `\t"${name}": ${opener}`;
 	const startMarkerIdx = src.indexOf(marker);
@@ -1225,15 +1198,12 @@ function insertIntoBlock(
 	content: string, // trailing newline expected
 ): string {
 	if (!span.singleLine) {
-		return src.slice(0, span.closeLineStart) + content +
-			src.slice(span.closeLineStart);
+		return src.slice(0, span.closeLineStart) + content + src.slice(span.closeLineStart);
 	}
 	// Single-line empty: replace `[]` (or `{}`) with multi-line form.
 	// span.contentStart points just after the opener; span.closerIdx points at the closer.
 	// Insert: newline, content (already has trailing \n), then `\t` before the closer for alignment.
-	return src.slice(0, span.contentStart) +
-		"\n" + content + "\t" +
-		src.slice(span.closerIdx);
+	return src.slice(0, span.contentStart) + "\n" + content + "\t" + src.slice(span.closerIdx);
 }
 
 export function applyDiff(originalSrc: string, diff: Diff): string {
@@ -1252,9 +1222,7 @@ export function applyDiff(originalSrc: string, diff: Diff): string {
 			warnings.push(`enum block not found: ${enumName}`);
 			continue;
 		}
-		const insertion = adds
-			.map((a) => `\t\t"${a.value}": "${a.memberName}",`)
-			.join("\n") + "\n";
+		const insertion = adds.map((a) => `\t\t"${a.value}": "${a.memberName}",`).join("\n") + "\n";
 		src = insertIntoBlock(src, span, insertion);
 	}
 
@@ -1270,9 +1238,7 @@ export function applyDiff(originalSrc: string, diff: Diff): string {
 			warnings.push(`struct block not found: ${structName}`);
 			continue;
 		}
-		const insertion = adds.map((a) =>
-			emitFieldEntry(a.field, "\t\t")
-		).join("\n") + "\n";
+		const insertion = adds.map((a) => emitFieldEntry(a.field, "\t\t")).join("\n") + "\n";
 		src = insertIntoBlock(src, span, insertion);
 	}
 
@@ -1283,7 +1249,7 @@ export function applyDiff(originalSrc: string, diff: Diff): string {
 			throw new Error("cannot locate closing `};` of Thrift dict");
 		}
 		const sorted = [...diff.newTypes].sort((a, b) =>
-			a.canonicalName.localeCompare(b.canonicalName)
+			a.canonicalName.localeCompare(b.canonicalName),
 		);
 		const insertions: string[] = [];
 		for (const nt of sorted) {
@@ -1293,8 +1259,7 @@ export function applyDiff(originalSrc: string, diff: Diff): string {
 				insertions.push(emitNewStruct(nt.structDef));
 			}
 		}
-		src = src.slice(0, closeIdx) + insertions.join("\n") + "\n" +
-			src.slice(closeIdx);
+		src = src.slice(0, closeIdx) + insertions.join("\n") + "\n" + src.slice(closeIdx);
 	}
 
 	if (warnings.length) {
@@ -1324,10 +1289,7 @@ async function main() {
 	console.log(`  services:  ${idl.services.size}`);
 	console.log(`  typedefs:  ${idl.typedefs.size}`);
 
-	const thriftPath = resolve(
-		scriptDir,
-		"../../packages/types/thrift.ts",
-	);
+	const thriftPath = resolve(scriptDir, "../../packages/types/thrift.ts");
 	const mod = await import(pathToFileURL(thriftPath).href);
 	const thrift = mod.Thrift as LineThrift;
 	console.log(`linejs Thrift entries: ${Object.keys(thrift).length}`);
@@ -1342,8 +1304,10 @@ async function main() {
 	console.log(`new types:         ${diff.newTypes.length}`);
 
 	const head = <T>(arr: T[], n: number) =>
-		arr.slice(0, n).map((x) => String(x)).join(", ") +
-		(arr.length > n ? `, ... (+${arr.length - n})` : "");
+		arr
+			.slice(0, n)
+			.map((x) => String(x))
+			.join(", ") + (arr.length > n ? `, ... (+${arr.length - n})` : "");
 
 	if (diff.enumValueAdds.length) {
 		const byEnum = new Map<string, string[]>();
@@ -1365,9 +1329,10 @@ async function main() {
 	}
 	if (diff.newTypes.length) {
 		console.log(
-			`\nnew types: ${
-				head(diff.newTypes.map((t) => `${t.kind}:${t.canonicalName}`), 25)
-			}`,
+			`\nnew types: ${head(
+				diff.newTypes.map((t) => `${t.kind}:${t.canonicalName}`),
+				25,
+			)}`,
 		);
 	}
 

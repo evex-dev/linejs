@@ -105,9 +105,7 @@ if (import.meta.main) {
 	const linejsRoot = await findUpDir(scriptDir, "pnpm-workspace.yaml");
 
 	const apkAbs = pathResolve(args.apk);
-	const decompileOut = args.out
-		? pathResolve(args.out)
-		: defaultDecompileRoot(linejsRoot, apkAbs);
+	const decompileOut = args.out ? pathResolve(args.out) : defaultDecompileRoot(linejsRoot, apkAbs);
 	const smaliDir = `${decompileOut}/smali`;
 
 	console.log(`apk:            ${apkAbs}`);
@@ -119,34 +117,26 @@ if (import.meta.main) {
 	const packageRoot = pathResolve(linejsRoot, "packages/linejs");
 
 	if (!args.skipDecompile) {
-		await runStep(
-			"decompile (apktool only)",
-			node,
-			[
-				pathResolve(linejsRoot, "scripts/apk/decompile.ts"),
-				"--apk",
-				apkAbs,
-				"--out",
-				decompileOut,
-				"--apktool-only",
-			],
-		);
+		await runStep("decompile (apktool only)", node, [
+			pathResolve(linejsRoot, "scripts/apk/decompile.ts"),
+			"--apk",
+			apkAbs,
+			"--out",
+			decompileOut,
+			"--apktool-only",
+		]);
 	} else if (!existsSync(smaliDir)) {
 		throw new Error(`--skip-decompile passed but ${smaliDir} doesn't exist`);
 	}
 
 	const servicesReport = `${decompileOut}/services.json`;
-	await runStep(
-		"extract Thrift service catalog (for RPC cross-reference)",
-		node,
-		[
-			pathResolve(linejsRoot, "scripts/apk/extract_services.ts"),
-			"--smali",
-			smaliDir,
-			"--report",
-			servicesReport,
-		],
-	);
+	await runStep("extract Thrift service catalog (for RPC cross-reference)", node, [
+		pathResolve(linejsRoot, "scripts/apk/extract_services.ts"),
+		"--smali",
+		smaliDir,
+		"--report",
+		servicesReport,
+	]);
 
 	// Iterate the schema extraction until the diff converges. Each --apply
 	// pass can expose new mismatches (e.g. fields whose struct refs only
@@ -161,14 +151,10 @@ if (import.meta.main) {
 		`${decompileOut}/extract_report.json`,
 	];
 	if (args.dryRun) {
-		await runStep(
-			"extract Thrift diff (dry-run)",
-			node,
-			[
-				pathResolve(linejsRoot, "scripts/apk/extract_thrift.ts"),
-				...baseFlags,
-			],
-		);
+		await runStep("extract Thrift diff (dry-run)", node, [
+			pathResolve(linejsRoot, "scripts/apk/extract_thrift.ts"),
+			...baseFlags,
+		]);
 	} else {
 		// Iterate apply passes. Each pass can expose new pairings because
 		// the previous pass added types or updated refs the matcher couldn't
@@ -188,17 +174,16 @@ if (import.meta.main) {
 				encoding: "utf8",
 			});
 			if (applyProc.error) throw applyProc.error;
-			const applyOut = `${applyProc.stdout ?? ""}${
-				applyProc.stderr ?? ""
-			}`;
+			const applyOut = `${applyProc.stdout ?? ""}${applyProc.stderr ?? ""}`;
 			console.log(applyOut.split("\n").slice(-20).join("\n"));
 			if (applyProc.status !== 0) {
 				throw new Error(`extract_thrift failed (exit ${applyProc.status})`);
 			}
 
 			const adds =
-				/enum value adds:\s+(\d+)[^]*?struct field adds:\s+(\d+)[^]*?new types:\s+(\d+)/m
-					.exec(applyOut);
+				/enum value adds:\s+(\d+)[^]*?struct field adds:\s+(\d+)[^]*?new types:\s+(\d+)/m.exec(
+					applyOut,
+				);
 			const rewrites = /Rewrote\s+(\d+)\s+field/m.exec(applyOut);
 			const addsZero = adds && adds[1] === "0" && adds[2] === "0" && adds[3] === "0";
 			const rewritesZero = rewrites && rewrites[1] === "0";
@@ -230,33 +215,29 @@ if (import.meta.main) {
 	// Format only what the previous two steps wrote. `vp fmt packages/linejs`
 	// reformats every file that predates the current formatter settings, which
 	// buries a two-file schema diff under an unrelated repo-wide reformat.
-	await runStep("vp fmt (generated files)", pnpm, [
-		"exec",
-		"vp",
-		"fmt",
-		pathResolve(linejsRoot, "packages/types/thrift.ts"),
-		pathResolve(linejsRoot, "packages/types/line_types.ts"),
-		pathResolve(
-			linejsRoot,
-			"packages/linejs/base/thrift/readwrite/struct.ts",
-		),
-		"--write",
-	], { cwd: packageRoot });
-	await runStep("type check (entry point)", pnpm, [
-		"exec",
-		"tsc",
-		"--noEmit",
-	], { cwd: packageRoot });
+	await runStep(
+		"vp fmt (generated files)",
+		pnpm,
+		[
+			"exec",
+			"vp",
+			"fmt",
+			pathResolve(linejsRoot, "packages/types/thrift.ts"),
+			pathResolve(linejsRoot, "packages/types/line_types.ts"),
+			pathResolve(linejsRoot, "packages/linejs/base/thrift/readwrite/struct.ts"),
+			"--write",
+		],
+		{ cwd: packageRoot },
+	);
+	await runStep("type check (entry point)", pnpm, ["exec", "tsc", "--noEmit"], {
+		cwd: packageRoot,
+	});
 	await runStep("package tests", pnpm, ["exec", "vp", "test"], {
 		cwd: packageRoot,
 	});
 
 	console.log(`\n=== sync complete ===`);
 	console.log(`Report: ${decompileOut}/extract_report.json`);
-	console.log(
-		`Review the report's mismatches.fieldMismatches / mismatches.enumMismatches arrays`,
-	);
-	console.log(
-		`for entries that were *not* auto-applied (Jaccard-only matches and enum renames).`,
-	);
+	console.log(`Review the report's mismatches.fieldMismatches / mismatches.enumMismatches arrays`);
+	console.log(`for entries that were *not* auto-applied (Jaccard-only matches and enum renames).`);
 }

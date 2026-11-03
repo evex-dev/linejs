@@ -117,9 +117,7 @@ async function findUpDir(
 ): Promise<string | null> {
 	let dir = start;
 	while (true) {
-		const found = kind === "dir"
-			? isDirectory(`${dir}/${marker}`)
-			: isFile(`${dir}/${marker}`);
+		const found = kind === "dir" ? isDirectory(`${dir}/${marker}`) : isFile(`${dir}/${marker}`);
 		if (found) return dir;
 		const parent = pathResolve(dir, "..");
 		if (parent === dir) return null;
@@ -162,9 +160,7 @@ async function onPath(name: string): Promise<boolean> {
 	return result.error === undefined;
 }
 
-async function resolveApktool(workspaceRoot: string | null): Promise<
-	ToolInvocation | null
-> {
+async function resolveApktool(workspaceRoot: string | null): Promise<ToolInvocation | null> {
 	const fromEnv = process.env.APKTOOL_JAR;
 	if (fromEnv) {
 		if (!(await safeExists(fromEnv))) {
@@ -188,9 +184,7 @@ async function resolveApktool(workspaceRoot: string | null): Promise<
 	return null;
 }
 
-async function resolveJadx(workspaceRoot: string | null): Promise<
-	ToolInvocation | null
-> {
+async function resolveJadx(workspaceRoot: string | null): Promise<ToolInvocation | null> {
 	const fromEnv = process.env.JADX_BIN;
 	if (fromEnv) {
 		if (!(await safeExists(fromEnv))) {
@@ -211,15 +205,14 @@ async function resolveJadx(workspaceRoot: string | null): Promise<
 }
 
 /** Resolve only the tools that are going to be used. `need` says which. */
-export async function resolveToolchain(
-	need: { apktool: boolean; jadx: boolean },
-): Promise<Toolchain> {
+export async function resolveToolchain(need: {
+	apktool: boolean;
+	jadx: boolean;
+}): Promise<Toolchain> {
 	const here = scriptDir;
 	// A `bin/` hit at the filesystem root is `/bin`, not a checkout — ignore it.
 	const found = await findUpDir(here, "bin");
-	const workspaceRoot = found === null || found === pathResolve(found, "..")
-		? null
-		: found;
+	const workspaceRoot = found === null || found === pathResolve(found, "..") ? null : found;
 	const apktool = need.apktool ? await resolveApktool(workspaceRoot) : null;
 	const jadx = need.jadx ? await resolveJadx(workspaceRoot) : null;
 	if (need.apktool && !apktool) {
@@ -228,19 +221,14 @@ export async function resolveToolchain(
 		);
 	}
 	if (need.jadx && !jadx) {
-		throw new Error(
-			"jadx not found: set JADX_BIN, or install it on PATH (Arch: `pacman -S jadx`)",
-		);
+		throw new Error("jadx not found: set JADX_BIN, or install it on PATH (Arch: `pacman -S jadx`)");
 	}
 	return { apktool, jadx };
 }
 
 /** Default decompile root for an APK, alongside the APKs themselves so a
  *  single ignore rule (`apks/`) keeps multi-GB smali trees out of git. */
-export function defaultDecompileRoot(
-	linejsRoot: string,
-	apkPath: string,
-): string {
+export function defaultDecompileRoot(linejsRoot: string, apkPath: string): string {
 	const apkName = apkPath.split(/[/\\]/).pop() ?? "apk";
 	const stem = apkName.replace(/\.apk$/i, "");
 	return `${linejsRoot}/apks/decompiled/${stem}`;
@@ -260,10 +248,7 @@ async function runStreamed(
 		stdio: ["ignore", "pipe", "pipe"],
 	});
 
-	const pipe = async (
-		stream: Readable,
-		channel: "stdout" | "stderr",
-	) => {
+	const pipe = async (stream: Readable, channel: "stdout" | "stderr") => {
 		const lines = createInterface({ input: stream, crlfDelay: Infinity });
 		for await (const line of lines) {
 			const sink = channel === "stderr" ? console.error : console.log;
@@ -276,10 +261,7 @@ async function runStreamed(
 		proc.on("close", (code) => resolvePromise(code ?? 1));
 	});
 
-	await Promise.all([
-		pipe(proc.stdout!, "stdout"),
-		pipe(proc.stderr!, "stderr"),
-	]);
+	await Promise.all([pipe(proc.stdout!, "stdout"), pipe(proc.stderr!, "stderr")]);
 
 	const code = await closed;
 	const dt = ((performance.now() - t0) / 1000).toFixed(1);
@@ -287,11 +269,7 @@ async function runStreamed(
 	return code;
 }
 
-async function runApktool(
-	toolchain: Toolchain,
-	apk: string,
-	outDir: string,
-): Promise<number> {
+async function runApktool(toolchain: Toolchain, apk: string, outDir: string): Promise<number> {
 	// apktool d <apk> -o <out> --no-res --force
 	//   --no-res: skip resource decoding (we only need smali for code analysis)
 	//   --force:  overwrite existing output
@@ -344,14 +322,10 @@ if (import.meta.main) {
 
 	const linejsRoot = await findUpDir(scriptDir, "pnpm-workspace.yaml", "file");
 	if (!linejsRoot && !args.out) {
-		console.error(
-			"could not locate the linejs root (no pnpm-workspace.yaml ancestor); pass --out",
-		);
+		console.error("could not locate the linejs root (no pnpm-workspace.yaml ancestor); pass --out");
 		process.exit(2);
 	}
-	const outRoot = args.out
-		? pathResolve(args.out)
-		: defaultDecompileRoot(linejsRoot!, apkPath);
+	const outRoot = args.out ? pathResolve(args.out) : defaultDecompileRoot(linejsRoot!, apkPath);
 	const smaliRoot = `${outRoot}/smali`;
 	const javaRoot = `${outRoot}/java`;
 

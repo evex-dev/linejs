@@ -35,18 +35,8 @@
 			"apk": "r3",
 			"linejs": "acquireGroupCallRoute_args",
 			"via": "rpc",
-			"apkNames": [
-				"subscriptionService",
-				"storeCode",
-				"storeOrderId",
-				"outsideAppPurchase"
-			],
-			"linejsNames": [
-				"chatMid",
-				"mediaType",
-				"isInitialHost",
-				"capabilities"
-			],
+			"apkNames": ["subscriptionService", "storeCode", "storeOrderId", "outsideAppPurchase"],
+			"linejsNames": ["chatMid", "mediaType", "isInitialHost", "capabilities"],
 			"uniqueShape": true,
 			"expectRewrite": false,
 			"expectFieldAdd": false,
@@ -56,14 +46,8 @@
 			"apk": "v3",
 			"linejs": "acquirePaidCallRoute_args",
 			"via": "rpc",
-			"apkNames": [
-				"paidCallType",
-				"networkCode"
-			],
-			"linejsNames": [
-				"productId",
-				"recipientMid"
-			],
+			"apkNames": ["paidCallType", "networkCode"],
+			"linejsNames": ["productId", "recipientMid"],
 			"uniqueShape": true,
 			"expectRewrite": false,
 			"expectFieldAdd": false,
@@ -73,15 +57,8 @@
 			"apk": "ProductSearchSummary",
 			"linejs": "ProductSearchSummary",
 			"via": "canonical",
-			"apkNames": [
-				"productId",
-				"name",
-				"periodEnd"
-			],
-			"linejsNames": [
-				"productId",
-				"name"
-			],
+			"apkNames": ["productId", "name", "periodEnd"],
+			"linejsNames": ["productId", "name"],
 			"uniqueShape": true,
 			"expectRewrite": true,
 			"expectFieldAdd": true,
@@ -113,14 +90,8 @@
 			"apk": "d3",
 			"linejs": "Locale",
 			"via": "jaccard",
-			"apkNames": [
-				"language",
-				"country"
-			],
-			"linejsNames": [
-				"language",
-				"country"
-			],
+			"apkNames": ["language", "country"],
+			"linejsNames": ["language", "country"],
 			"uniqueShape": true,
 			"expectRewrite": false,
 			"expectFieldAdd": false,
@@ -130,12 +101,8 @@
 			"apk": "p0",
 			"linejs": "getProductV2_args",
 			"via": "rpc",
-			"apkNames": [
-				"request"
-			],
-			"linejsNames": [
-				"request"
-			],
+			"apkNames": ["request"],
+			"linejsNames": ["request"],
 			"uniqueShape": true,
 			"expectRewrite": false,
 			"expectFieldAdd": false,
@@ -145,20 +112,8 @@
 			"apk": "n3",
 			"linejs": "PurchaseOrder",
 			"via": "jaccard",
-			"apkNames": [
-				"orderId",
-				"productId",
-				"currency",
-				"price",
-				"enablePointAutoExchange"
-			],
-			"linejsNames": [
-				"orderId",
-				"productId",
-				"currency",
-				"price",
-				"enableLinePointAutoExchange"
-			],
+			"apkNames": ["orderId", "productId", "currency", "price", "enablePointAutoExchange"],
+			"linejsNames": ["orderId", "productId", "currency", "price", "enableLinePointAutoExchange"],
 			"uniqueShape": true,
 			"expectRewrite": true,
 			"expectFieldAdd": false,
@@ -213,15 +168,8 @@
 			"linejs": "T70_C",
 			"via": "jaccard",
 			"linejsMemberCount": 6,
-			"apkNames": [
-				"UNKNOWN",
-				"READY",
-				"INITIAL_BACKUP_STATE_RESET"
-			],
-			"linejsNames": [
-				"UNKNOWN",
-				"READY"
-			],
+			"apkNames": ["UNKNOWN", "READY", "INITIAL_BACKUP_STATE_RESET"],
+			"linejsNames": ["UNKNOWN", "READY"],
 			"expectValueAdd": false,
 			"why": "6 members. Held for review: too small for a name overlap to mean anything."
 		},
@@ -230,14 +178,8 @@
 			"linejs": "Uf_EnumC14873o",
 			"via": "jaccard",
 			"linejsMemberCount": 2,
-			"apkNames": [
-				"IOS",
-				"ANDROID"
-			],
-			"linejsNames": [
-				"ANDROID",
-				"IOS"
-			],
+			"apkNames": ["IOS", "ANDROID"],
+			"linejsNames": ["ANDROID", "IOS"],
 			"expectValueAdd": false,
 			"why": "A two-member {ANDROID, IOS} enum matches every other two-member {ANDROID, IOS} enum at Jaccard 1.0 — and this one had the ordinals swapped."
 		}

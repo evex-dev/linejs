@@ -30,26 +30,24 @@ import { FileStorage } from "@evex-dev/linejs/storage";
 const storage = new FileStorage("./storage.json");
 const client = new BaseClient({ device: "DESKTOPWIN", storage });
 
-client.on("qrcall",  (url) => console.log("scan:", url));
+client.on("qrcall", (url) => console.log("scan:", url));
 client.on("pincall", (pin) => console.log("PIN:", pin));
 client.on("update:authtoken", (t) => storage.set(".auth", t));
 
 const cached = await storage.get(".auth");
-await client.loginProcess.login(
-    typeof cached === "string" ? { authToken: cached } : {},
-);
+await client.loginProcess.login(typeof cached === "string" ? { authToken: cached } : {});
 
 for await (const op of client.createPolling().listenTalkEvents()) {
-    if (op.type === "RECEIVE_MESSAGE" || op.type === "SEND_MESSAGE") {
-        const msg = await client.e2ee.decryptE2EEMessage(op.message);
-        if (msg.text === "!ping") {
-            await client.talk.sendMessage({
-                to: msg.to === client.profile?.mid ? msg.from : msg.to,
-                text: "pong!",
-                e2ee: !!op.message.chunks,
-            });
-        }
-    }
+	if (op.type === "RECEIVE_MESSAGE" || op.type === "SEND_MESSAGE") {
+		const msg = await client.e2ee.decryptE2EEMessage(op.message);
+		if (msg.text === "!ping") {
+			await client.talk.sendMessage({
+				to: msg.to === client.profile?.mid ? msg.from : msg.to,
+				text: "pong!",
+				e2ee: !!op.message.chunks,
+			});
+		}
+	}
 }
 ```
 
@@ -60,22 +58,22 @@ That's the smallest useful bot. For richer surfaces start with the `Client` wrap
 In all cases, looking at the latest code is best.
 https://github.com/evex-dev/linejs
 
-| You want to … | Look at |
-|---|---|
-| log in (QR / email) | `packages/linejs/base/login/mod.ts` — uses ForSecure RPCs as of v2.7; legacy `createQrCode` is server-rejected |
-| send / receive messages | `packages/linejs/client/features/message/` and `BaseClient.talk.sendMessage` |
-| any Thrift RPC LINE supports | `packages/linejs/base/service/*/mod.ts` — one wrapper per LINE service (30+ services, 130+ methods) |
-| change profile attributes | `client.updateMyProfile({...})` / see `packages/linejs/client/features/profile.ts` |
-| rename / favourite / mute friends | `User.rename()` / `User.setFavorite()` etc. — see `packages/linejs/client/features/user/mod.ts` |
-| chat BGM | `Chat.getBgm()` / `Chat.setBgm()` |
-| LIFF share / token | `client.liff.shareMessages(chatMid, [...])` and `client.liff.getToken({ liffId, chatMid })` — see `packages/linejs/client/features/liff.ts` for message builders (`text` / `sticker` / `image` / `flex`).  Lower-level surface at `client.liff.service` / `BaseClient.liff`. |
-| VOOM / timeline / Note REST | `client.voomRest({ path, channelToken })` — low-level wrapper around the `gw.line.naver.jp/mh/api/v{34,40,52,57}/...` gateway.  Mint the channel token first: `await client.base.channel.issueChannelToken({ channelId: VoomChannelId.TIMELINE })` (note: **object arg**, not positional string).  `DESKTOPWIN` device cannot do this — use `device: "ANDROIDSECONDARY"`.  Once Bearer'd, the gateway moves from 401 to 504 — remaining downstream error tracked in #151. |
-| calendar events on a contact | `User.fetchCalendarEvents()` — note: server-gated on some client device types (DESKTOPWIN currently lacks it) |
-| approve a PIN login on this device | `client.base.loginProcess.respondE2EELoginRequest({ verifier, publicKey, encryptedKeyChain, hashKeyChain, errorCode? })` — primary-side counterpart to `confirmE2EELogin`. Call when this client receives a PIN-login notification from another device the user wants to admit. |
-| upload profile picture / cover | `client.uploadMyProfileImage(blob)` / `client.uploadMyProfileBackground(blob)` |
-| **Agent I** (LINE's chat-tab AI search) | `@evex/linejs-agent` — wraps Yahoo's search-agent SSE backend that LINE Android opens in a WebView. Requires Yahoo session cookies; LINE does not mint them. |
-| E2EE primitives | `packages/linejs/base/e2ee/mod.ts` — AES-GCM-SIV, ECDH, decrypt encrypted QR identifier, key chain etc. |
-| Thrift schema | `packages/types/thrift.ts` (data) + `packages/types/line_types.ts` (TS interfaces). Both auto-synced from LINE Android APK by `node scripts/apk/sync_from_apk.ts`. |
+| You want to …                           | Look at                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| log in (QR / email)                     | `packages/linejs/base/login/mod.ts` — uses ForSecure RPCs as of v2.7; legacy `createQrCode` is server-rejected                                                                                                                                                                                                                                                                                                                                                         |
+| send / receive messages                 | `packages/linejs/client/features/message/` and `BaseClient.talk.sendMessage`                                                                                                                                                                                                                                                                                                                                                                                           |
+| any Thrift RPC LINE supports            | `packages/linejs/base/service/*/mod.ts` — one wrapper per LINE service (30+ services, 130+ methods)                                                                                                                                                                                                                                                                                                                                                                    |
+| change profile attributes               | `client.updateMyProfile({...})` / see `packages/linejs/client/features/profile.ts`                                                                                                                                                                                                                                                                                                                                                                                     |
+| rename / favourite / mute friends       | `User.rename()` / `User.setFavorite()` etc. — see `packages/linejs/client/features/user/mod.ts`                                                                                                                                                                                                                                                                                                                                                                        |
+| chat BGM                                | `Chat.getBgm()` / `Chat.setBgm()`                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| LIFF share / token                      | `client.liff.shareMessages(chatMid, [...])` and `client.liff.getToken({ liffId, chatMid })` — see `packages/linejs/client/features/liff.ts` for message builders (`text` / `sticker` / `image` / `flex`). Lower-level surface at `client.liff.service` / `BaseClient.liff`.                                                                                                                                                                                            |
+| VOOM / timeline / Note REST             | `client.voomRest({ path, channelToken })` — low-level wrapper around the `gw.line.naver.jp/mh/api/v{34,40,52,57}/...` gateway. Mint the channel token first: `await client.base.channel.issueChannelToken({ channelId: VoomChannelId.TIMELINE })` (note: **object arg**, not positional string). `DESKTOPWIN` device cannot do this — use `device: "ANDROIDSECONDARY"`. Once Bearer'd, the gateway moves from 401 to 504 — remaining downstream error tracked in #151. |
+| calendar events on a contact            | `User.fetchCalendarEvents()` — note: server-gated on some client device types (DESKTOPWIN currently lacks it)                                                                                                                                                                                                                                                                                                                                                          |
+| approve a PIN login on this device      | `client.base.loginProcess.respondE2EELoginRequest({ verifier, publicKey, encryptedKeyChain, hashKeyChain, errorCode? })` — primary-side counterpart to `confirmE2EELogin`. Call when this client receives a PIN-login notification from another device the user wants to admit.                                                                                                                                                                                        |
+| upload profile picture / cover          | `client.uploadMyProfileImage(blob)` / `client.uploadMyProfileBackground(blob)`                                                                                                                                                                                                                                                                                                                                                                                         |
+| **Agent I** (LINE's chat-tab AI search) | `@evex/linejs-agent` — wraps Yahoo's search-agent SSE backend that LINE Android opens in a WebView. Requires Yahoo session cookies; LINE does not mint them.                                                                                                                                                                                                                                                                                                           |
+| E2EE primitives                         | `packages/linejs/base/e2ee/mod.ts` — AES-GCM-SIV, ECDH, decrypt encrypted QR identifier, key chain etc.                                                                                                                                                                                                                                                                                                                                                                |
+| Thrift schema                           | `packages/types/thrift.ts` (data) + `packages/types/line_types.ts` (TS interfaces). Both auto-synced from LINE Android APK by `node scripts/apk/sync_from_apk.ts`.                                                                                                                                                                                                                                                                                                     |
 
 When in doubt, **read the source** under `packages/linejs/client/features/` — feature classes are short and read like documentation.
 

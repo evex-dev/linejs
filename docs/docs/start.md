@@ -29,16 +29,20 @@ After execution, you should have the library available.
 Next, let's create a script that just retrieves your profile!
 
 To making client, you can use `loginWithPassword`.
+
 ```ts
 import { loginWithPassword } from "@evex-dev/linejs";
 
-const client = await loginWithPassword({
-    email: 'you@example.com', // e-mail address
-    password: 'password', // Password
-    onPincodeRequest(pincode) {
-        console.log('Enter this pincode to your LINE app:', pincode)
-    }
-}, { device: "IOSIPAD" })
+const client = await loginWithPassword(
+	{
+		email: "you@example.com", // e-mail address
+		password: "password", // Password
+		onPincodeRequest(pincode) {
+			console.log("Enter this pincode to your LINE app:", pincode);
+		},
+	},
+	{ device: "IOSIPAD" },
+);
 ```
 
 Authentication is complicated process, so you should read [here](./auth.md).
@@ -46,9 +50,10 @@ Authentication is complicated process, so you should read [here](./auth.md).
 After created client, you can do various things!
 
 For instance, you can get one of chat informations you joined:
+
 ```ts
-const chats = await client.fetchJoinedChats()
-console.log(chats[0].name)
+const chats = await client.fetchJoinedChats();
+console.log(chats[0].name);
 ```
 
 ---

@@ -4,19 +4,22 @@ Next, we will talk about the ClientInit.\
 The Client has several options.
 
 ```ts
-const client = await loginWithPassword({
-    email: "",
-    password: "",
-    onPincodeRequest(pin) {
-        console.log(pin);
-    },
-}, {
-    device: "IOSIPAD",
-    version: "14.0.1",
-    endpoint: "example.com",
-    fetch: (req) => fetch(req),
-    storage: new FileStorage("./storage.json"),
-});
+const client = await loginWithPassword(
+	{
+		email: "",
+		password: "",
+		onPincodeRequest(pin) {
+			console.log(pin);
+		},
+	},
+	{
+		device: "IOSIPAD",
+		version: "14.0.1",
+		endpoint: "example.com",
+		fetch: (req) => fetch(req),
+		storage: new FileStorage("./storage.json"),
+	},
+);
 ```
 
 For example, **storage for the data** we discussed before,
@@ -35,16 +38,19 @@ You can use `FileStorage` there.
 ```ts
 import { FileStorage } from "@evex-dev/linejs/storage";
 
-const client = await loginWithPassword({
-    email: "",
-    password: "",
-    onPincodeRequest(pin) {
-        console.log(pin);
-    },
-}, {
-    device: "IOSIPAD",
-    storage: new FileStorage("./storage.json"),
-});
+const client = await loginWithPassword(
+	{
+		email: "",
+		password: "",
+		onPincodeRequest(pin) {
+			console.log(pin);
+		},
+	},
+	{
+		device: "IOSIPAD",
+		storage: new FileStorage("./storage.json"),
+	},
+);
 ```
 
 If you want to store in your cloud or storages with your data storage API, you
@@ -58,16 +64,19 @@ There is no need to change this point.\
 If you want to try out a proxied server, use it.
 
 ```ts
-const client = await loginWithPassword({
-    email: "",
-    password: "",
-    onPincodeRequest(pin) {
-        console.log(pin);
-    },
-}, {
-    device: "IOSIPAD",
-    endpoint: "example.com",
-});
+const client = await loginWithPassword(
+	{
+		email: "",
+		password: "",
+		onPincodeRequest(pin) {
+			console.log(pin);
+		},
+	},
+	{
+		device: "IOSIPAD",
+		endpoint: "example.com",
+	},
+);
 ```
 
 ## Custom Fetch

@@ -1,20 +1,19 @@
-import {
-	loginWithAuthToken,
-	loginWithPassword,
-	loginWithQR,
-} from "@evex-dev/linejs";
+import { loginWithAuthToken, loginWithPassword, loginWithQR } from "@evex-dev/linejs";
 import { FileStorage } from "@evex-dev/linejs/storage";
 
-const client = await loginWithPassword({
-	email: "",
-	password: "",
-	onPincodeRequest(pin) {
-		console.log(pin);
+const client = await loginWithPassword(
+	{
+		email: "",
+		password: "",
+		onPincodeRequest(pin) {
+			console.log(pin);
+		},
 	},
-}, {
-	device: "DESKTOPWIN",
-	storage: new FileStorage("./storage.json"),
-});
+	{
+		device: "DESKTOPWIN",
+		storage: new FileStorage("./storage.json"),
+	},
+);
 
 client.on("message", async (message) => {
 	console.log(message.text);

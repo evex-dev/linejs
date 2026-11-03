@@ -1,9 +1,5 @@
 import { readFile } from "node:fs/promises";
-import {
-	loginWithAuthToken,
-	loginWithQR,
-	type TalkMessage,
-} from "@evex-dev/linejs";
+import { loginWithAuthToken, loginWithQR, type TalkMessage } from "@evex-dev/linejs";
 import type { Device } from "@evex-dev/linejs/base";
 import { FileStorage } from "@evex-dev/linejs/storage";
 import {
@@ -19,25 +15,21 @@ type PlanetMediaKeyMode = NonNullable<PlanetTransportOpts["mediaKeyMode"]>;
 
 const COMMAND = process.env.LINE_CALL_COMMAND ?? "!call";
 const SAMPLE_RATE = 48_000;
-const wavPath = process.argv[2] ?? process.env.LINE_CALL_WAV ??
-	new URL("./unity.wav", import.meta.url);
-const configuredDevice = process.env.LINE_DEVICE?.trim() as
-	| Device
-	| undefined;
+const wavPath =
+	process.argv[2] ?? process.env.LINE_CALL_WAV ?? new URL("./unity.wav", import.meta.url);
+const configuredDevice = process.env.LINE_DEVICE?.trim() as Device | undefined;
 const version = process.env.LINE_VERSION ?? undefined;
 const fromEnvInfo = readFromEnvInfo();
 const storagePath = process.env.LINE_STORAGE_FILE;
-const configuredMediaKeyMode = process.env.LINE_CALL_MEDIA_KEY_MODE
-	?.trim() as PlanetMediaKeyMode | undefined;
+const configuredMediaKeyMode = process.env.LINE_CALL_MEDIA_KEY_MODE?.trim() as
+	| PlanetMediaKeyMode
+	| undefined;
 const oneToOneMediaKeyMode = configuredMediaKeyMode ?? "audio-reverse-stage";
 const groupMediaKeyMode = configuredMediaKeyMode ?? "audio-secret-sender";
 const frameMs = readNumberEnv("LINE_CALL_FRAME_MS", 20);
 const gain = readNumberEnv("LINE_CALL_GAIN", 1);
 const holdMs = readNumberEnv("LINE_CALL_HOLD_MS", 1_000);
-const repeatCount = Math.max(
-	1,
-	Math.floor(readNumberEnv("LINE_CALL_REPEAT_COUNT", 1)),
-);
+const repeatCount = Math.max(1, Math.floor(readNumberEnv("LINE_CALL_REPEAT_COUNT", 1)));
 const timeoutMs = readNumberEnv("LINE_CALL_TIMEOUT_MS", 10_000);
 const answerTimeoutMs = readNumberEnv("LINE_CALL_ANSWER_TIMEOUT_MS", 60_000);
 const bitrate = readOptionalNumberEnv("LINE_CALL_OPUS_BITRATE");
@@ -50,9 +42,7 @@ const bandwidth = process.env.LINE_CALL_OPUS_BANDWIDTH as
 	| undefined;
 const opusSignal = readOpusSignalEnv();
 const opusVbr = readBooleanEnv("LINE_CALL_OPUS_VBR", false);
-const payloadPrefix = hexToBytes(
-	process.env.LINE_CALL_PAYLOAD_PREFIX_HEX ?? "00",
-);
+const payloadPrefix = hexToBytes(process.env.LINE_CALL_PAYLOAD_PREFIX_HEX ?? "00");
 
 const authToken = await readAuthToken();
 const device = configuredDevice || (authToken ? "ANDROID" : "ANDROIDSECONDARY");
@@ -60,14 +50,17 @@ const deviceInfo = readDeviceInfo();
 const storage = storagePath ? new FileStorage(storagePath) : undefined;
 const client = authToken
 	? await loginWithAuthToken(authToken, { device, version, storage })
-	: await loginWithQR({
-		onReceiveQRUrl(url) {
-			console.log(`QR: ${url}`);
-		},
-		onPincodeRequest(pin) {
-			console.log(`PIN: ${pin}`);
-		},
-	}, { device, version, storage });
+	: await loginWithQR(
+			{
+				onReceiveQRUrl(url) {
+					console.log(`QR: ${url}`);
+				},
+				onPincodeRequest(pin) {
+					console.log(`PIN: ${pin}`);
+				},
+			},
+			{ device, version, storage },
+		);
 
 const audio = await loadWavForCall(wavPath, gain);
 let activeCall: Promise<void> | undefined;
@@ -75,10 +68,7 @@ let activeCall: Promise<void> | undefined;
 console.log(`Listening for ${COMMAND}`);
 client.on("message", (message) => {
 	void handleMessage(message).catch((error) => {
-		console.error(
-			"[call] failed:",
-			error instanceof Error ? error.message : error,
-		);
+		console.error("[call] failed:", error instanceof Error ? error.message : error);
 	});
 });
 client.listen({ talk: true, square: false });
@@ -98,10 +88,9 @@ async function handleMessage(message: TalkMessage): Promise<void> {
 		return;
 	}
 	await message.reply(to ? "calling" : "starting group call");
-	activeCall = (to ? callAndPlay(to) : callGroupAndPlay(chatMid!))
-		.finally(() => {
-			activeCall = undefined;
-		});
+	activeCall = (to ? callAndPlay(to) : callGroupAndPlay(chatMid!)).finally(() => {
+		activeCall = undefined;
+	});
 	await activeCall;
 }
 
@@ -138,8 +127,7 @@ async function callGroupAndPlay(chatMid: string): Promise<void> {
 	const localMid = client.base.profile?.mid;
 	if (!localMid) throw new Error("profile is not ready");
 
-	const state = await client.call.getGroupCall(chatMid)
-		.catch(() => undefined);
+	const state = await client.call.getGroupCall(chatMid).catch(() => undefined);
 	const online = Boolean((state as { online?: boolean } | undefined)?.online);
 	const route = await client.call.acquireGroupRoute({
 		chatMid,
@@ -205,18 +193,11 @@ async function streamOpus(
 	let sentBytes = 0;
 	try {
 		if (opts.nativeGroupPacketize) {
-			const { packets, frameActivity } = encodeOpusPackets(
-				encoder,
-				samples,
-				repeats,
-				frameSamples,
-			);
-			for (
-				const payload of packetizeNativeGroupOpusPairs(packets, {
-					inputPrefixBytes: payloadPrefix.length,
-					frameActivity,
-				})
-			) {
+			const { packets, frameActivity } = encodeOpusPackets(encoder, samples, repeats, frameSamples);
+			for (const payload of packetizeNativeGroupOpusPairs(packets, {
+				inputPrefixBytes: payloadPrefix.length,
+				frameActivity,
+			})) {
 				await transport.send(payload, {
 					timestampStep: frameSamples * 2,
 				});
@@ -253,9 +234,7 @@ async function streamOpus(
 }
 
 function encodeOpusPackets(
-	encoder: ReturnType<
-		Awaited<ReturnType<typeof opusCodecFactory>>["newEncoder"]
-	>,
+	encoder: ReturnType<Awaited<ReturnType<typeof opusCodecFactory>>["newEncoder"]>,
 	samples: Int16Array,
 	repeats: number,
 	frameSamples: number,
@@ -263,8 +242,7 @@ function encodeOpusPackets(
 	const packets: Uint8Array[] = [];
 	const frameActivity: boolean[] = [];
 	// Pad the last pair with silence rather than dropping an unpaired frame.
-	const paddedLength = Math.ceil(samples.length / (frameSamples * 2)) *
-		frameSamples * 2;
+	const paddedLength = Math.ceil(samples.length / (frameSamples * 2)) * frameSamples * 2;
 	for (let repeat = 0; repeat < repeats; repeat++) {
 		for (let offset = 0; offset < paddedLength; offset += frameSamples) {
 			const frame = new Int16Array(frameSamples);
@@ -286,19 +264,11 @@ function encodeOpusPackets(
 	return { packets, frameActivity };
 }
 
-async function loadWavForCall(
-	path: string | URL,
-	audioGain: number,
-): Promise<Int16Array> {
+async function loadWavForCall(path: string | URL, audioGain: number): Promise<Int16Array> {
 	const wav = decodeWavSync(await readFile(path));
 	let samples = wav.samples;
 	if (wav.sampleRate !== SAMPLE_RATE) {
-		samples = resampleLinear(
-			samples,
-			wav.sampleRate,
-			SAMPLE_RATE,
-			wav.channels,
-		);
+		samples = resampleLinear(samples, wav.sampleRate, SAMPLE_RATE, wav.channels);
 	}
 	if (wav.channels !== 1) samples = downmixToMono(samples, wav.channels);
 	if (audioGain !== 1) samples = applyGain(samples, audioGain);
@@ -369,9 +339,7 @@ function isStringRecord(value: unknown): value is Record<string, string> {
 
 function addAcquireRouteHint(error: unknown): Error {
 	const message = error instanceof Error ? error.message : String(error);
-	if (
-		!message.includes("acquireCallRoute") || !message.includes("INVALID_STATE")
-	) {
+	if (!message.includes("acquireCallRoute") || !message.includes("INVALID_STATE")) {
 		return error instanceof Error ? error : new Error(message);
 	}
 	return new Error(

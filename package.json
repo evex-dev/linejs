@@ -6,8 +6,8 @@
 		"build": "pnpm --filter './packages/*' -r run build",
 		"test": "pnpm --filter './packages/*' -r run test",
 		"test:scripts": "vp test",
-		"check": "pnpm --filter './packages/*' -r run check",
-		"format": "pnpm --filter './packages/*' -r run format",
+		"check": "vp check",
+		"format": "vp fmt . --write",
 		"docs:dev": "pnpm --filter linejs-docs run dev",
 		"docs:build": "pnpm --filter linejs-docs run build"
 	},

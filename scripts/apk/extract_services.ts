@@ -118,9 +118,7 @@ function parseClientSmali(src: string, _path: string): ServiceDef | null {
 	while (i < lines.length) {
 		const ln = lines[i].trim();
 		// .method <modifiers> <name>(params)return
-		const methodHeader = /^\.method\s+(?:[\w]+\s+)*(\w+)\((.*?)\)(.+)$/.exec(
-			ln,
-		);
+		const methodHeader = /^\.method\s+(?:[\w]+\s+)*(\w+)\((.*?)\)(.+)$/.exec(ln);
 		if (!methodHeader) {
 			i++;
 			continue;
@@ -144,12 +142,7 @@ function parseClientSmali(src: string, _path: string): ServiceDef | null {
 			body.push(inner);
 			j++;
 		}
-		const method = analyseClientMethod(
-			body,
-			obfMethodName,
-			paramTypes,
-			ret,
-		);
+		const method = analyseClientMethod(body, obfMethodName, paramTypes, ret);
 		if (method) methods.push(method);
 		i = j + 1;
 	}
@@ -166,15 +159,15 @@ function skipToEndMethod(lines: string[], start: number): number {
 }
 
 const PRIM_TOKENS: Record<string, string> = {
-	"V": "V",
-	"Z": "Z",
-	"B": "B",
-	"S": "S",
-	"C": "C",
-	"I": "I",
-	"J": "J",
-	"F": "F",
-	"D": "D",
+	V: "V",
+	Z: "Z",
+	B: "B",
+	S: "S",
+	C: "C",
+	I: "I",
+	J: "J",
+	F: "F",
+	D: "D",
 };
 
 function splitJvmParamList(params: string): string[] {
@@ -262,8 +255,7 @@ function analyseClientMethod(
 			continue;
 		}
 		const iv =
-			/^invoke-virtual\s+\{([^}]+)\},\s+L[^;]+;->\w+\(Ljava\/lang\/String;L[^)]+;\)V$/
-				.exec(line);
+			/^invoke-virtual\s+\{([^}]+)\},\s+L[^;]+;->\w+\(Ljava\/lang\/String;L[^)]+;\)V$/.exec(line);
 		if (iv) {
 			const callRegs = iv[1].split(",").map((s) => s.trim());
 			// {receiver, nameReg, tbaseReg}
@@ -279,7 +271,7 @@ function analyseClientMethod(
 	}
 
 	if (!rpcNameFromString) return null;
-	const argsMethodName = argsClass ? /\$(\w+)_args;$/.exec(argsClass)?.[1] ?? "" : "";
+	const argsMethodName = argsClass ? (/\$(\w+)_args;$/.exec(argsClass)?.[1] ?? "") : "";
 
 	return {
 		rpcName: rpcNameFromString,
@@ -315,9 +307,9 @@ async function locateThriftServiceClient(dir: string): Promise<string | null> {
 				if (!e.isFile() || !e.name.endsWith(".smali")) continue;
 				const path = `${d}/${e.name}`;
 				const src = await readFile(path, "utf8");
-				const sendRecvCount = [...src.matchAll(
-					/^\.method\s+(?:[\w]+\s+)*\w+\(Ljava\/lang\/String;L[^;]+;\)V$/gm,
-				)].length;
+				const sendRecvCount = [
+					...src.matchAll(/^\.method\s+(?:[\w]+\s+)*\w+\(Ljava\/lang\/String;L[^;]+;\)V$/gm),
+				].length;
 				if (sendRecvCount !== 2) continue;
 				// Also expect a constructor taking a TProtocol-shaped reference.
 				if (!/^\.method[^\n]*<init>\(L[^;]+;(?:L[^;]+;)?\)V$/m.test(src)) continue;
@@ -350,16 +342,12 @@ async function walkServices(dir: string, opts: Args): Promise<ServiceDef[]> {
 
 	let scanned = 0;
 	const t0 = performance.now();
-	for await (
-		const entry of walk(dir, { exts: [".smali"], includeDirs: false })
-	) {
+	for await (const entry of walk(dir, { exts: [".smali"], includeDirs: false })) {
 		if (opts.includePkg && !opts.includePkg.test(entry.path)) continue;
 		const src = await readFile(entry.path, "utf8");
 
 		const canonicalClient = entry.path.endsWith("$Client.smali");
-		const structuralClient = tServiceClient
-			? src.includes(`.super ${tServiceClient}`)
-			: false;
+		const structuralClient = tServiceClient ? src.includes(`.super ${tServiceClient}`) : false;
 		if (!canonicalClient && !structuralClient) continue;
 		if (!src.includes("Ljava/lang/String;L")) continue;
 
@@ -372,9 +360,7 @@ async function walkServices(dir: string, opts: Args): Promise<ServiceDef[]> {
 		scanned++;
 		if (scanned % 50 === 0) {
 			const dt = (performance.now() - t0) / 1000;
-			console.log(
-				`  scanned ${scanned} Client candidates (${(scanned / dt).toFixed(0)}/s)...`,
-			);
+			console.log(`  scanned ${scanned} Client candidates (${(scanned / dt).toFixed(0)}/s)...`);
 		}
 	}
 	const dt = ((performance.now() - t0) / 1000).toFixed(1);

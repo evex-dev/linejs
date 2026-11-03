@@ -21,7 +21,7 @@ export function installIncomingAudio(
 		void (async () => {
 			let transport: PlanetTransport | undefined;
 			try {
-				if (!await options.admit(event.audio!.callerMid)) return;
+				if (!(await options.admit(event.audio!.callerMid))) return;
 				transport = await client.call.answerIncoming(event, {
 					deviceId: options.deviceId,
 					signal: options.signal,

@@ -20,10 +20,7 @@ export interface WalkOptions {
 	includeDirs?: boolean;
 }
 
-async function* walkDir(
-	dir: string,
-	opts: WalkOptions,
-): AsyncGenerator<WalkEntry> {
+async function* walkDir(dir: string, opts: WalkOptions): AsyncGenerator<WalkEntry> {
 	for (const entry of await readdir(dir, { withFileTypes: true })) {
 		const path = join(dir, entry.name);
 		if (entry.isDirectory()) {
@@ -46,9 +43,6 @@ async function* walkDir(
 	}
 }
 
-export function walk(
-	root: string,
-	opts: WalkOptions = {},
-): AsyncGenerator<WalkEntry> {
+export function walk(root: string, opts: WalkOptions = {}): AsyncGenerator<WalkEntry> {
 	return walkDir(root, opts);
 }

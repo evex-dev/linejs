@@ -10,11 +10,11 @@ OBS helpers are available from the authenticated client's `BaseClient`:
 
 ```ts
 const metadata = await client.base.obs.getMessageObsMetadata({
-  messageId: "MESSAGE_ID",
+	messageId: "MESSAGE_ID",
 });
 
 const file = await client.base.obs.downloadMessageData({
-  messageId: "MESSAGE_ID",
+	messageId: "MESSAGE_ID",
 });
 ```
 
@@ -22,10 +22,10 @@ Media upload helpers are available on the same object:
 
 ```ts
 const message = await client.base.obs.uploadMediaByE2EE({
-  to: "u...",
-  oType: "image",
-  data: imageFile,
-  filename: "image.png",
+	to: "u...",
+	oType: "image",
+	data: imageFile,
+	filename: "image.png",
 });
 ```
 

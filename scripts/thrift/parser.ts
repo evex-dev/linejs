@@ -34,9 +34,7 @@ function getType(obj: any) {
  * @param input thrift File
  * @returns thrift
  */
-export function parseThrift(
-	input: string,
-): Record<string, any[] | Record<string, string>> {
+export function parseThrift(input: string): Record<string, any[] | Record<string, string>> {
 	const def = thriftIdl.parse(input);
 	const thrift_def: Record<string, Record<string, string> | any[]> = {};
 	def.definitions.forEach((e: any) => {

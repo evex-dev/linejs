@@ -11,19 +11,19 @@ channel (`1375220249`).
 import { loginWithAuthToken } from "@evex-dev/linejs";
 
 const client = await loginWithAuthToken("YOUR_AUTH_TOKEN", {
-  device: "IOSIPAD",
+	device: "IOSIPAD",
 });
 
 let cursor = "";
 while (true) {
-  const resp = await client.base.moa.getAlbums({ cursor });
-  const result = resp.result;
-  for (const album of result?.albums ?? []) {
-    console.log(`[${album.albumId}] ${album.title} (${album.photoCount} photos)`);
-  }
-  const next = result?.nextCursor ?? result?.cursor ?? "";
-  if (!next || next === cursor || !(result?.hasMore ?? true)) break;
-  cursor = next;
+	const resp = await client.base.moa.getAlbums({ cursor });
+	const result = resp.result;
+	for (const album of result?.albums ?? []) {
+		console.log(`[${album.albumId}] ${album.title} (${album.photoCount} photos)`);
+	}
+	const next = result?.nextCursor ?? result?.cursor ?? "";
+	if (!next || next === cursor || !(result?.hasMore ?? true)) break;
+	cursor = next;
 }
 ```
 
@@ -32,18 +32,18 @@ while (true) {
 ```ts
 let cursor = "";
 while (true) {
-  const resp = await client.base.moa.getPhotos({
-    chatId: "cxxxxxxxxxxxxxxx",
-    albumId: "1234567890123456789",
-    cursor,
-    pageSize: 100,
-  });
-  for (const photo of resp.result?.photos ?? []) {
-    console.log(photo.oid, "shot at", photo.shotTime);
-  }
-  const next = resp.result?.nextCursor ?? "";
-  if (!next || next === cursor) break;
-  cursor = next;
+	const resp = await client.base.moa.getPhotos({
+		chatId: "cxxxxxxxxxxxxxxx",
+		albumId: "1234567890123456789",
+		cursor,
+		pageSize: 100,
+	});
+	for (const photo of resp.result?.photos ?? []) {
+		console.log(photo.oid, "shot at", photo.shotTime);
+	}
+	const next = resp.result?.nextCursor ?? "";
+	if (!next || next === cursor) break;
+	cursor = next;
 }
 ```
 
@@ -56,9 +56,9 @@ further.
 import { writeFileSync } from "node:fs";
 
 const bytes = await client.base.moa.downloadPhoto({
-  chatId: "cxxxxxxxxxxxxxxx",
-  albumId: "1234567890123456789",
-  oid: "someOid",
+	chatId: "cxxxxxxxxxxxxxxx",
+	albumId: "1234567890123456789",
+	oid: "someOid",
 });
 writeFileSync("./out.jpg", bytes);
 ```
@@ -69,10 +69,10 @@ you whether the item is an image or a video):
 ```ts
 const isVideo = photo.obsResourceId?.sid === "v";
 const bytes = await client.base.moa.downloadPhoto({
-  chatId,
-  albumId,
-  oid: photo.obsResourceId!.oid!,
-  prefix: isVideo ? "album/v" : "album/a",
+	chatId,
+	albumId,
+	oid: photo.obsResourceId!.oid!,
+	prefix: isVideo ? "album/v" : "album/a",
 });
 ```
 
@@ -85,7 +85,7 @@ const bytes = await client.base.moa.downloadPhoto({
   are not automatically retried. REST requests and downloads use
   `client.base.config.timeout`.
 - Moa uses `X-Line-ChannelToken`, `X-Line-Mid` (your MID) and — for photo
-  fetches — `X-Line-Album` (the album id) and `X-Line-Mid` set to the *chat*
+  fetches — `X-Line-Album` (the album id) and `X-Line-Mid` set to the _chat_
   id. All of these are set for you automatically.
 - The header override `accept: application/json` is important: the default
   `client.base.request.getHeader("GET")` returns `application/x-thrift`, which

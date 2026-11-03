@@ -50,13 +50,15 @@ export function main(
 	};
 	const toType = (tname: string | number) =>
 		typeof tname !== "undefined"
-			? (tname !== "_any"
-				? (tname !== "_anykey"
-					? (typeof tname === "string"
-						? (typeof (Thrift as any)[tname] !== "undefined" ? tname : "any")
-						: ttype[tname])
-					: "keyof any")
-				: "any")
+			? tname !== "_any"
+				? tname !== "_anykey"
+					? typeof tname === "string"
+						? typeof (Thrift as any)[tname] !== "undefined"
+							? tname
+							: "any"
+						: ttype[tname]
+					: "keyof any"
+				: "any"
 			: "any";
 	function toUnion(input: Record<string, string>, name: string) {
 		const unions: string[] = [];
@@ -79,50 +81,28 @@ export function main(
 		const defs: string[] = [];
 		for (const e of input) {
 			if (typeof e.type !== "undefined") {
-				defs.push(
-					`${e.name}: ${e.binary ? "(string|Buffer)" : toType(e.type)};`,
-				);
+				defs.push(`${e.name}: ${e.binary ? "(string|Buffer)" : toType(e.type)};`);
 			} else if (typeof e.struct !== "undefined") {
 				defs.push(`${e.name}: ${toType(e.struct)};`);
-			} else if (
-				typeof e.map !== "undefined" && typeof e.key !== "undefined"
-			) {
+			} else if (typeof e.map !== "undefined" && typeof e.key !== "undefined") {
 				defs.push(
-					`${e.name}: ${
-						ttype[13].replace(
-							"$K",
-							e.key === 10 ? "number" : toType(e.key),
-						).replace(
-							"$V",
-							e.binary ? "(string|Buffer)" : toType(e.map),
-						)
-					};`,
+					`${e.name}: ${ttype[13]
+						.replace("$K", e.key === 10 ? "number" : toType(e.key))
+						.replace("$V", e.binary ? "(string|Buffer)" : toType(e.map))};`,
 				);
 			} else if (typeof e.list !== "undefined") {
 				defs.push(
-					`${e.name}: ${
-						ttype[14].replace(
-							"$E",
-							e.binary ? "(string|Buffer)" : toType(e.list),
-						)
-					};`,
+					`${e.name}: ${ttype[14].replace("$E", e.binary ? "(string|Buffer)" : toType(e.list))};`,
 				);
 			} else if (typeof e.set !== "undefined") {
 				defs.push(
-					`${e.name}: ${
-						ttype[15].replace(
-							"$E",
-							e.binary ? "(string|Buffer)" : toType(e.set),
-						)
-					};`,
+					`${e.name}: ${ttype[15].replace("$E", e.binary ? "(string|Buffer)" : toType(e.set))};`,
 				);
 			}
 		}
-		return (
-			`export interface ${name} {
+		return `export interface ${name} {
 		${defs.join("\n	")}
-	}`
-		);
+	}`;
 	}
 	const types = [];
 	const tname = [];
@@ -148,17 +128,10 @@ export function main(
 	out.push(
 		`import type { Buffer } from "node:buffer";\nexport type { Pb1_C13154r6 as Operation, Pb1_EnumC13151r3 as ContactRelation };`,
 	);
-	out.push(
-		`export const enums:{${tname.join("\n")}} = ${
-			JSON.stringify(enums, null, 2)
-		};`,
-	);
+	out.push(`export const enums:{${tname.join("\n")}} = ${JSON.stringify(enums, null, 2)};`);
 	out.push(types.join("\n\n"));
 
-	writeFileSync(
-		path || resolve(scriptDir, "../../packages/types/line_types.ts"),
-		out.join("\n"),
-	);
+	writeFileSync(path || resolve(scriptDir, "../../packages/types/line_types.ts"), out.join("\n"));
 }
 
 if (import.meta.main) {

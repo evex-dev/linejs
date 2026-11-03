@@ -6,9 +6,4 @@ import { Buffer } from "node:buffer";
 import * as thrift from "thrift";
 
 const thriftClient = new Thrift();
-console.log(
-	thriftClient.readThrift(
-		readFileSync("./http-body.bin"),
-		thrift.TCompactProtocol,
-	),
-);
+console.log(thriftClient.readThrift(readFileSync("./http-body.bin"), thrift.TCompactProtocol));

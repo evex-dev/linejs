@@ -23,10 +23,7 @@ for (const allowH2 of [false, true]) {
 			const short = (await getFetch(50))!;
 			assert.equal(await getFetch(50), short);
 			await assert.rejects(short(new Request(url)), (err: unknown) => {
-				assert.equal(
-					(err as { cause?: { code?: string } }).cause?.code,
-					"UND_ERR_CONNECT_TIMEOUT",
-				);
+				assert.equal((err as { cause?: { code?: string } }).cause?.code, "UND_ERR_CONNECT_TIMEOUT");
 				return true;
 			});
 			const longer = (await getFetch(30_000))!;
@@ -34,10 +31,9 @@ for (const allowH2 of [false, true]) {
 			const controller = new AbortController();
 			const timer = setTimeout(() => controller.abort(), 200);
 			try {
-				await assert.rejects(
-					longer(new Request(url, { signal: controller.signal })),
-					{ name: "AbortError" },
-				);
+				await assert.rejects(longer(new Request(url, { signal: controller.signal })), {
+					name: "AbortError",
+				});
 			} finally {
 				clearTimeout(timer);
 			}

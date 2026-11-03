@@ -14,31 +14,31 @@ const USER_AGENT = `Line/${APP_VER}`;
 const AUTH_KEY = "u***************:++++++++++++++++++";
 
 function createToken(authKey) {
-  const [mid, ...rest] = authKey.split(":");
-  const key = Buffer.from(rest.join(":"), "base64");
-  const iat =
-    Buffer.from(`iat: ${Math.floor(Date.now() / 1000) * 60}\n`, "utf-8").toString("base64") + ".";
-  const digest = crypto.createHmac("sha1", key).update(iat).digest("base64");
-  return `${mid}:${iat}.${digest}`;
+	const [mid, ...rest] = authKey.split(":");
+	const key = Buffer.from(rest.join(":"), "base64");
+	const iat =
+		Buffer.from(`iat: ${Math.floor(Date.now() / 1000) * 60}\n`, "utf-8").toString("base64") + ".";
+	const digest = crypto.createHmac("sha1", key).update(iat).digest("base64");
+	return `${mid}:${iat}.${digest}`;
 }
 
 function isAlreadyToken(value) {
-  const idx = value.indexOf(":");
-  if (idx === -1) return false;
-  const payload = value.substring(idx + 1);
-  try {
-    const decoded = Buffer.from(payload.split(".")[0], "base64").toString("utf-8");
-    return decoded.startsWith("iat:");
-  } catch {
-    return false;
-  }
+	const idx = value.indexOf(":");
+	if (idx === -1) return false;
+	const payload = value.substring(idx + 1);
+	try {
+		const decoded = Buffer.from(payload.split(".")[0], "base64").toString("utf-8");
+		return decoded.startsWith("iat:");
+	} catch {
+		return false;
+	}
 }
 
 function resolveToken(value) {
-  if (isAlreadyToken(value)) {
-    return value;
-  }
-  return createToken(value);
+	if (isAlreadyToken(value)) {
+		return value;
+	}
+	return createToken(value);
 }
 
 // legy enc
@@ -57,152 +57,167 @@ const LEGY_LE = "7";
 const LEGY_LCS_PREFIX = "0008";
 const LEGY_GF_URL = "https://gf.line.naver.jp/enc";
 const leGyAesKey = crypto.randomBytes(16);
-const xLcs = LEGY_LCS_PREFIX + crypto.publicEncrypt(
-  { key: LINE_PUBLIC_KEY, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING, oaepHash: "sha1" },
-  leGyAesKey,
-).toString("base64");
+const xLcs =
+	LEGY_LCS_PREFIX +
+	crypto
+		.publicEncrypt(
+			{ key: LINE_PUBLIC_KEY, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING, oaepHash: "sha1" },
+			leGyAesKey,
+		)
+		.toString("base64");
 let xxh = null;
 
 // Serialize
 function encHeaders(headers) {
-  const keys = Object.keys(headers);
-  const parts = [];
-  parts.push(Buffer.from([(keys.length >> 8) & 0xff, keys.length & 0xff]));
-  for (const k of keys) {
-    const kBuf = Buffer.from(k, "ascii");
-    const vBuf = Buffer.from(headers[k], "ascii");
-    parts.push(Buffer.from([(kBuf.length >> 8) & 0xff, kBuf.length & 0xff]));
-    parts.push(kBuf);
-    parts.push(Buffer.from([(vBuf.length >> 8) & 0xff, vBuf.length & 0xff]));
-    parts.push(vBuf);
-  }
-  const body = Buffer.concat(parts);
-  return Buffer.concat([Buffer.from([(body.length >> 8) & 0xff, body.length & 0xff]), body]);
+	const keys = Object.keys(headers);
+	const parts = [];
+	parts.push(Buffer.from([(keys.length >> 8) & 0xff, keys.length & 0xff]));
+	for (const k of keys) {
+		const kBuf = Buffer.from(k, "ascii");
+		const vBuf = Buffer.from(headers[k], "ascii");
+		parts.push(Buffer.from([(kBuf.length >> 8) & 0xff, kBuf.length & 0xff]));
+		parts.push(kBuf);
+		parts.push(Buffer.from([(vBuf.length >> 8) & 0xff, vBuf.length & 0xff]));
+		parts.push(vBuf);
+	}
+	const body = Buffer.concat(parts);
+	return Buffer.concat([Buffer.from([(body.length >> 8) & 0xff, body.length & 0xff]), body]);
 }
 
 // parse
 function decHeaders(data) {
-  let off = 0;
-  const ri16 = () => { const v = (data[off] << 8) | data[off + 1]; off += 2; return v; };
-  const dataLen = ri16() + 2;
-  const count = ri16();
-  const headers = {};
-  for (let i = 0; i < count; i++) {
-    const kl = ri16(); const k = data.subarray(off, off + kl).toString("ascii"); off += kl;
-    const vl = ri16(); const v = data.subarray(off, off + vl).toString("ascii"); off += vl;
-    headers[k] = v;
-  }
-  return { headers, data: data.subarray(dataLen) };
+	let off = 0;
+	const ri16 = () => {
+		const v = (data[off] << 8) | data[off + 1];
+		off += 2;
+		return v;
+	};
+	const dataLen = ri16() + 2;
+	const count = ri16();
+	const headers = {};
+	for (let i = 0; i < count; i++) {
+		const kl = ri16();
+		const k = data.subarray(off, off + kl).toString("ascii");
+		off += kl;
+		const vl = ri16();
+		const v = data.subarray(off, off + vl).toString("ascii");
+		off += vl;
+		headers[k] = v;
+	}
+	return { headers, data: data.subarray(dataLen) };
 }
 
 function pkcs7Unpad(buf) {
-  const n = buf[buf.length - 1];
-  return (n > 0 && n <= 16) ? buf.subarray(0, buf.length - n) : buf;
+	const n = buf[buf.length - 1];
+	return n > 0 && n <= 16 ? buf.subarray(0, buf.length - n) : buf;
 }
 
 function pkcs7Pad(buf, bs) {
-  const n = bs - (buf.length % bs);
-  return Buffer.concat([buf, Buffer.alloc(n, n)]);
+	const n = bs - (buf.length % bs);
+	return Buffer.concat([buf, Buffer.alloc(n, n)]);
 }
 
 // AES-128-CBC enc
 function leGyEncrypt(pt) {
-  const c = crypto.createCipheriv("aes-128-cbc", leGyAesKey, LEGY_IV);
-  c.setAutoPadding(true);
-  return Buffer.concat([c.update(pt), c.final()]);
+	const c = crypto.createCipheriv("aes-128-cbc", leGyAesKey, LEGY_IV);
+	c.setAutoPadding(true);
+	return Buffer.concat([c.update(pt), c.final()]);
 }
 
 // AES-128-CBC dec
 function leGyDecrypt(ct) {
-  const padded = pkcs7Pad(ct, 16);
-  const d = crypto.createDecipheriv("aes-128-cbc", leGyAesKey, LEGY_IV);
-  d.setAutoPadding(false);
-  const dec = Buffer.concat([d.update(padded), d.final()]);
-  return pkcs7Unpad(dec.subarray(0, dec.length - 16));
+	const padded = pkcs7Pad(ct, 16);
+	const d = crypto.createDecipheriv("aes-128-cbc", leGyAesKey, LEGY_IV);
+	d.setAutoPadding(false);
+	const dec = Buffer.concat([d.update(padded), d.final()]);
+	return pkcs7Unpad(dec.subarray(0, dec.length - 16));
 }
 
 // xxHash32 HMAC
 function leGyHmac(key, data, h) {
-  const opad = Buffer.alloc(16);
-  const ipad = Buffer.alloc(16);
-  for (let i = 0; i < 16; i++) {
-    opad[i] = 0x5c ^ key[i];
-    ipad[i] = 0x36 ^ key[i];
-  }
-  const innerHex = (h.h32Raw(Buffer.concat([ipad, data]), 0) >>> 0).toString(16).padStart(8, "0");
-  const outerHex = (h.h32Raw(Buffer.concat([opad, Buffer.from(innerHex, "hex")]), 0) >>> 0).toString(16).padStart(8, "0");
-  return Buffer.from(outerHex, "hex");
+	const opad = Buffer.alloc(16);
+	const ipad = Buffer.alloc(16);
+	for (let i = 0; i < 16; i++) {
+		opad[i] = 0x5c ^ key[i];
+		ipad[i] = 0x36 ^ key[i];
+	}
+	const innerHex = (h.h32Raw(Buffer.concat([ipad, data]), 0) >>> 0).toString(16).padStart(8, "0");
+	const outerHex = (h.h32Raw(Buffer.concat([opad, Buffer.from(innerHex, "hex")]), 0) >>> 0)
+		.toString(16)
+		.padStart(8, "0");
+	return Buffer.from(outerHex, "hex");
 }
 
 async function leGyFetch(request) {
-  if (!xxh) xxh = await xxhashInit();
-  const url = new URL(request.url);
-  const path = url.pathname;
-  const thriftBody = Buffer.from(await request.arrayBuffer());
-  const token = request.headers.get("x-line-access");
-  // legy header
-  const inner = token
-    ? { "x-lt": token, "x-lpqs": path }
-    : { "x-lpqs": path };
-  const plaintext = Buffer.concat([encHeaders(inner), thriftBody]);
-  const leInt = parseInt(LEGY_LE, 10);
-  const fixBytes = (leInt & 4) === 4;
-  let toEncrypt = fixBytes
-    ? Buffer.concat([Buffer.from([leInt]), plaintext])
-    : plaintext;
-  let enc = leGyEncrypt(toEncrypt);
-  if ((leInt & 2) === 2) {
-    enc = Buffer.concat([enc, leGyHmac(leGyAesKey, enc, xxh)]);
-  }
-  // gf.line.naver.jp/enc
-  const { statusCode, responseBody, responseHeaders } = await new Promise((resolve, reject) => {
-    const gfUrl = new URL(LEGY_GF_URL);
-    const req = https.request({
-      hostname: gfUrl.hostname,
-      port: 443,
-      path: gfUrl.pathname,
-      method: "POST",
-      headers: {
-        "x-line-application": X_LINE_APP,
-        "x-le": LEGY_LE,
-        "x-lap": "5",
-        "x-lpv": "1",
-        "x-lcs": xLcs,
-        "User-Agent": USER_AGENT,
-        "content-type": "application/x-thrift; protocol=TBINARY",
-        "x-lal": "ja_JP",
-        "x-lhm": "POST",
-        "accept": "*/*",
-        "accept-encoding": "gzip, deflate",
-        "connection": "keep-alive",
-        "Content-Length": enc.length,
-      },
-    }, (res) => {
-      const chunks = [];
-      res.on("data", (chunk) => chunks.push(chunk));
-      res.on("end", () => resolve({
-        statusCode: res.statusCode,
-        responseBody: Buffer.concat(chunks),
-        responseHeaders: res.headers,
-      }));
-    });
-    req.on("error", reject);
-    req.write(enc);
-    req.end();
-  });
-  if (!responseBody.length) {
-    return new Response(responseBody, { status: statusCode });
-  }
-  // legy dec
-  let dec = leGyDecrypt(responseBody);
-  if (fixBytes) dec = dec.subarray(1);
-  const { headers: innerH, data: thriftData } = decHeaders(dec);
-  const innerStatus = innerH["x-lc"];
-  const httpStatus = (innerStatus && innerStatus !== "200") ? parseInt(innerStatus, 10) : statusCode;
-  return new Response(thriftData, {
-    status: httpStatus,
-    headers: { "content-type": "application/x-thrift" },
-  });
+	if (!xxh) xxh = await xxhashInit();
+	const url = new URL(request.url);
+	const path = url.pathname;
+	const thriftBody = Buffer.from(await request.arrayBuffer());
+	const token = request.headers.get("x-line-access");
+	// legy header
+	const inner = token ? { "x-lt": token, "x-lpqs": path } : { "x-lpqs": path };
+	const plaintext = Buffer.concat([encHeaders(inner), thriftBody]);
+	const leInt = parseInt(LEGY_LE, 10);
+	const fixBytes = (leInt & 4) === 4;
+	let toEncrypt = fixBytes ? Buffer.concat([Buffer.from([leInt]), plaintext]) : plaintext;
+	let enc = leGyEncrypt(toEncrypt);
+	if ((leInt & 2) === 2) {
+		enc = Buffer.concat([enc, leGyHmac(leGyAesKey, enc, xxh)]);
+	}
+	// gf.line.naver.jp/enc
+	const { statusCode, responseBody, responseHeaders } = await new Promise((resolve, reject) => {
+		const gfUrl = new URL(LEGY_GF_URL);
+		const req = https.request(
+			{
+				hostname: gfUrl.hostname,
+				port: 443,
+				path: gfUrl.pathname,
+				method: "POST",
+				headers: {
+					"x-line-application": X_LINE_APP,
+					"x-le": LEGY_LE,
+					"x-lap": "5",
+					"x-lpv": "1",
+					"x-lcs": xLcs,
+					"User-Agent": USER_AGENT,
+					"content-type": "application/x-thrift; protocol=TBINARY",
+					"x-lal": "ja_JP",
+					"x-lhm": "POST",
+					accept: "*/*",
+					"accept-encoding": "gzip, deflate",
+					connection: "keep-alive",
+					"Content-Length": enc.length,
+				},
+			},
+			(res) => {
+				const chunks = [];
+				res.on("data", (chunk) => chunks.push(chunk));
+				res.on("end", () =>
+					resolve({
+						statusCode: res.statusCode,
+						responseBody: Buffer.concat(chunks),
+						responseHeaders: res.headers,
+					}),
+				);
+			},
+		);
+		req.on("error", reject);
+		req.write(enc);
+		req.end();
+	});
+	if (!responseBody.length) {
+		return new Response(responseBody, { status: statusCode });
+	}
+	// legy dec
+	let dec = leGyDecrypt(responseBody);
+	if (fixBytes) dec = dec.subarray(1);
+	const { headers: innerH, data: thriftData } = decHeaders(dec);
+	const innerStatus = innerH["x-lc"];
+	const httpStatus = innerStatus && innerStatus !== "200" ? parseInt(innerStatus, 10) : statusCode;
+	return new Response(thriftData, {
+		status: httpStatus,
+		headers: { "content-type": "application/x-thrift" },
+	});
 }
 
 // linejs BaseClient

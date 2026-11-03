@@ -10,18 +10,22 @@ options, including the device to emulate.
 ### `loginWithPassword`
 
 Here is an example:
+
 ```ts
 import { loginWithPassword } from "@evex-dev/linejs";
 
-const client = await loginWithPassword({
-  email: 'you@example.com', // e-mail address
-  password: 'password', // Password
-  onPincodeRequest(pincode) {
-    console.log('Enter this pincode to your LINE app:', pincode)
-  }
-}, {
-  device: "IOSIPAD",
-})
+const client = await loginWithPassword(
+	{
+		email: "you@example.com", // e-mail address
+		password: "password", // Password
+		onPincodeRequest(pincode) {
+			console.log("Enter this pincode to your LINE app:", pincode);
+		},
+	},
+	{
+		device: "IOSIPAD",
+	},
+);
 ```
 
 email and password are required. On first login, you have to enter pincode on mobile app for enable e2ee.
@@ -34,16 +38,19 @@ In this way, email and password is not needed.
 ```ts
 import { loginWithQR } from "@evex-dev/linejs";
 
-const client = await loginWithQR({
-  onReceiveQRUrl(url) {
-    console.log("Access this URL:", url);
-  },
-  onPincodeRequest(pincode) {
-    console.log("Enter this pincode to your LINE app:", pincode);
-  },
-}, {
-  device: "ANDROIDSECONDARY",
-})
+const client = await loginWithQR(
+	{
+		onReceiveQRUrl(url) {
+			console.log("Access this URL:", url);
+		},
+		onPincodeRequest(pincode) {
+			console.log("Enter this pincode to your LINE app:", pincode);
+		},
+	},
+	{
+		device: "ANDROIDSECONDARY",
+	},
+);
 ```
 
 The function gives an url to read on mobile. You have to create QR with yourself if you want to show QR code, this is because of LINEJS doesn't support creating QR code.
@@ -56,7 +63,7 @@ There is a possibility to banned your account if you tried login many times, so 
 import { loginWithAuthToken } from "@evex-dev/linejs";
 
 const client = await loginWithAuthToken("YOUR_AUTH_TOKEN", {
-  device: "IOSIPAD",
+	device: "IOSIPAD",
 });
 ```
 
@@ -81,21 +88,25 @@ const base = new BaseClient({ device: "IOSIPAD", storage });
 // handle failures without creating an unhandled rejection.
 let pendingSave = Promise.resolve();
 base.on("update:authtoken", (token) => {
-  base.authToken = token;
-  pendingSave = pendingSave.then(() => storage.set(TOKEN_KEY, token)).catch(() => {
-    console.error("Could not persist the LINE session token.");
-  });
+	base.authToken = token;
+	pendingSave = pendingSave
+		.then(() => storage.set(TOKEN_KEY, token))
+		.catch(() => {
+			console.error("Could not persist the LINE session token.");
+		});
 });
 base.on("pincall", (pin) => console.log("Enter this pincode:", pin));
 
 const saved = await storage.get(TOKEN_KEY);
 
-await base.loginProcess.login(typeof saved === "string" && saved
-  ? { authToken: saved }
-  : {
-    email: "you@example.com",
-    password: "password",
-  });
+await base.loginProcess.login(
+	typeof saved === "string" && saved
+		? { authToken: saved }
+		: {
+				email: "you@example.com",
+				password: "password",
+			},
+);
 await pendingSave;
 const client = new Client(base);
 // Use client here. Also await pendingSave before an explicit process exit.

@@ -33,9 +33,7 @@
 	"scripts": {
 		"build": "vp pack",
 		"test": "vp test --passWithNoTests",
-		"check": "vp check",
-		"format": "vp fmt . --write",
-		"prepublishOnly": "pnpm run check && pnpm run build"
+		"prepublishOnly": "pnpm -w run check && pnpm run build"
 	},
 	"devDependencies": {
 		"@types/node": "^24.10.0",

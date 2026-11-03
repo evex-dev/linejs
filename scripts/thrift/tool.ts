@@ -32,15 +32,11 @@ let Thrift = _Thrift;
 if (flags.thrift !== undefined && flags.input !== undefined) {
 	console.log("parsing thrift...");
 	const thrift = parseThrift(
-		readFileSync(
-			flags.input || resolve(scriptDir, "../../resources/line/line.thrift"),
-			"utf8",
-		),
+		readFileSync(flags.input || resolve(scriptDir, "../../resources/line/line.thrift"), "utf8"),
 	);
 	Thrift = thrift;
 	writeFileSync(
-		flags.thrift ||
-			resolve(scriptDir, "../../packages/types/thrift.ts"),
+		flags.thrift || resolve(scriptDir, "../../packages/types/thrift.ts"),
 		"export const Thrift: Record<string, Record<string, string> | any[]> = " +
 			JSON.stringify(thrift, null, 2) +
 			`\nexport function parseEnum(name: string, value: number | string): string | null {
@@ -51,16 +47,10 @@ if (flags.thrift !== undefined && flags.input !== undefined) {
 
 if (flags.type !== undefined) {
 	console.log("generating ts typedef...");
-	typedef(
-		Thrift,
-		flags.type || undefined,
-	);
+	typedef(Thrift, flags.type || undefined);
 }
 
 if (flags.struct !== undefined) {
 	console.log("generating struct parser...");
-	struct(
-		Thrift,
-		flags.struct || undefined,
-	);
+	struct(Thrift, flags.struct || undefined);
 }

@@ -27,8 +27,8 @@ So first, let's retrieve the messages sent.
 
 ```ts
 client.on("message", (message) => {
-    const text = message.text;
-    console.log(text);
+	const text = message.text;
+	console.log(text);
 });
 client.listen();
 ```
@@ -47,7 +47,7 @@ client.on("message", (message) => {
     const text = message.text;
 
     if (text === "!ping") {
-        ...     
+        ...
     }
 });
 ```
@@ -59,11 +59,11 @@ To reply, you can call a method that sends a `messageId` with a
 
 ```ts
 client.on("message", (message) => {
-    const text = message.text;
+	const text = message.text;
 
-    if (text === "!ping") {
-        message.reply("pong!");
-    }
+	if (text === "!ping") {
+		message.reply("pong!");
+	}
 });
 ```
 
@@ -72,11 +72,11 @@ beautiful to enclose it in an asynchronous function.
 
 ```ts
 client.on("message", async (message) => {
-    const text = message.text;
+	const text = message.text;
 
-    if (text === "!ping") {
-        await message.reply("pong!");
-    }
+	if (text === "!ping") {
+		await message.reply("pong!");
+	}
 });
 ```
 
@@ -91,7 +91,7 @@ to `message:edit` instead.
 
 ```ts
 client.on("message:edit", (message) => {
-    console.log(message.raw.id, "was edited to:", message.text);
+	console.log(message.raw.id, "was edited to:", message.text);
 });
 ```
 
@@ -103,7 +103,7 @@ The event fires both when someone else edits a message and when you edit one
 from another device.
 
 :::warning
-Only receiving edits is supported. Editing a message *from* linejs is not
+Only receiving edits is supported. Editing a message _from_ linejs is not
 implemented.
 :::
 
@@ -113,11 +113,11 @@ So what should we do with Square (OpenChat)? Basically the same thing.
 
 ```ts
 client.on("square:message", async (message) => {
-    const text = message.text;
+	const text = message.text;
 
-    if (text === "!ping") {
-        await message.reply("pong!");
-    }
+	if (text === "!ping") {
+		await message.reply("pong!");
+	}
 });
 ```
 
@@ -127,5 +127,5 @@ There are many more features!
 Stay tuned for our next journey.
 
 :::tip If you encounter problems, please refer to [Question](/docs/question),
-not only here. 
+not only here.
 :::

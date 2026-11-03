@@ -55,18 +55,10 @@ test("regenerating the Thrift artefacts on a clean tree is a no-op", async () =>
 		genStruct(Thrift as Parameters<typeof genStruct>[0], genWriters);
 		await vpFmt([genTypes, genWriters]);
 
-		for (
-			const [generated, committed] of [
-				[genTypes, join(linejsRoot, "packages/types/line_types.ts")],
-				[
-					genWriters,
-					join(
-						linejsRoot,
-						"packages/linejs/base/thrift/readwrite/struct.ts",
-					),
-				],
-			]
-		) {
+		for (const [generated, committed] of [
+			[genTypes, join(linejsRoot, "packages/types/line_types.ts")],
+			[genWriters, join(linejsRoot, "packages/linejs/base/thrift/readwrite/struct.ts")],
+		]) {
 			const normalizeNewlines = (text: string) => text.replaceAll("\r\n", "\n");
 			assert.deepEqual(
 				normalizeNewlines(await readFile(generated, "utf8")),
@@ -90,32 +82,19 @@ test("thrift.ts binary markers survive into both generated artefacts", async () 
 		.flatMap(([name, v]) =>
 			(v as Array<{ name: string; binary?: boolean }>)
 				.filter((f) => f.binary)
-				.map((f) => `${name}.${f.name}`)
+				.map((f) => `${name}.${f.name}`),
 		);
-	assert.isOk(
-		binaryFields.length > 0,
-		"expected at least one binary field declared in thrift.ts",
-	);
+	assert.isOk(binaryFields.length > 0, "expected at least one binary field declared in thrift.ts");
 
-	const types = await readFile(
-		join(linejsRoot, "packages/types/line_types.ts"),
-		"utf8",
-	);
+	const types = await readFile(join(linejsRoot, "packages/types/line_types.ts"), "utf8");
 	assert.isOk(types.includes("keyData: string | Buffer;"));
 
 	const writers = await readFile(
-		join(
-			linejsRoot,
-			"packages/linejs/base/thrift/readwrite/struct.ts",
-		),
+		join(linejsRoot, "packages/linejs/base/thrift/readwrite/struct.ts"),
 		"utf8",
 	);
-	assert.isOk(
-		writers.includes('import type { Buffer } from "node:buffer";'),
-	);
-	assert.isOk(
-		writers.includes("param.keyData as string | Buffer | undefined"),
-	);
+	assert.isOk(writers.includes('import type { Buffer } from "node:buffer";'));
+	assert.isOk(writers.includes("param.keyData as string | Buffer | undefined"));
 	// Binary *containers* deliberately carry no cast: NestedArray's list/set/map
 	// arms end in `unknown[]`, so the element type is unconstrained, while the
 	// scalar arm is `string | Buffer | undefined` and PartialDeep breaks Buffer

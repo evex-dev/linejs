@@ -713,8 +713,7 @@ export default (function () {
 			peg$c335 = {
 				type: "class",
 				value: "[_\\u203F-\\u2040\\u2054\\uFE33-\\uFE34\\uFE4D-\\uFE4F\\uFF3F]",
-				description:
-					"[_\\u203F-\\u2040\\u2054\\uFE33-\\uFE34\\uFE4D-\\uFE4F\\uFF3F]",
+				description: "[_\\u203F-\\u2040\\u2054\\uFE33-\\uFE34\\uFE4D-\\uFE4F\\uFF3F]",
 			},
 			peg$c336 = /^[ \xA0\u1680\u2000-\u200A\u202F\u205F\u3000]/,
 			peg$c337 = {
@@ -733,9 +732,7 @@ export default (function () {
 
 		if ("startRule" in options) {
 			if (!(options.startRule in peg$startRuleFunctions)) {
-				throw new Error(
-					"Can't start parsing from rule \"" + options.startRule + '".',
-				);
+				throw new Error("Can't start parsing from rule \"" + options.startRule + '".');
 			}
 
 			peg$startRuleFunction = peg$startRuleFunctions[options.startRule];
@@ -873,11 +870,10 @@ export default (function () {
 					expectedDescs[i] = expected[i].description;
 				}
 
-				expectedDesc = expected.length > 1
-					? expectedDescs.slice(0, -1).join(", ") +
-						" or " +
-						expectedDescs[expected.length - 1]
-					: expectedDescs[0];
+				expectedDesc =
+					expected.length > 1
+						? expectedDescs.slice(0, -1).join(", ") + " or " + expectedDescs[expected.length - 1]
+						: expectedDescs[0];
 
 				foundDesc = found ? '"' + stringEscape(found) + '"' : "end of input";
 
@@ -1605,9 +1601,7 @@ export default (function () {
 																	if (peg$silentFails === 0) peg$fail(peg$c63);
 																}
 																if (s0 === peg$FAILED) {
-																	if (
-																		input.substr(peg$currPos, 6) === peg$c64
-																	) {
+																	if (input.substr(peg$currPos, 6) === peg$c64) {
 																		s0 = peg$c64;
 																		peg$currPos += 6;
 																	} else {
@@ -1617,9 +1611,7 @@ export default (function () {
 																		}
 																	}
 																	if (s0 === peg$FAILED) {
-																		if (
-																			input.substr(peg$currPos, 3) === peg$c66
-																		) {
+																		if (input.substr(peg$currPos, 3) === peg$c66) {
 																			s0 = peg$c66;
 																			peg$currPos += 3;
 																		} else {

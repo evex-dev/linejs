@@ -1,11 +1,6 @@
 import { defineConfig } from "vite-plus";
 
 export default defineConfig({
-	fmt: {
-		semi: true,
-		singleQuote: false,
-		useTabs: true,
-	},
 	pack: {
 		entry: {
 			mod: "mod.ts",

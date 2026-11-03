@@ -3,23 +3,14 @@
 import type { BaseStorage, Storage } from "@evex-dev/linejs/storage";
 export class LocalStorage implements BaseStorage {
 	prefix = "linejs:";
-	constructor() {
-	}
-	public async set(
-		key: Storage["Key"],
-		value: Storage["Value"],
-	): Promise<void> {
+	constructor() {}
+	public async set(key: Storage["Key"], value: Storage["Value"]): Promise<void> {
 		localStorage.setItem(this.prefix + key, JSON.stringify(value));
 	}
-	public async get(
-		key: Storage["Key"],
-	): Promise<Storage["Value"] | undefined> {
+	public async get(key: Storage["Key"]): Promise<Storage["Value"] | undefined> {
 		try {
-			return JSON.parse(
-				localStorage.getItem(this.prefix + key) || "null",
-			);
-		} catch (_) {
-		}
+			return JSON.parse(localStorage.getItem(this.prefix + key) || "null");
+		} catch (_) {}
 	}
 	public async delete(key: Storage["Key"]): Promise<void> {
 		localStorage.removeItem(this.prefix + key);
@@ -31,10 +22,7 @@ export class LocalStorage implements BaseStorage {
 		for (let index = 0; index < localStorage.length; index++) {
 			const k = localStorage.key(index);
 			if (k) {
-				await storage.set(
-					k.replace(this.prefix, ""),
-					localStorage.getItem(k),
-				);
+				await storage.set(k.replace(this.prefix, ""), localStorage.getItem(k));
 			} else {
 				continue;
 			}

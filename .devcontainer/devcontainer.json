@@ -1,18 +1,18 @@
 {
-  "build": {
-    "dockerfile": "Dockerfile"
-  },
-  "containerEnv": {
-    "HOME": "/home/node"
-  },
-  "customizations": {
-    "vscode": {
-      "settings": {
-        "editor.insertSpaces": false,
-        "editor.tabSize": 4,
-        "oxc.enable": true
-      },
-      "extensions": ["oxc.oxc-vscode"]
-    }
-  }
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"containerEnv": {
+		"HOME": "/home/node"
+	},
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"editor.insertSpaces": false,
+				"editor.tabSize": 4,
+				"oxc.enable": true
+			},
+			"extensions": ["oxc.oxc-vscode"]
+		}
+	}
 }

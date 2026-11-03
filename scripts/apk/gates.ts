@@ -118,11 +118,7 @@ export function classifyPair(
 	let shared = 0;
 	for (const x of A) if (B.has(x)) shared++;
 	const score = jaccard(A, B);
-	const via: PairVia = apk === linejs
-		? "canonical"
-		: overrides[apk] === linejs
-		? "rpc"
-		: "jaccard";
+	const via: PairVia = apk === linejs ? "canonical" : overrides[apk] === linejs ? "rpc" : "jaccard";
 	return { apk, linejs, via, score, shared };
 }
 
@@ -153,16 +149,13 @@ export function acceptRewrite(
 	if (p.score < opts.minOverlap) {
 		return {
 			ok: false,
-			reason: `overlap ${
-				p.score.toFixed(2)
-			} below ${opts.minOverlap} (via ${p.via})`,
+			reason: `overlap ${p.score.toFixed(2)} below ${opts.minOverlap} (via ${p.via})`,
 		};
 	}
 	if (p.shared < opts.minSharedFields) {
 		return {
 			ok: false,
-			reason:
-				`only ${p.shared} shared field name(s), below ${opts.minSharedFields} (via ${p.via})`,
+			reason: `only ${p.shared} shared field name(s), below ${opts.minSharedFields} (via ${p.via})`,
 		};
 	}
 	if (p.via === "rpc") {
@@ -196,16 +189,13 @@ export function acceptStructFieldAdd(
 		if (p.score < opts.minOverlap) {
 			return {
 				ok: false,
-				reason: `tier B: overlap ${
-					p.score.toFixed(2)
-				} below ${opts.minOverlap}`,
+				reason: `tier B: overlap ${p.score.toFixed(2)} below ${opts.minOverlap}`,
 			};
 		}
 		if (p.shared < opts.minSharedFields) {
 			return {
 				ok: false,
-				reason:
-					`tier B: only ${p.shared} shared field name(s), below ${opts.minSharedFields}`,
+				reason: `tier B: only ${p.shared} shared field name(s), below ${opts.minSharedFields}`,
 			};
 		}
 		return {
@@ -237,16 +227,13 @@ export function acceptEnumValueAdd(
 	if (p.score < opts.minOverlap) {
 		return {
 			ok: false,
-			reason: `overlap ${
-				p.score.toFixed(2)
-			} below ${opts.minOverlap} (via ${p.via})`,
+			reason: `overlap ${p.score.toFixed(2)} below ${opts.minOverlap} (via ${p.via})`,
 		};
 	}
 	if (linejsMemberCount < opts.enumAddMinMembers) {
 		return {
 			ok: false,
-			reason:
-				`enum has ${linejsMemberCount} members, below ${opts.enumAddMinMembers}`,
+			reason: `enum has ${linejsMemberCount} members, below ${opts.enumAddMinMembers}`,
 		};
 	}
 	return {

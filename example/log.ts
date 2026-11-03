@@ -5,9 +5,7 @@ const logger = openSync("./debug.log", "a");
 
 writeSync(
 	logger,
-	new TextEncoder().encode(
-		`\n\n\n----- New Session: ${new Date().toLocaleString()} -----\n`,
-	),
+	new TextEncoder().encode(`\n\n\n----- New Session: ${new Date().toLocaleString()} -----\n`),
 );
 
 const client = new BaseClient({
@@ -18,9 +16,11 @@ client.on("log", (data) => {
 	writeSync(
 		logger,
 		new TextEncoder().encode(
-			`[${new Date().toLocaleTimeString()}] ${data.type}: ${
-				JSON.stringify(data.data, BaseClient.jsonReplacer, 2)
-			}\n`,
+			`[${new Date().toLocaleTimeString()}] ${data.type}: ${JSON.stringify(
+				data.data,
+				BaseClient.jsonReplacer,
+				2,
+			)}\n`,
 		),
 	);
 });

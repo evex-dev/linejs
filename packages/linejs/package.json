@@ -51,9 +51,7 @@
 	"scripts": {
 		"build": "vp pack",
 		"test": "vp test",
-		"check": "vp check",
-		"format": "vp fmt . --write",
-		"prepublishOnly": "pnpm run check && pnpm run build"
+		"prepublishOnly": "pnpm -w run check && pnpm run build"
 	},
 	"dependencies": {
 		"@evex-dev/linejs-types": "^3.6.0",

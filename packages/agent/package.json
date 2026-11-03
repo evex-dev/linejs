@@ -15,9 +15,7 @@
 	},
 	"scripts": {
 		"build": "vp pack",
-		"test": "vp test",
-		"check": "vp check",
-		"format": "vp fmt . --write"
+		"test": "vp test"
 	},
 	"devDependencies": {
 		"@types/node": "^24.10.0",
