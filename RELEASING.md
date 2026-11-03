@@ -16,9 +16,13 @@ release workflow requires an existing npm version to increment. Do this once:
    ```sh
    pnpm install
    pnpm run build
-   (cd packages/types && npm publish --access public)
-   (cd packages/linejs && npm publish --access public)
+   (cd packages/types && pnpm publish --access public --no-git-checks)
+   (cd packages/linejs && pnpm publish --access public --no-git-checks)
    ```
+
+   `pnpm publish` applies the `publishConfig` manifest: the committed
+   `exports`/`main`/`types` point at the TypeScript sources, while the packed
+   tarball points at `dist/`.
 
 2. On npmjs.com, open each package → **Settings → Trusted Publisher** and add:
 
@@ -47,7 +51,7 @@ release workflow requires an existing npm version to increment. Do this once:
    - installs, builds, type-checks/lints, and runs the package and script tests;
    - refuses to reuse an existing version or tag;
    - publishes `@evex-dev/linejs-types` and then `@evex-dev/linejs` with
-     `npm publish`;
+     `pnpm publish` (Trusted Publishing);
    - pushes the release commit and `v<version>` tag, then creates the GitHub
      Release.
 

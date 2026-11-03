@@ -17,18 +17,28 @@
 		"README.md"
 	],
 	"type": "module",
-	"main": "./dist/line_types.mjs",
-	"module": "./dist/line_types.mjs",
-	"types": "./dist/line_types.d.mts",
+	"main": "./line_types.ts",
+	"module": "./line_types.ts",
+	"types": "./line_types.ts",
 	"exports": {
-		".": {
-			"types": "./dist/line_types.d.mts",
-			"import": "./dist/line_types.mjs"
+		".": "./line_types.ts",
+		"./thrift": "./thrift.ts"
+	},
+	"publishConfig": {
+		"main": "./dist/line_types.mjs",
+		"module": "./dist/line_types.mjs",
+		"types": "./dist/line_types.d.mts",
+		"exports": {
+			".": {
+				"types": "./dist/line_types.d.mts",
+				"import": "./dist/line_types.mjs"
+			},
+			"./thrift": {
+				"types": "./dist/thrift.d.mts",
+				"import": "./dist/thrift.mjs"
+			}
 		},
-		"./thrift": {
-			"types": "./dist/thrift.d.mts",
-			"import": "./dist/thrift.mjs"
-		}
+		"access": "public"
 	},
 	"scripts": {
 		"build": "vp pack",

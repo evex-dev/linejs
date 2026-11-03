@@ -23,30 +23,43 @@
 		"README.md"
 	],
 	"type": "module",
-	"main": "./dist/client/mod.mjs",
-	"module": "./dist/client/mod.mjs",
-	"types": "./dist/client/mod.d.mts",
+	"main": "./client/mod.ts",
+	"module": "./client/mod.ts",
+	"types": "./client/mod.ts",
 	"exports": {
-		".": {
-			"types": "./dist/client/mod.d.mts",
-			"import": "./dist/client/mod.mjs"
+		".": "./client/mod.ts",
+		"./base": "./base/mod.ts",
+		"./call": "./client/features/call/mod.ts",
+		"./storage": "./base/storage/mod.ts",
+		"./thrift": "./base/thrift/mod.ts"
+	},
+	"publishConfig": {
+		"main": "./dist/client/mod.mjs",
+		"module": "./dist/client/mod.mjs",
+		"types": "./dist/client/mod.d.mts",
+		"exports": {
+			".": {
+				"types": "./dist/client/mod.d.mts",
+				"import": "./dist/client/mod.mjs"
+			},
+			"./base": {
+				"types": "./dist/base/mod.d.mts",
+				"import": "./dist/base/mod.mjs"
+			},
+			"./call": {
+				"types": "./dist/client/features/call/mod.d.mts",
+				"import": "./dist/client/features/call/mod.mjs"
+			},
+			"./storage": {
+				"types": "./dist/base/storage/mod.d.mts",
+				"import": "./dist/base/storage/mod.mjs"
+			},
+			"./thrift": {
+				"types": "./dist/base/thrift/mod.d.mts",
+				"import": "./dist/base/thrift/mod.mjs"
+			}
 		},
-		"./base": {
-			"types": "./dist/base/mod.d.mts",
-			"import": "./dist/base/mod.mjs"
-		},
-		"./call": {
-			"types": "./dist/client/features/call/mod.d.mts",
-			"import": "./dist/client/features/call/mod.mjs"
-		},
-		"./storage": {
-			"types": "./dist/base/storage/mod.d.mts",
-			"import": "./dist/base/storage/mod.mjs"
-		},
-		"./thrift": {
-			"types": "./dist/base/thrift/mod.d.mts",
-			"import": "./dist/base/thrift/mod.mjs"
-		}
+		"access": "public"
 	},
 	"scripts": {
 		"build": "vp pack",

@@ -47,9 +47,6 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           cache: pnpm
 
-      - name: Use a current npm (Trusted Publishing needs >= 11.5.1)
-        run: npm install --global npm@latest
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -185,10 +182,12 @@ jobs:
           git tag -a "$TAG" -m "$TAG"
 
       - name: Publish to npm with Trusted Publishing
+        # pnpm rewrites package.json with the `publishConfig` exports/main/types
+        # (dist) before packing, and exchanges the GitHub OIDC token itself.
         run: |
           set -euo pipefail
-          (cd packages/types && npm publish --access public)
-          (cd packages/linejs && npm publish --access public)
+          (cd packages/types && pnpm publish --access public --no-git-checks)
+          (cd packages/linejs && pnpm publish --access public --no-git-checks)
 
       - name: Push the release commit and tag
         env:

@@ -9,9 +9,28 @@
 		"directory": "packages/agent"
 	},
 	"type": "module",
+	"main": "./mod.ts",
+	"module": "./mod.ts",
+	"types": "./mod.ts",
 	"exports": {
-		".": "./dist/mod.js",
-		"./client": "./dist/client.js"
+		".": "./mod.ts",
+		"./client": "./client.ts"
+	},
+	"publishConfig": {
+		"main": "./dist/mod.mjs",
+		"module": "./dist/mod.mjs",
+		"types": "./dist/mod.d.mts",
+		"exports": {
+			".": {
+				"types": "./dist/mod.d.mts",
+				"import": "./dist/mod.mjs"
+			},
+			"./client": {
+				"types": "./dist/client.d.mts",
+				"import": "./dist/client.mjs"
+			}
+		},
+		"access": "public"
 	},
 	"scripts": {
 		"build": "vp pack",
