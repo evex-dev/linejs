@@ -26,7 +26,6 @@ This repository is a pnpm + [Vite+](https://viteplus.dev/) monorepo.
 - `pnpm docs:dev` / `pnpm docs:build`: run the VitePress site from `docs`.
 - `cd packages/linejs && pnpm exec vp test`: package-scoped test run.
 - `node example/<name>.ts`: run an example with plain Node 24; the root devDependencies link the workspace packages and the sources are strip-only-compatible TypeScript.
-- `node sandbox/main.ts`: run the local (gitignored) sandbox on Node.
 
 ## Release
 
