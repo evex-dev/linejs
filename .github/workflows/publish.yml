@@ -149,7 +149,6 @@ jobs:
             for (const file of [
               "packages/types/jsr.json",
               "packages/linejs/jsr.json",
-              "packages/agent/jsr.json",
             ]) {
               const config = JSON.parse(fs.readFileSync(file, "utf8"));
               config.version = version;
@@ -243,10 +242,24 @@ jobs:
 
       - name: Push the release commit and tag
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ steps.version.outputs.tag }}
         run: |
           set -euo pipefail
-          git push --atomic origin HEAD:main "$TAG"
+
+          if git push --atomic origin HEAD:main "$TAG"; then
+            exit 0
+          fi
+
+          # Some repositories reject git pushes to the default branch even for
+          # the Actions token. The API update is the same fast-forward, and it
+          # gives a clear error if the ruleset really blocks the token.
+          echo "::warning::git push failed; retrying the ref updates through the GitHub API"
+          SHA=$(git rev-parse HEAD)
+          gh api -X PATCH "repos/$GITHUB_REPOSITORY/git/refs/heads/main" \
+            -f sha="$SHA" -F force=false >/dev/null
+          gh api -X POST "repos/$GITHUB_REPOSITORY/git/refs" \
+            -f ref="refs/tags/$TAG" -f sha="$SHA" >/dev/null
 
       - name: Create the GitHub Release
         env:
@@ -262,4 +275,3 @@ jobs:
           set -euo pipefail
           (cd packages/types && npx --yes jsr@0.14.3 publish)
           (cd packages/linejs && npx --yes jsr@0.14.3 publish)
-          (cd packages/agent && npx --yes jsr@0.14.3 publish)
