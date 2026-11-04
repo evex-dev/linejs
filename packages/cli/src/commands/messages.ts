@@ -4,7 +4,13 @@ import { CliError, UsageError } from "../errors.ts";
 import { writeBinaryFile } from "../files.ts";
 import { formatJson } from "../output.ts";
 import { withClient } from "../session.ts";
-import { limitOption, outOption, resolveReaction, talkMessageSummary } from "./shared.ts";
+import {
+	fetchTalkMessages,
+	limitOption,
+	outOption,
+	resolveReaction,
+	talkMessageSummary,
+} from "./shared.ts";
 
 function bigIntId(value: string): bigint {
 	if (!/^\d+$/.test(value)) throw new UsageError(`Invalid message id: ${value}`);
@@ -12,8 +18,7 @@ function bigIntId(value: string): bigint {
 }
 
 async function resolveTalkMessage(client: Client, chatMid: string, messageId: string, limit = 100) {
-	const chat = await client.getChat(chatMid);
-	const messages = await chat.fetchMessages(limit);
+	const messages = await fetchTalkMessages(client, chatMid, limit);
 	const message = messages.find((entry) => entry.raw.id === messageId);
 	if (!message) {
 		throw new CliError(
@@ -172,7 +177,7 @@ const showCommand: CommandSpec = {
 	summary: "Show a message with stickers, mentions, flex, and reply metadata.",
 	category: "Messages",
 	args: [
-		{ name: "chatMid", description: "Chat MID.", required: true },
+		{ name: "chatMid", description: "Chat MID (c..., r..., or u... for 1:1).", required: true },
 		{ name: "messageId", description: "Message id.", required: true },
 	],
 	options: [limitOption(100)],
@@ -224,7 +229,7 @@ const pinCommand: CommandSpec = {
 	summary: "Pin a message as a chat announcement.",
 	category: "Messages",
 	args: [
-		{ name: "chatMid", description: "Chat MID.", required: true },
+		{ name: "chatMid", description: "Chat MID (c..., r..., or u... for 1:1).", required: true },
 		{ name: "messageId", description: "Message id.", required: true },
 	],
 	options: [limitOption(100)],
@@ -289,7 +294,7 @@ const dataCommand: CommandSpec = {
 	summary: "Download the media attached to a message.",
 	category: "Messages",
 	args: [
-		{ name: "chatMid", description: "Chat MID.", required: true },
+		{ name: "chatMid", description: "Chat MID (c..., r..., or u... for 1:1).", required: true },
 		{ name: "messageId", description: "Message id.", required: true },
 	],
 	options: dataOptions,

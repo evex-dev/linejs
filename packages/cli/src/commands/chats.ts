@@ -5,11 +5,14 @@ import { serialize } from "../output.ts";
 import { withClient } from "../session.ts";
 import {
 	chatSummary,
+	fetchUserTalkMessages,
+	isUserMid,
 	limitOption,
 	requireJsonObject,
 	requireStringRecord,
 	resolveContentType,
 	talkMessageSummary,
+	userChatSummary,
 } from "./shared.ts";
 
 const listCommand: CommandSpec = {
@@ -82,7 +85,9 @@ const messagesCommand: CommandSpec = {
 	name: "chats messages",
 	summary: "Fetch recent messages from a chat.",
 	category: "Chats",
-	args: [{ name: "chatMid", description: "Chat MID.", required: true }],
+	args: [
+		{ name: "chatMid", description: "Chat MID (c..., r..., or u... for 1:1).", required: true },
+	],
 	options: [limitOption(20)],
 	examples: ["line chats messages cxxxxxxxx -n 50", "line chats messages cxxxxxxxx --json"],
 	auth: true,
@@ -91,6 +96,13 @@ const messagesCommand: CommandSpec = {
 		const limit = context.getNumber("limit") ?? 20;
 		if (limit <= 0) throw new UsageError("--limit must be positive");
 		return await withClient(context, async ({ client }) => {
+			if (isUserMid(chatMid)) {
+				const messages = await fetchUserTalkMessages(client, chatMid, limit);
+				return {
+					chat: userChatSummary(chatMid),
+					messages: messages.map((message) => talkMessageSummary(message, context.json)),
+				};
+			}
 			const chat = await client.getChat(chatMid);
 			const messages = await chat.fetchMessages(limit);
 			return {
