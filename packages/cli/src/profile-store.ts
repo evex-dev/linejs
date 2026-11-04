@@ -76,10 +76,11 @@ function tokenExpiry(storage: Record<string, StorageValue>): {
 	const raw = storage.expire;
 	const value = typeof raw === "string" ? Number(raw) : typeof raw === "number" ? raw : NaN;
 	if (!Number.isFinite(value) || value <= 0) return { expiresAt: null, expired: null };
-	// LINE stores milliseconds since the epoch.
-	const date = new Date(value);
+	// LINE stores epoch seconds; also accept epoch milliseconds.
+	const milliseconds = value < 1e12 ? value * 1000 : value;
+	const date = new Date(milliseconds);
 	if (Number.isNaN(date.getTime())) return { expiresAt: null, expired: null };
-	return { expiresAt: date.toISOString(), expired: Date.now() >= value };
+	return { expiresAt: date.toISOString(), expired: Date.now() >= milliseconds };
 }
 
 export class ProfileStore {
