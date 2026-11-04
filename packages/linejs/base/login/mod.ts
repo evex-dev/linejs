@@ -16,6 +16,7 @@ export type LoginOption =
 			authToken: AuthTokenInput;
 			email?: undefined;
 			qr?: undefined;
+			skipCheck?: boolean;
 	  };
 
 export function registrationAuthEndpoint(device: Device): "/api/v3p/rs" | "/api/v4p/rs" {
@@ -50,6 +51,8 @@ export interface PasswordLoginOption {
 	 */
 	e2ee?: boolean;
 	qr?: undefined;
+	/** Skip the getProfile() check after login and keep the current profile. */
+	skipCheck?: boolean;
 
 	authToken?: undefined;
 }
@@ -62,6 +65,8 @@ export interface QrCodeLoginOption {
 	 * use v3 login or not.
 	 */
 	v3?: boolean;
+	/** Skip the getProfile() check after login and keep the current profile. */
+	skipCheck?: boolean;
 }
 
 export class Login {
@@ -110,9 +115,21 @@ export class Login {
 		return (await this.client.storage.get("qrCert")) as string;
 	}
 
-	async ready(): Promise<void> {
+	/**
+	 * Marks the client ready.
+	 *
+	 * By default this calls `talk.getProfile()` so that `client.profile` is
+	 * populated and the token is validated. Pass `{ skipCheck: true }` to reuse
+	 * an already populated `client.profile` without an extra network request.
+	 * The caller is responsible for setting `client.profile` in that case.
+	 */
+	async ready(options: { skipCheck?: boolean } = {}): Promise<void> {
 		if (!this.client.authToken) {
 			throw new InternalError("NotAuthorized", "try login first");
+		}
+		if (options.skipCheck) {
+			if (this.client.profile) this.client.emit("ready", this.client.profile);
+			return;
 		}
 		this.client.profile = await this.client.talk.getProfile();
 		this.client.emit("ready", this.client.profile);
@@ -132,6 +149,7 @@ export class Login {
 	 * @param {string} [options.authToken] - The authentication token.
 	 * @param {string} [options.email] - The user's email.
 	 * @param {string} [options.password] - The user's password.
+	 * @param {boolean} [options.skipCheck] - Skip the getProfile() check after login.
 	 *
 	 * @example
 	 * // Login with QR code
@@ -165,7 +183,7 @@ export class Login {
 		} else {
 			await this.withQrCode();
 		}
-		await this.ready();
+		await this.ready({ skipCheck: options?.skipCheck });
 	}
 	/**
 	 * Login with qrcode.
@@ -236,9 +254,12 @@ export class Login {
 		const longPollingMaxCount: number = forSecure[2] ?? 12;
 		const longPollingIntervalSec: number = forSecure[3] ?? 30;
 		const nonce: string = forSecure[4] ?? "";
-		console.log(
-			`[login] ForSecure: maxCount=${longPollingMaxCount} intervalSec=${longPollingIntervalSec} nonce=${nonce.length}chars`,
-		);
+		this.client.log("login", {
+			method: "qr_v3",
+			longPollingMaxCount,
+			longPollingIntervalSec,
+			nonceLength: nonce.length,
+		});
 		const [secret, secretUrl] = this.client.e2ee.createSqrSecret();
 		url = url + secretUrl;
 		this.client.emit("qrcall", url);

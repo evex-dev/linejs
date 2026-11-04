@@ -99,11 +99,16 @@ export class TalkService implements BaseService {
 		chunks?: string[] | Buffer[];
 		e2ee?: boolean;
 	}): Promise<LINETypes.Message> {
-		const { to, text, contentType, contentMetadata, relatedMessageId, location, e2ee, chunks } = {
-			contentType: "NONE" as LINETypes.ContentType,
-			contentMetadata: {},
-			...options,
-		};
+		const { to, text, relatedMessageId, location, e2ee, chunks } = options;
+		// Callers routinely forward an unset option as `undefined` (the CLI does
+		// this for `--content-type`), and spreading `...options` over a default
+		// object let that overwrite the default. On the wire the writer then
+		// drops the field entirely, so an E2EE message could advertise
+		// `contentMetadata.contentType = "0"` while carrying no `contentType` at
+		// all; /S4 answers that with
+		// `E2EE_INVALID_VERSION: not allowed contentType`.
+		const contentType = options.contentType ?? ("NONE" as LINETypes.ContentType);
+		const contentMetadata = options.contentMetadata ?? {};
 		if ((e2ee && !chunks && location) || (e2ee && !chunks && text)) {
 			const chunks = await this.client.e2ee.encryptE2EEMessage(
 				to,
@@ -112,11 +117,9 @@ export class TalkService implements BaseService {
 			);
 			const _contentMetadata = {
 				...contentMetadata,
-				...{
-					e2eeVersion: "2",
-					contentType: (ContentType(contentType) || 0).toString(),
-					e2eeMark: "2",
-				},
+				e2eeVersion: "2",
+				contentType: (ContentType(contentType) || 0).toString(),
+				e2eeMark: "2",
 			};
 			const options = {
 				to,

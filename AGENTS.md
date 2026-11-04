@@ -7,6 +7,7 @@ This repository is a pnpm + [Vite+](https://viteplus.dev/) monorepo.
 - `packages/linejs`: main TypeScript library (`@evex-dev/linejs`, also published as JSR `@evex/linejs`) with feature modules under `client`, `base`, and `thrift`.
 - `packages/types`: shared LINE type definitions (`@evex-dev/linejs-types`, JSR `@evex/linejs-types`).
 - `packages/agent`: LINE Agent I / LINE AI REST helpers. Private workspace package; not published to npm or JSR.
+- `packages/cli`: `@evex-dev/linejs-cli` (`line` binary, `--json` output, MCP stdio server).
 - `docs`: VitePress documentation site and content.
 - `example`: runnable examples for browser, node, talk, square, storage, thrift, etc.
 - `scripts`: generation/utility scripts, including thrift tooling and service/type helpers.
@@ -23,13 +24,14 @@ This repository is a pnpm + [Vite+](https://viteplus.dev/) monorepo.
 - `pnpm run check`: run Vite+ format/lint checks and TypeScript type-checking for the whole repository (root-only lint/fmt config).
 - `pnpm run typecheck`: run `tsc --noEmit` in every package.
 - `pnpm run format`: format the whole repository with `vp fmt . --write`.
+- `pnpm line <args>`: run the CLI from source through `tsx` (for example `pnpm line help`).
 - `pnpm docs:dev` / `pnpm docs:build`: run the VitePress site from `docs`.
 - `cd packages/linejs && pnpm exec vp test`: package-scoped test run.
 - `node example/<name>.ts`: run an example with plain Node 24; the root devDependencies link the workspace packages and the sources are strip-only-compatible TypeScript.
 
 ## Release
 
-- `.github/workflows/publish.yml` is a manual `workflow_dispatch` release with a `major` / `minor` / `patch` choice. It reads the latest npm version, bumps it, publishes `@evex-dev/linejs-types` and `@evex-dev/linejs` with npm Trusted Publishing (OIDC), then pushes the release commit/tag and creates the GitHub Release.
+- `.github/workflows/publish.yml` is a manual `workflow_dispatch` release with a `package` choice (`all` / `linejs` / `cli`) and a `major` / `minor` / `patch` choice. It reads the latest npm versions, bumps the selected package set, publishes with npm Trusted Publishing (OIDC), then pushes the release commit/tags and creates the GitHub Releases. Library releases use `v<version>`; CLI releases use `cli-v<version>`.
 - `publish.yml` also publishes the tag to JSR with OIDC (tags pushed with `GITHUB_TOKEN` do not trigger other workflows). `.github/workflows/release.yml` remains for a maintainer-pushed tag or a manual JSR retry via `workflow_dispatch`.
 - Never add `NPM_TOKEN`/`NODE_AUTH_TOKEN`; trusted publishing supplies credentials.
 

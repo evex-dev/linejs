@@ -1,0 +1,52 @@
+{
+	"name": "@evex-dev/linejs-cli",
+	"version": "0.1.0",
+	"description": "Command-line interface and MCP server for LINEJS",
+	"keywords": [
+		"cli",
+		"line",
+		"linejs",
+		"mcp",
+		"selfbot"
+	],
+	"homepage": "https://linejs.evex.land",
+	"bugs": {
+		"url": "https://github.com/evex-dev/linejs/issues"
+	},
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/evex-dev/linejs.git",
+		"directory": "packages/cli"
+	},
+	"bin": {
+		"line": "./dist/line.mjs"
+	},
+	"files": [
+		"dist",
+		"README.md"
+	],
+	"type": "module",
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"build": "vp pack && node scripts/postbuild.mjs",
+		"test": "vp test",
+		"typecheck": "tsc --noEmit",
+		"prepublishOnly": "pnpm -w run check && pnpm run build"
+	},
+	"dependencies": {
+		"@evex-dev/linejs": "workspace:^",
+		"@evex-dev/linejs-types": "workspace:^",
+		"uqr": "^0.1.3"
+	},
+	"devDependencies": {
+		"@types/node": "^24.10.0",
+		"typescript": "^5.9.3",
+		"vite-plus": "^1.4.0"
+	},
+	"engines": {
+		"node": "^22.18.0 || ^24.11.0 || >=26.0.0"
+	}
+}
