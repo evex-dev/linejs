@@ -1,0 +1,14 @@
+{
+	"$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+	"name": "linejs-cli",
+	"version": "0.1.0",
+	"description": "Operate LINE Messenger from the terminal with the LINEJS CLI: profiles, chats, contacts, media, OpenChat, and raw LINE APIs.",
+	"author": {
+		"name": "evex-dev",
+		"url": "https://github.com/evex-dev"
+	},
+	"homepage": "https://linejs.evex.land",
+	"repository": "https://github.com/evex-dev/linejs",
+	"license": "MIT",
+	"keywords": ["line", "linejs", "cli", "messaging", "mcp", "automation"]
+}
