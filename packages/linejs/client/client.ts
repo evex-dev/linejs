@@ -306,27 +306,34 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			request: { blockStatus: "ALL" },
 		});
 		if (!userFriendMids?.length) return [];
+		const batches: string[][] = [];
+		const batchSize = 100;
+		for (let i = 0; i < userFriendMids.length; i += batchSize) {
+			batches.push(userFriendMids.slice(i, i + batchSize));
+		}
 		try {
-			const res = await this.base.relation.getContactsV3({
-				mids: userFriendMids,
-			});
-			return res.responses.map((raw) => new User({ client: this, raw }));
+			const out: User[] = [];
+			for (const mids of batches) {
+				const res = await this.base.relation.getContactsV3({ mids });
+				out.push(...res.responses.map((raw) => new User({ client: this, raw })));
+			}
+			return out;
 		} catch (e) {
 			if (!isApiNotCapable(e)) throw e;
 		}
 		try {
-			const res2 = await this.base.talk.getContactsV2({
-				mids: userFriendMids,
-			});
-			// V2 returns { contacts: Record<mid, entry> }; shim to V3 shape.
 			const out: User[] = [];
-			for (const [mid, entry] of Object.entries(res2.contacts ?? {})) {
-				out.push(
-					new User({
-						client: this,
-						raw: { ...(entry as object), targetUserMid: mid } as never,
-					}),
-				);
+			for (const mids of batches) {
+				const res2 = await this.base.talk.getContactsV2({ mids });
+				// V2 returns { contacts: Record<mid, entry> }; shim to V3 shape.
+				for (const [mid, entry] of Object.entries(res2.contacts ?? {})) {
+					out.push(
+						new User({
+							client: this,
+							raw: { ...(entry as object), targetUserMid: mid } as never,
+						}),
+					);
+				}
 			}
 			if (out.length) return out;
 		} catch (e) {
