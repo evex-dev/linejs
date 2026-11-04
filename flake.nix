@@ -11,7 +11,8 @@
       systems = [
         "x86_64-linux"
         "aarch64-linux"
-        "x86_64-darwin"
+        # nixos-unstable dropped x86_64-darwin in 26.11 and evaluating it now
+        # throws, so Intel Macs need the `nixpkgs-26.05-darwin` input instead.
         "aarch64-darwin"
       ];
 
@@ -101,7 +102,11 @@
               homepage = "https://linejs.evex.land";
               license = lib.licenses.mit;
               mainProgram = "line";
-              platforms = lib.platforms.unix;
+              platforms = [
+                "x86_64-linux"
+                "aarch64-linux"
+                "aarch64-darwin"
+              ];
             };
           });
         in
