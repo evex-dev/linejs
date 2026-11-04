@@ -1,4 +1,4 @@
-// deno-lint-ignore-file
+// oxlint-disable
 /*
  * @module
  * LINEJS Types
@@ -18,14 +18,8 @@ export const enums: {
 	ApplicationType: Record<ApplicationType & string, ApplicationType & number>;
 	BotType: Record<BotType & string, BotType & number>;
 	CarrierCode: Record<CarrierCode & string, CarrierCode & number>;
-	ChannelErrorCode: Record<
-		ChannelErrorCode & string,
-		ChannelErrorCode & number
-	>;
-	ContactAttribute: Record<
-		ContactAttribute & string,
-		ContactAttribute & number
-	>;
+	ChannelErrorCode: Record<ChannelErrorCode & string, ChannelErrorCode & number>;
+	ContactAttribute: Record<ContactAttribute & string, ContactAttribute & number>;
 	ContactSetting: Record<ContactSetting & string, ContactSetting & number>;
 	ContactStatus: Record<ContactStatus & string, ContactStatus & number>;
 	ContactType: Record<ContactType & string, ContactType & number>;
@@ -37,89 +31,41 @@ export const enums: {
 	>;
 	ErrorCode: Record<ErrorCode & string, ErrorCode & number>;
 	Fg_a: Record<Fg_a & string, Fg_a & number>;
-	FriendRequestStatus: Record<
-		FriendRequestStatus & string,
-		FriendRequestStatus & number
-	>;
-	IdentityProvider: Record<
-		IdentityProvider & string,
-		IdentityProvider & number
-	>;
+	FriendRequestStatus: Record<FriendRequestStatus & string, FriendRequestStatus & number>;
+	IdentityProvider: Record<IdentityProvider & string, IdentityProvider & number>;
 	LN0_F0: Record<LN0_F0 & string, LN0_F0 & number>;
 	LN0_X0: Record<LN0_X0 & string, LN0_X0 & number>;
 	MIDType: Record<MIDType & string, MIDType & number>;
 	NZ0_B0: Record<NZ0_B0 & string, NZ0_B0 & number>;
 	NZ0_C0: Record<NZ0_C0 & string, NZ0_C0 & number>;
-	NZ0_EnumC12154b1: Record<
-		NZ0_EnumC12154b1 & string,
-		NZ0_EnumC12154b1 & number
-	>;
-	NZ0_EnumC12169g1: Record<
-		NZ0_EnumC12169g1 & string,
-		NZ0_EnumC12169g1 & number
-	>;
+	NZ0_EnumC12154b1: Record<NZ0_EnumC12154b1 & string, NZ0_EnumC12154b1 & number>;
+	NZ0_EnumC12169g1: Record<NZ0_EnumC12169g1 & string, NZ0_EnumC12169g1 & number>;
 	NZ0_EnumC12170h: Record<NZ0_EnumC12170h & string, NZ0_EnumC12170h & number>;
 	NZ0_EnumC12188n: Record<NZ0_EnumC12188n & string, NZ0_EnumC12188n & number>;
-	NZ0_EnumC12192o0: Record<
-		NZ0_EnumC12192o0 & string,
-		NZ0_EnumC12192o0 & number
-	>;
-	NZ0_EnumC12193o1: Record<
-		NZ0_EnumC12193o1 & string,
-		NZ0_EnumC12193o1 & number
-	>;
-	NZ0_EnumC12195p0: Record<
-		NZ0_EnumC12195p0 & string,
-		NZ0_EnumC12195p0 & number
-	>;
+	NZ0_EnumC12192o0: Record<NZ0_EnumC12192o0 & string, NZ0_EnumC12192o0 & number>;
+	NZ0_EnumC12193o1: Record<NZ0_EnumC12193o1 & string, NZ0_EnumC12193o1 & number>;
+	NZ0_EnumC12195p0: Record<NZ0_EnumC12195p0 & string, NZ0_EnumC12195p0 & number>;
 	NZ0_EnumC12197q: Record<NZ0_EnumC12197q & string, NZ0_EnumC12197q & number>;
-	NZ0_EnumC12218x0: Record<
-		NZ0_EnumC12218x0 & string,
-		NZ0_EnumC12218x0 & number
-	>;
+	NZ0_EnumC12218x0: Record<NZ0_EnumC12218x0 & string, NZ0_EnumC12218x0 & number>;
 	NZ0_I0: Record<NZ0_I0 & string, NZ0_I0 & number>;
 	NZ0_K0: Record<NZ0_K0 & string, NZ0_K0 & number>;
 	NZ0_N0: Record<NZ0_N0 & string, NZ0_N0 & number>;
 	NZ0_S0: Record<NZ0_S0 & string, NZ0_S0 & number>;
 	NZ0_W0: Record<NZ0_W0 & string, NZ0_W0 & number>;
-	NotificationStatus: Record<
-		NotificationStatus & string,
-		NotificationStatus & number
-	>;
-	NotificationType: Record<
-		NotificationType & string,
-		NotificationType & number
-	>;
+	NotificationStatus: Record<NotificationStatus & string, NotificationStatus & number>;
+	NotificationType: Record<NotificationType & string, NotificationType & number>;
 	Ob1_B0: Record<Ob1_B0 & string, Ob1_B0 & number>;
 	Ob1_C1: Record<Ob1_C1 & string, Ob1_C1 & number>;
 	Ob1_D0: Record<Ob1_D0 & string, Ob1_D0 & number>;
-	Ob1_EnumC12607a1: Record<
-		Ob1_EnumC12607a1 & string,
-		Ob1_EnumC12607a1 & number
-	>;
-	Ob1_EnumC12610b1: Record<
-		Ob1_EnumC12610b1 & string,
-		Ob1_EnumC12610b1 & number
-	>;
-	Ob1_EnumC12631i1: Record<
-		Ob1_EnumC12631i1 & string,
-		Ob1_EnumC12631i1 & number
-	>;
+	Ob1_EnumC12607a1: Record<Ob1_EnumC12607a1 & string, Ob1_EnumC12607a1 & number>;
+	Ob1_EnumC12610b1: Record<Ob1_EnumC12610b1 & string, Ob1_EnumC12610b1 & number>;
+	Ob1_EnumC12631i1: Record<Ob1_EnumC12631i1 & string, Ob1_EnumC12631i1 & number>;
 	Ob1_EnumC12638l: Record<Ob1_EnumC12638l & string, Ob1_EnumC12638l & number>;
 	Ob1_EnumC12641m: Record<Ob1_EnumC12641m & string, Ob1_EnumC12641m & number>;
-	Ob1_EnumC12652p1: Record<
-		Ob1_EnumC12652p1 & string,
-		Ob1_EnumC12652p1 & number
-	>;
-	Ob1_EnumC12656r0: Record<
-		Ob1_EnumC12656r0 & string,
-		Ob1_EnumC12656r0 & number
-	>;
+	Ob1_EnumC12652p1: Record<Ob1_EnumC12652p1 & string, Ob1_EnumC12652p1 & number>;
+	Ob1_EnumC12656r0: Record<Ob1_EnumC12656r0 & string, Ob1_EnumC12656r0 & number>;
 	Ob1_EnumC12664u: Record<Ob1_EnumC12664u & string, Ob1_EnumC12664u & number>;
-	Ob1_EnumC12666u1: Record<
-		Ob1_EnumC12666u1 & string,
-		Ob1_EnumC12666u1 & number
-	>;
+	Ob1_EnumC12666u1: Record<Ob1_EnumC12666u1 & string, Ob1_EnumC12666u1 & number>;
 	Ob1_F1: Record<Ob1_F1 & string, Ob1_F1 & number>;
 	Ob1_I: Record<Ob1_I & string, Ob1_I & number>;
 	Ob1_J0: Record<Ob1_J0 & string, Ob1_J0 & number>;
@@ -147,124 +93,37 @@ export const enums: {
 	Pb1_D4: Record<Pb1_D4 & string, Pb1_D4 & number>;
 	Pb1_D6: Record<Pb1_D6 & string, Pb1_D6 & number>;
 	Pb1_E7: Record<Pb1_E7 & string, Pb1_E7 & number>;
-	Pb1_EnumC12917a6: Record<
-		Pb1_EnumC12917a6 & string,
-		Pb1_EnumC12917a6 & number
-	>;
-	Pb1_EnumC12926b1: Record<
-		Pb1_EnumC12926b1 & string,
-		Pb1_EnumC12926b1 & number
-	>;
-	Pb1_EnumC12941c2: Record<
-		Pb1_EnumC12941c2 & string,
-		Pb1_EnumC12941c2 & number
-	>;
-	Pb1_EnumC12945c6: Record<
-		Pb1_EnumC12945c6 & string,
-		Pb1_EnumC12945c6 & number
-	>;
-	Pb1_EnumC12970e3: Record<
-		Pb1_EnumC12970e3 & string,
-		Pb1_EnumC12970e3 & number
-	>;
-	Pb1_EnumC12997g2: Record<
-		Pb1_EnumC12997g2 & string,
-		Pb1_EnumC12997g2 & number
-	>;
-	Pb1_EnumC12998g3: Record<
-		Pb1_EnumC12998g3 & string,
-		Pb1_EnumC12998g3 & number
-	>;
-	Pb1_EnumC13009h0: Record<
-		Pb1_EnumC13009h0 & string,
-		Pb1_EnumC13009h0 & number
-	>;
-	Pb1_EnumC13010h1: Record<
-		Pb1_EnumC13010h1 & string,
-		Pb1_EnumC13010h1 & number
-	>;
-	Pb1_EnumC13015h6: Record<
-		Pb1_EnumC13015h6 & string,
-		Pb1_EnumC13015h6 & number
-	>;
+	Pb1_EnumC12917a6: Record<Pb1_EnumC12917a6 & string, Pb1_EnumC12917a6 & number>;
+	Pb1_EnumC12926b1: Record<Pb1_EnumC12926b1 & string, Pb1_EnumC12926b1 & number>;
+	Pb1_EnumC12941c2: Record<Pb1_EnumC12941c2 & string, Pb1_EnumC12941c2 & number>;
+	Pb1_EnumC12945c6: Record<Pb1_EnumC12945c6 & string, Pb1_EnumC12945c6 & number>;
+	Pb1_EnumC12970e3: Record<Pb1_EnumC12970e3 & string, Pb1_EnumC12970e3 & number>;
+	Pb1_EnumC12997g2: Record<Pb1_EnumC12997g2 & string, Pb1_EnumC12997g2 & number>;
+	Pb1_EnumC12998g3: Record<Pb1_EnumC12998g3 & string, Pb1_EnumC12998g3 & number>;
+	Pb1_EnumC13009h0: Record<Pb1_EnumC13009h0 & string, Pb1_EnumC13009h0 & number>;
+	Pb1_EnumC13010h1: Record<Pb1_EnumC13010h1 & string, Pb1_EnumC13010h1 & number>;
+	Pb1_EnumC13015h6: Record<Pb1_EnumC13015h6 & string, Pb1_EnumC13015h6 & number>;
 	Pb1_EnumC13022i: Record<Pb1_EnumC13022i & string, Pb1_EnumC13022i & number>;
-	Pb1_EnumC13029i6: Record<
-		Pb1_EnumC13029i6 & string,
-		Pb1_EnumC13029i6 & number
-	>;
-	Pb1_EnumC13037j0: Record<
-		Pb1_EnumC13037j0 & string,
-		Pb1_EnumC13037j0 & number
-	>;
+	Pb1_EnumC13029i6: Record<Pb1_EnumC13029i6 & string, Pb1_EnumC13029i6 & number>;
+	Pb1_EnumC13037j0: Record<Pb1_EnumC13037j0 & string, Pb1_EnumC13037j0 & number>;
 	Pb1_EnumC13050k: Record<Pb1_EnumC13050k & string, Pb1_EnumC13050k & number>;
-	Pb1_EnumC13082m3: Record<
-		Pb1_EnumC13082m3 & string,
-		Pb1_EnumC13082m3 & number
-	>;
-	Pb1_EnumC13093n0: Record<
-		Pb1_EnumC13093n0 & string,
-		Pb1_EnumC13093n0 & number
-	>;
-	Pb1_EnumC13127p6: Record<
-		Pb1_EnumC13127p6 & string,
-		Pb1_EnumC13127p6 & number
-	>;
-	Pb1_EnumC13128p7: Record<
-		Pb1_EnumC13128p7 & string,
-		Pb1_EnumC13128p7 & number
-	>;
-	Pb1_EnumC13148r0: Record<
-		Pb1_EnumC13148r0 & string,
-		Pb1_EnumC13148r0 & number
-	>;
-	Pb1_EnumC13151r3: Record<
-		Pb1_EnumC13151r3 & string,
-		Pb1_EnumC13151r3 & number
-	>;
-	Pb1_EnumC13162s0: Record<
-		Pb1_EnumC13162s0 & string,
-		Pb1_EnumC13162s0 & number
-	>;
-	Pb1_EnumC13196u6: Record<
-		Pb1_EnumC13196u6 & string,
-		Pb1_EnumC13196u6 & number
-	>;
-	Pb1_EnumC13209v5: Record<
-		Pb1_EnumC13209v5 & string,
-		Pb1_EnumC13209v5 & number
-	>;
-	Pb1_EnumC13221w3: Record<
-		Pb1_EnumC13221w3 & string,
-		Pb1_EnumC13221w3 & number
-	>;
-	Pb1_EnumC13222w4: Record<
-		Pb1_EnumC13222w4 & string,
-		Pb1_EnumC13222w4 & number
-	>;
-	Pb1_EnumC13237x5: Record<
-		Pb1_EnumC13237x5 & string,
-		Pb1_EnumC13237x5 & number
-	>;
-	Pb1_EnumC13238x6: Record<
-		Pb1_EnumC13238x6 & string,
-		Pb1_EnumC13238x6 & number
-	>;
-	Pb1_EnumC13251y5: Record<
-		Pb1_EnumC13251y5 & string,
-		Pb1_EnumC13251y5 & number
-	>;
-	Pb1_EnumC13252y6: Record<
-		Pb1_EnumC13252y6 & string,
-		Pb1_EnumC13252y6 & number
-	>;
-	Pb1_EnumC13260z0: Record<
-		Pb1_EnumC13260z0 & string,
-		Pb1_EnumC13260z0 & number
-	>;
-	Pb1_EnumC13267z7: Record<
-		Pb1_EnumC13267z7 & string,
-		Pb1_EnumC13267z7 & number
-	>;
+	Pb1_EnumC13082m3: Record<Pb1_EnumC13082m3 & string, Pb1_EnumC13082m3 & number>;
+	Pb1_EnumC13093n0: Record<Pb1_EnumC13093n0 & string, Pb1_EnumC13093n0 & number>;
+	Pb1_EnumC13127p6: Record<Pb1_EnumC13127p6 & string, Pb1_EnumC13127p6 & number>;
+	Pb1_EnumC13128p7: Record<Pb1_EnumC13128p7 & string, Pb1_EnumC13128p7 & number>;
+	Pb1_EnumC13148r0: Record<Pb1_EnumC13148r0 & string, Pb1_EnumC13148r0 & number>;
+	Pb1_EnumC13151r3: Record<Pb1_EnumC13151r3 & string, Pb1_EnumC13151r3 & number>;
+	Pb1_EnumC13162s0: Record<Pb1_EnumC13162s0 & string, Pb1_EnumC13162s0 & number>;
+	Pb1_EnumC13196u6: Record<Pb1_EnumC13196u6 & string, Pb1_EnumC13196u6 & number>;
+	Pb1_EnumC13209v5: Record<Pb1_EnumC13209v5 & string, Pb1_EnumC13209v5 & number>;
+	Pb1_EnumC13221w3: Record<Pb1_EnumC13221w3 & string, Pb1_EnumC13221w3 & number>;
+	Pb1_EnumC13222w4: Record<Pb1_EnumC13222w4 & string, Pb1_EnumC13222w4 & number>;
+	Pb1_EnumC13237x5: Record<Pb1_EnumC13237x5 & string, Pb1_EnumC13237x5 & number>;
+	Pb1_EnumC13238x6: Record<Pb1_EnumC13238x6 & string, Pb1_EnumC13238x6 & number>;
+	Pb1_EnumC13251y5: Record<Pb1_EnumC13251y5 & string, Pb1_EnumC13251y5 & number>;
+	Pb1_EnumC13252y6: Record<Pb1_EnumC13252y6 & string, Pb1_EnumC13252y6 & number>;
+	Pb1_EnumC13260z0: Record<Pb1_EnumC13260z0 & string, Pb1_EnumC13260z0 & number>;
+	Pb1_EnumC13267z7: Record<Pb1_EnumC13267z7 & string, Pb1_EnumC13267z7 & number>;
 	Pb1_F0: Record<Pb1_F0 & string, Pb1_F0 & number>;
 	Pb1_F4: Record<Pb1_F4 & string, Pb1_F4 & number>;
 	Pb1_F5: Record<Pb1_F5 & string, Pb1_F5 & number>;
@@ -313,16 +172,10 @@ export const enums: {
 	Qj_h0: Record<Qj_h0 & string, Qj_h0 & number>;
 	Qj_i0: Record<Qj_i0 & string, Qj_i0 & number>;
 	R70_e: Record<R70_e & string, R70_e & number>;
-	RegistrationType: Record<
-		RegistrationType & string,
-		RegistrationType & number
-	>;
+	RegistrationType: Record<RegistrationType & string, RegistrationType & number>;
 	ReportType: Record<ReportType & string, ReportType & number>;
 	S70_a: Record<S70_a & string, S70_a & number>;
-	SettingsAttributeEx: Record<
-		SettingsAttributeEx & string,
-		SettingsAttributeEx & number
-	>;
+	SettingsAttributeEx: Record<SettingsAttributeEx & string, SettingsAttributeEx & number>;
 	SnsIdType: Record<SnsIdType & string, SnsIdType & number>;
 	SpammerReason: Record<SpammerReason & string, SpammerReason & number>;
 	SpotCategory: Record<SpotCategory & string, SpotCategory & number>;
@@ -332,18 +185,9 @@ export const enums: {
 		SquareAuthorityAttribute & number
 	>;
 	SquareChatType: Record<SquareChatType & string, SquareChatType & number>;
-	SquareMemberAttribute: Record<
-		SquareMemberAttribute & string,
-		SquareMemberAttribute & number
-	>;
-	SquareMembershipState: Record<
-		SquareMembershipState & string,
-		SquareMembershipState & number
-	>;
-	StickerResourceType: Record<
-		StickerResourceType & string,
-		StickerResourceType & number
-	>;
+	SquareMemberAttribute: Record<SquareMemberAttribute & string, SquareMemberAttribute & number>;
+	SquareMembershipState: Record<SquareMembershipState & string, SquareMembershipState & number>;
+	StickerResourceType: Record<StickerResourceType & string, StickerResourceType & number>;
 	SyncCategory: Record<SyncCategory & string, SyncCategory & number>;
 	T70_C: Record<T70_C & string, T70_C & number>;
 	T70_EnumC14390b: Record<T70_EnumC14390b & string, T70_EnumC14390b & number>;
@@ -357,73 +201,34 @@ export const enums: {
 	U70_c: Record<U70_c & string, U70_c & number>;
 	Uf_EnumC14873o: Record<Uf_EnumC14873o & string, Uf_EnumC14873o & number>;
 	VR0_l: Record<VR0_l & string, VR0_l & number>;
-	VerificationMethod: Record<
-		VerificationMethod & string,
-		VerificationMethod & number
-	>;
-	VerificationResult: Record<
-		VerificationResult & string,
-		VerificationResult & number
-	>;
+	VerificationMethod: Record<VerificationMethod & string, VerificationMethod & number>;
+	VerificationResult: Record<VerificationResult & string, VerificationResult & number>;
 	WR0_a: Record<WR0_a & string, WR0_a & number>;
 	a80_EnumC16644b: Record<a80_EnumC16644b & string, a80_EnumC16644b & number>;
 	FetchDirection: Record<FetchDirection & string, FetchDirection & number>;
-	LiveTalkEventType: Record<
-		LiveTalkEventType & string,
-		LiveTalkEventType & number
-	>;
-	LiveTalkReportType: Record<
-		LiveTalkReportType & string,
-		LiveTalkReportType & number
-	>;
+	LiveTalkEventType: Record<LiveTalkEventType & string, LiveTalkEventType & number>;
+	LiveTalkReportType: Record<LiveTalkReportType & string, LiveTalkReportType & number>;
 	MessageSummaryReportType: Record<
 		MessageSummaryReportType & string,
 		MessageSummaryReportType & number
 	>;
-	NotificationPostType: Record<
-		NotificationPostType & string,
-		NotificationPostType & number
-	>;
-	SquareEventStatus: Record<
-		SquareEventStatus & string,
-		SquareEventStatus & number
-	>;
+	NotificationPostType: Record<NotificationPostType & string, NotificationPostType & number>;
+	SquareEventStatus: Record<SquareEventStatus & string, SquareEventStatus & number>;
 	SquareEventType: Record<SquareEventType & string, SquareEventType & number>;
 	AdScreen: Record<AdScreen & string, AdScreen & number>;
 	BooleanState: Record<BooleanState & string, BooleanState & number>;
-	ChatroomPopupType: Record<
-		ChatroomPopupType & string,
-		ChatroomPopupType & number
-	>;
-	ContentsAttribute: Record<
-		ContentsAttribute & string,
-		ContentsAttribute & number
-	>;
+	ChatroomPopupType: Record<ChatroomPopupType & string, ChatroomPopupType & number>;
+	ContentsAttribute: Record<ContentsAttribute & string, ContentsAttribute & number>;
 	FetchType: Record<FetchType & string, FetchType & number>;
-	LiveTalkAttribute: Record<
-		LiveTalkAttribute & string,
-		LiveTalkAttribute & number
-	>;
+	LiveTalkAttribute: Record<LiveTalkAttribute & string, LiveTalkAttribute & number>;
 	LiveTalkRole: Record<LiveTalkRole & string, LiveTalkRole & number>;
-	LiveTalkSpeakerSetting: Record<
-		LiveTalkSpeakerSetting & string,
-		LiveTalkSpeakerSetting & number
-	>;
+	LiveTalkSpeakerSetting: Record<LiveTalkSpeakerSetting & string, LiveTalkSpeakerSetting & number>;
 	LiveTalkType: Record<LiveTalkType & string, LiveTalkType & number>;
-	MessageReactionType: Record<
-		MessageReactionType & string,
-		MessageReactionType & number
-	>;
-	NotifiedMessageType: Record<
-		NotifiedMessageType & string,
-		NotifiedMessageType & number
-	>;
+	MessageReactionType: Record<MessageReactionType & string, MessageReactionType & number>;
+	NotifiedMessageType: Record<NotifiedMessageType & string, NotifiedMessageType & number>;
 	PopupAttribute: Record<PopupAttribute & string, PopupAttribute & number>;
 	PopupType: Record<PopupType & string, PopupType & number>;
-	SquareChatAttribute: Record<
-		SquareChatAttribute & string,
-		SquareChatAttribute & number
-	>;
+	SquareChatAttribute: Record<SquareChatAttribute & string, SquareChatAttribute & number>;
 	SquareChatFeatureControlState: Record<
 		SquareChatFeatureControlState & string,
 		SquareChatFeatureControlState & number
@@ -447,22 +252,13 @@ export const enums: {
 		SquareFeatureSetAttribute & string,
 		SquareFeatureSetAttribute & number
 	>;
-	SquareJoinMethodType: Record<
-		SquareJoinMethodType & string,
-		SquareJoinMethodType & number
-	>;
+	SquareJoinMethodType: Record<SquareJoinMethodType & string, SquareJoinMethodType & number>;
 	SquareMemberRelationState: Record<
 		SquareMemberRelationState & string,
 		SquareMemberRelationState & number
 	>;
-	SquareMemberRole: Record<
-		SquareMemberRole & string,
-		SquareMemberRole & number
-	>;
-	SquareMessageState: Record<
-		SquareMessageState & string,
-		SquareMessageState & number
-	>;
+	SquareMemberRole: Record<SquareMemberRole & string, SquareMemberRole & number>;
+	SquareMessageState: Record<SquareMessageState & string, SquareMessageState & number>;
 	SquareMetadataAttribute: Record<
 		SquareMetadataAttribute & string,
 		SquareMetadataAttribute & number
@@ -471,23 +267,14 @@ export const enums: {
 		SquarePreferenceAttribute & string,
 		SquarePreferenceAttribute & number
 	>;
-	SquareProviderType: Record<
-		SquareProviderType & string,
-		SquareProviderType & number
-	>;
+	SquareProviderType: Record<SquareProviderType & string, SquareProviderType & number>;
 	SquareState: Record<SquareState & string, SquareState & number>;
-	SquareThreadAttribute: Record<
-		SquareThreadAttribute & string,
-		SquareThreadAttribute & number
-	>;
+	SquareThreadAttribute: Record<SquareThreadAttribute & string, SquareThreadAttribute & number>;
 	SquareThreadMembershipState: Record<
 		SquareThreadMembershipState & string,
 		SquareThreadMembershipState & number
 	>;
-	SquareThreadState: Record<
-		SquareThreadState & string,
-		SquareThreadState & number
-	>;
+	SquareThreadState: Record<SquareThreadState & string, SquareThreadState & number>;
 	SquareType: Record<SquareType & string, SquareType & number>;
 	TargetChatType: Record<TargetChatType & string, TargetChatType & number>;
 	TargetUserType: Record<TargetUserType & string, TargetUserType & number>;
@@ -568,19 +355,10 @@ export const enums: {
 	zf_EnumC40715c: Record<zf_EnumC40715c & string, zf_EnumC40715c & number>;
 	zf_EnumC40716d: Record<zf_EnumC40716d & string, zf_EnumC40716d & number>;
 	LoginResultType: Record<LoginResultType & string, LoginResultType & number>;
-	F61_EnumC10204a0: Record<
-		F61_EnumC10204a0 & string,
-		F61_EnumC10204a0 & number
-	>;
-	ForbiddenWordsGroup: Record<
-		ForbiddenWordsGroup & string,
-		ForbiddenWordsGroup & number
-	>;
+	F61_EnumC10204a0: Record<F61_EnumC10204a0 & string, F61_EnumC10204a0 & number>;
+	ForbiddenWordsGroup: Record<ForbiddenWordsGroup & string, ForbiddenWordsGroup & number>;
 	LMPCode: Record<LMPCode & string, LMPCode & number>;
-	PaidSquareFormState: Record<
-		PaidSquareFormState & string,
-		PaidSquareFormState & number
-	>;
+	PaidSquareFormState: Record<PaidSquareFormState & string, PaidSquareFormState & number>;
 	SquareSubscriptionProductRegistrationStatus: Record<
 		SquareSubscriptionProductRegistrationStatus & string,
 		SquareSubscriptionProductRegistrationStatus & number
@@ -591,2853 +369,2853 @@ export const enums: {
 	>;
 	TermsType: Record<TermsType & string, TermsType & number>;
 } = {
-	"AR0_g": {
-		"ILLEGAL_ARGUMENT": 16641,
-		"MAJOR_VERSION_NOT_SUPPORTED": 16642,
-		"AUTHENTICATION_FAILED": 16897,
-		"INTERNAL_SERVER_ERROR": 20737,
-		"SERVICE_UNAVAILABLE": 20739,
-	},
-	"AR0_q": {
-		"NOT_PURCHASED": 0,
-		"SUBSCRIPTION": 1,
-	},
-	"AccountMigrationPincodeType": {
-		"NOT_APPLICABLE": 0,
-		"NOT_SET": 1,
-		"SET": 2,
-		"NEED_ENFORCED_INPUT": 3,
-	},
-	"ApplicationType": {
-		"IOS": 16,
-		"IOS_RC": 17,
-		"IOS_BETA": 18,
-		"IOS_ALPHA": 19,
-		"ANDROID": 32,
-		"ANDROID_RC": 33,
-		"ANDROID_BETA": 34,
-		"ANDROID_ALPHA": 35,
-		"WAP": 48,
-		"WAP_RC": 49,
-		"WAP_BETA": 50,
-		"WAP_ALPHA": 51,
-		"BOT": 64,
-		"BOT_RC": 65,
-		"BOT_BETA": 66,
-		"BOT_ALPHA": 67,
-		"WEB": 80,
-		"WEB_RC": 81,
-		"WEB_BETA": 82,
-		"WEB_ALPHA": 83,
-		"DESKTOPWIN": 96,
-		"DESKTOPWIN_RC": 97,
-		"DESKTOPWIN_BETA": 98,
-		"DESKTOPWIN_ALPHA": 99,
-		"DESKTOPMAC": 112,
-		"DESKTOPMAC_RC": 113,
-		"DESKTOPMAC_BETA": 114,
-		"DESKTOPMAC_ALPHA": 115,
-		"CHANNELGW": 128,
-		"CHANNELGW_RC": 129,
-		"CHANNELGW_BETA": 130,
-		"CHANNELGW_ALPHA": 131,
-		"CHANNELCP": 144,
-		"CHANNELCP_RC": 145,
-		"CHANNELCP_BETA": 146,
-		"CHANNELCP_ALPHA": 147,
-		"WINPHONE": 160,
-		"WINPHONE_RC": 161,
-		"WINPHONE_BETA": 162,
-		"WINPHONE_ALPHA": 163,
-		"BLACKBERRY": 176,
-		"BLACKBERRY_RC": 177,
-		"BLACKBERRY_BETA": 178,
-		"BLACKBERRY_ALPHA": 179,
-		"WINMETRO": 192,
-		"WINMETRO_RC": 193,
-		"WINMETRO_BETA": 194,
-		"WINMETRO_ALPHA": 195,
-		"S40": 200,
-		"S40_RC": 209,
-		"S40_BETA": 210,
-		"S40_ALPHA": 211,
-		"CHRONO": 224,
-		"CHRONO_RC": 225,
-		"CHRONO_BETA": 226,
-		"CHRONO_ALPHA": 227,
-		"TIZEN": 256,
-		"TIZEN_RC": 257,
-		"TIZEN_BETA": 258,
-		"TIZEN_ALPHA": 259,
-		"VIRTUAL": 272,
-		"FIREFOXOS": 288,
-		"FIREFOXOS_RC": 289,
-		"FIREFOXOS_BETA": 290,
-		"FIREFOXOS_ALPHA": 291,
-		"IOSIPAD": 304,
-		"IOSIPAD_RC": 305,
-		"IOSIPAD_BETA": 306,
-		"IOSIPAD_ALPHA": 307,
-		"BIZIOS": 320,
-		"BIZIOS_RC": 321,
-		"BIZIOS_BETA": 322,
-		"BIZIOS_ALPHA": 323,
-		"BIZANDROID": 336,
-		"BIZANDROID_RC": 337,
-		"BIZANDROID_BETA": 338,
-		"BIZANDROID_ALPHA": 339,
-		"BIZBOT": 352,
-		"BIZBOT_RC": 353,
-		"BIZBOT_BETA": 354,
-		"BIZBOT_ALPHA": 355,
-		"CHROMEOS": 368,
-		"CHROMEOS_RC": 369,
-		"CHROMEOS_BETA": 370,
-		"CHROMEOS_ALPHA": 371,
-		"ANDROIDLITE": 384,
-		"ANDROIDLITE_RC": 385,
-		"ANDROIDLITE_BETA": 386,
-		"ANDROIDLITE_ALPHA": 387,
-		"WIN10": 400,
-		"WIN10_RC": 401,
-		"WIN10_BETA": 402,
-		"WIN10_ALPHA": 403,
-		"BIZWEB": 416,
-		"BIZWEB_RC": 417,
-		"BIZWEB_BETA": 418,
-		"BIZWEB_ALPHA": 419,
-		"DUMMYPRIMARY": 432,
-		"DUMMYPRIMARY_RC": 433,
-		"DUMMYPRIMARY_BETA": 434,
-		"DUMMYPRIMARY_ALPHA": 435,
-		"SQUARE": 448,
-		"SQUARE_RC": 449,
-		"SQUARE_BETA": 450,
-		"SQUARE_ALPHA": 451,
-		"INTERNAL": 464,
-		"INTERNAL_RC": 465,
-		"INTERNAL_BETA": 466,
-		"INTERNAL_ALPHA": 467,
-		"CLOVAFRIENDS": 480,
-		"CLOVAFRIENDS_RC": 481,
-		"CLOVAFRIENDS_BETA": 482,
-		"CLOVAFRIENDS_ALPHA": 483,
-		"WATCHOS": 496,
-		"WATCHOS_RC": 497,
-		"WATCHOS_BETA": 498,
-		"WATCHOS_ALPHA": 499,
-		"OPENCHAT_PLUG": 512,
-		"OPENCHAT_PLUG_RC": 513,
-		"OPENCHAT_PLUG_BETA": 514,
-		"OPENCHAT_PLUG_ALPHA": 515,
-		"ANDROIDSECONDARY": 528,
-		"ANDROIDSECONDARY_RC": 529,
-		"ANDROIDSECONDARY_BETA": 530,
-		"ANDROIDSECONDARY_ALPHA": 531,
-		"WEAROS": 544,
-		"WEAROS_RC": 545,
-		"WEAROS_BETA": 546,
-		"WEAROS_ALPHA": 547,
-	},
-	"BotType": {
-		"RESERVED": 0,
-		"OFFICIAL": 1,
-		"LINE_AT_0": 2,
-		"LINE_AT": 3,
-	},
-	"CarrierCode": {
-		"NOT_SPECIFIED": 0,
-		"JP_DOCOMO": 1,
-		"JP_AU": 2,
-		"JP_SOFTBANK": 3,
-		"JP_DOCOMO_LINE": 4,
-		"JP_SOFTBANK_LINE": 5,
-		"JP_AU_LINE": 6,
-		"JP_RAKUTEN": 7,
-		"JP_MVNO": 8,
-		"JP_USER_SELECTED_LINE": 9,
-		"KR_SKT": 17,
-		"KR_KT": 18,
-		"KR_LGT": 19,
-	},
-	"ChannelErrorCode": {
-		"ILLEGAL_ARGUMENT": 0,
-		"INTERNAL_ERROR": 1,
-		"CONNECTION_ERROR": 2,
-		"AUTHENTICATIONI_FAILED": 3,
-		"NEED_PERMISSION_APPROVAL": 4,
-		"COIN_NOT_USABLE": 5,
-		"WEBVIEW_NOT_ALLOWED": 6,
-		"NOT_AVAILABLE_API": 7,
-	},
-	"ContactAttribute": {
-		"CONTACT_ATTRIBUTE_CAPABLE_VOICE_CALL": 1,
-		"CONTACT_ATTRIBUTE_CAPABLE_VIDEO_CALL": 2,
-		"CONTACT_ATTRIBUTE_CAPABLE_MY_HOME": 16,
-		"CONTACT_ATTRIBUTE_CAPABLE_BUDDY": 32,
-	},
-	"ContactSetting": {
-		"CONTACT_SETTING_NOTIFICATION_DISABLE": 1,
-		"CONTACT_SETTING_DISPLAY_NAME_OVERRIDE": 2,
-		"CONTACT_SETTING_CONTACT_HIDE": 4,
-		"CONTACT_SETTING_FAVORITE": 8,
-		"CONTACT_SETTING_DELETE": 16,
-		"CONTACT_SETTING_FRIEND_RINGTONE": 32,
-		"CONTACT_SETTING_FRIEND_RINGBACK_TONE": 64,
-	},
-	"ContactStatus": {
-		"UNSPECIFIED": 0,
-		"FRIEND": 1,
-		"FRIEND_BLOCKED": 2,
-		"RECOMMEND": 3,
-		"RECOMMEND_BLOCKED": 4,
-		"DELETED": 5,
-		"DELETED_BLOCKED": 6,
-	},
-	"ContactType": {
-		"MID": 0,
-		"PHONE": 1,
-		"EMAIL": 2,
-		"USERID": 3,
-		"PROXIMITY": 4,
-		"GROUP": 5,
-		"USER": 6,
-		"QRCODE": 7,
-		"PROMOTION_BOT": 8,
-		"CONTACT_MESSAGE": 9,
-		"FRIEND_REQUEST": 10,
-		"BEACON": 11,
-		"REPAIR": 128,
-		"FACEBOOK": 2305,
-		"SINA": 2306,
-		"RENREN": 2307,
-		"FEIXIN": 2308,
-		"BBM": 2309,
-	},
-	"ContentType": {
-		"NONE": 0,
-		"IMAGE": 1,
-		"VIDEO": 2,
-		"AUDIO": 3,
-		"HTML": 4,
-		"PDF": 5,
-		"CALL": 6,
-		"STICKER": 7,
-		"PRESENCE": 8,
-		"GIFT": 9,
-		"GROUPBOARD": 10,
-		"APPLINK": 11,
-		"LINK": 12,
-		"CONTACT": 13,
-		"FILE": 14,
-		"LOCATION": 15,
-		"POSTNOTIFICATION": 16,
-		"RICH": 17,
-		"CHATEVENT": 18,
-		"MUSIC": 19,
-		"PAYMENT": 20,
-		"EXTIMAGE": 21,
-		"FLEX": 22,
-	},
-	"Eg_EnumC8927a": {
-		"NEW": 1,
-		"UPDATE": 2,
-		"EVENT": 3,
-	},
-	"EmailConfirmationStatus": {
-		"NOT_SPECIFIED": 0,
-		"NOT_YET": 1,
-		"DONE": 3,
-		"NEED_ENFORCED_INPUT": 4,
-	},
-	"ErrorCode": {
-		"ILLEGAL_ARGUMENT": 0,
-		"AUTHENTICATION_FAILED": 1,
-		"DB_FAILED": 2,
-		"INVALID_STATE": 3,
-		"EXCESSIVE_ACCESS": 4,
-		"NOT_FOUND": 5,
-		"INVALID_LENGTH": 6,
-		"NOT_AVAILABLE_USER": 7,
-		"NOT_AUTHORIZED_DEVICE": 8,
-		"INVALID_MID": 9,
-		"NOT_A_MEMBER": 10,
-		"INCOMPATIBLE_APP_VERSION": 11,
-		"NOT_READY": 12,
-		"NOT_AVAILABLE_SESSION": 13,
-		"NOT_AUTHORIZED_SESSION": 14,
-		"SYSTEM_ERROR": 15,
-		"NO_AVAILABLE_VERIFICATION_METHOD": 16,
-		"NOT_AUTHENTICATED": 17,
-		"INVALID_IDENTITY_CREDENTIAL": 18,
-		"NOT_AVAILABLE_IDENTITY_IDENTIFIER": 19,
-		"INTERNAL_ERROR": 20,
-		"NO_SUCH_IDENTITY_IDENFIER": 21,
-		"DEACTIVATED_ACCOUNT_BOUND_TO_THIS_IDENTITY": 22,
-		"ILLEGAL_IDENTITY_CREDENTIAL": 23,
-		"UNKNOWN_CHANNEL": 24,
-		"NO_SUCH_MESSAGE_BOX": 25,
-		"NOT_AVAILABLE_MESSAGE_BOX": 26,
-		"CHANNEL_DOES_NOT_MATCH": 27,
-		"NOT_YOUR_MESSAGE": 28,
-		"MESSAGE_DEFINED_ERROR": 29,
-		"USER_CANNOT_ACCEPT_PRESENTS": 30,
-		"USER_NOT_STICKER_OWNER": 32,
-		"MAINTENANCE_ERROR": 33,
-		"ACCOUNT_NOT_MATCHED": 34,
-		"ABUSE_BLOCK": 35,
-		"NOT_FRIEND": 36,
-		"NOT_ALLOWED_CALL": 37,
-		"BLOCK_FRIEND": 38,
-		"INCOMPATIBLE_VOIP_VERSION": 39,
-		"INVALID_SNS_ACCESS_TOKEN": 40,
-		"EXTERNAL_SERVICE_NOT_AVAILABLE": 41,
-		"NOT_ALLOWED_ADD_CONTACT": 42,
-		"NOT_CERTIFICATED": 43,
-		"NOT_ALLOWED_SECONDARY_DEVICE": 44,
-		"INVALID_PIN_CODE": 45,
-		"EXCEED_FILE_MAX_SIZE": 47,
-		"EXCEED_DAILY_QUOTA": 48,
-		"NOT_SUPPORT_SEND_FILE": 49,
-		"MUST_UPGRADE": 50,
-		"NOT_AVAILABLE_PIN_CODE_SESSION": 51,
-		"EXPIRED_REVISION": 52,
-		"NOT_YET_PHONE_NUMBER": 54,
-		"BAD_CALL_NUMBER": 55,
-		"UNAVAILABLE_CALL_NUMBER": 56,
-		"NOT_SUPPORT_CALL_SERVICE": 57,
-		"CONGESTION_CONTROL": 58,
-		"NO_BALANCE": 59,
-		"NOT_PERMITTED_CALLER_ID": 60,
-		"NO_CALLER_ID_LIMIT_EXCEEDED": 61,
-		"CALLER_ID_VERIFICATION_REQUIRED": 62,
-		"NO_CALLER_ID_LIMIT_EXCEEDED_AND_VERIFICATION_REQUIRED": 63,
-		"MESSAGE_NOT_FOUND": 64,
-		"INVALID_ACCOUNT_MIGRATION_PINCODE_FORMAT": 65,
-		"ACCOUNT_MIGRATION_PINCODE_NOT_MATCHED": 66,
-		"ACCOUNT_MIGRATION_PINCODE_BLOCKED": 67,
-		"INVALID_PASSWORD_FORMAT": 69,
-		"FEATURE_RESTRICTED": 70,
-		"MESSAGE_NOT_DESTRUCTIBLE": 71,
-		"PAID_CALL_REDEEM_FAILED": 72,
-		"PREVENTED_JOIN_BY_TICKET": 73,
-		"SEND_MESSAGE_NOT_PERMITTED_FROM_LINE_AT": 75,
-		"SEND_MESSAGE_NOT_PERMITTED_WHILE_AUTO_REPLY": 76,
-		"SECURITY_CENTER_NOT_VERIFIED": 77,
-		"SECURITY_CENTER_BLOCKED_BY_SETTING": 78,
-		"SECURITY_CENTER_BLOCKED": 79,
-		"TALK_PROXY_EXCEPTION": 80,
-		"E2EE_INVALID_PROTOCOL": 81,
-		"E2EE_RETRY_ENCRYPT": 82,
-		"E2EE_UPDATE_SENDER_KEY": 83,
-		"E2EE_UPDATE_RECEIVER_KEY": 84,
-		"E2EE_INVALID_ARGUMENT": 85,
-		"E2EE_INVALID_VERSION": 86,
-		"E2EE_SENDER_DISABLED": 87,
-		"E2EE_RECEIVER_DISABLED": 88,
-		"E2EE_SENDER_NOT_ALLOWED": 89,
-		"E2EE_RECEIVER_NOT_ALLOWED": 90,
-		"E2EE_RESEND_FAIL": 91,
-		"E2EE_RESEND_OK": 92,
-		"HITOKOTO_BACKUP_NO_AVAILABLE_DATA": 93,
-		"E2EE_UPDATE_PRIMARY_DEVICE": 94,
-		"SUCCESS": 95,
-		"CANCEL": 96,
-		"E2EE_PRIMARY_NOT_SUPPORT": 97,
-		"E2EE_RETRY_PLAIN": 98,
-		"E2EE_RECREATE_GROUP_KEY": 99,
-		"E2EE_GROUP_TOO_MANY_MEMBERS": 100,
-		"SERVER_BUSY": 101,
-		"NOT_ALLOWED_ADD_FOLLOW": 102,
-		"INCOMING_FRIEND_REQUEST_LIMIT": 103,
-		"OUTGOING_FRIEND_REQUEST_LIMIT": 104,
-		"OUTGOING_FRIEND_REQUEST_QUOTA": 105,
-		"DUPLICATED": 106,
-		"BANNED": 107,
-		"NOT_AN_INVITEE": 108,
-		"NOT_AN_OUTSIDER": 109,
-		"EMPTY_GROUP": 111,
-		"EXCEED_FOLLOW_LIMIT": 112,
-		"UNSUPPORTED_ACCOUNT_TYPE": 113,
-		"AGREEMENT_REQUIRED": 114,
-		"SHOULD_RETRY": 115,
-		"OVER_MAX_CHATS_PER_USER": 116,
-		"NOT_AVAILABLE_API": 117,
-		"INVALID_OTP": 118,
-		"MUST_REFRESH_V3_TOKEN": 119,
-		"ALREADY_EXPIRED": 120,
-		"USER_NOT_STICON_OWNER": 121,
-		"REFRESH_MEDIA_FLOW": 122,
-		"EXCEED_FOLLOWER_LIMIT": 123,
-		"INCOMPATIBLE_APP_TYPE": 124,
-		"NOT_PREMIUM": 125,
-		"BITMAX_ACCOUNT_EXIST": 126,
-		"MESSAGE_NOT_EDITABLE": 127,
-		"MESSAGE_NOT_EDITABLE_TIMELIMIT": 128,
-		"SCHEDULED_MESSAGE_TIMELIMIT": 129,
-		"SCHEDULED_MESSAGE_SERVER_TIMESLOT_LIMIT": 130,
-		"SCHEDULED_MESSAGE_USER_TOTAL_LIMIT": 131,
-		"SCHEDULED_MESSAGE_USER_TIMESLOT_LIMIT": 132,
-		"SCHEDULED_MESSAGE_UPDATE_TIMELIMIT": 133,
-		"SCHEDULED_MESSAGE_RESCHEDULE_TIMELIMIT": 134,
-		"NOT_LAB_ENABLED": 135,
-	},
-	"Fg_a": {
-		"INTERNAL_ERROR": 0,
-		"ILLEGAL_ARGUMENT": 1,
-		"VERIFICATION_FAILED": 2,
-		"NOT_FOUND": 3,
-		"RETRY_LATER": 4,
-		"HUMAN_VERIFICATION_REQUIRED": 5,
-		"NOT_ENABLED": 6,
-		"INVALID_CONTEXT": 100,
-		"APP_UPGRADE_REQUIRED": 101,
-		"NO_CONTENT": 102,
-	},
-	"FriendRequestStatus": {
-		"NONE": 0,
-		"AVAILABLE": 1,
-		"ALREADY_REQUESTED": 2,
-		"UNAVAILABLE": 3,
-	},
-	"IdentityProvider": {
-		"UNKNOWN": 0,
-		"LINE": 1,
-		"NAVER_KR": 2,
-		"LINE_PHONE": 3,
-	},
-	"LN0_F0": {
-		"UNKNOWN": 0,
-		"INVALID_TARGET_USER": 1,
-		"AGE_VALIDATION": 2,
-		"TOO_MANY_FRIENDS": 3,
-		"TOO_MANY_REQUESTS": 4,
-		"MALFORMED_REQUEST": 5,
-		"TRACKING_META_QRCODE_FAVORED": 6,
-	},
-	"LN0_X0": {
-		"USER": 1,
-		"BOT": 2,
-	},
-	"MIDType": {
-		"USER": 0,
-		"ROOM": 1,
-		"GROUP": 2,
-		"SQUARE": 3,
-		"SQUARE_CHAT": 4,
-		"SQUARE_MEMBER": 5,
-		"BOT": 6,
-		"SQUARE_THREAD": 7,
-	},
-	"NZ0_B0": {
-		"PAY": 0,
-		"POI": 1,
-		"FX": 2,
-		"SEC": 3,
-		"BIT": 4,
-		"LIN": 5,
-		"SCO": 6,
-		"POC": 7,
-	},
-	"NZ0_C0": {
-		"OK": 0,
-		"MAINTENANCE": 1,
-		"TPS_EXCEEDED": 2,
-		"NOT_FOUND": 3,
-		"BLOCKED": 4,
-		"INTERNAL_ERROR": 5,
-		"WALLET_CMS_MAINTENANCE": 6,
-	},
-	"NZ0_EnumC12154b1": {
-		"NORMAL": 0,
-		"CAMERA": 1,
-	},
-	"NZ0_EnumC12169g1": {
-		"WALLET": 101,
-		"ASSET": 201,
-		"SHOPPING": 301,
-	},
-	"NZ0_EnumC12170h": {
-		"HIDE_BADGE": 0,
-		"SHOW_BADGE": 1,
-	},
-	"NZ0_EnumC12188n": {
-		"OK": 0,
-		"UNAVAILABLE": 1,
-		"DUPLICATAE_REGISTRATION": 2,
-		"INTERNAL_ERROR": 3,
-	},
-	"NZ0_EnumC12192o0": {
-		"LV1": 0,
-		"LV2": 1,
-		"LV3": 2,
-		"LV9": 3,
-	},
-	"NZ0_EnumC12193o1": {
-		"INVALID_PARAMETER": 400,
-		"AUTHENTICATION_FAILED": 401,
-		"INTERNAL_SERVER_ERROR": 500,
-		"SERVICE_IN_MAINTENANCE_MODE": 503,
-	},
-	"NZ0_EnumC12195p0": {
-		"ALIVE": 1,
-		"SUSPENDED": 2,
-		"UNREGISTERED": 3,
-	},
-	"NZ0_EnumC12197q": {
-		"PREFIX": 0,
-		"SUFFIX": 1,
-	},
-	"NZ0_EnumC12218x0": {
-		"NO_CONTENT": 0,
-		"OK": 1,
-		"ERROR": 2,
-	},
-	"NZ0_I0": {
-		"A": 0,
-		"B": 1,
-		"C": 2,
-		"D": 3,
-		"UNKNOWN": 4,
-	},
-	"NZ0_K0": {
-		"POCKET_MONEY": 0,
-		"REFINANCE": 1,
-	},
-	"NZ0_N0": {
-		"COMPACT": 0,
-		"EXPANDED": 1,
-	},
-	"NZ0_S0": {
-		"CARD": 0,
-		"ACTION": 1,
-	},
-	"NZ0_W0": {
-		"OK": 0,
-		"INTERNAL_ERROR": 1,
-	},
-	"NotificationStatus": {
-		"NOTIFICATION_ITEM_EXIST": 1,
-		"TIMELINE_ITEM_EXIST": 2,
-		"NOTE_GROUP_NEW_ITEM_EXIST": 4,
-		"TIMELINE_BUDDYGROUP_CHANGED": 8,
-		"NOTE_ONE_TO_ONE_NEW_ITEM_EXIST": 16,
-		"ALBUM_ITEM_EXIST": 32,
-		"TIMELINE_ITEM_DELETED": 64,
-		"OTOGROUP_ITEM_EXIST": 128,
-		"GROUPHOME_NEW_ITEM_EXIST": 256,
-		"GROUPHOME_HIDDEN_ITEM_CHANGED": 512,
-		"NOTIFICATION_ITEM_CHANGED": 1024,
-		"BEAD_ITEM_HIDE": 2048,
-		"BEAD_ITEM_SHOW": 4096,
-		"LINE_TICKET_UPDATED": 8192,
-		"TIMELINE_STORY_UPDATED": 16384,
-		"SMARTCH_UPDATED": 32768,
-		"AVATAR_UPDATED": 65536,
-		"HOME_NOTIFICATION_ITEM_EXIST": 131072,
-		"TIMELINE_REBOOT_COMPLETED": 262144,
-		"TIMELINE_GUIDE_STORY_UPDATED": 524288,
-		"TIMELINE_F2F_COMPLETED": 1048576,
-		"VOOM_LIVE_STATE_CHANGED": 2097152,
-		"VOOM_ACTIVITY_REWARD_ITEM_EXIST": 4194304,
-		"LINE_TODAY_PROFILE_UPDATED": 8388608,
-		"AI_FRIENDS_EVENT_EXIST": 16777216,
-		"CALENDAR_ITEM_EXIST": 33554432,
-		"WALLET_NOTIFICATION_ITEM_EXIST": 67108864,
-	},
-	"NotificationType": {
-		"APPLE_APNS": 1,
-		"GOOGLE_C2DM": 2,
-		"NHN_NNI": 3,
-		"SKT_AOM": 4,
-		"MS_MPNS": 5,
-		"RIM_BIS": 6,
-		"GOOGLE_GCM": 7,
-		"NOKIA_NNAPI": 8,
-		"TIZEN": 9,
-		"MOZILLA_SIMPLE": 10,
-		"LINE_BOT": 17,
-		"LINE_WAP": 18,
-		"APPLE_APNS_VOIP": 19,
-		"MS_WNS": 20,
-		"GOOGLE_FCM": 21,
-		"CLOVA": 22,
-		"CLOVA_VOIP": 23,
-		"HUAWEI_HCM": 24,
-	},
-	"Ob1_B0": {
-		"FOREGROUND": 0,
-		"BACKGROUND": 1,
-	},
-	"Ob1_C1": {
-		"NORMAL": 0,
-		"BIG": 1,
-	},
-	"Ob1_D0": {
-		"PURCHASE_ONLY": 0,
-		"PURCHASE_OR_SUBSCRIPTION": 1,
-		"SUBSCRIPTION_ONLY": 2,
-	},
-	"Ob1_EnumC12607a1": {
-		"DEFAULT": 1,
-		"VIEW_VIDEO": 2,
-	},
-	"Ob1_EnumC12610b1": {
-		"NONE": 0,
-		"BUDDY": 2,
-		"INSTALL": 3,
-		"MISSION": 4,
-		"MUSTBUY": 5,
-	},
-	"Ob1_EnumC12631i1": {
-		"UNKNOWN": 0,
-		"PRODUCT": 1,
-		"USER": 2,
-		"PREMIUM_USER": 3,
-	},
-	"Ob1_EnumC12638l": {
-		"VALID": 0,
-		"INVALID": 1,
-	},
-	"Ob1_EnumC12641m": {
-		"PREMIUM": 1,
-		"VERIFIED": 2,
-		"UNVERIFIED": 3,
-	},
-	"Ob1_EnumC12652p1": {
-		"UNKNOWN": 0,
-		"NONE": 1,
-		"ILLEGAL_ARGUMENT": 16641,
-		"NOT_FOUND": 16642,
-		"NOT_AVAILABLE": 16643,
-		"NOT_PAID_PRODUCT": 16644,
-		"NOT_FREE_PRODUCT": 16645,
-		"ALREADY_OWNED": 16646,
-		"ERROR_WITH_CUSTOM_MESSAGE": 16647,
-		"NOT_AVAILABLE_TO_RECIPIENT": 16648,
-		"NOT_AVAILABLE_FOR_CHANNEL_ID": 16649,
-		"NOT_SALE_FOR_COUNTRY": 16650,
-		"NOT_SALES_PERIOD": 16651,
-		"NOT_SALE_FOR_DEVICE": 16652,
-		"NOT_SALE_FOR_VERSION": 16653,
-		"ALREADY_EXPIRED": 16654,
-		"LIMIT_EXCEEDED": 16655,
-		"MISSING_CAPABILITY": 16656,
-		"AUTHENTICATION_FAILED": 16897,
-		"BALANCE_SHORTAGE": 17153,
-		"INTERNAL_SERVER_ERROR": 20737,
-		"SERVICE_IN_MAINTENANCE_MODE": 20738,
-		"SERVICE_UNAVAILABLE": 20739,
-	},
-	"Ob1_EnumC12656r0": {
-		"OK": 0,
-		"PRODUCT_UNSUPPORTED": 1,
-		"TEXT_NOT_SPECIFIED": 2,
-		"TEXT_STYLE_UNAVAILABLE": 3,
-		"CHARACTER_COUNT_LIMIT_EXCEEDED": 4,
-		"CONTAINS_INVALID_WORD": 5,
-	},
-	"Ob1_EnumC12664u": {
-		"UNKNOWN": 0,
-		"NONE": 1,
-		"ILLEGAL_ARGUMENT": 16641,
-		"NOT_FOUND": 16642,
-		"NOT_AVAILABLE": 16643,
-		"MAX_AMOUNT_OF_PRODUCTS_REACHED": 16644,
-		"PRODUCT_IS_NOT_PREMIUM": 16645,
-		"PRODUCT_IS_NOT_AVAILABLE_FOR_USER": 16646,
-		"USER_HAS_NO_VALID_SUBSCRIPTION": 16647,
-		"USER_HAS_NO_PRODUCT_OWNERSHIP": 16648,
-		"AUTHENTICATION_FAILED": 16897,
-		"INTERNAL_SERVER_ERROR": 20737,
-		"SERVICE_UNAVAILABLE": 20739,
-	},
-	"Ob1_EnumC12666u1": {
-		"POPULAR": 0,
-		"NEW_RELEASE": 1,
-		"EVENT": 2,
-		"RECOMMENDED": 3,
-		"POPULAR_WEEKLY": 4,
-		"POPULAR_MONTHLY": 5,
-		"POPULAR_RECENTLY_PUBLISHED": 6,
-		"BUDDY": 7,
-		"EXTRA_EVENT": 8,
-		"BROWSING_HISTORY": 9,
-		"POPULAR_TOTAL_SALES": 10,
-		"NEW_SUBSCRIPTION": 11,
-		"POPULAR_SUBSCRIPTION_30D": 12,
-		"CPD_STICKER": 13,
-		"POPULAR_WITH_FREE": 14,
-	},
-	"Ob1_F1": {
-		"STATIC": 1,
-		"ANIMATION": 2,
-	},
-	"Ob1_I": {
-		"STATIC": 0,
-		"POPULAR": 1,
-		"NEW_RELEASE": 2,
-	},
-	"Ob1_J0": {
-		"ON_SALE": 0,
-		"OUTDATED_VERSION": 1,
-		"NOT_ON_SALE": 2,
-	},
-	"Ob1_J1": {
-		"OK": 0,
-		"INVALID_PARAMETER": 1,
-		"NOT_FOUND": 2,
-		"NOT_SUPPORTED": 3,
-		"CONFLICT": 4,
-		"NOT_ELIGIBLE": 5,
-	},
-	"Ob1_K1": {
-		"GOOGLE": 0,
-		"APPLE": 1,
-		"WEBSTORE": 2,
-		"LINEMO": 3,
-		"LINE_MUSIC": 4,
-		"LYP": 5,
-		"TW_CHT": 6,
-		"FREEMIUM": 7,
-	},
-	"Ob1_M1": {
-		"OK": 0,
-		"UNKNOWN": 1,
-		"NOT_SUPPORTED": 2,
-		"NO_SUBSCRIPTION": 3,
-		"SUBSCRIPTION_EXISTS": 4,
-		"NOT_AVAILABLE": 5,
-		"CONFLICT": 6,
-		"OUTDATED_VERSION": 7,
-		"NO_STUDENT_INFORMATION": 8,
-		"ACCOUNT_HOLD": 9,
-		"RETRY_STATE": 10,
-	},
-	"Ob1_O0": {
-		"STICKER": 1,
-		"THEME": 2,
-		"STICON": 3,
-	},
-	"Ob1_O1": {
-		"AVAILABLE": 0,
-		"DIFFERENT_STORE": 1,
-		"NOT_STUDENT": 2,
-		"ALREADY_PURCHASED": 3,
-	},
-	"Ob1_P1": {
-		"GENERAL": 1,
-		"STUDENT": 2,
-	},
-	"Ob1_Q1": {
-		"BASIC": 1,
-		"DELUXE": 2,
-	},
-	"Ob1_R1": {
-		"MONTHLY": 1,
-		"YEARLY": 2,
-	},
-	"Ob1_U1": {
-		"OK": 0,
-		"UNKNOWN": 1,
-		"NO_SUBSCRIPTION": 2,
-		"EXISTS": 3,
-		"NOT_FOUND": 4,
-		"EXCEEDS_LIMIT": 5,
-		"NOT_AVAILABLE": 6,
-	},
-	"Ob1_V1": {
-		"DATE_ASC": 1,
-		"DATE_DESC": 2,
-	},
-	"Ob1_X1": {
-		"GENERAL": 0,
-		"CREATORS": 1,
-		"STICON": 2,
-	},
-	"Ob1_a2": {
-		"NOT_PURCHASED": 0,
-		"SUBSCRIPTION": 1,
-		"NOT_SUBSCRIBED": 2,
-		"NOT_ACCEPTED": 3,
-		"NOT_PURCHASED_U2I": 4,
-		"BUDDY": 5,
-		"TREND": 6,
-	},
-	"Ob1_c2": {
-		"STATIC": 1,
-		"ANIMATION": 2,
-	},
-	"OpType": {
-		"END_OF_OPERATION": 0,
-		"UPDATE_PROFILE": 1,
-		"NOTIFIED_UPDATE_PROFILE": 2,
-		"REGISTER_USERID": 3,
-		"ADD_CONTACT": 4,
-		"NOTIFIED_ADD_CONTACT": 5,
-		"BLOCK_CONTACT": 6,
-		"UNBLOCK_CONTACT": 7,
-		"NOTIFIED_RECOMMEND_CONTACT": 8,
-		"CREATE_GROUP": 9,
-		"UPDATE_GROUP": 10,
-		"NOTIFIED_UPDATE_GROUP": 11,
-		"INVITE_INTO_GROUP": 12,
-		"NOTIFIED_INVITE_INTO_GROUP": 13,
-		"LEAVE_GROUP": 14,
-		"NOTIFIED_LEAVE_GROUP": 15,
-		"ACCEPT_GROUP_INVITATION": 16,
-		"NOTIFIED_ACCEPT_GROUP_INVITATION": 17,
-		"KICKOUT_FROM_GROUP": 18,
-		"NOTIFIED_KICKOUT_FROM_GROUP": 19,
-		"CREATE_ROOM": 20,
-		"INVITE_INTO_ROOM": 21,
-		"NOTIFIED_INVITE_INTO_ROOM": 22,
-		"LEAVE_ROOM": 23,
-		"NOTIFIED_LEAVE_ROOM": 24,
-		"SEND_MESSAGE": 25,
-		"RECEIVE_MESSAGE": 26,
-		"SEND_MESSAGE_RECEIPT": 27,
-		"RECEIVE_MESSAGE_RECEIPT": 28,
-		"SEND_CONTENT_RECEIPT": 29,
-		"RECEIVE_ANNOUNCEMENT": 30,
-		"CANCEL_INVITATION_GROUP": 31,
-		"NOTIFIED_CANCEL_INVITATION_GROUP": 32,
-		"NOTIFIED_UNREGISTER_USER": 33,
-		"REJECT_GROUP_INVITATION": 34,
-		"NOTIFIED_REJECT_GROUP_INVITATION": 35,
-		"UPDATE_SETTINGS": 36,
-		"NOTIFIED_REGISTER_USER": 37,
-		"INVITE_VIA_EMAIL": 38,
-		"NOTIFIED_REQUEST_RECOVERY": 39,
-		"SEND_CHAT_CHECKED": 40,
-		"SEND_CHAT_REMOVED": 41,
-		"NOTIFIED_FORCE_SYNC": 42,
-		"SEND_CONTENT": 43,
-		"SEND_MESSAGE_MYHOME": 44,
-		"NOTIFIED_UPDATE_CONTENT_PREVIEW": 45,
-		"REMOVE_ALL_MESSAGES": 46,
-		"NOTIFIED_UPDATE_PURCHASES": 47,
-		"DUMMY": 48,
-		"UPDATE_CONTACT": 49,
-		"NOTIFIED_RECEIVED_CALL": 50,
-		"CANCEL_CALL": 51,
-		"NOTIFIED_REDIRECT": 52,
-		"NOTIFIED_CHANNEL_SYNC": 53,
-		"FAILED_SEND_MESSAGE": 54,
-		"NOTIFIED_READ_MESSAGE": 55,
-		"FAILED_EMAIL_CONFIRMATION": 56,
-		"NOTIFIED_CHAT_CONTENT": 58,
-		"NOTIFIED_PUSH_NOTICENTER_ITEM": 59,
-		"NOTIFIED_JOIN_CHAT": 60,
-		"NOTIFIED_LEAVE_CHAT": 61,
-		"NOTIFIED_TYPING": 62,
-		"FRIEND_REQUEST_ACCEPTED": 63,
-		"DESTROY_MESSAGE": 64,
-		"NOTIFIED_DESTROY_MESSAGE": 65,
-		"UPDATE_PUBLICKEYCHAIN": 66,
-		"NOTIFIED_UPDATE_PUBLICKEYCHAIN": 67,
-		"NOTIFIED_BLOCK_CONTACT": 68,
-		"NOTIFIED_UNBLOCK_CONTACT": 69,
-		"UPDATE_GROUPPREFERENCE": 70,
-		"NOTIFIED_PAYMENT_EVENT": 71,
-		"REGISTER_E2EE_PUBLICKEY": 72,
-		"NOTIFIED_E2EE_KEY_EXCHANGE_REQ": 73,
-		"NOTIFIED_E2EE_KEY_EXCHANGE_RESP": 74,
-		"NOTIFIED_E2EE_MESSAGE_RESEND_REQ": 75,
-		"NOTIFIED_E2EE_MESSAGE_RESEND_RESP": 76,
-		"NOTIFIED_E2EE_KEY_UPDATE": 77,
-		"NOTIFIED_BUDDY_UPDATE_PROFILE": 78,
-		"NOTIFIED_UPDATE_LINEAT_TABS": 79,
-		"UPDATE_ROOM": 80,
-		"NOTIFIED_BEACON_DETECTED": 81,
-		"UPDATE_EXTENDED_PROFILE": 82,
-		"ADD_FOLLOW": 83,
-		"NOTIFIED_ADD_FOLLOW": 84,
-		"DELETE_FOLLOW": 85,
-		"NOTIFIED_DELETE_FOLLOW": 86,
-		"UPDATE_TIMELINE_SETTINGS": 87,
-		"NOTIFIED_FRIEND_REQUEST": 88,
-		"UPDATE_RINGBACK_TONE": 89,
-		"NOTIFIED_POSTBACK": 90,
-		"RECEIVE_READ_WATERMARK": 91,
-		"NOTIFIED_MESSAGE_DELIVERED": 92,
-		"NOTIFIED_UPDATE_CHAT_BAR": 93,
-		"NOTIFIED_CHATAPP_INSTALLED": 94,
-		"NOTIFIED_CHATAPP_UPDATED": 95,
-		"NOTIFIED_CHATAPP_NEW_MARK": 96,
-		"NOTIFIED_CHATAPP_DELETED": 97,
-		"NOTIFIED_CHATAPP_SYNC": 98,
-		"NOTIFIED_UPDATE_MESSAGE": 99,
-		"UPDATE_CHATROOMBGM": 100,
-		"NOTIFIED_UPDATE_CHATROOMBGM": 101,
-		"UPDATE_RINGTONE": 102,
-		"UPDATE_USER_SETTINGS": 118,
-		"NOTIFIED_UPDATE_STATUS_BAR": 119,
-		"CREATE_CHAT": 120,
-		"UPDATE_CHAT": 121,
-		"NOTIFIED_UPDATE_CHAT": 122,
-		"INVITE_INTO_CHAT": 123,
-		"NOTIFIED_INVITE_INTO_CHAT": 124,
-		"CANCEL_CHAT_INVITATION": 125,
-		"NOTIFIED_CANCEL_CHAT_INVITATION": 126,
-		"DELETE_SELF_FROM_CHAT": 127,
-		"NOTIFIED_DELETE_SELF_FROM_CHAT": 128,
-		"ACCEPT_CHAT_INVITATION": 129,
-		"NOTIFIED_ACCEPT_CHAT_INVITATION": 130,
-		"REJECT_CHAT_INVITATION": 131,
-		"DELETE_OTHER_FROM_CHAT": 132,
-		"NOTIFIED_DELETE_OTHER_FROM_CHAT": 133,
-		"NOTIFIED_CONTACT_CALENDAR_EVENT": 134,
-		"NOTIFIED_CONTACT_CALENDAR_EVENT_ALL": 135,
-		"UPDATE_THINGS_OPERATIONS": 136,
-		"SEND_CHAT_HIDDEN": 137,
-		"CHAT_META_SYNC_ALL": 138,
-		"SEND_REACTION": 139,
-		"NOTIFIED_SEND_REACTION": 140,
-		"NOTIFIED_UPDATE_PROFILE_CONTENT": 141,
-		"FAILED_DELIVERY_MESSAGE": 142,
-		"SEND_ENCRYPTED_E2EE_KEY_REQUESTED": 143,
-		"CHANNEL_PAAK_AUTHENTICATION_REQUESTED": 144,
-		"UPDATE_PIN_STATE": 145,
-		"NOTIFIED_PREMIUMBACKUP_STATE_CHANGED": 146,
-		"CREATE_MULTI_PROFILE": 147,
-		"MULTI_PROFILE_STATUS_CHANGED": 148,
-		"DELETE_MULTI_PROFILE": 149,
-		"UPDATE_PROFILE_MAPPING": 150,
-		"DELETE_PROFILE_MAPPING": 151,
-		"NOTIFIED_DESTROY_NOTICENTER_PUSH": 152,
-		"FORCE_KEY_BACKUP_HEADER_VALIDATION": 153,
-		"NOTIFIED_GCS_REACTION": 154,
-		"UPDATE_MESSAGE_REQUEST_BOX": 155,
-		"NOTIFIED_UPDATE_MESSAGE_REQUEST_BOX": 156,
-		"NOTIFIED_GCS_REFRESH_CONTENT": 157,
-		"EDIT_MESSAGE": 158,
-		"NOTIFIED_EDIT_MESSAGE": 159,
-		"ADD_SCHEDULED_MESSAGE": 160,
-		"UPDATE_SCHEDULED_MESSAGE": 161,
-		"DELETE_SCHEDULED_MESSAGE": 162,
-		"E2EE_REENCRYPT_SCHEDULED_MESSAGE": 163,
-		"SEND_FAILED_SCHEDULED_MESSAGE": 164,
-		"SEND_SUCCEEDED_SCHEDULED_MESSAGE": 165,
-		"UPDATE_SERVICE_CHAT": 166,
-		"MARK_SERVICE_CHAT_AS_READ": 167,
-		"UPDATE_SERVICE_CHAT_NOTIFICATION_TEXT": 168,
-		"LINE_AUTH_NOTIFICATION": 169,
-	},
-	"P70_g": {
-		"INVALID_REQUEST": 1000,
-		"RETRY_REQUIRED": 1001,
-	},
-	"PaidCallType": {
-		"OUT": 0,
-		"IN": 1,
-		"TOLLFREE": 2,
-		"RECORD": 3,
-		"AD": 4,
-		"CS": 5,
-		"OA": 6,
-		"OAM": 7,
-	},
-	"PayloadType": {
-		"PAYLOAD_BUY": 101,
-		"PAYLOAD_CS": 111,
-		"PAYLOAD_BONUS": 121,
-		"PAYLOAD_EVENT": 131,
-		"PAYLOAD_POINT_AUTO_EXCHANGED": 141,
-		"PAYLOAD_POINT_MANUAL_EXCHANGED": 151,
-	},
-	"Pb1_A0": {
-		"NORMAL": 0,
-		"VIDEOCAM": 1,
-		"VOIP": 2,
-		"RECORD": 3,
-	},
-	"Pb1_A3": {
-		"UNKNOWN": 0,
-		"BACKGROUND_NEW_KEY_CREATED": 1,
-		"BACKGROUND_PERIODICAL_VERIFICATION": 2,
-		"FOREGROUND_NEW_PIN_REGISTERED": 3,
-		"FOREGROUND_VERIFICATION": 4,
-	},
-	"Pb1_B": {
-		"SIRI": 1,
-		"GOOGLE_ASSISTANT": 2,
-		"OS_SHARE": 3,
-	},
-	"Pb1_D0": {
-		"RICH_MENU_ID": 0,
-		"STATUS_BAR": 1,
-		"BUDDY_CAUTION_NOTICE": 2,
-	},
-	"Pb1_D4": {
-		"AUDIO": 1,
-		"VIDEO": 2,
-		"FACEPLAY": 3,
-	},
-	"Pb1_D6": {
-		"GOOGLE": 0,
-		"BAIDU": 1,
-		"FOURSQUARE": 2,
-		"YAHOOJAPAN": 3,
-		"KINGWAY": 4,
-	},
-	"Pb1_E7": {
-		"UNKNOWN": 0,
-		"TALK": 1,
-		"SQUARE": 2,
-	},
-	"Pb1_EnumC12917a6": {
-		"UNKNOWN": 0,
-		"APP_FOREGROUND": 1,
-		"PERIODIC": 2,
-		"MANUAL": 3,
-	},
-	"Pb1_EnumC12926b1": {
-		"NOT_A_FRIEND": 0,
-		"ALWAYS": 1,
-	},
-	"Pb1_EnumC12941c2": {
-		"BLE_LCS_API_USABLE": 26,
-		"PROHIBIT_MINIMIZE_CHANNEL_BROWSER": 27,
-		"ALLOW_IOS_WEBKIT": 28,
-		"PURCHASE_LCS_API_USABLE": 38,
-		"ALLOW_ANDROID_ENABLE_ZOOM": 48,
-	},
-	"Pb1_EnumC12945c6": {
-		"V1": 1,
-		"V2": 2,
-	},
-	"Pb1_EnumC12970e3": {
-		"USER_AGE_CHECKED": 1,
-		"USER_APPROVAL_REQUIRED": 2,
-	},
-	"Pb1_EnumC12997g2": {
-		"PROFILE": 0,
-		"FRIENDS": 1,
-		"GROUP": 2,
-	},
-	"Pb1_EnumC12998g3": {
-		"UNKNOWN": 0,
-		"WIFI": 1,
-		"CELLULAR_NETWORK": 2,
-	},
-	"Pb1_EnumC13009h0": {
-		"NORMAL": 1,
-		"LOW_BATTERY": 2,
-	},
-	"Pb1_EnumC13010h1": {
-		"NEW": 1,
-		"PLANET": 2,
-	},
-	"Pb1_EnumC13015h6": {
-		"FORWARD": 0,
-		"AUTO_REPLY": 1,
-		"SUBORDINATE": 2,
-		"REPLY": 3,
-	},
-	"Pb1_EnumC13022i": {
-		"SKIP": 0,
-		"PINCODE": 1,
-		"SECURITY_CENTER": 2,
-	},
-	"Pb1_EnumC13029i6": {
-		"ADD": 0,
-		"REMOVE": 1,
-		"MODIFY": 2,
-	},
-	"Pb1_EnumC13037j0": {
-		"UNSPECIFIED": 0,
-		"INACTIVE": 1,
-		"ACTIVE": 2,
-		"DELETED": 3,
-	},
-	"Pb1_EnumC13050k": {
-		"UNKNOWN": 0,
-		"IOS_REDUCED_ACCURACY": 1,
-		"IOS_FULL_ACCURACY": 2,
-		"AOS_PRECISE_LOCATION": 3,
-		"AOS_APPROXIMATE_LOCATION": 4,
-	},
-	"Pb1_EnumC13082m3": {
-		"SHOW": 0,
-		"HIDE": 1,
-	},
-	"Pb1_EnumC13093n0": {
-		"NONE": 0,
-		"TOP": 1,
-	},
-	"Pb1_EnumC13127p6": {
-		"NORMAL": 0,
-		"ALERT_DISABLED": 1,
-		"ALWAYS": 2,
-	},
-	"Pb1_EnumC13128p7": {
-		"UNKNOWN": 0,
-		"DIRECT_INVITATION": 1,
-		"DIRECT_CHAT": 2,
-		"GROUP_INVITATION": 3,
-		"GROUP_CHAT": 4,
-		"ROOM_INVITATION": 5,
-		"ROOM_CHAT": 6,
-		"FRIEND_PROFILE": 7,
-		"DIRECT_CHAT_SELECTED": 8,
-		"GROUP_CHAT_SELECTED": 9,
-		"ROOM_CHAT_SELECTED": 10,
-		"DEPRECATED": 11,
-	},
-	"Pb1_EnumC13148r0": {
-		"ALWAYS_HIDDEN": 1,
-		"ALWAYS_SHOWN": 2,
-		"SHOWN_BY_CONDITION": 3,
-	},
-	"Pb1_EnumC13151r3": {
-		"ONEWAY": 0,
-		"BOTH": 1,
-		"NOT_REGISTERED": 2,
-	},
-	"Pb1_EnumC13162s0": {
-		"NOT_SUSPICIOUS": 1,
-		"SUSPICIOUS_00": 2,
-		"SUSPICIOUS_01": 3,
-	},
-	"Pb1_EnumC13196u6": {
-		"COIN": 0,
-		"CREDIT": 1,
-		"MONTHLY": 2,
-		"OAM": 3,
-	},
-	"Pb1_EnumC13209v5": {
-		"DUMMY": 0,
-		"NOTICE": 1,
-		"MORETAB": 2,
-		"STICKERSHOP": 3,
-		"CHANNEL": 4,
-		"DENY_KEYWORD": 5,
-		"CONNECTIONINFO": 6,
-		"BUDDY": 7,
-		"TIMELINEINFO": 8,
-		"THEMESHOP": 9,
-		"CALLRATE": 10,
-		"CONFIGURATION": 11,
-		"STICONSHOP": 12,
-		"SUGGESTDICTIONARY": 13,
-		"SUGGESTSETTINGS": 14,
-		"USERSETTINGS": 15,
-		"ANALYTICSINFO": 16,
-		"SEARCHPOPULARKEYWORD": 17,
-		"SEARCHNOTICE": 18,
-		"TIMELINE": 19,
-		"SEARCHPOPULARCATEGORY": 20,
-		"EXTENDEDPROFILE": 21,
-		"SEASONALMARKETING": 22,
-		"NEWSTAB": 23,
-		"SUGGESTDICTIONARYV2": 24,
-		"CHATAPPSYNC": 25,
-		"AGREEMENTS": 26,
-		"INSTANTNEWS": 27,
-		"EMOJI_MAPPING": 28,
-		"SEARCHBARKEYWORDS": 29,
-		"SHOPPING": 30,
-		"CHAT_EFFECT_BACKGROUND": 31,
-		"CHAT_EFFECT_KEYWORD": 32,
-		"SEARCHINDEX": 33,
-		"HUBTAB": 34,
-		"PAY_RULE_UPDATED": 35,
-		"SMARTCH": 36,
-		"HOME_SERVICE_LIST": 37,
-		"TIMELINESTORY": 38,
-		"WALLET_TAB": 39,
-		"POD_TAB": 40,
-		"HOME_SAFETY_CHECK": 41,
-		"HOME_SEASONAL_EFFECT": 42,
-		"OPENCHAT_MAIN": 43,
-		"CHAT_EFFECT_CONTENT_METADATA_TAG": 44,
-		"VOOM_LIVE_STATE_CHANGED": 45,
-		"PROFILE_STUDIO_N_BADGE": 46,
-		"LYP_FONT": 47,
-		"TIMELINESTORY_OA": 48,
-		"TRAVEL": 49,
-		"PORTALTAB_GNB_DOT": 50,
-		"NEWS_ROW_TAB": 51,
-		"GCS_REFRESH": 52,
-		"GCS_REFRESH_ALL": 53,
-		"ASSET_META_POPUP": 54,
-		"AI_FRIENDS": 55,
-		"COMMERCE_TW_TAB": 56,
-		"PREMIUM_PRODUCT_DEFINITION": 57,
-		"DATAMODE": 58,
-	},
-	"Pb1_EnumC13221w3": {
-		"UNKNOWN": 0,
-		"EUROPEAN_ECONOMIC_AREA": 1,
-	},
-	"Pb1_EnumC13222w4": {
-		"OBS_VIDEO": 1,
-		"OBS_GENERAL": 2,
-		"OBS_RINGBACK_TONE": 3,
-	},
-	"Pb1_EnumC13237x5": {
-		"AUDIO": 1,
-		"VIDEO": 2,
-		"LIVE": 3,
-		"PHOTOBOOTH": 4,
-	},
-	"Pb1_EnumC13238x6": {
-		"NOT_SPECIFIED": 0,
-		"VALID": 1,
-		"VERIFICATION_REQUIRED": 2,
-		"NOT_PERMITTED": 3,
-		"LIMIT_EXCEEDED": 4,
-		"LIMIT_EXCEEDED_AND_VERIFICATION_REQUIRED": 5,
-	},
-	"Pb1_EnumC13251y5": {
-		"STANDARD": 1,
-		"CONSTELLA": 2,
-	},
-	"Pb1_EnumC13252y6": {
-		"ALL": 0,
-		"PROFILE": 1,
-		"SETTINGS": 2,
-		"CONFIGURATIONS": 3,
-		"CONTACT": 4,
-		"GROUP": 5,
-		"E2EE": 6,
-		"MESSAGE": 7,
-		"MULTI_PROFILE": 8,
-		"MESSAGE_REQUEST_BOX": 9,
-		"SCHEDULED_MESSAGE": 10,
-	},
-	"Pb1_EnumC13260z0": {
-		"ON_AIR": 0,
-		"LIVE": 1,
-		"GLP": 2,
-	},
-	"Pb1_EnumC13267z7": {
-		"NOTIFICATION_SETTING": 1,
-		"ALL": 255,
-	},
-	"Pb1_F0": {
-		"NA": 0,
-		"FRIEND_VIEW": 1,
-		"OFFICIAL_ACCOUNT_VIEW": 2,
-	},
-	"Pb1_F4": {
-		"INCOMING": 1,
-		"OUTGOING": 2,
-	},
-	"Pb1_F5": {
-		"UNKNOWN": 0,
-		"SUCCESS": 1,
-		"REQUIRE_SERVER_SIDE_EMAIL": 2,
-		"REQUIRE_CLIENT_SIDE_EMAIL": 3,
-	},
-	"Pb1_F6": {
-		"JBU": 0,
-		"LIP": 1,
-	},
-	"Pb1_G3": {
-		"PROMOTION_FRIENDS_INVITE": 1,
-		"CAPABILITY_SERVER_SIDE_SMS": 2,
-		"LINE_CLIENT_ANALYTICS_CONFIGURATION": 3,
-	},
-	"Pb1_G4": {
-		"TIMELINE": 1,
-		"NEARBY": 2,
-		"SQUARE": 3,
-	},
-	"Pb1_G6": {
-		"NICE": 2,
-		"LOVE": 3,
-		"FUN": 4,
-		"AMAZING": 5,
-		"SAD": 6,
-		"OMG": 7,
-	},
-	"Pb1_H6": {
-		"PUBLIC": 0,
-		"PRIVATE": 1,
-	},
-	"Pb1_I6": {
-		"NEVER_SHOW": 0,
-		"ONE_WAY": 1,
-		"MUTUAL": 2,
-	},
-	"Pb1_J4": {
-		"OTHER": 0,
-		"INITIALIZATION": 1,
-		"PERIODIC_SYNC": 2,
-		"MANUAL_SYNC": 3,
-		"LOCAL_DB_CORRUPTED": 4,
-	},
-	"Pb1_K2": {
-		"CHANNEL_INFO": 1,
-		"CHANNEL_TOKEN": 2,
-		"COMMON_DOMAIN": 4,
-		"ALL": 255,
-	},
-	"Pb1_K6": {
-		"EMAIL": 1,
-		"DISPLAY_NAME": 2,
-		"PHONETIC_NAME": 4,
-		"PICTURE": 8,
-		"STATUS_MESSAGE": 16,
-		"ALLOW_SEARCH_BY_USERID": 32,
-		"ALLOW_SEARCH_BY_EMAIL": 64,
-		"BUDDY_STATUS": 128,
-		"MUSIC_PROFILE": 256,
-		"AVATAR_PROFILE": 512,
-		"HIDDEN_FROM_LIST": 1024,
-		"ALL": 2147483647,
-	},
-	"Pb1_L2": {
-		"SYNC": 0,
-		"REMOVE": 1,
-		"REMOVE_ALL": 2,
-	},
-	"Pb1_L4": {
-		"UNKNOWN": 0,
-		"REVISION_GAP_TOO_LARGE_CLIENT": 1,
-		"REVISION_GAP_TOO_LARGE_SERVER": 2,
-		"OPERATION_EXPIRED": 3,
-		"REVISION_HOLE": 4,
-		"FORCE_TRIGGERED": 5,
-	},
-	"Pb1_M6": {
-		"OWNER": 0,
-		"FRIEND": 1,
-	},
-	"Pb1_N6": {
-		"NFT": 1,
-		"AVATAR": 2,
-		"SNOW": 3,
-		"ARCZ": 4,
-		"FRENZ": 5,
-	},
-	"Pb1_O2": {
-		"NAME": 1,
-		"PICTURE_STATUS": 2,
-		"PREVENTED_JOIN_BY_TICKET": 4,
-		"NOTIFICATION_SETTING": 8,
-		"INVITATION_TICKET": 16,
-		"FAVORITE_TIMESTAMP": 32,
-		"CHAT_TYPE": 64,
-		"PENALTY": 128,
-	},
-	"Pb1_O6": {
-		"DEFAULT": 1,
-		"MULTI_PROFILE": 2,
-	},
-	"Pb1_P6": {
-		"HIDDEN": 0,
-		"PUBLIC": 1000,
-	},
-	"Pb1_Q2": {
-		"BACKGROUND": 0,
-		"KEYWORD": 1,
-		"CONTENT_METADATA_TAG_BASED": 2,
-	},
-	"Pb1_R3": {
-		"BEACON_AGREEMENT": 1,
-		"BLUETOOTH": 2,
-		"SHAKE_AGREEMENT": 3,
-		"AUTO_SUGGEST": 4,
-		"CHATROOM_CAPTURE": 5,
-		"CHATROOM_MINIMIZEBROWSER": 6,
-		"CHATROOM_MOBILESAFARI": 7,
-		"VIDEO_HIGHTLIGHT_WIZARD": 8,
-		"CHAT_FOLDER": 9,
-		"BLUETOOTH_SCAN": 10,
-		"AUTO_SUGGEST_FOLLOW_UP": 11,
-		"PHISHING_SITE_DETECTION": 12,
-		"SMART_STICKER_SUGGEST": 13,
-	},
-	"Pb1_S7": {
-		"NONE": 1,
-		"ALL": 2,
-	},
-	"Pb1_T3": {
-		"LOCATION_OS": 1,
-		"LOCATION_APP": 2,
-		"VIDEO_AUTO_PLAY": 3,
-		"HNI": 4,
-		"AUTO_SUGGEST_LANG": 5,
-		"CHAT_EFFECT_CACHED_CONTENT_LIST": 6,
-		"IFA": 7,
-		"ACCURACY_MODE": 8,
-	},
-	"Pb1_T7": {
-		"SYNC": 0,
-		"REPORT": 1,
-	},
-	"Pb1_V7": {
-		"UNSPECIFIED": 0,
-		"UNKNOWN": 1,
-		"INITIALIZATION": 2,
-		"OPERATION": 3,
-		"FULL_SYNC": 4,
-		"AUTO_REPAIR": 5,
-		"MANUAL_REPAIR": 6,
-		"INTERNAL": 7,
-		"USER_INITIATED": 8,
-		"PREMIUM_BACKUP_RESTORE": 9,
-	},
-	"Pb1_W2": {
-		"ANYONE_IN_CHAT": 0,
-		"CREATOR_ONLY": 1,
-		"NO_ONE": 2,
-	},
-	"Pb1_W3": {
-		"ILLEGAL_ARGUMENT": 0,
-		"AUTHENTICATION_FAILED": 1,
-		"INTERNAL_ERROR": 2,
-		"RESTORE_KEY_FIRST": 3,
-		"NO_BACKUP": 4,
-		"INVALID_PIN": 6,
-		"PERMANENTLY_LOCKED": 7,
-		"INVALID_PASSWORD": 8,
-		"MASTER_KEY_CONFLICT": 9,
-		"KEY_BACKUP_HEADER_MISMATCH": 10,
-	},
-	"Pb1_X1": {
-		"MESSAGE": 0,
-		"MESSAGE_NOTIFICATION": 1,
-		"NOTIFICATION_CENTER": 2,
-	},
-	"Pb1_X2": {
-		"MESSAGE": 0,
-		"NOTE": 1,
-		"CHANNEL": 2,
-	},
-	"Pb1_Z2": {
-		"GROUP": 0,
-		"ROOM": 1,
-		"PEER": 2,
-	},
-	"Pb1_gd": {
-		"OVER": 1,
-		"UNDER": 2,
-		"UNDEFINED": 3,
-	},
-	"Pb1_od": {
-		"UNKNOWN": 0,
-		"LOCATION": 1,
-	},
-	"PointErrorCode": {
-		"REQUEST_DUPLICATION": 3001,
-		"INVALID_PARAMETER": 3002,
-		"NOT_ENOUGH_BALANCE": 3003,
-		"AUTHENTICATION_FAIL": 3004,
-		"API_ACCESS_FORBIDDEN": 3005,
-		"MEMBER_ACCOUNT_NOT_FOUND": 3006,
-		"SERVICE_ACCOUNT_NOT_FOUND": 3007,
-		"TRANSACTION_NOT_FOUND": 3008,
-		"ALREADY_REVERSED_TRANSACTION": 3009,
-		"MESSAGE_NOT_READABLE": 3010,
-		"HTTP_REQUEST_METHOD_NOT_SUPPORTED": 3011,
-		"HTTP_MEDIA_TYPE_NOT_SUPPORTED": 3012,
-		"NOT_ALLOWED_TO_DEPOSIT": 3013,
-		"NOT_ALLOWED_TO_PAY": 3014,
-		"TRANSACTION_ACCESS_FORBIDDEN": 3015,
-		"INVALID_SERVICE_CONFIGURATION": 4001,
-		"DCS_COMMUNICATION_FAIL": 5004,
-		"UPDATE_BALANCE_FAIL": 5007,
-		"SYSTEM_MAINTENANCE": 5888,
-		"SYSTEM_ERROR": 5999,
-	},
-	"Q70_q": {
-		"UNKNOWN": 0,
-		"FACEBOOK": 1,
-		"APPLE": 2,
-		"GOOGLE": 3,
-	},
-	"Q70_r": {
-		"INTERNAL_ERROR": 0,
-		"ILLEGAL_ARGUMENT": 1,
-		"VERIFICATION_FAILED": 2,
-		"RETRY_LATER": 4,
-		"HUMAN_VERIFICATION_REQUIRED": 5,
-		"APP_UPGRADE_REQUIRED": 101,
-	},
-	"Qj_EnumC13584a": {
-		"NOT_DETERMINED": 0,
-		"RESTRICTED": 1,
-		"DENIED": 2,
-		"AUTHORIZED": 3,
-	},
-	"Qj_EnumC13585b": {
-		"WHITE": 1,
-		"BLACK": 2,
-	},
-	"Qj_EnumC13588e": {
-		"LIGHT": 1,
-		"DARK": 2,
-	},
-	"Qj_EnumC13592i": {
-		"ILLEGAL_ARGUMENT": 0,
-		"INTERNAL_ERROR": 1,
-		"CONNECTION_ERROR": 2,
-		"AUTHENTICATION_FAILED": 3,
-		"NEED_PERMISSION_APPROVAL": 4,
-		"COIN_NOT_USABLE": 5,
-		"WEBVIEW_NOT_ALLOWED": 6,
-	},
-	"Qj_EnumC13597n": {
-		"INVALID_REQUEST": 1,
-		"UNAUTHORIZED": 2,
-		"CONSENT_REQUIRED": 3,
-		"VERSION_UPDATE_REQUIRED": 4,
-		"COMPREHENSIVE_AGREEMENT_REQUIRED": 5,
-		"SPLASH_SCREEN_REQUIRED": 6,
-		"PERMANENT_LINK_INVALID_REQUEST": 7,
-		"NO_DESTINATION_URL": 8,
-		"SERVICE_ALREADY_TERMINATED": 9,
-		"ID_FEDERATION_REQUIRED": 10,
-		"SERVER_ERROR": 100,
-	},
-	"Qj_EnumC13604v": {
-		"GEOLOCATION": 1,
-		"ADVERTISING_ID": 2,
-		"BLUETOOTH_LE": 3,
-		"QR_CODE": 4,
-		"ADVERTISING_SDK": 5,
-		"ADD_TO_HOME": 6,
-		"SHARE_TARGET_MESSAGE": 7,
-		"VIDEO_AUTO_PLAY": 8,
-		"PROFILE_PLUS": 9,
-		"SUBWINDOW_OPEN": 10,
-		"SUBWINDOW_COMMON_MODULE": 11,
-		"NO_LIFF_REFERRER": 12,
-		"SKIP_CHANNEL_VERIFICATION_SCREEN": 13,
-		"PROVIDER_PAGE": 14,
-		"BASIC_AUTH": 15,
-		"SIRI_DONATION": 16,
-	},
-	"Qj_EnumC13605w": {
-		"ALLOW_DIRECT_LINK": 1,
-		"ALLOW_DIRECT_LINK_V2": 2,
-	},
-	"Qj_EnumC13606x": {
-		"LIGHT": 1,
-		"LIGHT_TRANSLUCENT": 2,
-		"DARK_TRANSLUCENT": 3,
-		"LIGHT_ICON": 4,
-		"DARK_ICON": 5,
-	},
-	"Qj_a0": {
-		"CONCAT": 1,
-		"REPLACE": 2,
-	},
-	"Qj_e0": {
-		"SUCCESS": 0,
-		"FAILURE": 1,
-		"CANCEL": 2,
-	},
-	"Qj_h0": {
-		"RIGHT": 1,
-		"LEFT": 2,
-	},
-	"Qj_i0": {
-		"FULL": 1,
-		"TALL": 2,
-		"COMPACT": 3,
-	},
-	"R70_e": {
-		"INTERNAL_ERROR": 0,
-		"ILLEGAL_ARGUMENT": 1,
-		"VERIFICATION_FAILED": 2,
-		"EXTERNAL_SERVICE_UNAVAILABLE": 3,
-		"RETRY_LATER": 4,
-		"INVALID_CONTEXT": 100,
-		"NOT_SUPPORTED": 101,
-		"FORBIDDEN": 102,
-		"FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR": 201,
-	},
-	"RegistrationType": {
-		"PHONE": 0,
-		"EMAIL_WAP": 1,
-		"FACEBOOK": 2305,
-		"SINA": 2306,
-		"RENREN": 2307,
-		"FEIXIN": 2308,
-		"APPLE": 2309,
-		"YAHOOJAPAN": 2310,
-		"GOOGLE": 2311,
-	},
-	"ReportType": {
-		"ADVERTISING": 1,
-		"GENDER_HARASSMENT": 2,
-		"HARASSMENT": 3,
-		"OTHER": 4,
-		"IRRELEVANT_CONTENT": 5,
-		"IMPERSONATION": 6,
-		"SCAM": 7,
-	},
-	"S70_a": {
-		"INTERNAL_ERROR": 0,
-		"ILLEGAL_ARGUMENT": 1,
-		"VERIFICATION_FAILED": 2,
-		"RETRY_LATER": 3,
-		"INVALID_CONTEXT": 100,
-		"APP_UPGRADE_REQUIRED": 101,
-	},
-	"SettingsAttributeEx": {
-		"NOTIFICATION_ENABLE": 0,
-		"NOTIFICATION_MUTE_EXPIRATION": 1,
-		"NOTIFICATION_NEW_MESSAGE": 2,
-		"NOTIFICATION_GROUP_INVITATION": 3,
-		"NOTIFICATION_SHOW_MESSAGE": 4,
-		"NOTIFICATION_INCOMING_CALL": 5,
-		"PRIVACY_SYNC_CONTACTS": 6,
-		"PRIVACY_SEARCH_BY_PHONE_NUMBER": 7,
-		"NOTIFICATION_SOUND_MESSAGE": 8,
-		"NOTIFICATION_SOUND_GROUP": 9,
-		"CONTACT_MY_TICKET": 10,
-		"IDENTITY_PROVIDER": 11,
-		"IDENTITY_IDENTIFIER": 12,
-		"PRIVACY_SEARCH_BY_USERID": 13,
-		"PRIVACY_SEARCH_BY_EMAIL": 14,
-		"PREFERENCE_LOCALE": 15,
-		"NOTIFICATION_DISABLED_WITH_SUB": 16,
-		"NOTIFICATION_PAYMENT": 17,
-		"SECURITY_CENTER_SETTINGS": 18,
-		"SNS_ACCOUNT": 19,
-		"PHONE_REGISTRATION": 20,
-		"PRIVACY_ALLOW_SECONDARY_DEVICE_LOGIN": 21,
-		"CUSTOM_MODE": 22,
-		"PRIVACY_PROFILE_IMAGE_POST_TO_MYHOME": 23,
-		"EMAIL_CONFIRMATION_STATUS": 24,
-		"PRIVACY_RECV_MESSAGES_FROM_NOT_FRIEND": 25,
-		"PRIVACY_AGREE_USE_LINECOIN_TO_PAIDCALL": 26,
-		"PRIVACY_AGREE_USE_PAIDCALL": 27,
-		"ACCOUNT_MIGRATION_PINCODE": 28,
-		"ENFORCED_INPUT_ACCOUNT_MIGRATION_PINCODE": 29,
-		"PRIVACY_ALLOW_FRIEND_REQUEST": 30,
-		"PWLESS_PRIMARY_CREDENTIAL_REGISTRATION": 31,
-		"ALLOWED_TO_CONNECT_EAP_ACCOUNT": 32,
-		"E2EE_ENABLE": 33,
-		"HITOKOTO_BACKUP_REQUESTED": 34,
-		"PRIVACY_PROFILE_MUSIC_POST_TO_MYHOME": 35,
-		"CONTACT_ALLOW_FOLLOWING": 36,
-		"PRIVACY_ALLOW_NEARBY": 37,
-		"AGREEMENT_NEARBY": 38,
-		"AGREEMENT_SQUARE": 39,
-		"NOTIFICATION_MENTION": 40,
-		"ALLOW_UNREGISTRATION_SECONDARY_DEVICE": 41,
-		"AGREEMENT_BOT_USE": 42,
-		"AGREEMENT_SHAKE_FUNCTION": 43,
-		"AGREEMENT_MOBILE_CONTACT_NAME": 44,
-		"NOTIFICATION_THUMBNAIL": 45,
-		"AGREEMENT_SOUND_TO_TEXT": 46,
-		"AGREEMENT_PRIVACY_POLICY_VERSION": 47,
-		"AGREEMENT_AD_BY_WEB_ACCESS": 48,
-		"AGREEMENT_PHONE_NUMBER_MATCHING": 49,
-		"AGREEMENT_COMMUNICATION_INFO": 50,
-		"PRIVACY_SHARE_PERSONAL_INFO_TO_FRIENDS": 51,
-		"AGREEMENT_THINGS_WIRELESS_COMMUNICATION": 52,
-		"AGREEMENT_GDPR": 53,
-		"PRIVACY_STATUS_MESSAGE_HISTORY": 54,
-		"AGREEMENT_PROVIDE_LOCATION": 55,
-		"AGREEMENT_BEACON": 56,
-		"PRIVACY_PROFILE_HISTORY": 57,
-		"AGREEMENT_CONTENTS_SUGGEST": 58,
-		"AGREEMENT_CONTENTS_SUGGEST_DATA_COLLECTION": 59,
-		"PRIVACY_AGE_RESULT": 60,
-		"PRIVACY_AGE_RESULT_RECEIVED": 61,
-		"AGREEMENT_OCR_IMAGE_COLLECTION": 62,
-		"PRIVACY_ALLOW_FOLLOW": 63,
-		"PRIVACY_SHOW_FOLLOW_LIST": 64,
-		"NOTIFICATION_BADGE_TALK_ONLY": 65,
-		"AGREEMENT_ICNA": 66,
-		"NOTIFICATION_REACTION": 67,
-		"AGREEMENT_MID": 68,
-		"HOME_NOTIFICATION_NEW_FRIEND": 69,
-		"HOME_NOTIFICATION_FAVORITE_FRIEND_UPDATE": 70,
-		"HOME_NOTIFICATION_GROUP_MEMBER_UPDATE": 71,
-		"HOME_NOTIFICATION_BIRTHDAY": 72,
-		"AGREEMENT_LINE_OUT_USE": 73,
-		"AGREEMENT_LINE_OUT_PROVIDE_INFO": 74,
-		"NOTIFICATION_SHOW_PROFILE_IMAGE": 75,
-		"AGREEMENT_PDPA": 76,
-		"AGREEMENT_LOCATION_VERSION": 77,
-		"ALLOWED_TO_SHOW_ZHD_PAGE": 78,
-		"AGREEMENT_SNOW_AI_AVATAR": 79,
-		"EAP_ONLY_ACCOUNT_TARGET_COUNTRY": 80,
-		"AGREEMENT_LYP_PREMIUM_ALBUM": 81,
-		"AGREEMENT_LYP_PREMIUM_ALBUM_VERSION": 82,
-		"AGREEMENT_ALBUM_USAGE_DATA": 83,
-		"AGREEMENT_ALBUM_USAGE_DATA_VERSION": 84,
-		"AGREEMENT_LYP_PREMIUM_BACKUP": 85,
-		"AGREEMENT_LYP_PREMIUM_BACKUP_VERSION": 86,
-		"AGREEMENT_OA_AI_ASSISTANT": 87,
-		"AGREEMENT_OA_AI_ASSISTANT_VERSION": 88,
-		"AGREEMENT_LYP_PREMIUM_MULTI_PROFILE": 89,
-		"AGREEMENT_LYP_PREMIUM_MULTI_PROFILE_VERSION": 90,
-		"AGREEMENT_PREMIUM_BACKUP_PREMIUM_TYPE": 91,
-		"AGREEMENT_PDP": 92,
-		"AGREEMENT_PREMIUM_ALBUM_PREMIUM_TYPE": 93,
-		"HOME_NOTIFICATION_NOTE_NOTE_LIKE": 94,
-		"HOME_NOTIFICATION_NOTE_COMMENT": 95,
-		"HOME_NOTIFICATION_NOTE_COMMENT_LIKE": 96,
-		"HOME_NOTIFICATION_NOTE_MENTION": 97,
-		"AGREEMENT_IN_APP_PURCHASE": 98,
-		"AGREEMENT_IN_APP_PURCHASE_VERSION": 99,
-		"HOME_NOTIFICATION_ALBUM_LIKE": 100,
-		"AGREEMENT_TRIGGER_MESSAGE": 101,
-		"AGREEMENT_LYP_PREMIUM_UNSEND": 102,
-		"AGREEMENT_LYP_PREMIUM_UNSEND_VERSION": 103,
-		"AGREEMENT_LYP_PREMIUM_MESSAGE_EDIT": 104,
-		"AGREEMENT_LYP_PREMIUM_MESSAGE_EDIT_VERSION": 105,
-		"NOTIFICATION_NOTE_REACTION": 106,
-		"NOTIFICATION_NOTE_COMMENT": 107,
-		"NOTIFICATION_NOTE_COMMENT_LIKE": 108,
-		"NOTIFICATION_NOTE_MENTION": 109,
-		"NOTIFICATION_ALBUM_LIKE": 110,
-		"PHONE_NUMBER_DELETE_ENABLE": 111,
-		"AGREEMENT_LYP_PREMIUM_MESSAGE_SCHEDULING": 112,
-		"AGREEMENT_LYP_PREMIUM_MESSAGE_SCHEDULING_VERSION": 113,
-		"SECURITY_CARD_REQUIRED": 114,
-		"AGREEMENT_LYP_PREMIUM_MESSAGE_SCHEDULING_PREMIUM_TYPE": 115,
-		"LAB_MESSAGE_EDIT": 116,
-		"LAB_FRIENDS_MANAGEMENT": 117,
-		"AGREEMENT_LYP_PREMIUM_MUTE_MESSAGE": 118,
-		"AGREEMENT_LYP_PREMIUM_MUTE_MESSAGE_VERSION": 119,
-		"AGREEMENT_LYP_PREMIUM_MUTE_MESSAGE_PREMIUM_TYPE": 120,
-	},
-	"SnsIdType": {
-		"FACEBOOK": 1,
-		"SINA": 2,
-		"RENREN": 3,
-		"FEIXIN": 4,
-		"BBM": 5,
-		"APPLE": 6,
-		"YAHOOJAPAN": 7,
-		"GOOGLE": 8,
-	},
-	"SpammerReason": {
-		"OTHER": 0,
-		"ADVERTISING": 1,
-		"GENDER_HARASSMENT": 2,
-		"HARASSMENT": 3,
-		"IMPERSONATION": 4,
-		"SCAM": 5,
-	},
-	"SpotCategory": {
-		"UNKNOWN": 0,
-		"GOURMET": 1,
-		"BEAUTY": 2,
-		"TRAVEL": 3,
-		"SHOPPING": 4,
-		"ENTERTAINMENT": 5,
-		"SPORTS": 6,
-		"TRANSPORT": 7,
-		"LIFE": 8,
-		"HOSPITAL": 9,
-		"FINANCE": 10,
-		"EDUCATION": 11,
-		"OTHER": 12,
-		"ALL": 10000,
-	},
-	"SquareAttribute": {
-		"NAME": 1,
-		"WELCOME_MESSAGE": 2,
-		"PROFILE_IMAGE": 3,
-		"DESCRIPTION": 4,
-		"SEARCHABLE": 6,
-		"CATEGORY": 7,
-		"INVITATION_URL": 8,
-		"ABLE_TO_USE_INVITATION_URL": 9,
-		"STATE": 10,
-		"EMBLEMS": 11,
-		"JOIN_METHOD": 12,
-		"CHANNEL_ID": 13,
-		"SVC_TAGS": 14,
-		"BENEFIT_KEYWORDS": 15,
-		"SNEAK_PEEK_CONTENTS": 16,
-		"EXPIRE_AT": 17,
-		"PROVIDER": 18,
-	},
-	"SquareAuthorityAttribute": {
-		"UPDATE_SQUARE_PROFILE": 1,
-		"INVITE_NEW_MEMBER": 2,
-		"APPROVE_JOIN_REQUEST": 3,
-		"CREATE_POST": 4,
-		"CREATE_OPEN_SQUARE_CHAT": 5,
-		"DELETE_SQUARE_CHAT_OR_POST": 6,
-		"REMOVE_SQUARE_MEMBER": 7,
-		"GRANT_ROLE": 8,
-		"ENABLE_INVITATION_TICKET": 9,
-		"CREATE_CHAT_ANNOUNCEMENT": 10,
-		"UPDATE_MAX_CHAT_MEMBER_COUNT": 11,
-		"USE_READONLY_DEFAULT_CHAT": 12,
-		"SEND_ALL_MENTION": 13,
-	},
-	"SquareChatType": {
-		"OPEN": 1,
-		"SECRET": 2,
-		"ONE_ON_ONE": 3,
-		"SQUARE_DEFAULT": 4,
-	},
-	"SquareMemberAttribute": {
-		"DISPLAY_NAME": 1,
-		"PROFILE_IMAGE": 2,
-		"ABLE_TO_RECEIVE_MESSAGE": 3,
-		"MEMBERSHIP_STATE": 5,
-		"ROLE": 6,
-		"PREFERENCE": 7,
-		"SELF_INTRODUCTION": 8,
-		"SOCIAL_MEDIA_ACCOUNT_URLS": 9,
-	},
-	"SquareMembershipState": {
-		"JOIN_REQUESTED": 1,
-		"JOINED": 2,
-		"REJECTED": 3,
-		"LEFT": 4,
-		"KICK_OUT": 5,
-		"BANNED": 6,
-		"DELETED": 7,
-		"JOIN_REQUEST_WITHDREW": 8,
-		"JOIN_RESERVED": 9,
-		"JOIN_RESERVATION_EXPIRED": 10,
-	},
-	"StickerResourceType": {
-		"STATIC": 1,
-		"ANIMATION": 2,
-		"SOUND": 3,
-		"ANIMATION_SOUND": 4,
-		"POPUP": 5,
-		"POPUP_SOUND": 6,
-		"NAME_TEXT": 7,
-		"PER_STICKER_TEXT": 8,
-	},
-	"SyncCategory": {
-		"PROFILE": 0,
-		"SETTINGS": 1,
-		"OPS": 2,
-		"CONTACT": 3,
-		"RECOMMEND": 4,
-		"BLOCK": 5,
-		"GROUP": 6,
-		"ROOM": 7,
-		"NOTIFICATION": 8,
-		"ADDRESS_BOOK": 9,
-		"MULTI_PROFILE": 10,
-	},
-	"T70_C": {
-		"INITIAL_BACKUP_STATE_UNSPECIFIED": 0,
-		"INITIAL_BACKUP_STATE_READY": 1,
-		"INITIAL_BACKUP_STATE_MESSAGE_ONGOING": 2,
-		"INITIAL_BACKUP_STATE_FINISHED": 3,
-		"INITIAL_BACKUP_STATE_ABORTED": 4,
-		"INITIAL_BACKUP_STATE_MEDIA_ONGOING": 5,
-	},
-	"T70_EnumC14390b": {
-		"UNKNOWN": 0,
-		"PHONE_NUMBER": 1,
-		"EMAIL": 2,
-	},
-	"T70_EnumC14392c": {
-		"UNKNOWN": 0,
-		"SKIP": 1,
-		"PASSWORD": 2,
-		"WEB_BASED": 3,
-		"EMAIL_BASED": 4,
-		"NONE": 11,
-	},
-	"T70_EnumC14406j": {
-		"INTERNAL_ERROR": 0,
-		"ILLEGAL_ARGUMENT": 1,
-		"VERIFICATION_FAILED": 2,
-		"NOT_FOUND": 3,
-		"RETRY_LATER": 4,
-		"HUMAN_VERIFICATION_REQUIRED": 5,
-		"INVALID_CONTEXT": 100,
-		"APP_UPGRADE_REQUIRED": 101,
-	},
-	"T70_K": {
-		"UNKNOWN": 0,
-		"SMS": 1,
-		"IVR": 2,
-		"SMSPULL": 3,
-	},
-	"T70_L": {
-		"PREMIUM_TYPE_UNSPECIFIED": 0,
-		"PREMIUM_TYPE_LYP": 1,
-		"PREMIUM_TYPE_LINE": 2,
-	},
-	"T70_Z0": {
-		"PHONE_VERIF": 1,
-		"EAP_VERIF": 2,
-	},
-	"T70_e1": {
-		"UNKNOWN": 0,
-		"SKIP": 1,
-		"WEB_BASED": 2,
-	},
-	"T70_j1": {
-		"UNKNOWN": 0,
-		"FACEBOOK": 1,
-		"APPLE": 2,
-		"GOOGLE": 3,
-	},
-	"U70_c": {
-		"INTERNAL_ERROR": 0,
-		"FORBIDDEN": 1,
-		"INVALID_CONTEXT": 100,
-	},
-	"Uf_EnumC14873o": {
-		"ANDROID": 1,
-		"IOS": 2,
-	},
-	"VR0_l": {
-		"DEFAULT": 1,
-		"UEN": 2,
-	},
-	"VerificationMethod": {
-		"NO_AVAILABLE": 0,
-		"PIN_VIA_SMS": 1,
-		"CALLERID_INDIGO": 2,
-		"PIN_VIA_TTS": 4,
-		"SKIP": 10,
-	},
-	"VerificationResult": {
-		"FAILED": 0,
-		"OK_NOT_REGISTERED_YET": 1,
-		"OK_REGISTERED_WITH_SAME_DEVICE": 2,
-		"OK_REGISTERED_WITH_ANOTHER_DEVICE": 3,
-	},
-	"WR0_a": {
-		"FREE": 1,
-		"PREMIUM": 2,
-	},
-	"a80_EnumC16644b": {
-		"UNKNOWN": 0,
-		"FACEBOOK": 1,
-		"APPLE": 2,
-		"GOOGLE": 3,
-	},
-	"FetchDirection": {
-		"FORWARD": 1,
-		"BACKWARD": 2,
-	},
-	"LiveTalkEventType": {
-		"NOTIFIED_UPDATE_LIVE_TALK_TITLE": 1,
-		"NOTIFIED_UPDATE_LIVE_TALK_ANNOUNCEMENT": 2,
-		"NOTIFIED_UPDATE_SQUARE_MEMBER_ROLE": 3,
-		"NOTIFIED_UPDATE_LIVE_TALK_ALLOW_REQUEST_TO_SPEAK": 4,
-		"NOTIFIED_UPDATE_SQUARE_MEMBER": 5,
-	},
-	"LiveTalkReportType": {
-		"ADVERTISING": 1,
-		"GENDER_HARASSMENT": 2,
-		"HARASSMENT": 3,
-		"IRRELEVANT_CONTENT": 4,
-		"OTHER": 5,
-		"IMPERSONATION": 6,
-		"SCAM": 7,
-	},
-	"MessageSummaryReportType": {
-		"LEGAL_VIOLATION": 1,
-		"HARASSMENT": 2,
-		"PERSONAL_IDENTIFIER": 3,
-		"FALSE_INFORMATION": 4,
-		"GENDER_HARASSMENT": 5,
-		"OTHER": 6,
-	},
-	"NotificationPostType": {
-		"POST_MENTION": 2,
-		"POST_LIKE": 3,
-		"POST_COMMENT": 4,
-		"POST_COMMENT_MENTION": 5,
-		"POST_COMMENT_LIKE": 6,
-		"POST_RELAY_JOIN": 7,
-	},
-	"SquareEventStatus": {
-		"NORMAL": 1,
-		"ALERT_DISABLED": 2,
-	},
-	"SquareEventType": {
-		"RECEIVE_MESSAGE": 0,
-		"SEND_MESSAGE": 1,
-		"NOTIFIED_JOIN_SQUARE_CHAT": 2,
-		"NOTIFIED_INVITE_INTO_SQUARE_CHAT": 3,
-		"NOTIFIED_LEAVE_SQUARE_CHAT": 4,
-		"NOTIFIED_DESTROY_MESSAGE": 5,
-		"NOTIFIED_MARK_AS_READ": 6,
-		"NOTIFIED_UPDATE_SQUARE_MEMBER_PROFILE": 7,
-		"NOTIFIED_UPDATE_SQUARE": 8,
-		"NOTIFIED_UPDATE_SQUARE_STATUS": 9,
-		"NOTIFIED_UPDATE_SQUARE_AUTHORITY": 10,
-		"NOTIFIED_UPDATE_SQUARE_MEMBER": 11,
-		"NOTIFIED_UPDATE_SQUARE_CHAT": 12,
-		"NOTIFIED_UPDATE_SQUARE_CHAT_STATUS": 13,
-		"NOTIFIED_UPDATE_SQUARE_CHAT_MEMBER": 14,
-		"NOTIFIED_CREATE_SQUARE_MEMBER": 15,
-		"NOTIFIED_CREATE_SQUARE_CHAT_MEMBER": 16,
-		"NOTIFIED_UPDATE_SQUARE_MEMBER_RELATION": 17,
-		"NOTIFIED_SHUTDOWN_SQUARE": 18,
-		"NOTIFIED_KICKOUT_FROM_SQUARE": 19,
-		"NOTIFIED_DELETE_SQUARE_CHAT": 20,
-		"NOTIFICATION_JOIN_REQUEST": 21,
-		"NOTIFICATION_JOINED": 22,
-		"NOTIFICATION_PROMOTED_COADMIN": 23,
-		"NOTIFICATION_PROMOTED_ADMIN": 24,
-		"NOTIFICATION_DEMOTED_MEMBER": 25,
-		"NOTIFICATION_KICKED_OUT": 26,
-		"NOTIFICATION_SQUARE_DELETE": 27,
-		"NOTIFICATION_SQUARE_CHAT_DELETE": 28,
-		"NOTIFICATION_MESSAGE": 29,
-		"NOTIFIED_UPDATE_SQUARE_CHAT_PROFILE_NAME": 30,
-		"NOTIFIED_UPDATE_SQUARE_CHAT_PROFILE_IMAGE": 31,
-		"NOTIFIED_UPDATE_SQUARE_FEATURE_SET": 32,
-		"NOTIFIED_ADD_BOT": 33,
-		"NOTIFIED_REMOVE_BOT": 34,
-		"NOTIFIED_UPDATE_SQUARE_NOTE_STATUS": 36,
-		"NOTIFIED_UPDATE_SQUARE_CHAT_ANNOUNCEMENT": 37,
-		"NOTIFIED_UPDATE_SQUARE_CHAT_MAX_MEMBER_COUNT": 38,
-		"NOTIFICATION_POST_ANNOUNCEMENT": 39,
-		"NOTIFICATION_POST": 40,
-		"MUTATE_MESSAGE": 41,
-		"NOTIFICATION_NEW_CHAT_MEMBER": 42,
-		"NOTIFIED_UPDATE_READONLY_CHAT": 43,
-		"NOTIFIED_UPDATE_MESSAGE_STATUS": 46,
-		"NOTIFICATION_MESSAGE_REACTION": 47,
-		"NOTIFIED_CHAT_POPUP": 48,
-		"NOTIFIED_SYSTEM_MESSAGE": 49,
-		"NOTIFIED_UPDATE_SQUARE_CHAT_FEATURE_SET": 50,
-		"NOTIFIED_UPDATE_LIVE_TALK": 51,
-		"NOTIFICATION_LIVE_TALK": 52,
-		"NOTIFIED_UPDATE_LIVE_TALK_INFO": 53,
-		"NOTIFICATION_THREAD_MESSAGE": 54,
-		"NOTIFICATION_THREAD_MESSAGE_REACTION": 55,
-		"NOTIFIED_UPDATE_THREAD": 56,
-		"NOTIFIED_UPDATE_THREAD_STATUS": 57,
-		"NOTIFIED_UPDATE_THREAD_MEMBER": 58,
-		"NOTIFIED_UPDATE_THREAD_ROOT_MESSAGE": 59,
-		"NOTIFIED_UPDATE_THREAD_ROOT_MESSAGE_STATUS": 60,
-		"NOTIFIED_CREATE_SQUARE_SUBSCRIPTION": 61,
-		"NOTIFIED_UPDATE_SQUARE_SUBSCRIPTION": 62,
-	},
-	"AdScreen": {
-		"CHATROOM": 1,
-		"THREAD_SPACE": 2,
-		"YOUR_THREADS": 3,
-		"NOTE_LIST": 4,
-		"NOTE_END": 5,
-		"WEB_MAIN": 6,
-		"WEB_SEARCH_RESULT": 7,
-	},
-	"BooleanState": {
-		"NONE": 0,
-		"OFF": 1,
-		"ON": 2,
-	},
-	"ChatroomPopupType": {
-		"IMG_TEXT": 1,
-		"TEXT_ONLY": 2,
-		"IMG_ONLY": 3,
-	},
-	"ContentsAttribute": {
-		"NONE": 1,
-		"CONTENTS_HIDDEN": 2,
-	},
-	"FetchType": {
-		"DEFAULT": 1,
-		"PREFETCH_BY_SERVER": 2,
-		"PREFETCH_BY_CLIENT": 3,
-	},
-	"LiveTalkAttribute": {
-		"TITLE": 1,
-		"ALLOW_REQUEST_TO_SPEAK": 2,
-	},
-	"LiveTalkRole": {
-		"HOST": 1,
-		"CO_HOST": 2,
-		"GUEST": 3,
-	},
-	"LiveTalkSpeakerSetting": {
-		"APPROVAL": 1,
-		"ALL": 2,
-	},
-	"LiveTalkType": {
-		"PUBLIC": 1,
-		"PRIVATE": 2,
-	},
-	"MessageReactionType": {
-		"ALL": 0,
-		"UNDO": 1,
-		"NICE": 2,
-		"LOVE": 3,
-		"FUN": 4,
-		"AMAZING": 5,
-		"SAD": 6,
-		"OMG": 7,
-	},
-	"NotifiedMessageType": {
-		"MENTION": 1,
-		"REPLY": 2,
-	},
-	"PopupAttribute": {
-		"NAME": 1,
-		"ACTIVATED": 2,
-		"STARTS_AT": 3,
-		"ENDS_AT": 4,
-		"CONTENT": 5,
-	},
-	"PopupType": {
-		"MAIN": 1,
-		"CHATROOM": 2,
-	},
-	"SquareChatAttribute": {
-		"NAME": 2,
-		"SQUARE_CHAT_IMAGE": 3,
-		"STATE": 4,
-		"TYPE": 5,
-		"MAX_MEMBER_COUNT": 6,
-		"MESSAGE_VISIBILITY": 7,
-		"ABLE_TO_SEARCH_MESSAGE": 8,
-	},
-	"SquareChatFeatureControlState": {
-		"DISABLED": 1,
-		"ENABLED": 2,
-	},
-	"SquareChatMemberAttribute": {
-		"MEMBERSHIP_STATE": 4,
-		"NOTIFICATION_MESSAGE": 6,
-		"NOTIFICATION_NEW_MEMBER": 7,
-		"LEFT_BY_KICK_MESSAGE_LOCAL_ID": 8,
-		"MESSAGE_LOCAL_ID_WHEN_BLOCK": 9,
-	},
-	"SquareChatMembershipState": {
-		"JOINED": 1,
-		"LEFT": 2,
-		"JOIN_RESERVED": 3,
-		"JOIN_RESERVATION_EXPIRED": 4,
-	},
-	"SquareChatState": {
-		"ALIVE": 0,
-		"DELETED": 1,
-		"SUSPENDED": 2,
-	},
-	"SquareEmblem": {
-		"SUPER": 1,
-		"OFFICIAL": 2,
-	},
-	"SquareErrorCode": {
-		"UNKNOWN": 0,
-		"ILLEGAL_ARGUMENT": 400,
-		"AUTHENTICATION_FAILURE": 401,
-		"FORBIDDEN": 403,
-		"NOT_FOUND": 404,
-		"REVISION_MISMATCH": 409,
-		"PRECONDITION_FAILED": 410,
-		"INTERNAL_ERROR": 500,
-		"NOT_IMPLEMENTED": 501,
-		"TRY_AGAIN_LATER": 503,
-		"MAINTENANCE": 505,
-		"NO_PRESENCE_EXISTS": 506,
-	},
-	"SquareFeatureControlState": {
-		"DISABLED": 1,
-		"ENABLED": 2,
-	},
-	"SquareFeatureSetAttribute": {
-		"CREATING_SECRET_SQUARE_CHAT": 1,
-		"INVITING_INTO_OPEN_SQUARE_CHAT": 2,
-		"CREATING_SQUARE_CHAT": 3,
-		"READONLY_DEFAULT_CHAT": 4,
-		"SHOWING_ADVERTISEMENT": 5,
-		"DELEGATE_JOIN_TO_PLUG": 6,
-		"DELEGATE_KICK_OUT_TO_PLUG": 7,
-		"DISABLE_UPDATE_JOIN_METHOD": 8,
-		"DISABLE_TRANSFER_ADMIN": 9,
-		"CREATING_LIVE_TALK": 10,
-		"DISABLE_UPDATE_SEARCHABLE": 11,
-		"SUMMARIZING_MESSAGES": 12,
-		"CREATING_SQUARE_THREAD": 13,
-		"ENABLE_SQUARE_THREAD": 14,
-		"DISABLE_CHANGE_ROLE_CO_ADMIN": 15,
-	},
-	"SquareJoinMethodType": {
-		"NONE": 0,
-		"APPROVAL": 1,
-		"CODE": 2,
-	},
-	"SquareMemberRelationState": {
-		"NONE": 1,
-		"BLOCKED": 2,
-	},
-	"SquareMemberRole": {
-		"ADMIN": 1,
-		"CO_ADMIN": 2,
-		"MEMBER": 10,
-	},
-	"SquareMessageState": {
-		"SENT": 1,
-		"DELETED": 2,
-		"FORBIDDEN": 3,
-		"UNSENT": 4,
-	},
-	"SquareMetadataAttribute": {
-		"EXCLUDED": 1,
-		"NO_AD": 2,
-	},
-	"SquarePreferenceAttribute": {
-		"FAVORITE": 1,
-		"NOTI_FOR_NEW_JOIN_REQUEST": 2,
-	},
-	"SquareProviderType": {
-		"NONE": 0,
-		"UNKNOWN": 1,
-		"YOUTUBE": 2,
-		"OA_FANSPACE": 3,
-		"OA_SHOP": 4,
-	},
-	"SquareState": {
-		"ALIVE": 0,
-		"DELETED": 1,
-		"SUSPENDED": 2,
-	},
-	"SquareThreadAttribute": {
-		"STATE": 1,
-		"EXPIRES_AT": 2,
-		"READ_ONLY_AT": 3,
-	},
-	"SquareThreadMembershipState": {
-		"JOINED": 1,
-		"LEFT": 2,
-	},
-	"SquareThreadState": {
-		"ALIVE": 1,
-		"DELETED": 2,
-	},
-	"SquareType": {
-		"CLOSED": 0,
-		"OPEN": 1,
-	},
-	"TargetChatType": {
-		"ALL": 0,
-		"MIDS": 1,
-		"CATEGORIES": 2,
-		"CHANNEL_ID": 3,
-	},
-	"TargetUserType": {
-		"ALL": 0,
-		"MIDS": 1,
-	},
-	"do0_EnumC23139B": {
-		"CLOUD": 1,
-		"BLE": 2,
-		"BEACON": 3,
-	},
-	"do0_EnumC23147e": {
-		"SUCCESS": 0,
-		"UNKNOWN_ERROR": 1,
-		"BLUETOOTH_NOT_AVAILABLE": 2,
-		"CONNECTION_TIMEOUT": 3,
-		"CONNECTION_ERROR": 4,
-		"CONNECTION_IN_PROGRESS": 5,
-	},
-	"do0_EnumC23148f": {
-		"ONETIME": 0,
-		"AUTOMATIC": 1,
-		"BEACON": 2,
-	},
-	"do0_G": {
-		"SUCCESS": 0,
-		"UNKNOWN_ERROR": 1,
-		"GATT_ERROR": 2,
-		"GATT_OPERATION_NOT_SUPPORTED": 3,
-		"GATT_SERVICE_NOT_FOUND": 4,
-		"GATT_CHARACTERISTIC_NOT_FOUND": 5,
-		"GATT_CONNECTION_CLOSED": 6,
-		"CONNECTION_INVALID": 7,
-	},
-	"do0_M": {
-		"INTERNAL_SERVER_ERROR": 0,
-		"UNAUTHORIZED": 1,
-		"INVALID_REQUEST": 2,
-		"INVALID_STATE": 3,
-		"DEVICE_LIMIT_EXCEEDED": 4096,
-		"UNSUPPORTED_REGION": 4097,
-	},
-	"fN0_EnumC24466B": {
-		"LINE_PREMIUM": 0,
-		"LYP_PREMIUM": 1,
-	},
-	"fN0_EnumC24467C": {
-		"LINE": 1,
-		"YAHOO_JAPAN": 2,
-	},
-	"fN0_EnumC24469a": {
-		"OK": 1,
-		"NOT_SUPPORTED": 2,
-		"UNDEFINED": 3,
-		"NOT_ENOUGH_TICKETS": 4,
-		"NOT_FRIENDS": 5,
-		"NO_AGREEMENT": 6,
-	},
-	"fN0_F": {
-		"OK": 1,
-		"NOT_SUPPORTED": 2,
-		"UNDEFINED": 3,
-		"CONFLICT": 4,
-		"NOT_AVAILABLE": 5,
-		"INVALID_INVITATION": 6,
-		"IN_PAYMENT_FAILURE_STATE": 7,
-	},
-	"fN0_G": {
-		"APPLE": 1,
-		"GOOGLE": 2,
-	},
-	"fN0_H": {
-		"INACTIVE": 1,
-		"ACTIVE_FINITE": 2,
-		"ACTIVE_INFINITE": 3,
-	},
-	"fN0_o": {
-		"AVAILABLE": 1,
-		"ALREADY_SUBSCRIBED": 2,
-	},
-	"fN0_p": {
-		"UNKNOWN": 0,
-		"SOFTBANK_BUNDLE": 1,
-		"YBB_BUNDLE": 2,
-		"YAHOO_MOBILE_BUNDLE": 3,
-		"PPCG_BUNDLE": 4,
-		"ENJOY_BUNDLE": 5,
-		"YAHOO_TRIAL_BUNDLE": 6,
-		"YAHOO_APPLE": 7,
-		"YAHOO_GOOGLE": 8,
-		"LINE_APPLE": 9,
-		"LINE_GOOGLE": 10,
-		"YAHOO_WALLET": 11,
-	},
-	"fN0_q": {
-		"UNKNOWN": 0,
-		"NONE": 1,
-		"ILLEGAL_ARGUMENT": 16641,
-		"NOT_FOUND": 16642,
-		"NOT_AVAILABLE": 16643,
-		"INTERNAL_SERVER_ERROR": 16644,
-		"AUTHENTICATION_FAILED": 16645,
-	},
-	"g80_EnumC24993a": {
-		"INTERNAL_ERROR": 0,
-		"ILLEGAL_ARGUMENT": 1,
-		"INVALID_CONTEXT": 2,
-		"TOO_MANY_REQUESTS": 3,
-	},
-	"h80_EnumC25645e": {
-		"INTERNAL_ERROR": 0,
-		"ILLEGAL_ARGUMENT": 1,
-		"NOT_FOUND": 2,
-		"RETRY_LATER": 3,
-		"INVALID_CONTEXT": 100,
-		"NOT_SUPPORTED": 101,
-	},
-	"I80_EnumC26392b": {
-		"UNKNOWN": 0,
-		"SKIP": 1,
-		"PASSWORD": 2,
-		"EMAIL_BASED": 4,
-		"NONE": 11,
-	},
-	"I80_EnumC26394c": {
-		"PHONE_NUMBER": 0,
-		"APPLE": 1,
-		"GOOGLE": 2,
-	},
-	"I80_EnumC26408j": {
-		"INTERNAL_ERROR": 0,
-		"ILLEGAL_ARGUMENT": 1,
-		"VERIFICATION_FAILED": 2,
-		"NOT_FOUND": 3,
-		"RETRY_LATER": 4,
-		"HUMAN_VERIFICATION_REQUIRED": 5,
-		"INVALID_CONTEXT": 100,
-		"APP_UPGRADE_REQUIRED": 101,
-	},
-	"I80_EnumC26425y": {
-		"UNKNOWN": 0,
-		"SMS": 1,
-		"IVR": 2,
-	},
-	"j80_EnumC27228a": {
-		"AUTHENTICATION_FAILED": 1,
-		"INVALID_STATE": 2,
-		"NOT_AUTHORIZED_DEVICE": 3,
-		"MUST_REFRESH_V3_TOKEN": 4,
-	},
-	"jO0_EnumC27533B": {
-		"PAYMENT_APPLE": 1,
-		"PAYMENT_GOOGLE": 2,
-	},
-	"jO0_EnumC27535b": {
-		"ILLEGAL_ARGUMENT": 0,
-		"AUTHENTICATION_FAILED": 1,
-		"INTERNAL_ERROR": 20,
-		"MESSAGE_DEFINED_ERROR": 29,
-		"MAINTENANCE_ERROR": 33,
-	},
-	"jO0_EnumC27559z": {
-		"PAYMENT_PG_NONE": 0,
-		"PAYMENT_PG_AU": 1,
-		"PAYMENT_PG_AL": 2,
-	},
-	"jf_EnumC27712a": {
-		"NONE": 1,
-		"DOES_NOT_RESPOND": 2,
-		"RESPOND_MANUALLY": 3,
-		"RESPOND_AUTOMATICALLY": 4,
-	},
-	"jf_EnumC27717f": {
-		"UNKNOWN": 0,
-		"BAD_REQUEST": 1,
-		"NOT_FOUND": 2,
-		"FORBIDDEN": 3,
-		"INTERNAL_SERVER_ERROR": 4,
-	},
-	"kf_EnumC28766a": {
-		"ILLEGAL_ARGUMENT": 0,
-		"INTERNAL_ERROR": 1,
-		"UNAUTHORIZED": 2,
-	},
-	"kf_o": {
-		"ANDROID": 0,
-		"IOS": 1,
-	},
-	"kf_p": {
-		"RICHMENU": 0,
-		"TALK_ROOM": 1,
-	},
-	"kf_r": {
-		"WEB": 0,
-		"POSTBACK": 1,
-		"SEND_MESSAGE": 2,
-	},
-	"kf_u": {
-		"CLICK": 0,
-		"IMPRESSION": 1,
-	},
-	"kf_x": {
-		"UNKNOWN": 0,
-		"PROFILE": 1,
-		"TALK_LIST": 2,
-		"OA_CALL": 3,
-	},
-	"n80_o": {
-		"INTERNAL_ERROR": 0,
-		"INVALID_CONTEXT": 100,
-		"FIDO_UNKNOWN_CREDENTIAL_ID": 200,
-		"FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR": 201,
-		"FIDO_UNACCEPTABLE_CONTENT": 202,
-		"FIDO_INVALID_REQUEST": 203,
-	},
-	"o80_e": {
-		"INTERNAL_ERROR": 0,
-		"VERIFICATION_FAILED": 1,
-		"LOGIN_NOT_ALLOWED": 2,
-		"EXTERNAL_SERVICE_UNAVAILABLE": 3,
-		"RETRY_LATER": 4,
-		"NOT_SUPPORTED": 100,
-		"ILLEGAL_ARGUMENT": 101,
-		"INVALID_CONTEXT": 102,
-		"FORBIDDEN": 103,
-		"FIDO_UNKNOWN_CREDENTIAL_ID": 200,
-		"FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR": 201,
-		"FIDO_UNACCEPTABLE_CONTENT": 202,
-		"FIDO_INVALID_REQUEST": 203,
-	},
-	"og_E": {
-		"RUNNING": 1,
-		"CLOSING": 2,
-		"CLOSED": 3,
-		"SUSPEND": 4,
-	},
-	"og_EnumC32661b": {
-		"INACTIVE": 0,
-		"ACTIVE": 1,
-	},
-	"og_EnumC32663d": {
-		"PREMIUM": 0,
-		"VERIFIED": 1,
-		"UNVERIFIED": 2,
-	},
-	"og_EnumC32671l": {
-		"ILLEGAL_ARGUMENT": 0,
-		"AUTHENTICATION_FAILED": 1,
-		"INVALID_STATE": 3,
-		"NOT_FOUND": 5,
-		"INTERNAL_ERROR": 20,
-		"MAINTENANCE_ERROR": 33,
-	},
-	"og_G": {
-		"FREE": 0,
-		"MONTHLY": 1,
-		"PER_PAYMENT": 2,
-	},
-	"og_I": {
-		"OK": 0,
-		"REACHED_TIER_LIMIT": 1,
-		"REACHED_MEMBER_LIMIT": 2,
-		"ALREADY_JOINED": 3,
-		"NOT_SUPPORTED_LINE_VERSION": 4,
-		"BOT_USER_REGION_IS_NOT_MATCH": 5,
-	},
-	"q80_EnumC33651c": {
-		"INTERNAL_ERROR": 0,
-		"ILLEGAL_ARGUMENT": 1,
-		"VERIFICATION_FAILED": 2,
-		"NOT_ALLOWED_QR_CODE_LOGIN": 3,
-		"VERIFICATION_NOTICE_FAILED": 4,
-		"RETRY_LATER": 5,
-		"INVALID_CONTEXT": 100,
-		"APP_UPGRADE_REQUIRED": 101,
-	},
-	"qm_EnumC34112e": {
-		"BUTTON": 1,
-		"ENTRY_SELECTED": 2,
-		"BROADCAST_ENTER": 3,
-		"BROADCAST_LEAVE": 4,
-		"BROADCAST_STAY": 5,
-	},
-	"qm_s": {
-		"ILLEGAL_ARGUMENT": 0,
-		"NOT_FOUND": 5,
-		"INTERNAL_ERROR": 20,
-	},
-	"r80_EnumC34361a": {
-		"PERSONAL_ACCOUNT": 1,
-		"CURRENT_ACCOUNT": 2,
-	},
-	"r80_EnumC34362b": {
-		"BANK_ALL": 1,
-		"BANK_DEPOSIT": 2,
-		"BANK_WITHDRAWAL": 3,
-	},
-	"r80_EnumC34365e": {
-		"BANK": 1,
-		"ATM": 2,
-		"CONVENIENCE_STORE": 3,
-		"DEBIT_CARD": 4,
-		"E_CHANNEL": 5,
-		"VIRTUAL_BANK_ACCOUNT": 6,
-		"AUTO": 7,
-		"CVS_LAWSON": 8,
-		"SEVEN_BANK_DEPOSIT": 9,
-		"CODE_DEPOSIT": 10,
-	},
-	"r80_EnumC34367g": {
-		"AVAILABLE": 0,
-		"DIFFERENT_REGION": 1,
-		"UNSUPPORTED_DEVICE": 2,
-		"PHONE_NUMBER_UNREGISTERED": 3,
-		"UNAVAILABLE_FROM_LINE_PAY": 4,
-		"INVALID_USER": 5,
-	},
-	"r80_EnumC34368h": {
-		"CHARGE": 1,
-		"WITHDRAW": 2,
-	},
-	"r80_EnumC34370j": {
-		"UNKNOWN": 0,
-		"VISA": 1,
-		"MASTER": 2,
-		"AMEX": 3,
-		"DINERS": 4,
-		"JCB": 5,
-	},
-	"r80_EnumC34371k": {
-		"NULL": 0,
-		"ATM": 1,
-		"CONVENIENCE_STORE": 2,
-	},
-	"r80_EnumC34372l": {
-		"SCALE2": 1,
-		"SCALE3": 2,
-		"HDPI": 3,
-		"XHDPI": 4,
-	},
-	"r80_EnumC34374n": {
-		"SUCCESS": 0,
-		"GENERAL_USER_ERROR": 1000,
-		"ACCOUNT_NOT_EXISTS": 1101,
-		"ACCOUNT_INVALID_STATUS": 1102,
-		"ACCOUNT_ALREADY_EXISTS": 1103,
-		"MERCHANT_NOT_EXISTS": 1104,
-		"MERCHANT_INVALID_STATUS": 1105,
-		"AGREEMENT_REQUIRED": 1107,
-		"BLACKLISTED": 1108,
-		"WRONG_PASSWORD": 1109,
-		"INVALID_CREDIT_CARD": 1110,
-		"LIMIT_EXCEEDED": 1111,
-		"CANNOT_PROCEED": 1115,
-		"TOO_WEAK_PASSWORD": 1120,
-		"CANNOT_CREATE_ACCOUNT": 1125,
-		"TEMPORARY_PASSWORD_ERROR": 1130,
-		"MISSING_PARAMETERS": 1140,
-		"NO_VALID_MYCODE_ACCOUNT": 1141,
-		"INSUFFICIENT_BALANCE": 1142,
-		"TRANSACTION_NOT_FOUND": 1150,
-		"TRANSACTION_FINISHED": 1152,
-		"PAYMENT_AMOUNT_WRONG": 1153,
-		"BALANCE_ACCOUNT_NOT_EXISTS": 1157,
-		"DUPLICATED_CITIZEN_ID": 1158,
-		"PAYMENT_REQUEST_NOT_FOUND": 1159,
-		"AUTH_FAILED": 1169,
-		"PASSWORD_SETTING_REQUIRED": 1171,
-		"TRANSACTION_ALREADY_PROCESSED": 1172,
-		"CURRENCY_NOT_SUPPORTED": 1178,
-		"PAYMENT_NOT_AVAILABLE": 1180,
-		"TRANSFER_REQUEST_NOT_FOUND": 1181,
-		"INVALID_PAYMENT_AMOUNT": 1183,
-		"INSUFFICIENT_PAYMENT_AMOUNT": 1184,
-		"EXTERNAL_SYSTEM_MAINTENANCE": 1185,
-		"EXTERNAL_SYSTEM_INOPERATIONAL": 1186,
-		"SESSION_EXPIRED": 1192,
-		"UPGRADE_REQUIRED": 1195,
-		"REQUEST_TOKEN_EXPIRED": 1196,
-		"OPERATION_FINISHED": 1198,
-		"EXTERNAL_SYSTEM_ERROR": 1199,
-		"PARTIAL_AMOUNT_APPROVED": 1299,
-		"PINCODE_AUTH_REQUIRED": 1600,
-		"ADDITIONAL_AUTH_REQUIRED": 1601,
-		"NOT_BOUND": 1603,
-		"OTP_USER_REGISTRATION_ERROR": 1610,
-		"OTP_CARD_REGISTRATION_ERROR": 1611,
-		"NO_AUTH_METHOD": 1612,
-		"GENERAL_USER_ERROR_RESTART": 1696,
-		"GENERAL_USER_ERROR_REFRESH": 1697,
-		"GENERAL_USER_ERROR_CLOSE": 1698,
-		"INTERNAL_SERVER_ERROR": 9000,
-		"INTERNAL_SYSTEM_MAINTENANCE": 9999,
-		"UNKNOWN_ERROR": 10000,
-	},
-	"r80_EnumC34376p": {
-		"TRANSFER": 1,
-		"TRANSFER_REQUEST": 2,
-		"DUTCH": 3,
-		"INVITATION": 4,
-	},
-	"r80_EnumC34377q": {
-		"NULL": 0,
-		"UNIDEN": 1,
-		"WAIT": 2,
-		"IDENTIFIED": 3,
-		"CHECKING": 4,
-	},
-	"r80_EnumC34378s": {
-		"UNKNOWN": 0,
-		"MORE_TAB": 1,
-		"CHAT_ROOM_PLUS_MENU": 2,
-		"TRANSFER": 3,
-		"PAYMENT": 4,
-		"LINECARD": 5,
-		"INVITATION": 6,
-	},
-	"r80_e0": {
-		"NONE": 0,
-		"ONE_TIME_PAYMENT_AGREEMENT": 1,
-		"SIMPLE_JOINING_AGREEMENT": 2,
-		"LINE_CARD_CASH_AGREEMENT": 3,
-		"LINE_CARD_MONEY_AGREEMENT": 4,
-		"JOINING_WITH_LINE_CARD_AGREEMENT": 5,
-		"LINE_CARD_AGREEMENT": 6,
-	},
-	"r80_g0": {
-		"NULL": 0,
-		"ATM": 1,
-		"CONVENIENCE_STORE": 2,
-		"ALL": 3,
-	},
-	"r80_h0": {
-		"READY": 1,
-		"COMPLETE": 2,
-		"WAIT": 3,
-		"CANCEL": 4,
-		"FAIL": 5,
-		"EXPIRE": 6,
-		"ALL": 7,
-	},
-	"r80_i0": {
-		"TRANSFER_ACCEPTABLE": 1,
-		"REMOVE_INVOICE": 2,
-		"INVOICE_CODE": 3,
-		"SHOW_ALWAYS_INVOICE": 4,
-	},
-	"r80_m0": {
-		"OK": 1,
-		"NOT_ALIVE_USER": 2,
-		"NEED_BALANCE_DISCLAIMER": 3,
-		"ECONTEXT_CHARGING_IN_PROGRESS": 4,
-		"TRANSFER_IN_PROGRESS": 6,
-		"OK_REMAINING_BALANCE": 7,
-		"ADVERSE_BALANCE": 8,
-		"CONFIRM_REQUIRED": 9,
-	},
-	"r80_n0": {
-		"LINE": 1,
-		"LINEPAY": 2,
-	},
-	"r80_r": {
-		"CITIZEN_ID": 1,
-		"PASSPORT": 2,
-		"WORK_PERMIT": 3,
-		"ALIEN_CARD": 4,
-	},
-	"t80_h": {
-		"CLIENT": 1,
-		"SERVER": 2,
-	},
-	"t80_i": {
-		"APP_INSTANCE_LOCAL": 1,
-		"APP_TYPE_LOCAL": 2,
-		"GLOBAL": 3,
-	},
-	"t80_n": {
-		"UNKNOWN": 0,
-		"NONE": 1,
-		"ILLEGAL_ARGUMENT": 16641,
-		"NOT_FOUND": 16642,
-		"NOT_AVAILABLE": 16643,
-		"TOO_LARGE_VALUE": 16644,
-		"CLOCK_DRIFT_DETECTED": 16645,
-		"UNSUPPORTED_APPLICATION_TYPE": 16646,
-		"DUPLICATED_ENTRY": 16647,
-		"AUTHENTICATION_FAILED": 16897,
-		"INTERNAL_SERVER_ERROR": 20737,
-		"SERVICE_IN_MAINTENANCE_MODE": 20738,
-		"SERVICE_UNAVAILABLE": 20739,
-	},
-	"t80_r": {
-		"USER_ACTION": 1,
-		"DATA_OUTDATED": 2,
-		"APP_MIGRATION": 3,
-		"OTHER": 100,
-	},
-	"vh_EnumC37632c": {
-		"ACTIVE": 1,
-		"INACTIVE": 2,
-	},
-	"vh_m": {
-		"SAFE": 1,
-		"NOT_SAFE": 2,
-	},
-	"wm_EnumC38497a": {
-		"UNKNOWN": 0,
-		"BOT_NOT_FOUND": 1,
-		"BOT_NOT_AVAILABLE": 2,
-		"NOT_A_MEMBER": 3,
-		"SQUARECHAT_NOT_FOUND": 4,
-		"FORBIDDEN": 5,
-		"ILLEGAL_ARGUMENT": 400,
-		"AUTHENTICATION_FAILED": 401,
-		"INTERNAL_ERROR": 500,
-	},
-	"zR0_EnumC40578c": {
-		"FOREGROUND": 0,
-		"BACKGROUND": 1,
-	},
-	"zR0_EnumC40579d": {
-		"STICKER": 1,
-		"THEME": 2,
-		"STICON": 3,
-	},
-	"zR0_h": {
-		"NORMAL": 0,
-		"BIG": 1,
-	},
-	"zR0_j": {
-		"UNKNOWN": 0,
-		"NONE": 1,
-		"ILLEGAL_ARGUMENT": 16641,
-		"NOT_FOUND": 16642,
-		"NOT_AVAILABLE": 16643,
-		"AUTHENTICATION_FAILED": 16897,
-		"INTERNAL_SERVER_ERROR": 20737,
-		"SERVICE_UNAVAILABLE": 20739,
-	},
-	"zf_EnumC40713a": {
-		"PERSONAL": 1,
-		"ROOM": 2,
-		"GROUP": 3,
-		"SQUARE_CHAT": 4,
-	},
-	"zf_EnumC40715c": {
-		"REGULAR": 1,
-		"PRIORITY": 2,
-		"MORE": 3,
-	},
-	"zf_EnumC40716d": {
-		"INVALID_REQUEST": 1,
-		"UNAUTHORIZED": 2,
-		"SERVER_ERROR": 100,
-	},
-	"LoginResultType": {
-		"SUCCESS": 1,
-		"REQUIRE_QRCODE": 2,
-		"REQUIRE_DEVICE_CONFIRM": 3,
-		"REQUIRE_SMS_CONFIRM": 4,
-	},
-	"F61_EnumC10204a0": {
-		"ALL": 0,
-		"BLOCK": 1,
-		"NOT_BLOCK": 2,
-	},
-	"ForbiddenWordsGroup": {
-		"SQUARE_NAME": 1,
-		"SQUARE_DESCRIPTION": 2,
-		"MEMBER_NAME": 3,
-	},
-	"LMPCode": {
-		"PR01": 1,
-		"PR02": 2,
-		"PR03": 3,
-		"PR04": 4,
-		"PR05": 5,
-		"PR06": 6,
-		"PR07": 7,
-		"PR08": 8,
-		"PR12": 12,
-		"PR13": 13,
-		"PR14": 14,
-		"PR15": 15,
-		"PR16": 16,
-		"PR17": 17,
-		"PR18": 18,
-		"PR60": 60,
-		"PR61": 61,
-		"PR88": 88,
-		"PR99": 99,
-		"PRAUTO00": 100,
-		"PRAUTO01": 101,
-		"PRAUTO99": 199,
-		"NOT_PENALIZED": 500,
-	},
-	"PaidSquareFormState": {
-		"UNDER_REVIEW": 1,
-		"APPROVED": 2,
-		"REJECTED": 3,
-		"REGISTRATION_COMPLETE": 4,
-		"REGISTRATION_FAILED": 5,
-	},
-	"SquareSubscriptionProductRegistrationStatus": {
-		"IN_REVIEW": 1,
-		"APPROVED": 2,
-		"REJECTED": 3,
-		"PENDING": 4,
-	},
-	"SquareSubscriptionStatus": {
-		"ACTIVE": 1,
-		"CANCELLED": 2,
-		"ON_HOLD": 3,
-		"EXPIRED": 4,
-		"REVOKED": 5,
-	},
-	"TermsType": {
-		"AI_QNA_BOT": 1,
-		"PAID_SQUARE_SUBSCRIPTION": 2,
-		"PAID_SQUARE_CREATION": 3,
+	AR0_g: {
+		ILLEGAL_ARGUMENT: 16641,
+		MAJOR_VERSION_NOT_SUPPORTED: 16642,
+		AUTHENTICATION_FAILED: 16897,
+		INTERNAL_SERVER_ERROR: 20737,
+		SERVICE_UNAVAILABLE: 20739,
+	},
+	AR0_q: {
+		NOT_PURCHASED: 0,
+		SUBSCRIPTION: 1,
+	},
+	AccountMigrationPincodeType: {
+		NOT_APPLICABLE: 0,
+		NOT_SET: 1,
+		SET: 2,
+		NEED_ENFORCED_INPUT: 3,
+	},
+	ApplicationType: {
+		IOS: 16,
+		IOS_RC: 17,
+		IOS_BETA: 18,
+		IOS_ALPHA: 19,
+		ANDROID: 32,
+		ANDROID_RC: 33,
+		ANDROID_BETA: 34,
+		ANDROID_ALPHA: 35,
+		WAP: 48,
+		WAP_RC: 49,
+		WAP_BETA: 50,
+		WAP_ALPHA: 51,
+		BOT: 64,
+		BOT_RC: 65,
+		BOT_BETA: 66,
+		BOT_ALPHA: 67,
+		WEB: 80,
+		WEB_RC: 81,
+		WEB_BETA: 82,
+		WEB_ALPHA: 83,
+		DESKTOPWIN: 96,
+		DESKTOPWIN_RC: 97,
+		DESKTOPWIN_BETA: 98,
+		DESKTOPWIN_ALPHA: 99,
+		DESKTOPMAC: 112,
+		DESKTOPMAC_RC: 113,
+		DESKTOPMAC_BETA: 114,
+		DESKTOPMAC_ALPHA: 115,
+		CHANNELGW: 128,
+		CHANNELGW_RC: 129,
+		CHANNELGW_BETA: 130,
+		CHANNELGW_ALPHA: 131,
+		CHANNELCP: 144,
+		CHANNELCP_RC: 145,
+		CHANNELCP_BETA: 146,
+		CHANNELCP_ALPHA: 147,
+		WINPHONE: 160,
+		WINPHONE_RC: 161,
+		WINPHONE_BETA: 162,
+		WINPHONE_ALPHA: 163,
+		BLACKBERRY: 176,
+		BLACKBERRY_RC: 177,
+		BLACKBERRY_BETA: 178,
+		BLACKBERRY_ALPHA: 179,
+		WINMETRO: 192,
+		WINMETRO_RC: 193,
+		WINMETRO_BETA: 194,
+		WINMETRO_ALPHA: 195,
+		S40: 200,
+		S40_RC: 209,
+		S40_BETA: 210,
+		S40_ALPHA: 211,
+		CHRONO: 224,
+		CHRONO_RC: 225,
+		CHRONO_BETA: 226,
+		CHRONO_ALPHA: 227,
+		TIZEN: 256,
+		TIZEN_RC: 257,
+		TIZEN_BETA: 258,
+		TIZEN_ALPHA: 259,
+		VIRTUAL: 272,
+		FIREFOXOS: 288,
+		FIREFOXOS_RC: 289,
+		FIREFOXOS_BETA: 290,
+		FIREFOXOS_ALPHA: 291,
+		IOSIPAD: 304,
+		IOSIPAD_RC: 305,
+		IOSIPAD_BETA: 306,
+		IOSIPAD_ALPHA: 307,
+		BIZIOS: 320,
+		BIZIOS_RC: 321,
+		BIZIOS_BETA: 322,
+		BIZIOS_ALPHA: 323,
+		BIZANDROID: 336,
+		BIZANDROID_RC: 337,
+		BIZANDROID_BETA: 338,
+		BIZANDROID_ALPHA: 339,
+		BIZBOT: 352,
+		BIZBOT_RC: 353,
+		BIZBOT_BETA: 354,
+		BIZBOT_ALPHA: 355,
+		CHROMEOS: 368,
+		CHROMEOS_RC: 369,
+		CHROMEOS_BETA: 370,
+		CHROMEOS_ALPHA: 371,
+		ANDROIDLITE: 384,
+		ANDROIDLITE_RC: 385,
+		ANDROIDLITE_BETA: 386,
+		ANDROIDLITE_ALPHA: 387,
+		WIN10: 400,
+		WIN10_RC: 401,
+		WIN10_BETA: 402,
+		WIN10_ALPHA: 403,
+		BIZWEB: 416,
+		BIZWEB_RC: 417,
+		BIZWEB_BETA: 418,
+		BIZWEB_ALPHA: 419,
+		DUMMYPRIMARY: 432,
+		DUMMYPRIMARY_RC: 433,
+		DUMMYPRIMARY_BETA: 434,
+		DUMMYPRIMARY_ALPHA: 435,
+		SQUARE: 448,
+		SQUARE_RC: 449,
+		SQUARE_BETA: 450,
+		SQUARE_ALPHA: 451,
+		INTERNAL: 464,
+		INTERNAL_RC: 465,
+		INTERNAL_BETA: 466,
+		INTERNAL_ALPHA: 467,
+		CLOVAFRIENDS: 480,
+		CLOVAFRIENDS_RC: 481,
+		CLOVAFRIENDS_BETA: 482,
+		CLOVAFRIENDS_ALPHA: 483,
+		WATCHOS: 496,
+		WATCHOS_RC: 497,
+		WATCHOS_BETA: 498,
+		WATCHOS_ALPHA: 499,
+		OPENCHAT_PLUG: 512,
+		OPENCHAT_PLUG_RC: 513,
+		OPENCHAT_PLUG_BETA: 514,
+		OPENCHAT_PLUG_ALPHA: 515,
+		ANDROIDSECONDARY: 528,
+		ANDROIDSECONDARY_RC: 529,
+		ANDROIDSECONDARY_BETA: 530,
+		ANDROIDSECONDARY_ALPHA: 531,
+		WEAROS: 544,
+		WEAROS_RC: 545,
+		WEAROS_BETA: 546,
+		WEAROS_ALPHA: 547,
+	},
+	BotType: {
+		RESERVED: 0,
+		OFFICIAL: 1,
+		LINE_AT_0: 2,
+		LINE_AT: 3,
+	},
+	CarrierCode: {
+		NOT_SPECIFIED: 0,
+		JP_DOCOMO: 1,
+		JP_AU: 2,
+		JP_SOFTBANK: 3,
+		JP_DOCOMO_LINE: 4,
+		JP_SOFTBANK_LINE: 5,
+		JP_AU_LINE: 6,
+		JP_RAKUTEN: 7,
+		JP_MVNO: 8,
+		JP_USER_SELECTED_LINE: 9,
+		KR_SKT: 17,
+		KR_KT: 18,
+		KR_LGT: 19,
+	},
+	ChannelErrorCode: {
+		ILLEGAL_ARGUMENT: 0,
+		INTERNAL_ERROR: 1,
+		CONNECTION_ERROR: 2,
+		AUTHENTICATIONI_FAILED: 3,
+		NEED_PERMISSION_APPROVAL: 4,
+		COIN_NOT_USABLE: 5,
+		WEBVIEW_NOT_ALLOWED: 6,
+		NOT_AVAILABLE_API: 7,
+	},
+	ContactAttribute: {
+		CONTACT_ATTRIBUTE_CAPABLE_VOICE_CALL: 1,
+		CONTACT_ATTRIBUTE_CAPABLE_VIDEO_CALL: 2,
+		CONTACT_ATTRIBUTE_CAPABLE_MY_HOME: 16,
+		CONTACT_ATTRIBUTE_CAPABLE_BUDDY: 32,
+	},
+	ContactSetting: {
+		CONTACT_SETTING_NOTIFICATION_DISABLE: 1,
+		CONTACT_SETTING_DISPLAY_NAME_OVERRIDE: 2,
+		CONTACT_SETTING_CONTACT_HIDE: 4,
+		CONTACT_SETTING_FAVORITE: 8,
+		CONTACT_SETTING_DELETE: 16,
+		CONTACT_SETTING_FRIEND_RINGTONE: 32,
+		CONTACT_SETTING_FRIEND_RINGBACK_TONE: 64,
+	},
+	ContactStatus: {
+		UNSPECIFIED: 0,
+		FRIEND: 1,
+		FRIEND_BLOCKED: 2,
+		RECOMMEND: 3,
+		RECOMMEND_BLOCKED: 4,
+		DELETED: 5,
+		DELETED_BLOCKED: 6,
+	},
+	ContactType: {
+		MID: 0,
+		PHONE: 1,
+		EMAIL: 2,
+		USERID: 3,
+		PROXIMITY: 4,
+		GROUP: 5,
+		USER: 6,
+		QRCODE: 7,
+		PROMOTION_BOT: 8,
+		CONTACT_MESSAGE: 9,
+		FRIEND_REQUEST: 10,
+		BEACON: 11,
+		REPAIR: 128,
+		FACEBOOK: 2305,
+		SINA: 2306,
+		RENREN: 2307,
+		FEIXIN: 2308,
+		BBM: 2309,
+	},
+	ContentType: {
+		NONE: 0,
+		IMAGE: 1,
+		VIDEO: 2,
+		AUDIO: 3,
+		HTML: 4,
+		PDF: 5,
+		CALL: 6,
+		STICKER: 7,
+		PRESENCE: 8,
+		GIFT: 9,
+		GROUPBOARD: 10,
+		APPLINK: 11,
+		LINK: 12,
+		CONTACT: 13,
+		FILE: 14,
+		LOCATION: 15,
+		POSTNOTIFICATION: 16,
+		RICH: 17,
+		CHATEVENT: 18,
+		MUSIC: 19,
+		PAYMENT: 20,
+		EXTIMAGE: 21,
+		FLEX: 22,
+	},
+	Eg_EnumC8927a: {
+		NEW: 1,
+		UPDATE: 2,
+		EVENT: 3,
+	},
+	EmailConfirmationStatus: {
+		NOT_SPECIFIED: 0,
+		NOT_YET: 1,
+		DONE: 3,
+		NEED_ENFORCED_INPUT: 4,
+	},
+	ErrorCode: {
+		ILLEGAL_ARGUMENT: 0,
+		AUTHENTICATION_FAILED: 1,
+		DB_FAILED: 2,
+		INVALID_STATE: 3,
+		EXCESSIVE_ACCESS: 4,
+		NOT_FOUND: 5,
+		INVALID_LENGTH: 6,
+		NOT_AVAILABLE_USER: 7,
+		NOT_AUTHORIZED_DEVICE: 8,
+		INVALID_MID: 9,
+		NOT_A_MEMBER: 10,
+		INCOMPATIBLE_APP_VERSION: 11,
+		NOT_READY: 12,
+		NOT_AVAILABLE_SESSION: 13,
+		NOT_AUTHORIZED_SESSION: 14,
+		SYSTEM_ERROR: 15,
+		NO_AVAILABLE_VERIFICATION_METHOD: 16,
+		NOT_AUTHENTICATED: 17,
+		INVALID_IDENTITY_CREDENTIAL: 18,
+		NOT_AVAILABLE_IDENTITY_IDENTIFIER: 19,
+		INTERNAL_ERROR: 20,
+		NO_SUCH_IDENTITY_IDENFIER: 21,
+		DEACTIVATED_ACCOUNT_BOUND_TO_THIS_IDENTITY: 22,
+		ILLEGAL_IDENTITY_CREDENTIAL: 23,
+		UNKNOWN_CHANNEL: 24,
+		NO_SUCH_MESSAGE_BOX: 25,
+		NOT_AVAILABLE_MESSAGE_BOX: 26,
+		CHANNEL_DOES_NOT_MATCH: 27,
+		NOT_YOUR_MESSAGE: 28,
+		MESSAGE_DEFINED_ERROR: 29,
+		USER_CANNOT_ACCEPT_PRESENTS: 30,
+		USER_NOT_STICKER_OWNER: 32,
+		MAINTENANCE_ERROR: 33,
+		ACCOUNT_NOT_MATCHED: 34,
+		ABUSE_BLOCK: 35,
+		NOT_FRIEND: 36,
+		NOT_ALLOWED_CALL: 37,
+		BLOCK_FRIEND: 38,
+		INCOMPATIBLE_VOIP_VERSION: 39,
+		INVALID_SNS_ACCESS_TOKEN: 40,
+		EXTERNAL_SERVICE_NOT_AVAILABLE: 41,
+		NOT_ALLOWED_ADD_CONTACT: 42,
+		NOT_CERTIFICATED: 43,
+		NOT_ALLOWED_SECONDARY_DEVICE: 44,
+		INVALID_PIN_CODE: 45,
+		EXCEED_FILE_MAX_SIZE: 47,
+		EXCEED_DAILY_QUOTA: 48,
+		NOT_SUPPORT_SEND_FILE: 49,
+		MUST_UPGRADE: 50,
+		NOT_AVAILABLE_PIN_CODE_SESSION: 51,
+		EXPIRED_REVISION: 52,
+		NOT_YET_PHONE_NUMBER: 54,
+		BAD_CALL_NUMBER: 55,
+		UNAVAILABLE_CALL_NUMBER: 56,
+		NOT_SUPPORT_CALL_SERVICE: 57,
+		CONGESTION_CONTROL: 58,
+		NO_BALANCE: 59,
+		NOT_PERMITTED_CALLER_ID: 60,
+		NO_CALLER_ID_LIMIT_EXCEEDED: 61,
+		CALLER_ID_VERIFICATION_REQUIRED: 62,
+		NO_CALLER_ID_LIMIT_EXCEEDED_AND_VERIFICATION_REQUIRED: 63,
+		MESSAGE_NOT_FOUND: 64,
+		INVALID_ACCOUNT_MIGRATION_PINCODE_FORMAT: 65,
+		ACCOUNT_MIGRATION_PINCODE_NOT_MATCHED: 66,
+		ACCOUNT_MIGRATION_PINCODE_BLOCKED: 67,
+		INVALID_PASSWORD_FORMAT: 69,
+		FEATURE_RESTRICTED: 70,
+		MESSAGE_NOT_DESTRUCTIBLE: 71,
+		PAID_CALL_REDEEM_FAILED: 72,
+		PREVENTED_JOIN_BY_TICKET: 73,
+		SEND_MESSAGE_NOT_PERMITTED_FROM_LINE_AT: 75,
+		SEND_MESSAGE_NOT_PERMITTED_WHILE_AUTO_REPLY: 76,
+		SECURITY_CENTER_NOT_VERIFIED: 77,
+		SECURITY_CENTER_BLOCKED_BY_SETTING: 78,
+		SECURITY_CENTER_BLOCKED: 79,
+		TALK_PROXY_EXCEPTION: 80,
+		E2EE_INVALID_PROTOCOL: 81,
+		E2EE_RETRY_ENCRYPT: 82,
+		E2EE_UPDATE_SENDER_KEY: 83,
+		E2EE_UPDATE_RECEIVER_KEY: 84,
+		E2EE_INVALID_ARGUMENT: 85,
+		E2EE_INVALID_VERSION: 86,
+		E2EE_SENDER_DISABLED: 87,
+		E2EE_RECEIVER_DISABLED: 88,
+		E2EE_SENDER_NOT_ALLOWED: 89,
+		E2EE_RECEIVER_NOT_ALLOWED: 90,
+		E2EE_RESEND_FAIL: 91,
+		E2EE_RESEND_OK: 92,
+		HITOKOTO_BACKUP_NO_AVAILABLE_DATA: 93,
+		E2EE_UPDATE_PRIMARY_DEVICE: 94,
+		SUCCESS: 95,
+		CANCEL: 96,
+		E2EE_PRIMARY_NOT_SUPPORT: 97,
+		E2EE_RETRY_PLAIN: 98,
+		E2EE_RECREATE_GROUP_KEY: 99,
+		E2EE_GROUP_TOO_MANY_MEMBERS: 100,
+		SERVER_BUSY: 101,
+		NOT_ALLOWED_ADD_FOLLOW: 102,
+		INCOMING_FRIEND_REQUEST_LIMIT: 103,
+		OUTGOING_FRIEND_REQUEST_LIMIT: 104,
+		OUTGOING_FRIEND_REQUEST_QUOTA: 105,
+		DUPLICATED: 106,
+		BANNED: 107,
+		NOT_AN_INVITEE: 108,
+		NOT_AN_OUTSIDER: 109,
+		EMPTY_GROUP: 111,
+		EXCEED_FOLLOW_LIMIT: 112,
+		UNSUPPORTED_ACCOUNT_TYPE: 113,
+		AGREEMENT_REQUIRED: 114,
+		SHOULD_RETRY: 115,
+		OVER_MAX_CHATS_PER_USER: 116,
+		NOT_AVAILABLE_API: 117,
+		INVALID_OTP: 118,
+		MUST_REFRESH_V3_TOKEN: 119,
+		ALREADY_EXPIRED: 120,
+		USER_NOT_STICON_OWNER: 121,
+		REFRESH_MEDIA_FLOW: 122,
+		EXCEED_FOLLOWER_LIMIT: 123,
+		INCOMPATIBLE_APP_TYPE: 124,
+		NOT_PREMIUM: 125,
+		BITMAX_ACCOUNT_EXIST: 126,
+		MESSAGE_NOT_EDITABLE: 127,
+		MESSAGE_NOT_EDITABLE_TIMELIMIT: 128,
+		SCHEDULED_MESSAGE_TIMELIMIT: 129,
+		SCHEDULED_MESSAGE_SERVER_TIMESLOT_LIMIT: 130,
+		SCHEDULED_MESSAGE_USER_TOTAL_LIMIT: 131,
+		SCHEDULED_MESSAGE_USER_TIMESLOT_LIMIT: 132,
+		SCHEDULED_MESSAGE_UPDATE_TIMELIMIT: 133,
+		SCHEDULED_MESSAGE_RESCHEDULE_TIMELIMIT: 134,
+		NOT_LAB_ENABLED: 135,
+	},
+	Fg_a: {
+		INTERNAL_ERROR: 0,
+		ILLEGAL_ARGUMENT: 1,
+		VERIFICATION_FAILED: 2,
+		NOT_FOUND: 3,
+		RETRY_LATER: 4,
+		HUMAN_VERIFICATION_REQUIRED: 5,
+		NOT_ENABLED: 6,
+		INVALID_CONTEXT: 100,
+		APP_UPGRADE_REQUIRED: 101,
+		NO_CONTENT: 102,
+	},
+	FriendRequestStatus: {
+		NONE: 0,
+		AVAILABLE: 1,
+		ALREADY_REQUESTED: 2,
+		UNAVAILABLE: 3,
+	},
+	IdentityProvider: {
+		UNKNOWN: 0,
+		LINE: 1,
+		NAVER_KR: 2,
+		LINE_PHONE: 3,
+	},
+	LN0_F0: {
+		UNKNOWN: 0,
+		INVALID_TARGET_USER: 1,
+		AGE_VALIDATION: 2,
+		TOO_MANY_FRIENDS: 3,
+		TOO_MANY_REQUESTS: 4,
+		MALFORMED_REQUEST: 5,
+		TRACKING_META_QRCODE_FAVORED: 6,
+	},
+	LN0_X0: {
+		USER: 1,
+		BOT: 2,
+	},
+	MIDType: {
+		USER: 0,
+		ROOM: 1,
+		GROUP: 2,
+		SQUARE: 3,
+		SQUARE_CHAT: 4,
+		SQUARE_MEMBER: 5,
+		BOT: 6,
+		SQUARE_THREAD: 7,
+	},
+	NZ0_B0: {
+		PAY: 0,
+		POI: 1,
+		FX: 2,
+		SEC: 3,
+		BIT: 4,
+		LIN: 5,
+		SCO: 6,
+		POC: 7,
+	},
+	NZ0_C0: {
+		OK: 0,
+		MAINTENANCE: 1,
+		TPS_EXCEEDED: 2,
+		NOT_FOUND: 3,
+		BLOCKED: 4,
+		INTERNAL_ERROR: 5,
+		WALLET_CMS_MAINTENANCE: 6,
+	},
+	NZ0_EnumC12154b1: {
+		NORMAL: 0,
+		CAMERA: 1,
+	},
+	NZ0_EnumC12169g1: {
+		WALLET: 101,
+		ASSET: 201,
+		SHOPPING: 301,
+	},
+	NZ0_EnumC12170h: {
+		HIDE_BADGE: 0,
+		SHOW_BADGE: 1,
+	},
+	NZ0_EnumC12188n: {
+		OK: 0,
+		UNAVAILABLE: 1,
+		DUPLICATAE_REGISTRATION: 2,
+		INTERNAL_ERROR: 3,
+	},
+	NZ0_EnumC12192o0: {
+		LV1: 0,
+		LV2: 1,
+		LV3: 2,
+		LV9: 3,
+	},
+	NZ0_EnumC12193o1: {
+		INVALID_PARAMETER: 400,
+		AUTHENTICATION_FAILED: 401,
+		INTERNAL_SERVER_ERROR: 500,
+		SERVICE_IN_MAINTENANCE_MODE: 503,
+	},
+	NZ0_EnumC12195p0: {
+		ALIVE: 1,
+		SUSPENDED: 2,
+		UNREGISTERED: 3,
+	},
+	NZ0_EnumC12197q: {
+		PREFIX: 0,
+		SUFFIX: 1,
+	},
+	NZ0_EnumC12218x0: {
+		NO_CONTENT: 0,
+		OK: 1,
+		ERROR: 2,
+	},
+	NZ0_I0: {
+		A: 0,
+		B: 1,
+		C: 2,
+		D: 3,
+		UNKNOWN: 4,
+	},
+	NZ0_K0: {
+		POCKET_MONEY: 0,
+		REFINANCE: 1,
+	},
+	NZ0_N0: {
+		COMPACT: 0,
+		EXPANDED: 1,
+	},
+	NZ0_S0: {
+		CARD: 0,
+		ACTION: 1,
+	},
+	NZ0_W0: {
+		OK: 0,
+		INTERNAL_ERROR: 1,
+	},
+	NotificationStatus: {
+		NOTIFICATION_ITEM_EXIST: 1,
+		TIMELINE_ITEM_EXIST: 2,
+		NOTE_GROUP_NEW_ITEM_EXIST: 4,
+		TIMELINE_BUDDYGROUP_CHANGED: 8,
+		NOTE_ONE_TO_ONE_NEW_ITEM_EXIST: 16,
+		ALBUM_ITEM_EXIST: 32,
+		TIMELINE_ITEM_DELETED: 64,
+		OTOGROUP_ITEM_EXIST: 128,
+		GROUPHOME_NEW_ITEM_EXIST: 256,
+		GROUPHOME_HIDDEN_ITEM_CHANGED: 512,
+		NOTIFICATION_ITEM_CHANGED: 1024,
+		BEAD_ITEM_HIDE: 2048,
+		BEAD_ITEM_SHOW: 4096,
+		LINE_TICKET_UPDATED: 8192,
+		TIMELINE_STORY_UPDATED: 16384,
+		SMARTCH_UPDATED: 32768,
+		AVATAR_UPDATED: 65536,
+		HOME_NOTIFICATION_ITEM_EXIST: 131072,
+		TIMELINE_REBOOT_COMPLETED: 262144,
+		TIMELINE_GUIDE_STORY_UPDATED: 524288,
+		TIMELINE_F2F_COMPLETED: 1048576,
+		VOOM_LIVE_STATE_CHANGED: 2097152,
+		VOOM_ACTIVITY_REWARD_ITEM_EXIST: 4194304,
+		LINE_TODAY_PROFILE_UPDATED: 8388608,
+		AI_FRIENDS_EVENT_EXIST: 16777216,
+		CALENDAR_ITEM_EXIST: 33554432,
+		WALLET_NOTIFICATION_ITEM_EXIST: 67108864,
+	},
+	NotificationType: {
+		APPLE_APNS: 1,
+		GOOGLE_C2DM: 2,
+		NHN_NNI: 3,
+		SKT_AOM: 4,
+		MS_MPNS: 5,
+		RIM_BIS: 6,
+		GOOGLE_GCM: 7,
+		NOKIA_NNAPI: 8,
+		TIZEN: 9,
+		MOZILLA_SIMPLE: 10,
+		LINE_BOT: 17,
+		LINE_WAP: 18,
+		APPLE_APNS_VOIP: 19,
+		MS_WNS: 20,
+		GOOGLE_FCM: 21,
+		CLOVA: 22,
+		CLOVA_VOIP: 23,
+		HUAWEI_HCM: 24,
+	},
+	Ob1_B0: {
+		FOREGROUND: 0,
+		BACKGROUND: 1,
+	},
+	Ob1_C1: {
+		NORMAL: 0,
+		BIG: 1,
+	},
+	Ob1_D0: {
+		PURCHASE_ONLY: 0,
+		PURCHASE_OR_SUBSCRIPTION: 1,
+		SUBSCRIPTION_ONLY: 2,
+	},
+	Ob1_EnumC12607a1: {
+		DEFAULT: 1,
+		VIEW_VIDEO: 2,
+	},
+	Ob1_EnumC12610b1: {
+		NONE: 0,
+		BUDDY: 2,
+		INSTALL: 3,
+		MISSION: 4,
+		MUSTBUY: 5,
+	},
+	Ob1_EnumC12631i1: {
+		UNKNOWN: 0,
+		PRODUCT: 1,
+		USER: 2,
+		PREMIUM_USER: 3,
+	},
+	Ob1_EnumC12638l: {
+		VALID: 0,
+		INVALID: 1,
+	},
+	Ob1_EnumC12641m: {
+		PREMIUM: 1,
+		VERIFIED: 2,
+		UNVERIFIED: 3,
+	},
+	Ob1_EnumC12652p1: {
+		UNKNOWN: 0,
+		NONE: 1,
+		ILLEGAL_ARGUMENT: 16641,
+		NOT_FOUND: 16642,
+		NOT_AVAILABLE: 16643,
+		NOT_PAID_PRODUCT: 16644,
+		NOT_FREE_PRODUCT: 16645,
+		ALREADY_OWNED: 16646,
+		ERROR_WITH_CUSTOM_MESSAGE: 16647,
+		NOT_AVAILABLE_TO_RECIPIENT: 16648,
+		NOT_AVAILABLE_FOR_CHANNEL_ID: 16649,
+		NOT_SALE_FOR_COUNTRY: 16650,
+		NOT_SALES_PERIOD: 16651,
+		NOT_SALE_FOR_DEVICE: 16652,
+		NOT_SALE_FOR_VERSION: 16653,
+		ALREADY_EXPIRED: 16654,
+		LIMIT_EXCEEDED: 16655,
+		MISSING_CAPABILITY: 16656,
+		AUTHENTICATION_FAILED: 16897,
+		BALANCE_SHORTAGE: 17153,
+		INTERNAL_SERVER_ERROR: 20737,
+		SERVICE_IN_MAINTENANCE_MODE: 20738,
+		SERVICE_UNAVAILABLE: 20739,
+	},
+	Ob1_EnumC12656r0: {
+		OK: 0,
+		PRODUCT_UNSUPPORTED: 1,
+		TEXT_NOT_SPECIFIED: 2,
+		TEXT_STYLE_UNAVAILABLE: 3,
+		CHARACTER_COUNT_LIMIT_EXCEEDED: 4,
+		CONTAINS_INVALID_WORD: 5,
+	},
+	Ob1_EnumC12664u: {
+		UNKNOWN: 0,
+		NONE: 1,
+		ILLEGAL_ARGUMENT: 16641,
+		NOT_FOUND: 16642,
+		NOT_AVAILABLE: 16643,
+		MAX_AMOUNT_OF_PRODUCTS_REACHED: 16644,
+		PRODUCT_IS_NOT_PREMIUM: 16645,
+		PRODUCT_IS_NOT_AVAILABLE_FOR_USER: 16646,
+		USER_HAS_NO_VALID_SUBSCRIPTION: 16647,
+		USER_HAS_NO_PRODUCT_OWNERSHIP: 16648,
+		AUTHENTICATION_FAILED: 16897,
+		INTERNAL_SERVER_ERROR: 20737,
+		SERVICE_UNAVAILABLE: 20739,
+	},
+	Ob1_EnumC12666u1: {
+		POPULAR: 0,
+		NEW_RELEASE: 1,
+		EVENT: 2,
+		RECOMMENDED: 3,
+		POPULAR_WEEKLY: 4,
+		POPULAR_MONTHLY: 5,
+		POPULAR_RECENTLY_PUBLISHED: 6,
+		BUDDY: 7,
+		EXTRA_EVENT: 8,
+		BROWSING_HISTORY: 9,
+		POPULAR_TOTAL_SALES: 10,
+		NEW_SUBSCRIPTION: 11,
+		POPULAR_SUBSCRIPTION_30D: 12,
+		CPD_STICKER: 13,
+		POPULAR_WITH_FREE: 14,
+	},
+	Ob1_F1: {
+		STATIC: 1,
+		ANIMATION: 2,
+	},
+	Ob1_I: {
+		STATIC: 0,
+		POPULAR: 1,
+		NEW_RELEASE: 2,
+	},
+	Ob1_J0: {
+		ON_SALE: 0,
+		OUTDATED_VERSION: 1,
+		NOT_ON_SALE: 2,
+	},
+	Ob1_J1: {
+		OK: 0,
+		INVALID_PARAMETER: 1,
+		NOT_FOUND: 2,
+		NOT_SUPPORTED: 3,
+		CONFLICT: 4,
+		NOT_ELIGIBLE: 5,
+	},
+	Ob1_K1: {
+		GOOGLE: 0,
+		APPLE: 1,
+		WEBSTORE: 2,
+		LINEMO: 3,
+		LINE_MUSIC: 4,
+		LYP: 5,
+		TW_CHT: 6,
+		FREEMIUM: 7,
+	},
+	Ob1_M1: {
+		OK: 0,
+		UNKNOWN: 1,
+		NOT_SUPPORTED: 2,
+		NO_SUBSCRIPTION: 3,
+		SUBSCRIPTION_EXISTS: 4,
+		NOT_AVAILABLE: 5,
+		CONFLICT: 6,
+		OUTDATED_VERSION: 7,
+		NO_STUDENT_INFORMATION: 8,
+		ACCOUNT_HOLD: 9,
+		RETRY_STATE: 10,
+	},
+	Ob1_O0: {
+		STICKER: 1,
+		THEME: 2,
+		STICON: 3,
+	},
+	Ob1_O1: {
+		AVAILABLE: 0,
+		DIFFERENT_STORE: 1,
+		NOT_STUDENT: 2,
+		ALREADY_PURCHASED: 3,
+	},
+	Ob1_P1: {
+		GENERAL: 1,
+		STUDENT: 2,
+	},
+	Ob1_Q1: {
+		BASIC: 1,
+		DELUXE: 2,
+	},
+	Ob1_R1: {
+		MONTHLY: 1,
+		YEARLY: 2,
+	},
+	Ob1_U1: {
+		OK: 0,
+		UNKNOWN: 1,
+		NO_SUBSCRIPTION: 2,
+		EXISTS: 3,
+		NOT_FOUND: 4,
+		EXCEEDS_LIMIT: 5,
+		NOT_AVAILABLE: 6,
+	},
+	Ob1_V1: {
+		DATE_ASC: 1,
+		DATE_DESC: 2,
+	},
+	Ob1_X1: {
+		GENERAL: 0,
+		CREATORS: 1,
+		STICON: 2,
+	},
+	Ob1_a2: {
+		NOT_PURCHASED: 0,
+		SUBSCRIPTION: 1,
+		NOT_SUBSCRIBED: 2,
+		NOT_ACCEPTED: 3,
+		NOT_PURCHASED_U2I: 4,
+		BUDDY: 5,
+		TREND: 6,
+	},
+	Ob1_c2: {
+		STATIC: 1,
+		ANIMATION: 2,
+	},
+	OpType: {
+		END_OF_OPERATION: 0,
+		UPDATE_PROFILE: 1,
+		NOTIFIED_UPDATE_PROFILE: 2,
+		REGISTER_USERID: 3,
+		ADD_CONTACT: 4,
+		NOTIFIED_ADD_CONTACT: 5,
+		BLOCK_CONTACT: 6,
+		UNBLOCK_CONTACT: 7,
+		NOTIFIED_RECOMMEND_CONTACT: 8,
+		CREATE_GROUP: 9,
+		UPDATE_GROUP: 10,
+		NOTIFIED_UPDATE_GROUP: 11,
+		INVITE_INTO_GROUP: 12,
+		NOTIFIED_INVITE_INTO_GROUP: 13,
+		LEAVE_GROUP: 14,
+		NOTIFIED_LEAVE_GROUP: 15,
+		ACCEPT_GROUP_INVITATION: 16,
+		NOTIFIED_ACCEPT_GROUP_INVITATION: 17,
+		KICKOUT_FROM_GROUP: 18,
+		NOTIFIED_KICKOUT_FROM_GROUP: 19,
+		CREATE_ROOM: 20,
+		INVITE_INTO_ROOM: 21,
+		NOTIFIED_INVITE_INTO_ROOM: 22,
+		LEAVE_ROOM: 23,
+		NOTIFIED_LEAVE_ROOM: 24,
+		SEND_MESSAGE: 25,
+		RECEIVE_MESSAGE: 26,
+		SEND_MESSAGE_RECEIPT: 27,
+		RECEIVE_MESSAGE_RECEIPT: 28,
+		SEND_CONTENT_RECEIPT: 29,
+		RECEIVE_ANNOUNCEMENT: 30,
+		CANCEL_INVITATION_GROUP: 31,
+		NOTIFIED_CANCEL_INVITATION_GROUP: 32,
+		NOTIFIED_UNREGISTER_USER: 33,
+		REJECT_GROUP_INVITATION: 34,
+		NOTIFIED_REJECT_GROUP_INVITATION: 35,
+		UPDATE_SETTINGS: 36,
+		NOTIFIED_REGISTER_USER: 37,
+		INVITE_VIA_EMAIL: 38,
+		NOTIFIED_REQUEST_RECOVERY: 39,
+		SEND_CHAT_CHECKED: 40,
+		SEND_CHAT_REMOVED: 41,
+		NOTIFIED_FORCE_SYNC: 42,
+		SEND_CONTENT: 43,
+		SEND_MESSAGE_MYHOME: 44,
+		NOTIFIED_UPDATE_CONTENT_PREVIEW: 45,
+		REMOVE_ALL_MESSAGES: 46,
+		NOTIFIED_UPDATE_PURCHASES: 47,
+		DUMMY: 48,
+		UPDATE_CONTACT: 49,
+		NOTIFIED_RECEIVED_CALL: 50,
+		CANCEL_CALL: 51,
+		NOTIFIED_REDIRECT: 52,
+		NOTIFIED_CHANNEL_SYNC: 53,
+		FAILED_SEND_MESSAGE: 54,
+		NOTIFIED_READ_MESSAGE: 55,
+		FAILED_EMAIL_CONFIRMATION: 56,
+		NOTIFIED_CHAT_CONTENT: 58,
+		NOTIFIED_PUSH_NOTICENTER_ITEM: 59,
+		NOTIFIED_JOIN_CHAT: 60,
+		NOTIFIED_LEAVE_CHAT: 61,
+		NOTIFIED_TYPING: 62,
+		FRIEND_REQUEST_ACCEPTED: 63,
+		DESTROY_MESSAGE: 64,
+		NOTIFIED_DESTROY_MESSAGE: 65,
+		UPDATE_PUBLICKEYCHAIN: 66,
+		NOTIFIED_UPDATE_PUBLICKEYCHAIN: 67,
+		NOTIFIED_BLOCK_CONTACT: 68,
+		NOTIFIED_UNBLOCK_CONTACT: 69,
+		UPDATE_GROUPPREFERENCE: 70,
+		NOTIFIED_PAYMENT_EVENT: 71,
+		REGISTER_E2EE_PUBLICKEY: 72,
+		NOTIFIED_E2EE_KEY_EXCHANGE_REQ: 73,
+		NOTIFIED_E2EE_KEY_EXCHANGE_RESP: 74,
+		NOTIFIED_E2EE_MESSAGE_RESEND_REQ: 75,
+		NOTIFIED_E2EE_MESSAGE_RESEND_RESP: 76,
+		NOTIFIED_E2EE_KEY_UPDATE: 77,
+		NOTIFIED_BUDDY_UPDATE_PROFILE: 78,
+		NOTIFIED_UPDATE_LINEAT_TABS: 79,
+		UPDATE_ROOM: 80,
+		NOTIFIED_BEACON_DETECTED: 81,
+		UPDATE_EXTENDED_PROFILE: 82,
+		ADD_FOLLOW: 83,
+		NOTIFIED_ADD_FOLLOW: 84,
+		DELETE_FOLLOW: 85,
+		NOTIFIED_DELETE_FOLLOW: 86,
+		UPDATE_TIMELINE_SETTINGS: 87,
+		NOTIFIED_FRIEND_REQUEST: 88,
+		UPDATE_RINGBACK_TONE: 89,
+		NOTIFIED_POSTBACK: 90,
+		RECEIVE_READ_WATERMARK: 91,
+		NOTIFIED_MESSAGE_DELIVERED: 92,
+		NOTIFIED_UPDATE_CHAT_BAR: 93,
+		NOTIFIED_CHATAPP_INSTALLED: 94,
+		NOTIFIED_CHATAPP_UPDATED: 95,
+		NOTIFIED_CHATAPP_NEW_MARK: 96,
+		NOTIFIED_CHATAPP_DELETED: 97,
+		NOTIFIED_CHATAPP_SYNC: 98,
+		NOTIFIED_UPDATE_MESSAGE: 99,
+		UPDATE_CHATROOMBGM: 100,
+		NOTIFIED_UPDATE_CHATROOMBGM: 101,
+		UPDATE_RINGTONE: 102,
+		UPDATE_USER_SETTINGS: 118,
+		NOTIFIED_UPDATE_STATUS_BAR: 119,
+		CREATE_CHAT: 120,
+		UPDATE_CHAT: 121,
+		NOTIFIED_UPDATE_CHAT: 122,
+		INVITE_INTO_CHAT: 123,
+		NOTIFIED_INVITE_INTO_CHAT: 124,
+		CANCEL_CHAT_INVITATION: 125,
+		NOTIFIED_CANCEL_CHAT_INVITATION: 126,
+		DELETE_SELF_FROM_CHAT: 127,
+		NOTIFIED_DELETE_SELF_FROM_CHAT: 128,
+		ACCEPT_CHAT_INVITATION: 129,
+		NOTIFIED_ACCEPT_CHAT_INVITATION: 130,
+		REJECT_CHAT_INVITATION: 131,
+		DELETE_OTHER_FROM_CHAT: 132,
+		NOTIFIED_DELETE_OTHER_FROM_CHAT: 133,
+		NOTIFIED_CONTACT_CALENDAR_EVENT: 134,
+		NOTIFIED_CONTACT_CALENDAR_EVENT_ALL: 135,
+		UPDATE_THINGS_OPERATIONS: 136,
+		SEND_CHAT_HIDDEN: 137,
+		CHAT_META_SYNC_ALL: 138,
+		SEND_REACTION: 139,
+		NOTIFIED_SEND_REACTION: 140,
+		NOTIFIED_UPDATE_PROFILE_CONTENT: 141,
+		FAILED_DELIVERY_MESSAGE: 142,
+		SEND_ENCRYPTED_E2EE_KEY_REQUESTED: 143,
+		CHANNEL_PAAK_AUTHENTICATION_REQUESTED: 144,
+		UPDATE_PIN_STATE: 145,
+		NOTIFIED_PREMIUMBACKUP_STATE_CHANGED: 146,
+		CREATE_MULTI_PROFILE: 147,
+		MULTI_PROFILE_STATUS_CHANGED: 148,
+		DELETE_MULTI_PROFILE: 149,
+		UPDATE_PROFILE_MAPPING: 150,
+		DELETE_PROFILE_MAPPING: 151,
+		NOTIFIED_DESTROY_NOTICENTER_PUSH: 152,
+		FORCE_KEY_BACKUP_HEADER_VALIDATION: 153,
+		NOTIFIED_GCS_REACTION: 154,
+		UPDATE_MESSAGE_REQUEST_BOX: 155,
+		NOTIFIED_UPDATE_MESSAGE_REQUEST_BOX: 156,
+		NOTIFIED_GCS_REFRESH_CONTENT: 157,
+		EDIT_MESSAGE: 158,
+		NOTIFIED_EDIT_MESSAGE: 159,
+		ADD_SCHEDULED_MESSAGE: 160,
+		UPDATE_SCHEDULED_MESSAGE: 161,
+		DELETE_SCHEDULED_MESSAGE: 162,
+		E2EE_REENCRYPT_SCHEDULED_MESSAGE: 163,
+		SEND_FAILED_SCHEDULED_MESSAGE: 164,
+		SEND_SUCCEEDED_SCHEDULED_MESSAGE: 165,
+		UPDATE_SERVICE_CHAT: 166,
+		MARK_SERVICE_CHAT_AS_READ: 167,
+		UPDATE_SERVICE_CHAT_NOTIFICATION_TEXT: 168,
+		LINE_AUTH_NOTIFICATION: 169,
+	},
+	P70_g: {
+		INVALID_REQUEST: 1000,
+		RETRY_REQUIRED: 1001,
+	},
+	PaidCallType: {
+		OUT: 0,
+		IN: 1,
+		TOLLFREE: 2,
+		RECORD: 3,
+		AD: 4,
+		CS: 5,
+		OA: 6,
+		OAM: 7,
+	},
+	PayloadType: {
+		PAYLOAD_BUY: 101,
+		PAYLOAD_CS: 111,
+		PAYLOAD_BONUS: 121,
+		PAYLOAD_EVENT: 131,
+		PAYLOAD_POINT_AUTO_EXCHANGED: 141,
+		PAYLOAD_POINT_MANUAL_EXCHANGED: 151,
+	},
+	Pb1_A0: {
+		NORMAL: 0,
+		VIDEOCAM: 1,
+		VOIP: 2,
+		RECORD: 3,
+	},
+	Pb1_A3: {
+		UNKNOWN: 0,
+		BACKGROUND_NEW_KEY_CREATED: 1,
+		BACKGROUND_PERIODICAL_VERIFICATION: 2,
+		FOREGROUND_NEW_PIN_REGISTERED: 3,
+		FOREGROUND_VERIFICATION: 4,
+	},
+	Pb1_B: {
+		SIRI: 1,
+		GOOGLE_ASSISTANT: 2,
+		OS_SHARE: 3,
+	},
+	Pb1_D0: {
+		RICH_MENU_ID: 0,
+		STATUS_BAR: 1,
+		BUDDY_CAUTION_NOTICE: 2,
+	},
+	Pb1_D4: {
+		AUDIO: 1,
+		VIDEO: 2,
+		FACEPLAY: 3,
+	},
+	Pb1_D6: {
+		GOOGLE: 0,
+		BAIDU: 1,
+		FOURSQUARE: 2,
+		YAHOOJAPAN: 3,
+		KINGWAY: 4,
+	},
+	Pb1_E7: {
+		UNKNOWN: 0,
+		TALK: 1,
+		SQUARE: 2,
+	},
+	Pb1_EnumC12917a6: {
+		UNKNOWN: 0,
+		APP_FOREGROUND: 1,
+		PERIODIC: 2,
+		MANUAL: 3,
+	},
+	Pb1_EnumC12926b1: {
+		NOT_A_FRIEND: 0,
+		ALWAYS: 1,
+	},
+	Pb1_EnumC12941c2: {
+		BLE_LCS_API_USABLE: 26,
+		PROHIBIT_MINIMIZE_CHANNEL_BROWSER: 27,
+		ALLOW_IOS_WEBKIT: 28,
+		PURCHASE_LCS_API_USABLE: 38,
+		ALLOW_ANDROID_ENABLE_ZOOM: 48,
+	},
+	Pb1_EnumC12945c6: {
+		V1: 1,
+		V2: 2,
+	},
+	Pb1_EnumC12970e3: {
+		USER_AGE_CHECKED: 1,
+		USER_APPROVAL_REQUIRED: 2,
+	},
+	Pb1_EnumC12997g2: {
+		PROFILE: 0,
+		FRIENDS: 1,
+		GROUP: 2,
+	},
+	Pb1_EnumC12998g3: {
+		UNKNOWN: 0,
+		WIFI: 1,
+		CELLULAR_NETWORK: 2,
+	},
+	Pb1_EnumC13009h0: {
+		NORMAL: 1,
+		LOW_BATTERY: 2,
+	},
+	Pb1_EnumC13010h1: {
+		NEW: 1,
+		PLANET: 2,
+	},
+	Pb1_EnumC13015h6: {
+		FORWARD: 0,
+		AUTO_REPLY: 1,
+		SUBORDINATE: 2,
+		REPLY: 3,
+	},
+	Pb1_EnumC13022i: {
+		SKIP: 0,
+		PINCODE: 1,
+		SECURITY_CENTER: 2,
+	},
+	Pb1_EnumC13029i6: {
+		ADD: 0,
+		REMOVE: 1,
+		MODIFY: 2,
+	},
+	Pb1_EnumC13037j0: {
+		UNSPECIFIED: 0,
+		INACTIVE: 1,
+		ACTIVE: 2,
+		DELETED: 3,
+	},
+	Pb1_EnumC13050k: {
+		UNKNOWN: 0,
+		IOS_REDUCED_ACCURACY: 1,
+		IOS_FULL_ACCURACY: 2,
+		AOS_PRECISE_LOCATION: 3,
+		AOS_APPROXIMATE_LOCATION: 4,
+	},
+	Pb1_EnumC13082m3: {
+		SHOW: 0,
+		HIDE: 1,
+	},
+	Pb1_EnumC13093n0: {
+		NONE: 0,
+		TOP: 1,
+	},
+	Pb1_EnumC13127p6: {
+		NORMAL: 0,
+		ALERT_DISABLED: 1,
+		ALWAYS: 2,
+	},
+	Pb1_EnumC13128p7: {
+		UNKNOWN: 0,
+		DIRECT_INVITATION: 1,
+		DIRECT_CHAT: 2,
+		GROUP_INVITATION: 3,
+		GROUP_CHAT: 4,
+		ROOM_INVITATION: 5,
+		ROOM_CHAT: 6,
+		FRIEND_PROFILE: 7,
+		DIRECT_CHAT_SELECTED: 8,
+		GROUP_CHAT_SELECTED: 9,
+		ROOM_CHAT_SELECTED: 10,
+		DEPRECATED: 11,
+	},
+	Pb1_EnumC13148r0: {
+		ALWAYS_HIDDEN: 1,
+		ALWAYS_SHOWN: 2,
+		SHOWN_BY_CONDITION: 3,
+	},
+	Pb1_EnumC13151r3: {
+		ONEWAY: 0,
+		BOTH: 1,
+		NOT_REGISTERED: 2,
+	},
+	Pb1_EnumC13162s0: {
+		NOT_SUSPICIOUS: 1,
+		SUSPICIOUS_00: 2,
+		SUSPICIOUS_01: 3,
+	},
+	Pb1_EnumC13196u6: {
+		COIN: 0,
+		CREDIT: 1,
+		MONTHLY: 2,
+		OAM: 3,
+	},
+	Pb1_EnumC13209v5: {
+		DUMMY: 0,
+		NOTICE: 1,
+		MORETAB: 2,
+		STICKERSHOP: 3,
+		CHANNEL: 4,
+		DENY_KEYWORD: 5,
+		CONNECTIONINFO: 6,
+		BUDDY: 7,
+		TIMELINEINFO: 8,
+		THEMESHOP: 9,
+		CALLRATE: 10,
+		CONFIGURATION: 11,
+		STICONSHOP: 12,
+		SUGGESTDICTIONARY: 13,
+		SUGGESTSETTINGS: 14,
+		USERSETTINGS: 15,
+		ANALYTICSINFO: 16,
+		SEARCHPOPULARKEYWORD: 17,
+		SEARCHNOTICE: 18,
+		TIMELINE: 19,
+		SEARCHPOPULARCATEGORY: 20,
+		EXTENDEDPROFILE: 21,
+		SEASONALMARKETING: 22,
+		NEWSTAB: 23,
+		SUGGESTDICTIONARYV2: 24,
+		CHATAPPSYNC: 25,
+		AGREEMENTS: 26,
+		INSTANTNEWS: 27,
+		EMOJI_MAPPING: 28,
+		SEARCHBARKEYWORDS: 29,
+		SHOPPING: 30,
+		CHAT_EFFECT_BACKGROUND: 31,
+		CHAT_EFFECT_KEYWORD: 32,
+		SEARCHINDEX: 33,
+		HUBTAB: 34,
+		PAY_RULE_UPDATED: 35,
+		SMARTCH: 36,
+		HOME_SERVICE_LIST: 37,
+		TIMELINESTORY: 38,
+		WALLET_TAB: 39,
+		POD_TAB: 40,
+		HOME_SAFETY_CHECK: 41,
+		HOME_SEASONAL_EFFECT: 42,
+		OPENCHAT_MAIN: 43,
+		CHAT_EFFECT_CONTENT_METADATA_TAG: 44,
+		VOOM_LIVE_STATE_CHANGED: 45,
+		PROFILE_STUDIO_N_BADGE: 46,
+		LYP_FONT: 47,
+		TIMELINESTORY_OA: 48,
+		TRAVEL: 49,
+		PORTALTAB_GNB_DOT: 50,
+		NEWS_ROW_TAB: 51,
+		GCS_REFRESH: 52,
+		GCS_REFRESH_ALL: 53,
+		ASSET_META_POPUP: 54,
+		AI_FRIENDS: 55,
+		COMMERCE_TW_TAB: 56,
+		PREMIUM_PRODUCT_DEFINITION: 57,
+		DATAMODE: 58,
+	},
+	Pb1_EnumC13221w3: {
+		UNKNOWN: 0,
+		EUROPEAN_ECONOMIC_AREA: 1,
+	},
+	Pb1_EnumC13222w4: {
+		OBS_VIDEO: 1,
+		OBS_GENERAL: 2,
+		OBS_RINGBACK_TONE: 3,
+	},
+	Pb1_EnumC13237x5: {
+		AUDIO: 1,
+		VIDEO: 2,
+		LIVE: 3,
+		PHOTOBOOTH: 4,
+	},
+	Pb1_EnumC13238x6: {
+		NOT_SPECIFIED: 0,
+		VALID: 1,
+		VERIFICATION_REQUIRED: 2,
+		NOT_PERMITTED: 3,
+		LIMIT_EXCEEDED: 4,
+		LIMIT_EXCEEDED_AND_VERIFICATION_REQUIRED: 5,
+	},
+	Pb1_EnumC13251y5: {
+		STANDARD: 1,
+		CONSTELLA: 2,
+	},
+	Pb1_EnumC13252y6: {
+		ALL: 0,
+		PROFILE: 1,
+		SETTINGS: 2,
+		CONFIGURATIONS: 3,
+		CONTACT: 4,
+		GROUP: 5,
+		E2EE: 6,
+		MESSAGE: 7,
+		MULTI_PROFILE: 8,
+		MESSAGE_REQUEST_BOX: 9,
+		SCHEDULED_MESSAGE: 10,
+	},
+	Pb1_EnumC13260z0: {
+		ON_AIR: 0,
+		LIVE: 1,
+		GLP: 2,
+	},
+	Pb1_EnumC13267z7: {
+		NOTIFICATION_SETTING: 1,
+		ALL: 255,
+	},
+	Pb1_F0: {
+		NA: 0,
+		FRIEND_VIEW: 1,
+		OFFICIAL_ACCOUNT_VIEW: 2,
+	},
+	Pb1_F4: {
+		INCOMING: 1,
+		OUTGOING: 2,
+	},
+	Pb1_F5: {
+		UNKNOWN: 0,
+		SUCCESS: 1,
+		REQUIRE_SERVER_SIDE_EMAIL: 2,
+		REQUIRE_CLIENT_SIDE_EMAIL: 3,
+	},
+	Pb1_F6: {
+		JBU: 0,
+		LIP: 1,
+	},
+	Pb1_G3: {
+		PROMOTION_FRIENDS_INVITE: 1,
+		CAPABILITY_SERVER_SIDE_SMS: 2,
+		LINE_CLIENT_ANALYTICS_CONFIGURATION: 3,
+	},
+	Pb1_G4: {
+		TIMELINE: 1,
+		NEARBY: 2,
+		SQUARE: 3,
+	},
+	Pb1_G6: {
+		NICE: 2,
+		LOVE: 3,
+		FUN: 4,
+		AMAZING: 5,
+		SAD: 6,
+		OMG: 7,
+	},
+	Pb1_H6: {
+		PUBLIC: 0,
+		PRIVATE: 1,
+	},
+	Pb1_I6: {
+		NEVER_SHOW: 0,
+		ONE_WAY: 1,
+		MUTUAL: 2,
+	},
+	Pb1_J4: {
+		OTHER: 0,
+		INITIALIZATION: 1,
+		PERIODIC_SYNC: 2,
+		MANUAL_SYNC: 3,
+		LOCAL_DB_CORRUPTED: 4,
+	},
+	Pb1_K2: {
+		CHANNEL_INFO: 1,
+		CHANNEL_TOKEN: 2,
+		COMMON_DOMAIN: 4,
+		ALL: 255,
+	},
+	Pb1_K6: {
+		EMAIL: 1,
+		DISPLAY_NAME: 2,
+		PHONETIC_NAME: 4,
+		PICTURE: 8,
+		STATUS_MESSAGE: 16,
+		ALLOW_SEARCH_BY_USERID: 32,
+		ALLOW_SEARCH_BY_EMAIL: 64,
+		BUDDY_STATUS: 128,
+		MUSIC_PROFILE: 256,
+		AVATAR_PROFILE: 512,
+		HIDDEN_FROM_LIST: 1024,
+		ALL: 2147483647,
+	},
+	Pb1_L2: {
+		SYNC: 0,
+		REMOVE: 1,
+		REMOVE_ALL: 2,
+	},
+	Pb1_L4: {
+		UNKNOWN: 0,
+		REVISION_GAP_TOO_LARGE_CLIENT: 1,
+		REVISION_GAP_TOO_LARGE_SERVER: 2,
+		OPERATION_EXPIRED: 3,
+		REVISION_HOLE: 4,
+		FORCE_TRIGGERED: 5,
+	},
+	Pb1_M6: {
+		OWNER: 0,
+		FRIEND: 1,
+	},
+	Pb1_N6: {
+		NFT: 1,
+		AVATAR: 2,
+		SNOW: 3,
+		ARCZ: 4,
+		FRENZ: 5,
+	},
+	Pb1_O2: {
+		NAME: 1,
+		PICTURE_STATUS: 2,
+		PREVENTED_JOIN_BY_TICKET: 4,
+		NOTIFICATION_SETTING: 8,
+		INVITATION_TICKET: 16,
+		FAVORITE_TIMESTAMP: 32,
+		CHAT_TYPE: 64,
+		PENALTY: 128,
+	},
+	Pb1_O6: {
+		DEFAULT: 1,
+		MULTI_PROFILE: 2,
+	},
+	Pb1_P6: {
+		HIDDEN: 0,
+		PUBLIC: 1000,
+	},
+	Pb1_Q2: {
+		BACKGROUND: 0,
+		KEYWORD: 1,
+		CONTENT_METADATA_TAG_BASED: 2,
+	},
+	Pb1_R3: {
+		BEACON_AGREEMENT: 1,
+		BLUETOOTH: 2,
+		SHAKE_AGREEMENT: 3,
+		AUTO_SUGGEST: 4,
+		CHATROOM_CAPTURE: 5,
+		CHATROOM_MINIMIZEBROWSER: 6,
+		CHATROOM_MOBILESAFARI: 7,
+		VIDEO_HIGHTLIGHT_WIZARD: 8,
+		CHAT_FOLDER: 9,
+		BLUETOOTH_SCAN: 10,
+		AUTO_SUGGEST_FOLLOW_UP: 11,
+		PHISHING_SITE_DETECTION: 12,
+		SMART_STICKER_SUGGEST: 13,
+	},
+	Pb1_S7: {
+		NONE: 1,
+		ALL: 2,
+	},
+	Pb1_T3: {
+		LOCATION_OS: 1,
+		LOCATION_APP: 2,
+		VIDEO_AUTO_PLAY: 3,
+		HNI: 4,
+		AUTO_SUGGEST_LANG: 5,
+		CHAT_EFFECT_CACHED_CONTENT_LIST: 6,
+		IFA: 7,
+		ACCURACY_MODE: 8,
+	},
+	Pb1_T7: {
+		SYNC: 0,
+		REPORT: 1,
+	},
+	Pb1_V7: {
+		UNSPECIFIED: 0,
+		UNKNOWN: 1,
+		INITIALIZATION: 2,
+		OPERATION: 3,
+		FULL_SYNC: 4,
+		AUTO_REPAIR: 5,
+		MANUAL_REPAIR: 6,
+		INTERNAL: 7,
+		USER_INITIATED: 8,
+		PREMIUM_BACKUP_RESTORE: 9,
+	},
+	Pb1_W2: {
+		ANYONE_IN_CHAT: 0,
+		CREATOR_ONLY: 1,
+		NO_ONE: 2,
+	},
+	Pb1_W3: {
+		ILLEGAL_ARGUMENT: 0,
+		AUTHENTICATION_FAILED: 1,
+		INTERNAL_ERROR: 2,
+		RESTORE_KEY_FIRST: 3,
+		NO_BACKUP: 4,
+		INVALID_PIN: 6,
+		PERMANENTLY_LOCKED: 7,
+		INVALID_PASSWORD: 8,
+		MASTER_KEY_CONFLICT: 9,
+		KEY_BACKUP_HEADER_MISMATCH: 10,
+	},
+	Pb1_X1: {
+		MESSAGE: 0,
+		MESSAGE_NOTIFICATION: 1,
+		NOTIFICATION_CENTER: 2,
+	},
+	Pb1_X2: {
+		MESSAGE: 0,
+		NOTE: 1,
+		CHANNEL: 2,
+	},
+	Pb1_Z2: {
+		GROUP: 0,
+		ROOM: 1,
+		PEER: 2,
+	},
+	Pb1_gd: {
+		OVER: 1,
+		UNDER: 2,
+		UNDEFINED: 3,
+	},
+	Pb1_od: {
+		UNKNOWN: 0,
+		LOCATION: 1,
+	},
+	PointErrorCode: {
+		REQUEST_DUPLICATION: 3001,
+		INVALID_PARAMETER: 3002,
+		NOT_ENOUGH_BALANCE: 3003,
+		AUTHENTICATION_FAIL: 3004,
+		API_ACCESS_FORBIDDEN: 3005,
+		MEMBER_ACCOUNT_NOT_FOUND: 3006,
+		SERVICE_ACCOUNT_NOT_FOUND: 3007,
+		TRANSACTION_NOT_FOUND: 3008,
+		ALREADY_REVERSED_TRANSACTION: 3009,
+		MESSAGE_NOT_READABLE: 3010,
+		HTTP_REQUEST_METHOD_NOT_SUPPORTED: 3011,
+		HTTP_MEDIA_TYPE_NOT_SUPPORTED: 3012,
+		NOT_ALLOWED_TO_DEPOSIT: 3013,
+		NOT_ALLOWED_TO_PAY: 3014,
+		TRANSACTION_ACCESS_FORBIDDEN: 3015,
+		INVALID_SERVICE_CONFIGURATION: 4001,
+		DCS_COMMUNICATION_FAIL: 5004,
+		UPDATE_BALANCE_FAIL: 5007,
+		SYSTEM_MAINTENANCE: 5888,
+		SYSTEM_ERROR: 5999,
+	},
+	Q70_q: {
+		UNKNOWN: 0,
+		FACEBOOK: 1,
+		APPLE: 2,
+		GOOGLE: 3,
+	},
+	Q70_r: {
+		INTERNAL_ERROR: 0,
+		ILLEGAL_ARGUMENT: 1,
+		VERIFICATION_FAILED: 2,
+		RETRY_LATER: 4,
+		HUMAN_VERIFICATION_REQUIRED: 5,
+		APP_UPGRADE_REQUIRED: 101,
+	},
+	Qj_EnumC13584a: {
+		NOT_DETERMINED: 0,
+		RESTRICTED: 1,
+		DENIED: 2,
+		AUTHORIZED: 3,
+	},
+	Qj_EnumC13585b: {
+		WHITE: 1,
+		BLACK: 2,
+	},
+	Qj_EnumC13588e: {
+		LIGHT: 1,
+		DARK: 2,
+	},
+	Qj_EnumC13592i: {
+		ILLEGAL_ARGUMENT: 0,
+		INTERNAL_ERROR: 1,
+		CONNECTION_ERROR: 2,
+		AUTHENTICATION_FAILED: 3,
+		NEED_PERMISSION_APPROVAL: 4,
+		COIN_NOT_USABLE: 5,
+		WEBVIEW_NOT_ALLOWED: 6,
+	},
+	Qj_EnumC13597n: {
+		INVALID_REQUEST: 1,
+		UNAUTHORIZED: 2,
+		CONSENT_REQUIRED: 3,
+		VERSION_UPDATE_REQUIRED: 4,
+		COMPREHENSIVE_AGREEMENT_REQUIRED: 5,
+		SPLASH_SCREEN_REQUIRED: 6,
+		PERMANENT_LINK_INVALID_REQUEST: 7,
+		NO_DESTINATION_URL: 8,
+		SERVICE_ALREADY_TERMINATED: 9,
+		ID_FEDERATION_REQUIRED: 10,
+		SERVER_ERROR: 100,
+	},
+	Qj_EnumC13604v: {
+		GEOLOCATION: 1,
+		ADVERTISING_ID: 2,
+		BLUETOOTH_LE: 3,
+		QR_CODE: 4,
+		ADVERTISING_SDK: 5,
+		ADD_TO_HOME: 6,
+		SHARE_TARGET_MESSAGE: 7,
+		VIDEO_AUTO_PLAY: 8,
+		PROFILE_PLUS: 9,
+		SUBWINDOW_OPEN: 10,
+		SUBWINDOW_COMMON_MODULE: 11,
+		NO_LIFF_REFERRER: 12,
+		SKIP_CHANNEL_VERIFICATION_SCREEN: 13,
+		PROVIDER_PAGE: 14,
+		BASIC_AUTH: 15,
+		SIRI_DONATION: 16,
+	},
+	Qj_EnumC13605w: {
+		ALLOW_DIRECT_LINK: 1,
+		ALLOW_DIRECT_LINK_V2: 2,
+	},
+	Qj_EnumC13606x: {
+		LIGHT: 1,
+		LIGHT_TRANSLUCENT: 2,
+		DARK_TRANSLUCENT: 3,
+		LIGHT_ICON: 4,
+		DARK_ICON: 5,
+	},
+	Qj_a0: {
+		CONCAT: 1,
+		REPLACE: 2,
+	},
+	Qj_e0: {
+		SUCCESS: 0,
+		FAILURE: 1,
+		CANCEL: 2,
+	},
+	Qj_h0: {
+		RIGHT: 1,
+		LEFT: 2,
+	},
+	Qj_i0: {
+		FULL: 1,
+		TALL: 2,
+		COMPACT: 3,
+	},
+	R70_e: {
+		INTERNAL_ERROR: 0,
+		ILLEGAL_ARGUMENT: 1,
+		VERIFICATION_FAILED: 2,
+		EXTERNAL_SERVICE_UNAVAILABLE: 3,
+		RETRY_LATER: 4,
+		INVALID_CONTEXT: 100,
+		NOT_SUPPORTED: 101,
+		FORBIDDEN: 102,
+		FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR: 201,
+	},
+	RegistrationType: {
+		PHONE: 0,
+		EMAIL_WAP: 1,
+		FACEBOOK: 2305,
+		SINA: 2306,
+		RENREN: 2307,
+		FEIXIN: 2308,
+		APPLE: 2309,
+		YAHOOJAPAN: 2310,
+		GOOGLE: 2311,
+	},
+	ReportType: {
+		ADVERTISING: 1,
+		GENDER_HARASSMENT: 2,
+		HARASSMENT: 3,
+		OTHER: 4,
+		IRRELEVANT_CONTENT: 5,
+		IMPERSONATION: 6,
+		SCAM: 7,
+	},
+	S70_a: {
+		INTERNAL_ERROR: 0,
+		ILLEGAL_ARGUMENT: 1,
+		VERIFICATION_FAILED: 2,
+		RETRY_LATER: 3,
+		INVALID_CONTEXT: 100,
+		APP_UPGRADE_REQUIRED: 101,
+	},
+	SettingsAttributeEx: {
+		NOTIFICATION_ENABLE: 0,
+		NOTIFICATION_MUTE_EXPIRATION: 1,
+		NOTIFICATION_NEW_MESSAGE: 2,
+		NOTIFICATION_GROUP_INVITATION: 3,
+		NOTIFICATION_SHOW_MESSAGE: 4,
+		NOTIFICATION_INCOMING_CALL: 5,
+		PRIVACY_SYNC_CONTACTS: 6,
+		PRIVACY_SEARCH_BY_PHONE_NUMBER: 7,
+		NOTIFICATION_SOUND_MESSAGE: 8,
+		NOTIFICATION_SOUND_GROUP: 9,
+		CONTACT_MY_TICKET: 10,
+		IDENTITY_PROVIDER: 11,
+		IDENTITY_IDENTIFIER: 12,
+		PRIVACY_SEARCH_BY_USERID: 13,
+		PRIVACY_SEARCH_BY_EMAIL: 14,
+		PREFERENCE_LOCALE: 15,
+		NOTIFICATION_DISABLED_WITH_SUB: 16,
+		NOTIFICATION_PAYMENT: 17,
+		SECURITY_CENTER_SETTINGS: 18,
+		SNS_ACCOUNT: 19,
+		PHONE_REGISTRATION: 20,
+		PRIVACY_ALLOW_SECONDARY_DEVICE_LOGIN: 21,
+		CUSTOM_MODE: 22,
+		PRIVACY_PROFILE_IMAGE_POST_TO_MYHOME: 23,
+		EMAIL_CONFIRMATION_STATUS: 24,
+		PRIVACY_RECV_MESSAGES_FROM_NOT_FRIEND: 25,
+		PRIVACY_AGREE_USE_LINECOIN_TO_PAIDCALL: 26,
+		PRIVACY_AGREE_USE_PAIDCALL: 27,
+		ACCOUNT_MIGRATION_PINCODE: 28,
+		ENFORCED_INPUT_ACCOUNT_MIGRATION_PINCODE: 29,
+		PRIVACY_ALLOW_FRIEND_REQUEST: 30,
+		PWLESS_PRIMARY_CREDENTIAL_REGISTRATION: 31,
+		ALLOWED_TO_CONNECT_EAP_ACCOUNT: 32,
+		E2EE_ENABLE: 33,
+		HITOKOTO_BACKUP_REQUESTED: 34,
+		PRIVACY_PROFILE_MUSIC_POST_TO_MYHOME: 35,
+		CONTACT_ALLOW_FOLLOWING: 36,
+		PRIVACY_ALLOW_NEARBY: 37,
+		AGREEMENT_NEARBY: 38,
+		AGREEMENT_SQUARE: 39,
+		NOTIFICATION_MENTION: 40,
+		ALLOW_UNREGISTRATION_SECONDARY_DEVICE: 41,
+		AGREEMENT_BOT_USE: 42,
+		AGREEMENT_SHAKE_FUNCTION: 43,
+		AGREEMENT_MOBILE_CONTACT_NAME: 44,
+		NOTIFICATION_THUMBNAIL: 45,
+		AGREEMENT_SOUND_TO_TEXT: 46,
+		AGREEMENT_PRIVACY_POLICY_VERSION: 47,
+		AGREEMENT_AD_BY_WEB_ACCESS: 48,
+		AGREEMENT_PHONE_NUMBER_MATCHING: 49,
+		AGREEMENT_COMMUNICATION_INFO: 50,
+		PRIVACY_SHARE_PERSONAL_INFO_TO_FRIENDS: 51,
+		AGREEMENT_THINGS_WIRELESS_COMMUNICATION: 52,
+		AGREEMENT_GDPR: 53,
+		PRIVACY_STATUS_MESSAGE_HISTORY: 54,
+		AGREEMENT_PROVIDE_LOCATION: 55,
+		AGREEMENT_BEACON: 56,
+		PRIVACY_PROFILE_HISTORY: 57,
+		AGREEMENT_CONTENTS_SUGGEST: 58,
+		AGREEMENT_CONTENTS_SUGGEST_DATA_COLLECTION: 59,
+		PRIVACY_AGE_RESULT: 60,
+		PRIVACY_AGE_RESULT_RECEIVED: 61,
+		AGREEMENT_OCR_IMAGE_COLLECTION: 62,
+		PRIVACY_ALLOW_FOLLOW: 63,
+		PRIVACY_SHOW_FOLLOW_LIST: 64,
+		NOTIFICATION_BADGE_TALK_ONLY: 65,
+		AGREEMENT_ICNA: 66,
+		NOTIFICATION_REACTION: 67,
+		AGREEMENT_MID: 68,
+		HOME_NOTIFICATION_NEW_FRIEND: 69,
+		HOME_NOTIFICATION_FAVORITE_FRIEND_UPDATE: 70,
+		HOME_NOTIFICATION_GROUP_MEMBER_UPDATE: 71,
+		HOME_NOTIFICATION_BIRTHDAY: 72,
+		AGREEMENT_LINE_OUT_USE: 73,
+		AGREEMENT_LINE_OUT_PROVIDE_INFO: 74,
+		NOTIFICATION_SHOW_PROFILE_IMAGE: 75,
+		AGREEMENT_PDPA: 76,
+		AGREEMENT_LOCATION_VERSION: 77,
+		ALLOWED_TO_SHOW_ZHD_PAGE: 78,
+		AGREEMENT_SNOW_AI_AVATAR: 79,
+		EAP_ONLY_ACCOUNT_TARGET_COUNTRY: 80,
+		AGREEMENT_LYP_PREMIUM_ALBUM: 81,
+		AGREEMENT_LYP_PREMIUM_ALBUM_VERSION: 82,
+		AGREEMENT_ALBUM_USAGE_DATA: 83,
+		AGREEMENT_ALBUM_USAGE_DATA_VERSION: 84,
+		AGREEMENT_LYP_PREMIUM_BACKUP: 85,
+		AGREEMENT_LYP_PREMIUM_BACKUP_VERSION: 86,
+		AGREEMENT_OA_AI_ASSISTANT: 87,
+		AGREEMENT_OA_AI_ASSISTANT_VERSION: 88,
+		AGREEMENT_LYP_PREMIUM_MULTI_PROFILE: 89,
+		AGREEMENT_LYP_PREMIUM_MULTI_PROFILE_VERSION: 90,
+		AGREEMENT_PREMIUM_BACKUP_PREMIUM_TYPE: 91,
+		AGREEMENT_PDP: 92,
+		AGREEMENT_PREMIUM_ALBUM_PREMIUM_TYPE: 93,
+		HOME_NOTIFICATION_NOTE_NOTE_LIKE: 94,
+		HOME_NOTIFICATION_NOTE_COMMENT: 95,
+		HOME_NOTIFICATION_NOTE_COMMENT_LIKE: 96,
+		HOME_NOTIFICATION_NOTE_MENTION: 97,
+		AGREEMENT_IN_APP_PURCHASE: 98,
+		AGREEMENT_IN_APP_PURCHASE_VERSION: 99,
+		HOME_NOTIFICATION_ALBUM_LIKE: 100,
+		AGREEMENT_TRIGGER_MESSAGE: 101,
+		AGREEMENT_LYP_PREMIUM_UNSEND: 102,
+		AGREEMENT_LYP_PREMIUM_UNSEND_VERSION: 103,
+		AGREEMENT_LYP_PREMIUM_MESSAGE_EDIT: 104,
+		AGREEMENT_LYP_PREMIUM_MESSAGE_EDIT_VERSION: 105,
+		NOTIFICATION_NOTE_REACTION: 106,
+		NOTIFICATION_NOTE_COMMENT: 107,
+		NOTIFICATION_NOTE_COMMENT_LIKE: 108,
+		NOTIFICATION_NOTE_MENTION: 109,
+		NOTIFICATION_ALBUM_LIKE: 110,
+		PHONE_NUMBER_DELETE_ENABLE: 111,
+		AGREEMENT_LYP_PREMIUM_MESSAGE_SCHEDULING: 112,
+		AGREEMENT_LYP_PREMIUM_MESSAGE_SCHEDULING_VERSION: 113,
+		SECURITY_CARD_REQUIRED: 114,
+		AGREEMENT_LYP_PREMIUM_MESSAGE_SCHEDULING_PREMIUM_TYPE: 115,
+		LAB_MESSAGE_EDIT: 116,
+		LAB_FRIENDS_MANAGEMENT: 117,
+		AGREEMENT_LYP_PREMIUM_MUTE_MESSAGE: 118,
+		AGREEMENT_LYP_PREMIUM_MUTE_MESSAGE_VERSION: 119,
+		AGREEMENT_LYP_PREMIUM_MUTE_MESSAGE_PREMIUM_TYPE: 120,
+	},
+	SnsIdType: {
+		FACEBOOK: 1,
+		SINA: 2,
+		RENREN: 3,
+		FEIXIN: 4,
+		BBM: 5,
+		APPLE: 6,
+		YAHOOJAPAN: 7,
+		GOOGLE: 8,
+	},
+	SpammerReason: {
+		OTHER: 0,
+		ADVERTISING: 1,
+		GENDER_HARASSMENT: 2,
+		HARASSMENT: 3,
+		IMPERSONATION: 4,
+		SCAM: 5,
+	},
+	SpotCategory: {
+		UNKNOWN: 0,
+		GOURMET: 1,
+		BEAUTY: 2,
+		TRAVEL: 3,
+		SHOPPING: 4,
+		ENTERTAINMENT: 5,
+		SPORTS: 6,
+		TRANSPORT: 7,
+		LIFE: 8,
+		HOSPITAL: 9,
+		FINANCE: 10,
+		EDUCATION: 11,
+		OTHER: 12,
+		ALL: 10000,
+	},
+	SquareAttribute: {
+		NAME: 1,
+		WELCOME_MESSAGE: 2,
+		PROFILE_IMAGE: 3,
+		DESCRIPTION: 4,
+		SEARCHABLE: 6,
+		CATEGORY: 7,
+		INVITATION_URL: 8,
+		ABLE_TO_USE_INVITATION_URL: 9,
+		STATE: 10,
+		EMBLEMS: 11,
+		JOIN_METHOD: 12,
+		CHANNEL_ID: 13,
+		SVC_TAGS: 14,
+		BENEFIT_KEYWORDS: 15,
+		SNEAK_PEEK_CONTENTS: 16,
+		EXPIRE_AT: 17,
+		PROVIDER: 18,
+	},
+	SquareAuthorityAttribute: {
+		UPDATE_SQUARE_PROFILE: 1,
+		INVITE_NEW_MEMBER: 2,
+		APPROVE_JOIN_REQUEST: 3,
+		CREATE_POST: 4,
+		CREATE_OPEN_SQUARE_CHAT: 5,
+		DELETE_SQUARE_CHAT_OR_POST: 6,
+		REMOVE_SQUARE_MEMBER: 7,
+		GRANT_ROLE: 8,
+		ENABLE_INVITATION_TICKET: 9,
+		CREATE_CHAT_ANNOUNCEMENT: 10,
+		UPDATE_MAX_CHAT_MEMBER_COUNT: 11,
+		USE_READONLY_DEFAULT_CHAT: 12,
+		SEND_ALL_MENTION: 13,
+	},
+	SquareChatType: {
+		OPEN: 1,
+		SECRET: 2,
+		ONE_ON_ONE: 3,
+		SQUARE_DEFAULT: 4,
+	},
+	SquareMemberAttribute: {
+		DISPLAY_NAME: 1,
+		PROFILE_IMAGE: 2,
+		ABLE_TO_RECEIVE_MESSAGE: 3,
+		MEMBERSHIP_STATE: 5,
+		ROLE: 6,
+		PREFERENCE: 7,
+		SELF_INTRODUCTION: 8,
+		SOCIAL_MEDIA_ACCOUNT_URLS: 9,
+	},
+	SquareMembershipState: {
+		JOIN_REQUESTED: 1,
+		JOINED: 2,
+		REJECTED: 3,
+		LEFT: 4,
+		KICK_OUT: 5,
+		BANNED: 6,
+		DELETED: 7,
+		JOIN_REQUEST_WITHDREW: 8,
+		JOIN_RESERVED: 9,
+		JOIN_RESERVATION_EXPIRED: 10,
+	},
+	StickerResourceType: {
+		STATIC: 1,
+		ANIMATION: 2,
+		SOUND: 3,
+		ANIMATION_SOUND: 4,
+		POPUP: 5,
+		POPUP_SOUND: 6,
+		NAME_TEXT: 7,
+		PER_STICKER_TEXT: 8,
+	},
+	SyncCategory: {
+		PROFILE: 0,
+		SETTINGS: 1,
+		OPS: 2,
+		CONTACT: 3,
+		RECOMMEND: 4,
+		BLOCK: 5,
+		GROUP: 6,
+		ROOM: 7,
+		NOTIFICATION: 8,
+		ADDRESS_BOOK: 9,
+		MULTI_PROFILE: 10,
+	},
+	T70_C: {
+		INITIAL_BACKUP_STATE_UNSPECIFIED: 0,
+		INITIAL_BACKUP_STATE_READY: 1,
+		INITIAL_BACKUP_STATE_MESSAGE_ONGOING: 2,
+		INITIAL_BACKUP_STATE_FINISHED: 3,
+		INITIAL_BACKUP_STATE_ABORTED: 4,
+		INITIAL_BACKUP_STATE_MEDIA_ONGOING: 5,
+	},
+	T70_EnumC14390b: {
+		UNKNOWN: 0,
+		PHONE_NUMBER: 1,
+		EMAIL: 2,
+	},
+	T70_EnumC14392c: {
+		UNKNOWN: 0,
+		SKIP: 1,
+		PASSWORD: 2,
+		WEB_BASED: 3,
+		EMAIL_BASED: 4,
+		NONE: 11,
+	},
+	T70_EnumC14406j: {
+		INTERNAL_ERROR: 0,
+		ILLEGAL_ARGUMENT: 1,
+		VERIFICATION_FAILED: 2,
+		NOT_FOUND: 3,
+		RETRY_LATER: 4,
+		HUMAN_VERIFICATION_REQUIRED: 5,
+		INVALID_CONTEXT: 100,
+		APP_UPGRADE_REQUIRED: 101,
+	},
+	T70_K: {
+		UNKNOWN: 0,
+		SMS: 1,
+		IVR: 2,
+		SMSPULL: 3,
+	},
+	T70_L: {
+		PREMIUM_TYPE_UNSPECIFIED: 0,
+		PREMIUM_TYPE_LYP: 1,
+		PREMIUM_TYPE_LINE: 2,
+	},
+	T70_Z0: {
+		PHONE_VERIF: 1,
+		EAP_VERIF: 2,
+	},
+	T70_e1: {
+		UNKNOWN: 0,
+		SKIP: 1,
+		WEB_BASED: 2,
+	},
+	T70_j1: {
+		UNKNOWN: 0,
+		FACEBOOK: 1,
+		APPLE: 2,
+		GOOGLE: 3,
+	},
+	U70_c: {
+		INTERNAL_ERROR: 0,
+		FORBIDDEN: 1,
+		INVALID_CONTEXT: 100,
+	},
+	Uf_EnumC14873o: {
+		ANDROID: 1,
+		IOS: 2,
+	},
+	VR0_l: {
+		DEFAULT: 1,
+		UEN: 2,
+	},
+	VerificationMethod: {
+		NO_AVAILABLE: 0,
+		PIN_VIA_SMS: 1,
+		CALLERID_INDIGO: 2,
+		PIN_VIA_TTS: 4,
+		SKIP: 10,
+	},
+	VerificationResult: {
+		FAILED: 0,
+		OK_NOT_REGISTERED_YET: 1,
+		OK_REGISTERED_WITH_SAME_DEVICE: 2,
+		OK_REGISTERED_WITH_ANOTHER_DEVICE: 3,
+	},
+	WR0_a: {
+		FREE: 1,
+		PREMIUM: 2,
+	},
+	a80_EnumC16644b: {
+		UNKNOWN: 0,
+		FACEBOOK: 1,
+		APPLE: 2,
+		GOOGLE: 3,
+	},
+	FetchDirection: {
+		FORWARD: 1,
+		BACKWARD: 2,
+	},
+	LiveTalkEventType: {
+		NOTIFIED_UPDATE_LIVE_TALK_TITLE: 1,
+		NOTIFIED_UPDATE_LIVE_TALK_ANNOUNCEMENT: 2,
+		NOTIFIED_UPDATE_SQUARE_MEMBER_ROLE: 3,
+		NOTIFIED_UPDATE_LIVE_TALK_ALLOW_REQUEST_TO_SPEAK: 4,
+		NOTIFIED_UPDATE_SQUARE_MEMBER: 5,
+	},
+	LiveTalkReportType: {
+		ADVERTISING: 1,
+		GENDER_HARASSMENT: 2,
+		HARASSMENT: 3,
+		IRRELEVANT_CONTENT: 4,
+		OTHER: 5,
+		IMPERSONATION: 6,
+		SCAM: 7,
+	},
+	MessageSummaryReportType: {
+		LEGAL_VIOLATION: 1,
+		HARASSMENT: 2,
+		PERSONAL_IDENTIFIER: 3,
+		FALSE_INFORMATION: 4,
+		GENDER_HARASSMENT: 5,
+		OTHER: 6,
+	},
+	NotificationPostType: {
+		POST_MENTION: 2,
+		POST_LIKE: 3,
+		POST_COMMENT: 4,
+		POST_COMMENT_MENTION: 5,
+		POST_COMMENT_LIKE: 6,
+		POST_RELAY_JOIN: 7,
+	},
+	SquareEventStatus: {
+		NORMAL: 1,
+		ALERT_DISABLED: 2,
+	},
+	SquareEventType: {
+		RECEIVE_MESSAGE: 0,
+		SEND_MESSAGE: 1,
+		NOTIFIED_JOIN_SQUARE_CHAT: 2,
+		NOTIFIED_INVITE_INTO_SQUARE_CHAT: 3,
+		NOTIFIED_LEAVE_SQUARE_CHAT: 4,
+		NOTIFIED_DESTROY_MESSAGE: 5,
+		NOTIFIED_MARK_AS_READ: 6,
+		NOTIFIED_UPDATE_SQUARE_MEMBER_PROFILE: 7,
+		NOTIFIED_UPDATE_SQUARE: 8,
+		NOTIFIED_UPDATE_SQUARE_STATUS: 9,
+		NOTIFIED_UPDATE_SQUARE_AUTHORITY: 10,
+		NOTIFIED_UPDATE_SQUARE_MEMBER: 11,
+		NOTIFIED_UPDATE_SQUARE_CHAT: 12,
+		NOTIFIED_UPDATE_SQUARE_CHAT_STATUS: 13,
+		NOTIFIED_UPDATE_SQUARE_CHAT_MEMBER: 14,
+		NOTIFIED_CREATE_SQUARE_MEMBER: 15,
+		NOTIFIED_CREATE_SQUARE_CHAT_MEMBER: 16,
+		NOTIFIED_UPDATE_SQUARE_MEMBER_RELATION: 17,
+		NOTIFIED_SHUTDOWN_SQUARE: 18,
+		NOTIFIED_KICKOUT_FROM_SQUARE: 19,
+		NOTIFIED_DELETE_SQUARE_CHAT: 20,
+		NOTIFICATION_JOIN_REQUEST: 21,
+		NOTIFICATION_JOINED: 22,
+		NOTIFICATION_PROMOTED_COADMIN: 23,
+		NOTIFICATION_PROMOTED_ADMIN: 24,
+		NOTIFICATION_DEMOTED_MEMBER: 25,
+		NOTIFICATION_KICKED_OUT: 26,
+		NOTIFICATION_SQUARE_DELETE: 27,
+		NOTIFICATION_SQUARE_CHAT_DELETE: 28,
+		NOTIFICATION_MESSAGE: 29,
+		NOTIFIED_UPDATE_SQUARE_CHAT_PROFILE_NAME: 30,
+		NOTIFIED_UPDATE_SQUARE_CHAT_PROFILE_IMAGE: 31,
+		NOTIFIED_UPDATE_SQUARE_FEATURE_SET: 32,
+		NOTIFIED_ADD_BOT: 33,
+		NOTIFIED_REMOVE_BOT: 34,
+		NOTIFIED_UPDATE_SQUARE_NOTE_STATUS: 36,
+		NOTIFIED_UPDATE_SQUARE_CHAT_ANNOUNCEMENT: 37,
+		NOTIFIED_UPDATE_SQUARE_CHAT_MAX_MEMBER_COUNT: 38,
+		NOTIFICATION_POST_ANNOUNCEMENT: 39,
+		NOTIFICATION_POST: 40,
+		MUTATE_MESSAGE: 41,
+		NOTIFICATION_NEW_CHAT_MEMBER: 42,
+		NOTIFIED_UPDATE_READONLY_CHAT: 43,
+		NOTIFIED_UPDATE_MESSAGE_STATUS: 46,
+		NOTIFICATION_MESSAGE_REACTION: 47,
+		NOTIFIED_CHAT_POPUP: 48,
+		NOTIFIED_SYSTEM_MESSAGE: 49,
+		NOTIFIED_UPDATE_SQUARE_CHAT_FEATURE_SET: 50,
+		NOTIFIED_UPDATE_LIVE_TALK: 51,
+		NOTIFICATION_LIVE_TALK: 52,
+		NOTIFIED_UPDATE_LIVE_TALK_INFO: 53,
+		NOTIFICATION_THREAD_MESSAGE: 54,
+		NOTIFICATION_THREAD_MESSAGE_REACTION: 55,
+		NOTIFIED_UPDATE_THREAD: 56,
+		NOTIFIED_UPDATE_THREAD_STATUS: 57,
+		NOTIFIED_UPDATE_THREAD_MEMBER: 58,
+		NOTIFIED_UPDATE_THREAD_ROOT_MESSAGE: 59,
+		NOTIFIED_UPDATE_THREAD_ROOT_MESSAGE_STATUS: 60,
+		NOTIFIED_CREATE_SQUARE_SUBSCRIPTION: 61,
+		NOTIFIED_UPDATE_SQUARE_SUBSCRIPTION: 62,
+	},
+	AdScreen: {
+		CHATROOM: 1,
+		THREAD_SPACE: 2,
+		YOUR_THREADS: 3,
+		NOTE_LIST: 4,
+		NOTE_END: 5,
+		WEB_MAIN: 6,
+		WEB_SEARCH_RESULT: 7,
+	},
+	BooleanState: {
+		NONE: 0,
+		OFF: 1,
+		ON: 2,
+	},
+	ChatroomPopupType: {
+		IMG_TEXT: 1,
+		TEXT_ONLY: 2,
+		IMG_ONLY: 3,
+	},
+	ContentsAttribute: {
+		NONE: 1,
+		CONTENTS_HIDDEN: 2,
+	},
+	FetchType: {
+		DEFAULT: 1,
+		PREFETCH_BY_SERVER: 2,
+		PREFETCH_BY_CLIENT: 3,
+	},
+	LiveTalkAttribute: {
+		TITLE: 1,
+		ALLOW_REQUEST_TO_SPEAK: 2,
+	},
+	LiveTalkRole: {
+		HOST: 1,
+		CO_HOST: 2,
+		GUEST: 3,
+	},
+	LiveTalkSpeakerSetting: {
+		APPROVAL: 1,
+		ALL: 2,
+	},
+	LiveTalkType: {
+		PUBLIC: 1,
+		PRIVATE: 2,
+	},
+	MessageReactionType: {
+		ALL: 0,
+		UNDO: 1,
+		NICE: 2,
+		LOVE: 3,
+		FUN: 4,
+		AMAZING: 5,
+		SAD: 6,
+		OMG: 7,
+	},
+	NotifiedMessageType: {
+		MENTION: 1,
+		REPLY: 2,
+	},
+	PopupAttribute: {
+		NAME: 1,
+		ACTIVATED: 2,
+		STARTS_AT: 3,
+		ENDS_AT: 4,
+		CONTENT: 5,
+	},
+	PopupType: {
+		MAIN: 1,
+		CHATROOM: 2,
+	},
+	SquareChatAttribute: {
+		NAME: 2,
+		SQUARE_CHAT_IMAGE: 3,
+		STATE: 4,
+		TYPE: 5,
+		MAX_MEMBER_COUNT: 6,
+		MESSAGE_VISIBILITY: 7,
+		ABLE_TO_SEARCH_MESSAGE: 8,
+	},
+	SquareChatFeatureControlState: {
+		DISABLED: 1,
+		ENABLED: 2,
+	},
+	SquareChatMemberAttribute: {
+		MEMBERSHIP_STATE: 4,
+		NOTIFICATION_MESSAGE: 6,
+		NOTIFICATION_NEW_MEMBER: 7,
+		LEFT_BY_KICK_MESSAGE_LOCAL_ID: 8,
+		MESSAGE_LOCAL_ID_WHEN_BLOCK: 9,
+	},
+	SquareChatMembershipState: {
+		JOINED: 1,
+		LEFT: 2,
+		JOIN_RESERVED: 3,
+		JOIN_RESERVATION_EXPIRED: 4,
+	},
+	SquareChatState: {
+		ALIVE: 0,
+		DELETED: 1,
+		SUSPENDED: 2,
+	},
+	SquareEmblem: {
+		SUPER: 1,
+		OFFICIAL: 2,
+	},
+	SquareErrorCode: {
+		UNKNOWN: 0,
+		ILLEGAL_ARGUMENT: 400,
+		AUTHENTICATION_FAILURE: 401,
+		FORBIDDEN: 403,
+		NOT_FOUND: 404,
+		REVISION_MISMATCH: 409,
+		PRECONDITION_FAILED: 410,
+		INTERNAL_ERROR: 500,
+		NOT_IMPLEMENTED: 501,
+		TRY_AGAIN_LATER: 503,
+		MAINTENANCE: 505,
+		NO_PRESENCE_EXISTS: 506,
+	},
+	SquareFeatureControlState: {
+		DISABLED: 1,
+		ENABLED: 2,
+	},
+	SquareFeatureSetAttribute: {
+		CREATING_SECRET_SQUARE_CHAT: 1,
+		INVITING_INTO_OPEN_SQUARE_CHAT: 2,
+		CREATING_SQUARE_CHAT: 3,
+		READONLY_DEFAULT_CHAT: 4,
+		SHOWING_ADVERTISEMENT: 5,
+		DELEGATE_JOIN_TO_PLUG: 6,
+		DELEGATE_KICK_OUT_TO_PLUG: 7,
+		DISABLE_UPDATE_JOIN_METHOD: 8,
+		DISABLE_TRANSFER_ADMIN: 9,
+		CREATING_LIVE_TALK: 10,
+		DISABLE_UPDATE_SEARCHABLE: 11,
+		SUMMARIZING_MESSAGES: 12,
+		CREATING_SQUARE_THREAD: 13,
+		ENABLE_SQUARE_THREAD: 14,
+		DISABLE_CHANGE_ROLE_CO_ADMIN: 15,
+	},
+	SquareJoinMethodType: {
+		NONE: 0,
+		APPROVAL: 1,
+		CODE: 2,
+	},
+	SquareMemberRelationState: {
+		NONE: 1,
+		BLOCKED: 2,
+	},
+	SquareMemberRole: {
+		ADMIN: 1,
+		CO_ADMIN: 2,
+		MEMBER: 10,
+	},
+	SquareMessageState: {
+		SENT: 1,
+		DELETED: 2,
+		FORBIDDEN: 3,
+		UNSENT: 4,
+	},
+	SquareMetadataAttribute: {
+		EXCLUDED: 1,
+		NO_AD: 2,
+	},
+	SquarePreferenceAttribute: {
+		FAVORITE: 1,
+		NOTI_FOR_NEW_JOIN_REQUEST: 2,
+	},
+	SquareProviderType: {
+		NONE: 0,
+		UNKNOWN: 1,
+		YOUTUBE: 2,
+		OA_FANSPACE: 3,
+		OA_SHOP: 4,
+	},
+	SquareState: {
+		ALIVE: 0,
+		DELETED: 1,
+		SUSPENDED: 2,
+	},
+	SquareThreadAttribute: {
+		STATE: 1,
+		EXPIRES_AT: 2,
+		READ_ONLY_AT: 3,
+	},
+	SquareThreadMembershipState: {
+		JOINED: 1,
+		LEFT: 2,
+	},
+	SquareThreadState: {
+		ALIVE: 1,
+		DELETED: 2,
+	},
+	SquareType: {
+		CLOSED: 0,
+		OPEN: 1,
+	},
+	TargetChatType: {
+		ALL: 0,
+		MIDS: 1,
+		CATEGORIES: 2,
+		CHANNEL_ID: 3,
+	},
+	TargetUserType: {
+		ALL: 0,
+		MIDS: 1,
+	},
+	do0_EnumC23139B: {
+		CLOUD: 1,
+		BLE: 2,
+		BEACON: 3,
+	},
+	do0_EnumC23147e: {
+		SUCCESS: 0,
+		UNKNOWN_ERROR: 1,
+		BLUETOOTH_NOT_AVAILABLE: 2,
+		CONNECTION_TIMEOUT: 3,
+		CONNECTION_ERROR: 4,
+		CONNECTION_IN_PROGRESS: 5,
+	},
+	do0_EnumC23148f: {
+		ONETIME: 0,
+		AUTOMATIC: 1,
+		BEACON: 2,
+	},
+	do0_G: {
+		SUCCESS: 0,
+		UNKNOWN_ERROR: 1,
+		GATT_ERROR: 2,
+		GATT_OPERATION_NOT_SUPPORTED: 3,
+		GATT_SERVICE_NOT_FOUND: 4,
+		GATT_CHARACTERISTIC_NOT_FOUND: 5,
+		GATT_CONNECTION_CLOSED: 6,
+		CONNECTION_INVALID: 7,
+	},
+	do0_M: {
+		INTERNAL_SERVER_ERROR: 0,
+		UNAUTHORIZED: 1,
+		INVALID_REQUEST: 2,
+		INVALID_STATE: 3,
+		DEVICE_LIMIT_EXCEEDED: 4096,
+		UNSUPPORTED_REGION: 4097,
+	},
+	fN0_EnumC24466B: {
+		LINE_PREMIUM: 0,
+		LYP_PREMIUM: 1,
+	},
+	fN0_EnumC24467C: {
+		LINE: 1,
+		YAHOO_JAPAN: 2,
+	},
+	fN0_EnumC24469a: {
+		OK: 1,
+		NOT_SUPPORTED: 2,
+		UNDEFINED: 3,
+		NOT_ENOUGH_TICKETS: 4,
+		NOT_FRIENDS: 5,
+		NO_AGREEMENT: 6,
+	},
+	fN0_F: {
+		OK: 1,
+		NOT_SUPPORTED: 2,
+		UNDEFINED: 3,
+		CONFLICT: 4,
+		NOT_AVAILABLE: 5,
+		INVALID_INVITATION: 6,
+		IN_PAYMENT_FAILURE_STATE: 7,
+	},
+	fN0_G: {
+		APPLE: 1,
+		GOOGLE: 2,
+	},
+	fN0_H: {
+		INACTIVE: 1,
+		ACTIVE_FINITE: 2,
+		ACTIVE_INFINITE: 3,
+	},
+	fN0_o: {
+		AVAILABLE: 1,
+		ALREADY_SUBSCRIBED: 2,
+	},
+	fN0_p: {
+		UNKNOWN: 0,
+		SOFTBANK_BUNDLE: 1,
+		YBB_BUNDLE: 2,
+		YAHOO_MOBILE_BUNDLE: 3,
+		PPCG_BUNDLE: 4,
+		ENJOY_BUNDLE: 5,
+		YAHOO_TRIAL_BUNDLE: 6,
+		YAHOO_APPLE: 7,
+		YAHOO_GOOGLE: 8,
+		LINE_APPLE: 9,
+		LINE_GOOGLE: 10,
+		YAHOO_WALLET: 11,
+	},
+	fN0_q: {
+		UNKNOWN: 0,
+		NONE: 1,
+		ILLEGAL_ARGUMENT: 16641,
+		NOT_FOUND: 16642,
+		NOT_AVAILABLE: 16643,
+		INTERNAL_SERVER_ERROR: 16644,
+		AUTHENTICATION_FAILED: 16645,
+	},
+	g80_EnumC24993a: {
+		INTERNAL_ERROR: 0,
+		ILLEGAL_ARGUMENT: 1,
+		INVALID_CONTEXT: 2,
+		TOO_MANY_REQUESTS: 3,
+	},
+	h80_EnumC25645e: {
+		INTERNAL_ERROR: 0,
+		ILLEGAL_ARGUMENT: 1,
+		NOT_FOUND: 2,
+		RETRY_LATER: 3,
+		INVALID_CONTEXT: 100,
+		NOT_SUPPORTED: 101,
+	},
+	I80_EnumC26392b: {
+		UNKNOWN: 0,
+		SKIP: 1,
+		PASSWORD: 2,
+		EMAIL_BASED: 4,
+		NONE: 11,
+	},
+	I80_EnumC26394c: {
+		PHONE_NUMBER: 0,
+		APPLE: 1,
+		GOOGLE: 2,
+	},
+	I80_EnumC26408j: {
+		INTERNAL_ERROR: 0,
+		ILLEGAL_ARGUMENT: 1,
+		VERIFICATION_FAILED: 2,
+		NOT_FOUND: 3,
+		RETRY_LATER: 4,
+		HUMAN_VERIFICATION_REQUIRED: 5,
+		INVALID_CONTEXT: 100,
+		APP_UPGRADE_REQUIRED: 101,
+	},
+	I80_EnumC26425y: {
+		UNKNOWN: 0,
+		SMS: 1,
+		IVR: 2,
+	},
+	j80_EnumC27228a: {
+		AUTHENTICATION_FAILED: 1,
+		INVALID_STATE: 2,
+		NOT_AUTHORIZED_DEVICE: 3,
+		MUST_REFRESH_V3_TOKEN: 4,
+	},
+	jO0_EnumC27533B: {
+		PAYMENT_APPLE: 1,
+		PAYMENT_GOOGLE: 2,
+	},
+	jO0_EnumC27535b: {
+		ILLEGAL_ARGUMENT: 0,
+		AUTHENTICATION_FAILED: 1,
+		INTERNAL_ERROR: 20,
+		MESSAGE_DEFINED_ERROR: 29,
+		MAINTENANCE_ERROR: 33,
+	},
+	jO0_EnumC27559z: {
+		PAYMENT_PG_NONE: 0,
+		PAYMENT_PG_AU: 1,
+		PAYMENT_PG_AL: 2,
+	},
+	jf_EnumC27712a: {
+		NONE: 1,
+		DOES_NOT_RESPOND: 2,
+		RESPOND_MANUALLY: 3,
+		RESPOND_AUTOMATICALLY: 4,
+	},
+	jf_EnumC27717f: {
+		UNKNOWN: 0,
+		BAD_REQUEST: 1,
+		NOT_FOUND: 2,
+		FORBIDDEN: 3,
+		INTERNAL_SERVER_ERROR: 4,
+	},
+	kf_EnumC28766a: {
+		ILLEGAL_ARGUMENT: 0,
+		INTERNAL_ERROR: 1,
+		UNAUTHORIZED: 2,
+	},
+	kf_o: {
+		ANDROID: 0,
+		IOS: 1,
+	},
+	kf_p: {
+		RICHMENU: 0,
+		TALK_ROOM: 1,
+	},
+	kf_r: {
+		WEB: 0,
+		POSTBACK: 1,
+		SEND_MESSAGE: 2,
+	},
+	kf_u: {
+		CLICK: 0,
+		IMPRESSION: 1,
+	},
+	kf_x: {
+		UNKNOWN: 0,
+		PROFILE: 1,
+		TALK_LIST: 2,
+		OA_CALL: 3,
+	},
+	n80_o: {
+		INTERNAL_ERROR: 0,
+		INVALID_CONTEXT: 100,
+		FIDO_UNKNOWN_CREDENTIAL_ID: 200,
+		FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR: 201,
+		FIDO_UNACCEPTABLE_CONTENT: 202,
+		FIDO_INVALID_REQUEST: 203,
+	},
+	o80_e: {
+		INTERNAL_ERROR: 0,
+		VERIFICATION_FAILED: 1,
+		LOGIN_NOT_ALLOWED: 2,
+		EXTERNAL_SERVICE_UNAVAILABLE: 3,
+		RETRY_LATER: 4,
+		NOT_SUPPORTED: 100,
+		ILLEGAL_ARGUMENT: 101,
+		INVALID_CONTEXT: 102,
+		FORBIDDEN: 103,
+		FIDO_UNKNOWN_CREDENTIAL_ID: 200,
+		FIDO_RETRY_WITH_ANOTHER_AUTHENTICATOR: 201,
+		FIDO_UNACCEPTABLE_CONTENT: 202,
+		FIDO_INVALID_REQUEST: 203,
+	},
+	og_E: {
+		RUNNING: 1,
+		CLOSING: 2,
+		CLOSED: 3,
+		SUSPEND: 4,
+	},
+	og_EnumC32661b: {
+		INACTIVE: 0,
+		ACTIVE: 1,
+	},
+	og_EnumC32663d: {
+		PREMIUM: 0,
+		VERIFIED: 1,
+		UNVERIFIED: 2,
+	},
+	og_EnumC32671l: {
+		ILLEGAL_ARGUMENT: 0,
+		AUTHENTICATION_FAILED: 1,
+		INVALID_STATE: 3,
+		NOT_FOUND: 5,
+		INTERNAL_ERROR: 20,
+		MAINTENANCE_ERROR: 33,
+	},
+	og_G: {
+		FREE: 0,
+		MONTHLY: 1,
+		PER_PAYMENT: 2,
+	},
+	og_I: {
+		OK: 0,
+		REACHED_TIER_LIMIT: 1,
+		REACHED_MEMBER_LIMIT: 2,
+		ALREADY_JOINED: 3,
+		NOT_SUPPORTED_LINE_VERSION: 4,
+		BOT_USER_REGION_IS_NOT_MATCH: 5,
+	},
+	q80_EnumC33651c: {
+		INTERNAL_ERROR: 0,
+		ILLEGAL_ARGUMENT: 1,
+		VERIFICATION_FAILED: 2,
+		NOT_ALLOWED_QR_CODE_LOGIN: 3,
+		VERIFICATION_NOTICE_FAILED: 4,
+		RETRY_LATER: 5,
+		INVALID_CONTEXT: 100,
+		APP_UPGRADE_REQUIRED: 101,
+	},
+	qm_EnumC34112e: {
+		BUTTON: 1,
+		ENTRY_SELECTED: 2,
+		BROADCAST_ENTER: 3,
+		BROADCAST_LEAVE: 4,
+		BROADCAST_STAY: 5,
+	},
+	qm_s: {
+		ILLEGAL_ARGUMENT: 0,
+		NOT_FOUND: 5,
+		INTERNAL_ERROR: 20,
+	},
+	r80_EnumC34361a: {
+		PERSONAL_ACCOUNT: 1,
+		CURRENT_ACCOUNT: 2,
+	},
+	r80_EnumC34362b: {
+		BANK_ALL: 1,
+		BANK_DEPOSIT: 2,
+		BANK_WITHDRAWAL: 3,
+	},
+	r80_EnumC34365e: {
+		BANK: 1,
+		ATM: 2,
+		CONVENIENCE_STORE: 3,
+		DEBIT_CARD: 4,
+		E_CHANNEL: 5,
+		VIRTUAL_BANK_ACCOUNT: 6,
+		AUTO: 7,
+		CVS_LAWSON: 8,
+		SEVEN_BANK_DEPOSIT: 9,
+		CODE_DEPOSIT: 10,
+	},
+	r80_EnumC34367g: {
+		AVAILABLE: 0,
+		DIFFERENT_REGION: 1,
+		UNSUPPORTED_DEVICE: 2,
+		PHONE_NUMBER_UNREGISTERED: 3,
+		UNAVAILABLE_FROM_LINE_PAY: 4,
+		INVALID_USER: 5,
+	},
+	r80_EnumC34368h: {
+		CHARGE: 1,
+		WITHDRAW: 2,
+	},
+	r80_EnumC34370j: {
+		UNKNOWN: 0,
+		VISA: 1,
+		MASTER: 2,
+		AMEX: 3,
+		DINERS: 4,
+		JCB: 5,
+	},
+	r80_EnumC34371k: {
+		NULL: 0,
+		ATM: 1,
+		CONVENIENCE_STORE: 2,
+	},
+	r80_EnumC34372l: {
+		SCALE2: 1,
+		SCALE3: 2,
+		HDPI: 3,
+		XHDPI: 4,
+	},
+	r80_EnumC34374n: {
+		SUCCESS: 0,
+		GENERAL_USER_ERROR: 1000,
+		ACCOUNT_NOT_EXISTS: 1101,
+		ACCOUNT_INVALID_STATUS: 1102,
+		ACCOUNT_ALREADY_EXISTS: 1103,
+		MERCHANT_NOT_EXISTS: 1104,
+		MERCHANT_INVALID_STATUS: 1105,
+		AGREEMENT_REQUIRED: 1107,
+		BLACKLISTED: 1108,
+		WRONG_PASSWORD: 1109,
+		INVALID_CREDIT_CARD: 1110,
+		LIMIT_EXCEEDED: 1111,
+		CANNOT_PROCEED: 1115,
+		TOO_WEAK_PASSWORD: 1120,
+		CANNOT_CREATE_ACCOUNT: 1125,
+		TEMPORARY_PASSWORD_ERROR: 1130,
+		MISSING_PARAMETERS: 1140,
+		NO_VALID_MYCODE_ACCOUNT: 1141,
+		INSUFFICIENT_BALANCE: 1142,
+		TRANSACTION_NOT_FOUND: 1150,
+		TRANSACTION_FINISHED: 1152,
+		PAYMENT_AMOUNT_WRONG: 1153,
+		BALANCE_ACCOUNT_NOT_EXISTS: 1157,
+		DUPLICATED_CITIZEN_ID: 1158,
+		PAYMENT_REQUEST_NOT_FOUND: 1159,
+		AUTH_FAILED: 1169,
+		PASSWORD_SETTING_REQUIRED: 1171,
+		TRANSACTION_ALREADY_PROCESSED: 1172,
+		CURRENCY_NOT_SUPPORTED: 1178,
+		PAYMENT_NOT_AVAILABLE: 1180,
+		TRANSFER_REQUEST_NOT_FOUND: 1181,
+		INVALID_PAYMENT_AMOUNT: 1183,
+		INSUFFICIENT_PAYMENT_AMOUNT: 1184,
+		EXTERNAL_SYSTEM_MAINTENANCE: 1185,
+		EXTERNAL_SYSTEM_INOPERATIONAL: 1186,
+		SESSION_EXPIRED: 1192,
+		UPGRADE_REQUIRED: 1195,
+		REQUEST_TOKEN_EXPIRED: 1196,
+		OPERATION_FINISHED: 1198,
+		EXTERNAL_SYSTEM_ERROR: 1199,
+		PARTIAL_AMOUNT_APPROVED: 1299,
+		PINCODE_AUTH_REQUIRED: 1600,
+		ADDITIONAL_AUTH_REQUIRED: 1601,
+		NOT_BOUND: 1603,
+		OTP_USER_REGISTRATION_ERROR: 1610,
+		OTP_CARD_REGISTRATION_ERROR: 1611,
+		NO_AUTH_METHOD: 1612,
+		GENERAL_USER_ERROR_RESTART: 1696,
+		GENERAL_USER_ERROR_REFRESH: 1697,
+		GENERAL_USER_ERROR_CLOSE: 1698,
+		INTERNAL_SERVER_ERROR: 9000,
+		INTERNAL_SYSTEM_MAINTENANCE: 9999,
+		UNKNOWN_ERROR: 10000,
+	},
+	r80_EnumC34376p: {
+		TRANSFER: 1,
+		TRANSFER_REQUEST: 2,
+		DUTCH: 3,
+		INVITATION: 4,
+	},
+	r80_EnumC34377q: {
+		NULL: 0,
+		UNIDEN: 1,
+		WAIT: 2,
+		IDENTIFIED: 3,
+		CHECKING: 4,
+	},
+	r80_EnumC34378s: {
+		UNKNOWN: 0,
+		MORE_TAB: 1,
+		CHAT_ROOM_PLUS_MENU: 2,
+		TRANSFER: 3,
+		PAYMENT: 4,
+		LINECARD: 5,
+		INVITATION: 6,
+	},
+	r80_e0: {
+		NONE: 0,
+		ONE_TIME_PAYMENT_AGREEMENT: 1,
+		SIMPLE_JOINING_AGREEMENT: 2,
+		LINE_CARD_CASH_AGREEMENT: 3,
+		LINE_CARD_MONEY_AGREEMENT: 4,
+		JOINING_WITH_LINE_CARD_AGREEMENT: 5,
+		LINE_CARD_AGREEMENT: 6,
+	},
+	r80_g0: {
+		NULL: 0,
+		ATM: 1,
+		CONVENIENCE_STORE: 2,
+		ALL: 3,
+	},
+	r80_h0: {
+		READY: 1,
+		COMPLETE: 2,
+		WAIT: 3,
+		CANCEL: 4,
+		FAIL: 5,
+		EXPIRE: 6,
+		ALL: 7,
+	},
+	r80_i0: {
+		TRANSFER_ACCEPTABLE: 1,
+		REMOVE_INVOICE: 2,
+		INVOICE_CODE: 3,
+		SHOW_ALWAYS_INVOICE: 4,
+	},
+	r80_m0: {
+		OK: 1,
+		NOT_ALIVE_USER: 2,
+		NEED_BALANCE_DISCLAIMER: 3,
+		ECONTEXT_CHARGING_IN_PROGRESS: 4,
+		TRANSFER_IN_PROGRESS: 6,
+		OK_REMAINING_BALANCE: 7,
+		ADVERSE_BALANCE: 8,
+		CONFIRM_REQUIRED: 9,
+	},
+	r80_n0: {
+		LINE: 1,
+		LINEPAY: 2,
+	},
+	r80_r: {
+		CITIZEN_ID: 1,
+		PASSPORT: 2,
+		WORK_PERMIT: 3,
+		ALIEN_CARD: 4,
+	},
+	t80_h: {
+		CLIENT: 1,
+		SERVER: 2,
+	},
+	t80_i: {
+		APP_INSTANCE_LOCAL: 1,
+		APP_TYPE_LOCAL: 2,
+		GLOBAL: 3,
+	},
+	t80_n: {
+		UNKNOWN: 0,
+		NONE: 1,
+		ILLEGAL_ARGUMENT: 16641,
+		NOT_FOUND: 16642,
+		NOT_AVAILABLE: 16643,
+		TOO_LARGE_VALUE: 16644,
+		CLOCK_DRIFT_DETECTED: 16645,
+		UNSUPPORTED_APPLICATION_TYPE: 16646,
+		DUPLICATED_ENTRY: 16647,
+		AUTHENTICATION_FAILED: 16897,
+		INTERNAL_SERVER_ERROR: 20737,
+		SERVICE_IN_MAINTENANCE_MODE: 20738,
+		SERVICE_UNAVAILABLE: 20739,
+	},
+	t80_r: {
+		USER_ACTION: 1,
+		DATA_OUTDATED: 2,
+		APP_MIGRATION: 3,
+		OTHER: 100,
+	},
+	vh_EnumC37632c: {
+		ACTIVE: 1,
+		INACTIVE: 2,
+	},
+	vh_m: {
+		SAFE: 1,
+		NOT_SAFE: 2,
+	},
+	wm_EnumC38497a: {
+		UNKNOWN: 0,
+		BOT_NOT_FOUND: 1,
+		BOT_NOT_AVAILABLE: 2,
+		NOT_A_MEMBER: 3,
+		SQUARECHAT_NOT_FOUND: 4,
+		FORBIDDEN: 5,
+		ILLEGAL_ARGUMENT: 400,
+		AUTHENTICATION_FAILED: 401,
+		INTERNAL_ERROR: 500,
+	},
+	zR0_EnumC40578c: {
+		FOREGROUND: 0,
+		BACKGROUND: 1,
+	},
+	zR0_EnumC40579d: {
+		STICKER: 1,
+		THEME: 2,
+		STICON: 3,
+	},
+	zR0_h: {
+		NORMAL: 0,
+		BIG: 1,
+	},
+	zR0_j: {
+		UNKNOWN: 0,
+		NONE: 1,
+		ILLEGAL_ARGUMENT: 16641,
+		NOT_FOUND: 16642,
+		NOT_AVAILABLE: 16643,
+		AUTHENTICATION_FAILED: 16897,
+		INTERNAL_SERVER_ERROR: 20737,
+		SERVICE_UNAVAILABLE: 20739,
+	},
+	zf_EnumC40713a: {
+		PERSONAL: 1,
+		ROOM: 2,
+		GROUP: 3,
+		SQUARE_CHAT: 4,
+	},
+	zf_EnumC40715c: {
+		REGULAR: 1,
+		PRIORITY: 2,
+		MORE: 3,
+	},
+	zf_EnumC40716d: {
+		INVALID_REQUEST: 1,
+		UNAUTHORIZED: 2,
+		SERVER_ERROR: 100,
+	},
+	LoginResultType: {
+		SUCCESS: 1,
+		REQUIRE_QRCODE: 2,
+		REQUIRE_DEVICE_CONFIRM: 3,
+		REQUIRE_SMS_CONFIRM: 4,
+	},
+	F61_EnumC10204a0: {
+		ALL: 0,
+		BLOCK: 1,
+		NOT_BLOCK: 2,
+	},
+	ForbiddenWordsGroup: {
+		SQUARE_NAME: 1,
+		SQUARE_DESCRIPTION: 2,
+		MEMBER_NAME: 3,
+	},
+	LMPCode: {
+		PR01: 1,
+		PR02: 2,
+		PR03: 3,
+		PR04: 4,
+		PR05: 5,
+		PR06: 6,
+		PR07: 7,
+		PR08: 8,
+		PR12: 12,
+		PR13: 13,
+		PR14: 14,
+		PR15: 15,
+		PR16: 16,
+		PR17: 17,
+		PR18: 18,
+		PR60: 60,
+		PR61: 61,
+		PR88: 88,
+		PR99: 99,
+		PRAUTO00: 100,
+		PRAUTO01: 101,
+		PRAUTO99: 199,
+		NOT_PENALIZED: 500,
+	},
+	PaidSquareFormState: {
+		UNDER_REVIEW: 1,
+		APPROVED: 2,
+		REJECTED: 3,
+		REGISTRATION_COMPLETE: 4,
+		REGISTRATION_FAILED: 5,
+	},
+	SquareSubscriptionProductRegistrationStatus: {
+		IN_REVIEW: 1,
+		APPROVED: 2,
+		REJECTED: 3,
+		PENDING: 4,
+	},
+	SquareSubscriptionStatus: {
+		ACTIVE: 1,
+		CANCELLED: 2,
+		ON_HOLD: 3,
+		EXPIRED: 4,
+		REVOKED: 5,
+	},
+	TermsType: {
+		AI_QNA_BOT: 1,
+		PAID_SQUARE_SUBSCRIPTION: 2,
+		PAID_SQUARE_CREATION: 3,
 	},
 };
 export type AR0_g =
@@ -3724,15 +3502,7 @@ export type ApplicationType =
 	| 547
 	| "WEAROS_ALPHA";
 
-export type BotType =
-	| 0
-	| "RESERVED"
-	| 1
-	| "OFFICIAL"
-	| 2
-	| "LINE_AT_0"
-	| 3
-	| "LINE_AT";
+export type BotType = 0 | "RESERVED" | 1 | "OFFICIAL" | 2 | "LINE_AT_0" | 3 | "LINE_AT";
 
 export type CarrierCode =
 	| 0
@@ -4214,15 +3984,7 @@ export type FriendRequestStatus =
 	| 3
 	| "UNAVAILABLE";
 
-export type IdentityProvider =
-	| 0
-	| "UNKNOWN"
-	| 1
-	| "LINE"
-	| 2
-	| "NAVER_KR"
-	| 3
-	| "LINE_PHONE";
+export type IdentityProvider = 0 | "UNKNOWN" | 1 | "LINE" | 2 | "NAVER_KR" | 3 | "LINE_PHONE";
 
 export type LN0_F0 =
 	| 0
@@ -4296,13 +4058,7 @@ export type NZ0_C0 =
 
 export type NZ0_EnumC12154b1 = 0 | "NORMAL" | 1 | "CAMERA";
 
-export type NZ0_EnumC12169g1 =
-	| 101
-	| "WALLET"
-	| 201
-	| "ASSET"
-	| 301
-	| "SHOPPING";
+export type NZ0_EnumC12169g1 = 101 | "WALLET" | 201 | "ASSET" | 301 | "SHOPPING";
 
 export type NZ0_EnumC12170h = 0 | "HIDE_BADGE" | 1 | "SHOW_BADGE";
 
@@ -4328,13 +4084,7 @@ export type NZ0_EnumC12193o1 =
 	| 503
 	| "SERVICE_IN_MAINTENANCE_MODE";
 
-export type NZ0_EnumC12195p0 =
-	| 1
-	| "ALIVE"
-	| 2
-	| "SUSPENDED"
-	| 3
-	| "UNREGISTERED";
+export type NZ0_EnumC12195p0 = 1 | "ALIVE" | 2 | "SUSPENDED" | 3 | "UNREGISTERED";
 
 export type NZ0_EnumC12197q = 0 | "PREFIX" | 1 | "SUFFIX";
 
@@ -4448,13 +4198,7 @@ export type Ob1_B0 = 0 | "FOREGROUND" | 1 | "BACKGROUND";
 
 export type Ob1_C1 = 0 | "NORMAL" | 1 | "BIG";
 
-export type Ob1_D0 =
-	| 0
-	| "PURCHASE_ONLY"
-	| 1
-	| "PURCHASE_OR_SUBSCRIPTION"
-	| 2
-	| "SUBSCRIPTION_ONLY";
+export type Ob1_D0 = 0 | "PURCHASE_ONLY" | 1 | "PURCHASE_OR_SUBSCRIPTION" | 2 | "SUBSCRIPTION_ONLY";
 
 export type Ob1_EnumC12607a1 = 1 | "DEFAULT" | 2 | "VIEW_VIDEO";
 
@@ -4470,15 +4214,7 @@ export type Ob1_EnumC12610b1 =
 	| 5
 	| "MUSTBUY";
 
-export type Ob1_EnumC12631i1 =
-	| 0
-	| "UNKNOWN"
-	| 1
-	| "PRODUCT"
-	| 2
-	| "USER"
-	| 3
-	| "PREMIUM_USER";
+export type Ob1_EnumC12631i1 = 0 | "UNKNOWN" | 1 | "PRODUCT" | 2 | "USER" | 3 | "PREMIUM_USER";
 
 export type Ob1_EnumC12638l = 0 | "VALID" | 1 | "INVALID";
 
@@ -5084,13 +4820,7 @@ export type Pb1_A3 =
 
 export type Pb1_B = 1 | "SIRI" | 2 | "GOOGLE_ASSISTANT" | 3 | "OS_SHARE";
 
-export type Pb1_D0 =
-	| 0
-	| "RICH_MENU_ID"
-	| 1
-	| "STATUS_BAR"
-	| 2
-	| "BUDDY_CAUTION_NOTICE";
+export type Pb1_D0 = 0 | "RICH_MENU_ID" | 1 | "STATUS_BAR" | 2 | "BUDDY_CAUTION_NOTICE";
 
 export type Pb1_D4 = 1 | "AUDIO" | 2 | "VIDEO" | 3 | "FACEPLAY";
 
@@ -5108,15 +4838,7 @@ export type Pb1_D6 =
 
 export type Pb1_E7 = 0 | "UNKNOWN" | 1 | "TALK" | 2 | "SQUARE";
 
-export type Pb1_EnumC12917a6 =
-	| 0
-	| "UNKNOWN"
-	| 1
-	| "APP_FOREGROUND"
-	| 2
-	| "PERIODIC"
-	| 3
-	| "MANUAL";
+export type Pb1_EnumC12917a6 = 0 | "UNKNOWN" | 1 | "APP_FOREGROUND" | 2 | "PERIODIC" | 3 | "MANUAL";
 
 export type Pb1_EnumC12926b1 = 0 | "NOT_A_FRIEND" | 1 | "ALWAYS";
 
@@ -5134,55 +4856,23 @@ export type Pb1_EnumC12941c2 =
 
 export type Pb1_EnumC12945c6 = 1 | "V1" | 2 | "V2";
 
-export type Pb1_EnumC12970e3 =
-	| 1
-	| "USER_AGE_CHECKED"
-	| 2
-	| "USER_APPROVAL_REQUIRED";
+export type Pb1_EnumC12970e3 = 1 | "USER_AGE_CHECKED" | 2 | "USER_APPROVAL_REQUIRED";
 
 export type Pb1_EnumC12997g2 = 0 | "PROFILE" | 1 | "FRIENDS" | 2 | "GROUP";
 
-export type Pb1_EnumC12998g3 =
-	| 0
-	| "UNKNOWN"
-	| 1
-	| "WIFI"
-	| 2
-	| "CELLULAR_NETWORK";
+export type Pb1_EnumC12998g3 = 0 | "UNKNOWN" | 1 | "WIFI" | 2 | "CELLULAR_NETWORK";
 
 export type Pb1_EnumC13009h0 = 1 | "NORMAL" | 2 | "LOW_BATTERY";
 
 export type Pb1_EnumC13010h1 = 1 | "NEW" | 2 | "PLANET";
 
-export type Pb1_EnumC13015h6 =
-	| 0
-	| "FORWARD"
-	| 1
-	| "AUTO_REPLY"
-	| 2
-	| "SUBORDINATE"
-	| 3
-	| "REPLY";
+export type Pb1_EnumC13015h6 = 0 | "FORWARD" | 1 | "AUTO_REPLY" | 2 | "SUBORDINATE" | 3 | "REPLY";
 
-export type Pb1_EnumC13022i =
-	| 0
-	| "SKIP"
-	| 1
-	| "PINCODE"
-	| 2
-	| "SECURITY_CENTER";
+export type Pb1_EnumC13022i = 0 | "SKIP" | 1 | "PINCODE" | 2 | "SECURITY_CENTER";
 
 export type Pb1_EnumC13029i6 = 0 | "ADD" | 1 | "REMOVE" | 2 | "MODIFY";
 
-export type Pb1_EnumC13037j0 =
-	| 0
-	| "UNSPECIFIED"
-	| 1
-	| "INACTIVE"
-	| 2
-	| "ACTIVE"
-	| 3
-	| "DELETED";
+export type Pb1_EnumC13037j0 = 0 | "UNSPECIFIED" | 1 | "INACTIVE" | 2 | "ACTIVE" | 3 | "DELETED";
 
 export type Pb1_EnumC13050k =
 	| 0
@@ -5200,13 +4890,7 @@ export type Pb1_EnumC13082m3 = 0 | "SHOW" | 1 | "HIDE";
 
 export type Pb1_EnumC13093n0 = 0 | "NONE" | 1 | "TOP";
 
-export type Pb1_EnumC13127p6 =
-	| 0
-	| "NORMAL"
-	| 1
-	| "ALERT_DISABLED"
-	| 2
-	| "ALWAYS";
+export type Pb1_EnumC13127p6 = 0 | "NORMAL" | 1 | "ALERT_DISABLED" | 2 | "ALWAYS";
 
 export type Pb1_EnumC13128p7 =
 	| 0
@@ -5234,33 +4918,13 @@ export type Pb1_EnumC13128p7 =
 	| 11
 	| "DEPRECATED";
 
-export type Pb1_EnumC13148r0 =
-	| 1
-	| "ALWAYS_HIDDEN"
-	| 2
-	| "ALWAYS_SHOWN"
-	| 3
-	| "SHOWN_BY_CONDITION";
+export type Pb1_EnumC13148r0 = 1 | "ALWAYS_HIDDEN" | 2 | "ALWAYS_SHOWN" | 3 | "SHOWN_BY_CONDITION";
 
 export type Pb1_EnumC13151r3 = 0 | "ONEWAY" | 1 | "BOTH" | 2 | "NOT_REGISTERED";
 
-export type Pb1_EnumC13162s0 =
-	| 1
-	| "NOT_SUSPICIOUS"
-	| 2
-	| "SUSPICIOUS_00"
-	| 3
-	| "SUSPICIOUS_01";
+export type Pb1_EnumC13162s0 = 1 | "NOT_SUSPICIOUS" | 2 | "SUSPICIOUS_00" | 3 | "SUSPICIOUS_01";
 
-export type Pb1_EnumC13196u6 =
-	| 0
-	| "COIN"
-	| 1
-	| "CREDIT"
-	| 2
-	| "MONTHLY"
-	| 3
-	| "OAM";
+export type Pb1_EnumC13196u6 = 0 | "COIN" | 1 | "CREDIT" | 2 | "MONTHLY" | 3 | "OAM";
 
 export type Pb1_EnumC13209v5 =
 	| 0
@@ -5384,23 +5048,9 @@ export type Pb1_EnumC13209v5 =
 
 export type Pb1_EnumC13221w3 = 0 | "UNKNOWN" | 1 | "EUROPEAN_ECONOMIC_AREA";
 
-export type Pb1_EnumC13222w4 =
-	| 1
-	| "OBS_VIDEO"
-	| 2
-	| "OBS_GENERAL"
-	| 3
-	| "OBS_RINGBACK_TONE";
+export type Pb1_EnumC13222w4 = 1 | "OBS_VIDEO" | 2 | "OBS_GENERAL" | 3 | "OBS_RINGBACK_TONE";
 
-export type Pb1_EnumC13237x5 =
-	| 1
-	| "AUDIO"
-	| 2
-	| "VIDEO"
-	| 3
-	| "LIVE"
-	| 4
-	| "PHOTOBOOTH";
+export type Pb1_EnumC13237x5 = 1 | "AUDIO" | 2 | "VIDEO" | 3 | "LIVE" | 4 | "PHOTOBOOTH";
 
 export type Pb1_EnumC13238x6 =
 	| 0
@@ -5472,19 +5122,7 @@ export type Pb1_G3 =
 
 export type Pb1_G4 = 1 | "TIMELINE" | 2 | "NEARBY" | 3 | "SQUARE";
 
-export type Pb1_G6 =
-	| 2
-	| "NICE"
-	| 3
-	| "LOVE"
-	| 4
-	| "FUN"
-	| 5
-	| "AMAZING"
-	| 6
-	| "SAD"
-	| 7
-	| "OMG";
+export type Pb1_G6 = 2 | "NICE" | 3 | "LOVE" | 4 | "FUN" | 5 | "AMAZING" | 6 | "SAD" | 7 | "OMG";
 
 export type Pb1_H6 = 0 | "PUBLIC" | 1 | "PRIVATE";
 
@@ -5502,15 +5140,7 @@ export type Pb1_J4 =
 	| 4
 	| "LOCAL_DB_CORRUPTED";
 
-export type Pb1_K2 =
-	| 1
-	| "CHANNEL_INFO"
-	| 2
-	| "CHANNEL_TOKEN"
-	| 4
-	| "COMMON_DOMAIN"
-	| 255
-	| "ALL";
+export type Pb1_K2 = 1 | "CHANNEL_INFO" | 2 | "CHANNEL_TOKEN" | 4 | "COMMON_DOMAIN" | 255 | "ALL";
 
 export type Pb1_K6 =
 	| 1
@@ -5556,17 +5186,7 @@ export type Pb1_L4 =
 
 export type Pb1_M6 = 0 | "OWNER" | 1 | "FRIEND";
 
-export type Pb1_N6 =
-	| 1
-	| "NFT"
-	| 2
-	| "AVATAR"
-	| 3
-	| "SNOW"
-	| 4
-	| "ARCZ"
-	| 5
-	| "FRENZ";
+export type Pb1_N6 = 1 | "NFT" | 2 | "AVATAR" | 3 | "SNOW" | 4 | "ARCZ" | 5 | "FRENZ";
 
 export type Pb1_O2 =
 	| 1
@@ -5590,13 +5210,7 @@ export type Pb1_O6 = 1 | "DEFAULT" | 2 | "MULTI_PROFILE";
 
 export type Pb1_P6 = 0 | "HIDDEN" | 1000 | "PUBLIC";
 
-export type Pb1_Q2 =
-	| 0
-	| "BACKGROUND"
-	| 1
-	| "KEYWORD"
-	| 2
-	| "CONTENT_METADATA_TAG_BASED";
+export type Pb1_Q2 = 0 | "BACKGROUND" | 1 | "KEYWORD" | 2 | "CONTENT_METADATA_TAG_BASED";
 
 export type Pb1_R3 =
 	| 1
@@ -5694,13 +5308,7 @@ export type Pb1_W3 =
 	| 10
 	| "KEY_BACKUP_HEADER_MISMATCH";
 
-export type Pb1_X1 =
-	| 0
-	| "MESSAGE"
-	| 1
-	| "MESSAGE_NOTIFICATION"
-	| 2
-	| "NOTIFICATION_CENTER";
+export type Pb1_X1 = 0 | "MESSAGE" | 1 | "MESSAGE_NOTIFICATION" | 2 | "NOTIFICATION_CENTER";
 
 export type Pb1_X2 = 0 | "MESSAGE" | 1 | "NOTE" | 2 | "CHANNEL";
 
@@ -5856,11 +5464,7 @@ export type Qj_EnumC13604v =
 	| 16
 	| "SIRI_DONATION";
 
-export type Qj_EnumC13605w =
-	| 1
-	| "ALLOW_DIRECT_LINK"
-	| 2
-	| "ALLOW_DIRECT_LINK_V2";
+export type Qj_EnumC13605w = 1 | "ALLOW_DIRECT_LINK" | 2 | "ALLOW_DIRECT_LINK_V2";
 
 export type Qj_EnumC13606x =
 	| 1
@@ -6322,15 +5926,7 @@ export type SquareAuthorityAttribute =
 	| 13
 	| "SEND_ALL_MENTION";
 
-export type SquareChatType =
-	| 1
-	| "OPEN"
-	| 2
-	| "SECRET"
-	| 3
-	| "ONE_ON_ONE"
-	| 4
-	| "SQUARE_DEFAULT";
+export type SquareChatType = 1 | "OPEN" | 2 | "SECRET" | 3 | "ONE_ON_ONE" | 4 | "SQUARE_DEFAULT";
 
 export type SquareMemberAttribute =
 	| 1
@@ -6476,23 +6072,9 @@ export type T70_Z0 = 1 | "PHONE_VERIF" | 2 | "EAP_VERIF";
 
 export type T70_e1 = 0 | "UNKNOWN" | 1 | "SKIP" | 2 | "WEB_BASED";
 
-export type T70_j1 =
-	| 0
-	| "UNKNOWN"
-	| 1
-	| "FACEBOOK"
-	| 2
-	| "APPLE"
-	| 3
-	| "GOOGLE";
+export type T70_j1 = 0 | "UNKNOWN" | 1 | "FACEBOOK" | 2 | "APPLE" | 3 | "GOOGLE";
 
-export type U70_c =
-	| 0
-	| "INTERNAL_ERROR"
-	| 1
-	| "FORBIDDEN"
-	| 100
-	| "INVALID_CONTEXT";
+export type U70_c = 0 | "INTERNAL_ERROR" | 1 | "FORBIDDEN" | 100 | "INVALID_CONTEXT";
 
 export type Uf_EnumC14873o = 1 | "ANDROID" | 2 | "IOS";
 
@@ -6522,15 +6104,7 @@ export type VerificationResult =
 
 export type WR0_a = 1 | "FREE" | 2 | "PREMIUM";
 
-export type a80_EnumC16644b =
-	| 0
-	| "UNKNOWN"
-	| 1
-	| "FACEBOOK"
-	| 2
-	| "APPLE"
-	| 3
-	| "GOOGLE";
+export type a80_EnumC16644b = 0 | "UNKNOWN" | 1 | "FACEBOOK" | 2 | "APPLE" | 3 | "GOOGLE";
 
 export type FetchDirection = 1 | "FORWARD" | 2 | "BACKWARD";
 
@@ -6732,23 +6306,11 @@ export type AdScreen =
 
 export type BooleanState = 0 | "NONE" | 1 | "OFF" | 2 | "ON";
 
-export type ChatroomPopupType =
-	| 1
-	| "IMG_TEXT"
-	| 2
-	| "TEXT_ONLY"
-	| 3
-	| "IMG_ONLY";
+export type ChatroomPopupType = 1 | "IMG_TEXT" | 2 | "TEXT_ONLY" | 3 | "IMG_ONLY";
 
 export type ContentsAttribute = 1 | "NONE" | 2 | "CONTENTS_HIDDEN";
 
-export type FetchType =
-	| 1
-	| "DEFAULT"
-	| 2
-	| "PREFETCH_BY_SERVER"
-	| 3
-	| "PREFETCH_BY_CLIENT";
+export type FetchType = 1 | "DEFAULT" | 2 | "PREFETCH_BY_SERVER" | 3 | "PREFETCH_BY_CLIENT";
 
 export type LiveTalkAttribute = 1 | "TITLE" | 2 | "ALLOW_REQUEST_TO_SPEAK";
 
@@ -6902,23 +6464,11 @@ export type SquareMemberRelationState = 1 | "NONE" | 2 | "BLOCKED";
 
 export type SquareMemberRole = 1 | "ADMIN" | 2 | "CO_ADMIN" | 10 | "MEMBER";
 
-export type SquareMessageState =
-	| 1
-	| "SENT"
-	| 2
-	| "DELETED"
-	| 3
-	| "FORBIDDEN"
-	| 4
-	| "UNSENT";
+export type SquareMessageState = 1 | "SENT" | 2 | "DELETED" | 3 | "FORBIDDEN" | 4 | "UNSENT";
 
 export type SquareMetadataAttribute = 1 | "EXCLUDED" | 2 | "NO_AD";
 
-export type SquarePreferenceAttribute =
-	| 1
-	| "FAVORITE"
-	| 2
-	| "NOTI_FOR_NEW_JOIN_REQUEST";
+export type SquarePreferenceAttribute = 1 | "FAVORITE" | 2 | "NOTI_FOR_NEW_JOIN_REQUEST";
 
 export type SquareProviderType =
 	| 0
@@ -6934,13 +6484,7 @@ export type SquareProviderType =
 
 export type SquareState = 0 | "ALIVE" | 1 | "DELETED" | 2 | "SUSPENDED";
 
-export type SquareThreadAttribute =
-	| 1
-	| "STATE"
-	| 2
-	| "EXPIRES_AT"
-	| 3
-	| "READ_ONLY_AT";
+export type SquareThreadAttribute = 1 | "STATE" | 2 | "EXPIRES_AT" | 3 | "READ_ONLY_AT";
 
 export type SquareThreadMembershipState = 1 | "JOINED" | 2 | "LEFT";
 
@@ -6948,15 +6492,7 @@ export type SquareThreadState = 1 | "ALIVE" | 2 | "DELETED";
 
 export type SquareType = 0 | "CLOSED" | 1 | "OPEN";
 
-export type TargetChatType =
-	| 0
-	| "ALL"
-	| 1
-	| "MIDS"
-	| 2
-	| "CATEGORIES"
-	| 3
-	| "CHANNEL_ID";
+export type TargetChatType = 0 | "ALL" | 1 | "MIDS" | 2 | "CATEGORIES" | 3 | "CHANNEL_ID";
 
 export type TargetUserType = 0 | "ALL" | 1 | "MIDS";
 
@@ -7046,13 +6582,7 @@ export type fN0_F =
 
 export type fN0_G = 1 | "APPLE" | 2 | "GOOGLE";
 
-export type fN0_H =
-	| 1
-	| "INACTIVE"
-	| 2
-	| "ACTIVE_FINITE"
-	| 3
-	| "ACTIVE_INFINITE";
+export type fN0_H = 1 | "INACTIVE" | 2 | "ACTIVE_FINITE" | 3 | "ACTIVE_INFINITE";
 
 export type fN0_o = 1 | "AVAILABLE" | 2 | "ALREADY_SUBSCRIBED";
 
@@ -7180,13 +6710,7 @@ export type jO0_EnumC27535b =
 	| 33
 	| "MAINTENANCE_ERROR";
 
-export type jO0_EnumC27559z =
-	| 0
-	| "PAYMENT_PG_NONE"
-	| 1
-	| "PAYMENT_PG_AU"
-	| 2
-	| "PAYMENT_PG_AL";
+export type jO0_EnumC27559z = 0 | "PAYMENT_PG_NONE" | 1 | "PAYMENT_PG_AU" | 2 | "PAYMENT_PG_AL";
 
 export type jf_EnumC27712a =
 	| 1
@@ -7210,13 +6734,7 @@ export type jf_EnumC27717f =
 	| 4
 	| "INTERNAL_SERVER_ERROR";
 
-export type kf_EnumC28766a =
-	| 0
-	| "ILLEGAL_ARGUMENT"
-	| 1
-	| "INTERNAL_ERROR"
-	| 2
-	| "UNAUTHORIZED";
+export type kf_EnumC28766a = 0 | "ILLEGAL_ARGUMENT" | 1 | "INTERNAL_ERROR" | 2 | "UNAUTHORIZED";
 
 export type kf_o = 0 | "ANDROID" | 1 | "IOS";
 
@@ -7226,15 +6744,7 @@ export type kf_r = 0 | "WEB" | 1 | "POSTBACK" | 2 | "SEND_MESSAGE";
 
 export type kf_u = 0 | "CLICK" | 1 | "IMPRESSION";
 
-export type kf_x =
-	| 0
-	| "UNKNOWN"
-	| 1
-	| "PROFILE"
-	| 2
-	| "TALK_LIST"
-	| 3
-	| "OA_CALL";
+export type kf_x = 0 | "UNKNOWN" | 1 | "PROFILE" | 2 | "TALK_LIST" | 3 | "OA_CALL";
 
 export type n80_o =
 	| 0
@@ -7344,23 +6854,11 @@ export type qm_EnumC34112e =
 	| 5
 	| "BROADCAST_STAY";
 
-export type qm_s =
-	| 0
-	| "ILLEGAL_ARGUMENT"
-	| 5
-	| "NOT_FOUND"
-	| 20
-	| "INTERNAL_ERROR";
+export type qm_s = 0 | "ILLEGAL_ARGUMENT" | 5 | "NOT_FOUND" | 20 | "INTERNAL_ERROR";
 
 export type r80_EnumC34361a = 1 | "PERSONAL_ACCOUNT" | 2 | "CURRENT_ACCOUNT";
 
-export type r80_EnumC34362b =
-	| 1
-	| "BANK_ALL"
-	| 2
-	| "BANK_DEPOSIT"
-	| 3
-	| "BANK_WITHDRAWAL";
+export type r80_EnumC34362b = 1 | "BANK_ALL" | 2 | "BANK_DEPOSIT" | 3 | "BANK_WITHDRAWAL";
 
 export type r80_EnumC34365e =
 	| 1
@@ -7416,15 +6914,7 @@ export type r80_EnumC34370j =
 
 export type r80_EnumC34371k = 0 | "NULL" | 1 | "ATM" | 2 | "CONVENIENCE_STORE";
 
-export type r80_EnumC34372l =
-	| 1
-	| "SCALE2"
-	| 2
-	| "SCALE3"
-	| 3
-	| "HDPI"
-	| 4
-	| "XHDPI";
+export type r80_EnumC34372l = 1 | "SCALE2" | 2 | "SCALE3" | 3 | "HDPI" | 4 | "XHDPI";
 
 export type r80_EnumC34374n =
 	| 0
@@ -7588,15 +7078,7 @@ export type r80_e0 =
 	| 6
 	| "LINE_CARD_AGREEMENT";
 
-export type r80_g0 =
-	| 0
-	| "NULL"
-	| 1
-	| "ATM"
-	| 2
-	| "CONVENIENCE_STORE"
-	| 3
-	| "ALL";
+export type r80_g0 = 0 | "NULL" | 1 | "ATM" | 2 | "CONVENIENCE_STORE" | 3 | "ALL";
 
 export type r80_h0 =
 	| 1
@@ -7644,25 +7126,11 @@ export type r80_m0 =
 
 export type r80_n0 = 1 | "LINE" | 2 | "LINEPAY";
 
-export type r80_r =
-	| 1
-	| "CITIZEN_ID"
-	| 2
-	| "PASSPORT"
-	| 3
-	| "WORK_PERMIT"
-	| 4
-	| "ALIEN_CARD";
+export type r80_r = 1 | "CITIZEN_ID" | 2 | "PASSPORT" | 3 | "WORK_PERMIT" | 4 | "ALIEN_CARD";
 
 export type t80_h = 1 | "CLIENT" | 2 | "SERVER";
 
-export type t80_i =
-	| 1
-	| "APP_INSTANCE_LOCAL"
-	| 2
-	| "APP_TYPE_LOCAL"
-	| 3
-	| "GLOBAL";
+export type t80_i = 1 | "APP_INSTANCE_LOCAL" | 2 | "APP_TYPE_LOCAL" | 3 | "GLOBAL";
 
 export type t80_n =
 	| 0
@@ -7692,15 +7160,7 @@ export type t80_n =
 	| 20739
 	| "SERVICE_UNAVAILABLE";
 
-export type t80_r =
-	| 1
-	| "USER_ACTION"
-	| 2
-	| "DATA_OUTDATED"
-	| 3
-	| "APP_MIGRATION"
-	| 100
-	| "OTHER";
+export type t80_r = 1 | "USER_ACTION" | 2 | "DATA_OUTDATED" | 3 | "APP_MIGRATION" | 100 | "OTHER";
 
 export type vh_EnumC37632c = 1 | "ACTIVE" | 2 | "INACTIVE";
 
@@ -7750,25 +7210,11 @@ export type zR0_j =
 	| 20739
 	| "SERVICE_UNAVAILABLE";
 
-export type zf_EnumC40713a =
-	| 1
-	| "PERSONAL"
-	| 2
-	| "ROOM"
-	| 3
-	| "GROUP"
-	| 4
-	| "SQUARE_CHAT";
+export type zf_EnumC40713a = 1 | "PERSONAL" | 2 | "ROOM" | 3 | "GROUP" | 4 | "SQUARE_CHAT";
 
 export type zf_EnumC40715c = 1 | "REGULAR" | 2 | "PRIORITY" | 3 | "MORE";
 
-export type zf_EnumC40716d =
-	| 1
-	| "INVALID_REQUEST"
-	| 2
-	| "UNAUTHORIZED"
-	| 100
-	| "SERVER_ERROR";
+export type zf_EnumC40716d = 1 | "INVALID_REQUEST" | 2 | "UNAUTHORIZED" | 100 | "SERVER_ERROR";
 
 export interface AccessTokenRefreshException {
 	errorCode: P70_g;
@@ -7986,11 +7432,9 @@ export interface WalletException {
 	attributes: Record<string, string>;
 }
 
-export interface m80_C30146a {
-}
+export interface m80_C30146a {}
 
-export interface m80_b {
-}
+export interface m80_b {}
 
 export interface AD {
 	body: string;
@@ -9535,14 +8979,11 @@ export interface EditorsPickBannerForClient {
 	description: string;
 }
 
-export interface Eg_C8928b {
-}
+export interface Eg_C8928b {}
 
-export interface Eh_C8933a {
-}
+export interface Eh_C8933a {}
 
-export interface Eh_C8935c {
-}
+export interface Eh_C8935c {}
 
 export interface EstablishE2EESessionRequest {
 	clientPublicKey: string;
@@ -11523,23 +10964,17 @@ export interface LIFFMenuColorSetting {
 	darkModeColor: LIFFMenuColor;
 }
 
-export interface LN0_A {
-}
+export interface LN0_A {}
 
-export interface LN0_A0 {
-}
+export interface LN0_A0 {}
 
-export interface LN0_B {
-}
+export interface LN0_B {}
 
-export interface LN0_B0 {
-}
+export interface LN0_B0 {}
 
-export interface LN0_C0 {
-}
+export interface LN0_C0 {}
 
-export interface LN0_C11270b {
-}
+export interface LN0_C11270b {}
 
 export interface LN0_C11274d {
 	invalid: AddMetaInvalid;
@@ -11586,89 +11021,61 @@ export interface LN0_C11274d {
 	premiumAgreement: LN0_H;
 }
 
-export interface LN0_C11276e {
-}
+export interface LN0_C11276e {}
 
-export interface LN0_C11278f {
-}
+export interface LN0_C11278f {}
 
-export interface LN0_C11280g {
-}
+export interface LN0_C11280g {}
 
-export interface LN0_C11282h {
-}
+export interface LN0_C11282h {}
 
-export interface LN0_C11290l {
-}
+export interface LN0_C11290l {}
 
-export interface LN0_C11292m {
-}
+export interface LN0_C11292m {}
 
-export interface LN0_C11294n {
-}
+export interface LN0_C11294n {}
 
-export interface LN0_C11300q {
-}
+export interface LN0_C11300q {}
 
-export interface LN0_C11307u {
-}
+export interface LN0_C11307u {}
 
-export interface LN0_C11308u0 {
-}
+export interface LN0_C11308u0 {}
 
-export interface LN0_C11309v {
-}
+export interface LN0_C11309v {}
 
-export interface LN0_C11310v0 {
-}
+export interface LN0_C11310v0 {}
 
-export interface LN0_C11312w0 {
-}
+export interface LN0_C11312w0 {}
 
-export interface LN0_C11313x {
-}
+export interface LN0_C11313x {}
 
-export interface LN0_C11315y {
-}
+export interface LN0_C11315y {}
 
-export interface LN0_C11316z {
-}
+export interface LN0_C11316z {}
 
-export interface LN0_D {
-}
+export interface LN0_D {}
 
-export interface LN0_E {
-}
+export interface LN0_E {}
 
-export interface LN0_F {
-}
+export interface LN0_F {}
 
-export interface LN0_G {
-}
+export interface LN0_G {}
 
-export interface LN0_H {
-}
+export interface LN0_H {}
 
-export interface LN0_L {
-}
+export interface LN0_L {}
 
-export interface LN0_O {
-}
+export interface LN0_O {}
 
-export interface LN0_P {
-}
+export interface LN0_P {}
 
-export interface LN0_Q {
-}
+export interface LN0_Q {}
 
-export interface LN0_S {
-}
+export interface LN0_S {}
 
-export interface LN0_T {
-}
+export interface LN0_T {}
 
-export interface LN0_U {
-}
+export interface LN0_U {}
 
 export interface LN0_V {
 	user: UserBlockDetail;
@@ -11682,8 +11089,7 @@ export interface LN0_Z {
 	notFriend: LN0_C11310v0;
 }
 
-export interface LN0_r {
-}
+export interface LN0_r {}
 
 export interface LN0_y0 {
 	recommendationDetail: RecommendationDetail;
@@ -12257,14 +11663,11 @@ export interface MyDashboardMessageIcon {
 	iconAltText: string;
 }
 
-export interface NZ0_C12150a0 {
-}
+export interface NZ0_C12150a0 {}
 
-export interface NZ0_C12152b {
-}
+export interface NZ0_C12152b {}
 
-export interface NZ0_C12155c {
-}
+export interface NZ0_C12155c {}
 
 export interface NZ0_C12206t0 {
 	id: string;
@@ -12281,8 +11684,7 @@ export interface NZ0_C12206t0 {
 	headers: any[];
 }
 
-export interface NZ0_C12208u {
-}
+export interface NZ0_C12208u {}
 
 export interface NZ0_C12209u0 {
 	fixedModules: NZ0_C12206t0[];
@@ -12299,8 +11701,7 @@ export interface NZ0_C12212v0 {
 	etag: string;
 }
 
-export interface NZ0_C12214w {
-}
+export interface NZ0_C12214w {}
 
 export interface NZ0_C12221y0 {
 	status: NZ0_EnumC12218x0;
@@ -12345,8 +11746,7 @@ export interface NZ0_F {
 	notFound: NZ0_F0;
 }
 
-export interface NZ0_F0 {
-}
+export interface NZ0_F0 {}
 
 export interface NZ0_G {
 	id: string;
@@ -12357,8 +11757,7 @@ export interface NZ0_G {
 	deviceId: string;
 }
 
-export interface NZ0_G0 {
-}
+export interface NZ0_G0 {}
 
 export interface NZ0_H {
 	moduleResponse: ModuleWithStatusResponse;
@@ -12376,11 +11775,9 @@ export interface NZ0_M {
 	notModified: NZ0_G0;
 }
 
-export interface NZ0_S {
-}
+export interface NZ0_S {}
 
-export interface NZ0_U {
-}
+export interface NZ0_U {}
 
 export interface NearbyEntry {
 	emid: string;
@@ -12464,11 +11861,9 @@ export interface OaAddFriendArea {
 	text: string;
 }
 
-export interface Ob1_C12606a0 {
-}
+export interface Ob1_C12606a0 {}
 
-export interface Ob1_C12608b {
-}
+export interface Ob1_C12608b {}
 
 export interface Ob1_C12618e0 {
 	subscriptionService: any;
@@ -12483,27 +11878,21 @@ export interface Ob1_C12621f0 {
 	totalSize: Int64;
 }
 
-export interface Ob1_C12630i0 {
-}
+export interface Ob1_C12630i0 {}
 
-export interface Ob1_C12637k1 {
-}
+export interface Ob1_C12637k1 {}
 
-export interface Ob1_C12642m0 {
-}
+export interface Ob1_C12642m0 {}
 
-export interface Ob1_C12649o1 {
-}
+export interface Ob1_C12649o1 {}
 
-export interface Ob1_C12660s1 {
-}
+export interface Ob1_C12660s1 {}
 
 export interface Ob1_E {
 	stickerSummary: any;
 }
 
-export interface Ob1_G {
-}
+export interface Ob1_G {}
 
 export interface Ob1_H0 {
 	lpPromotionProperty: any;
@@ -12528,8 +11917,7 @@ export interface Ob1_M {
 	totalSize: number;
 }
 
-export interface Ob1_N {
-}
+export interface Ob1_N {}
 
 export interface Ob1_P0 {
 	stickerSummary: StickerSummary;
@@ -12596,8 +11984,7 @@ export interface OrderInfo {
 	bot: Bot;
 }
 
-export interface P70_k {
-}
+export interface P70_k {}
 
 export interface PaidCallDialing {
 	type: PaidCallType;
@@ -12697,11 +12084,9 @@ export interface Pb1_A4 {
 	eMid: string;
 }
 
-export interface Pb1_A6 {
-}
+export interface Pb1_A6 {}
 
-export interface Pb1_B3 {
-}
+export interface Pb1_B3 {}
 
 export interface Pb1_C12916a5 {
 	wrappedNonce: string;
@@ -12714,8 +12099,7 @@ export interface Pb1_C12938c {
 	lineMeeting: AbuseReportLineMeeting;
 }
 
-export interface Pb1_C12946c7 {
-}
+export interface Pb1_C12946c7 {}
 
 export interface Pb1_C12953d0 {
 	verifier: string;
@@ -12726,23 +12110,17 @@ export interface Pb1_C12953d0 {
 	hashKeyChain: string;
 }
 
-export interface Pb1_C12980f {
-}
+export interface Pb1_C12980f {}
 
-export interface Pb1_C12996g1 {
-}
+export interface Pb1_C12996g1 {}
 
-export interface Pb1_C13008h {
-}
+export interface Pb1_C13008h {}
 
-export interface Pb1_C13019ha {
-}
+export interface Pb1_C13019ha {}
 
-export interface Pb1_C13042j5 {
-}
+export interface Pb1_C13042j5 {}
 
-export interface Pb1_C13070l5 {
-}
+export interface Pb1_C13070l5 {}
 
 export interface Pb1_C13097n4 {
 	version: number;
@@ -12756,17 +12134,13 @@ export interface Pb1_C13113o6 {
 	paidCallResponse: PaidCallResponse;
 }
 
-export interface Pb1_C13114o7 {
-}
+export interface Pb1_C13114o7 {}
 
-export interface Pb1_C13126p5 {
-}
+export interface Pb1_C13126p5 {}
 
-export interface Pb1_C13131pa {
-}
+export interface Pb1_C13131pa {}
 
-export interface Pb1_C13150r2 {
-}
+export interface Pb1_C13150r2 {}
 
 export interface Pb1_C13154r6 {
 	revision: Int64;
@@ -12790,8 +12164,7 @@ export interface Pb1_C13169s7 {
 	blobPayload: string;
 }
 
-export interface Pb1_C13183t7 {
-}
+export interface Pb1_C13183t7 {}
 
 export interface Pb1_C13190u0 {
 	rich: BuddyRichMenuChatBarItem;
@@ -12799,16 +12172,14 @@ export interface Pb1_C13190u0 {
 	web: BuddyWebChatBarItem;
 }
 
-export interface Pb1_C13202uc {
-}
+export interface Pb1_C13202uc {}
 
 export interface Pb1_C13208v4 {
 	groupExtra: GroupExtra;
 	peerExtra: Pb1_A6;
 }
 
-export interface Pb1_C13254y8 {
-}
+export interface Pb1_C13254y8 {}
 
 export interface Pb1_C13263z3 {
 	blobHeader: string;
@@ -12816,52 +12187,38 @@ export interface Pb1_C13263z3 {
 	reason: Pb1_A3;
 }
 
-export interface Pb1_Ca {
-}
+export interface Pb1_Ca {}
 
 export interface Pb1_E3 {
 	blobHeader: string;
 	payloadDataList: Pb1_X5[];
 }
 
-export interface Pb1_Ea {
-}
+export interface Pb1_Ea {}
 
-export interface Pb1_F3 {
-}
+export interface Pb1_F3 {}
 
-export interface Pb1_H3 {
-}
+export interface Pb1_H3 {}
 
-export interface Pb1_I3 {
-}
+export interface Pb1_I3 {}
 
-export interface Pb1_Ia {
-}
+export interface Pb1_Ia {}
 
-export interface Pb1_J5 {
-}
+export interface Pb1_J5 {}
 
-export interface Pb1_K3 {
-}
+export interface Pb1_K3 {}
 
-export interface Pb1_M3 {
-}
+export interface Pb1_M3 {}
 
-export interface Pb1_O {
-}
+export interface Pb1_O {}
 
-export interface Pb1_O3 {
-}
+export interface Pb1_O3 {}
 
-export interface Pb1_P9 {
-}
+export interface Pb1_P9 {}
 
-export interface Pb1_Q8 {
-}
+export interface Pb1_Q8 {}
 
-export interface Pb1_S5 {
-}
+export interface Pb1_S5 {}
 
 export interface Pb1_Sb {
 	reqSeq: number;
@@ -12869,8 +12226,7 @@ export interface Pb1_Sb {
 	hashKeyChain: string;
 }
 
-export interface Pb1_U1 {
-}
+export interface Pb1_U1 {}
 
 export interface Pb1_U3 {
 	keyVersion: number;
@@ -12892,8 +12248,7 @@ export interface Pb1_V3 {
 	createdTime: Int64;
 }
 
-export interface Pb1_W4 {
-}
+export interface Pb1_W4 {}
 
 export interface Pb1_W5 {
 	e2ee: E2EEMetadata;
@@ -12925,21 +12280,17 @@ export interface Pb1_X7 {
 	partialFullSyncResponse: PartialFullSyncResponse;
 }
 
-export interface Pb1_Y4 {
-}
+export interface Pb1_Y4 {}
 
-export interface Pb1_Za {
-}
+export interface Pb1_Za {}
 
-export interface Pb1_Zc {
-}
+export interface Pb1_Zc {}
 
 export interface Pb1_ad {
 	title: string;
 }
 
-export interface Pb1_cd {
-}
+export interface Pb1_cd {}
 
 export interface PendingAgreementsResponse {
 	pendingAgreements: number[];
@@ -13358,11 +12709,9 @@ export interface PutE2eeKeyRequest {
 	e2eeKey: Record<string, string>;
 }
 
-export interface Q70_l {
-}
+export interface Q70_l {}
 
-export interface Q70_o {
-}
+export interface Q70_o {}
 
 export interface Qj_C13595l {
 	none: any;
@@ -13379,8 +12728,7 @@ export interface Qj_C13602t {
 	externalService: any;
 }
 
-export interface Qj_C13607y {
-}
+export interface Qj_C13607y {}
 
 export interface QuickMenuCouponInfo {
 	couponCount: string;
@@ -13417,17 +12765,13 @@ export interface QuickMenuPointInfo {
 	responseStatus: NZ0_W0;
 }
 
-export interface R70_a {
-}
+export interface R70_a {}
 
-export interface R70_c {
-}
+export interface R70_c {}
 
-export interface R70_d {
-}
+export interface R70_d {}
 
-export interface R70_t {
-}
+export interface R70_t {}
 
 export interface RSAEncryptedLoginInfo {
 	loginId: string;
@@ -13906,11 +13250,9 @@ export interface Rssi {
 	value: number;
 }
 
-export interface S70_b {
-}
+export interface S70_b {}
 
-export interface S70_k {
-}
+export interface S70_k {}
 
 export interface SCC {
 	businessName: string;
@@ -15218,17 +14560,13 @@ export interface SyncSquareMembersResponse {
 	updatedSquareMembers: SquareMember[];
 }
 
-export interface T70_C14398f {
-}
+export interface T70_C14398f {}
 
-export interface T70_g1 {
-}
+export interface T70_g1 {}
 
-export interface T70_o1 {
-}
+export interface T70_o1 {}
 
-export interface T70_s1 {
-}
+export interface T70_s1 {}
 
 export interface TGlobalEvents {
 	events: Record<number, GlobalEvent>;
@@ -15406,14 +14744,11 @@ export interface TryAgainLaterExtraInfo {
 	blockSecs: number;
 }
 
-export interface U70_a {
-}
+export interface U70_a {}
 
-export interface U70_t {
-}
+export interface U70_t {}
 
-export interface U70_v {
-}
+export interface U70_v {}
 
 export interface UEN {
 	revision: Int64;
@@ -15781,8 +15116,7 @@ export interface Z70_a {
 	backupBlobPayload: string;
 }
 
-export interface ZQ0_b {
-}
+export interface ZQ0_b {}
 
 export interface acceptChatInvitationByTicket_args {
 	request: AcceptChatInvitationByTicketRequest;
@@ -17244,82 +16578,57 @@ export interface clearRingtone_result {
 	e: TalkException;
 }
 
-export interface AcceptSpeakersResponse {
-}
+export interface AcceptSpeakersResponse {}
 
-export interface AcceptToChangeRoleResponse {
-}
+export interface AcceptToChangeRoleResponse {}
 
-export interface AcceptToListenResponse {
-}
+export interface AcceptToListenResponse {}
 
-export interface AcceptToSpeakResponse {
-}
+export interface AcceptToSpeakResponse {}
 
-export interface AgreeToTermsResponse {
-}
+export interface AgreeToTermsResponse {}
 
-export interface AllNonMemberLiveTalkParticipants {
-}
+export interface AllNonMemberLiveTalkParticipants {}
 
-export interface CancelToSpeakResponse {
-}
+export interface CancelToSpeakResponse {}
 
-export interface DeleteSquareChatAnnouncementResponse {
-}
+export interface DeleteSquareChatAnnouncementResponse {}
 
-export interface DeleteSquareChatResponse {
-}
+export interface DeleteSquareChatResponse {}
 
-export interface DeleteSquareResponse {
-}
+export interface DeleteSquareResponse {}
 
-export interface DestroyMessageResponse {
-}
+export interface DestroyMessageResponse {}
 
-export interface DestroyMessagesResponse {
-}
+export interface DestroyMessagesResponse {}
 
-export interface ForceEndLiveTalkResponse {
-}
+export interface ForceEndLiveTalkResponse {}
 
-export interface GetPopularKeywordsRequest {
-}
+export interface GetPopularKeywordsRequest {}
 
-export interface GetSquareCategoriesRequest {
-}
+export interface GetSquareCategoriesRequest {}
 
-export interface HideSquareMemberContentsResponse {
-}
+export interface HideSquareMemberContentsResponse {}
 
-export interface InviteToChangeRoleResponse {
-}
+export interface InviteToChangeRoleResponse {}
 
-export interface InviteToListenResponse {
-}
+export interface InviteToListenResponse {}
 
-export interface InviteToLiveTalkResponse {
-}
+export interface InviteToLiveTalkResponse {}
 
-export interface InviteToSquareResponse {
-}
+export interface InviteToSquareResponse {}
 
-export interface KickOutLiveTalkParticipantsResponse {
-}
+export interface KickOutLiveTalkParticipantsResponse {}
 
-export interface LeaveSquareChatResponse {
-}
+export interface LeaveSquareChatResponse {}
 
-export interface LeaveSquareResponse {
-}
+export interface LeaveSquareResponse {}
 
 export interface LiveTalkEventPayload {
 	notifiedUpdateLiveTalkTitle: LiveTalkEventNotifiedUpdateLiveTalkTitle;
-	notifiedUpdateLiveTalkAnnouncement:
-		LiveTalkEventNotifiedUpdateLiveTalkAnnouncement;
+	notifiedUpdateLiveTalkAnnouncement: LiveTalkEventNotifiedUpdateLiveTalkAnnouncement;
 	notifiedUpdateSquareMemberRole: LiveTalkEventNotifiedUpdateSquareMemberRole;
-	notifiedUpdateLiveTalkAllowRequestToSpeak:
-		LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak;
+	notifiedUpdateLiveTalkAllowRequestToSpeak: LiveTalkEventNotifiedUpdateLiveTalkAllowRequestToSpeak;
 	notifiedUpdateSquareMember: LiveTalkEventNotifiedUpdateSquareMember;
 }
 
@@ -17328,53 +16637,37 @@ export interface LiveTalkKickOutTarget {
 	allNonMemberLiveTalkParticipants: AllNonMemberLiveTalkParticipants;
 }
 
-export interface MarkAsReadResponse {
-}
+export interface MarkAsReadResponse {}
 
-export interface MarkChatsAsReadResponse {
-}
+export interface MarkChatsAsReadResponse {}
 
-export interface MarkThreadsAsReadResponse {
-}
+export interface MarkThreadsAsReadResponse {}
 
-export interface RejectSpeakersResponse {
-}
+export interface RejectSpeakersResponse {}
 
-export interface RejectToSpeakResponse {
-}
+export interface RejectToSpeakResponse {}
 
-export interface RemoveLiveTalkSubscriptionResponse {
-}
+export interface RemoveLiveTalkSubscriptionResponse {}
 
-export interface RemoveSubscriptionsResponse {
-}
+export interface RemoveSubscriptionsResponse {}
 
-export interface ReportLiveTalkResponse {
-}
+export interface ReportLiveTalkResponse {}
 
-export interface ReportLiveTalkSpeakerResponse {
-}
+export interface ReportLiveTalkSpeakerResponse {}
 
-export interface ReportMessageSummaryResponse {
-}
+export interface ReportMessageSummaryResponse {}
 
-export interface ReportSquareChatResponse {
-}
+export interface ReportSquareChatResponse {}
 
-export interface ReportSquareMemberResponse {
-}
+export interface ReportSquareMemberResponse {}
 
-export interface ReportSquareMessageResponse {
-}
+export interface ReportSquareMessageResponse {}
 
-export interface ReportSquareResponse {
-}
+export interface ReportSquareResponse {}
 
-export interface RequestToListenResponse {
-}
+export interface RequestToListenResponse {}
 
-export interface RequestToSpeakResponse {
-}
+export interface RequestToSpeakResponse {}
 
 export interface SquareEventPayload {
 	receiveMessage: SquareEventReceiveMessage;
@@ -17384,8 +16677,7 @@ export interface SquareEventPayload {
 	notifiedLeaveSquareChat: SquareEventNotifiedLeaveSquareChat;
 	notifiedDestroyMessage: SquareEventNotifiedDestroyMessage;
 	notifiedMarkAsRead: SquareEventNotifiedMarkAsRead;
-	notifiedUpdateSquareMemberProfile:
-		SquareEventNotifiedUpdateSquareMemberProfile;
+	notifiedUpdateSquareMemberProfile: SquareEventNotifiedUpdateSquareMemberProfile;
 	notifiedUpdateSquare: SquareEventNotifiedUpdateSquare;
 	notifiedUpdateSquareMember: SquareEventNotifiedUpdateSquareMember;
 	notifiedUpdateSquareChat: SquareEventNotifiedUpdateSquareChat;
@@ -17395,8 +16687,7 @@ export interface SquareEventPayload {
 	notifiedUpdateSquareChatStatus: SquareEventNotifiedUpdateSquareChatStatus;
 	notifiedCreateSquareMember: SquareEventNotifiedCreateSquareMember;
 	notifiedCreateSquareChatMember: SquareEventNotifiedCreateSquareChatMember;
-	notifiedUpdateSquareMemberRelation:
-		SquareEventNotifiedUpdateSquareMemberRelation;
+	notifiedUpdateSquareMemberRelation: SquareEventNotifiedUpdateSquareMemberRelation;
 	notifiedShutdownSquare: SquareEventNotifiedShutdownSquare;
 	notifiedKickoutFromSquare: SquareEventNotifiedKickoutFromSquare;
 	notifiedDeleteSquareChat: SquareEventNotifiedDeleteSquareChat;
@@ -17409,18 +16700,14 @@ export interface SquareEventPayload {
 	notificationSquareDelete: SquareEventNotificationSquareDelete;
 	notificationSquareChatDelete: SquareEventNotificationSquareChatDelete;
 	notificationMessage: SquareEventNotificationMessage;
-	notifiedUpdateSquareChatProfileName:
-		SquareEventNotifiedUpdateSquareChatProfileName;
-	notifiedUpdateSquareChatProfileImage:
-		SquareEventNotifiedUpdateSquareChatProfileImage;
+	notifiedUpdateSquareChatProfileName: SquareEventNotifiedUpdateSquareChatProfileName;
+	notifiedUpdateSquareChatProfileImage: SquareEventNotifiedUpdateSquareChatProfileImage;
 	notifiedUpdateSquareFeatureSet: SquareEventNotifiedUpdateSquareFeatureSet;
 	notifiedAddBot: SquareEventNotifiedAddBot;
 	notifiedRemoveBot: SquareEventNotifiedRemoveBot;
 	notifiedUpdateSquareNoteStatus: SquareEventNotifiedUpdateSquareNoteStatus;
-	notifiedUpdateSquareChatAnnouncement:
-		SquareEventNotifiedUpdateSquareChatAnnouncement;
-	notifiedUpdateSquareChatMaxMemberCount:
-		SquareEventNotifiedUpdateSquareChatMaxMemberCount;
+	notifiedUpdateSquareChatAnnouncement: SquareEventNotifiedUpdateSquareChatAnnouncement;
+	notifiedUpdateSquareChatMaxMemberCount: SquareEventNotifiedUpdateSquareChatMaxMemberCount;
 	notificationPostAnnouncement: SquareEventNotificationPostAnnouncement;
 	notificationPost: SquareEventNotificationPost;
 	mutateMessage: SquareEventMutateMessage;
@@ -17430,32 +16717,26 @@ export interface SquareEventPayload {
 	notificationMessageReaction: SquareEventNotificationMessageReaction;
 	chatPopup: SquareEventChatPopup;
 	notifiedSystemMessage: SquareEventNotifiedSystemMessage;
-	notifiedUpdateSquareChatFeatureSet:
-		SquareEventNotifiedUpdateSquareChatFeatureSet;
+	notifiedUpdateSquareChatFeatureSet: SquareEventNotifiedUpdateSquareChatFeatureSet;
 	notifiedUpdateLiveTalkInfo: SquareEventNotifiedUpdateLiveTalkInfo;
 	notifiedUpdateLiveTalk: SquareEventNotifiedUpdateLiveTalk;
 	notificationLiveTalk: SquareEventNotificationLiveTalk;
 	notificationThreadMessage: SquareEventNotificationThreadMessage;
-	notificationThreadMessageReaction:
-		SquareEventNotificationThreadMessageReaction;
+	notificationThreadMessageReaction: SquareEventNotificationThreadMessageReaction;
 	notifiedUpdateThread: SquareEventNotifiedUpdateThread;
 	notifiedUpdateThreadStatus: SquareEventNotifiedUpdateThreadStatus;
 	notifiedUpdateThreadMember: SquareEventNotifiedUpdateThreadMember;
 	notifiedUpdateThreadRootMessage: SquareEventNotifiedUpdateThreadRootMessage;
-	notifiedUpdateThreadRootMessageStatus:
-		SquareEventNotifiedUpdateThreadRootMessageStatus;
+	notifiedUpdateThreadRootMessageStatus: SquareEventNotifiedUpdateThreadRootMessageStatus;
 	notifiedCreateSquareSubscription: any;
 	notifiedUpdateSquareSubscription: any;
 }
 
-export interface UnhideSquareMemberContentsResponse {
-}
+export interface UnhideSquareMemberContentsResponse {}
 
-export interface UpdateLiveTalkAttrsResponse {
-}
+export interface UpdateLiveTalkAttrsResponse {}
 
-export interface UpdateUserSettingsResponse {
-}
+export interface UpdateUserSettingsResponse {}
 
 export interface ButtonBGColor {
 	custom: CustomColor;
@@ -17468,8 +16749,7 @@ export interface ButtonContent {
 	okButton: OkButton;
 }
 
-export interface DefaultGradientColor {
-}
+export interface DefaultGradientColor {}
 
 export interface ErrorExtraInfo {
 	preconditionFailedExtraInfo: number;
@@ -17751,11 +17031,9 @@ export interface do0_C23143a {
 	bytes: string;
 }
 
-export interface do0_C23152j {
-}
+export interface do0_C23152j {}
 
-export interface do0_C23153k {
-}
+export interface do0_C23153k {}
 
 export interface do0_C23158p {
 	serviceUuid: string;
@@ -17763,14 +17041,11 @@ export interface do0_C23158p {
 	data: string;
 }
 
-export interface do0_C23161t {
-}
+export interface do0_C23161t {}
 
-export interface do0_C23165x {
-}
+export interface do0_C23165x {}
 
-export interface do0_C23167z {
-}
+export interface do0_C23167z {}
 
 export interface do0_F {
 	scenarioId: string;
@@ -17790,14 +17065,11 @@ export interface do0_I {
 	bleNotificationReceived: BleNotificationReceivedTrigger;
 }
 
-export interface do0_V {
-}
+export interface do0_V {}
 
-export interface do0_X {
-}
+export interface do0_X {}
 
-export interface do0_m0 {
-}
+export interface do0_m0 {}
 
 export interface editItemsInCollection_args {
 	request: any;
@@ -17840,17 +17112,13 @@ export interface existPinCode_result {
 	e: SecondAuthFactorPinCodeException;
 }
 
-export interface fN0_C24471c {
-}
+export interface fN0_C24471c {}
 
-export interface fN0_C24473e {
-}
+export interface fN0_C24473e {}
 
-export interface fN0_C24475g {
-}
+export interface fN0_C24475g {}
 
-export interface fN0_C24476h {
-}
+export interface fN0_C24476h {}
 
 export interface fetchOperations_args {
 	request: FetchOperationsRequest;
@@ -17956,11 +17224,9 @@ export interface follow_result {
 	e: TalkException;
 }
 
-export interface gN0_C25143G {
-}
+export interface gN0_C25143G {}
 
-export interface gN0_C25147d {
-}
+export interface gN0_C25147d {}
 
 export interface generateUserTicket_args {
 	expirationTime: Int64;
@@ -19790,34 +19056,26 @@ export interface getWebLoginDisallowedUrl_result {
 	e: ChannelException;
 }
 
-export interface h80_C25643c {
-}
+export interface h80_C25643c {}
 
 export interface h80_t {
 	newDevicePublicKey: string;
 	encryptedQrIdentifier: string;
 }
 
-export interface h80_v {
-}
+export interface h80_v {}
 
-export interface I80_A0 {
-}
+export interface I80_A0 {}
 
-export interface I80_C26398e {
-}
+export interface I80_C26398e {}
 
-export interface I80_C26404h {
-}
+export interface I80_C26404h {}
 
-export interface I80_F0 {
-}
+export interface I80_F0 {}
 
-export interface I80_r0 {
-}
+export interface I80_r0 {}
 
-export interface I80_v0 {
-}
+export interface I80_v0 {}
 
 export interface inviteFriends_args {
 	request: InviteFriendsRequest;
@@ -19975,14 +19233,11 @@ export interface joinChatByCallUrl_result {
 	e: TalkException;
 }
 
-export interface jp_naver_line_shop_protocol_thrift_ProductProperty {
-}
+export interface jp_naver_line_shop_protocol_thrift_ProductProperty {}
 
-export interface kf_i {
-}
+export interface kf_i {}
 
-export interface kf_k {
-}
+export interface kf_k {}
 
 export interface kf_m {
 	richmenu: RichmenuEvent;
@@ -20044,17 +19299,13 @@ export interface lookupPaidCall_result {
 	e: TalkException;
 }
 
-export interface m80_l {
-}
+export interface m80_l {}
 
-export interface m80_n {
-}
+export interface m80_n {}
 
-export interface m80_q {
-}
+export interface m80_q {}
 
-export interface m80_s {
-}
+export interface m80_s {}
 
 export interface mapProfileToUsers_args {
 	request: MapProfileToUsersRequest;
@@ -20092,11 +19343,9 @@ export interface migratePrimaryUsingQrCode_result {
 	e: PrimaryQrCodeMigrationException;
 }
 
-export interface n80_C31222b {
-}
+export interface n80_C31222b {}
 
-export interface n80_d {
-}
+export interface n80_d {}
 
 export interface negotiateE2EEPublicKey_args {
 	mid: string;
@@ -20107,8 +19356,7 @@ export interface negotiateE2EEPublicKey_result {
 	e: TalkException;
 }
 
-export interface noop_args {
-}
+export interface noop_args {}
 
 export interface noop_result {
 	e: TalkException;
@@ -20215,17 +19463,13 @@ export interface notifyUpdated_result {
 	e: TalkException;
 }
 
-export interface o80_C32273b {
-}
+export interface o80_C32273b {}
 
-export interface o80_d {
-}
+export interface o80_d {}
 
-export interface o80_m {
-}
+export interface o80_m {}
 
-export interface og_u {
-}
+export interface og_u {}
 
 export interface openAuthSession_args {
 	request: AuthSessionRequest;
@@ -20305,14 +19549,11 @@ export interface putE2eeKey_result {
 	e: SecondaryPwlessLoginException;
 }
 
-export interface q80_C33650b {
-}
+export interface q80_C33650b {}
 
-export interface q80_q {
-}
+export interface q80_q {}
 
-export interface q80_s {
-}
+export interface q80_s {}
 
 export interface qm_C34110c {
 	inFriends: string;
@@ -20366,11 +19607,9 @@ export interface queryBeaconActions_result {
 	e: TalkException;
 }
 
-export interface r80_C34358N {
-}
+export interface r80_C34358N {}
 
-export interface r80_C34360P {
-}
+export interface r80_C34360P {}
 
 export interface react_args {
 	reactRequest: ReactRequest;
@@ -21472,8 +20711,7 @@ export interface verifySocialLogin_result {
 	e: AuthException;
 }
 
-export interface vh_C37633d {
-}
+export interface vh_C37633d {}
 
 export interface wakeUpLongPolling_args {
 	clientRevision: Int64;
@@ -21484,8 +20722,7 @@ export interface wakeUpLongPolling_result {
 	e: TalkException;
 }
 
-export interface zR0_C40576a {
-}
+export interface zR0_C40576a {}
 
 export interface zR0_C40580e {
 	sticker: any;
@@ -21548,13 +20785,7 @@ export interface GetUserFriendIdsResponse {
 	nextUserPageToken: string;
 }
 
-export type ForbiddenWordsGroup =
-	| 1
-	| "SQUARE_NAME"
-	| 2
-	| "SQUARE_DESCRIPTION"
-	| 3
-	| "MEMBER_NAME";
+export type ForbiddenWordsGroup = 1 | "SQUARE_NAME" | 2 | "SQUARE_DESCRIPTION" | 3 | "MEMBER_NAME";
 
 export type LMPCode =
 	| 1

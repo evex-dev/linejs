@@ -2,28 +2,24 @@ import { getRSACrypto } from "./rsa-verify.ts";
 import { EMAIL_REGEX, PASSWORD_REGEX } from "./regex.ts";
 import { type Device, isV3Support } from "../core/utils/devices.ts";
 import { InternalError } from "../core/mod.ts";
-import type * as LINETypes from "@evex/linejs-types";
+import type * as LINETypes from "@evex-dev/linejs-types";
 import { Buffer } from "node:buffer";
 import { LINEStruct } from "../thrift/mod.ts";
 import type { BaseClient } from "../core/mod.ts";
-import type { LooseType } from "@evex/loose-types";
-import {
-	type AuthTokenInput,
-	parseAuthTokenInput,
-} from "../request/auth_token.ts";
+import type { LooseType } from "../types.ts";
+import { type AuthTokenInput, parseAuthTokenInput } from "../request/auth_token.ts";
 
-export type LoginOption = PasswordLoginOption | QrCodeLoginOption | {
-	authToken: AuthTokenInput;
-	email?: undefined;
-	qr?: undefined;
-};
+export type LoginOption =
+	| PasswordLoginOption
+	| QrCodeLoginOption
+	| {
+			authToken: AuthTokenInput;
+			email?: undefined;
+			qr?: undefined;
+	  };
 
-export function registrationAuthEndpoint(
-	device: Device,
-): "/api/v3p/rs" | "/api/v4p/rs" {
-	return device === "ANDROID" || device === "ANDROIDSECONDARY"
-		? "/api/v4p/rs"
-		: "/api/v3p/rs";
+export function registrationAuthEndpoint(device: Device): "/api/v3p/rs" | "/api/v4p/rs" {
+	return device === "ANDROID" || device === "ANDROIDSECONDARY" ? "/api/v4p/rs" : "/api/v3p/rs";
 }
 
 interface LoginVer {
@@ -93,7 +89,7 @@ export class Login {
 	 * @return {Promise<string | undefined>} The certificate, or undefined if it does not exist or an error occurred.
 	 */
 	public async getCert(email: string): Promise<string | undefined> {
-		return await this.client.storage.get("cert:" + email) as string;
+		return (await this.client.storage.get("cert:" + email)) as string;
 	}
 
 	/**
@@ -111,7 +107,7 @@ export class Login {
 	 * @return {Promise<string | undefined>} The certificate, or undefined if it does not exist or an error occurred.
 	 */
 	public async getQrCert(): Promise<string | undefined> {
-		return await this.client.storage.get("qrCert") as string;
+		return (await this.client.storage.get("qrCert")) as string;
 	}
 
 	async ready(): Promise<void> {
@@ -149,9 +145,7 @@ export class Login {
 	 * // Login with email and password
 	 * await login({ email: 'user@example.com', password: 'your-password' });
 	 */
-	async login(
-		options?: LoginOption,
-	) {
+	async login(options?: LoginOption) {
 		if (!options) {
 			await this.withQrCode();
 		} else if (options.qr) {
@@ -179,9 +173,7 @@ export class Login {
 	 */
 	async withQrCode(options?: QrCodeLoginOption): Promise<void> {
 		let authToken: string;
-		if (
-			typeof options === "undefined" || typeof options.v3 === "undefined"
-		) {
+		if (typeof options === "undefined" || typeof options.v3 === "undefined") {
 			if (isV3Support(this.client.device)) {
 				authToken = await this.requestSQR2();
 			} else {
@@ -221,20 +213,14 @@ export class Login {
 			}
 			let e2eeKeyResult: LooseType = undefined;
 			if (e2eeInfo) {
-				e2eeKeyResult = await this.client.e2ee.decodeE2EEKeyV1(
-					e2eeInfo,
-					Buffer.from(secret),
-				);
+				e2eeKeyResult = await this.client.e2ee.decodeE2EEKeyV1(e2eeInfo, Buffer.from(secret));
 			}
 			if (!e2eeKeyResult) {
 				await this.client.e2ee.registerE2EEKeyPair();
 			}
 			return authToken;
 		}
-		throw new InternalError(
-			"TimeoutError",
-			"checkQrCodeVerified timed out",
-		);
+		throw new InternalError("TimeoutError", "checkQrCodeVerified timed out");
 	}
 
 	public async requestSQR2(): Promise<string> {
@@ -261,23 +247,13 @@ export class Login {
 		// and retries up to `longPollingMaxCount` times.  A single
 		// non-long-polling call (the legacy behaviour) makes the server
 		// expire the session almost immediately.
-		if (
-			await this.checkQrCodeVerified(
-				sqr,
-				longPollingMaxCount,
-				longPollingIntervalSec,
-			)
-		) {
+		if (await this.checkQrCodeVerified(sqr, longPollingMaxCount, longPollingIntervalSec)) {
 			try {
 				await this.verifyCertificate(sqr, await this.getQrCert());
 			} catch (_e) {
 				const { 1: pincode } = await this.createPinCode(sqr);
 				this.client.emit("pincall", pincode);
-				await this.checkPinCodeVerified(
-					sqr,
-					longPollingMaxCount,
-					longPollingIntervalSec,
-				);
+				await this.checkPinCodeVerified(sqr, longPollingMaxCount, longPollingIntervalSec);
 			}
 			const response = await this.qrCodeLoginV2ForSecure(sqr, nonce);
 			// Response shape per `oc4.q` (QrCodeLoginV2Response — reused
@@ -296,25 +272,16 @@ export class Login {
 			const e2eeInfo = response[10] ?? metaData?.["e2eeInfo"];
 			let e2eeKeyResult: LooseType = undefined;
 			if (e2eeInfo) {
-				e2eeKeyResult = await this.client.e2ee.decodeE2EEKeyV1(
-					e2eeInfo,
-					Buffer.from(secret),
-				);
+				e2eeKeyResult = await this.client.e2ee.decodeE2EEKeyV1(e2eeInfo, Buffer.from(secret));
 			}
 			if (!e2eeKeyResult) {
 				await this.client.e2ee.registerE2EEKeyPair();
 			}
 			await this.client.storage.set("refreshToken", tokenInfo[2]);
-			await this.client.storage.set(
-				"expire",
-				tokenInfo[3] + tokenInfo[6],
-			);
+			await this.client.storage.set("expire", tokenInfo[3] + tokenInfo[6]);
 			return tokenInfo[1];
 		}
-		throw new InternalError(
-			"TimeoutError",
-			"checkQrCodeVerified timed out",
-		);
+		throw new InternalError("TimeoutError", "checkQrCodeVerified timed out");
 	}
 
 	/**
@@ -408,16 +375,15 @@ export class Login {
 		const rsaKey = await this.getRSAKeyInfo();
 		const { keynm, sessionKey } = rsaKey;
 
-		const message = String.fromCharCode(sessionKey.length) +
+		const message =
+			String.fromCharCode(sessionKey.length) +
 			sessionKey +
 			String.fromCharCode(email.length) +
 			email +
 			String.fromCharCode(password.length) +
 			password;
 
-		let e2eeData: Buffer | undefined,
-			secret: Uint8Array | undefined,
-			secretPK: string | undefined;
+		let e2eeData: Buffer | undefined, secret: Uint8Array | undefined, secretPK: string | undefined;
 
 		if (enableE2EE) {
 			[secret, secretPK] = this.client.e2ee.createSqrSecret(true);
@@ -429,7 +395,7 @@ export class Login {
 
 		const encryptedMessage = getRSACrypto(message, rsaKey).credentials;
 
-		const cert = await this.getCert(email) || undefined;
+		const cert = (await this.getCert(email)) || undefined;
 
 		let response = await this.loginV2(
 			keynm,
@@ -454,27 +420,20 @@ export class Login {
 					"accept-encoding": "gzip",
 				};
 				const e2eeInfo = (
-					await this.client.fetch(
-						`https://${this.client.request.endpoint}/LF1`,
-						{
+					await this.client
+						.fetch(`https://${this.client.request.endpoint}/LF1`, {
 							headers: headers,
-						},
-					).then((res) => res.json())
+						})
+						.then((res) => res.json())
 				).result;
 				this.client.log("response", e2eeInfo);
-				await this.client.e2ee.decodeE2EEKeyV1(
-					e2eeInfo.metadata,
-					Buffer.from(secret),
-				);
+				await this.client.e2ee.decodeE2EEKeyV1(e2eeInfo.metadata, Buffer.from(secret));
 				const deviceSecret = this.client.e2ee.encryptDeviceSecret(
 					Buffer.from(e2eeInfo.metadata.publicKey, "base64"),
 					Buffer.from(secret),
 					Buffer.from(e2eeInfo.metadata.encryptedKeyChain, "base64"),
 				);
-				const e2eeLogin = await this.confirmE2EELogin(
-					response.verifier,
-					deviceSecret,
-				);
+				const e2eeLogin = await this.confirmE2EELogin(response.verifier, deviceSecret);
 				response = await this.loginV2(
 					keynm,
 					encryptedMessage,
@@ -495,12 +454,11 @@ export class Login {
 					"x-lhm": "GET",
 					"accept-encoding": "gzip",
 				};
-				const verifier = await this.client.fetch(
-					`https://${this.client.request.endpoint}/Q`,
-					{
+				const verifier = await this.client
+					.fetch(`https://${this.client.request.endpoint}/Q`, {
 						headers: headers,
-					},
-				).then((res) => res.json());
+					})
+					.then((res) => res.json());
 				this.client.log("response", verifier);
 				response = await this.loginV2(
 					keynm,
@@ -542,7 +500,8 @@ export class Login {
 		const rsaKey = await this.getRSAKeyInfo();
 		const { keynm, sessionKey } = rsaKey;
 
-		const message = String.fromCharCode(sessionKey.length) +
+		const message =
+			String.fromCharCode(sessionKey.length) +
 			sessionKey +
 			String.fromCharCode(email.length) +
 			email +
@@ -557,7 +516,7 @@ export class Login {
 
 		const encryptedMessage = getRSACrypto(message, rsaKey).credentials;
 
-		const cert = await this.getCert(email) || undefined;
+		const cert = (await this.getCert(email)) || undefined;
 
 		let response = await this.loginV2(
 			keynm,
@@ -582,27 +541,20 @@ export class Login {
 				"accept-encoding": "gzip",
 			};
 			const e2eeInfo = (
-				await this.client.fetch(
-					`https://${this.client.request.endpoint}/LF1`,
-					{
+				await this.client
+					.fetch(`https://${this.client.request.endpoint}/LF1`, {
 						headers: headers,
-					},
-				).then((res) => res.json())
+					})
+					.then((res) => res.json())
 			).result;
 			this.client.log("response", e2eeInfo);
-			await this.client.e2ee.decodeE2EEKeyV1(
-				e2eeInfo.metadata,
-				Buffer.from(secret),
-			);
+			await this.client.e2ee.decodeE2EEKeyV1(e2eeInfo.metadata, Buffer.from(secret));
 			const deviceSecret = this.client.e2ee.encryptDeviceSecret(
 				Buffer.from(e2eeInfo.metadata.publicKey, "base64"),
 				Buffer.from(secret),
 				Buffer.from(e2eeInfo.metadata.encryptedKeyChain, "base64"),
 			);
-			const e2eeLogin = await this.confirmE2EELogin(
-				response[3],
-				deviceSecret,
-			);
+			const e2eeLogin = await this.confirmE2EELogin(response[3], deviceSecret);
 			response = await this.loginV2(
 				keynm,
 				encryptedMessage,
@@ -618,10 +570,7 @@ export class Login {
 			await this.registerCert(response[2], email);
 		}
 		await this.client.storage.set("refreshToken", response[9][2]);
-		await this.client.storage.set(
-			"expire",
-			response[9][3] + response[9][6],
-		);
+		await this.client.storage.set("expire", response[9][3] + response[9][6]);
 		return response[9][1];
 	}
 
@@ -632,9 +581,7 @@ export class Login {
 	 * @returns {Promise<LINETypes.RSAKey>} RSA key info.
 	 * @throws {FetchError} If failed to fetch RSA key info.
 	 */
-	public async getRSAKeyInfo(
-		provider: LINETypes.IdentityProvider = 0,
-	): Promise<LINETypes.RSAKey> {
+	public async getRSAKeyInfo(provider: LINETypes.IdentityProvider = 0): Promise<LINETypes.RSAKey> {
 		return await this.client.request.request(
 			[[12, 1, [[8, 2, LINEStruct.IdentityProvider(provider)]]]],
 			"getRSAKeyInfo",
@@ -687,13 +634,7 @@ export class Login {
 	}
 
 	public async createSession(): Promise<LooseType> {
-		return await this.client.request.request(
-			[],
-			"createSession",
-			4,
-			false,
-			"/acct/lgn/sq/v1",
-		);
+		return await this.client.request.request([], "createSession", 4, false, "/acct/lgn/sq/v1");
 	}
 
 	public async createQrCode(qrcode: string): Promise<LooseType> {
@@ -731,10 +672,7 @@ export class Login {
 				const msg = error instanceof Error ? error.message : String(error);
 				// Long-polling: a timed-out poll just means "no user
 				// action yet", keep looping.  Anything else is fatal.
-				if (
-					/Timeout|timed out|status=408|status=410/i.test(msg) &&
-					i < maxCount - 1
-				) {
+				if (/Timeout|timed out|status=408|status=410/i.test(msg) && i < maxCount - 1) {
 					continue;
 				}
 				throw error;
@@ -743,12 +681,18 @@ export class Login {
 		return false;
 	}
 
-	public async verifyCertificate(
-		qrcode: string,
-		cert?: string | undefined,
-	): Promise<LooseType> {
+	public async verifyCertificate(qrcode: string, cert?: string | undefined): Promise<LooseType> {
 		return await this.client.request.request(
-			[[12, 1, [[11, 1, qrcode], [11, 2, cert]]]],
+			[
+				[
+					12,
+					1,
+					[
+						[11, 1, qrcode],
+						[11, 2, cert],
+					],
+				],
+			],
 			"verifyCertificate",
 			4,
 			false,
@@ -789,10 +733,7 @@ export class Login {
 				return true;
 			} catch (error) {
 				const msg = error instanceof Error ? error.message : String(error);
-				if (
-					/Timeout|timed out|status=408|status=410/i.test(msg) &&
-					i < maxCount - 1
-				) {
+				if (/Timeout|timed out|status=408|status=410/i.test(msg) && i < maxCount - 1) {
 					continue;
 				}
 				throw error;
@@ -806,11 +747,17 @@ export class Login {
 		autoLoginIsRequired: boolean = true,
 	): Promise<LooseType> {
 		return await this.client.request.request(
-			[[12, 1, [
-				[11, 1, authSessionId],
-				[11, 2, this.client.device],
-				[2, 3, autoLoginIsRequired],
-			]]],
+			[
+				[
+					12,
+					1,
+					[
+						[11, 1, authSessionId],
+						[11, 2, this.client.device],
+						[2, 3, autoLoginIsRequired],
+					],
+				],
+			],
 			"qrCodeLogin",
 			4,
 			false,
@@ -825,12 +772,18 @@ export class Login {
 		autoLoginIsRequired: boolean = true,
 	): Promise<LooseType> {
 		return await this.client.request.request(
-			[[12, 1, [
-				[11, 1, authSessionId],
-				[11, 2, systemName],
-				[11, 3, modelName],
-				[2, 4, autoLoginIsRequired],
-			]]],
+			[
+				[
+					12,
+					1,
+					[
+						[11, 1, authSessionId],
+						[11, 2, systemName],
+						[11, 3, modelName],
+						[2, 4, autoLoginIsRequired],
+					],
+				],
+			],
 			"qrCodeLoginV2",
 			4,
 			false,
@@ -852,9 +805,7 @@ export class Login {
 	 *
 	 * Schema source: smali `oc4.i.smali` in LINE Android 26.6.2.
 	 */
-	public async createQrCodeForSecure(
-		authSessionId: string,
-	): Promise<LooseType> {
+	public async createQrCodeForSecure(authSessionId: string): Promise<LooseType> {
 		return await this.client.request.request(
 			[[12, 1, [[11, 1, authSessionId]]]],
 			"createQrCodeForSecure",
@@ -884,13 +835,19 @@ export class Login {
 		autoLoginIsRequired: boolean = true,
 	): Promise<LooseType> {
 		return await this.client.request.request(
-			[[12, 1, [
-				[11, 1, authSessionId],
-				[11, 2, systemName],
-				[11, 3, modelName],
-				[2, 4, autoLoginIsRequired],
-				[11, 5, nonce],
-			]]],
+			[
+				[
+					12,
+					1,
+					[
+						[11, 1, authSessionId],
+						[11, 2, systemName],
+						[11, 3, modelName],
+						[2, 4, autoLoginIsRequired],
+						[11, 5, nonce],
+					],
+				],
+			],
 			"qrCodeLoginV2ForSecure",
 			4,
 			false,
@@ -898,10 +855,7 @@ export class Login {
 		);
 	}
 
-	public async confirmE2EELogin(
-		verifier: string,
-		deviceSecret: Buffer,
-	): Promise<LooseType> {
+	public async confirmE2EELogin(verifier: string, deviceSecret: Buffer): Promise<LooseType> {
 		return await this.client.request.request(
 			[
 				[11, 1, verifier],

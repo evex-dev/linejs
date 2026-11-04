@@ -1,4 +1,4 @@
-import type * as line from "@evex/linejs-types";
+import type * as line from "@evex-dev/linejs-types";
 import type { Client } from "../../mod.ts";
 import type {
 	CompactMessageResponse,
@@ -26,8 +26,7 @@ export class User {
 	 * constructed with a Client.
 	 */
 	async fetchCalendarEvents(
-		eventKinds?:
-			line.GetContactCalendarEventsRequest["requiredContactCalendarEvents"],
+		eventKinds?: line.GetContactCalendarEventsRequest["requiredContactCalendarEvents"],
 	): Promise<line.ContactCalendarEvent[]> {
 		const client = this.#requireClient("fetchCalendarEvents");
 		const res = await client.base.relation.getContactCalendarEvents({

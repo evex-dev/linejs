@@ -5,7 +5,7 @@ into two layers:
 
 - `client.call.*` wraps LINE's call control APIs, such as route acquisition and
   group-call URL management.
-- `@evex/linejs/call` contains the call media building blocks: PLANET
+- `@evex-dev/linejs/call` contains the call media building blocks: PLANET
   signaling, SRTP, RTP, Opus, WAV/PCM helpers, and the transport-neutral
   `CallSession` wrapper.
 
@@ -29,7 +29,7 @@ command example:
 ```sh
 LINE_AUTH_TOKEN_FILE=/path/to/auth-token.txt \
 LINE_DEVICE=ANDROID \
-deno run -A example/call/call_on_command.ts ./voice.wav
+node example/call/call_on_command.ts ./voice.wav
 ```
 
 Then send `!call` to that account in a 1:1 chat. The example will:
@@ -44,19 +44,19 @@ Then send `!call` to that account in a 1:1 chat. The example will:
 
 For a reliable outgoing audio call, these defaults matter:
 
-| Setting | Use this |
-| --- | --- |
-| Device | `ANDROID` |
-| Call type | `AUDIO` |
-| Route env info | `fromEnvInfo.devname` |
-| Transport | `PlanetTransport` |
-| Media key mode | `audio-reverse-stage` |
-| Input audio | 16-bit PCM WAV |
-| Sample rate | 48 kHz |
-| Channels | mono |
-| Opus frame size | 20 ms |
-| RTP timestamp step | `960` |
-| PLANET audio payload prefix | `00` |
+| Setting                     | Use this              |
+| --------------------------- | --------------------- |
+| Device                      | `ANDROID`             |
+| Call type                   | `AUDIO`               |
+| Route env info              | `fromEnvInfo.devname` |
+| Transport                   | `PlanetTransport`     |
+| Media key mode              | `audio-reverse-stage` |
+| Input audio                 | 16-bit PCM WAV        |
+| Sample rate                 | 48 kHz                |
+| Channels                    | mono                  |
+| Opus frame size             | 20 ms                 |
+| RTP timestamp step          | `960`                 |
+| PLANET audio payload prefix | `00`                  |
 
 The rest of this page explains why those values are needed and where each one
 fits into the call flow.
@@ -88,20 +88,20 @@ and real-time pacing.
 
 ## Implementation Status
 
-| Area | Status |
-| --- | --- |
-| 1:1 call route acquisition | `client.call.acquireRoute()` |
-| Outgoing Android 1:1 audio calls | `PlanetTransport` |
-| PLANET SETUP/INVITE signaling | `inviteDetailed()` |
-| Peer answer handshake | `waitForAnswerDetailed()` and automatic `conn_rsp` |
-| SRTP media send/receive | `AES_CM_128_HMAC_SHA1_80` |
-| Opus encode/decode hooks | `opusCodecFactory()` |
-| WAV/PCM helpers | `decodeWavSync()`, `resampleLinear()`, `bufferSource()` |
-| Incoming call notifications | `call:incoming`, `call:cancel` |
-| Incoming call answering | Not wrapped as a high-level public flow yet |
-| Group-call URL/control APIs | Wrapped under `client.call.*` |
-| Group-call PLANET join | `PlanetTransport.joinGroupDetailed()` |
-| Group-call audio send | Supported with native group Opus packetization |
+| Area                             | Status                                                  |
+| -------------------------------- | ------------------------------------------------------- |
+| 1:1 call route acquisition       | `client.call.acquireRoute()`                            |
+| Outgoing Android 1:1 audio calls | `PlanetTransport`                                       |
+| PLANET SETUP/INVITE signaling    | `inviteDetailed()`                                      |
+| Peer answer handshake            | `waitForAnswerDetailed()` and automatic `conn_rsp`      |
+| SRTP media send/receive          | `AES_CM_128_HMAC_SHA1_80`                               |
+| Opus encode/decode hooks         | `opusCodecFactory()`                                    |
+| WAV/PCM helpers                  | `decodeWavSync()`, `resampleLinear()`, `bufferSource()` |
+| Incoming call notifications      | `call:incoming`, `call:cancel`                          |
+| Incoming call answering          | Not wrapped as a high-level public flow yet             |
+| Group-call URL/control APIs      | Wrapped under `client.call.*`                           |
+| Group-call PLANET join           | `PlanetTransport.joinGroupDetailed()`                   |
+| Group-call audio send            | Supported with native group Opus packetization          |
 
 The older `AndromedaTransport` and SIP/MIKEY helpers are still exported for
 experiments and compatibility, but the working modern Android 1:1 audio flow is
@@ -112,27 +112,28 @@ PLANET.
 Most applications only need these exports:
 
 ```ts
-import { loginWithAuthToken } from "@evex/linejs";
+import { readFileSync } from "node:fs";
+import { loginWithAuthToken } from "@evex-dev/linejs";
 import {
 	decodeWavSync,
 	opusCodecFactory,
 	PlanetTransport,
 	resampleLinear,
-} from "@evex/linejs/call";
+} from "@evex-dev/linejs/call";
 ```
 
 Useful call APIs:
 
-| API | Purpose |
-| --- | --- |
-| `client.call.acquireRoute({ to, callType: "AUDIO" })` | Fetches a fresh call route for a peer. |
-| `new PlanetTransport({ localMid, ... })` | Creates the PLANET signaling and media transport. |
-| `transport.connect({ route })` | Opens UDP and prepares PLANET transport crypto. |
-| `transport.inviteDetailed({ to })` | Sends `setup_req` and waits for `setup_rsp`. |
-| `transport.waitForAnswerDetailed()` | Waits for peer `conn_req`, derives SRTP keys, and sends `conn_rsp`. |
-| `transport.send(packet, { timestampStep })` | Sends one SRTP-protected RTP media packet. |
-| `transport.receive()` | Yields received media payloads after SRTP authentication. |
-| `transport.close()` | Sends `rel_req` when applicable and closes the socket. |
+| API                                                   | Purpose                                                             |
+| ----------------------------------------------------- | ------------------------------------------------------------------- |
+| `client.call.acquireRoute({ to, callType: "AUDIO" })` | Fetches a fresh call route for a peer.                              |
+| `new PlanetTransport({ localMid, ... })`              | Creates the PLANET signaling and media transport.                   |
+| `transport.connect({ route })`                        | Opens UDP and prepares PLANET transport crypto.                     |
+| `transport.inviteDetailed({ to })`                    | Sends `setup_req` and waits for `setup_rsp`.                        |
+| `transport.waitForAnswerDetailed()`                   | Waits for peer `conn_req`, derives SRTP keys, and sends `conn_rsp`. |
+| `transport.send(packet, { timestampStep })`           | Sends one SRTP-protected RTP media packet.                          |
+| `transport.receive()`                                 | Yields received media payloads after SRTP authentication.           |
+| `transport.close()`                                   | Sends `rel_req` when applicable and closes the socket.              |
 
 ## Minimal Outgoing Audio Call
 
@@ -140,19 +141,20 @@ This is the explicit low-level flow. It is intentionally verbose so each
 protocol step is visible.
 
 ```ts
-import { loginWithAuthToken } from "@evex/linejs";
+import { readFileSync } from "node:fs";
+import { loginWithAuthToken } from "@evex-dev/linejs";
 import {
 	decodeWavSync,
 	opusCodecFactory,
 	PlanetTransport,
 	resampleLinear,
-} from "@evex/linejs/call";
+} from "@evex-dev/linejs/call";
 
-const client = await loginWithAuthToken(Deno.env.get("LINE_AUTH_TOKEN")!, {
+const client = await loginWithAuthToken(process.env.LINE_AUTH_TOKEN!, {
 	device: "ANDROID",
 });
 
-const to = Deno.env.get("LINE_CALL_TO")!;
+const to = process.env.LINE_CALL_TO!;
 const localMid = client.base.profile?.mid;
 if (!localMid) throw new Error("profile is not ready");
 
@@ -179,7 +181,7 @@ try {
 		throw new Error("peer answered, but media keys were not established");
 	}
 
-	const wav = decodeWavSync(await Deno.readFile("./audio.wav"));
+	const wav = decodeWavSync(readFileSync("./audio.wav"));
 	let samples = wav.samples;
 	if (wav.sampleRate !== 48_000) {
 		samples = resampleLinear(samples, wav.sampleRate, 48_000, wav.channels);
@@ -258,7 +260,7 @@ all handled by the library.
 ```sh
 LINE_AUTH_TOKEN_FILE=/path/to/auth-token.txt \
 LINE_DEVICE=ANDROID \
-deno run -A example/call/call_on_command.ts
+node example/call/call_on_command.ts
 ```
 
 You can replace the bundled audio with any 16-bit PCM WAV:
@@ -266,36 +268,36 @@ You can replace the bundled audio with any 16-bit PCM WAV:
 ```sh
 LINE_AUTH_TOKEN_FILE=/path/to/auth-token.txt \
 LINE_DEVICE=ANDROID \
-deno run -A example/call/call_on_command.ts ./voice.wav
+node example/call/call_on_command.ts ./voice.wav
 ```
 
 The example intentionally keeps account-specific material outside the
 repository:
 
-| Variable | Default | Meaning |
-| --- | --- | --- |
-| `LINE_AUTH_TOKEN` | | Auth token string. |
-| `LINE_AUTH_TOKEN_FILE` | | File containing an auth token. If unset, QR login is used. |
-| `LINE_STORAGE_FILE` | | Optional `FileStorage` path. If unset, in-memory storage is used. |
-| `LINE_DEVICE` | context-aware | Login device type. Defaults to `ANDROID` with an auth token, otherwise `ANDROIDSECONDARY`. |
-| `LINE_VERSION` | package default | LINE app version used in `x-line-application`. |
-| `LINE_CALL_DEVNAME` | package default | Device name sent in `fromEnvInfo.devname` during route acquisition. |
-| `LINE_CALL_DEVICE_INFO` | Android default | PLANET user-agent device info. Override only when emulating a specific native client. |
-| `LINE_CALL_FROM_ENV_INFO` | | JSON string map for the full `fromEnvInfo` route-acquisition field. |
-| `LINE_CALL_COMMAND` | `!call` | Chat command that starts the call. |
-| `LINE_CALL_WAV` | `./unity.wav` | WAV file to stream. The first CLI arg overrides this. |
-| `LINE_CALL_FRAME_MS` | `20` | Opus frame size. |
-| `LINE_CALL_PAYLOAD_PREFIX_HEX` | `00` | Native PLANET audio payload prefix. |
-| `LINE_CALL_MEDIA_KEY_MODE` | mode default | SRTP key selection mode. Defaults to `audio-reverse-stage` for 1:1 calls and `audio-secret-sender` for group calls. |
-| `LINE_CALL_GAIN` | `1` | PCM gain before Opus encoding. |
-| `LINE_CALL_REPEAT_COUNT` | `1` | Number of times to replay the WAV before closing the call. |
-| `LINE_CALL_HOLD_MS` | `1000` | Extra hold time after audio finishes. |
-| `LINE_CALL_TIMEOUT_MS` | `10000` | Timeout for initial PLANET replies. |
-| `LINE_CALL_ANSWER_TIMEOUT_MS` | `60000` | Timeout while waiting for the peer to answer. |
-| `LINE_CALL_OPUS_BITRATE` | | Optional Opus bitrate in bit/s. |
-| `LINE_CALL_OPUS_BANDWIDTH` | | Optional Opus bandwidth. |
-| `LINE_CALL_OPUS_SIGNAL` | `music` | Opus signal hint. Use `voice` for speech-only clips. |
-| `LINE_CALL_OPUS_VBR` | `false` | Enable Opus VBR. |
+| Variable                       | Default         | Meaning                                                                                                             |
+| ------------------------------ | --------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `LINE_AUTH_TOKEN`              |                 | Auth token string.                                                                                                  |
+| `LINE_AUTH_TOKEN_FILE`         |                 | File containing an auth token. If unset, QR login is used.                                                          |
+| `LINE_STORAGE_FILE`            |                 | Optional `FileStorage` path. If unset, in-memory storage is used.                                                   |
+| `LINE_DEVICE`                  | context-aware   | Login device type. Defaults to `ANDROID` with an auth token, otherwise `ANDROIDSECONDARY`.                          |
+| `LINE_VERSION`                 | package default | LINE app version used in `x-line-application`.                                                                      |
+| `LINE_CALL_DEVNAME`            | package default | Device name sent in `fromEnvInfo.devname` during route acquisition.                                                 |
+| `LINE_CALL_DEVICE_INFO`        | Android default | PLANET user-agent device info. Override only when emulating a specific native client.                               |
+| `LINE_CALL_FROM_ENV_INFO`      |                 | JSON string map for the full `fromEnvInfo` route-acquisition field.                                                 |
+| `LINE_CALL_COMMAND`            | `!call`         | Chat command that starts the call.                                                                                  |
+| `LINE_CALL_WAV`                | `./unity.wav`   | WAV file to stream. The first CLI arg overrides this.                                                               |
+| `LINE_CALL_FRAME_MS`           | `20`            | Opus frame size.                                                                                                    |
+| `LINE_CALL_PAYLOAD_PREFIX_HEX` | `00`            | Native PLANET audio payload prefix.                                                                                 |
+| `LINE_CALL_MEDIA_KEY_MODE`     | mode default    | SRTP key selection mode. Defaults to `audio-reverse-stage` for 1:1 calls and `audio-secret-sender` for group calls. |
+| `LINE_CALL_GAIN`               | `1`             | PCM gain before Opus encoding.                                                                                      |
+| `LINE_CALL_REPEAT_COUNT`       | `1`             | Number of times to replay the WAV before closing the call.                                                          |
+| `LINE_CALL_HOLD_MS`            | `1000`          | Extra hold time after audio finishes.                                                                               |
+| `LINE_CALL_TIMEOUT_MS`         | `10000`         | Timeout for initial PLANET replies.                                                                                 |
+| `LINE_CALL_ANSWER_TIMEOUT_MS`  | `60000`         | Timeout while waiting for the peer to answer.                                                                       |
+| `LINE_CALL_OPUS_BITRATE`       |                 | Optional Opus bitrate in bit/s.                                                                                     |
+| `LINE_CALL_OPUS_BANDWIDTH`     |                 | Optional Opus bandwidth.                                                                                            |
+| `LINE_CALL_OPUS_SIGNAL`        | `music`         | Opus signal hint. Use `voice` for speech-only clips.                                                                |
+| `LINE_CALL_OPUS_VBR`           | `false`         | Enable Opus VBR.                                                                                                    |
 
 ## How the Outgoing Flow Works
 
@@ -386,13 +388,13 @@ const answer = await transport.waitForAnswerDetailed({
 
 The answer result includes:
 
-| Field | Meaning |
-| --- | --- |
-| `connReq` | Decoded connection request. |
-| `peerAnswerOffer` | Decoded peer media answer when present. |
-| `peerOffer` | Alternate decoded peer offer shape when present. |
-| `connRspSent` | Whether linejs sent `conn_rsp`. |
-| `mediaReady` | Whether SRTP send/receive contexts and RTP target were configured. |
+| Field             | Meaning                                                            |
+| ----------------- | ------------------------------------------------------------------ |
+| `connReq`         | Decoded connection request.                                        |
+| `peerAnswerOffer` | Decoded peer media answer when present.                            |
+| `peerOffer`       | Alternate decoded peer offer shape when present.                   |
+| `connRspSent`     | Whether linejs sent `conn_rsp`.                                    |
+| `mediaReady`      | Whether SRTP send/receive contexts and RTP target were configured. |
 
 With `autoConnRsp: true`, linejs sends `conn_rsp` and also replies to duplicate
 `conn_req` packets while the peer settles. This matters because real clients can
@@ -457,16 +459,16 @@ linejs handles:
 
 The main call-control messages are:
 
-| Message | Direction | Purpose |
-| --- | --- | --- |
-| `setup_req` | caller -> relay | Start the call and ring the peer. |
-| `setup_rsp` | relay -> caller | Confirm setup, return keepalive timing and ringing state. |
-| pinhole probes | caller -> relay | Keep NAT/UDP path usable for call media. |
-| keepalive | caller -> relay | Maintain the PLANET session. |
-| `conn_req` | relay -> caller | Peer answered; carries media answer material and media endpoint fields. |
-| `conn_rsp` | caller -> relay | Acknowledge answer and complete media negotiation. |
-| `info_req` | relay -> caller | Miscellaneous control request. linejs answers with `info_rsp`. |
-| `rel_req` | caller -> relay | Release/end the call. |
+| Message        | Direction       | Purpose                                                                 |
+| -------------- | --------------- | ----------------------------------------------------------------------- |
+| `setup_req`    | caller -> relay | Start the call and ring the peer.                                       |
+| `setup_rsp`    | relay -> caller | Confirm setup, return keepalive timing and ringing state.               |
+| pinhole probes | caller -> relay | Keep NAT/UDP path usable for call media.                                |
+| keepalive      | caller -> relay | Maintain the PLANET session.                                            |
+| `conn_req`     | relay -> caller | Peer answered; carries media answer material and media endpoint fields. |
+| `conn_rsp`     | caller -> relay | Acknowledge answer and complete media negotiation.                      |
+| `info_req`     | relay -> caller | Miscellaneous control request. linejs answers with `info_rsp`.          |
+| `rel_req`      | caller -> relay | Release/end the call.                                                   |
 
 ## Keying Model
 
@@ -494,19 +496,19 @@ orientations because native clients use direction-sensitive material ordering.
 
 `PlanetTransportOpts.mediaKeyMode` selects which candidate is used:
 
-| Mode | Use |
-| --- | --- |
-| `current` | Base non-stream-specific key orientation. |
-| `reverse-stage` | Reversed base orientation. |
-| `sender-material` | Sender-material base orientation. |
-| `sender-material-reverse-stage` | Reversed sender-material orientation. |
-| `audio-current` | AUDIO stream key derived from `current`. |
-| `audio-reverse-stage` | AUDIO stream key derived from `reverse-stage`; working Android audio-send default. |
-| `audio-sender-material` | AUDIO stream key derived from sender material. |
-| `audio-sender-material-reverse-stage` | AUDIO stream key derived from reversed sender material. |
-| `secret-receiver` / `secret-sender` | Direct secret-material modes. |
-| `audio-secret-receiver` / `audio-secret-sender` | AUDIO stream key derived from direct secret material. |
-| `auto` | Starts with `current` and can switch receive mode when authenticated inbound RTP proves another candidate. |
+| Mode                                            | Use                                                                                                        |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `current`                                       | Base non-stream-specific key orientation.                                                                  |
+| `reverse-stage`                                 | Reversed base orientation.                                                                                 |
+| `sender-material`                               | Sender-material base orientation.                                                                          |
+| `sender-material-reverse-stage`                 | Reversed sender-material orientation.                                                                      |
+| `audio-current`                                 | AUDIO stream key derived from `current`.                                                                   |
+| `audio-reverse-stage`                           | AUDIO stream key derived from `reverse-stage`; working Android audio-send default.                         |
+| `audio-sender-material`                         | AUDIO stream key derived from sender material.                                                             |
+| `audio-sender-material-reverse-stage`           | AUDIO stream key derived from reversed sender material.                                                    |
+| `secret-receiver` / `secret-sender`             | Direct secret-material modes.                                                                              |
+| `audio-secret-receiver` / `audio-secret-sender` | AUDIO stream key derived from direct secret material.                                                      |
+| `auto`                                          | Starts with `current` and can switch receive mode when authenticated inbound RTP proves another candidate. |
 
 For outgoing audio examples, prefer `audio-reverse-stage` unless you are testing
 a different native path.
@@ -524,11 +526,11 @@ a different native path.
 Use `timestampStep` to match your Opus frame duration:
 
 | Frame duration | 48 kHz samples | `timestampStep` |
-| --- | ---: | ---: |
-| 10 ms | 480 | 480 |
-| 20 ms | 960 | 960 |
-| 40 ms | 1920 | 1920 |
-| 60 ms | 2880 | 2880 |
+| -------------- | -------------: | --------------: |
+| 10 ms          |            480 |             480 |
+| 20 ms          |            960 |             960 |
+| 40 ms          |           1920 |            1920 |
+| 60 ms          |           2880 |            2880 |
 
 20 ms is the safest default. If packets are sent too quickly, too slowly, or
 with the wrong timestamp step, the peer may hear dropouts, repeated fragments,
@@ -539,15 +541,15 @@ or nothing at all.
 LINE call media expects Opus frames in an RTP stream. linejs provides small
 building blocks instead of hiding the whole pipeline:
 
-| Helper | Purpose |
-| --- | --- |
-| `decodeWavSync(bytes)` | Decodes uncompressed 16-bit PCM WAV. |
-| `resampleLinear(samples, fromRate, toRate, channels)` | Linear PCM resampler. |
-| `bufferSource()` | Splits PCM into timed frames. |
-| `bufferSink()` | Collects decoded PCM frames. |
-| `streamSource()` / `streamSink()` | Adapt Web streams to call audio sources/sinks. |
-| `opusCodecFactory()` | Loads `opusscript` and creates Opus encoders/decoders. |
-| `packetizeNativeGroupOpusPairs()` | Combines two 20 ms Opus packets into the native 40 ms group-call payload shape. |
+| Helper                                                | Purpose                                                                         |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `decodeWavSync(bytes)`                                | Decodes uncompressed 16-bit PCM WAV.                                            |
+| `resampleLinear(samples, fromRate, toRate, channels)` | Linear PCM resampler.                                                           |
+| `bufferSource()`                                      | Splits PCM into timed frames.                                                   |
+| `bufferSink()`                                        | Collects decoded PCM frames.                                                    |
+| `streamSource()` / `streamSink()`                     | Adapt Web streams to call audio sources/sinks.                                  |
+| `opusCodecFactory()`                                  | Loads `opusscript` and creates Opus encoders/decoders.                          |
+| `packetizeNativeGroupOpusPairs()`                     | Combines two 20 ms Opus packets into the native 40 ms group-call payload shape. |
 
 Recommended sender pipeline:
 
@@ -669,34 +671,34 @@ const transport = new PlanetTransport({
 
 Useful events include:
 
-| Event | Meaning |
-| --- | --- |
-| `send` / `recv` | PLANET control packet sent or received. |
-| `decrypt_ok` / `decrypt_fail` | Control packet authentication/decryption status. |
-| `plain_shape` | Decoded protobuf field shape. |
-| `media_configured` | SRTP keys, RTP endpoint, payload type, and SSRC selected. |
-| `media_send` | One SRTP media packet was sent. |
-| `media_recv` | One SRTP media packet was authenticated and decrypted. |
-| `media_decrypt_fail` | Inbound RTP did not authenticate under current candidates. |
+| Event                         | Meaning                                                    |
+| ----------------------------- | ---------------------------------------------------------- |
+| `send` / `recv`               | PLANET control packet sent or received.                    |
+| `decrypt_ok` / `decrypt_fail` | Control packet authentication/decryption status.           |
+| `plain_shape`                 | Decoded protobuf field shape.                              |
+| `media_configured`            | SRTP keys, RTP endpoint, payload type, and SSRC selected.  |
+| `media_send`                  | One SRTP media packet was sent.                            |
+| `media_recv`                  | One SRTP media packet was authenticated and decrypted.     |
+| `media_decrypt_fail`          | Inbound RTP did not authenticate under current candidates. |
 
 Avoid logging auth tokens, MIDs, full routes, full decrypted packets, or key
 material in public examples and issue reports.
 
 ## Troubleshooting
 
-| Symptom | Likely cause | What to check |
-| --- | --- | --- |
-| Call never rings | No `setup_req`, stale route, wrong peer, or route acquisition failed. | Acquire a fresh route, call `inviteDetailed()`, verify `route.fakeCall` is false. |
+| Symptom                                         | Likely cause                                                               | What to check                                                                                                                                                                                                      |
+| ----------------------------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Call never rings                                | No `setup_req`, stale route, wrong peer, or route acquisition failed.      | Acquire a fresh route, call `inviteDetailed()`, verify `route.fakeCall` is false.                                                                                                                                  |
 | `acquireCallRoute(/V4)` returns `INVALID_STATE` | LINE rejected the account, peer, or device state before signaling started. | Verify the command came from a callable 1:1 friend chat, do not call yourself, match `LINE_DEVICE` to the token's device family, and set `LINE_CALL_DEVNAME` or `fromEnvInfo.devname` to the primary device model. |
-| `PLANET reply timeout` before ringing | UDP path or transport key bootstrap failed. | Check IPv4/IPv6 choice, network, route endpoint, and `commParam.mpkey`. |
-| Peer answers but `mediaReady` is false | `conn_req` did not contain decodable media material. | Inspect `answer.peerAnswerOffer`, `answer.peerOffer`, and debug `plain_shape`. |
-| Peer hears silence | SRTP may be valid but payload shape is wrong. | Use `mediaKeyMode: "audio-reverse-stage"`, prefix Opus with `00`, and send 20 ms frames. |
-| Peer hears noisy/choppy audio | Wrong frame timing, bad sample conversion, or missing prefix. | Use 48 kHz mono PCM, 20 ms Opus, `timestampStep: 960`, and real-time sleeps. |
-| Audio plays too fast or too slow | RTP timestamp step does not match frame duration. | Use `sampleRate * frameMs / 1000`. |
-| Call ends after audio finishes | Script closed the transport. | Increase hold time or keep the transport open. |
-| Terminal call code after close | The script initiated release. | Expected for short scripted calls. |
-| `decodeWavSync` rejects the file | File is compressed or not 16-bit PCM WAV. | Convert with ffmpeg to `-ac 1 -ar 48000 -sample_fmt s16`. |
-| Permission error in Deno | Missing runtime permission. | Use `deno run -A` for examples or grant `--allow-net --allow-read --allow-env --allow-run` as needed. |
+| `PLANET reply timeout` before ringing           | UDP path or transport key bootstrap failed.                                | Check IPv4/IPv6 choice, network, route endpoint, and `commParam.mpkey`.                                                                                                                                            |
+| Peer answers but `mediaReady` is false          | `conn_req` did not contain decodable media material.                       | Inspect `answer.peerAnswerOffer`, `answer.peerOffer`, and debug `plain_shape`.                                                                                                                                     |
+| Peer hears silence                              | SRTP may be valid but payload shape is wrong.                              | Use `mediaKeyMode: "audio-reverse-stage"`, prefix Opus with `00`, and send 20 ms frames.                                                                                                                           |
+| Peer hears noisy/choppy audio                   | Wrong frame timing, bad sample conversion, or missing prefix.              | Use 48 kHz mono PCM, 20 ms Opus, `timestampStep: 960`, and real-time sleeps.                                                                                                                                       |
+| Audio plays too fast or too slow                | RTP timestamp step does not match frame duration.                          | Use `sampleRate * frameMs / 1000`.                                                                                                                                                                                 |
+| Call ends after audio finishes                  | Script closed the transport.                                               | Increase hold time or keep the transport open.                                                                                                                                                                     |
+| Terminal call code after close                  | The script initiated release.                                              | Expected for short scripted calls.                                                                                                                                                                                 |
+| `decodeWavSync` rejects the file                | File is compressed or not 16-bit PCM WAV.                                  | Convert with ffmpeg to `-ac 1 -ar 48000 -sample_fmt s16`.                                                                                                                                                          |
+| `EACCES` / missing file error                   | The process cannot read the token or audio file.                           | Run the examples with `node` and make sure `LINE_AUTH_TOKEN_FILE` and the WAV path are readable.                                                                                                                   |
 
 ## E2EE and Privacy Notes
 
@@ -764,7 +766,7 @@ The helper accepts the same prefixed 20 ms packets used by 1:1 examples. Supply
 one activity boolean per input frame when using CELT:
 
 ```ts
-import { packetizeNativeGroupOpusPairs } from "@evex/linejs/call";
+import { packetizeNativeGroupOpusPairs } from "@evex-dev/linejs/call";
 
 const groupPackets = packetizeNativeGroupOpusPairs(oneToOneStylePackets, {
 	frameActivity, // boolean[] from your encoder or a PCM non-silence meter
@@ -794,15 +796,15 @@ remove the native prefix and, for CELT, the activity bitmap. The ordinary codec,
 Group-call URL and membership APIs are also available:
 
 ```ts
-const created = await client.call.createGroupCallUrl({ /* request */ });
+const created = await client.call.createGroupCallUrl({/* request */});
 const urls = await client.call.listGroupCallUrls();
 const info = await client.call.getGroupCallUrl("ticket");
 
-await client.call.updateGroupCallUrl({ /* request */ });
-await client.call.deleteGroupCallUrl({ /* request */ });
+await client.call.updateGroupCallUrl({/* request */});
+await client.call.deleteGroupCallUrl({/* request */});
 await client.call.joinChatByUrl("ticket");
-await client.call.invite({ /* request */ });
-await client.call.kick({ /* request */ });
+await client.call.invite({/* request */});
+await client.call.kick({/* request */});
 ```
 
 ## Test Coverage

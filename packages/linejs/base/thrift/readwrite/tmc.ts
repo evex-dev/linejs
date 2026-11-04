@@ -1,5 +1,5 @@
 import type { Buffer } from "node:buffer";
-import type { LooseType } from "@evex/loose-types";
+import type { LooseType } from "../../types.ts";
 
 /**
  * TMoreCompactProtocol - TypeScript implementation
@@ -36,11 +36,7 @@ export class TMoreCompactProtocol {
 	baseException: { [key: string]: number };
 	readWith?: string;
 
-	constructor(
-		inputData?: Buffer,
-		baseException?: { [key: string]: number },
-		readWith?: string,
-	) {
+	constructor(inputData?: Buffer, baseException?: { [key: string]: number }, readWith?: string) {
 		this.buildHuffmanNode = this.buildHuffmanNodeImpl.bind(this);
 		this.bufferToHexArray = this.convertBufferToHexArray.bind(this);
 		this.initializeHuffmanTree(); // Initialize Huffman tree
@@ -64,9 +60,7 @@ export class TMoreCompactProtocol {
 			this.currentPosition += 1;
 			result |= BigInt(byte & 127) << BigInt(shift);
 			if ((byte & 128) !== 128) {
-				return (result > Number.MAX_SAFE_INTEGER)
-					? <LooseType> result
-					: Number(result);
+				return result > Number.MAX_SAFE_INTEGER ? (result as LooseType) : Number(result);
 			}
 			shift += 7;
 		}
@@ -112,9 +106,7 @@ export class TMoreCompactProtocol {
 		} else {
 			const fieldType = this.getNextType();
 			[result] = this.readDataByType(fieldType);
-			throw new Error(
-				`recv fid \`${fieldIdBits}\`, expected \`1\`, message: \`${result}\``,
-			);
+			throw new Error(`recv fid \`${fieldIdBits}\`, expected \`1\`, message: \`${result}\``);
 		}
 
 		this.res = result;
@@ -127,14 +119,11 @@ export class TMoreCompactProtocol {
 	}
 
 	// Read data by type
-	readDataByType(
-		typeId: number,
-		fieldId: number | null = null,
-	): [number | null, LooseType] {
+	readDataByType(typeId: number, fieldId: number | null = null): [number | null, LooseType] {
 		let value: unknown = null;
 		let temp: unknown = null;
 		let valData: unknown = null;
-		// deno-lint-ignore no-unused-vars
+		// oxlint-disable-next-line no-unused-vars
 		let subType: number[] | null = null;
 
 		if (typeId === 2) {
@@ -169,11 +158,8 @@ export class TMoreCompactProtocol {
 			valData = {};
 
 			for (const fid of fieldIds) {
-				const [_, fieldValue] = this.readDataByType(
-					this.getNextType(),
-					fid,
-				);
-				(<LooseType> valData)[fid] = fieldValue;
+				const [_, fieldValue] = this.readDataByType(this.getNextType(), fid);
+				(valData as LooseType)[fid] = fieldValue;
 			}
 		} else if (typeId === 13) {
 			// MAP
@@ -190,7 +176,7 @@ export class TMoreCompactProtocol {
 				for (let i = 0; i < mapSize; i++) {
 					const [, kVal] = this.readDataByType(keyType);
 					const [, vVal] = this.readDataByType(valueType);
-					(<LooseType> valData)[kVal] = vVal;
+					(valData as LooseType)[kVal] = vVal;
 				}
 			}
 		} else if (typeId === 14 || typeId === 15) {
@@ -210,10 +196,8 @@ export class TMoreCompactProtocol {
 			valData = [];
 
 			for (let i = 0; i < count; i++) {
-				const [, val] = this.readDataByType(
-					this.convertCompactTypeToTType(elementType),
-				);
-				(<Array<LooseType>> valData).push(val);
+				const [, val] = this.readDataByType(this.convertCompactTypeToTType(elementType));
+				(valData as Array<LooseType>).push(val);
 			}
 		} else if (typeId === 16) {
 			// STRING (string ID delta)
@@ -248,9 +232,9 @@ export class TMoreCompactProtocol {
 		const tableSize = this.readVarint();
 
 		for (let i = 0; i < tableSize; i++) {
-			const m = String.fromCharCode(this.data[this.currentPosition]) +
-				this.data.subarray(this.currentPosition + 1, this.currentPosition + 17)
-					.toString("hex");
+			const m =
+				String.fromCharCode(this.data[this.currentPosition]) +
+				this.data.subarray(this.currentPosition + 1, this.currentPosition + 17).toString("hex");
 			this.stringTable.push(m);
 			this.currentPosition += 17;
 		}
@@ -287,10 +271,7 @@ export class TMoreCompactProtocol {
 	// Read string
 	readString(): string | Buffer {
 		const length = this.readVarint();
-		const buffer = this.data.subarray(
-			this.currentPosition,
-			this.currentPosition + length,
-		);
+		const buffer = this.data.subarray(this.currentPosition, this.currentPosition + length);
 		let result: string | Buffer;
 
 		try {
@@ -363,10 +344,7 @@ export class TMoreCompactProtocol {
 	}
 
 	// Read varint (with optional return length)
-	readVarintWithoutIncrement(
-		buffer: Buffer,
-		_returnLength: boolean = false,
-	): number {
+	readVarintWithoutIncrement(buffer: Buffer, _returnLength: boolean = false): number {
 		let result = BigInt(0);
 		let shift = 0;
 		let index = 0;

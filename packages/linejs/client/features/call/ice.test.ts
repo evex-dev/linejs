@@ -1,18 +1,13 @@
-import { assert, assertEquals } from "@std/assert";
-import {
-	formatCandidate,
-	gatherIceCandidates,
-	icePriority,
-	parseCandidate,
-} from "./ice.ts";
+import { assert, test } from "vite-plus/test";
+import { formatCandidate, gatherIceCandidates, icePriority, parseCandidate } from "./ice.ts";
 
-Deno.test("icePriority: host candidate ranks higher than srflx", () => {
+test("icePriority: host candidate ranks higher than srflx", () => {
 	const host = icePriority("host", 1);
 	const srflx = icePriority("srflx", 1);
-	assert(host > srflx, `host=${host} should be > srflx=${srflx}`);
+	assert.isOk(host > srflx, `host=${host} should be > srflx=${srflx}`);
 });
 
-Deno.test("formatCandidate + parseCandidate round-trip", () => {
+test("formatCandidate + parseCandidate round-trip", () => {
 	const c = {
 		foundation: "1",
 		componentId: 1,
@@ -24,10 +19,10 @@ Deno.test("formatCandidate + parseCandidate round-trip", () => {
 	};
 	const s = formatCandidate(c);
 	const back = parseCandidate(s);
-	assertEquals(back, c);
+	assert.deepEqual(back, c);
 });
 
-Deno.test("formatCandidate + parseCandidate round-trip with raddr/rport", () => {
+test("formatCandidate + parseCandidate round-trip with raddr/rport", () => {
 	const c = {
 		foundation: "2",
 		componentId: 1,
@@ -41,27 +36,27 @@ Deno.test("formatCandidate + parseCandidate round-trip with raddr/rport", () => 
 	};
 	const s = formatCandidate(c);
 	const back = parseCandidate(s);
-	assertEquals(back, c);
+	assert.deepEqual(back, c);
 });
 
-Deno.test("parseCandidate accepts the full 'a=candidate:' prefix", () => {
+test("parseCandidate accepts the full 'a=candidate:' prefix", () => {
 	const c = parseCandidate("candidate:1 1 udp 2113929471 192.168.1.5 50000 typ host");
-	assertEquals(c?.type, "host");
+	assert.deepEqual(c?.type, "host");
 });
 
-Deno.test("gatherIceCandidates: live host + srflx via Google STUN", async () => {
+test("gatherIceCandidates: live host + srflx via Google STUN", async () => {
 	const { socket, candidates } = await gatherIceCandidates({
 		stunHost: "stun.l.google.com",
 		stunPort: 19302,
 	});
 	socket.close();
-	assert(candidates.length >= 1, "expected at least a host candidate");
+	assert.isOk(candidates.length >= 1, "expected at least a host candidate");
 	const host = candidates.find((c) => c.type === "host");
-	assert(host, "no host candidate");
-	assert(host!.port > 0);
+	assert.isOk(host, "no host candidate");
+	assert.isOk(host!.port > 0);
 	// srflx might fail in CI sandboxes — accept either way
 	const srflx = candidates.find((c) => c.type === "srflx");
 	if (srflx) {
-		assertEquals(srflx.relatedPort, host!.port);
+		assert.deepEqual(srflx.relatedPort, host!.port);
 	}
 });

@@ -8,9 +8,9 @@ For example:
 
 ```ts
 await client.base.talk.sendMessage({
-    to: "u...",
-    text: "Hello, LINEJS!",
-    e2ee: true,
+	to: "u...",
+	text: "Hello, LINEJS!",
+	e2ee: true,
 });
 ```
 
@@ -25,9 +25,9 @@ For example:
 
 ```ts
 await client.base.square.findSquareByInvitationTicket({
-    request: {
-        invitationTicket: "INVITATION_TICKET",
-    },
+	request: {
+		invitationTicket: "INVITATION_TICKET",
+	},
 });
 ```
 
@@ -40,18 +40,14 @@ If you just want simple api access or custom event handlers, you can use `BaseCl
 For example:
 
 ```ts
-import { BaseClient } from "@evex/linejs/base";
-
+import { BaseClient } from "@evex-dev/linejs/base";
 
 const client = new BaseClient({ device: "DESKTOPWIN", version: "9.7.0.3556" });
-client.on("pincall", (pin) => {
-});
+client.on("pincall", (pin) => {});
 
-client.on("qrcall", (qrUrl) => {
-});
+client.on("qrcall", (qrUrl) => {});
 
-client.on("update:authtoken", (authToken) => {
-});
+client.on("update:authtoken", (authToken) => {});
 
 await client.loginProcess.login({
 	authToken: "...",
@@ -67,9 +63,8 @@ await client.loginProcess.login({
 	qr: true,
 });
 
-client.square // = SquareService
-client.talk // = TalkService
-
+client.square; // = SquareService
+client.talk; // = TalkService
 
 // event polling
 const polling = client.createPolling();
@@ -95,22 +90,22 @@ When you hand-craft a REST request, **override both headers to
 
 ```ts
 const headers = {
-  ...client.base.request.getHeader("GET"),
-  accept: "application/json",
-  "content-type": "application/json; charset=UTF-8",
-  "X-Line-ChannelToken": token,
-  "X-Line-Mid": client.base.profile!.mid,
+	...client.base.request.getHeader("GET"),
+	accept: "application/json",
+	"content-type": "application/json; charset=UTF-8",
+	"X-Line-ChannelToken": token,
+	"X-Line-Mid": client.base.profile!.mid,
 };
 const res = await client.base.fetch(url, {
-  method: "POST",
-  headers,
-  body: new Uint8Array(),
-  signal: AbortSignal.timeout(client.base.config.timeout),
+	method: "POST",
+	headers,
+	body: new Uint8Array(),
+	signal: AbortSignal.timeout(client.base.config.timeout),
 });
 if (!res.ok) throw new Error(`REST request failed: HTTP ${res.status}`);
 const data = await res.json();
 if (data.code !== undefined && data.code !== 0) {
-  throw new Error(`REST request failed: code ${data.code}`);
+	throw new Error(`REST request failed: code ${data.code}`);
 }
 ```
 

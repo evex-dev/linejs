@@ -7,10 +7,7 @@
 /** Source identifier for the Agent I invocation.  Matches the
  *  values in LINE Android's `ni4.d$a` enum: each maps to the tab the
  *  user opened Agent I from. */
-export type AgentISource =
-	| "chattab_searchbar"
-	| "hometab_searchbar"
-	| "newstab_searchbar";
+export type AgentISource = "chattab_searchbar" | "hometab_searchbar" | "newstab_searchbar";
 
 export type AgentRole = "user" | "assistant";
 
@@ -101,11 +98,10 @@ function randomId32(): string {
 /** Faithful client of LINE Android's Agent I (Yahoo search-agent /v2/chat
  *  SSE endpoint). */
 export class AgentIClient {
-	#opts:
-		& Required<
-			Omit<AgentIOptions, "fetch" | "userAgent">
-		>
-		& { fetch: typeof fetch; userAgent: string };
+	#opts: Required<Omit<AgentIOptions, "fetch" | "userAgent">> & {
+		fetch: typeof fetch;
+		userAgent: string;
+	};
 	/** Conversation `chats` accumulator — Agent I expects every turn to
 	 *  echo the prior turns.  Reset via {@link reset}. */
 	#history: ChatMessage[] = [];
@@ -118,7 +114,8 @@ export class AgentIClient {
 			source: opts.source ?? "chattab_searchbar",
 			endpoint: opts.endpoint ?? "https://search-agent.yahoo.co.jp/v2/chat",
 			fetch: opts.fetch ?? fetch,
-			userAgent: opts.userAgent ??
+			userAgent:
+				opts.userAgent ??
 				`Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) ` +
 					`AppleWebKit/605.1.15 (KHTML, like Gecko) Line/${lineVersion}/Agenti`,
 		};
@@ -181,9 +178,7 @@ export class AgentIClient {
 			body: JSON.stringify(body),
 		});
 		if (!res.ok || !res.body) {
-			throw new Error(
-				`Agent I: ${res.status} ${res.statusText} (no Yahoo session?)`,
-			);
+			throw new Error(`Agent I: ${res.status} ${res.statusText} (no Yahoo session?)`);
 		}
 		// Accumulate the assistant's reply text so we can append it to
 		// history after the stream closes.
@@ -202,10 +197,12 @@ export class AgentIClient {
 	}
 
 	/** Mints anonymous Yahoo `B`/`XB` cookies via the same GET LINE's WebView does. */
-	static async mintAnonymousCookies(opts: {
-		fetch?: typeof fetch;
-		source?: AgentISource;
-	} = {}): Promise<string> {
+	static async mintAnonymousCookies(
+		opts: {
+			fetch?: typeof fetch;
+			source?: AgentISource;
+		} = {},
+	): Promise<string> {
 		const f = opts.fetch ?? fetch;
 		const url = buildAgentIWebViewUrl({
 			source: opts.source ?? "chattab_searchbar",
@@ -232,11 +229,14 @@ export class AgentIClient {
 	}
 }
 
-async function* parseSseStream(
-	stream: ReadableStream<Uint8Array>,
-): AsyncGenerator<AgentIChunk> {
+async function* parseSseStream(stream: ReadableStream<Uint8Array>): AsyncGenerator<AgentIChunk> {
 	const reader = stream
-		.pipeThrough(new TextDecoderStream())
+		.pipeThrough(
+			new TextDecoderStream() as unknown as ReadableWritablePair<
+				string,
+				Uint8Array<ArrayBufferLike>
+			>,
+		)
 		.getReader();
 	let buffer = "";
 	try {
@@ -276,7 +276,9 @@ function parseSseEvent(raw: string): AgentIChunk | null {
 	if (dataStr.startsWith("{") || dataStr.startsWith("[")) {
 		try {
 			data = JSON.parse(dataStr);
-		} catch { /* keep raw string */ }
+		} catch {
+			/* keep raw string */
+		}
 	}
 	return {
 		event: eventName,
@@ -291,9 +293,7 @@ function extractText(data: unknown): string | null {
 	const o = data as Record<string, unknown>;
 	// Yahoo search-agent wire shape (live-verified 2026-05):
 	//   {type:"compositeMessage-delta", value:{message:"..."}, messageType:"text"}
-	if (
-		o.type === "compositeMessage-delta" || o.type === "compositeMessage-end"
-	) {
+	if (o.type === "compositeMessage-delta" || o.type === "compositeMessage-end") {
 		const v = o.value as { message?: unknown } | undefined;
 		if (v && typeof v.message === "string") return v.message;
 		if (v && v.message && typeof v.message === "object") {
@@ -309,10 +309,7 @@ function extractText(data: unknown): string | null {
 	if (Array.isArray(contents)) {
 		const parts: string[] = [];
 		for (const c of contents) {
-			if (
-				c && typeof c === "object" &&
-				typeof (c as { text?: unknown }).text === "string"
-			) {
+			if (c && typeof c === "object" && typeof (c as { text?: unknown }).text === "string") {
 				parts.push((c as { text: string }).text);
 			}
 		}

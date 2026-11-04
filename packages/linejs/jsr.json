@@ -1,7 +1,6 @@
 {
 	"name": "@evex/linejs",
-	"version": "0.0.0",
-	"license": "MIT",
+	"version": "3.6.0",
 	"exports": {
 		".": "./client/mod.ts",
 		"./base": "./base/mod.ts",
@@ -10,17 +9,18 @@
 		"./thrift": "./base/thrift/mod.ts"
 	},
 	"imports": {
-		"@evex/loose-types": "jsr:@evex/loose-types@^1.0.1",
-		"thrift-types": "npm:@types/thrift@^0.10.17",
+		"@evex-dev/linejs-types": "npm:@evex-dev/linejs-types@^3.6.0",
+		"@noble/ciphers": "npm:@noble/ciphers@^2.2.0",
 		"crypto-js": "npm:crypto-js@^4.2.0",
 		"curve25519-js": "npm:curve25519-js@^0.0.4",
 		"node-bignumber": "npm:node-bignumber@^1.2.2",
+		"node-int64": "npm:node-int64@^0.4.0",
+		"opusscript": "npm:opusscript@^0.1.1",
 		"thrift": "npm:thrift@^0.20.0",
 		"tweetnacl": "npm:tweetnacl@^1.0.3",
-		"node-types": "npm:@types/node@latest",
-		"node-int64": "npm:node-int64@^0.4.0",
-		"undici": "npm:undici@^7",
-		"@noble/ciphers": "npm:@noble/ciphers@^2.2",
-		"opusscript": "npm:opusscript@^0.1.1"
+		"undici": "npm:undici@^7.16.0"
+	},
+	"publish": {
+		"exclude": ["**/*.test.ts", "test/**", "vite.config.ts", "tsconfig.json", "shims.d.ts"]
 	}
 }

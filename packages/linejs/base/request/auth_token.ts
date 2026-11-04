@@ -9,9 +9,7 @@ export interface AuthTokenCredential {
 
 export type AuthTokenInput = string | AuthTokenCredential;
 
-export function parseAuthTokenInput(
-	input: AuthTokenInput,
-): AuthTokenCredential {
+export function parseAuthTokenInput(input: AuthTokenInput): AuthTokenCredential {
 	if (typeof input !== "string") {
 		return {
 			accessToken: input.accessToken.trim(),
@@ -22,24 +20,26 @@ export function parseAuthTokenInput(
 	const value = input.trim();
 	if (!value) return { accessToken: value };
 
-	const lines = value.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+	const lines = value
+		.split(/\r?\n/)
+		.map((line) => line.trim())
+		.filter(Boolean);
 	if (lines.length >= 2 && isJwt(lines[0]) && isJwt(lines[1])) {
 		return { accessToken: lines[0], refreshToken: lines[1] };
 	}
 
 	if (value.startsWith("{")) {
 		const parsed = JSON.parse(value) as Record<string, unknown>;
-		const nested = parsed.tokenV3IssueResult as
-			| Record<string, unknown>
-			| undefined;
-		const accessToken = stringField(parsed.accessToken) ??
+		const nested = parsed.tokenV3IssueResult as Record<string, unknown> | undefined;
+		const accessToken =
+			stringField(parsed.accessToken) ??
 			stringField(parsed.authToken) ??
 			(nested ? stringField(nested.accessToken) : undefined);
 		if (!accessToken) {
 			throw new Error("auth token JSON must contain accessToken");
 		}
-		const refreshToken = stringField(parsed.refreshToken) ??
-			(nested ? stringField(nested.refreshToken) : undefined);
+		const refreshToken =
+			stringField(parsed.refreshToken) ?? (nested ? stringField(nested.refreshToken) : undefined);
 		const expire = numberField(parsed.expire);
 		return { accessToken, refreshToken, expire };
 	}
@@ -59,17 +59,14 @@ export function resolveLineAccessToken(token: string): string {
 	return value;
 }
 
-export function shouldUseLegyEncryptedAccess(
-	token: string | undefined,
-): boolean {
+export function shouldUseLegyEncryptedAccess(token: string | undefined): boolean {
 	if (!token) return false;
 	const value = token.trim();
 	if (isJwt(value)) return true;
 	const colon = value.indexOf(":");
 	if (colon === -1) return false;
 	const payload = value.slice(colon + 1);
-	return isJwt(payload) || isPrimaryAccessToken(value) ||
-		looksLikeAuthKey(value);
+	return isJwt(payload) || isPrimaryAccessToken(value) || looksLikeAuthKey(value);
 }
 
 export function isJwt(value: string): boolean {
@@ -79,17 +76,19 @@ export function isJwt(value: string): boolean {
 		const header = JSON.parse(base64UrlDecode(parts[0]).toString("utf-8")) as {
 			alg?: unknown;
 		};
-		const payload = JSON.parse(
-			base64UrlDecode(parts[1]).toString("utf-8"),
-		) as Record<string, unknown>;
-		return typeof header.alg === "string" && (
-			typeof payload.ver !== "undefined" ||
-			typeof payload.scp !== "undefined" ||
-			typeof payload.exp !== "undefined" ||
-			typeof payload.iat !== "undefined" ||
-			typeof payload.sub !== "undefined" ||
-			typeof payload.iss !== "undefined" ||
-			typeof payload.aud !== "undefined"
+		const payload = JSON.parse(base64UrlDecode(parts[1]).toString("utf-8")) as Record<
+			string,
+			unknown
+		>;
+		return (
+			typeof header.alg === "string" &&
+			(typeof payload.ver !== "undefined" ||
+				typeof payload.scp !== "undefined" ||
+				typeof payload.exp !== "undefined" ||
+				typeof payload.iat !== "undefined" ||
+				typeof payload.sub !== "undefined" ||
+				typeof payload.iss !== "undefined" ||
+				typeof payload.aud !== "undefined")
 		);
 	} catch {
 		return false;
@@ -108,18 +107,13 @@ export function isPrimaryAccessToken(value: string): boolean {
 	}
 }
 
-export function createPrimaryAccessToken(
-	authKey: string,
-	now = Date.now(),
-): string {
+export function createPrimaryAccessToken(authKey: string, now = Date.now()): string {
 	const colon = authKey.indexOf(":");
 	if (colon === -1) return authKey;
 	const mid = authKey.slice(0, colon);
 	const key = Buffer.from(authKey.slice(colon + 1), "base64");
-	const iat = Buffer.from(
-		`iat: ${Math.floor(now / 1000) * 60}\n`,
-		"utf-8",
-	).toString("base64") + ".";
+	const iat =
+		Buffer.from(`iat: ${Math.floor(now / 1000) * 60}\n`, "utf-8").toString("base64") + ".";
 	const digest = createHmac("sha1", key).update(iat).digest("base64");
 	return `${mid}:${iat}.${digest}`;
 }
@@ -142,13 +136,11 @@ function stringField(value: unknown): string | undefined {
 }
 
 function numberField(value: unknown): number | undefined {
-	return typeof value === "number" && Number.isFinite(value)
-		? value
-		: undefined;
+	return typeof value === "number" && Number.isFinite(value) ? value : undefined;
 }
 
 function base64UrlDecode(value: string): Buffer {
 	const normalized = value.replace(/-/g, "+").replace(/_/g, "/");
-	const padded = normalized + "=".repeat((4 - normalized.length % 4) % 4);
+	const padded = normalized + "=".repeat((4 - (normalized.length % 4)) % 4);
 	return Buffer.from(padded, "base64");
 }

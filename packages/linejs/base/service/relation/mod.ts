@@ -1,7 +1,7 @@
 // For Relation (find user, etc)
 
 import { LINEStruct, type ProtocolKey } from "../../thrift/mod.ts";
-import type * as LINETypes from "@evex/linejs-types";
+import type * as LINETypes from "@evex-dev/linejs-types";
 import type { BaseClient } from "../../core/mod.ts";
 import type { BaseService } from "../types.ts";
 
@@ -49,9 +49,10 @@ export class RelationService implements BaseService {
 		);
 	}
 
-	async getContactsV3(
-		options: { mids: string[]; checkUserStatusStrictly?: boolean },
-	): Promise<LINETypes.getContactsV3_result["success"]> {
+	async getContactsV3(options: {
+		mids: string[];
+		checkUserStatusStrictly?: boolean;
+	}): Promise<LINETypes.getContactsV3_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.getContactsV3_args({
 				request: {
@@ -119,11 +120,7 @@ export class RelationService implements BaseService {
 							3,
 							[
 								[11, 1, reference],
-								[12, 2, [[12, trackingMetaType, [[
-									11,
-									1,
-									trackingMetaHint,
-								]]]]],
+								[12, 2, [[12, trackingMetaType, [[11, 1, trackingMetaHint]]]]],
 							],
 						],
 					],
@@ -176,9 +173,7 @@ export class RelationService implements BaseService {
 	 * @description Find a contact by phone number. The number is in E.164 form,
 	 * e.g. `+66814298575`. Throws when nothing matches or the lookup is rate limited.
 	 */
-	public async findContactByPhoneV3(options: {
-		phone: string;
-	}): Promise<LINETypes.Contact> {
+	public async findContactByPhoneV3(options: { phone: string }): Promise<LINETypes.Contact> {
 		return await this.client.request.request(
 			[[12, 1, [[11, 1, options.phone]]]],
 			"findContactByPhoneV3",

@@ -1,4 +1,5 @@
-import { assertEquals, assertRejects, assertThrows } from "@std/assert";
+import { assert, test } from "vite-plus/test";
+import { assertRejects } from "../../test/assert.ts";
 import { Buffer } from "node:buffer";
 import crypto from "node:crypto";
 import nacl from "tweetnacl";
@@ -30,9 +31,7 @@ function fixture(ids = [10, 20, 30, 40, 50, 60, 70, 80], corrupt = false) {
 		[11, 4, corrupt && i === 0 ? Buffer.alloc(32) : key.pubKey],
 		[11, 5, key.privKey],
 	]);
-	const plain = Buffer.from(
-		writeStruct([[15, 1, [12, entries]]], Protocols[4]),
-	);
+	const plain = Buffer.from(writeStruct([[15, 1, [12, entries]]], Protocols[4]));
 	const secret = Buffer.alloc(32, 99);
 	const publicKey = Buffer.from(nacl.scalarMult.base(Buffer.alloc(32, 100)));
 	const shared = Buffer.from(e2ee.generateSharedSecret(secret, publicKey));
@@ -51,82 +50,65 @@ function fixture(ids = [10, 20, 30, 40, 50, 60, 70, 80], corrupt = false) {
 	return { e2ee, saved, secret, publicKey, encrypted, data, keys };
 }
 
-Deno.test("login keychain selects the requested eighth entry and preserves every generation", async () => {
+test("login keychain selects the requested eighth entry and preserves every generation", async () => {
 	const f = fixture();
 	const result = await f.e2ee.decodeE2EEKeyV1(f.data, f.secret);
-	assertEquals(result?.privKey, f.keys[7].privKey);
-	assertEquals(result?.pubKey, f.keys[7].pubKey);
-	assertEquals(f.saved.size, 8);
+	assert.deepEqual(result?.privKey, f.keys[7].privKey);
+	assert.deepEqual(result?.pubKey, f.keys[7].pubKey);
+	assert.deepEqual(f.saved.size, 8);
 	for (const key of f.keys) {
 		const stored = JSON.parse(f.saved.get(`e2eeKeys:${key.keyId}`)!);
-		assertEquals(stored.keyId, key.keyId);
-		assertEquals(stored.privKey, key.privKey.toString("base64"));
+		assert.deepEqual(stored.keyId, key.keyId);
+		assert.deepEqual(stored.privKey, key.privKey.toString("base64"));
 	}
 });
 
-Deno.test("login keychain missing ID fails without saving a wrong key", async () => {
+test("login keychain missing ID fails without saving a wrong key", async () => {
 	const f = fixture();
 	await assertRejects(
 		() => f.e2ee.decodeE2EEKeyV1({ ...f.data, keyId: 999 }, f.secret),
 		Error,
 		"Requested keyId",
 	);
-	assertEquals(f.saved.size, 0);
+	assert.deepEqual(f.saved.size, 0);
 });
 
-Deno.test("login keychain validates historical pairs before any writes", async () => {
+test("login keychain validates historical pairs before any writes", async () => {
 	const f = fixture(undefined, true);
-	await assertRejects(
-		() => f.e2ee.decodeE2EEKeyV1(f.data, f.secret),
-		Error,
-		"invalid key pair",
-	);
-	assertEquals(f.saved.size, 0);
+	await assertRejects(() => f.e2ee.decodeE2EEKeyV1(f.data, f.secret), Error, "invalid key pair");
+	assert.deepEqual(f.saved.size, 0);
 });
 
-Deno.test("login keychain rejects duplicate IDs", async () => {
+test("login keychain rejects duplicate IDs", async () => {
 	const f = fixture([80, 80]);
-	await assertRejects(
-		() => f.e2ee.decodeE2EEKeyV1(f.data, f.secret),
-		Error,
-		"duplicate keyId",
-	);
-	assertEquals(f.saved.size, 0);
+	await assertRejects(() => f.e2ee.decodeE2EEKeyV1(f.data, f.secret), Error, "duplicate keyId");
+	assert.deepEqual(f.saved.size, 0);
 });
 
-Deno.test("server verification is deferred and mismatch does not rotate keys", async () => {
+test("server verification is deferred and mismatch does not rotate keys", async () => {
 	const f = fixture();
 	let calls = 0;
 	f.e2ee.client.talk.getE2EEPublicKeys = () => {
 		calls++;
-		assertEquals(f.e2ee.client.authToken, "test-token");
+		assert.deepEqual(f.e2ee.client.authToken, "test-token");
 		return Promise.resolve([{ keyId: 80, keyData: Buffer.alloc(32) }] as never);
 	};
 	await f.e2ee.decodeE2EEKeyV1(f.data, f.secret);
-	assertEquals(calls, 0);
+	assert.deepEqual(calls, 0);
 	f.e2ee.client.authToken = "test-token";
-	await assertRejects(
-		() => f.e2ee.verifyLoginKey(),
-		Error,
-		"no replacement key was registered",
-	);
-	assertEquals(calls, 1);
+	await assertRejects(() => f.e2ee.verifyLoginKey(), Error, "no replacement key was registered");
+	assert.deepEqual(calls, 1);
 });
 
-Deno.test("unavailable server verification is unknown, not a verified match", async () => {
+test("unavailable server verification is unknown, not a verified match", async () => {
 	const f = fixture();
-	f.e2ee.client.talk.getE2EEPublicKeys = () =>
-		Promise.reject(new Error("offline"));
-	assertEquals(
-		await f.e2ee.verifyStoredKeyAgainstServer(80, f.keys[7].privKey),
-		false,
-	);
+	f.e2ee.client.talk.getE2EEPublicKeys = () => Promise.reject(new Error("offline"));
+	assert.deepEqual(await f.e2ee.verifyStoredKeyAgainstServer(80, f.keys[7].privKey), false);
 });
 
-Deno.test("re-login repairs stale mid alias through its corrected per-ID key", async () => {
+test("re-login repairs stale mid alias through its corrected per-ID key", async () => {
 	const f = fixture();
-	f.e2ee.client.storage.get = (key) =>
-		Promise.resolve(f.saved.get(key) ?? null);
+	f.e2ee.client.storage.get = (key) => Promise.resolve(f.saved.get(key) ?? null);
 	f.saved.set(
 		"e2eeKeys:u-self",
 		JSON.stringify({
@@ -137,25 +119,19 @@ Deno.test("re-login repairs stale mid alias through its corrected per-ID key", a
 	);
 	await f.e2ee.decodeE2EEKeyV1(f.data, f.secret);
 	const selfKey = await f.e2ee.getE2EESelfKeyData("u-self");
-	assertEquals(selfKey.privKey, f.keys[7].privKey.toString("base64"));
+	assert.deepEqual(selfKey.privKey, f.keys[7].privKey.toString("base64"));
 });
 
-Deno.test("decryptKeyChain accepts explicit ID but rejects ambiguous legacy calls", () => {
+test("decryptKeyChain accepts explicit ID but rejects ambiguous legacy calls", () => {
 	const f = fixture();
-	assertEquals(
+	assert.deepEqual(
 		f.e2ee.decryptKeyChain(f.publicKey, f.secret, f.encrypted, 80)[0],
 		f.keys[7].privKey,
 	);
-	assertThrows(() =>
-		f.e2ee.decryptKeyChain(f.publicKey, f.secret, f.encrypted)
-	);
+	assert.throws(() => f.e2ee.decryptKeyChain(f.publicKey, f.secret, f.encrypted));
 	const single = fixture([80]);
-	assertEquals(
-		single.e2ee.decryptKeyChain(
-			single.publicKey,
-			single.secret,
-			single.encrypted,
-		)[0],
+	assert.deepEqual(
+		single.e2ee.decryptKeyChain(single.publicKey, single.secret, single.encrypted)[0],
 		single.keys[0].privKey,
 	);
 });

@@ -1,4 +1,4 @@
-import { assert, assertEquals } from "@std/assert";
+import { assert, test } from "vite-plus/test";
 import { Buffer } from "node:buffer";
 import { E2EE } from "./mod.ts";
 
@@ -42,12 +42,11 @@ function makeE2EE(opts: {
 		log() {},
 	};
 	const e2ee = new E2EE(fakeBase as never);
-	(e2ee as unknown as {
-		getE2EELocalPublicKey: unknown;
-	}).getE2EELocalPublicKey = (
-		mid: string,
-		keyId: string | number | undefined,
-	) => {
+	(
+		e2ee as unknown as {
+			getE2EELocalPublicKey: unknown;
+		}
+	).getE2EELocalPublicKey = (mid: string, keyId: string | number | undefined) => {
 		localPubKeyLookups.push([mid, keyId]);
 		return Promise.resolve(opts.negotiatedPubKey ?? Buffer.alloc(32));
 	};
@@ -57,9 +56,11 @@ function makeE2EE(opts: {
 		privK: Buffer | null;
 		pubK: unknown;
 	} = { contentType: undefined, privK: null, pubK: null };
-	(e2ee as unknown as {
-		decryptE2EEMessageV2: unknown;
-	}).decryptE2EEMessageV2 = (
+	(
+		e2ee as unknown as {
+			decryptE2EEMessageV2: unknown;
+		}
+	).decryptE2EEMessageV2 = (
 		_to: string,
 		_from: string,
 		_chunks: Buffer[],
@@ -105,7 +106,7 @@ function makeFakeMessage(opts: {
 	} as never;
 }
 
-Deno.test("decryptE2EELocationMessage — received: numeric AAD contentType + peer key selected", async () => {
+test("decryptE2EELocationMessage — received: numeric AAD contentType + peer key selected", async () => {
 	const oldKey = { privKey: "AAAA", pubKey: "BBBB" };
 	const newKey = { privKey: "CCCC", pubKey: "DDDD" };
 	const { e2ee, seen, byIdLookups, localPubKeyLookups } = makeE2EE({
@@ -120,18 +121,18 @@ Deno.test("decryptE2EELocationMessage — received: numeric AAD contentType + pe
 	});
 	await e2ee.decryptE2EELocationMessage(msg);
 	// "LOCATION" must be mapped to its numeric enum value (15) for the AAD.
-	assertEquals(seen.contentType, 15);
+	assert.deepEqual(seen.contentType, 15);
 	// Received message: pin my key by receiverKeyId=9…
-	assert(byIdLookups.includes("9"), "expected by-keyId lookup for 9");
-	assertEquals(
+	assert.isOk(byIdLookups.includes("9"), "expected by-keyId lookup for 9");
+	assert.deepEqual(
 		Buffer.from(oldKey.privKey, "base64").toString("base64"),
 		seen.privK!.toString("base64"),
 	);
 	// …and use the *sender's* public key, not mine.
-	assertEquals(localPubKeyLookups, [["u-them", 7]]);
+	assert.deepEqual(localPubKeyLookups, [["u-them", 7]]);
 });
 
-Deno.test("decryptE2EELocationMessage — sent: isSelf derived from from-mid", async () => {
+test("decryptE2EELocationMessage — sent: isSelf derived from from-mid", async () => {
 	const key7 = { privKey: "AAAA", pubKey: "BBBB" };
 	const key11 = { privKey: "CCCC", pubKey: "DDDD" };
 	const { e2ee, seen, byIdLookups, localPubKeyLookups } = makeE2EE({
@@ -145,17 +146,17 @@ Deno.test("decryptE2EELocationMessage — sent: isSelf derived from from-mid", a
 		to: "u-them",
 	});
 	await e2ee.decryptE2EELocationMessage(msg);
-	assertEquals(seen.contentType, 15);
-	assert(byIdLookups.includes("7"), "expected by-keyId lookup for 7");
-	assertEquals(
+	assert.deepEqual(seen.contentType, 15);
+	assert.isOk(byIdLookups.includes("7"), "expected by-keyId lookup for 7");
+	assert.deepEqual(
 		Buffer.from(key7.privKey, "base64").toString("base64"),
 		seen.privK!.toString("base64"),
 	);
 	// Self-sent: use the recipient's public key with receiverKeyId.
-	assertEquals(localPubKeyLookups, [["u-them", 11]]);
+	assert.deepEqual(localPubKeyLookups, [["u-them", 11]]);
 });
 
-Deno.test("decryptE2EELocationMessage — falls back to latest key on by-id miss", async () => {
+test("decryptE2EELocationMessage — falls back to latest key on by-id miss", async () => {
 	const latestKey = { privKey: "ZZZZ", pubKey: "YYYY" };
 	const { e2ee, seen, byIdLookups } = makeE2EE({
 		keysByKeyId: {}, // empty by-id store
@@ -168,8 +169,8 @@ Deno.test("decryptE2EELocationMessage — falls back to latest key on by-id miss
 		to: "u-self",
 	});
 	await e2ee.decryptE2EELocationMessage(msg);
-	assert(byIdLookups.includes("9"));
-	assertEquals(
+	assert.isOk(byIdLookups.includes("9"));
+	assert.deepEqual(
 		Buffer.from(latestKey.privKey, "base64").toString("base64"),
 		seen.privK!.toString("base64"),
 	);

@@ -20,9 +20,7 @@ const LABEL_RTP_AUTH = 0x01;
 const LABEL_RTP_SALT = 0x02;
 
 /** Derive SRTP session keys from the 30-byte SDES master keying material. */
-export async function deriveSrtpContext(
-	masterKeying: Uint8Array,
-): Promise<SrtpCryptoContext> {
+export async function deriveSrtpContext(masterKeying: Uint8Array): Promise<SrtpCryptoContext> {
 	if (masterKeying.length !== SRTP_KEYING_LEN) {
 		throw new Error(
 			`SRTP master keying must be ${SRTP_KEYING_LEN} bytes, got ${masterKeying.length}`,
@@ -69,14 +67,7 @@ export async function srtpEncrypt(
 	const seq = readU16(rtpPacket, 2);
 	const rocKey = ssrc;
 	const roc = ctx.rocs.get(rocKey) ?? 0;
-	const enc = await aesCmEncrypt(
-		ctx.cipherKey,
-		ctx.cipherSalt,
-		ssrc,
-		roc,
-		seq,
-		payload,
-	);
+	const enc = await aesCmEncrypt(ctx.cipherKey, ctx.cipherSalt, ssrc, roc, seq, payload);
 
 	const out = new Uint8Array(rtpPacket.length + HMAC_TAG_LEN);
 	out.set(header, 0);
@@ -126,14 +117,7 @@ export async function srtpDecrypt(
 	}
 	const headerLen = rtpHeaderLength(inner);
 	const payload = inner.subarray(headerLen);
-	const dec = await aesCmEncrypt(
-		ctx.cipherKey,
-		ctx.cipherSalt,
-		ssrc,
-		roc,
-		seq,
-		payload,
-	);
+	const dec = await aesCmEncrypt(ctx.cipherKey, ctx.cipherSalt, ssrc, roc, seq, payload);
 	const out = new Uint8Array(headerLen + dec.length);
 	out.set(inner.subarray(0, headerLen), 0);
 	out.set(dec, headerLen);
@@ -166,15 +150,8 @@ async function aesCmEncrypt(
 	iv[13] ^= seq & 0xff;
 	// Final two bytes (14..15) start as counter 0 — Node aes-128-ctr increments them
 	const { createCipheriv } = await import("node:crypto");
-	const cipher = createCipheriv(
-		"aes-128-ctr",
-		Buffer.from(key),
-		Buffer.from(iv),
-	);
-	const out = Buffer.concat([
-		cipher.update(Buffer.from(payload)),
-		cipher.final(),
-	]);
+	const cipher = createCipheriv("aes-128-ctr", Buffer.from(key), Buffer.from(iv));
+	const out = Buffer.concat([cipher.update(Buffer.from(payload)), cipher.final()]);
 	return new Uint8Array(out.subarray(0, payload.length));
 }
 

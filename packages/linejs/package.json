@@ -1,0 +1,94 @@
+{
+	"name": "@evex-dev/linejs",
+	"version": "3.6.0",
+	"description": "LINE SelfBot library for Node.js",
+	"keywords": [
+		"line",
+		"linejs",
+		"selfbot",
+		"thrift"
+	],
+	"homepage": "https://linejs.evex.land",
+	"bugs": {
+		"url": "https://github.com/evex-dev/linejs/issues"
+	},
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/evex-dev/linejs.git",
+		"directory": "packages/linejs"
+	},
+	"files": [
+		"dist",
+		"README.md"
+	],
+	"type": "module",
+	"main": "./client/mod.ts",
+	"module": "./client/mod.ts",
+	"types": "./client/mod.ts",
+	"exports": {
+		".": "./client/mod.ts",
+		"./base": "./base/mod.ts",
+		"./call": "./client/features/call/mod.ts",
+		"./storage": "./base/storage/mod.ts",
+		"./thrift": "./base/thrift/mod.ts"
+	},
+	"publishConfig": {
+		"main": "./dist/client/mod.mjs",
+		"module": "./dist/client/mod.mjs",
+		"types": "./dist/client/mod.d.mts",
+		"exports": {
+			".": {
+				"types": "./dist/client/mod.d.mts",
+				"import": "./dist/client/mod.mjs"
+			},
+			"./base": {
+				"types": "./dist/base/mod.d.mts",
+				"import": "./dist/base/mod.mjs"
+			},
+			"./call": {
+				"types": "./dist/client/features/call/mod.d.mts",
+				"import": "./dist/client/features/call/mod.mjs"
+			},
+			"./storage": {
+				"types": "./dist/base/storage/mod.d.mts",
+				"import": "./dist/base/storage/mod.mjs"
+			},
+			"./thrift": {
+				"types": "./dist/base/thrift/mod.d.mts",
+				"import": "./dist/base/thrift/mod.mjs"
+			}
+		},
+		"access": "public"
+	},
+	"scripts": {
+		"build": "vp pack",
+		"test": "vp test",
+		"prepublishOnly": "pnpm -w run check && pnpm run build",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@evex-dev/linejs-types": "^3.6.0",
+		"@noble/ciphers": "^2.2.0",
+		"@types/crypto-js": "^4.2.2",
+		"@types/thrift": "^0.10.17",
+		"crypto-js": "^4.2.0",
+		"curve25519-js": "^0.0.4",
+		"node-bignumber": "^1.2.2",
+		"node-int64": "^0.4.0",
+		"opusscript": "^0.1.1",
+		"thrift": "^0.20.0",
+		"tweetnacl": "^1.0.3",
+		"undici": "^7.16.0"
+	},
+	"devDependencies": {
+		"typescript": "^5.9.3",
+		"vite-plus": "^1.4.0"
+	},
+	"optionalDependencies": {
+		"@types/node": "^24.10.0"
+	},
+	"engines": {
+		"node": "^22.18.0 || ^24.11.0 || >=26.0.0"
+	}
+}

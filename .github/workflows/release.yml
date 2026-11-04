@@ -1,40 +1,80 @@
 name: release
 
+# Manual recovery / human-pushed tags: publish a released tag to JSR.
+#
+# The automated release in publish.yml publishes JSR itself, because tags
+# pushed with GITHUB_TOKEN do not trigger `push: tags` workflows. This workflow
+# is still useful for retrying JSR (workflow_dispatch) or for tags pushed by a
+# maintainer with their own credentials.
 on:
   push:
     tags:
-      - "*"
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing v<version> tag to publish to JSR"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
   jsr:
     name: publish-to-jsr
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: read
-      id-token: write
-
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Install deno
-        uses: denoland/setup-deno@v1
+      - uses: actions/checkout@v7
         with:
-          deno-version: v2.x
+          ref: ${{ inputs.tag || github.ref }}
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 12.16.1
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        # `npx jsr publish` resolves npm dependencies from node_modules, so the
+        # workspace must be installed before publishing @evex/linejs.
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify the tag matches the package versions
+        env:
+          TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          set -euo pipefail
+          TYPES_VERSION=$(node -p "require('./packages/types/jsr.json').version")
+          LINEJS_VERSION=$(node -p "require('./packages/linejs/jsr.json').version")
+          AGENT_VERSION=$(node -p "require('./packages/agent/jsr.json').version")
+          if [ "$TYPES_VERSION" != "$LINEJS_VERSION" ] || [ "$TYPES_VERSION" != "$AGENT_VERSION" ]; then
+            echo "::error::jsr.json versions differ: types=$TYPES_VERSION linejs=$LINEJS_VERSION agent=$AGENT_VERSION" >&2
+            exit 1
+          fi
+          if [ "v$TYPES_VERSION" != "$TAG" ]; then
+            echo "::error::Tag $TAG does not match package version $TYPES_VERSION" >&2
+            exit 1
+          fi
+
       - name: Publish linejs-types to JSR
-        run: |
-          cd packages/types
-          deno run -A jsr:@david/publish-on-tag@0.1.3
+        working-directory: packages/types
+        run: npx --yes jsr@0.14.3 publish
+
       - name: Publish linejs to JSR
-        run: |
-          cd packages/linejs
-          deno run -A jsr:@david/publish-on-tag@0.1.3
+        working-directory: packages/linejs
+        run: npx --yes jsr@0.14.3 publish
+
       - name: Publish linejs-agent to JSR
-        # First publish needs the package created at
-        #   https://jsr.io/new?scope=evex&package=linejs-agent&from=cli
-        # with OIDC trust to this repo. Until that's done this step is
-        # expected to fail; don't fail the release for it.
-        continue-on-error: true
-        run: |
-          cd packages/agent
-          deno run -A jsr:@david/publish-on-tag@0.1.3
+        # The package must exist at
+        #   https://jsr.io/new?scope=evex&package=linejs-agent
+        # with OIDC trust to this repository before the first release.
+        working-directory: packages/agent
+        run: npx --yes jsr@0.14.3 publish

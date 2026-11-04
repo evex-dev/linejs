@@ -1,8 +1,5 @@
-import type {
-	Square as SquareRaw,
-	SquareChat as SquareChatRaw,
-} from "@evex/linejs-types";
-import type * as LINETypes from "@evex/linejs-types";
+import type { Square as SquareRaw, SquareChat as SquareChatRaw } from "@evex-dev/linejs-types";
+import type * as LINETypes from "@evex-dev/linejs-types";
 import type { Client } from "../../mod.ts";
 import { continueRequest } from "../../../base/mod.ts";
 import type { ObjType } from "../../../base/obs/mod.ts";
@@ -26,17 +23,16 @@ export class Square {
 	}
 	/** Updates square information */
 	async update(): Promise<void> {
-		this.raw = (await this.#client.base.square.getSquare({
-			squareMid: this.raw.mid,
-		}))
-			.square;
+		this.raw = (
+			await this.#client.base.square.getSquare({
+				squareMid: this.raw.mid,
+			})
+		).square;
 	}
-	async updateSquare(
-		input: {
-			updatedAttrs: LINETypes.SquareAttribute[];
-			square: Partial<LINETypes.Square>;
-		},
-	): Promise<LINETypes.UpdateSquareResponse> {
+	async updateSquare(input: {
+		updatedAttrs: LINETypes.SquareAttribute[];
+		square: Partial<LINETypes.Square>;
+	}): Promise<LINETypes.UpdateSquareResponse> {
 		return await this.#client.base.square.updateSquare({
 			request: {
 				updatedAttrs: input.updatedAttrs,
@@ -87,19 +83,22 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 	}
 	/** Updates square information */
 	async update() {
-		this.raw = (await this.#client.base.square.getSquareChat({
-			squareChatMid: this.raw.squareChatMid,
-		}))
-			.squareChat;
+		this.raw = (
+			await this.#client.base.square.getSquareChat({
+				squareChatMid: this.raw.squareChatMid,
+			})
+		).squareChat;
 	}
 	async sendMessage(
-		input: string | {
-			text?: string;
-			contentType?: LINETypes.ContentType;
-			contentMetadata?: Record<string, string>;
-			relatedMessageId?: string;
-			location?: LINETypes.Location;
-		},
+		input:
+			| string
+			| {
+					text?: string;
+					contentType?: LINETypes.ContentType;
+					contentMetadata?: Record<string, string>;
+					relatedMessageId?: string;
+					location?: LINETypes.Location;
+			  },
 	): Promise<LINETypes.SendMessageResponse> {
 		if (typeof input === "string") {
 			return this.sendMessage({ text: input });
@@ -120,10 +119,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 	 * such a message can't carry a `relatedMessageId`, so media sent this way is
 	 * never threaded as a reply.
 	 */
-	async sendImage(
-		data: Blob,
-		filename = "image",
-	): Promise<{ objId: string; objHash: string }> {
+	async sendImage(data: Blob, filename = "image"): Promise<{ objId: string; objHash: string }> {
 		return await this.#sendMedia("image", data, filename);
 	}
 
@@ -165,12 +161,10 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 		return { objId, objHash };
 	}
 
-	async updateSquareChat(
-		input: {
-			updatedAttrs: LINETypes.SquareChatAttribute[];
-			squareChat: Partial<LINETypes.SquareChat>;
-		},
-	): Promise<LINETypes.UpdateSquareChatResponse> {
+	async updateSquareChat(input: {
+		updatedAttrs: LINETypes.SquareChatAttribute[];
+		squareChat: Partial<LINETypes.SquareChat>;
+	}): Promise<LINETypes.UpdateSquareChatResponse> {
 		return await this.#client.base.square.updateSquareChat({
 			request: {
 				updatedAttrs: input.updatedAttrs,
@@ -178,9 +172,7 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 			},
 		});
 	}
-	async updateName(
-		name: string,
-	): Promise<LINETypes.UpdateSquareChatResponse> {
+	async updateName(name: string): Promise<LINETypes.UpdateSquareChatResponse> {
 		return await this.updateSquareChat({
 			updatedAttrs: ["NAME"],
 			squareChat: { name },
@@ -214,11 +206,10 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 		let syncToken = param.syncToken;
 		if (!syncToken) {
 			while (true) {
-				const noneEvent = await this.#client.base.square
-					.fetchSquareChatEvents({
-						squareChatMid: this.raw.squareChatMid,
-						syncToken,
-					});
+				const noneEvent = await this.#client.base.square.fetchSquareChatEvents({
+					squareChatMid: this.raw.squareChatMid,
+					syncToken,
+				});
 				syncToken = noneEvent.syncToken;
 				if (noneEvent.events.length === 0) {
 					break;
@@ -228,39 +219,32 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 		this.emit("update:syncToken", syncToken);
 		while (!param.signal?.aborted && this.#client.base.authToken) {
 			try {
-				const response = await this.#client.base.square
-					.fetchSquareChatEvents({
-						squareChatMid: this.raw.squareChatMid,
-						syncToken: syncToken,
-					});
+				const response = await this.#client.base.square.fetchSquareChatEvents({
+					squareChatMid: this.raw.squareChatMid,
+					syncToken: syncToken,
+				});
 				if (syncToken !== response.syncToken) {
 					this.emit("update:syncToken", response.syncToken);
 					syncToken = response.syncToken;
 				}
 				for (const event of response.events) {
 					this.emit("event", event);
-					if (
-						event.type === "SEND_MESSAGE" &&
-						event.payload.sendMessage
-					) {
+					if (event.type === "SEND_MESSAGE" && event.payload.sendMessage) {
 						const message = new SquareMessage({
 							client: this.#client,
 							raw: event.payload.sendMessage.squareMessage,
 						});
 						this.emit("message", message);
-					} else if (
-						event.type === "RECEIVE_MESSAGE" &&
-						event.payload.receiveMessage
-					) {
+					} else if (event.type === "RECEIVE_MESSAGE" && event.payload.receiveMessage) {
 						const message = new SquareMessage({
 							client: this.#client,
 							raw: event.payload.receiveMessage.squareMessage,
 						});
 						this.emit("message", message);
 						if (
-							message.getTextDecorations().some((e) =>
-								e.mention && e.mention.mid === this.#client.base.profile?.mid
-							)
+							message
+								.getTextDecorations()
+								.some((e) => e.mention && e.mention.mid === this.#client.base.profile?.mid)
 						) {
 							this.emit("mention", message);
 						}

@@ -1,11 +1,11 @@
-import { assertEquals } from "@std/assert";
+import { assert, test } from "vite-plus/test";
 import { createMessageFetcher } from "./fetcher.ts";
 import type { Client } from "../../client.ts";
 
 // Message ids are 64-bit values; parseInt silently rounds them beyond
 // 2^53, corrupting the pagination cursor. Also, an empty page (end of
 // history) previously crashed on `messages.at(-1)!`.
-Deno.test("fetch uses a lossless bigint cursor and tolerates empty pages", async () => {
+test("fetch uses a lossless bigint cursor and tolerates empty pages", async () => {
 	const requests: unknown[] = [];
 	const client = {
 		base: {
@@ -50,11 +50,11 @@ Deno.test("fetch uses a lossless bigint cursor and tolerates empty pages", async
 	const fetcher = await createMessageFetcher(client, chat);
 
 	const page1 = await fetcher.fetch(10);
-	assertEquals(page1.length, 1);
+	assert.deepEqual(page1.length, 1);
 
 	const page2 = await fetcher.fetch(10);
-	assertEquals(page2.length, 0);
+	assert.deepEqual(page2.length, 0);
 
-	assertEquals(requests[0], 9007199254740993n);
-	assertEquals(requests[1], 9007199254740993n);
+	assert.deepEqual(requests[0], 9007199254740993n);
+	assert.deepEqual(requests[1], 9007199254740993n);
 });

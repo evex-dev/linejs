@@ -78,9 +78,7 @@ export function buildMoaUrl(
 	][];
 	if (entries.length === 0) return base;
 	const q = entries
-		.map(([k, v]) =>
-			`${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`
-		)
+		.map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`)
 		.join("&");
 	return `${base}?${q}`;
 }
@@ -102,12 +100,14 @@ export function buildMoaUrl(
  */
 export class MoaService {
 	client: BaseClient;
-	#channelToken: {
-		authToken: string;
-		mid: string;
-		endpoint: string;
-		value: Promise<string>;
-	} | undefined;
+	#channelToken:
+		| {
+				authToken: string;
+				mid: string;
+				endpoint: string;
+				value: Promise<string>;
+		  }
+		| undefined;
 
 	constructor(client: BaseClient) {
 		this.client = client;
@@ -126,16 +126,10 @@ export class MoaService {
 		const { authToken, endpoint } = this.client;
 		const mid = this.client.profile?.mid;
 		if (!authToken || !mid) {
-			throw new InternalError(
-				"MoaError",
-				"login must complete before calling Moa",
-			);
+			throw new InternalError("MoaError", "login must complete before calling Moa");
 		}
 		const cached = this.#channelToken;
-		if (
-			cached?.authToken === authToken && cached.mid === mid &&
-			cached.endpoint === endpoint
-		) {
+		if (cached?.authToken === authToken && cached.mid === mid && cached.endpoint === endpoint) {
 			return await cached.value;
 		}
 		const entry = {
@@ -143,14 +137,12 @@ export class MoaService {
 			mid,
 			endpoint,
 			value: (async () => {
-				const resp = await this.client.channel
-					.approveChannelAndIssueChannelToken({ channelId: MOA_CHANNEL_ID });
+				const resp = await this.client.channel.approveChannelAndIssueChannelToken({
+					channelId: MOA_CHANNEL_ID,
+				});
 				const token = resp?.channelAccessToken;
 				if (typeof token !== "string" || !token) {
-					throw new InternalError(
-						"MoaError",
-						"channelAccessToken missing from channel response",
-					);
+					throw new InternalError("MoaError", "channelAccessToken missing from channel response");
 				}
 				return token;
 			})(),
@@ -196,11 +188,9 @@ export class MoaService {
 			signal: AbortSignal.timeout(this.client.config.timeout),
 		});
 		if (!res.ok) {
-			throw new InternalError(
-				"MoaError",
-				`Moa ${pathSuffix} HTTP ${res.status}`,
-				{ status: res.status },
-			);
+			throw new InternalError("MoaError", `Moa ${pathSuffix} HTTP ${res.status}`, {
+				status: res.status,
+			});
 		}
 		let json: T;
 		try {
@@ -210,10 +200,7 @@ export class MoaService {
 			throw new InternalError("MoaError", "Moa returned invalid JSON");
 		}
 		if (!json || typeof json !== "object" || Array.isArray(json)) {
-			throw new InternalError(
-				"MoaError",
-				"Moa returned an invalid response object",
-			);
+			throw new InternalError("MoaError", "Moa returned an invalid response object");
 		}
 		if (json.code !== undefined && json.code !== 0) {
 			throw new InternalError(
@@ -300,11 +287,9 @@ export class MoaService {
 			signal: AbortSignal.timeout(this.client.config.timeout),
 		});
 		if (!res.ok) {
-			throw new InternalError(
-				"MoaError",
-				`OBS ${options.oid} HTTP ${res.status}`,
-				{ status: res.status },
-			);
+			throw new InternalError("MoaError", `OBS ${options.oid} HTTP ${res.status}`, {
+				status: res.status,
+			});
 		}
 		return new Uint8Array(await res.arrayBuffer());
 	}
@@ -313,10 +298,7 @@ export class MoaService {
 function encodePathId(value: string | number): string {
 	const id = String(value);
 	if (!id || id === "." || id === "..") {
-		throw new InternalError(
-			"MoaError",
-			"album and object IDs must be nonempty path segments",
-		);
+		throw new InternalError("MoaError", "album and object IDs must be nonempty path segments");
 	}
 	return encodeURIComponent(id);
 }

@@ -1,4 +1,4 @@
-import { assert, assertEquals, assertMatch } from "@std/assert";
+import { assert, test } from "vite-plus/test";
 import {
 	createPrimaryAccessToken,
 	isJwt,
@@ -8,31 +8,33 @@ import {
 	shouldUseLegyEncryptedAccess,
 } from "./auth_token.ts";
 
-Deno.test("auth token parser accepts V3 credential JSON", () => {
+test("auth token parser accepts V3 credential JSON", () => {
 	const accessToken = jwt({ ver: "3.1", scp: "LINE_AUTH" });
 	const refreshToken = jwt({ ver: "3.1", scp: "LINE_AUTH_REFRESH" });
-	const parsed = parseAuthTokenInput(JSON.stringify({
-		accessToken,
-		refreshToken,
-		expire: 123,
-	}));
-	assertEquals(parsed, { accessToken, refreshToken, expire: 123 });
+	const parsed = parseAuthTokenInput(
+		JSON.stringify({
+			accessToken,
+			refreshToken,
+			expire: 123,
+		}),
+	);
+	assert.deepEqual(parsed, { accessToken, refreshToken, expire: 123 });
 });
 
-Deno.test("auth token resolver strips aid prefix from JWT exports", () => {
+test("auth token resolver strips aid prefix from JWT exports", () => {
 	const accessToken = jwt({ ver: "3.1", scp: "LINE_AUTH" });
-	assertEquals(resolveLineAccessToken(`uc84fake:${accessToken}`), accessToken);
-	assert(shouldUseLegyEncryptedAccess(accessToken));
-	assert(isJwt(accessToken));
+	assert.deepEqual(resolveLineAccessToken(`uc84fake:${accessToken}`), accessToken);
+	assert.isOk(shouldUseLegyEncryptedAccess(accessToken));
+	assert.isOk(isJwt(accessToken));
 });
 
-Deno.test("auth token resolver expands primary auth key", () => {
+test("auth token resolver expands primary auth key", () => {
 	const authKey = `u${"0".repeat(32)}:${btoa("secret")}`;
 	const resolved = createPrimaryAccessToken(authKey, 1_700_000_000_000);
-	assert(isPrimaryAccessToken(resolved));
-	assertMatch(resolved, /^u0{32}:.*\..*$/);
-	assert(isPrimaryAccessToken(resolveLineAccessToken(authKey)));
-	assert(shouldUseLegyEncryptedAccess(authKey));
+	assert.isOk(isPrimaryAccessToken(resolved));
+	assert.match(resolved, /^u0{32}:.*\..*$/);
+	assert.isOk(isPrimaryAccessToken(resolveLineAccessToken(authKey)));
+	assert.isOk(shouldUseLegyEncryptedAccess(authKey));
 });
 
 function jwt(payload: Record<string, unknown>): string {
@@ -44,8 +46,5 @@ function jwt(payload: Record<string, unknown>): string {
 }
 
 function base64Url(value: string): string {
-	return btoa(value).replace(/\+/g, "-").replace(/\//g, "_").replace(
-		/=+$/g,
-		"",
-	);
+	return btoa(value).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
 }

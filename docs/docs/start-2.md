@@ -5,16 +5,20 @@ Next, How to use the methods of client?
 It's easy.
 
 All you have to do is call the client's method as follows.
-```ts
-import { loginWithPassword } from "@evex/linejs";
 
-const client = await loginWithPassword({
-  email: 'you@example.com', // e-mail address
-  password: 'password', // Password
-  onPincodeRequest(pincode) {
-    console.log('Enter this pincode to your LINE app:', pincode)
-  }
-}, { device: "IOSIPAD" })
+```ts
+import { loginWithPassword } from "@evex-dev/linejs";
+
+const client = await loginWithPassword(
+	{
+		email: "you@example.com", // e-mail address
+		password: "password", // Password
+		onPincodeRequest(pincode) {
+			console.log("Enter this pincode to your LINE app:", pincode);
+		},
+	},
+	{ device: "IOSIPAD" },
+);
 
 console.log(await client.getMyProfile());
 ```
@@ -66,7 +70,7 @@ AuthToken **********.********
 This is the auth token. It can be used as follows
 
 ```ts
-import { loginWithAuthToken } from "@evex/linejs";
+import { loginWithAuthToken } from "@evex-dev/linejs";
 const client = await loginWithAuthToken(authtoken, { device: "IOSIPAD" });
 ```
 
@@ -91,13 +95,12 @@ By default, it is `MemoryStorage`, and it all disappears after one execution.
 This can be `FileStorage`. As follows.
 
 ```ts
-import { FileStorage } from "@evex/linejs/storage";
+import { FileStorage } from "@evex-dev/linejs/storage";
 
 const client = await loginWithAuthToken(authtoken, {
-	  device: "IOSIPAD",
-	  storage: new FileStorage("./storage.json"), // path to storage file (This is secret file)
+	device: "IOSIPAD",
+	storage: new FileStorage("./storage.json"), // path to storage file (This is secret file)
 });
-
 ```
 
 You only need to log in once first with your email and then use your authToken.
@@ -108,5 +111,5 @@ Enjoy.
 
 :::tip\
 If you want to create your own storage such as connecting to the cloud api,\
-import `BaseStorage` and extend it to create your own storage. (An example can be found [here](https://github.com/evex-dev/linejs/tree/main/example/storage)) 
+import `BaseStorage` and extend it to create your own storage. (An example can be found [here](https://github.com/evex-dev/linejs/tree/main/example/storage))
 :::

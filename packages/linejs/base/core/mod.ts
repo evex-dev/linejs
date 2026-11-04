@@ -1,8 +1,4 @@
-import {
-	type Device,
-	type DeviceDetails,
-	getDeviceDetails,
-} from "./utils/devices.ts";
+import { type Device, type DeviceDetails, getDeviceDetails } from "./utils/devices.ts";
 
 import { type BaseStorage, MemoryStorage } from "../storage/mod.ts";
 
@@ -38,11 +34,11 @@ import { Timeline } from "../timeline/mod.ts";
 import { Polling } from "../polling/mod.ts";
 import { ConnManager } from "../push/mod.ts";
 
-import { Thrift as def } from "@evex/linejs-types/thrift";
+import { Thrift as def } from "@evex-dev/linejs-types/thrift";
 
-import type * as LINETypes from "@evex/linejs-types";
+import type * as LINETypes from "@evex-dev/linejs-types";
 import type { Fetch, FetchLike } from "../types.ts";
-import type { LooseType } from "@evex/loose-types";
+import type { LooseType } from "../types.ts";
 
 export interface LoginOption {
 	email?: string;
@@ -250,7 +246,10 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 			return seq;
 		});
 		// A failed storage operation must not poison subsequent allocations.
-		this.#reqseqQueue = next.then(() => {}, () => {});
+		this.#reqseqQueue = next.then(
+			() => {},
+			() => {},
+		);
 		return await next;
 	}
 
@@ -261,8 +260,8 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 		init?: RequestInit,
 	): Promise<Response> => {
 		const req = new Request(info, init);
-		const fetchFn = this.#customFetch ??
-			(await this.#nodeFetch(this.config.timeout)) ?? globalThis.fetch;
+		const fetchFn =
+			this.#customFetch ?? (await this.#nodeFetch(this.config.timeout)) ?? globalThis.fetch;
 		const res = await fetchFn(req);
 		return res;
 	};
@@ -270,8 +269,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 	/** Node PUSH requires HTTP/2. Explicit custom transports retain control. */
 	readonly fetchPush: Fetch = async (info, init) => {
 		if (this.#customFetch) return this.fetch(info, init);
-		const fetchFn = (await this.#nodePushFetch(this.config.timeout)) ??
-			this.fetch;
+		const fetchFn = (await this.#nodePushFetch(this.config.timeout)) ?? this.fetch;
 		return fetchFn(info, init);
 	};
 
@@ -308,17 +306,14 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 				return v.map((item) => BaseClient.jsonReplacer("", item));
 			}
 			if (v instanceof Uint8Array) {
-				return `Uint8Array[${v.length}]<${
-					Array.from(v).map((e) => e.toString(16).padStart(2, "0")).join(" ")
-				}>`;
+				return `Uint8Array[${v.length}]<${Array.from(v)
+					.map((e) => e.toString(16).padStart(2, "0"))
+					.join(" ")}>`;
 			}
 			if (v.type === "Buffer" && Array.isArray(v.data)) {
-				return `Buffer[${v.data.length}]<${
-					Array.from(v.data).map((e) => Number(e).toString(16).padStart(2, "0"))
-						.join(
-							" ",
-						)
-				}>`;
+				return `Buffer[${v.data.length}]<${Array.from(v.data)
+					.map((e) => Number(e).toString(16).padStart(2, "0"))
+					.join(" ")}>`;
 			}
 			if (v instanceof Blob) {
 				return `Blob[${v.size}]@${v.type}`;
@@ -332,9 +327,7 @@ export class BaseClient extends TypedEventEmitter<ClientEvents> {
 					const midType = key.match(/(.)[0123456789abcdef]{32}/);
 					if (midType && midType[1]) {
 						midCount++;
-						newObj[
-							`[${midType[1].toUpperCase()} mid ${midCount}]`
-						] = value;
+						newObj[`[${midType[1].toUpperCase()} mid ${midCount}]`] = value;
 					} else {
 						newObj[key] = value;
 					}

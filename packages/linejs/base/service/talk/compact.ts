@@ -36,9 +36,7 @@ export class CompactMessageProtocolError extends Error {
 	}
 }
 
-export function packCompactMessage(
-	options: CompactMessageProtocolOptions,
-): Uint8Array {
+export function packCompactMessage(options: CompactMessageProtocolOptions): Uint8Array {
 	const out: number[] = [];
 	out.push(assertByte(options.msgType, "msgType"));
 	out.push(getMidTypeByMid(options.to));
@@ -62,11 +60,7 @@ export function packCompactMessage(
 	return Uint8Array.from(out);
 }
 
-export function packCompactPlainMessage(
-	seqId: number,
-	to: string,
-	text: string,
-): Uint8Array {
+export function packCompactPlainMessage(seqId: number, to: string, text: string): Uint8Array {
 	return packCompactMessage({
 		msgType: 2,
 		seqId,
@@ -89,17 +83,12 @@ export function packCompactE2EEMessage(
 	});
 }
 
-export function decodeCompactMessageResponse(
-	data: Uint8Array,
-): CompactMessageResponse {
+export function decodeCompactMessageResponse(data: Uint8Array): CompactMessageResponse {
 	const reader = new CompactReader(data);
 	const success = reader.readBool();
 	if (!success) {
 		const code = reader.readI32();
-		throw new CompactMessageProtocolError(
-			`compact message failed: error code ${code}`,
-			code,
-		);
+		throw new CompactMessageProtocolError(`compact message failed: error code ${code}`, code);
 	}
 	const sequenceId = reader.readI32();
 	const messageId = reader.readI64();
@@ -113,10 +102,7 @@ export function decodeCompactMessageResponse(
 }
 
 export function encodeCompactText(text: string): Uint8Array {
-	const utf8 = Buffer.concat([
-		Buffer.from([0xef, 0xbb, 0xbf]),
-		Buffer.from(text, "utf8"),
-	]);
+	const utf8 = Buffer.concat([Buffer.from([0xef, 0xbb, 0xbf]), Buffer.from(text, "utf8")]);
 	const utf16 = Buffer.allocUnsafe(2 + text.length * 2);
 	utf16[0] = 0xff;
 	utf16[1] = 0xfe;
@@ -169,9 +155,7 @@ function getMidTypeByMid(mid: string): number {
 		case "c":
 			return 2;
 		default:
-			throw new CompactMessageProtocolError(
-				"unsupported compact message MID type",
-			);
+			throw new CompactMessageProtocolError("unsupported compact message MID type");
 	}
 }
 
@@ -189,23 +173,18 @@ function midToBytes(mid: string): number[] {
 
 function normalizeE2EEChunks(chunks: readonly Uint8Array[]): Uint8Array[] {
 	if (chunks.length < 5) {
-		throw new CompactMessageProtocolError(
-			"compact E2EE message requires 5 chunks",
-		);
+		throw new CompactMessageProtocolError("compact E2EE message requires 5 chunks");
 	}
-	return chunks.slice(0, 5).map((chunk) =>
-		chunk instanceof Uint8Array ? chunk : Uint8Array.from(chunk)
-	);
+	return chunks
+		.slice(0, 5)
+		.map((chunk) => (chunk instanceof Uint8Array ? chunk : Uint8Array.from(chunk)));
 }
 
 function readSignedI32(bytes: Uint8Array): number {
 	if (bytes.length !== 4) {
-		throw new CompactMessageProtocolError(
-			"compact E2EE key id chunk must be 4 bytes",
-		);
+		throw new CompactMessageProtocolError("compact E2EE key id chunk must be 4 bytes");
 	}
-	const value = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength)
-		.getUint32(0, false);
+	const value = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength).getUint32(0, false);
 	return value > 0x7fffffff ? value - 0x100000000 : value;
 }
 
@@ -228,9 +207,7 @@ class CompactReader {
 		const value = this.#readByte();
 		if (value === 1) return true;
 		if (value === 2) return false;
-		throw new CompactMessageProtocolError(
-			`invalid compact bool value ${value}`,
-		);
+		throw new CompactMessageProtocolError(`invalid compact bool value ${value}`);
 	}
 
 	readI32(): number {
@@ -249,9 +226,7 @@ class CompactReader {
 
 	assertDone(): void {
 		if (this.#offset !== this.#data.length) {
-			throw new CompactMessageProtocolError(
-				"unexpected trailing compact message response bytes",
-			);
+			throw new CompactMessageProtocolError("unexpected trailing compact message response bytes");
 		}
 	}
 

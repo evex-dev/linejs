@@ -10,11 +10,11 @@ OBS helpers are available from the authenticated client's `BaseClient`:
 
 ```ts
 const metadata = await client.base.obs.getMessageObsMetadata({
-  messageId: "MESSAGE_ID",
+	messageId: "MESSAGE_ID",
 });
 
 const file = await client.base.obs.downloadMessageData({
-  messageId: "MESSAGE_ID",
+	messageId: "MESSAGE_ID",
 });
 ```
 
@@ -22,10 +22,10 @@ Media upload helpers are available on the same object:
 
 ```ts
 const message = await client.base.obs.uploadMediaByE2EE({
-  to: "u...",
-  oType: "image",
-  data: imageFile,
-  filename: "image.png",
+	to: "u...",
+	oType: "image",
+	data: imageFile,
+	filename: "image.png",
 });
 ```
 
@@ -34,10 +34,10 @@ Implementation details live in
 
 ## Storage
 
-Storage helpers are exported from `@evex/linejs/storage`:
+Storage helpers are exported from `@evex-dev/linejs/storage`:
 
 ```ts
-import { FileStorage, MemoryStorage } from "@evex/linejs/storage";
+import { FileStorage, MemoryStorage } from "@evex-dev/linejs/storage";
 
 const storage = new FileStorage("./storage.json");
 ```
@@ -48,11 +48,11 @@ survive process restarts. Use `MemoryStorage` only for short-lived clients.
 ## Base Helpers
 
 Low-level helpers that are part of the public base package are exported from
-`@evex/linejs/base`:
+`@evex-dev/linejs/base`:
 
 ```ts
-import { BaseClient, continueRequest, InternalError } from "@evex/linejs/base";
+import { BaseClient, continueRequest, InternalError } from "@evex-dev/linejs/base";
 ```
 
 The package exports are defined in
-[`packages/linejs/deno.json`](https://github.com/evex-dev/linejs/blob/main/packages/linejs/deno.json).
+[`packages/linejs/package.json`](https://github.com/evex-dev/linejs/blob/main/packages/linejs/package.json).

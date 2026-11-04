@@ -1,6 +1,6 @@
 import type { Client } from "../../client.ts";
 import type { Chat } from "./mod.ts";
-import type * as line from "@evex/linejs-types";
+import type * as line from "@evex-dev/linejs-types";
 import { TalkMessage } from "../message/mod.ts";
 
 export interface MessageFetcher {
@@ -36,9 +36,7 @@ export const createMessageFetcher = async (client: Client, chat: Chat) => {
 				messageId: BigInt(lastMessage.id),
 			};
 
-			return await Promise.all(
-				messages.map((message) => TalkMessage.fromRawTalk(message, client)),
-			);
+			return await Promise.all(messages.map((message) => TalkMessage.fromRawTalk(message, client)));
 		},
 	};
 };

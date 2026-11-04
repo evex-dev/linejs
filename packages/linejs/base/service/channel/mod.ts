@@ -1,7 +1,7 @@
 // For Channel (channel, voom, etc)
 
 import { LINEStruct, type ProtocolKey } from "../../thrift/mod.ts";
-import type * as LINETypes from "@evex/linejs-types";
+import type * as LINETypes from "@evex-dev/linejs-types";
 import type { BaseClient } from "../../core/mod.ts";
 import type { BaseService } from "../types.ts";
 export class ChannelService implements BaseService {
@@ -18,9 +18,7 @@ export class ChannelService implements BaseService {
 	 * - linevoom: 1341209850
 	 */
 	async approveChannelAndIssueChannelToken(
-		...param: Parameters<
-			typeof LINEStruct.approveChannelAndIssueChannelToken_args
-		>
+		...param: Parameters<typeof LINEStruct.approveChannelAndIssueChannelToken_args>
 	): Promise<LINETypes.approveChannelAndIssueChannelToken_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.approveChannelAndIssueChannelToken_args(...param),
@@ -56,9 +54,7 @@ export class ChannelService implements BaseService {
 	}
 
 	async issueRequestTokenWithAuthScheme(
-		...param: Parameters<
-			typeof LINEStruct.issueRequestTokenWithAuthScheme_args
-		>
+		...param: Parameters<typeof LINEStruct.issueRequestTokenWithAuthScheme_args>
 	): Promise<LINETypes.issueRequestTokenWithAuthScheme_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.issueRequestTokenWithAuthScheme_args(...param),
@@ -70,12 +66,8 @@ export class ChannelService implements BaseService {
 	}
 
 	async getReturnUrlWithRequestTokenForAutoLogin(
-		...param: Parameters<
-			typeof LINEStruct.getReturnUrlWithRequestTokenForAutoLogin_args
-		>
-	): Promise<
-		LINETypes.getReturnUrlWithRequestTokenForAutoLogin_result["success"]
-	> {
+		...param: Parameters<typeof LINEStruct.getReturnUrlWithRequestTokenForAutoLogin_args>
+	): Promise<LINETypes.getReturnUrlWithRequestTokenForAutoLogin_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.getReturnUrlWithRequestTokenForAutoLogin_args(...param),
 			"getReturnUrlWithRequestTokenForAutoLogin",
@@ -98,9 +90,7 @@ export class ChannelService implements BaseService {
 	}
 
 	async updateChannelNotificationSetting(
-		...param: Parameters<
-			typeof LINEStruct.updateChannelNotificationSetting_args
-		>
+		...param: Parameters<typeof LINEStruct.updateChannelNotificationSetting_args>
 	): Promise<void> {
 		return await this.client.request.request(
 			LINEStruct.updateChannelNotificationSetting_args(...param),
@@ -136,9 +126,7 @@ export class ChannelService implements BaseService {
 	}
 
 	async getChannelNotificationSettings(
-		...param: Parameters<
-			typeof LINEStruct.getChannelNotificationSettings_args
-		>
+		...param: Parameters<typeof LINEStruct.getChannelNotificationSettings_args>
 	): Promise<LINETypes.getChannelNotificationSettings_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.getChannelNotificationSettings_args(...param),

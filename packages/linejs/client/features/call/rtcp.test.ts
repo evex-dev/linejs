@@ -1,18 +1,13 @@
-import { assert, assertEquals } from "@std/assert";
-import {
-	buildRtcpBye,
-	buildRtcpCompound,
-	nowNtp,
-	parseRtcp,
-} from "./rtcp.ts";
+import { assert, test } from "vite-plus/test";
+import { buildRtcpBye, buildRtcpCompound, nowNtp, parseRtcp } from "./rtcp.ts";
 
-Deno.test("nowNtp returns a value above the 1900-epoch threshold", () => {
+test("nowNtp returns a value above the 1900-epoch threshold", () => {
 	const t = nowNtp();
 	// Anything after 2024 means sec > 3914006400
-	assert(t.sec > 3_914_006_400);
+	assert.isOk(t.sec > 3_914_006_400);
 });
 
-Deno.test("buildRtcpCompound (SR + SDES) is parseable", () => {
+test("buildRtcpCompound (SR + SDES) is parseable", () => {
 	const out = buildRtcpCompound({
 		senderSsrc: 0x1234abcd,
 		sender: {
@@ -26,51 +21,53 @@ Deno.test("buildRtcpCompound (SR + SDES) is parseable", () => {
 		tool: "linejs",
 	});
 	const parsed = parseRtcp(out);
-	assertEquals(parsed.length, 2);
-	assertEquals(parsed[0].packetType, 200); // SR
-	assertEquals(parsed[0].senderSsrc, 0x1234abcd);
-	assertEquals(parsed[0].senderInfo?.packetCount, 5);
-	assertEquals(parsed[0].senderInfo?.octetCount, 800);
-	assertEquals(parsed[1].packetType, 202); // SDES
-	assertEquals(parsed[1].cname, "user@host");
+	assert.deepEqual(parsed.length, 2);
+	assert.deepEqual(parsed[0].packetType, 200); // SR
+	assert.deepEqual(parsed[0].senderSsrc, 0x1234abcd);
+	assert.deepEqual(parsed[0].senderInfo?.packetCount, 5);
+	assert.deepEqual(parsed[0].senderInfo?.octetCount, 800);
+	assert.deepEqual(parsed[1].packetType, 202); // SDES
+	assert.deepEqual(parsed[1].cname, "user@host");
 });
 
-Deno.test("buildRtcpCompound (RR with one report block)", () => {
+test("buildRtcpCompound (RR with one report block)", () => {
 	const out = buildRtcpCompound({
 		senderSsrc: 1,
-		reports: [{
-			ssrc: 0xabcdef01,
-			fractionLost: 5,
-			cumulativeLost: 100,
-			highestSeq: 9999,
-			jitter: 50,
-			lastSr: 0xaaaaaaaa,
-			delaySinceLastSr: 0xbbbb,
-		}],
+		reports: [
+			{
+				ssrc: 0xabcdef01,
+				fractionLost: 5,
+				cumulativeLost: 100,
+				highestSeq: 9999,
+				jitter: 50,
+				lastSr: 0xaaaaaaaa,
+				delaySinceLastSr: 0xbbbb,
+			},
+		],
 		cname: "anon",
 	});
 	const parsed = parseRtcp(out);
-	assertEquals(parsed[0].packetType, 201); // RR
-	assertEquals(parsed[0].count, 1);
+	assert.deepEqual(parsed[0].packetType, 201); // RR
+	assert.deepEqual(parsed[0].count, 1);
 	const r = parsed[0].reports[0];
-	assertEquals(r.ssrc, 0xabcdef01);
-	assertEquals(r.fractionLost, 5);
-	assertEquals(r.cumulativeLost, 100);
-	assertEquals(r.highestSeq, 9999);
-	assertEquals(r.jitter, 50);
-	assertEquals(r.lastSr, 0xaaaaaaaa);
-	assertEquals(r.delaySinceLastSr, 0xbbbb);
+	assert.deepEqual(r.ssrc, 0xabcdef01);
+	assert.deepEqual(r.fractionLost, 5);
+	assert.deepEqual(r.cumulativeLost, 100);
+	assert.deepEqual(r.highestSeq, 9999);
+	assert.deepEqual(r.jitter, 50);
+	assert.deepEqual(r.lastSr, 0xaaaaaaaa);
+	assert.deepEqual(r.delaySinceLastSr, 0xbbbb);
 });
 
-Deno.test("buildRtcpBye + parseRtcp recovers reason", () => {
+test("buildRtcpBye + parseRtcp recovers reason", () => {
 	const bye = buildRtcpBye(0x55667788, "hangup");
 	const parsed = parseRtcp(bye);
-	assertEquals(parsed[0].packetType, 203);
-	assertEquals(parsed[0].senderSsrc, 0x55667788);
-	assertEquals(parsed[0].byeReason, "hangup");
+	assert.deepEqual(parsed[0].packetType, 203);
+	assert.deepEqual(parsed[0].senderSsrc, 0x55667788);
+	assert.deepEqual(parsed[0].byeReason, "hangup");
 });
 
-Deno.test("parseRtcp ignores garbage past last valid packet", () => {
+test("parseRtcp ignores garbage past last valid packet", () => {
 	const sr = buildRtcpCompound({
 		senderSsrc: 1,
 		sender: { ntpSec: 1, ntpFrac: 0, rtpTimestamp: 1, packetCount: 1, octetCount: 1 },
@@ -81,5 +78,5 @@ Deno.test("parseRtcp ignores garbage past last valid packet", () => {
 	combined.set(sr, 0);
 	combined.set(garbage, sr.length);
 	const parsed = parseRtcp(combined);
-	assertEquals(parsed.length, 2); // SR + SDES, garbage rejected
+	assert.deepEqual(parsed.length, 2); // SR + SDES, garbage rejected
 });

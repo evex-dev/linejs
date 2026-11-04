@@ -36,10 +36,7 @@ export interface LiffTemplateMessage {
 	template: Record<string, unknown>;
 }
 
-export function text(
-	body: string,
-	sentBy?: LiffTextMessage["sentBy"],
-): LiffTextMessage {
+export function text(body: string, sentBy?: LiffTextMessage["sentBy"]): LiffTextMessage {
 	return sentBy ? { type: "text", text: body, sentBy } : { type: "text", text: body };
 }
 
@@ -54,10 +51,7 @@ export function image(
 	return { type: "image", originalContentUrl, previewImageUrl };
 }
 
-export function flex(
-	altText: string,
-	contents: Record<string, unknown>,
-): LiffFlexMessage {
+export function flex(altText: string, contents: Record<string, unknown>): LiffFlexMessage {
 	return { type: "flex", altText, contents };
 }
 
@@ -69,14 +63,10 @@ export interface LiffClient {
 		chatMid?: string;
 		liffId?: string;
 		lang?: string;
-	}): Promise<import("@evex/linejs-types").LiffViewResponse>;
+	}): Promise<import("@evex-dev/linejs-types").LiffViewResponse>;
 	issueSubView(
-		...args: Parameters<
-			import("../../base/service/liff/mod.ts").LiffService["issueSubLiffView"]
-		>
-	): ReturnType<
-		import("../../base/service/liff/mod.ts").LiffService["issueSubLiffView"]
-	>;
+		...args: Parameters<import("../../base/service/liff/mod.ts").LiffService["issueSubLiffView"]>
+	): ReturnType<import("../../base/service/liff/mod.ts").LiffService["issueSubLiffView"]>;
 	shareMessages(
 		to: string,
 		messages: LiffMessage[],
@@ -137,11 +127,7 @@ class ClientLiff implements LiffClient {
 			forceIssue: opts.forceIssue,
 		});
 	}
-	shareMessage(
-		to: string,
-		message: LiffMessage,
-		opts?: { liffId?: string; forceIssue?: boolean },
-	) {
+	shareMessage(to: string, message: LiffMessage, opts?: { liffId?: string; forceIssue?: boolean }) {
 		return this.shareMessages(to, [message], opts);
 	}
 }

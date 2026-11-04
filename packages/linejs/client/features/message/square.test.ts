@@ -1,10 +1,11 @@
-import { assertEquals, assertRejects } from "@std/assert";
+import { assert, test } from "vite-plus/test";
+import { assertRejects } from "../../../test/assert.ts";
 import { SquareMessage } from "./square.ts";
 import type { Client } from "../../client.ts";
 
 // `isMyMessage` is an async *method*, but `unsend()` tested it as a property
 // — a function object is always truthy, so the ownership guard never fired.
-Deno.test("unsend rejects messages that are not mine", async () => {
+test("unsend rejects messages that are not mine", async () => {
 	const client = {
 		base: {
 			profile: { mid: "u-self" },

@@ -37,14 +37,14 @@
  *      APK's (different) obfuscated names.
  *
  * Usage:
- *   deno run -A scripts/apk/extract_thrift.ts --smali <dir> [--apply]
- *                                              [--report <out>]
- *                                              [--match-threshold <0..1>]
- *                                              [--min-overlap <0..1>]
- *                                              [--enum-add-min-members <N>]
- *                                              [--min-shared-fields <N>]
- *                                              [--include-pkg <regex>]
- *                                              [--limit <N>]    # cap files for debugging
+ *   node scripts/apk/extract_thrift.ts --smali <dir> [--apply]
+ *                                      [--report <out>]
+ *                                      [--match-threshold <0..1>]
+ *                                      [--min-overlap <0..1>]
+ *                                      [--enum-add-min-members <N>]
+ *                                      [--min-shared-fields <N>]
+ *                                      [--include-pkg <regex>]
+ *                                      [--limit <N>]    # cap files for debugging
  *
  *   --min-overlap            content floor a non-canonical pairing must clear
  *                            before anything is written on its authority
@@ -57,8 +57,10 @@
  *                            agreeing from two narrow ones both called
  *                            `{request}`.
  */
-import { walk } from "https://deno.land/std@0.224.0/fs/walk.ts";
-import { fromFileUrl } from "https://deno.land/std@0.224.0/path/mod.ts";
+import { readFile, readdir, writeFile } from "node:fs/promises";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { walk } from "../utils/walk.ts";
 
 import {
 	acceptEnumValueAdd,
@@ -86,6 +88,8 @@ import {
 	TType,
 	type TypeExpr,
 } from "../thrift/sync_thrift.ts";
+
+const scriptDir = dirname(fileURLToPath(import.meta.url));
 
 // =========================================================================
 // CLI
@@ -197,10 +201,7 @@ interface ClinitData {
 	/** Map from a static field name → (TField argument values bound to it),
 	 * because TField objects are usually stored to a class static and later
 	 * referenced from read/write loops. */
-	tfieldByStaticField: Map<
-		string,
-		{ name: string; ttype: number; fid: number }
-	>;
+	tfieldByStaticField: Map<string, { name: string; ttype: number; fid: number }>;
 }
 
 const FIELD_DECL_RE = /^\.field\s+([\w\s]+?)\s+(\w+):(L[^;]+;|\[[^;]+;|\w)/;
@@ -253,11 +254,7 @@ function parseSmaliFile(src: string, filePath: string): SmaliClass | null {
 	}
 
 	if (!name) return null;
-	const enclosingClinit = interpretClinit(
-		clinitLines,
-		rawName,
-		modifiers.has("enum"),
-	);
+	const enclosingClinit = interpretClinit(clinitLines, rawName, modifiers.has("enum"));
 	return {
 		name,
 		rawName,
@@ -298,8 +295,7 @@ function interpretClinit(
 		// const-string vN, "value"
 		// (also const-string/jumbo)
 		{
-			const m = /^const-string(?:\/jumbo)?\s+(\w+),\s+"((?:\\.|[^"\\])*)"$/
-				.exec(line);
+			const m = /^const-string(?:\/jumbo)?\s+(\w+),\s+"((?:\\.|[^"\\])*)"$/.exec(line);
 			if (m) {
 				regs.set(m[1], { kind: "string", value: unescapeSmaliString(m[2]) });
 				continue;
@@ -309,8 +305,7 @@ function interpretClinit(
 		// ttype values don't appear in Thrift signatures).
 		{
 			const m =
-				/^const(?:\/4|\/16|\/high16|-wide(?:\/16|\/32|\/high16)?|)?\s+(\w+),\s+(-?\w+)$/
-					.exec(line);
+				/^const(?:\/4|\/16|\/high16|-wide(?:\/16|\/32|\/high16)?|)?\s+(\w+),\s+(-?\w+)$/.exec(line);
 			if (m) {
 				const reg = m[1];
 				const raw = m[2];
@@ -336,23 +331,15 @@ function interpretClinit(
 		}
 		// invoke-direct {regs}, Lcls;-><init>(sig)V
 		{
-			const m =
-				/^invoke-direct\s+\{([^}]*)\},\s+(L[^;]+;)->\<init\>\(([^)]*)\)V$/.exec(
-					line,
-				);
+			const m = /^invoke-direct\s+\{([^}]*)\},\s+(L[^;]+;)->\<init\>\(([^)]*)\)V$/.exec(line);
 			if (m) {
-				const callRegs = m[1].split(",").map((s) => s.trim()).filter(Boolean);
+				const callRegs = m[1]
+					.split(",")
+					.map((s) => s.trim())
+					.filter(Boolean);
 				const klass = m[2];
 				const sig = m[3];
-				const result = handleInvokeDirect(
-					regs,
-					callRegs,
-					klass,
-					sig,
-					ownerClass,
-					isEnum,
-					data,
-				);
+				const result = handleInvokeDirect(regs, callRegs, klass, sig, ownerClass, isEnum, data);
 				if (result) lastTField = result;
 				continue;
 			}
@@ -410,9 +397,7 @@ function handleInvokeDirect(
 		const name = regs.get(args[0]);
 		const ttype = regs.get(args[1]);
 		const fid = regs.get(args[2]);
-		if (
-			name?.kind === "string" && ttype?.kind === "int" && fid?.kind === "int"
-		) {
+		if (name?.kind === "string" && ttype?.kind === "int" && fid?.kind === "int") {
 			data.tfieldCalls.push({
 				name: name.value,
 				ttype: ttype.value,
@@ -437,9 +422,7 @@ function handleInvokeDirect(
 		const name = regs.get(args[0]);
 		const ord = regs.get(args[1]);
 		const value = regs.get(args[2]);
-		if (
-			name?.kind === "string" && ord?.kind === "int" && value?.kind === "int"
-		) {
+		if (name?.kind === "string" && ord?.kind === "int" && value?.kind === "int") {
 			data.enumConstantCalls.push({
 				name: name.value,
 				ordinal: ord.value,
@@ -493,10 +476,7 @@ function reportShadedInterfaces(classes: SmaliClass[]) {
 				tbaseCandidates.set(iface, (tbaseCandidates.get(iface) ?? 0) + 1);
 			}
 		}
-		if (
-			c.modifiers.has("enum") &&
-			c.enclosingClinit.enumConstantCalls.length > 0
-		) {
+		if (c.modifiers.has("enum") && c.enclosingClinit.enumConstantCalls.length > 0) {
 			for (const iface of c.interfaces) {
 				if (iface.startsWith("Ljava/")) continue;
 				tenumCandidates.set(iface, (tenumCandidates.get(iface) ?? 0) + 1);
@@ -504,17 +484,16 @@ function reportShadedInterfaces(classes: SmaliClass[]) {
 		}
 	}
 	const topPair = (m: Map<string, number>): string =>
-		[...m].sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k, v]) => `${k}=${v}`)
+		[...m]
+			.sort((a, b) => b[1] - a[1])
+			.slice(0, 3)
+			.map(([k, v]) => `${k}=${v}`)
 			.join(" ");
 	if (tbaseCandidates.size) {
-		console.log(
-			`detected TBase interface candidates: ${topPair(tbaseCandidates)}`,
-		);
+		console.log(`detected TBase interface candidates: ${topPair(tbaseCandidates)}`);
 	}
 	if (tenumCandidates.size) {
-		console.log(
-			`detected TEnum interface candidates: ${topPair(tenumCandidates)}`,
-		);
+		console.log(`detected TEnum interface candidates: ${topPair(tenumCandidates)}`);
 	}
 }
 
@@ -562,8 +541,12 @@ function buildFieldDef(
 		// unknown ttype — fall back to string (most permissive)
 		typeExpr = { kind: "primitive", ttype: TType.STRING, raw: "string" };
 	} else if (
-		tt === TType.BOOL || tt === TType.BYTE || tt === TType.DOUBLE ||
-		tt === TType.I16 || tt === TType.I32 || tt === TType.I64 ||
+		tt === TType.BOOL ||
+		tt === TType.BYTE ||
+		tt === TType.DOUBLE ||
+		tt === TType.I16 ||
+		tt === TType.I32 ||
+		tt === TType.I64 ||
 		tt === TType.STRING
 	) {
 		typeExpr = { kind: "primitive", ttype: tt, raw: TType[tt].toLowerCase() };
@@ -638,15 +621,13 @@ function buildIDL(classes: SmaliClass[]): IDL {
 		//                    contains ≥1 invoke of <init>(String, I, I) where the
 		//                    target is the enum class itself (Thrift's generated
 		//                    enum-member ctor takes name, ordinal, value)
-		const looksLikeThriftEnum = c.modifiers.has("enum") &&
-			c.enclosingClinit.enumConstantCalls.length > 0;
-		const looksLikeThriftStruct = !c.modifiers.has("enum") &&
-			c.enclosingClinit.tfieldCalls.length > 0;
+		const looksLikeThriftEnum =
+			c.modifiers.has("enum") && c.enclosingClinit.enumConstantCalls.length > 0;
+		const looksLikeThriftStruct =
+			!c.modifiers.has("enum") && c.enclosingClinit.tfieldCalls.length > 0;
 
 		if (looksLikeThriftEnum) {
-			const members: EnumMember[] = c.enclosingClinit.enumConstantCalls.map((
-				m,
-			) => ({
+			const members: EnumMember[] = c.enclosingClinit.enumConstantCalls.map((m) => ({
 				name: m.name,
 				value: m.value,
 			}));
@@ -656,7 +637,7 @@ function buildIDL(classes: SmaliClass[]): IDL {
 
 		if (looksLikeThriftStruct) {
 			const fields: FieldDef[] = c.enclosingClinit.tfieldCalls.map((tf, i) =>
-				buildFieldDef(tf, i, c.instanceFields)
+				buildFieldDef(tf, i, c.instanceFields),
 			);
 			fields.sort((a, b) => a.fid - b.fid);
 			idl.structs.set(short, { name: short, kind: "struct", fields });
@@ -685,26 +666,19 @@ async function loadAllClasses(dir: string, opts: Args): Promise<SmaliClass[]> {
 	const classes: SmaliClass[] = [];
 	let scanned = 0;
 	const t0 = performance.now();
-	for await (
-		const entry of walk(dir, { exts: [".smali"], includeDirs: false })
-	) {
+	for await (const entry of walk(dir, { exts: [".smali"], includeDirs: false })) {
 		if (opts.includePkg && !opts.includePkg.test(entry.path)) continue;
-		const src = await Deno.readTextFile(entry.path);
+		const src = await readFile(entry.path, "utf8");
 		// Cheap pre-filter: skip files that obviously don't touch Thrift.
 		// We only need files that either have an `<init>(Ljava/lang/String;BS)V`
 		// (TField call) or `Lorg/apache/thrift/` (TBase/TEnum implementation).
-		if (
-			!src.includes("(Ljava/lang/String;BS)V") &&
-			!src.includes("Lorg/apache/thrift/")
-		) continue;
+		if (!src.includes("(Ljava/lang/String;BS)V") && !src.includes("Lorg/apache/thrift/")) continue;
 		const cls = parseSmaliFile(src, entry.path);
 		if (cls) classes.push(cls);
 		scanned++;
 		if (scanned % 1000 === 0) {
 			const dt = (performance.now() - t0) / 1000;
-			console.log(
-				`  scanned ${scanned} files (${(scanned / dt).toFixed(0)}/s)...`,
-			);
+			console.log(`  scanned ${scanned} files (${(scanned / dt).toFixed(0)}/s)...`);
 		}
 		if (opts.limit > 0 && classes.length >= opts.limit) break;
 	}
@@ -750,12 +724,12 @@ interface ContainerElementResult {
 }
 
 const RET_TO_TTYPE: Record<string, TType> = {
-	"Z": TType.BOOL,
-	"B": TType.BYTE,
-	"S": TType.I16,
-	"I": TType.I32,
-	"J": TType.I64,
-	"D": TType.DOUBLE,
+	Z: TType.BOOL,
+	B: TType.BYTE,
+	S: TType.I16,
+	I: TType.I32,
+	J: TType.I64,
+	D: TType.DOUBLE,
 	"Ljava/lang/String;": TType.STRING,
 };
 
@@ -791,9 +765,10 @@ function sliceFidCases(readMethodBody: string): FidCase[] {
 	for (const line of lines) {
 		const cm = /^const(?:\/4|\/16|)?\s+(\w+),\s+(-?\w+)$/.exec(line);
 		if (cm) {
-			const v = cm[2].startsWith("0x") || cm[2].startsWith("-0x")
-				? parseInt(cm[2], 16)
-				: parseInt(cm[2], 10);
+			const v =
+				cm[2].startsWith("0x") || cm[2].startsWith("-0x")
+					? parseInt(cm[2], 16)
+					: parseInt(cm[2], 10);
 			if (!Number.isNaN(v)) regInt.set(cm[1], v);
 			continue;
 		}
@@ -950,8 +925,8 @@ async function inferStandardSchemeElements(
 	// Candidate scheme files: first the canonical `<stem>$<stem>StandardScheme`,
 	// then every other sibling `<stem>$*.smali`.
 	const candidates: string[] = [`${dir}/${tail}$${tail}StandardScheme.smali`];
-	for await (const entry of Deno.readDir(dir)) {
-		if (!entry.isFile) continue;
+	for (const entry of await readdir(dir, { withFileTypes: true })) {
+		if (!entry.isFile()) continue;
 		if (!entry.name.endsWith(".smali")) continue;
 		const prefix = `${tail}$`;
 		if (!entry.name.startsWith(prefix)) continue;
@@ -962,7 +937,7 @@ async function inferStandardSchemeElements(
 	for (const candidate of candidates) {
 		let src: string;
 		try {
-			src = await Deno.readTextFile(candidate);
+			src = await readFile(candidate, "utf8");
 		} catch {
 			continue;
 		}
@@ -970,8 +945,8 @@ async function inferStandardSchemeElements(
 		// signature `(<TProtocol>;<TBase>;)V`. We don't care which is read vs
 		// write — only one of them contains the fid dispatch.
 		const methodBlocks = extractMethodBlocks(src);
-		const voidPairMethods = methodBlocks.filter((mm) =>
-			mm.sig.endsWith(")V") && /^\(L[^;]+;L[^;]+;\)V$/.test(mm.sig)
+		const voidPairMethods = methodBlocks.filter(
+			(mm) => mm.sig.endsWith(")V") && /^\(L[^;]+;L[^;]+;\)V$/.test(mm.sig),
 		);
 		if (voidPairMethods.length === 0) continue;
 		let readMethod: SmaliMethod | null = null;
@@ -1037,10 +1012,7 @@ function inferRawElement(caseBody: string): TypeExpr | null {
 		for (let j = i + 1; j < Math.min(i + 5, lines.length); j++) {
 			const id = /^invoke-direct\s+\{[^}]+\},\s+(L[^;]+;)->\<init\>\(\)V$/.exec(lines[j]);
 			if (id && id[1] === cls) {
-				const short = cls.replace(/^L|;$/g, "").split("/").pop()!.replaceAll(
-					"$",
-					"_",
-				);
+				const short = cls.replace(/^L|;$/g, "").split("/").pop()!.replaceAll("$", "_");
 				return { kind: "ref", name: short };
 			}
 		}
@@ -1075,9 +1047,8 @@ async function refineContainerElements(
 		const path = pathByStruct.get(struct.name);
 		if (!path) continue;
 		const containerFids = struct.fields
-			.filter((f) =>
-				f.typeExpr.kind === "list" || f.typeExpr.kind === "set" ||
-				f.typeExpr.kind === "map"
+			.filter(
+				(f) => f.typeExpr.kind === "list" || f.typeExpr.kind === "set" || f.typeExpr.kind === "map",
 			)
 			.map((f) => f.fid);
 		if (containerFids.length === 0) continue;
@@ -1257,7 +1228,10 @@ function verifyMatches(
 		const myFields = canonical.fields.map((f) => f.name);
 		let best: { name: string; score: number } | null = null;
 		for (const [name, s] of linejsStructs) {
-			const score = jaccard(myFields, s.map((f) => f.name));
+			const score = jaccard(
+				myFields,
+				s.map((f) => f.name),
+			);
 			if (!best || score > best.score) best = { name, score };
 		}
 		if (best && best.score >= matchThreshold) {
@@ -1323,9 +1297,7 @@ function verifyMatches(
 
 			const apkT = fieldTypeExprTtype(apkField.typeExpr);
 
-			if (
-				linejsByFidHit && linejsByNameHit && linejsByFidHit === linejsByNameHit
-			) {
+			if (linejsByFidHit && linejsByNameHit && linejsByFidHit === linejsByNameHit) {
 				// Same fid+name; verify ttype agreement.
 				const linejsT = fieldTtype(linejsByFidHit, thrift);
 				if (linejsT !== apkT) {
@@ -1343,10 +1315,7 @@ function verifyMatches(
 				}
 				continue;
 			}
-			if (
-				linejsByFidHit && linejsByFidHit.name !== apkField.name &&
-				!linejsByNameHit
-			) {
+			if (linejsByFidHit && linejsByFidHit.name !== apkField.name && !linejsByNameHit) {
 				fieldMismatches.push({
 					struct: { canonical: canonical.name, linejs: match.name },
 					apk: { fid: apkField.fid, name: apkField.name, ttype: apkT },
@@ -1499,40 +1468,21 @@ function emitTypeRefRaw(t: TypeExpr): {
 function emitFieldObject(f: FieldDef, indent = "\t\t"): string {
 	const ref = emitTypeRefRaw(f.typeExpr);
 	const inner = `${indent}\t`;
-	const lines: string[] = [
-		`${inner}"fid": ${f.fid},`,
-		`${inner}"name": "${f.name}",`,
-	];
+	const lines: string[] = [`${inner}"fid": ${f.fid},`, `${inner}"name": "${f.name}",`];
 	if (ref.type !== undefined) lines.push(`${inner}"type": ${ref.type},`);
 	if (ref.struct !== undefined) {
 		lines.push(`${inner}"struct": "${ref.struct}",`);
 	}
 	if (ref.list !== undefined) {
-		lines.push(
-			`${inner}"list": ${
-				typeof ref.list === "number" ? ref.list : `"${ref.list}"`
-			},`,
-		);
+		lines.push(`${inner}"list": ${typeof ref.list === "number" ? ref.list : `"${ref.list}"`},`);
 	}
 	if (ref.set !== undefined) {
-		lines.push(
-			`${inner}"set": ${
-				typeof ref.set === "number" ? ref.set : `"${ref.set}"`
-			},`,
-		);
+		lines.push(`${inner}"set": ${typeof ref.set === "number" ? ref.set : `"${ref.set}"`},`);
 	}
 	if (ref.map !== undefined) {
-		lines.push(
-			`${inner}"map": ${
-				typeof ref.map === "number" ? ref.map : `"${ref.map}"`
-			},`,
-		);
+		lines.push(`${inner}"map": ${typeof ref.map === "number" ? ref.map : `"${ref.map}"`},`);
 		if (ref.key !== undefined) {
-			lines.push(
-				`${inner}"key": ${
-					typeof ref.key === "number" ? ref.key : `"${ref.key}"`
-				},`,
-			);
+			lines.push(`${inner}"key": ${typeof ref.key === "number" ? ref.key : `"${ref.key}"`},`);
 		}
 	}
 	return `${indent}{\n${lines.join("\n")}\n${indent}},`;
@@ -1603,10 +1553,7 @@ function findEnumValueLine(
 	const startIdx = src.indexOf(marker);
 	if (startIdx < 0) return null;
 	// Search forward for the line `\t\t"<value>": "..."` up to the closing `\t}`.
-	const valueLineRe = new RegExp(
-		`\\t\\t"${value}":\\s*"([^"]*)",`,
-		"g",
-	);
+	const valueLineRe = new RegExp(`\\t\\t"${value}":\\s*"([^"]*)",`, "g");
 	valueLineRe.lastIndex = startIdx;
 	const m = valueLineRe.exec(src);
 	if (!m) return null;
@@ -1669,9 +1616,7 @@ function applyRewrites(
 	for (const rw of rewrites) {
 		const range = findFieldEntry(cur, rw.linejsStruct, rw.fidInLinejs);
 		if (!range) {
-			missed.push(
-				`field not located: ${rw.linejsStruct} fid=${rw.fidInLinejs}`,
-			);
+			missed.push(`field not located: ${rw.linejsStruct} fid=${rw.fidInLinejs}`);
 			continue;
 		}
 		located.push({ range, rewrite: rw });
@@ -1679,8 +1624,7 @@ function applyRewrites(
 	located.sort((a, b) => b.range.start - a.range.start);
 	for (const loc of located) {
 		const replacement = emitFieldObject(loc.rewrite.apkField) + "\n";
-		cur = cur.slice(0, loc.range.start) + replacement +
-			cur.slice(loc.range.end);
+		cur = cur.slice(0, loc.range.start) + replacement + cur.slice(loc.range.end);
 		appliedField++;
 	}
 
@@ -1690,9 +1634,7 @@ function applyRewrites(
 	for (const m of enumMismatches) {
 		const hit = findEnumValueLine(cur, m.enum.linejs, m.apk.value);
 		if (!hit) {
-			missed.push(
-				`enum value not located: ${m.enum.linejs} value=${m.apk.value}`,
-			);
+			missed.push(`enum value not located: ${m.enum.linejs} value=${m.apk.value}`);
 			continue;
 		}
 		const replacement = `\t\t"${m.apk.value}": "${m.apk.name}",\n`;
@@ -1700,8 +1642,7 @@ function applyRewrites(
 	}
 	enumLocs.sort((a, b) => b.range.start - a.range.start);
 	for (const loc of enumLocs) {
-		cur = cur.slice(0, loc.range.start) + loc.replacement +
-			cur.slice(loc.range.end);
+		cur = cur.slice(0, loc.range.start) + loc.replacement + cur.slice(loc.range.end);
 		appliedEnum++;
 	}
 
@@ -1814,9 +1755,7 @@ function buildRpcCrossRefOverrides(
 			`  (dropped ${dropped.length} RPC binding(s) whose content disagrees — R8 short-name collisions)`,
 		);
 		for (const d of dropped.slice(0, 10)) {
-			console.log(
-				`    ${d.apk} -> ${d.linejs} (overlap ${d.score.toFixed(2)})`,
-			);
+			console.log(`    ${d.apk} -> ${d.linejs} (overlap ${d.score.toFixed(2)})`);
 		}
 		if (dropped.length > 10) {
 			console.log(`    ... (+${dropped.length - 10} more)`);
@@ -1826,7 +1765,7 @@ function buildRpcCrossRefOverrides(
 }
 
 async function main() {
-	const args = parseArgs(Deno.args);
+	const args = parseArgs(process.argv.slice(2));
 	console.log(`smali root: ${args.smaliDir}`);
 	console.log(`match threshold: ${args.matchThreshold}`);
 
@@ -1863,10 +1802,8 @@ async function main() {
 	);
 
 	// Load linejs Thrift dict via dynamic import.
-	const thriftPath = fromFileUrl(
-		import.meta.resolve("../../packages/types/thrift.ts"),
-	);
-	const mod = await import(`file://${thriftPath.replaceAll("\\", "/")}`);
+	const thriftPath = resolve(scriptDir, "../../packages/types/thrift.ts");
+	const mod = await import(pathToFileURL(thriftPath).href);
 	const thrift = mod.Thrift as LineThrift;
 	console.log(`linejs Thrift entries: ${Object.keys(thrift).length}`);
 
@@ -1882,13 +1819,8 @@ async function main() {
 	let overrides: Record<string, string> = {};
 	if (args.servicesReport) {
 		try {
-			const svcJson = JSON.parse(await Deno.readTextFile(args.servicesReport));
-			overrides = buildRpcCrossRefOverrides(
-				svcJson,
-				thrift,
-				idl,
-				args.gates.minOverlap,
-			);
+			const svcJson = JSON.parse(await readFile(args.servicesReport, "utf8"));
+			overrides = buildRpcCrossRefOverrides(svcJson, thrift, idl, args.gates.minOverlap);
 			console.log(
 				`RPC cross-reference: ${Object.keys(overrides).length} obfuscated class(es) bound to linejs names via wire RPC`,
 			);
@@ -1901,31 +1833,20 @@ async function main() {
 	// These never surface in computeDiff (which is additive only) but are the
 	// highest-risk silent-staleness bugs.
 	const mismatches = verifyMatches(idl, thrift, args.matchThreshold, overrides);
-	const totalMismatch = mismatches.fieldMismatches.length +
-		mismatches.enumMismatches.length;
+	const totalMismatch = mismatches.fieldMismatches.length + mismatches.enumMismatches.length;
 	if (totalMismatch) {
 		console.error(`\n=== mismatches (APK ≠ linejs) ===`);
 		for (const m of mismatches.fieldMismatches) {
-			console.error(
-				`  ${m.kind}: ${m.struct.canonical} (linejs=${m.struct.linejs})`,
-			);
-			console.error(
-				`    apk    fid=${m.apk.fid} name=${m.apk.name} ttype=${m.apk.ttype}`,
-			);
-			console.error(
-				`    linejs fid=${m.linejs.fid} name=${m.linejs.name} ttype=${m.linejs.ttype}`,
-			);
+			console.error(`  ${m.kind}: ${m.struct.canonical} (linejs=${m.struct.linejs})`);
+			console.error(`    apk    fid=${m.apk.fid} name=${m.apk.name} ttype=${m.apk.ttype}`);
+			console.error(`    linejs fid=${m.linejs.fid} name=${m.linejs.name} ttype=${m.linejs.ttype}`);
 		}
 		for (const m of mismatches.enumMismatches) {
-			console.error(
-				`  ${m.kind}: ${m.enum.canonical} (linejs=${m.enum.linejs})`,
-			);
+			console.error(`  ${m.kind}: ${m.enum.canonical} (linejs=${m.enum.linejs})`);
 			console.error(`    apk    value=${m.apk.value} name=${m.apk.name}`);
 			console.error(`    linejs value=${m.linejs.value} name=${m.linejs.name}`);
 		}
-		console.error(
-			`(${totalMismatch} mismatch(es) — these will NOT be auto-fixed by --apply)`,
-		);
+		console.error(`(${totalMismatch} mismatch(es) — these will NOT be auto-fixed by --apply)`);
 	} else {
 		console.log(`\nno type/name/fid mismatches between APK and linejs`);
 	}
@@ -1935,12 +1856,8 @@ async function main() {
 	// Drop new-type entries with obfuscated synthetic names: they'd land in
 	// thrift.ts as anonymous noise. Existing-entry adds (struct field adds,
 	// enum value adds) are kept regardless of the source class's name.
-	const droppedNewTypes = rawDiff.newTypes.filter((nt) =>
-		isR8SyntheticName(nt.canonicalName)
-	);
-	const gatedNewTypes = rawDiff.newTypes.filter((nt) =>
-		!isR8SyntheticName(nt.canonicalName)
-	);
+	const droppedNewTypes = rawDiff.newTypes.filter((nt) => isR8SyntheticName(nt.canonicalName));
+	const gatedNewTypes = rawDiff.newTypes.filter((nt) => !isR8SyntheticName(nt.canonicalName));
 
 	// Gate the additive diff on the same pairing evidence the rewrites use.
 	// computeDiff is additive, which used to read as "therefore safe" — but an
@@ -1948,9 +1865,8 @@ async function main() {
 	// pairing writes a field no LINE build ever sent. Against 26.14.0 the
 	// ungated path proposed coin balances for `establishE2EESession_args` and a
 	// `success` field at fid 0 on two `_args` structs.
-	const heldAdds: Array<
-		{ kind: "enum" | "field"; entry: string; detail: string; reason: string }
-	> = [];
+	const heldAdds: Array<{ kind: "enum" | "field"; entry: string; detail: string; reason: string }> =
+		[];
 	const enumValueAdds = rawDiff.enumValueAdds.filter((a) => {
 		const apkEnum = idl.enums.get(a.canonicalName);
 		const linejsEnum = thrift[a.enumName];
@@ -2006,9 +1922,10 @@ async function main() {
 	};
 	if (droppedNewTypes.length) {
 		console.log(
-			`(dropped ${droppedNewTypes.length} obfuscated new types: ${
-				droppedNewTypes.slice(0, 8).map((t) => t.canonicalName).join(", ")
-			}${droppedNewTypes.length > 8 ? ", ..." : ""})`,
+			`(dropped ${droppedNewTypes.length} obfuscated new types: ${droppedNewTypes
+				.slice(0, 8)
+				.map((t) => t.canonicalName)
+				.join(", ")}${droppedNewTypes.length > 8 ? ", ..." : ""})`,
 		);
 	}
 
@@ -2032,8 +1949,10 @@ async function main() {
 	}
 
 	const head = <T>(arr: T[], n: number): string =>
-		arr.slice(0, n).map((x) => String(x)).join(", ") +
-		(arr.length > n ? `, ... (+${arr.length - n})` : "");
+		arr
+			.slice(0, n)
+			.map((x) => String(x))
+			.join(", ") + (arr.length > n ? `, ... (+${arr.length - n})` : "");
 
 	if (diff.enumValueAdds.length) {
 		const byEnum = new Map<string, string[]>();
@@ -2069,23 +1988,21 @@ async function main() {
 	}
 	if (diff.newTypes.length) {
 		console.log(
-			`\nnew types: ${
-				head(diff.newTypes.map((t) => `${t.kind}:${t.canonicalName}`), 25)
-			}`,
+			`\nnew types: ${head(
+				diff.newTypes.map((t) => `${t.kind}:${t.canonicalName}`),
+				25,
+			)}`,
 		);
 	}
 
 	if (args.report) {
-		await Deno.writeTextFile(
-			args.report,
-			JSON.stringify({ diff, heldAdds, mismatches }, null, 2),
-		);
+		await writeFile(args.report, JSON.stringify({ diff, heldAdds, mismatches }, null, 2));
 		console.log(`\nReport written: ${args.report}`);
 	}
 
 	const wantWrite = args.apply || args.rewriteMismatches;
 	if (wantWrite) {
-		const orig = await Deno.readTextFile(thriftPath);
+		const orig = await readFile(thriftPath, "utf8");
 		let patched = orig;
 		if (args.apply) {
 			patched = applyDiff(patched, diff);
@@ -2127,7 +2044,11 @@ async function main() {
 			// even unique-shape enums turn out to be unsafe (e.g. CarrierCode
 			// renumberings vs unrelated enums with one shared member name).
 			const fieldNameSetKey = (fields: LineField[]): string =>
-				fields.map((f) => f.name).slice().sort().join("|");
+				fields
+					.map((f) => f.name)
+					.slice()
+					.sort()
+					.join("|");
 			const linejsShapeCount = new Map<string, number>();
 			for (const v of Object.values(thrift)) {
 				if (!Array.isArray(v)) continue;
@@ -2136,7 +2057,8 @@ async function main() {
 			}
 			const apkShapeCount = new Map<string, number>();
 			for (const s of idl.structs.values()) {
-				const key = s.fields.slice()
+				const key = s.fields
+					.slice()
 					.map((f) => f.name)
 					.sort()
 					.join("|");
@@ -2149,7 +2071,8 @@ async function main() {
 				if ((linejsShapeCount.get(lKey) ?? 0) !== 1) return false;
 				const aEntry = idl.structs.get(apkCanonical);
 				if (!aEntry) return false;
-				const aKey = aEntry.fields.slice()
+				const aKey = aEntry.fields
+					.slice()
 					.map((f) => f.name)
 					.sort()
 					.join("|");
@@ -2164,16 +2087,12 @@ async function main() {
 					args.gates,
 				);
 				if (!v.ok) {
-					skippedReasons.push(
-						`${m.struct.linejs} (apk ${m.struct.canonical}) — ${v.reason}`,
-					);
+					skippedReasons.push(`${m.struct.linejs} (apk ${m.struct.canonical}) — ${v.reason}`);
 				}
 				return v.ok;
 			});
 			const safeEnumMismatches = args.rewriteEnums
-				? mismatches.enumMismatches.filter((m) =>
-					m.enum.canonical === m.enum.linejs
-				)
+				? mismatches.enumMismatches.filter((m) => m.enum.canonical === m.enum.linejs)
 				: [];
 			if (skippedReasons.length > 0) {
 				console.log(
@@ -2183,35 +2102,24 @@ async function main() {
 					console.log(`    ${r}`);
 				}
 			}
-			const result = applyRewrites(
-				patched,
-				safeFieldMismatches,
-				safeEnumMismatches,
-				idl,
-			);
+			const result = applyRewrites(patched, safeFieldMismatches, safeEnumMismatches, idl);
 			patched = result.src;
-			console.log(
-				`Rewrote ${result.appliedField} field + ${result.appliedEnum} enum mismatches`,
-			);
+			console.log(`Rewrote ${result.appliedField} field + ${result.appliedEnum} enum mismatches`);
 			if (result.missed.length) {
-				console.error(
-					`  ${result.missed.length} rewrite(s) could not be located:`,
-				);
+				console.error(`  ${result.missed.length} rewrite(s) could not be located:`);
 				for (const m of result.missed.slice(0, 10)) {
 					console.error(`    ${m}`);
 				}
 			}
 		}
-		await Deno.writeTextFile(thriftPath, patched);
+		await writeFile(thriftPath, patched);
 	} else {
-		console.log(
-			`\n(dry-run; pass --apply and/or --rewrite-mismatches to write)`,
-		);
+		console.log(`\n(dry-run; pass --apply and/or --rewrite-mismatches to write)`);
 	}
 
 	if (args.strict && totalMismatch > 0 && !args.rewriteMismatches) {
 		console.error(`\n--strict: failing due to ${totalMismatch} mismatch(es)`);
-		Deno.exit(1);
+		process.exit(1);
 	}
 }
 

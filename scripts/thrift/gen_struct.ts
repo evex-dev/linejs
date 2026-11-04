@@ -2,16 +2,22 @@
  * @description Use to generate service from `ThriftRenameParser.def`
  * Warning: messy code
  */
-import * as path_ from "https://deno.land/std@0.79.0/path/mod.ts";
+import { writeFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { Thrift as _Thrift } from "../../packages/types/thrift.ts";
+
+const scriptDir = dirname(fileURLToPath(import.meta.url));
+
 export function main(
 	Thrift: Record<string, any[] | Record<string, string>> = _Thrift,
 	path?: string,
 ) {
 	const argList: string[] = [];
 	const structList: string[] = [];
-	const result = [`
-    import * as LINETypes from "@evex/linejs-types"
+	const result = [
+		`
+    import * as LINETypes from "@evex-dev/linejs-types"
     import {
         type NestedArray,
     } from "../mod.ts";
@@ -28,7 +34,8 @@ export function main(
             : T[P] extends ReadonlyArray<infer UU> ? ReadonlyArray<PartialDeep<UU>>
             : PartialDeep<T[P]>;
     };
-    `];
+    `,
+	];
 
 	Object.keys(Thrift).forEach((e) => {
 		if (e.endsWith("_args")) {
@@ -36,7 +43,7 @@ export function main(
 		}
 	});
 	function isExist(name: string) {
-		return typeof (Thrift[name]) !== "undefined";
+		return typeof Thrift[name] !== "undefined";
 	}
 	function isStruct(name: string) {
 		addStruct(name);
@@ -49,22 +56,20 @@ export function main(
 			result.push(struct(name));
 		}
 	}
-	function field(
-		data: {
-			fid: string;
-			name: string;
-			/** Thrift `binary`: declared in thrift.ts, see gen_typedef.ts. The
-			 *  generated LINETypes field is `(string|Buffer)`, so the writer
-			 *  needs the widened cast or `deno check` rejects Buffer callers. */
-			binary?: boolean;
-			type?: number;
-			struct?: string;
-			list?: string | number;
-			set?: string | number;
-			map?: string | number;
-			key?: number;
-		},
-	): string {
+	function field(data: {
+		fid: string;
+		name: string;
+		/** Thrift `binary`: declared in thrift.ts, see gen_typedef.ts. The
+		 *  generated LINETypes field is `(string|Buffer)`, so the writer
+		 *  needs the widened cast or the type check rejects Buffer callers. */
+		binary?: boolean;
+		type?: number;
+		struct?: string;
+		list?: string | number;
+		set?: string | number;
+		map?: string | number;
+		key?: number;
+	}): string {
 		if (typeof data.type !== "undefined") {
 			return data.binary
 				? `[${data.type}, ${data.fid}, param.${data.name} as string | Buffer | undefined]`
@@ -93,14 +98,9 @@ export function main(
 			return isStruct(data.set)
 				? `[14, ${data.fid}, [12, param.${data.name}&&(param.${data.name}).map(e=>${data.set}(e))]]`
 				: `[14, ${data.fid}, [8, param.${data.name}&&(param.${data.name}).map(e=>${data.set}(e))]]`;
-		} else if (
-			typeof data.map === "number" && typeof data.key === "number"
-		) {
+		} else if (typeof data.map === "number" && typeof data.key === "number") {
 			return `[13, ${data.fid}, [${data.key}, ${data.map}, param.${data.name}]]`;
-		} else if (
-			typeof data.map === "string" && typeof data.key === "number" &&
-			isExist(data.map)
-		) {
+		} else if (typeof data.map === "string" && typeof data.key === "number" && isExist(data.map)) {
 			return isStruct(data.map)
 				? `[13, ${data.fid}, [${data.key}, 12, map(${data.map}, param.${data.name})]]`
 				: `[13, ${data.fid}, [${data.key}, 8, map(${data.map}, param.${data.name})]]`;
@@ -110,21 +110,17 @@ export function main(
 	function struct(name: string): string {
 		const fields = Thrift[name];
 		if (isStruct(name)) {
-			return (`
+			return `
     export function ${name}(param?: PartialDeep<LINETypes.${name}> | undefined): NestedArray {
         return typeof param === "undefined" ? [] : [
-            ${
-				(fields as any[])
-					.map((e) => field(e))
-					.join(",\n        ")
-			}
+            ${(fields as any[]).map((e) => field(e)).join(",\n        ")}
         ]
-    }`);
+    }`;
 		} else {
-			return (`
+			return `
     export function ${name}(param: LINETypes.${name} | undefined): LINETypes.${name}&number | undefined {
         return typeof param === "string" ? LINETypes.enums.${name}[param] : param
-    }`);
+    }`;
 		}
 	}
 
@@ -136,15 +132,17 @@ export function main(
 	// schema that has none.
 	if (src.includes("as string | Buffer | undefined")) {
 		src = src.replace(
-			`import * as LINETypes from "@evex/linejs-types"`,
-			`import * as LINETypes from "@evex/linejs-types"\n    import type { Buffer } from "node:buffer";`,
+			`import * as LINETypes from "@evex-dev/linejs-types"`,
+			`import * as LINETypes from "@evex-dev/linejs-types"\n    import type { Buffer } from "node:buffer";`,
 		);
 	}
 
-	Deno.writeTextFileSync(
-		path || path_.fromFileUrl(import.meta.resolve(
-			"../../packages/linejs/base/thrift/readwrite/struct.ts",
-		)),
+	writeFileSync(
+		path || resolve(scriptDir, "../../packages/linejs/base/thrift/readwrite/struct.ts"),
 		src,
 	);
+}
+
+if (import.meta.main) {
+	main();
 }

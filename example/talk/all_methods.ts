@@ -1,18 +1,11 @@
-import {
-	loginWithAuthToken,
-	loginWithPassword,
-	loginWithQR,
-} from "@evex/linejs";
-import { FileStorage } from "@evex/linejs/storage";
+import { loginWithAuthToken, loginWithPassword, loginWithQR } from "@evex-dev/linejs";
+import { FileStorage } from "@evex-dev/linejs/storage";
 import { Buffer } from "node:buffer";
 
-const client = await loginWithAuthToken(
-	"DUMMYTOKEN",
-	{
-		device: "DESKTOPWIN",
-		storage: new FileStorage("./storage.json"),
-	},
-);
+const client = await loginWithAuthToken("DUMMYTOKEN", {
+	device: "DESKTOPWIN",
+	storage: new FileStorage("./storage.json"),
+});
 
 await client.base.talk.acceptChatInvitation({
 	request: {
@@ -358,10 +351,10 @@ await client.base.talk.getRepairElements({
 		numLocalBlockedFriends: 0,
 		numLocalBlockedRecommendations: 0,
 		localGroupMembers: {
-			"str": { invalidGroup: true, numMembers: 0 },
+			str: { invalidGroup: true, numMembers: 0 },
 		},
 		syncReason: "INTERNAL",
-		localProfileMappings: { "str": 0 },
+		localProfileMappings: { str: 0 },
 	},
 });
 
@@ -370,9 +363,7 @@ await client.base.talk.getServerTime();
 await client.base.talk.getSettings();
 
 await client.base.talk.getSettingsAttributes2({
-	attributesToRetrieve: [
-		"AGREEMENT_MID",
-	],
+	attributesToRetrieve: ["AGREEMENT_MID"],
 });
 
 await client.base.talk.inviteIntoChat({
@@ -424,17 +415,15 @@ await client.base.talk.registerE2EEGroupKey({
 	members: ["..."],
 });
 
-await client.base.talk.registerE2EEPublicKey(
-	{
-		reqSeq: await client.base.getReqseq(),
-		publicKey: {
-			createdTime: 0,
-			keyData: "...",
-			keyId: 0,
-			version: 0,
-		},
+await client.base.talk.registerE2EEPublicKey({
+	reqSeq: await client.base.getReqseq(),
+	publicKey: {
+		createdTime: 0,
+		keyData: "...",
+		keyId: 0,
+		version: 0,
 	},
-);
+});
 
 await client.base.talk.registerUserid({
 	reqSeq: await client.base.getReqseq(),
@@ -489,10 +478,12 @@ await client.base.talk.reportAbuseEx({
 		abuseReportEntry: {
 			lineMeeting: {
 				chatMid: "c...",
-				evidenceIds: [{
-					objectId: "...",
-					spaceId: "...",
-				}],
+				evidenceIds: [
+					{
+						objectId: "...",
+						spaceId: "...",
+					},
+				],
 			},
 		},
 	},
@@ -582,15 +573,17 @@ await client.base.talk.sync({
 });
 
 await client.base.talk.syncContacts({
-	localContacts: [{
-		emails: ["..."],
-		luid: "...",
-		mobileContactName: "...",
-		phones: ["..."],
-		phoneticName: "...",
-		type: "MODIFY",
-		userids: ["..."],
-	}],
+	localContacts: [
+		{
+			emails: ["..."],
+			luid: "...",
+			mobileContactName: "...",
+			phones: ["..."],
+			phoneticName: "...",
+			type: "MODIFY",
+			userids: ["..."],
+		},
+	],
 });
 
 await client.base.talk.tryFriendRequest({

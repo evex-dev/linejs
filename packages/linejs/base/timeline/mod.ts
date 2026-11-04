@@ -1,8 +1,8 @@
-// deno-lint-ignore-file no-explicit-any
+// oxlint-disable no-explicit-any
 import { Buffer } from "node:buffer";
 import crypto from "node:crypto";
 import type { BaseClient } from "../mod.ts";
-import type { LooseType } from "@evex/loose-types";
+import type { LooseType } from "../types.ts";
 
 export type TimelineResponse<T = LooseType> = {
 	code: number;
@@ -33,8 +33,7 @@ export class Timeline {
 			"user-agent": this.client.request.userAgent,
 			"x-line-channeltoken": this.timelineToken,
 			"accept-encoding": "gzip",
-			"x-line-global-config":
-				"discover.enable=true; follow.enable=true; reboot.phase=scenario",
+			"x-line-global-config": "discover.enable=true; follow.enable=true; reboot.phase=scenario",
 			"x-line-mid": this.client.profile!.mid,
 			"x-line-access": this.client.authToken,
 			"content-type": "application/json; charset=UTF-8",
@@ -176,18 +175,17 @@ export class Timeline {
 			...this.timelineHeaders,
 			"x-lhm": "POST",
 		};
-		return await this.client.fetch(
-			`https://${this.client.request.endpoint}/${
-				homeId[0] == "s" ? "sn" : "mh"
-			}/api/v57/post/create.json?${params}`,
-			{ headers, body: JSON.stringify(data), method: "POST" },
-		).then((r) => r.json());
+		return await this.client
+			.fetch(
+				`https://${this.client.request.endpoint}/${
+					homeId[0] == "s" ? "sn" : "mh"
+				}/api/v57/post/create.json?${params}`,
+				{ headers, body: JSON.stringify(data), method: "POST" },
+			)
+			.then((r) => r.json());
 	}
 
-	public async deletePost(options: {
-		homeId: string;
-		postId: string;
-	}): Promise<TimelineResponse> {
+	public async deletePost(options: { homeId: string; postId: string }): Promise<TimelineResponse> {
 		await this.initTimeline();
 		const { homeId, postId } = { ...options };
 		const headers = {
@@ -198,18 +196,17 @@ export class Timeline {
 			homeId,
 			postId,
 		});
-		return await this.client.fetch(
-			`https://${this.client.request.endpoint}/${
-				homeId[0] == "s" ? "sn" : "mh"
-			}/api/v57/post/delete.json?${params}`,
-			{ headers, method: "POST" },
-		).then((r) => r.json());
+		return await this.client
+			.fetch(
+				`https://${this.client.request.endpoint}/${
+					homeId[0] == "s" ? "sn" : "mh"
+				}/api/v57/post/delete.json?${params}`,
+				{ headers, method: "POST" },
+			)
+			.then((r) => r.json());
 	}
 
-	public async getPost(options: {
-		homeId: string;
-		postId: string;
-	}): Promise<TimelineResponse> {
+	public async getPost(options: { homeId: string; postId: string }): Promise<TimelineResponse> {
 		await this.initTimeline();
 		const { homeId, postId } = { ...options };
 		const headers = {
@@ -220,12 +217,14 @@ export class Timeline {
 			homeId,
 			postId,
 		});
-		return await this.client.fetch(
-			`https://${this.client.request.endpoint}/${
-				homeId[0] == "s" ? "sn" : "mh"
-			}/api/v57/post/get.json?${params}`,
-			{ headers },
-		).then((r) => r.json());
+		return await this.client
+			.fetch(
+				`https://${this.client.request.endpoint}/${
+					homeId[0] == "s" ? "sn" : "mh"
+				}/api/v57/post/get.json?${params}`,
+				{ headers },
+			)
+			.then((r) => r.json());
 	}
 
 	public async listPost(options: {
@@ -256,14 +255,16 @@ export class Timeline {
 			data.updatedTime = updatedTime.toString();
 		}
 		const params = new URLSearchParams(data);
-		return await this.client.fetch(
-			`https://${this.client.request.endpoint}/${
-				homeId[0] == "s" ? "sn" : "mh"
-			}/api/v57/post/list.json?${params}`,
-			{ headers },
-		).then((r) => r.json());
+		return await this.client
+			.fetch(
+				`https://${this.client.request.endpoint}/${
+					homeId[0] == "s" ? "sn" : "mh"
+				}/api/v57/post/list.json?${params}`,
+				{ headers },
+			)
+			.then((r) => r.json());
 	}
-	
+
 	public async updatePost(options: {
 		homeId: string;
 		postId: string;
@@ -365,13 +366,18 @@ export class Timeline {
 		const contents: LooseType = {
 			sticonMetas: [],
 			contentsStyle: {
-				textStyle: textSizeMode || textAnimation ? {
-					textSizeMode: textSizeMode,
-					textAnimation: textAnimation,
-				} : {},
-				stickerStyle: backgroundColor ? {
-					backgroundColor: backgroundColor,
-				} : {},
+				textStyle:
+					textSizeMode || textAnimation
+						? {
+								textSizeMode: textSizeMode,
+								textAnimation: textAnimation,
+							}
+						: {},
+				stickerStyle: backgroundColor
+					? {
+							backgroundColor: backgroundColor,
+						}
+					: {},
 				mediaStyle: {},
 			},
 			stickers: stickers,
@@ -396,12 +402,14 @@ export class Timeline {
 			...this.timelineHeaders,
 			"x-lhm": "POST",
 		};
-		return await this.client.fetch(
-			`https://${this.client.request.endpoint}/${
-				homeId[0] == "s" ? "sn" : "mh"
-			}/api/v57/post/update.json?${params}`,
-			{ headers, body: JSON.stringify(data), method: "POST" },
-		).then((r) => r.json());
+		return await this.client
+			.fetch(
+				`https://${this.client.request.endpoint}/${
+					homeId[0] == "s" ? "sn" : "mh"
+				}/api/v57/post/update.json?${params}`,
+				{ headers, body: JSON.stringify(data), method: "POST" },
+			)
+			.then((r) => r.json());
 	}
 
 	public async likePost(options: {
@@ -423,18 +431,20 @@ export class Timeline {
 			...this.timelineHeaders,
 			"x-lhm": "POST",
 		};
-		return await this.client.fetch(
-			`https://${this.client.request.endpoint}/ext/note/nt/api/v57/like/create.json?${params}`,
-			{
-				headers,
-				method: "POST",
-				body: JSON.stringify({
-					sourceType,
-					likeType,
-					contentId,
-				}),
-			},
-		).then((r) => r.json());
+		return await this.client
+			.fetch(
+				`https://${this.client.request.endpoint}/ext/note/nt/api/v57/like/create.json?${params}`,
+				{
+					headers,
+					method: "POST",
+					body: JSON.stringify({
+						sourceType,
+						likeType,
+						contentId,
+					}),
+				},
+			)
+			.then((r) => r.json());
 	}
 
 	public async createComment(options: {
@@ -463,16 +473,18 @@ export class Timeline {
 			contentId,
 			contentsList,
 		};
-		return await this.client.fetch(
-			`https://${this.client.request.endpoint}/ext/note/nt/api/v57/comment/create.json?${params}`,
-			{
-				headers,
-				method: "POST",
-				body: JSON.stringify(body),
-			},
-		).then((r) => r.json());
+		return await this.client
+			.fetch(
+				`https://${this.client.request.endpoint}/ext/note/nt/api/v57/comment/create.json?${params}`,
+				{
+					headers,
+					method: "POST",
+					body: JSON.stringify(body),
+				},
+			)
+			.then((r) => r.json());
 	}
-	
+
 	public async sharePost(options: {
 		postId: string;
 		chatMid: string;
@@ -486,19 +498,21 @@ export class Timeline {
 			...this.timelineHeaders,
 			"x-lhm": "POST",
 		};
-		return await this.client.fetch(
-			`https://${this.client.request.endpoint}/${
-				homeId[0] == "s" ? "sn" : "mh"
-			}/api/v57/post/sendPostToTalk.json`,
-			{
-				method: "POST",
-				headers,
-				body: JSON.stringify({
-					postId: postId,
-					receiveMids: [chatMid],
-				}),
-			},
-		).then((r) => r.json());
+		return await this.client
+			.fetch(
+				`https://${this.client.request.endpoint}/${
+					homeId[0] == "s" ? "sn" : "mh"
+				}/api/v57/post/sendPostToTalk.json`,
+				{
+					method: "POST",
+					headers,
+					body: JSON.stringify({
+						postId: postId,
+						receiveMids: [chatMid],
+					}),
+				},
+			)
+			.then((r) => r.json());
 	}
 
 	/**
@@ -517,7 +531,8 @@ export class Timeline {
 		data: Blob,
 	): Promise<{ objId: string; objHash: string }> {
 		await this.initTimeline();
-		const objId = crypto.createHash("md5")
+		const objId = crypto
+			.createHash("md5")
 			.update(`${this.client.profile!.mid}-${Date.now()}`)
 			.digest("hex");
 		const res = await this.#uploadObjNhn("myhome/h", objId, type, data);
@@ -534,11 +549,10 @@ export class Timeline {
 	 * id would leave the comment referencing a non-existent object (renders broken).
 	 * Note comments accept images only (video comments are not supported by LINE).
 	 */
-	public async uploadNoteCommentImage(
-		data: Blob,
-	): Promise<{ objId: string; objHash: string }> {
+	public async uploadNoteCommentImage(data: Blob): Promise<{ objId: string; objHash: string }> {
 		await this.initTimeline();
-		const seed = crypto.createHash("md5")
+		const seed = crypto
+			.createHash("md5")
 			.update(`${this.client.profile!.mid}-${Date.now()}`)
 			.digest("hex");
 		const res = await this.#uploadObjNhn("myhome/cmt", seed, "image", data);
@@ -570,17 +584,13 @@ export class Timeline {
 					...this.timelineHeaders,
 					"content-type": contentType,
 					"content-length": String(body.size),
-					"x-obs-params": Buffer.from(JSON.stringify(params)).toString(
-						"base64",
-					),
+					"x-obs-params": Buffer.from(JSON.stringify(params)).toString("base64"),
 				},
 				body,
 			},
 		);
 		if (res.status !== 201) {
-			throw new Error(
-				`Note media upload failed (${obsPath}): HTTP ${res.status}`,
-			);
+			throw new Error(`Note media upload failed (${obsPath}): HTTP ${res.status}`);
 		}
 		return res;
 	}

@@ -1,4 +1,4 @@
-import { assert, assertEquals } from "@std/assert";
+import { assert, test } from "vite-plus/test";
 import { Buffer } from "node:buffer";
 import { E2EE } from "./mod.ts";
 
@@ -41,18 +41,22 @@ function makeE2EE(opts: {
 	};
 	const e2ee = new E2EE(fakeBase as never);
 	// Stub getE2EELocalPublicKey so we don't need a real Curve25519 pubkey
-	(e2ee as unknown as {
-		getE2EELocalPublicKey: unknown;
-	}).getE2EELocalPublicKey = () => Promise.resolve(opts.receiverPubKey);
+	(
+		e2ee as unknown as {
+			getE2EELocalPublicKey: unknown;
+		}
+	).getE2EELocalPublicKey = () => Promise.resolve(opts.receiverPubKey);
 
 	// Trap decryptE2EEMessageV2 — we want to verify which privK reached it.
 	const seen: { privK: Buffer | null; pubK: unknown } = {
 		privK: null,
 		pubK: null,
 	};
-	(e2ee as unknown as {
-		decryptE2EEMessageV2: unknown;
-	}).decryptE2EEMessageV2 = (
+	(
+		e2ee as unknown as {
+			decryptE2EEMessageV2: unknown;
+		}
+	).decryptE2EEMessageV2 = (
 		_to: string,
 		_from: string,
 		_chunks: Buffer[],
@@ -95,7 +99,7 @@ function makeFakeMessage(opts: {
 	} as never;
 }
 
-Deno.test("decryptE2EEDataMessage — received: looks up self-key by receiverKeyId (#88)", async () => {
+test("decryptE2EEDataMessage — received: looks up self-key by receiverKeyId (#88)", async () => {
 	const oldKey = { privKey: "AAAA", pubKey: "BBBB" };
 	const newKey = { privKey: "CCCC", pubKey: "DDDD" };
 	const { e2ee, seen, lookups } = makeE2EE({
@@ -112,16 +116,16 @@ Deno.test("decryptE2EEDataMessage — received: looks up self-key by receiverKey
 	});
 	const out = await e2ee.decryptE2EEDataMessage(msg);
 	// The stub returned the keyMaterial/fileName we set above.
-	assertEquals(out.fileName, "x");
+	assert.deepEqual(out.fileName, "x");
 	// Verify the by-id lookup happened for receiverKeyId=9, not 11.
-	assert(lookups.includes("9"), "expected by-keyId lookup for 9");
-	assertEquals(
+	assert.isOk(lookups.includes("9"), "expected by-keyId lookup for 9");
+	assert.deepEqual(
 		Buffer.from(oldKey.privKey, "base64").toString("base64"),
 		seen.privK!.toString("base64"),
 	);
 });
 
-Deno.test("decryptE2EEDataMessage — sent: looks up self-key by senderKeyId (#88)", async () => {
+test("decryptE2EEDataMessage — sent: looks up self-key by senderKeyId (#88)", async () => {
 	const key7 = { privKey: "AAAA", pubKey: "BBBB" };
 	const key11 = { privKey: "CCCC", pubKey: "DDDD" };
 	const { e2ee, seen, lookups } = makeE2EE({
@@ -137,14 +141,14 @@ Deno.test("decryptE2EEDataMessage — sent: looks up self-key by senderKeyId (#8
 		to: "u-them",
 	});
 	await e2ee.decryptE2EEDataMessage(msg);
-	assert(lookups.includes("7"), "expected by-keyId lookup for senderKeyId 7");
-	assertEquals(
+	assert.isOk(lookups.includes("7"), "expected by-keyId lookup for senderKeyId 7");
+	assert.deepEqual(
 		Buffer.from(key7.privKey, "base64").toString("base64"),
 		seen.privK!.toString("base64"),
 	);
 });
 
-Deno.test("decryptE2EEDataMessage — falls back to latest key when by-id miss (#88)", async () => {
+test("decryptE2EEDataMessage — falls back to latest key when by-id miss (#88)", async () => {
 	const newKey = { privKey: "ZZZZ", pubKey: "YYYY" };
 	const { e2ee, seen } = makeE2EE({
 		keysByKeyId: {}, // empty by-id store
@@ -159,7 +163,7 @@ Deno.test("decryptE2EEDataMessage — falls back to latest key when by-id miss (
 		to: "u-self",
 	});
 	await e2ee.decryptE2EEDataMessage(msg);
-	assertEquals(
+	assert.deepEqual(
 		Buffer.from(newKey.privKey, "base64").toString("base64"),
 		seen.privK!.toString("base64"),
 	);

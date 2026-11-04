@@ -1,10 +1,7 @@
-import {
-	loginWithAuthToken,
-	loginWithQR,
-	type TalkMessage,
-} from "@evex/linejs";
-import type { Device } from "@evex/linejs/base";
-import { FileStorage } from "@evex/linejs/storage";
+import { readFile } from "node:fs/promises";
+import { loginWithAuthToken, loginWithQR, type TalkMessage } from "@evex-dev/linejs";
+import type { Device } from "@evex-dev/linejs/base";
+import { FileStorage } from "@evex-dev/linejs/storage";
 import {
 	decodeWavSync,
 	opusCodecFactory,
@@ -12,35 +9,31 @@ import {
 	PlanetTransport,
 	type PlanetTransportOpts,
 	resampleLinear,
-} from "@evex/linejs/call";
+} from "@evex-dev/linejs/call";
 
 type PlanetMediaKeyMode = NonNullable<PlanetTransportOpts["mediaKeyMode"]>;
 
-const COMMAND = Deno.env.get("LINE_CALL_COMMAND") ?? "!call";
+const COMMAND = process.env.LINE_CALL_COMMAND ?? "!call";
 const SAMPLE_RATE = 48_000;
-const wavPath = Deno.args[0] ?? Deno.env.get("LINE_CALL_WAV") ??
-	new URL("./unity.wav", import.meta.url);
-const configuredDevice = Deno.env.get("LINE_DEVICE")?.trim() as
-	| Device
-	| undefined;
-const version = Deno.env.get("LINE_VERSION") ?? undefined;
+const wavPath =
+	process.argv[2] ?? process.env.LINE_CALL_WAV ?? new URL("./unity.wav", import.meta.url);
+const configuredDevice = process.env.LINE_DEVICE?.trim() as Device | undefined;
+const version = process.env.LINE_VERSION ?? undefined;
 const fromEnvInfo = readFromEnvInfo();
-const storagePath = Deno.env.get("LINE_STORAGE_FILE");
-const configuredMediaKeyMode = Deno.env.get("LINE_CALL_MEDIA_KEY_MODE")
-	?.trim() as PlanetMediaKeyMode | undefined;
+const storagePath = process.env.LINE_STORAGE_FILE;
+const configuredMediaKeyMode = process.env.LINE_CALL_MEDIA_KEY_MODE?.trim() as
+	| PlanetMediaKeyMode
+	| undefined;
 const oneToOneMediaKeyMode = configuredMediaKeyMode ?? "audio-reverse-stage";
 const groupMediaKeyMode = configuredMediaKeyMode ?? "audio-secret-sender";
 const frameMs = readNumberEnv("LINE_CALL_FRAME_MS", 20);
 const gain = readNumberEnv("LINE_CALL_GAIN", 1);
 const holdMs = readNumberEnv("LINE_CALL_HOLD_MS", 1_000);
-const repeatCount = Math.max(
-	1,
-	Math.floor(readNumberEnv("LINE_CALL_REPEAT_COUNT", 1)),
-);
+const repeatCount = Math.max(1, Math.floor(readNumberEnv("LINE_CALL_REPEAT_COUNT", 1)));
 const timeoutMs = readNumberEnv("LINE_CALL_TIMEOUT_MS", 10_000);
 const answerTimeoutMs = readNumberEnv("LINE_CALL_ANSWER_TIMEOUT_MS", 60_000);
 const bitrate = readOptionalNumberEnv("LINE_CALL_OPUS_BITRATE");
-const bandwidth = Deno.env.get("LINE_CALL_OPUS_BANDWIDTH") as
+const bandwidth = process.env.LINE_CALL_OPUS_BANDWIDTH as
 	| "narrowband"
 	| "mediumband"
 	| "wideband"
@@ -49,9 +42,7 @@ const bandwidth = Deno.env.get("LINE_CALL_OPUS_BANDWIDTH") as
 	| undefined;
 const opusSignal = readOpusSignalEnv();
 const opusVbr = readBooleanEnv("LINE_CALL_OPUS_VBR", false);
-const payloadPrefix = hexToBytes(
-	Deno.env.get("LINE_CALL_PAYLOAD_PREFIX_HEX") ?? "00",
-);
+const payloadPrefix = hexToBytes(process.env.LINE_CALL_PAYLOAD_PREFIX_HEX ?? "00");
 
 const authToken = await readAuthToken();
 const device = configuredDevice || (authToken ? "ANDROID" : "ANDROIDSECONDARY");
@@ -59,14 +50,17 @@ const deviceInfo = readDeviceInfo();
 const storage = storagePath ? new FileStorage(storagePath) : undefined;
 const client = authToken
 	? await loginWithAuthToken(authToken, { device, version, storage })
-	: await loginWithQR({
-		onReceiveQRUrl(url) {
-			console.log(`QR: ${url}`);
-		},
-		onPincodeRequest(pin) {
-			console.log(`PIN: ${pin}`);
-		},
-	}, { device, version, storage });
+	: await loginWithQR(
+			{
+				onReceiveQRUrl(url) {
+					console.log(`QR: ${url}`);
+				},
+				onPincodeRequest(pin) {
+					console.log(`PIN: ${pin}`);
+				},
+			},
+			{ device, version, storage },
+		);
 
 const audio = await loadWavForCall(wavPath, gain);
 let activeCall: Promise<void> | undefined;
@@ -74,10 +68,7 @@ let activeCall: Promise<void> | undefined;
 console.log(`Listening for ${COMMAND}`);
 client.on("message", (message) => {
 	void handleMessage(message).catch((error) => {
-		console.error(
-			"[call] failed:",
-			error instanceof Error ? error.message : error,
-		);
+		console.error("[call] failed:", error instanceof Error ? error.message : error);
 	});
 });
 client.listen({ talk: true, square: false });
@@ -97,10 +88,9 @@ async function handleMessage(message: TalkMessage): Promise<void> {
 		return;
 	}
 	await message.reply(to ? "calling" : "starting group call");
-	activeCall = (to ? callAndPlay(to) : callGroupAndPlay(chatMid!))
-		.finally(() => {
-			activeCall = undefined;
-		});
+	activeCall = (to ? callAndPlay(to) : callGroupAndPlay(chatMid!)).finally(() => {
+		activeCall = undefined;
+	});
 	await activeCall;
 }
 
@@ -137,8 +127,7 @@ async function callGroupAndPlay(chatMid: string): Promise<void> {
 	const localMid = client.base.profile?.mid;
 	if (!localMid) throw new Error("profile is not ready");
 
-	const state = await client.call.getGroupCall(chatMid)
-		.catch(() => undefined);
+	const state = await client.call.getGroupCall(chatMid).catch(() => undefined);
 	const online = Boolean((state as { online?: boolean } | undefined)?.online);
 	const route = await client.call.acquireGroupRoute({
 		chatMid,
@@ -204,18 +193,11 @@ async function streamOpus(
 	let sentBytes = 0;
 	try {
 		if (opts.nativeGroupPacketize) {
-			const { packets, frameActivity } = encodeOpusPackets(
-				encoder,
-				samples,
-				repeats,
-				frameSamples,
-			);
-			for (
-				const payload of packetizeNativeGroupOpusPairs(packets, {
-					inputPrefixBytes: payloadPrefix.length,
-					frameActivity,
-				})
-			) {
+			const { packets, frameActivity } = encodeOpusPackets(encoder, samples, repeats, frameSamples);
+			for (const payload of packetizeNativeGroupOpusPairs(packets, {
+				inputPrefixBytes: payloadPrefix.length,
+				frameActivity,
+			})) {
 				await transport.send(payload, {
 					timestampStep: frameSamples * 2,
 				});
@@ -252,9 +234,7 @@ async function streamOpus(
 }
 
 function encodeOpusPackets(
-	encoder: ReturnType<
-		Awaited<ReturnType<typeof opusCodecFactory>>["newEncoder"]
-	>,
+	encoder: ReturnType<Awaited<ReturnType<typeof opusCodecFactory>>["newEncoder"]>,
 	samples: Int16Array,
 	repeats: number,
 	frameSamples: number,
@@ -262,8 +242,7 @@ function encodeOpusPackets(
 	const packets: Uint8Array[] = [];
 	const frameActivity: boolean[] = [];
 	// Pad the last pair with silence rather than dropping an unpaired frame.
-	const paddedLength = Math.ceil(samples.length / (frameSamples * 2)) *
-		frameSamples * 2;
+	const paddedLength = Math.ceil(samples.length / (frameSamples * 2)) * frameSamples * 2;
 	for (let repeat = 0; repeat < repeats; repeat++) {
 		for (let offset = 0; offset < paddedLength; offset += frameSamples) {
 			const frame = new Int16Array(frameSamples);
@@ -285,19 +264,11 @@ function encodeOpusPackets(
 	return { packets, frameActivity };
 }
 
-async function loadWavForCall(
-	path: string | URL,
-	audioGain: number,
-): Promise<Int16Array> {
-	const wav = decodeWavSync(await Deno.readFile(path));
+async function loadWavForCall(path: string | URL, audioGain: number): Promise<Int16Array> {
+	const wav = decodeWavSync(await readFile(path));
 	let samples = wav.samples;
 	if (wav.sampleRate !== SAMPLE_RATE) {
-		samples = resampleLinear(
-			samples,
-			wav.sampleRate,
-			SAMPLE_RATE,
-			wav.channels,
-		);
+		samples = resampleLinear(samples, wav.sampleRate, SAMPLE_RATE, wav.channels);
 	}
 	if (wav.channels !== 1) samples = downmixToMono(samples, wav.channels);
 	if (audioGain !== 1) samples = applyGain(samples, audioGain);
@@ -336,7 +307,7 @@ function downmixToMono(samples: Int16Array, channels: number): Int16Array {
 }
 
 function readFromEnvInfo(): Record<string, string> | undefined {
-	const json = Deno.env.get("LINE_CALL_FROM_ENV_INFO")?.trim();
+	const json = process.env.LINE_CALL_FROM_ENV_INFO?.trim();
 	if (json) {
 		const parsed = JSON.parse(json) as unknown;
 		if (!isStringRecord(parsed)) {
@@ -344,12 +315,12 @@ function readFromEnvInfo(): Record<string, string> | undefined {
 		}
 		return parsed;
 	}
-	const devname = Deno.env.get("LINE_CALL_DEVNAME")?.trim();
+	const devname = process.env.LINE_CALL_DEVNAME?.trim();
 	return devname ? { devname } : undefined;
 }
 
 function readDeviceInfo(): string | undefined {
-	const direct = Deno.env.get("LINE_CALL_DEVICE_INFO")?.trim();
+	const direct = process.env.LINE_CALL_DEVICE_INFO?.trim();
 	if (direct) return direct;
 	if (device === "ANDROID" || device === "ANDROIDSECONDARY") {
 		return `ANDROID\t${version ?? "26.6.2"}\tAndroid OS\t16`;
@@ -368,9 +339,7 @@ function isStringRecord(value: unknown): value is Record<string, string> {
 
 function addAcquireRouteHint(error: unknown): Error {
 	const message = error instanceof Error ? error.message : String(error);
-	if (
-		!message.includes("acquireCallRoute") || !message.includes("INVALID_STATE")
-	) {
+	if (!message.includes("acquireCallRoute") || !message.includes("INVALID_STATE")) {
 		return error instanceof Error ? error : new Error(message);
 	}
 	return new Error(
@@ -416,11 +385,11 @@ function hexToBytes(hex: string): Uint8Array {
 }
 
 async function readAuthToken(): Promise<string | undefined> {
-	const direct = Deno.env.get("LINE_AUTH_TOKEN");
+	const direct = process.env.LINE_AUTH_TOKEN;
 	if (direct) return direct.trim();
-	const file = Deno.env.get("LINE_AUTH_TOKEN_FILE");
+	const file = process.env.LINE_AUTH_TOKEN_FILE;
 	if (!file) return undefined;
-	return (await Deno.readTextFile(file)).trim();
+	return (await readFile(file, "utf8")).trim();
 }
 
 function readNumberEnv(name: string, fallback: number): number {
@@ -428,7 +397,7 @@ function readNumberEnv(name: string, fallback: number): number {
 }
 
 function readOptionalNumberEnv(name: string): number | undefined {
-	const value = Deno.env.get(name);
+	const value = process.env[name];
 	if (value === undefined || value === "") return undefined;
 	const number = Number(value);
 	if (!Number.isFinite(number)) throw new Error(`${name} must be a number`);
@@ -436,7 +405,7 @@ function readOptionalNumberEnv(name: string): number | undefined {
 }
 
 function readBooleanEnv(name: string, fallback: boolean): boolean {
-	const value = Deno.env.get(name);
+	const value = process.env[name];
 	if (value === undefined || value === "") return fallback;
 	if (value === "true" || value === "1") return true;
 	if (value === "false" || value === "0") return false;
@@ -444,7 +413,7 @@ function readBooleanEnv(name: string, fallback: boolean): boolean {
 }
 
 function readOpusSignalEnv(): "auto" | "voice" | "music" {
-	const value = Deno.env.get("LINE_CALL_OPUS_SIGNAL") ?? "music";
+	const value = process.env.LINE_CALL_OPUS_SIGNAL ?? "music";
 	if (value === "auto" || value === "voice" || value === "music") return value;
 	throw new Error("LINE_CALL_OPUS_SIGNAL must be one of auto, voice, music");
 }

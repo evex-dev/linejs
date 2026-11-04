@@ -1,3 +1,4 @@
+import { readFile, writeFile } from "node:fs/promises";
 import { Thrift } from "../../packages/types/thrift.ts";
 
 const used: string[] = [];
@@ -6,7 +7,8 @@ function getFunctions(input: string) {
 	const functions: string[] = [];
 	const fReg = /"(?<name>.*?)"/g;
 	const fReg2 = /'(?<name>.*?)'/g;
-	const square = input.includes("class SquareLiveTalkService(BaseService):") ||
+	const square =
+		input.includes("class SquareLiveTalkService(BaseService):") ||
 		input.includes("class SquareService(BaseService):");
 	while (true) {
 		const result = fReg.exec(input);
@@ -15,10 +17,7 @@ function getFunctions(input: string) {
 		}
 		const fn = f(result.groups.name, square);
 		if (fn) {
-			used.push(
-				(square ? "SquareService_" + result.groups.name : result.groups.name) +
-					"_args",
-			);
+			used.push((square ? "SquareService_" + result.groups.name : result.groups.name) + "_args");
 			functions.push(fn);
 		}
 	}
@@ -29,10 +28,7 @@ function getFunctions(input: string) {
 		}
 		const fn = f(result.groups.name, square);
 		if (fn) {
-			used.push(
-				(square ? "SquareService_" + result.groups.name : result.groups.name) +
-					"_args",
-			);
+			used.push((square ? "SquareService_" + result.groups.name : result.groups.name) + "_args");
 			functions.push(fn);
 		}
 	}
@@ -50,13 +46,11 @@ function f(name: string, square = false) {
 	return `async ${fname}(
         ...param: Parameters<typeof LINEStruct.${name}_args>
     ): Promise<${
-		Thrift[name + "_result"] &&
-			(Thrift[name + "_result"] as any[]).find(
-				(e) => e.name === "success",
-			)
-			? `LINETypes.${name}_result["success"]`
-			: "void"
-	}> {
+			Thrift[name + "_result"] &&
+			(Thrift[name + "_result"] as any[]).find((e) => e.name === "success")
+				? `LINETypes.${name}_result["success"]`
+				: "void"
+		}> {
         return await this.client.request.request(
             LINEStruct.${name}_args(...param),
             "${fname}",
@@ -106,16 +100,14 @@ const service = [
 ];
 for (const s of service) {
 	const functions = getFunctions(
-		await Deno.readTextFile(
-			`../../../_CHRLINE/CHRLINE/services/${s}.py`,
-		),
+		await readFile(`../../../_CHRLINE/CHRLINE/services/${s}.py`, "utf8"),
 	);
 	if (functions.length) {
-		await Deno.writeTextFile(`${s}.txt`, functions.join("\n\n"));
+		await writeFile(`${s}.txt`, functions.join("\n\n"));
 	}
 }
 Object.keys(Thrift).forEach((e) => {
-	if (e.endsWith("_args") && (!used.includes(e))) {
+	if (e.endsWith("_args") && !used.includes(e)) {
 		console.log("unused:", e);
 	}
 });

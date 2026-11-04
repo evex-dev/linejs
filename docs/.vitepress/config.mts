@@ -4,8 +4,7 @@ import { defineConfig } from "vitepress";
 export default defineConfig({
 	title: "LINEJS Documentation",
 	titleTemplate: ":title | LINEJS",
-	description:
-		"Documentation of LINEJS | LINEJS is a JavaScript library for LINE SelfBot.",
+	description: "Documentation of LINEJS | LINEJS is a JavaScript library for LINE SelfBot.",
 	sitemap: {
 		hostname: "https://linejs.evex.land",
 	},
@@ -59,8 +58,7 @@ export default defineConfig({
 
 		footer: {
 			message: "Released under the MIT License.",
-			copyright: "Copyright © " + new Date().getFullYear() +
-				"-present Evex Developers.",
+			copyright: "Copyright © " + new Date().getFullYear() + "-present Evex Developers.",
 		},
 
 		socialLinks: [
@@ -72,29 +70,39 @@ export default defineConfig({
 		["link", { rel: "icon shortcut", href: "/favicon.png" }],
 		["link", { rel: "apple-touch-icon", href: "/favicon.png" }],
 		["meta", { name: "og:title", content: "LINEJS Documentation" }],
-		["meta", {
-			name: "og:image",
-			content: "https://linejs.evex.land/favicon.png",
-		}],
-		["meta", {
-			name: "og:description",
-			content:
-				"LINEJS Documentation | LINEJS is a JavaScript library for LINE SelfBot.",
-		}],
+		[
+			"meta",
+			{
+				name: "og:image",
+				content: "https://linejs.evex.land/favicon.png",
+			},
+		],
+		[
+			"meta",
+			{
+				name: "og:description",
+				content: "LINEJS Documentation | LINEJS is a JavaScript library for LINE SelfBot.",
+			},
+		],
 		["meta", { name: "og:url", content: "https://linejs.evex.land" }],
 		["meta", { name: "twitter:title", content: "LINEJS Documentation" }],
-		["meta", {
-			name: "twitter:description",
-			content:
-				"LINEJS Documentation | LINEJS is a JavaScript library for LINE SelfBot.",
-		}],
+		[
+			"meta",
+			{
+				name: "twitter:description",
+				content: "LINEJS Documentation | LINEJS is a JavaScript library for LINE SelfBot.",
+			},
+		],
 		["meta", { name: "twitter:card", content: "summary_large_image" }],
 		["meta", { name: "twitter:site", content: "@amex2189" }],
 		["meta", { name: "twitter:creator", content: "@amex2189" }],
-		["meta", {
-			name: "twitter:image",
-			content: "https://linejs.evex.land/favicon.png",
-		}],
+		[
+			"meta",
+			{
+				name: "twitter:image",
+				content: "https://linejs.evex.land/favicon.png",
+			},
+		],
 	],
 
 	cleanUrls: true,

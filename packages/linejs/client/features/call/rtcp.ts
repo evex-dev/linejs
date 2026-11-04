@@ -128,7 +128,7 @@ function buildSdes(ssrc: number, cname: string, tool?: string): Uint8Array {
 export function buildRtcpBye(ssrc: number, reason?: string): Uint8Array {
 	const reasonBytes = reason ? new TextEncoder().encode(reason) : null;
 	const reasonLen = reasonBytes ? 1 + reasonBytes.length : 0;
-	const reasonPad = reasonLen > 0 ? (4 - ((reasonLen) % 4)) % 4 : 0;
+	const reasonPad = reasonLen > 0 ? (4 - (reasonLen % 4)) % 4 : 0;
 	const headerLen = 4 + 4 + reasonLen + reasonPad;
 	const out = new Uint8Array(headerLen);
 	const dv = new DataView(out.buffer);
@@ -218,7 +218,8 @@ function readReportBlock(dv: DataView, off: number): ReportBlock {
 	return {
 		ssrc: dv.getUint32(off, false),
 		fractionLost: dv.getUint8(off + 4),
-		cumulativeLost: (dv.getUint8(off + 5) << 16) | (dv.getUint8(off + 6) << 8) | dv.getUint8(off + 7),
+		cumulativeLost:
+			(dv.getUint8(off + 5) << 16) | (dv.getUint8(off + 6) << 8) | dv.getUint8(off + 7),
 		highestSeq: dv.getUint32(off + 8, false),
 		jitter: dv.getUint32(off + 12, false),
 		lastSr: dv.getUint32(off + 16, false),

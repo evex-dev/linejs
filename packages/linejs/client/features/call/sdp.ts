@@ -119,11 +119,7 @@ function base64Encode(b: Uint8Array): string {
 }
 
 /** Build a `a=crypto:` line per RFC 4568. */
-export function cryptoAttr(opts: {
-	tag: number;
-	suite: string;
-	key: Uint8Array;
-}): string {
+export function cryptoAttr(opts: { tag: number; suite: string; key: Uint8Array }): string {
 	return `crypto:${opts.tag} ${opts.suite} inline:${base64Encode(opts.key)}`;
 }
 
@@ -161,18 +157,20 @@ export function buildAudioOfferMikey(opts: {
 		c: `IN IP4 ${opts.host}`,
 		t: "0 0",
 		attrs: [keyMgmtMikeyAttr(opts.mikeyBase64)],
-		media: [{
-			type: "audio",
-			port: opts.port,
-			proto: "RTP/SAVP",
-			formats: [String(pt)],
-			attrs: [
-				`rtpmap:${pt} opus/48000/2`,
-				`fmtp:${pt} useinbandfec=1;usedtx=1;stereo=0`,
-				"sendrecv",
-				"ptime:20",
-			],
-		}],
+		media: [
+			{
+				type: "audio",
+				port: opts.port,
+				proto: "RTP/SAVP",
+				formats: [String(pt)],
+				attrs: [
+					`rtpmap:${pt} opus/48000/2`,
+					`fmtp:${pt} useinbandfec=1;usedtx=1;stereo=0`,
+					"sendrecv",
+					"ptime:20",
+				],
+			},
+		],
 	});
 }
 
@@ -196,18 +194,20 @@ export function buildAudioOffer(opts: {
 		c: `IN IP4 ${opts.host}`,
 		t: "0 0",
 		attrs: [],
-		media: [{
-			type: "audio",
-			port: opts.port,
-			proto: "RTP/SAVP",
-			formats: [String(pt)],
-			attrs: [
-				`rtpmap:${pt} opus/48000/2`,
-				`fmtp:${pt} useinbandfec=1;usedtx=1;stereo=0`,
-				cryptoAttr({ tag: 1, suite: opts.crypto.suite, key: opts.crypto.key }),
-				"sendrecv",
-				"ptime:20",
-			],
-		}],
+		media: [
+			{
+				type: "audio",
+				port: opts.port,
+				proto: "RTP/SAVP",
+				formats: [String(pt)],
+				attrs: [
+					`rtpmap:${pt} opus/48000/2`,
+					`fmtp:${pt} useinbandfec=1;usedtx=1;stereo=0`,
+					cryptoAttr({ tag: 1, suite: opts.crypto.suite, key: opts.crypto.key }),
+					"sendrecv",
+					"ptime:20",
+				],
+			},
+		],
 	});
 }

@@ -4,4 +4,4 @@ tasks:
 
 vscode:
   extensions:
-    - denoland.vscode-deno
+    - oxc.oxc-vscode

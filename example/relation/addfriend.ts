@@ -1,4 +1,4 @@
-import { BaseClient } from "@evex/linejs/base";
+import { BaseClient } from "@evex-dev/linejs/base";
 
 const client = new BaseClient({
 	device: "ANDROIDSECONDARY",

@@ -1,4 +1,5 @@
-import { assert, assertEquals, assertRejects } from "@std/assert";
+import { assert, test } from "vite-plus/test";
+import { assertRejects } from "../../test/assert.ts";
 import { Buffer } from "node:buffer";
 import { E2EE } from "./mod.ts";
 import { InternalError } from "../core/utils/error.ts";
@@ -25,21 +26,18 @@ function makeE2EE() {
 	} as never);
 }
 
-Deno.test("decryptByKeyMaterial round-trips and verifies the HMAC", async () => {
+test("decryptByKeyMaterial round-trips and verifies the HMAC", async () => {
 	const e2ee = makeE2EE();
 	const raw = Buffer.from("secret media payload");
 
 	const { keyMaterial, encryptedData } = await e2ee.encryptByKeyMaterial(raw);
-	assertEquals(encryptedData.length, raw.length + 32);
+	assert.deepEqual(encryptedData.length, raw.length + 32);
 
-	const decrypted = await e2ee.decryptByKeyMaterial(
-		encryptedData,
-		keyMaterial,
-	);
-	assertEquals(decrypted.toString(), "secret media payload");
+	const decrypted = await e2ee.decryptByKeyMaterial(encryptedData, keyMaterial);
+	assert.deepEqual(decrypted.toString(), "secret media payload");
 });
 
-Deno.test("decryptByKeyMaterial rejects a tampered ciphertext", async () => {
+test("decryptByKeyMaterial rejects a tampered ciphertext", async () => {
 	const e2ee = makeE2EE();
 	const { keyMaterial, encryptedData } = await e2ee.encryptByKeyMaterial(
 		Buffer.from("secret media payload"),
@@ -54,11 +52,9 @@ Deno.test("decryptByKeyMaterial rejects a tampered ciphertext", async () => {
 	);
 });
 
-Deno.test("decryptByKeyMaterial rejects a wrong keyMaterial", async () => {
+test("decryptByKeyMaterial rejects a wrong keyMaterial", async () => {
 	const e2ee = makeE2EE();
-	const { encryptedData } = await e2ee.encryptByKeyMaterial(
-		Buffer.from("secret media payload"),
-	);
+	const { encryptedData } = await e2ee.encryptByKeyMaterial(Buffer.from("secret media payload"));
 
 	await assertRejects(
 		() => e2ee.decryptByKeyMaterial(encryptedData, Buffer.alloc(32, 7)),
@@ -67,12 +63,12 @@ Deno.test("decryptByKeyMaterial rejects a wrong keyMaterial", async () => {
 	);
 });
 
-Deno.test("decryptByKeyMaterial rejects truncated input", async () => {
+test("decryptByKeyMaterial rejects truncated input", async () => {
 	const e2ee = makeE2EE();
 	await assertRejects(
 		() => e2ee.decryptByKeyMaterial(Buffer.alloc(10), Buffer.alloc(32)),
 		InternalError as never,
 		"too short",
 	);
-	assert(true);
+	assert.isOk(true);
 });

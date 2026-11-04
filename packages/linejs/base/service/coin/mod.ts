@@ -7,7 +7,7 @@ import { type BaseClient } from "../../core/mod.ts";
 import type { ProtocolKey } from "../../thrift/mod.ts";
 import type { BaseService } from "../types.ts";
 import { LINEStruct } from "../../thrift/mod.ts";
-import type * as LINETypes from "@evex/linejs-types";
+import type * as LINETypes from "@evex-dev/linejs-types";
 
 export class CoinService implements BaseService {
 	client: BaseClient;

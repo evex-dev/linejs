@@ -4,6 +4,7 @@
  * Depending on the version of LINE, you may need to change Regexp value.
  * Warning: messy code
  */
+import { readFile } from "node:fs/promises";
 
 let includeComment = false;
 
@@ -32,8 +33,7 @@ const replaces: Record<string, string> = {
 	"val{KeepContentDTO.TABLE_NAME}": "contents",
 	"val{KeepContentDTO.COLUMN_MODIFIED_TIME}": "modifiedTime",
 	"val{C24208z.f167992i}": "device",
-	"val{com.linecorp.linethings.devicemanagement.b.DATA_KEY_ERROR_MESSAGE}":
-		"errorMessage",
+	"val{com.linecorp.linethings.devicemanagement.b.DATA_KEY_ERROR_MESSAGE}": "errorMessage",
 	"val{VGuardBroadcastReceiver.VGUARD_ALERT_MESSAGE}": "alertMessage",
 	"val{C24208z.f167991g}": "location",
 	"val{KeepContentDTO.COLUMN_TOTAL_SIZE}": "totalSize",
@@ -42,44 +42,29 @@ const replaces: Record<string, string> = {
 	"val{C24208z.e}": "group",
 	"val{YW0.l.SCREEN}": "screen",
 	"val{FreeCallUtsScreen.SCREEN}": "screen",
-	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_BODY_DETECT_INTERVAL}":
-		"201",
+	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_BODY_DETECT_INTERVAL}": "201",
 	"val{STMobileModelType.ST_MOBILE_MODEL_TYPE_NAIL}": "501",
 	"val{STMobileModelType.ST_MOBILE_MODEL_TYPE_SEGMENT_TROUSER_LEG}": "409",
 	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_HAIR_MAX_SIZE}": "410",
 	"val{SegmentationData.MAX_SEGMENTATION_WIDTH}": "160",
 	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_BODY_STATURE}": "210",
 	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_CAM_FOVX}": "211",
-	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_HEAD_SEGMENT_MAX_COUNT}":
-		"304",
-	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_HEAD_SEGMENT_RESULT_BLUR}":
-		"305",
-	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_HEAD_SEGMENT_USE_TEMPERATURE}":
-		"306",
-	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_HAIR_SEGMENT_RESULT_BLUR}":
-		"416",
-	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_HAIR_SEGMENT_USE_TEMPERATURE}":
-		"417",
-	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_SKIN_SEGMENT_MIN_THRESHOLD}":
-		"432",
-	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_SKIN_SEGMENT_RESULT_ROTATE}":
-		"433",
-	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_SKIN_SEGMENT_RESULT_BLUR}":
-		"434",
-	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_SKIN_SEGMENT_USE_TEMPERATURE}":
-		"435",
-	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_MOUTH_PARSE_RESULT_ROTATE}":
-		"450",
-	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_FACE_OCCLUSION_SEGMENT_RESULT_BLUR}":
-		"464",
+	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_HEAD_SEGMENT_MAX_COUNT}": "304",
+	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_HEAD_SEGMENT_RESULT_BLUR}": "305",
+	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_HEAD_SEGMENT_USE_TEMPERATURE}": "306",
+	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_HAIR_SEGMENT_RESULT_BLUR}": "416",
+	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_HAIR_SEGMENT_USE_TEMPERATURE}": "417",
+	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_SKIN_SEGMENT_MIN_THRESHOLD}": "432",
+	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_SKIN_SEGMENT_RESULT_ROTATE}": "433",
+	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_SKIN_SEGMENT_RESULT_BLUR}": "434",
+	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_SKIN_SEGMENT_USE_TEMPERATURE}": "435",
+	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_MOUTH_PARSE_RESULT_ROTATE}": "450",
+	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_FACE_OCCLUSION_SEGMENT_RESULT_BLUR}": "464",
 	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_FACE_OCCLUSION_SEGMENT_USE_TEMPERATURE}":
 		"467",
-	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_SKY_SEGMENT_MIN_THRESHOLD}":
-		"513",
-	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_SKY_SEGMENT_REFINE_CPU_PROCESS}":
-		"514",
-	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_DEPTH_ESTIMATION_MAX_SIZE}":
-		"515",
+	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_SKY_SEGMENT_MIN_THRESHOLD}": "513",
+	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_SKY_SEGMENT_REFINE_CPU_PROCESS}": "514",
+	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_DEPTH_ESTIMATION_MAX_SIZE}": "515",
 	"val{BuildConfig.VERSION_CODE}": "200",
 	"val{YukiFaceTriggerType.FaceTriggerConstants.kAr3dStart}": "524288",
 	"val{STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_HAND_THRESHOLD}": "104",
@@ -127,15 +112,15 @@ const replaces: Record<string, string> = {
 	"val{z.f180760i}": "device",
 	"val{RichMessage.Action.ACTION_TYPE_SEND_MESSAGE}": "sendMessage",
 	"val{ReactionTypeData.PaidReaction.PAID_REACTION_JSON_KEY}": "paidReactionType",
-	"com_linecorp_square_protocol_thrift_common_": "",
-	"com_linecorp_square_protocol_thrift_": "",
+	com_linecorp_square_protocol_thrift_common_: "",
+	com_linecorp_square_protocol_thrift_: "",
 	" list ": " list<_any> ",
 	"list> ": "list<_any>> ",
 	" list<map> ": " list<_any> ",
 	" set ": " set<_any> ",
 	" map ": " map<_anykey,_any> ",
 	" struct ": " _any ",
-	"i80": "I80",
+	i80: "I80",
 };
 
 function replace(input: string) {
@@ -174,8 +159,11 @@ function getImport(input: string, target: string) {
 		if (target.includes(package_name)) {
 			return target.replaceAll(".", "_").replaceAll(" ", "");
 		}
-		return package_name.replaceAll(".", "_").replaceAll(" ", "") + "_" +
-			target.replaceAll(".", "_").replaceAll(" ", "");
+		return (
+			package_name.replaceAll(".", "_").replaceAll(" ", "") +
+			"_" +
+			target.replaceAll(".", "_").replaceAll(" ", "")
+		);
 	}
 	return import_name.groups.import.replaceAll(".", "_").replaceAll(" ", "");
 }
@@ -240,9 +228,7 @@ function fieldclass2set(
 		return;
 	}
 	if (struct.groups.type === "8") {
-		const enumname = /Set<(?<name>.*?)>/.exec(
-			getPropertyType(input, struct.groups.prop) || "",
-		);
+		const enumname = /Set<(?<name>.*?)>/.exec(getPropertyType(input, struct.groups.prop) || "");
 		if (!enumname?.groups) {
 			return [struct.groups.type];
 		}
@@ -271,10 +257,7 @@ function fieldclass2map(
 	if (!struct?.groups) {
 		return;
 	}
-	const kv: [number, number] = [
-		parseInt(struct.groups.ktype),
-		parseInt(struct.groups.vtype),
-	];
+	const kv: [number, number] = [parseInt(struct.groups.ktype), parseInt(struct.groups.vtype)];
 	if (kv[1] === 12) {
 		const x2 = new RegExp(
 			`gVar\\.x\\(${classname}\\.${fieldname}\\);\\n *gVar\\.D\\(new .*e\\(\\(byte\\) .*, \\(byte\\) .*\\n *for \\(Map.Entry.*\\n.*\\n *\\(\\((?<class>.*?)\\) .*\\.getValue\\(\\)\\)\\.write\\(gVar\\);`,
@@ -295,20 +278,13 @@ function fieldclass2map(
 	return [kv];
 }
 
-function fieldclass2struct(
-	input: string,
-	classname: string,
-	field: string,
-	fieldid: number,
-) {
+function fieldclass2struct(input: string, classname: string, field: string, fieldid: number) {
 	const x = new RegExp(
 		`gVar\\.x\\(${classname}\\.${field}\\);\n.*\\.(?<struct>.*?)\\.write\\(gVar\\)`,
 	);
 	const struct = x.exec(input);
 	if (!struct?.groups?.struct) {
-		const x2 = new RegExp(
-			`gVar\\.x\\(${classname}\\.${field}\\);\n *(?<class>.*?) .* = .*\\..*;`,
-		);
+		const x2 = new RegExp(`gVar\\.x\\(${classname}\\.${field}\\);\n *(?<class>.*?) .* = .*\\..*;`);
 		const struct = x2.exec(input);
 		if (!struct?.groups?.class) {
 			return fieldclass2struct2(input, fieldid);
@@ -377,12 +353,8 @@ class TStruct {
 	realname?: string;
 	package: string = "";
 	constructor(name?: string) {
-		this.memo = this.name = name ||
-			"struct_" + (Math.floor(Math.random())).toString(16);
-		if (
-			this.memo.includes(" extends org.apache.thrift.l") ||
-			this.memo.includes(" extends l")
-		) {
+		this.memo = this.name = name || "struct_" + Math.floor(Math.random()).toString(16);
+		if (this.memo.includes(" extends org.apache.thrift.l") || this.memo.includes(" extends l")) {
 			this.type = "exception";
 			this.memo = this.name = this.memo.split(" ")[0];
 		}
@@ -400,22 +372,26 @@ class TStruct {
  *${this.fields[2].id}: ${this.fields[2].isStructOrEnum ? ".*?" : this.fields[2].type} ${this.fields[2].name};
  *${this.fields[3].id}: ${this.fields[3].isStructOrEnum ? ".*?" : this.fields[3].type} ${this.fields[3].name};
  *${this.fields[4].id}: ${this.fields[4].isStructOrEnum ? ".*?" : this.fields[4].type} ${this.fields[4].name};
- `, "g"
+ `,
+				"g",
 			);
 			const results: string[] = [];
 			while (true) {
 				const result = re.exec(input);
 				if (result && result?.groups?.name) {
-					results.push(result?.groups?.name)
+					results.push(result?.groups?.name);
 				} else {
 					break;
 				}
 			}
 			if (results.length && !(this.realname && results.includes(this.realname))) {
-				console.warn(this.realname || `${this.package.replaceAll(".", "_")}_${this.name}`, ">", results[0]);
+				console.warn(
+					this.realname || `${this.package.replaceAll(".", "_")}_${this.name}`,
+					">",
+					results[0],
+				);
 				this.realname = results[0];
 			}
-
 		} catch (_e) {
 			_e;
 		}
@@ -423,14 +399,11 @@ class TStruct {
 
 	toString() {
 		this.fields.sort((a, b) => {
-			return parseInt(a.toString().split(":")[0]) -
-				parseInt(b.toString().split(":")[0]);
+			return parseInt(a.toString().split(":")[0]) - parseInt(b.toString().split(":")[0]);
 		});
 		if (this.realname) {
-			replaces[` ${this.package.replaceAll(".", "_")}_${this.name} `] =
-				` ${this.realname} `;
-			replaces[`${this.package.replaceAll(".", "_")}_${this.name}>`] =
-				`${this.realname}>`;
+			replaces[` ${this.package.replaceAll(".", "_")}_${this.name} `] = ` ${this.realname} `;
+			replaces[`${this.package.replaceAll(".", "_")}_${this.name}>`] = `${this.realname}>`;
 		}
 		if (includeComment) {
 			return `/* ${this.memo} */
@@ -438,8 +411,7 @@ ${this.type} ${this.package.replaceAll(".", "_")}_${this.name} {
     ${this.fields.join("\n    ")}
 }`;
 		}
-		return `${this.type} ${this.realname || `${this.package.replaceAll(".", "_")}_${this.name}`
-			} {
+		return `${this.type} ${this.realname || `${this.package.replaceAll(".", "_")}_${this.name}`} {
     ${this.fields.join("\n    ")}
 }`;
 	}
@@ -447,8 +419,7 @@ ${this.type} ${this.package.replaceAll(".", "_")}_${this.name} {
 	static load(input: string) {
 		const nameReg =
 			/public.*? class (?<name>.*?) implements .*? Serializable, Cloneable, Comparable.*?/;
-		const nameReg2 =
-			/public.*? class (?<name>.*?) extends org\.apache\.thrift\.e.*?/;
+		const nameReg2 = /public.*? class (?<name>.*?) extends org\.apache\.thrift\.e.*?/;
 		const nameReg3 = /public class (?<name>.*?) extends .*e</;
 		const nameReg4 = /public class (?<name>.*?) extends .*q</;
 		const fieldReg =
@@ -473,47 +444,36 @@ ${this.type} ${this.package.replaceAll(".", "_")}_${this.name} {
 		const struct = new this(name.groups.name);
 		struct.package = getPackage(input) || "";
 		const struct_name = structReg.exec(input);
-		if ((struct_name && struct_name.groups && struct_name.groups.name)) {
+		if (struct_name && struct_name.groups && struct_name.groups.name) {
 			struct.realname = struct_name.groups.name;
 		}
 		while (true) {
 			const fields = fieldReg.exec(input) ?? fieldReg2.exec(input);
 
-			if ((fields && fields.groups)) {
+			if (fields && fields.groups) {
 				const fname = fields.groups.prop;
 				let type: string | number = parseInt(fields.groups.type);
 				if (8 === parseInt(fields.groups.type)) {
-					type = fieldclass2enum(
-						input,
-						name.groups.name.split(" ")[0],
-						fname,
-					) || type;
+					type = fieldclass2enum(input, name.groups.name.split(" ")[0], fname) || type;
 				} else if (12 === parseInt(fields.groups.type)) {
-					type = fieldclass2struct(
-						input,
-						name.groups.name.split(" ")[0],
-						fname,
-						parseInt(fields.groups.id),
-					) || type;
+					type =
+						fieldclass2struct(
+							input,
+							name.groups.name.split(" ")[0],
+							fname,
+							parseInt(fields.groups.id),
+						) || type;
 				} else if (13 === parseInt(fields.groups.type)) {
-					const [map, struct] = fieldclass2map(
-						input,
-						name.groups.name.split(" ")[0],
-						fname,
-					) || [];
+					const [map, struct] = fieldclass2map(input, name.groups.name.split(" ")[0], fname) || [];
 					if (map) {
-						if ((map[1]) === 12 && struct) {
+						if (map[1] === 12 && struct) {
 							type = `map<${ttype[map[0]]}, ${struct}>`;
 						} else {
 							type = `map<${ttype[map[0]]}, ${ttype[map[1]]}>`;
 						}
 					}
 				} else if (14 === parseInt(fields.groups.type)) {
-					const set = fieldclass2set(
-						input,
-						name.groups.name.split(" ")[0],
-						fname,
-					);
+					const set = fieldclass2set(input, name.groups.name.split(" ")[0], fname);
 					if (set) {
 						if (parseInt(set[0]) === 12 && set[1]) {
 							type = `set<${set[1]}>`;
@@ -524,11 +484,7 @@ ${this.type} ${this.package.replaceAll(".", "_")}_${this.name} {
 						}
 					}
 				} else if (15 === parseInt(fields.groups.type)) {
-					const list = fieldclass2list(
-						input,
-						name.groups.name.split(" ")[0],
-						fname,
-					);
+					const list = fieldclass2list(input, name.groups.name.split(" ")[0], fname);
 					if (list) {
 						if (parseInt(list[0]) === 12 && list[1]) {
 							type = `list<${list[1]}>`;
@@ -551,12 +507,11 @@ ${this.type} ${this.package.replaceAll(".", "_")}_${this.name} {
 			}
 		}
 		if (struct.fields.length === 0) {
-			const realnameReg = /public final String toString\(\) \{\n *return "(?<name>.*?)\(\)";/
+			const realnameReg = /public final String toString\(\) \{\n *return "(?<name>.*?)\(\)";/;
 			const name = realnameReg.exec(input);
-			if ((name && name.groups && name.groups.name)) {
+			if (name && name.groups && name.groups.name) {
 				struct.realname = name.groups.name;
 			}
-
 		}
 		return struct;
 	}
@@ -596,46 +551,36 @@ ${this.type} ${this.package.replaceAll(".", "_")}_${this.name} {
 		const struct = new this("SquareService_" + name.groups.name);
 		struct.package = getPackage(input) || "";
 		const struct_name = structReg.exec(input);
-		if ((struct_name && struct_name.groups && struct_name.groups.name)) {
+		if (struct_name && struct_name.groups && struct_name.groups.name) {
 			struct.realname = struct_name.groups.name;
 		}
 		while (true) {
 			const fields = fieldReg.exec(classinput) ?? fieldReg2.exec(classinput);
-			if ((fields && fields.groups)) {
+			if (fields && fields.groups) {
 				const fname = fields.groups.prop;
 				let type: string | number = parseInt(fields.groups.type);
 				if (8 === parseInt(fields.groups.type)) {
-					type = fieldclass2enum(
-						classinput,
-						name.groups.name.split(" ")[0],
-						fname,
-					) || type;
+					type = fieldclass2enum(classinput, name.groups.name.split(" ")[0], fname) || type;
 				} else if (12 === parseInt(fields.groups.type)) {
-					type = fieldclass2struct(
-						classinput,
-						name.groups.name.split(" ")[0],
-						fname,
-						parseInt(fields.groups.id),
-					) || type;
+					type =
+						fieldclass2struct(
+							classinput,
+							name.groups.name.split(" ")[0],
+							fname,
+							parseInt(fields.groups.id),
+						) || type;
 				} else if (13 === parseInt(fields.groups.type)) {
-					const [map, struct] = fieldclass2map(
-						classinput,
-						name.groups.name.split(" ")[0],
-						fname,
-					) || [];
+					const [map, struct] =
+						fieldclass2map(classinput, name.groups.name.split(" ")[0], fname) || [];
 					if (map) {
-						if ((map[1]) === 12 && struct) {
+						if (map[1] === 12 && struct) {
 							type = `map<${ttype[map[0]]}, ${struct}>`;
 						} else {
 							type = `map<${ttype[map[0]]}, ${ttype[map[1]]}>`;
 						}
 					}
 				} else if (14 === parseInt(fields.groups.type)) {
-					const set = fieldclass2set(
-						classinput,
-						name.groups.name.split(" ")[0],
-						fname,
-					);
+					const set = fieldclass2set(classinput, name.groups.name.split(" ")[0], fname);
 					if (set) {
 						if (parseInt(set[0]) === 12 && set[1]) {
 							type = `set<${set[1]}>`;
@@ -646,11 +591,7 @@ ${this.type} ${this.package.replaceAll(".", "_")}_${this.name} {
 						}
 					}
 				} else if (15 === parseInt(fields.groups.type)) {
-					const list = fieldclass2list(
-						classinput,
-						name.groups.name.split(" ")[0],
-						fname,
-					);
+					const list = fieldclass2list(classinput, name.groups.name.split(" ")[0], fname);
 					if (list) {
 						if (parseInt(list[0]) === 12 && list[1]) {
 							type = `list<${list[1]}>`;
@@ -681,22 +622,20 @@ class TEnum {
 	memo: string = "";
 	package: string = "";
 	realname?: string;
-	constructor(public name: string) {
+	name: string;
+	constructor(name: string) {
+		this.name = name;
 	}
 
 	toString() {
 		if (!includeComment) {
-			return `enum ${this.realname ||
-				(this.package.replaceAll(".", "_") + "_" + this.name)
-				} {
+			return `enum ${this.realname || this.package.replaceAll(".", "_") + "_" + this.name} {
                 ${this.value.map((e) => `${e.name} = ${e.value};`).join("\n")}
                 }`;
 		}
 		if (this.realname) {
-			replaces[` ${this.package.replaceAll(".", "_")}_${this.name} `] =
-				` ${this.realname} `;
-			replaces[`${this.package.replaceAll(".", "_")}_${this.name}>`] =
-				`${this.realname}>`;
+			replaces[` ${this.package.replaceAll(".", "_")}_${this.name} `] = ` ${this.realname} `;
+			replaces[`${this.package.replaceAll(".", "_")}_${this.name}>`] = `${this.realname}>`;
 		}
 		if (includeComment) {
 			return `/* ${this.memo} */
@@ -711,10 +650,11 @@ ${this.value.map((e) => `${e.name} = ${e.value};`).join("\n")}
 	searchAndRename(input: string) {
 		try {
 			const re = new RegExp(
-				`enum (?<name>.*?) {\n${this.value[0].name} = ${this.value[0].value
-				};\n${this.value[1].name} = ${this.value[1].value};\n${this.value[2].name
-				} = ${this.value[2].value};\n${this.value[3].name} = ${this.value[3].value
-				};`,
+				`enum (?<name>.*?) {\n${this.value[0].name} = ${
+					this.value[0].value
+				};\n${this.value[1].name} = ${this.value[1].value};\n${
+					this.value[2].name
+				} = ${this.value[2].value};\n${this.value[3].name} = ${this.value[3].value};`,
 			);
 			const result = re.exec(input);
 			if (result && result?.groups?.name) {
@@ -737,10 +677,10 @@ ${this.value.map((e) => `${e.name} = ${e.value};`).join("\n")}
 			const value = valueReg.exec(input);
 			if (value && value.groups && value.groups.name) {
 				tenum.value.push({
-					name: (value.groups.name),
+					name: value.groups.name,
 					value: Number.isNaN(Number(value.groups.value))
 						? `val{${value.groups.value}}`
-						: (value.groups.value),
+						: value.groups.value,
 				});
 			} else {
 				break;
@@ -750,15 +690,15 @@ ${this.value.map((e) => `${e.name} = ${e.value};`).join("\n")}
 	}
 }
 
-const _line = await Deno.readTextFile("./_line.thrift");
+const _line = await readFile("./_line.thrift", "utf8");
 
 const exists: string[] = [];
 
 const thrift: (TEnum | TStruct)[] = [];
-for (const fpath of (await Deno.readTextFile("./memo.txt")).split("\n")) {
+for (const fpath of (await readFile("./memo.txt", "utf8")).split("\n")) {
 	try {
 		if (fpath.endsWith("Service.java")) {
-			const f = await Deno.readTextFile(fpath);
+			const f = await readFile(fpath, "utf8");
 			const structs = TStruct.loadSquareServices(f);
 			structs.forEach((e) => {
 				e.memo += " @" + fpath;
@@ -767,7 +707,7 @@ for (const fpath of (await Deno.readTextFile("./memo.txt")).split("\n")) {
 			exists.push(fpath);
 			continue;
 		}
-		const f = await Deno.readTextFile(fpath);
+		const f = await readFile(fpath, "utf8");
 		const struct = TStruct.load(f);
 		if (struct) {
 			struct.memo += " @" + fpath;

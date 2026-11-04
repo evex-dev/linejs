@@ -1,12 +1,11 @@
 {
 	"name": "@evex/linejs-agent",
-	"version": "0.0.0",
-	"license": "MIT",
+	"version": "0.1.0",
 	"exports": {
 		".": "./mod.ts",
 		"./client": "./client.ts"
 	},
-	"imports": {
-		"@std/assert": "jsr:@std/assert@^1.0.2"
+	"publish": {
+		"exclude": ["**/*.test.ts", "vite.config.ts", "tsconfig.json"]
 	}
 }

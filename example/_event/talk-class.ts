@@ -10,14 +10,12 @@ import type { Buffer } from "node:buffer";
 import { TypedEventEmitter } from "../core/typed-event-emitter/index.ts";
 import { TalkMessage } from "./message-class.ts";
 import type { TimelineResponse } from "../timeline/mod.ts";
-import type { LooseType } from "@evex/loose-types";
+import type { LooseType } from "@evex-dev/linejs/base";
 
 type GroupEvents = {
 	message: (message: TalkMessage) => void;
 	kick: (event: Operation & { event: DeleteOtherFromChat }) => void; // +NotifiedDeleteOtherFromChat
-	leave: (
-		event: Operation & { event: NotifiedLeaveChat | DeleteSelfFromChat },
-	) => void;
+	leave: (event: Operation & { event: NotifiedLeaveChat | DeleteSelfFromChat }) => void;
 	// update: (event: Operation & { event:  }) => void; name,img
 	// invite: (event: Operation & { event:  }) => void;
 	// join: (event: Operation & { event:  }) => void;
@@ -104,9 +102,7 @@ export class Note {
 		(options as LooseType).homeId = this.mid;
 		return this.client.timeline.createPost(options as LooseType);
 	}
-	deletePost(options: {
-		postId: string;
-	}): Promise<TimelineResponse> {
+	deletePost(options: { postId: string }): Promise<TimelineResponse> {
 		(options as LooseType).homeId = this.mid;
 		return this.client.timeline.deletePost(options as LooseType);
 	}
@@ -123,16 +119,11 @@ export class Note {
 		return this.client.timeline.listPost(options as LooseType);
 	}
 
-	getPost(options: {
-		postId: string;
-	}): Promise<TimelineResponse> {
+	getPost(options: { postId: string }): Promise<TimelineResponse> {
 		(options as LooseType).homeId = this.mid;
 		return this.client.timeline.getPost(options as LooseType);
 	}
-	sharePost(options: {
-		postId: string;
-		chatMid: string;
-	}): Promise<TimelineResponse> {
+	sharePost(options: { postId: string; chatMid: string }): Promise<TimelineResponse> {
 		(options as LooseType).homeId = this.mid;
 		return this.client.timeline.sharePost(options as LooseType);
 	}
@@ -183,17 +174,13 @@ export class User extends TypedEventEmitter<UserEvents> {
 		if (mid === client.profile?.mid) {
 			return new this(
 				{
-					...(await client.talk.getContactsV2({ mids: [mid] }))
-						.contacts[mid],
+					...(await client.talk.getContactsV2({ mids: [mid] })).contacts[mid],
 					contact: await client.talk.getContact({ mid }),
 				},
 				client,
 			);
 		}
-		return new this(
-			(await client.talk.getContactsV2({ mids: [mid] })).contacts[mid],
-			client,
-		);
+		return new this((await client.talk.getContactsV2({ mids: [mid] })).contacts[mid], client);
 	}
 
 	constructor(
@@ -241,14 +228,14 @@ export class User extends TypedEventEmitter<UserEvents> {
 		options:
 			| string
 			| {
-				text?: string;
-				contentType?: number;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string;
-				location?: LINETypes.Location;
-				chunk?: string[] | Buffer[];
-				e2ee?: boolean;
-			},
+					text?: string;
+					contentType?: number;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string;
+					location?: LINETypes.Location;
+					chunk?: string[] | Buffer[];
+					e2ee?: boolean;
+			  },
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return this.send({ text: options });
@@ -262,9 +249,7 @@ export class User extends TypedEventEmitter<UserEvents> {
 	/**
 	 * @description Kickout from group.
 	 */
-	kick(
-		chatMid: string,
-	): Promise<LINETypes.Pb1_M3> {
+	kick(chatMid: string): Promise<LINETypes.Pb1_M3> {
 		return this.client.talk.deleteOtherFromChat({
 			request: {
 				targetUserMids: [this.mid],
@@ -312,13 +297,9 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 	/**
 	 * @description Generate from groupMid or {Chat}.
 	 */
-	static async from(
-		gidOrChat: string | LINETypes.Chat,
-		client: BaseClient,
-	): Promise<Group> {
-		const chat: LINETypes.Chat = typeof gidOrChat === "string"
-			? await client.talk.getChat({ chatMid: gidOrChat })
-			: gidOrChat;
+	static async from(gidOrChat: string | LINETypes.Chat, client: BaseClient): Promise<Group> {
+		const chat: LINETypes.Chat =
+			typeof gidOrChat === "string" ? await client.talk.getChat({ chatMid: gidOrChat }) : gidOrChat;
 		const creator = await User.from(chat.extra.groupExtra.creator, client);
 		const _members = (
 			await client.talk.getContactsV2({
@@ -404,14 +385,14 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 		options:
 			| string
 			| {
-				text?: string;
-				contentType?: number;
-				contentMetadata?: LooseType;
-				relatedMessageId?: string;
-				location?: LINETypes.Location;
-				chunk?: string[] | Buffer[];
-				e2ee?: boolean;
-			},
+					text?: string;
+					contentType?: number;
+					contentMetadata?: LooseType;
+					relatedMessageId?: string;
+					location?: LINETypes.Location;
+					chunk?: string[] | Buffer[];
+					e2ee?: boolean;
+			  },
 	): Promise<LINETypes.Message> {
 		if (typeof options === "string") {
 			return await this.send({ text: options });
@@ -447,9 +428,7 @@ export class Group extends TypedEventEmitter<GroupEvents> {
 	/**
 	 * @description Invite user.
 	 */
-	async invite(
-		mids: string[],
-	): Promise<LINETypes.Pb1_J5> {
+	async invite(mids: string[]): Promise<LINETypes.Pb1_J5> {
 		return await this.client.talk.inviteIntoChat({
 			targetUserMids: mids,
 			chatMid: this.mid,
@@ -500,23 +479,16 @@ export class Operation {
 		| NotifiedLeaveChat
 		| DeleteOtherFromChat;
 
-	constructor(
-		source: LINETypes.Operation,
-		client: BaseClient,
-	) {
+	constructor(source: LINETypes.Operation, client: BaseClient) {
 		this.rawSource = source;
 		this.client = client;
 		this.revision = source.revision as number;
 		this.checksum = source.checksum;
 		this.createdTime = new Date((source.createdTime as number) * 1000);
-		this.type = (parseEnum("OpType", source.type) as LINETypes.OpType) ||
-			source.type;
+		this.type = (parseEnum("OpType", source.type) as LINETypes.OpType) || source.type;
 		this.reqSeq = source.reqSeq;
-		this.status = (parseEnum(
-			"Pb1_EnumC13127p6",
-			source.status,
-		) as LINETypes.Pb1_EnumC13127p6) ||
-			source.status;
+		this.status =
+			(parseEnum("Pb1_EnumC13127p6", source.status) as LINETypes.Pb1_EnumC13127p6) || source.status;
 		this.param = {
 			1: source.param1,
 			2: source.param2,
@@ -527,10 +499,7 @@ export class Operation {
 			source.type === "SEND_MESSAGE" ||
 			source.type === "SEND_CONTENT"
 		) {
-			this.message = new TalkMessage(
-				{ message: source.message },
-				client,
-			);
+			this.message = new TalkMessage({ message: source.message }, client);
 		}
 		if (source.type == "SEND_CHAT_REMOVED") {
 			this.event = new SendChatRemoved(this);
@@ -580,10 +549,7 @@ export class DestroyMessage {
 		if (op.type !== "DESTROY_MESSAGE") {
 			throw new TypeError("Wrong operation type");
 		}
-		if (
-			typeof op.param[1] === "undefined" ||
-			typeof op.param[2] === "undefined"
-		) {
+		if (typeof op.param[1] === "undefined" || typeof op.param[2] === "undefined") {
 			throw new TypeError("Wrong param");
 		}
 		this.messageId = op.param[2];
@@ -603,10 +569,7 @@ export class NotifiedDestroyMessage {
 		if (op.type !== "NOTIFIED_DESTROY_MESSAGE") {
 			throw new TypeError("Wrong operation type");
 		}
-		if (
-			typeof op.param[1] === "undefined" ||
-			typeof op.param[2] === "undefined"
-		) {
+		if (typeof op.param[1] === "undefined" || typeof op.param[2] === "undefined") {
 			throw new TypeError("Wrong param");
 		}
 		this.messageId = op.param[2];
@@ -626,10 +589,7 @@ export class NotifiedJoinChat {
 		if (op.type !== "NOTIFIED_JOIN_CHAT") {
 			throw new TypeError("Wrong operation type");
 		}
-		if (
-			typeof op.param[1] === "undefined" ||
-			typeof op.param[2] === "undefined"
-		) {
+		if (typeof op.param[1] === "undefined" || typeof op.param[2] === "undefined") {
 			throw new TypeError("Wrong param");
 		}
 		this.userMid = op.param[2];
@@ -649,10 +609,7 @@ export class NotifiedAcceptChatInvitation {
 		if (op.type !== "NOTIFIED_ACCEPT_CHAT_INVITATION") {
 			throw new TypeError("Wrong operation type");
 		}
-		if (
-			typeof op.param[1] === "undefined" ||
-			typeof op.param[2] === "undefined"
-		) {
+		if (typeof op.param[1] === "undefined" || typeof op.param[2] === "undefined") {
 			throw new TypeError("Wrong param");
 		}
 		this.userMid = op.param[2];
@@ -672,10 +629,7 @@ export class InviteIntoChat {
 		if (op.type !== "INVITE_INTO_CHAT") {
 			throw new TypeError("Wrong operation type");
 		}
-		if (
-			typeof op.param[1] === "undefined" ||
-			typeof op.param[2] === "undefined"
-		) {
+		if (typeof op.param[1] === "undefined" || typeof op.param[2] === "undefined") {
 			throw new TypeError("Wrong param");
 		}
 		this.userMid = op.param[2];
@@ -713,10 +667,7 @@ export class NotifiedLeaveChat {
 		if (op.type !== "NOTIFIED_LEAVE_CHAT") {
 			throw new TypeError("Wrong operation type");
 		}
-		if (
-			typeof op.param[1] === "undefined" ||
-			typeof op.param[2] === "undefined"
-		) {
+		if (typeof op.param[1] === "undefined" || typeof op.param[2] === "undefined") {
 			throw new TypeError("Wrong param");
 		}
 		this.userMid = op.param[2];
@@ -736,10 +687,7 @@ export class DeleteOtherFromChat {
 		if (op.type !== "DELETE_OTHER_FROM_CHAT") {
 			throw new TypeError("Wrong operation type");
 		}
-		if (
-			typeof op.param[1] === "undefined" ||
-			typeof op.param[2] === "undefined"
-		) {
+		if (typeof op.param[1] === "undefined" || typeof op.param[2] === "undefined") {
 			throw new TypeError("Wrong param");
 		}
 		this.userMid = op.param[2];
@@ -759,10 +707,7 @@ export class NotifiedUpdateProfileContent {
 		if (op.type !== "NOTIFIED_UPDATE_PROFILE_CONTENT") {
 			throw new TypeError("Wrong operation type");
 		}
-		if (
-			typeof op.param[1] === "undefined" ||
-			typeof op.param[2] === "undefined"
-		) {
+		if (typeof op.param[1] === "undefined" || typeof op.param[2] === "undefined") {
 			throw new TypeError("Wrong param");
 		}
 		this.userMid = op.param[1];
@@ -773,12 +718,7 @@ export class NotifiedUpdateProfileContent {
 			const arr: LINETypes.Pb1_K6[] = [];
 			toBit(parseInt(op.param[2])).forEach((e, i) => {
 				if (e === 1) {
-					arr.push(
-						parseEnum(
-							"ProfileAttribute",
-							2 ** i,
-						) as LooseType as LINETypes.Pb1_K6,
-					);
+					arr.push(parseEnum("ProfileAttribute", 2 ** i) as LooseType as LINETypes.Pb1_K6);
 				}
 			});
 			this.profileAttributes = arr;
@@ -814,12 +754,7 @@ export class NotifiedUpdateProfile {
 			const arr: LINETypes.Pb1_K6[] = [];
 			toBit(parseInt(op.param[2])).forEach((e, i) => {
 				if (e === 1) {
-					arr.push(
-						parseEnum(
-							"ProfileAttribute",
-							2 ** i,
-						) as LooseType as LINETypes.Pb1_K6,
-					);
+					arr.push(parseEnum("ProfileAttribute", 2 ** i) as LooseType as LINETypes.Pb1_K6);
 				}
 			});
 			this.profileAttributes = arr;
@@ -840,10 +775,7 @@ export class UpdateProfile {
 		if (op.type !== "UPDATE_PROFILE") {
 			throw new TypeError("Wrong operation type");
 		}
-		if (
-			typeof op.param[1] === "undefined" ||
-			typeof op.param[2] === "undefined"
-		) {
+		if (typeof op.param[1] === "undefined" || typeof op.param[2] === "undefined") {
 			throw new TypeError("Wrong param");
 		}
 		const attr = parseEnum("ProfileAttribute", op.param[1]);
@@ -853,12 +785,7 @@ export class UpdateProfile {
 			const arr: LINETypes.Pb1_K6[] = [];
 			toBit(parseInt(op.param[1])).forEach((e, i) => {
 				if (e === 1) {
-					arr.push(
-						parseEnum(
-							"ProfileAttribute",
-							2 ** i,
-						) as LooseType as LINETypes.Pb1_K6,
-					);
+					arr.push(parseEnum("ProfileAttribute", 2 ** i) as LooseType as LINETypes.Pb1_K6);
 				}
 			});
 			this.profileAttributes = arr;
@@ -880,10 +807,7 @@ export class SendReaction {
 		if (op.type !== "SEND_REACTION") {
 			throw new TypeError("Wrong operation type");
 		}
-		if (
-			typeof op.param[1] === "undefined" ||
-			typeof op.param[2] === "undefined"
-		) {
+		if (typeof op.param[1] === "undefined" || typeof op.param[2] === "undefined") {
 			throw new TypeError("Wrong param");
 		}
 		this.messageId = op.param[1];
@@ -971,10 +895,7 @@ export class SendChatChecked {
 		if (op.type !== "SEND_CHAT_CHECKED") {
 			throw new TypeError("Wrong operation type");
 		}
-		if (
-			typeof op.param[1] === "undefined" ||
-			typeof op.param[2] === "undefined"
-		) {
+		if (typeof op.param[1] === "undefined" || typeof op.param[2] === "undefined") {
 			throw new TypeError("Wrong param");
 		}
 		this.chatMid = op.param[1];
@@ -996,10 +917,7 @@ export class SendChatRemoved {
 		if (op.type !== "SEND_CHAT_REMOVED") {
 			throw new TypeError("Wrong operation type");
 		}
-		if (
-			typeof op.param[1] === "undefined" ||
-			typeof op.param[2] === "undefined"
-		) {
+		if (typeof op.param[1] === "undefined" || typeof op.param[2] === "undefined") {
 			throw new TypeError("Wrong param");
 		}
 		this.chatMid = op.param[1];

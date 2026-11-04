@@ -1,8 +1,5 @@
-import { assertEquals } from "@std/assert";
-import {
-	type NestedArray,
-	Protocols,
-} from "../../thrift/readwrite/declares.ts";
+import { assert, test } from "vite-plus/test";
+import { type NestedArray, Protocols } from "../../thrift/readwrite/declares.ts";
 import { readThrift } from "../../thrift/readwrite/read.ts";
 import { writeThrift } from "../../thrift/readwrite/write.ts";
 import { RelationService } from "./mod.ts";
@@ -41,13 +38,11 @@ function makeStubClient() {
 }
 
 function decodeAddFriendRequest(value: unknown) {
-	return readThrift(
-		writeThrift(value as NestedArray, "addFriendByMid", Protocols[4]),
-		Protocols[4],
-	).data;
+	return readThrift(writeThrift(value as NestedArray, "addFriendByMid", Protocols[4]), Protocols[4])
+		.data;
 }
 
-Deno.test("addFriendByMid serializes the RE4 request envelope and tracking metadata", async () => {
+test("addFriendByMid serializes the RE4 request envelope and tracking metadata", async () => {
 	const stub = makeStubClient();
 	const relation = new RelationService(stub.client as never);
 
@@ -58,21 +53,23 @@ Deno.test("addFriendByMid serializes the RE4 request envelope and tracking metad
 		trackingMetaHint: "c-group",
 	});
 
-	assertEquals(
+	assert.deepEqual(
 		stub.calls.map(({ methodName, protocol, parse, path }) => ({
 			methodName,
 			protocol,
 			parse,
 			path,
 		})),
-		[{
-			methodName: "addFriendByMid",
-			protocol: 4,
-			parse: true,
-			path: "/RE4",
-		}],
+		[
+			{
+				methodName: "addFriendByMid",
+				protocol: 4,
+				parse: true,
+				path: "/RE4",
+			},
+		],
 	);
-	assertEquals(decodeAddFriendRequest(stub.calls[0]!.value), {
+	assert.deepEqual(decodeAddFriendRequest(stub.calls[0]!.value), {
 		1: {
 			1: 42,
 			2: "u-target",
@@ -86,13 +83,13 @@ Deno.test("addFriendByMid serializes the RE4 request envelope and tracking metad
 	});
 });
 
-Deno.test("addFriendByUserId uses bySearchId provenance", async () => {
+test("addFriendByUserId uses bySearchId provenance", async () => {
 	const stub = makeStubClient();
 	const relation = new RelationService(stub.client as never);
 
 	await relation.addFriendByUserId({ userId: "alice" });
 
-	assertEquals(
+	assert.deepEqual(
 		stub.calls.map(({ methodName, protocol, parse, path }) => ({
 			methodName,
 			protocol,
@@ -114,7 +111,7 @@ Deno.test("addFriendByUserId uses bySearchId provenance", async () => {
 			},
 		],
 	);
-	assertEquals(decodeAddFriendRequest(stub.calls[1]!.value), {
+	assert.deepEqual(decodeAddFriendRequest(stub.calls[1]!.value), {
 		1: {
 			1: 42,
 			2: "u-resolved",

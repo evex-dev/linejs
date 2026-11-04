@@ -1,10 +1,10 @@
-import { assertEquals } from "@std/assert";
+import { assert, test } from "vite-plus/test";
 import { VoomChannelId } from "./voom.ts";
 
-Deno.test("VoomChannelId — TIMELINE id matches LINE Android smali", () => {
+test("VoomChannelId — TIMELINE id matches LINE Android smali", () => {
 	// From decompiled/base/smali/smali/t98/a$b.smali (release id).
-	assertEquals(VoomChannelId.TIMELINE, "1341209950");
-	assertEquals(VoomChannelId.HOME, "1341209850");
-	assertEquals(VoomChannelId.NOTE, "1655599932");
-	assertEquals(VoomChannelId.SQUARE_NOTE, "1657618623");
+	assert.deepEqual(VoomChannelId.TIMELINE, "1341209950");
+	assert.deepEqual(VoomChannelId.HOME, "1341209850");
+	assert.deepEqual(VoomChannelId.NOTE, "1655599932");
+	assert.deepEqual(VoomChannelId.SQUARE_NOTE, "1657618623");
 });

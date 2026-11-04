@@ -3,9 +3,9 @@
  *              tree (CHRLINE-Thrift or any IDL-conformant source).
  *
  * Usage:
- *   deno run -A scripts/thrift/sync_thrift.ts --idl <path> [--apply] [--report <out>]
- *                                              [--match-threshold <0..1>]
- *                                              [--map <name-map.json>]
+ *   node scripts/thrift/sync_thrift.ts --idl <path> [--apply] [--report <out>]
+ *                                        [--match-threshold <0..1>]
+ *                                        [--map <name-map.json>]
  *
  *   --idl <path>           Directory containing *.thrift files (scanned recursively)
  *   --apply                Write changes back to packages/types/thrift.ts (default: dry-run)
@@ -33,8 +33,12 @@
  * The diff is *additive only*: no entry is renamed, deleted, or reordered.
  * Emitted patches preserve the existing file's tab indentation and trailing-comma style.
  */
-import { walk } from "https://deno.land/std@0.224.0/fs/walk.ts";
-import { fromFileUrl } from "https://deno.land/std@0.224.0/path/mod.ts";
+import { readFile, writeFile } from "node:fs/promises";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { walk } from "../utils/walk.ts";
+
+const scriptDir = dirname(fileURLToPath(import.meta.url));
 
 // =========================================================================
 // IDL AST
@@ -97,25 +101,25 @@ export interface ConstDef extends AnnotatedNode {
 
 export type TypeExpr =
 	| {
-		kind: "primitive";
-		ttype: TType;
-		raw: string;
-		annotations?: Record<string, string | true>;
-	}
+			kind: "primitive";
+			ttype: TType;
+			raw: string;
+			annotations?: Record<string, string | true>;
+	  }
 	| { kind: "ref"; name: string; annotations?: Record<string, string | true> }
 	| {
-		kind: "list" | "set";
-		elem: TypeExpr;
-		cppType?: string;
-		annotations?: Record<string, string | true>;
-	}
+			kind: "list" | "set";
+			elem: TypeExpr;
+			cppType?: string;
+			annotations?: Record<string, string | true>;
+	  }
 	| {
-		kind: "map";
-		key: TypeExpr;
-		value: TypeExpr;
-		cppType?: string;
-		annotations?: Record<string, string | true>;
-	};
+			kind: "map";
+			key: TypeExpr;
+			value: TypeExpr;
+			cppType?: string;
+			annotations?: Record<string, string | true>;
+	  };
 
 export type Literal =
 	| { kind: "int"; value: number }
@@ -126,19 +130,43 @@ export type Literal =
 	| { kind: "list"; items: Literal[] }
 	| { kind: "map"; entries: Array<{ key: Literal; value: Literal }> };
 
-export enum TType {
-	BOOL = 2,
-	BYTE = 3,
-	DOUBLE = 4,
-	I16 = 6,
-	I32 = 8,
-	I64 = 10,
-	STRING = 11,
-	STRUCT = 12,
-	MAP = 13,
-	SET = 14,
-	LIST = 15,
-}
+export const TType = {
+	BOOL: 2,
+	BYTE: 3,
+	DOUBLE: 4,
+	I16: 6,
+	I32: 8,
+	I64: 10,
+	STRING: 11,
+	STRUCT: 12,
+	MAP: 13,
+	SET: 14,
+	LIST: 15,
+	2: "BOOL",
+	3: "BYTE",
+	4: "DOUBLE",
+	6: "I16",
+	8: "I32",
+	10: "I64",
+	11: "STRING",
+	12: "STRUCT",
+	13: "MAP",
+	14: "SET",
+	15: "LIST",
+} as const;
+
+export type TType =
+	| typeof TType.BOOL
+	| typeof TType.BYTE
+	| typeof TType.DOUBLE
+	| typeof TType.I16
+	| typeof TType.I32
+	| typeof TType.I64
+	| typeof TType.STRING
+	| typeof TType.STRUCT
+	| typeof TType.MAP
+	| typeof TType.SET
+	| typeof TType.LIST;
 
 export interface IDL {
 	enums: Map<string, EnumDef>;
@@ -425,7 +453,12 @@ const PRIMITIVES: Record<string, TType> = {
 
 class Parser {
 	pos = 0;
-	constructor(public toks: Tok[], public filename: string) {}
+	toks: Tok[];
+	filename: string;
+	constructor(toks: Tok[], filename: string) {
+		this.toks = toks;
+		this.filename = filename;
+	}
 
 	peek(k = 0): Tok | undefined {
 		return this.toks[this.pos + k];
@@ -577,10 +610,7 @@ class Parser {
 		this.expectPunct(":");
 		let requiredness: Requiredness = "default";
 		const r = this.peek();
-		if (
-			r && r.kind === "ident" &&
-			(r.value === "required" || r.value === "optional")
-		) {
+		if (r && r.kind === "ident" && (r.value === "required" || r.value === "optional")) {
 			requiredness = r.value;
 			this.pos++;
 		}
@@ -770,9 +800,7 @@ class Parser {
 }
 
 function tokStr(t: Tok): string {
-	return `${t.kind}:${
-		JSON.stringify((t as { value: unknown }).value)
-	}@${t.line}`;
+	return `${t.kind}:${JSON.stringify((t as { value: unknown }).value)}@${t.line}`;
 }
 
 async function parseIDLDir(dir: string): Promise<IDL> {
@@ -785,7 +813,7 @@ async function parseIDLDir(dir: string): Promise<IDL> {
 	};
 	let fileCount = 0;
 	for await (const entry of walk(dir, { exts: [".thrift"] })) {
-		const src = await Deno.readTextFile(entry.path);
+		const src = await readFile(entry.path, "utf8");
 		fileCount++;
 		const parser = new Parser(tokenize(src, entry.path), entry.path);
 		parser.parseFile(idl);
@@ -823,7 +851,10 @@ export function indexLineThrift(thrift: LineThrift): LineIndex {
 			}
 			idx.enumNamesByMembers.get(hash)!.push(name);
 		} else {
-			const hash = v.map((f) => f.name).sort().join("|");
+			const hash = v
+				.map((f) => f.name)
+				.sort()
+				.join("|");
 			if (!idx.structNamesByFields.has(hash)) {
 				idx.structNamesByFields.set(hash, []);
 			}
@@ -888,7 +919,10 @@ function findStructMatch(
 	let best: { name: string; score: number } | null = null;
 	for (const [name, v] of idx.byName) {
 		if (isLineEnum(v)) continue;
-		const score = jaccard(myFields, (v as LineStruct).map((f) => f.name));
+		const score = jaccard(
+			myFields,
+			(v as LineStruct).map((f) => f.name),
+		);
 		if (!best || score > best.score) best = { name, score };
 	}
 	if (best && best.score >= threshold) return best.name;
@@ -1009,12 +1043,7 @@ export function computeDiff(
 		for (const f of canonical.fields) {
 			if (existingFids.has(f.fid)) continue;
 			if (existingNames.has(f.name)) continue;
-			const resolved = resolveRefName(
-				f.typeExpr,
-				enumMap,
-				structMap,
-				idl.typedefs,
-			);
+			const resolved = resolveRefName(f.typeExpr, enumMap, structMap, idl.typedefs);
 			diff.structFieldAdds.push({
 				structName: matched,
 				canonicalName: canonical.name,
@@ -1067,40 +1096,21 @@ function typeRefOut(t: TypeExpr): TypeRefOut {
 export function emitFieldEntry(f: FieldDef, indent = "\t\t"): string {
 	const ref = typeRefOut(f.typeExpr);
 	const inner = `${indent}\t`;
-	const lines: string[] = [
-		`${inner}"fid": ${f.fid},`,
-		`${inner}"name": "${f.name}",`,
-	];
+	const lines: string[] = [`${inner}"fid": ${f.fid},`, `${inner}"name": "${f.name}",`];
 	if (ref.type !== undefined) lines.push(`${inner}"type": ${ref.type},`);
 	if (ref.struct !== undefined) {
 		lines.push(`${inner}"struct": "${ref.struct}",`);
 	}
 	if (ref.list !== undefined) {
-		lines.push(
-			`${inner}"list": ${
-				typeof ref.list === "number" ? ref.list : `"${ref.list}"`
-			},`,
-		);
+		lines.push(`${inner}"list": ${typeof ref.list === "number" ? ref.list : `"${ref.list}"`},`);
 	}
 	if (ref.set !== undefined) {
-		lines.push(
-			`${inner}"set": ${
-				typeof ref.set === "number" ? ref.set : `"${ref.set}"`
-			},`,
-		);
+		lines.push(`${inner}"set": ${typeof ref.set === "number" ? ref.set : `"${ref.set}"`},`);
 	}
 	if (ref.map !== undefined) {
-		lines.push(
-			`${inner}"map": ${
-				typeof ref.map === "number" ? ref.map : `"${ref.map}"`
-			},`,
-		);
+		lines.push(`${inner}"map": ${typeof ref.map === "number" ? ref.map : `"${ref.map}"`},`);
 		if (ref.key !== undefined) {
-			lines.push(
-				`${inner}"key": ${
-					typeof ref.key === "number" ? ref.key : `"${ref.key}"`
-				},`,
-			);
+			lines.push(`${inner}"key": ${typeof ref.key === "number" ? ref.key : `"${ref.key}"`},`);
 		}
 	}
 	return `${indent}{\n${lines.join("\n")}\n${indent}},`;
@@ -1132,11 +1142,7 @@ interface BlockSpan {
 	singleLine: boolean; // true when opener and closer are on the same source line (e.g. `[],`)
 }
 
-function findBlock(
-	src: string,
-	name: string,
-	opener: "[" | "{",
-): BlockSpan | null {
+function findBlock(src: string, name: string, opener: "[" | "{"): BlockSpan | null {
 	const closer = opener === "[" ? "]" : "}";
 	const marker = `\t"${name}": ${opener}`;
 	const startMarkerIdx = src.indexOf(marker);
@@ -1192,15 +1198,12 @@ function insertIntoBlock(
 	content: string, // trailing newline expected
 ): string {
 	if (!span.singleLine) {
-		return src.slice(0, span.closeLineStart) + content +
-			src.slice(span.closeLineStart);
+		return src.slice(0, span.closeLineStart) + content + src.slice(span.closeLineStart);
 	}
 	// Single-line empty: replace `[]` (or `{}`) with multi-line form.
 	// span.contentStart points just after the opener; span.closerIdx points at the closer.
 	// Insert: newline, content (already has trailing \n), then `\t` before the closer for alignment.
-	return src.slice(0, span.contentStart) +
-		"\n" + content + "\t" +
-		src.slice(span.closerIdx);
+	return src.slice(0, span.contentStart) + "\n" + content + "\t" + src.slice(span.closerIdx);
 }
 
 export function applyDiff(originalSrc: string, diff: Diff): string {
@@ -1219,9 +1222,7 @@ export function applyDiff(originalSrc: string, diff: Diff): string {
 			warnings.push(`enum block not found: ${enumName}`);
 			continue;
 		}
-		const insertion = adds
-			.map((a) => `\t\t"${a.value}": "${a.memberName}",`)
-			.join("\n") + "\n";
+		const insertion = adds.map((a) => `\t\t"${a.value}": "${a.memberName}",`).join("\n") + "\n";
 		src = insertIntoBlock(src, span, insertion);
 	}
 
@@ -1237,9 +1238,7 @@ export function applyDiff(originalSrc: string, diff: Diff): string {
 			warnings.push(`struct block not found: ${structName}`);
 			continue;
 		}
-		const insertion = adds.map((a) =>
-			emitFieldEntry(a.field, "\t\t")
-		).join("\n") + "\n";
+		const insertion = adds.map((a) => emitFieldEntry(a.field, "\t\t")).join("\n") + "\n";
 		src = insertIntoBlock(src, span, insertion);
 	}
 
@@ -1250,7 +1249,7 @@ export function applyDiff(originalSrc: string, diff: Diff): string {
 			throw new Error("cannot locate closing `};` of Thrift dict");
 		}
 		const sorted = [...diff.newTypes].sort((a, b) =>
-			a.canonicalName.localeCompare(b.canonicalName)
+			a.canonicalName.localeCompare(b.canonicalName),
 		);
 		const insertions: string[] = [];
 		for (const nt of sorted) {
@@ -1260,8 +1259,7 @@ export function applyDiff(originalSrc: string, diff: Diff): string {
 				insertions.push(emitNewStruct(nt.structDef));
 			}
 		}
-		src = src.slice(0, closeIdx) + insertions.join("\n") + "\n" +
-			src.slice(closeIdx);
+		src = src.slice(0, closeIdx) + insertions.join("\n") + "\n" + src.slice(closeIdx);
 	}
 
 	if (warnings.length) {
@@ -1277,11 +1275,11 @@ export function applyDiff(originalSrc: string, diff: Diff): string {
 // =========================================================================
 
 async function main() {
-	const args = parseArgs(Deno.args);
+	const args = parseArgs(process.argv.slice(2));
 
 	let overrides: Record<string, string> = {};
 	if (args.mapPath) {
-		overrides = JSON.parse(await Deno.readTextFile(args.mapPath));
+		overrides = JSON.parse(await readFile(args.mapPath, "utf8"));
 	}
 
 	console.log(`Parsing IDL: ${args.idl}`);
@@ -1291,10 +1289,8 @@ async function main() {
 	console.log(`  services:  ${idl.services.size}`);
 	console.log(`  typedefs:  ${idl.typedefs.size}`);
 
-	const thriftPath = fromFileUrl(
-		import.meta.resolve("../../packages/types/thrift.ts"),
-	);
-	const mod = await import(`file://${thriftPath.replaceAll("\\", "/")}`);
+	const thriftPath = resolve(scriptDir, "../../packages/types/thrift.ts");
+	const mod = await import(pathToFileURL(thriftPath).href);
 	const thrift = mod.Thrift as LineThrift;
 	console.log(`linejs Thrift entries: ${Object.keys(thrift).length}`);
 
@@ -1308,8 +1304,10 @@ async function main() {
 	console.log(`new types:         ${diff.newTypes.length}`);
 
 	const head = <T>(arr: T[], n: number) =>
-		arr.slice(0, n).map((x) => String(x)).join(", ") +
-		(arr.length > n ? `, ... (+${arr.length - n})` : "");
+		arr
+			.slice(0, n)
+			.map((x) => String(x))
+			.join(", ") + (arr.length > n ? `, ... (+${arr.length - n})` : "");
 
 	if (diff.enumValueAdds.length) {
 		const byEnum = new Map<string, string[]>();
@@ -1331,21 +1329,22 @@ async function main() {
 	}
 	if (diff.newTypes.length) {
 		console.log(
-			`\nnew types: ${
-				head(diff.newTypes.map((t) => `${t.kind}:${t.canonicalName}`), 25)
-			}`,
+			`\nnew types: ${head(
+				diff.newTypes.map((t) => `${t.kind}:${t.canonicalName}`),
+				25,
+			)}`,
 		);
 	}
 
 	if (args.report) {
-		await Deno.writeTextFile(args.report, JSON.stringify(diff, null, 2));
+		await writeFile(args.report, JSON.stringify(diff, null, 2));
 		console.log(`\nReport written: ${args.report}`);
 	}
 
 	if (args.apply) {
-		const orig = await Deno.readTextFile(thriftPath);
+		const orig = await readFile(thriftPath, "utf8");
 		const patched = applyDiff(orig, diff);
-		await Deno.writeTextFile(thriftPath, patched);
+		await writeFile(thriftPath, patched);
 		console.log(`\nApplied changes to ${thriftPath}`);
 	} else {
 		console.log(`\n(dry-run; pass --apply to write changes to thrift.ts)`);

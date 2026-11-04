@@ -4,11 +4,7 @@
 
 import dgram from "node:dgram";
 import { Buffer } from "node:buffer";
-import {
-	buildBindingRequestAsync,
-	parseStun,
-	readMappedAddress,
-} from "./stun.ts";
+import { buildBindingRequestAsync, parseStun, readMappedAddress } from "./stun.ts";
 
 export type IceCandidateType = "host" | "srflx" | "prflx" | "relay";
 
@@ -25,7 +21,11 @@ export interface IceCandidate {
 }
 
 /** Compute the standard ICE priority for a candidate. */
-export function icePriority(type: IceCandidateType, componentId: number, localPref = 65535): number {
+export function icePriority(
+	type: IceCandidateType,
+	componentId: number,
+	localPref = 65535,
+): number {
 	const typePref = type === "host" ? 126 : type === "srflx" ? 100 : type === "prflx" ? 110 : 0;
 	return ((typePref << 24) | (localPref << 8) | (256 - componentId)) >>> 0;
 }
@@ -107,7 +107,7 @@ export async function gatherSrflx(
 		sock.on("message", onMsg);
 	});
 	await new Promise<void>((res, rj) =>
-		sock.send(Buffer.from(req), stunPort, stunHost, (e) => e ? rj(e) : res())
+		sock.send(Buffer.from(req), stunPort, stunHost, (e) => (e ? rj(e) : res())),
 	);
 	const buf = await reply;
 	if (!buf) return null;
@@ -136,7 +136,7 @@ export async function gatherIceCandidates(opts?: {
 }): Promise<{ socket: dgram.Socket; candidates: IceCandidate[] }> {
 	const sock = dgram.createSocket("udp4");
 	await new Promise<void>((r) =>
-		sock.bind({ address: "0.0.0.0", port: opts?.localPort ?? 0 }, () => r())
+		sock.bind({ address: "0.0.0.0", port: opts?.localPort ?? 0 }, () => r()),
 	);
 	const candidates: IceCandidate[] = [];
 	candidates.push(await gatherHost(sock));
@@ -148,7 +148,4 @@ export async function gatherIceCandidates(opts?: {
 }
 
 /** Default STUN servers (public, free). */
-export const DEFAULT_STUN_HOSTS = [
-	"stun.l.google.com",
-	"stun1.l.google.com",
-];
+export const DEFAULT_STUN_HOSTS = ["stun.l.google.com", "stun1.l.google.com"];

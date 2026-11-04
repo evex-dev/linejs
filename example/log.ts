@@ -1,15 +1,11 @@
-import { BaseClient } from "@evex/linejs/base";
+import { openSync, writeSync } from "node:fs";
+import { BaseClient } from "@evex-dev/linejs/base";
 
-const logger = await Deno.open("./debug.log", {
-	write: true,
-	create: true,
-	append: true,
-});
+const logger = openSync("./debug.log", "a");
 
-logger.writeSync(
-	new TextEncoder().encode(
-		`\n\n\n----- New Session: ${new Date().toLocaleString()} -----\n`,
-	),
+writeSync(
+	logger,
+	new TextEncoder().encode(`\n\n\n----- New Session: ${new Date().toLocaleString()} -----\n`),
 );
 
 const client = new BaseClient({
@@ -17,11 +13,14 @@ const client = new BaseClient({
 });
 
 client.on("log", (data) => {
-	logger.writeSync(
+	writeSync(
+		logger,
 		new TextEncoder().encode(
-			`[${new Date().toLocaleTimeString()}] ${data.type}: ${
-				JSON.stringify(data.data, BaseClient.jsonReplacer, 2)
-			}\n`,
+			`[${new Date().toLocaleTimeString()}] ${data.type}: ${JSON.stringify(
+				data.data,
+				BaseClient.jsonReplacer,
+				2,
+			)}\n`,
 		),
 	);
 });

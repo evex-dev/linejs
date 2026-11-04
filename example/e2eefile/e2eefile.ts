@@ -1,10 +1,11 @@
-import { BaseClient } from "@evex/linejs/base";
+import { readFile } from "node:fs/promises";
+import { BaseClient } from "@evex-dev/linejs/base";
 
 const client = new BaseClient({
 	device: "DESKTOPWIN",
 });
 
-const b = new Blob([await Deno.readFile("./image.png")]);
+const b = new Blob([await readFile("./image.png")]);
 
 await client.obs.uploadMediaByE2EE({
 	data: b,

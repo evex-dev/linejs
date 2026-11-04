@@ -1,0 +1,7 @@
+packages:
+  - packages/*
+  - docs
+
+allowBuilds:
+  esbuild: true
+linkWorkspacePackages: true

@@ -1,4 +1,4 @@
-import { assert, assertEquals, assertInstanceOf } from "@std/assert";
+import { assert, test } from "vite-plus/test";
 import { Conn } from "./conn.ts";
 
 // `Conn.new` races the connect against a 300 ms fallback timer that stays
@@ -6,10 +6,7 @@ import { Conn } from "./conn.ts";
 // op sanitizer from reporting it as a leak.
 const CONNECT_FALLBACK_MS = 350;
 
-function stubManager(
-	fetch: () => Promise<Response>,
-	onLog?: () => void,
-) {
+function stubManager(fetch: () => Promise<Response>, onLog?: () => void) {
 	const logs: { type: string; data: Record<string, unknown> }[] = [];
 	const manager = {
 		client: {
@@ -30,21 +27,22 @@ function settleFallbackTimer(): Promise<void> {
 
 // A transport failure used to reject the floating IIFE inside `new`, which
 // nobody awaited: Deno tore the whole process down with "Uncaught (in
-// promise) TypeError: fetch failed". Deno.test's default sanitizers turn
+// promise) TypeError: fetch failed". test's default sanitizers turn
 // that same unhandled rejection into a test failure.
-Deno.test("Conn.new reports a transport failure instead of crashing", async () => {
-	const { manager, logs } = stubManager(() =>
-		Promise.reject(new TypeError("fetch failed"))
-	);
+test("Conn.new reports a transport failure instead of crashing", async () => {
+	const { manager, logs } = stubManager(() => Promise.reject(new TypeError("fetch failed")));
 	const conn = new Conn(manager as never);
 
 	await conn.new("example.invalid", 443, "/PUSH/1/subs?m=1");
 
-	assertEquals(conn.resStream, undefined);
-	assertEquals(logs.map((entry) => entry.type), ["LegyPusherError"]);
-	assertInstanceOf(logs[0].data.error, TypeError);
+	assert.deepEqual(conn.resStream, undefined);
+	assert.deepEqual(
+		logs.map((entry) => entry.type),
+		["LegyPusherError"],
+	);
+	assert.instanceOf(logs[0].data.error, TypeError);
 	// `reqStream` is still handed back so the caller can shut the conn down.
-	assert(conn.reqStream);
+	assert.isOk(conn.reqStream);
 	await conn.close();
 	await settleFallbackTimer();
 });
@@ -52,7 +50,7 @@ Deno.test("Conn.new reports a transport failure instead of crashing", async () =
 // `log` is a user-supplied listener, so it can throw. Reporting the error
 // before resolving, and outside any guard, would let that throw reject the
 // very handler that exists to stop an unhandled rejection.
-Deno.test("Conn.new survives a log listener that throws", async () => {
+test("Conn.new survives a log listener that throws", async () => {
 	const { manager, logs } = stubManager(
 		() => Promise.reject(new TypeError("fetch failed")),
 		() => {
@@ -63,41 +61,45 @@ Deno.test("Conn.new survives a log listener that throws", async () => {
 
 	await conn.new("example.invalid", 443, "/PUSH/1/subs?m=1");
 
-	assertEquals(conn.resStream, undefined);
+	assert.deepEqual(conn.resStream, undefined);
 	// The listener was still called; only its own failure was swallowed.
-	assertEquals(logs.map((entry) => entry.type), ["LegyPusherError"]);
-	assertInstanceOf(logs[0].data.error, TypeError);
-	assert(conn.reqStream);
+	assert.deepEqual(
+		logs.map((entry) => entry.type),
+		["LegyPusherError"],
+	);
+	assert.instanceOf(logs[0].data.error, TypeError);
+	assert.isOk(conn.reqStream);
 	await conn.close();
 	await settleFallbackTimer();
 });
 
-Deno.test("Conn.new reports a response without a body", async () => {
+test("Conn.new reports a response without a body", async () => {
+	const { manager, logs } = stubManager(() => Promise.resolve(new Response(null, { status: 204 })));
+	const conn = new Conn(manager as never);
+
+	await conn.new("example.invalid", 443, "/PUSH/1/subs?m=1");
+
+	assert.deepEqual(conn.resStream, undefined);
+	assert.deepEqual(
+		logs.map((entry) => entry.type),
+		["LegyPusherError"],
+	);
+	assert.instanceOf(logs[0].data.error, Error);
+	assert.deepEqual((logs[0].data.error as Error).message, "no body");
+	await conn.close();
+	await settleFallbackTimer();
+});
+
+test("Conn.new keeps the response stream on success", async () => {
 	const { manager, logs } = stubManager(() =>
-		Promise.resolve(new Response(null, { status: 204 }))
+		Promise.resolve(new Response(new Uint8Array([1, 2, 3]))),
 	);
 	const conn = new Conn(manager as never);
 
 	await conn.new("example.invalid", 443, "/PUSH/1/subs?m=1");
 
-	assertEquals(conn.resStream, undefined);
-	assertEquals(logs.map((entry) => entry.type), ["LegyPusherError"]);
-	assertInstanceOf(logs[0].data.error, Error);
-	assertEquals((logs[0].data.error as Error).message, "no body");
-	await conn.close();
-	await settleFallbackTimer();
-});
-
-Deno.test("Conn.new keeps the response stream on success", async () => {
-	const { manager, logs } = stubManager(() =>
-		Promise.resolve(new Response(new Uint8Array([1, 2, 3])))
-	);
-	const conn = new Conn(manager as never);
-
-	await conn.new("example.invalid", 443, "/PUSH/1/subs?m=1");
-
-	assert(conn.resStream);
-	assertEquals(logs, []);
+	assert.isOk(conn.resStream);
+	assert.deepEqual(logs, []);
 	await conn.resStream.cancel();
 	await conn.close();
 	await settleFallbackTimer();

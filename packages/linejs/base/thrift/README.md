@@ -30,11 +30,7 @@ const client = new Thrift();
 parser.add_def(thriftFile);
 
 const reqdata: Uint8Array = client.writeThrift(
-	[
-		[12, 1, [
-			[11, 1, "text"],
-		]],
-	],
+	[[12, 1, [[11, 1, "text"]]]],
 	"test",
 	thrift.TCompactProtocol,
 );
@@ -44,9 +40,7 @@ const response = await fetch("https://example.com/api/", {
 	method: "POST",
 });
 
-const resdata = client.rename_data(
-	client.readThrift(new Uint8Array(await response.arrayBuffer())),
-);
+const resdata = client.rename_data(client.readThrift(new Uint8Array(await response.arrayBuffer())));
 
 console.log(resdata.data);
 // { "text" : "~" , "num" : ~ }

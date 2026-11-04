@@ -1,7 +1,7 @@
 (function () {
 	const script = document.createElement("script");
 	script.innerHTML = `
-   import * as LINEJS from "https://esm.sh/v135/@jsr/evex__linejs@2.0.0-rc1/es2022/evex__linejs.mjs";
+   import * as LINEJS from "https://esm.sh/@evex-dev/linejs";
    
    document.body.innerHTML = "";
    class LocalStorage {

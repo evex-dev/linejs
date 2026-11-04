@@ -66,8 +66,8 @@ export async function digestResponse(p: DigestParams): Promise<string> {
 	const ha2 = await md5Hex(`${p.method}:${p.uri}`);
 	const response = p.qop
 		? await md5Hex(
-			`${ha1}:${p.nonce}:${p.nc ?? "00000001"}:${p.cnonce ?? "0a4f113b"}:${p.qop}:${ha2}`,
-		)
+				`${ha1}:${p.nonce}:${p.nc ?? "00000001"}:${p.cnonce ?? "0a4f113b"}:${p.qop}:${ha2}`,
+			)
 		: await md5Hex(`${ha1}:${p.nonce}:${ha2}`);
 	const parts = [
 		`username="${p.username}"`,
@@ -94,7 +94,8 @@ export function newBranch(): string {
 
 export function randomCallId(host = "invalid"): string {
 	const r = Array.from(crypto.getRandomValues(new Uint8Array(8)))
-		.map((b) => b.toString(16).padStart(2, "0")).join("");
+		.map((b) => b.toString(16).padStart(2, "0"))
+		.join("");
 	return `${r}@${host}`;
 }
 

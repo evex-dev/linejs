@@ -1,4 +1,5 @@
-import { assertEquals, assertRejects } from "@std/assert";
+import { assert, test } from "vite-plus/test";
+import { assertRejects } from "../../../test/assert.ts";
 import { Buffer } from "node:buffer";
 import { buildMikeyPke, mikeyFromBase64, mikeyToBase64, parseMikey } from "./mikey.ts";
 
@@ -17,7 +18,7 @@ async function fakeRsaKeypair() {
 	return { pub: k.publicKey, priv: k.privateKey, spki };
 }
 
-Deno.test("buildMikeyPke: TGK length is enforced", async () => {
+test("buildMikeyPke: TGK length is enforced", async () => {
 	const { spki } = await fakeRsaKeypair();
 	await assertRejects(
 		() => buildMikeyPke({ peerPublicKey: spki, tgk: new Uint8Array(29) }),
@@ -26,7 +27,7 @@ Deno.test("buildMikeyPke: TGK length is enforced", async () => {
 	);
 });
 
-Deno.test("buildMikeyPke: produces a header with v=1, dataType=2 (PKE_INIT)", async () => {
+test("buildMikeyPke: produces a header with v=1, dataType=2 (PKE_INIT)", async () => {
 	const { spki } = await fakeRsaKeypair();
 	const tgk = new Uint8Array(30);
 	for (let i = 0; i < 30; i++) tgk[i] = i;
@@ -38,12 +39,12 @@ Deno.test("buildMikeyPke: produces a header with v=1, dataType=2 (PKE_INIT)", as
 		csbId: 0xdeadbeef,
 	});
 	const parsed = parseMikey(msg);
-	assertEquals(parsed.version, 1);
-	assertEquals(parsed.dataType, 2);
-	assertEquals(parsed.csbId, 0xdeadbeef);
+	assert.deepEqual(parsed.version, 1);
+	assert.deepEqual(parsed.dataType, 2);
+	assert.deepEqual(parsed.csbId, 0xdeadbeef);
 });
 
-Deno.test("buildMikeyPke + parseMikey: round-trip pulls out rand/timestamp/PKE/KEMAC", async () => {
+test("buildMikeyPke + parseMikey: round-trip pulls out rand/timestamp/PKE/KEMAC", async () => {
 	const { spki } = await fakeRsaKeypair();
 	const tgk = new Uint8Array(30).fill(0x42);
 	const rand = new Uint8Array(16);
@@ -56,14 +57,14 @@ Deno.test("buildMikeyPke + parseMikey: round-trip pulls out rand/timestamp/PKE/K
 		csbId: 1,
 	});
 	const parsed = parseMikey(msg);
-	assertEquals(parsed.rand, rand);
-	assertEquals(parsed.ntpTimestamp, 0x123456789abcdef0n);
-	assertEquals(parsed.pkeBody?.length, 256); // RSA-2048 encryption = 256 bytes
+	assert.deepEqual(parsed.rand, rand);
+	assert.deepEqual(parsed.ntpTimestamp, 0x123456789abcdef0n);
+	assert.deepEqual(parsed.pkeBody?.length, 256); // RSA-2048 encryption = 256 bytes
 	// KEMAC encrypted body is at least 5 bytes (KEY_DATA payload header) + 30 (TGK) = 35
-	assertEquals((parsed.kemacEncrypted?.length ?? 0) >= 35, true);
+	assert.deepEqual((parsed.kemacEncrypted?.length ?? 0) >= 35, true);
 });
 
-Deno.test("MIKEY-PKE: peer can decrypt envelope key with private RSA key", async () => {
+test("MIKEY-PKE: peer can decrypt envelope key with private RSA key", async () => {
 	const kp = await fakeRsaKeypair();
 	const envKey = new Uint8Array(16);
 	for (let i = 0; i < 16; i++) envKey[i] = i + 100;
@@ -80,12 +81,12 @@ Deno.test("MIKEY-PKE: peer can decrypt envelope key with private RSA key", async
 	const ab = new ArrayBuffer(pke.byteLength);
 	new Uint8Array(ab).set(pke);
 	const dec = await crypto.subtle.decrypt({ name: "RSA-OAEP" }, kp.priv, ab);
-	assertEquals(new Uint8Array(dec), envKey);
+	assert.deepEqual(new Uint8Array(dec), envKey);
 });
 
-Deno.test("mikeyToBase64 + mikeyFromBase64 round-trip", () => {
+test("mikeyToBase64 + mikeyFromBase64 round-trip", () => {
 	const sample = new Uint8Array([0xde, 0xad, 0xbe, 0xef, 0x00, 0xff, 0x42]);
 	const enc = mikeyToBase64(sample);
 	const back = mikeyFromBase64(enc);
-	assertEquals(back, sample);
+	assert.deepEqual(back, sample);
 });

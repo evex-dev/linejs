@@ -1,21 +1,15 @@
 // For Liff (liff, etc)
-import {
-	LINEStruct,
-	type NestedArray,
-	type ProtocolKey,
-} from "../../thrift/mod.ts";
-import type * as LINETypes from "@evex/linejs-types";
+import { LINEStruct, type NestedArray, type ProtocolKey } from "../../thrift/mod.ts";
+import type * as LINETypes from "@evex-dev/linejs-types";
 import { InternalError } from "../../core/utils/error.ts";
 import type { BaseClient } from "../../core/mod.ts";
 import type { BaseService } from "../types.ts";
-import type { LooseType } from "@evex/loose-types";
+import type { LooseType } from "../../types.ts";
 
 export class LiffService implements BaseService {
 	static readonly LINE_LIFF_ENDPOINT = "https://api.line.me/message/v3/share";
-	static readonly CONSENT_API_URL =
-		"https://access.line.me/dialog/api/permissions";
-	static readonly AUTH_CONSENT_URL =
-		"https://access.line.me/oauth2/v2.1/authorize/consent";
+	static readonly CONSENT_API_URL = "https://access.line.me/dialog/api/permissions";
+	static readonly AUTH_CONSENT_URL = "https://access.line.me/oauth2/v2.1/authorize/consent";
 	liffTokenCache: { [key: string]: string } = {};
 	requestPath = "/LIFF1";
 	protocolType: ProtocolKey = 4;
@@ -55,11 +49,17 @@ export class LiffService implements BaseService {
 			context = [12, chaLINETypes, [chat]];
 		}
 		return await this.client.request.request<LINETypes.LiffViewResponse>(
-			[[12, 1, [
-				[11, 1, liffId],
-				[12, 2, [context]],
-				[11, 3, lang],
-			]]],
+			[
+				[
+					12,
+					1,
+					[
+						[11, 1, liffId],
+						[12, 2, [context]],
+						[11, 3, lang],
+					],
+				],
+			],
 			"issueLiffView",
 			this.protocolType,
 			true,
@@ -67,9 +67,7 @@ export class LiffService implements BaseService {
 		);
 	}
 	async getLiffViewWithoutUserContext(
-		...param: Parameters<
-			typeof LINEStruct.getLiffViewWithoutUserContext_args
-		>
+		...param: Parameters<typeof LINEStruct.getLiffViewWithoutUserContext_args>
 	): Promise<LINETypes.getLiffViewWithoutUserContext_result["success"]> {
 		return await this.client.request.request(
 			LINEStruct.getLiffViewWithoutUserContext_args(...param),
@@ -117,26 +115,16 @@ export class LiffService implements BaseService {
 				const error = e as InternalError;
 
 				this.client.log("liff-error", { ...error.data });
-				const liffException = error.data
-					.liffException as LINETypes.LiffException | undefined;
-				if (
-					liffException?.code === "CONSENT_REQUIRED" &&
-					tryConsent
-				) {
+				const liffException = error.data.liffException as LINETypes.LiffException | undefined;
+				if (liffException?.code === "CONSENT_REQUIRED" && tryConsent) {
 					const data = liffException;
 					const payload = data.payload;
 					const { channelId, consentUrl } = payload.consentRequired;
 					const toType = chatMid && this.client.getToType(chatMid);
 					let hasConsent = false;
 					if (channelId && consentUrl) {
-						if (
-							toType === 4 ||
-							this.client.device.startsWith("DESKTOP")
-						) {
-							hasConsent = await this.tryConsentAuthorize(
-								consentUrl,
-								channelId,
-							);
+						if (toType === 4 || this.client.device.startsWith("DESKTOP")) {
+							hasConsent = await this.tryConsentAuthorize(consentUrl, channelId);
 						} else {
 							hasConsent = await this.tryConsentLiff(channelId);
 						}
@@ -164,12 +152,7 @@ export class LiffService implements BaseService {
 		forceIssue?: boolean;
 	}): Promise<LooseType> {
 		let token: string;
-		const {
-			to,
-			messages,
-			tryConsent,
-			forceIssue,
-		} = {
+		const { to, messages, tryConsent, forceIssue } = {
 			tryConsent: true,
 			forceIssue: false,
 			...options,
@@ -194,14 +177,11 @@ export class LiffService implements BaseService {
 			"content-type": "application/json",
 		};
 		const payload = JSON.stringify({ messages });
-		const response = await this.client.fetch(
-			"https://api.line.me/message/v3/share",
-			{
-				method: "POST",
-				body: payload,
-				headers: liffHeaders,
-			},
-		);
+		const response = await this.client.fetch("https://api.line.me/message/v3/share", {
+			method: "POST",
+			body: payload,
+			headers: liffHeaders,
+		});
 
 		const responseBody = await response.json();
 		if (!response.ok) {
@@ -214,10 +194,7 @@ export class LiffService implements BaseService {
 		return responseBody;
 	}
 
-	private async tryConsentLiff(
-		channelId: string,
-		referer?: string,
-	): Promise<boolean> {
+	private async tryConsentLiff(channelId: string, referer?: string): Promise<boolean> {
 		const payload = JSON.stringify({ on: ["P", "CM"], off: [] });
 		const headers: Record<string, string> = {
 			"X-LINE-ChannelId": channelId,
@@ -268,19 +245,13 @@ export class LiffService implements BaseService {
 			if (channelId && csrfToken) {
 				headers["cookie"] = cookies.join("; ");
 				headers["referer"] = consentUrl;
-				const authResponse = await this.client.fetch(
-					LiffService.AUTH_CONSENT_URL,
-					{
-						method: "POST",
-						body: `${
-							allPermission.map((e) => "allPermission=" + e)
-								.join("&")
-						}&${
-							approvedPermission.map((e) => "approvedPermission=" + e).join("&")
-						}&__WLS=&channelId=${channelId}&__csrf=${csrfToken}&allow=true`,
-						headers,
-					},
-				);
+				const authResponse = await this.client.fetch(LiffService.AUTH_CONSENT_URL, {
+					method: "POST",
+					body: `${allPermission.map((e) => "allPermission=" + e).join("&")}&${approvedPermission
+						.map((e) => "approvedPermission=" + e)
+						.join("&")}&__WLS=&channelId=${channelId}&__csrf=${csrfToken}&allow=true`,
+					headers,
+				});
 				return authResponse.ok;
 			}
 		}

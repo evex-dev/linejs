@@ -1,11 +1,6 @@
 // Opus codec adapter (wraps npm:opusscript WASM).
 // Optional — only imported when client.call.useDefaultOpus() is called.
-import type {
-	AudioDecoder,
-	AudioEncoder,
-	CodecFactory,
-	PcmFrame,
-} from "./audio.ts";
+import type { AudioDecoder, AudioEncoder, CodecFactory, PcmFrame } from "./audio.ts";
 import { Buffer } from "node:buffer";
 
 interface OpusInstance {
@@ -15,11 +10,7 @@ interface OpusInstance {
 	encoderCTL(ctl: number, arg: number): void;
 	delete(): void;
 }
-type OpusCtor = new (
-	rate: number,
-	channels: number,
-	app: number,
-) => OpusInstance;
+type OpusCtor = new (rate: number, channels: number, app: number) => OpusInstance;
 const OPUS_VOIP = 2048; // OPUS_APPLICATION_VOIP per opus.h
 const OPUS_AUTO = -1000;
 const OPUS_SET_VBR_REQUEST = 4006;
@@ -40,8 +31,7 @@ const OPUS_SIGNAL = {
 
 async function loadOpusScript(): Promise<OpusCtor> {
 	const mod = await import("opusscript");
-	const ctor = (mod as { default?: OpusCtor }).default ??
-		(mod as unknown as OpusCtor);
+	const ctor = (mod as { default?: OpusCtor }).default ?? (mod as unknown as OpusCtor);
 	return ctor;
 }
 
@@ -65,9 +55,7 @@ export async function opusCodecFactory(): Promise<CodecFactory> {
 				enc.encoderCTL(OPUS_SET_BANDWIDTH_REQUEST, OPUS_BANDWIDTH[bandwidth]);
 			}
 			if (signal) enc.encoderCTL(OPUS_SET_SIGNAL_REQUEST, OPUS_SIGNAL[signal]);
-			const samplesPerChannel = Math.floor(
-				(sampleRate * (frameDurationMs ?? 20)) / 1000,
-			);
+			const samplesPerChannel = Math.floor((sampleRate * (frameDurationMs ?? 20)) / 1000);
 			const frameSamples = samplesPerChannel * channels;
 			return {
 				encode(f: PcmFrame): Uint8Array | null {

@@ -24,12 +24,13 @@ import { Buffer } from "node:buffer";
 
 // ─── varint + wire-type encoding ────────────────────────────────────────
 
-export const enum WireType {
-	Varint = 0,
-	Fixed64 = 1,
-	LengthDelim = 2,
-	Fixed32 = 5,
-}
+export const WireType = {
+	Varint: 0,
+	Fixed64: 1,
+	LengthDelim: 2,
+	Fixed32: 5,
+} as const;
+export type WireType = (typeof WireType)[keyof typeof WireType];
 
 export function encodeVarint(v: bigint | number): Uint8Array {
 	let x = typeof v === "bigint" ? v : BigInt(v);
@@ -43,7 +44,9 @@ export function encodeVarint(v: bigint | number): Uint8Array {
 }
 
 export function decodeVarint(buf: Uint8Array, off: number): [bigint, number] {
-	let v = 0n, shift = 0n, i = off;
+	let v = 0n,
+		shift = 0n,
+		i = off;
 	while (i < buf.length) {
 		const b = BigInt(buf[i]);
 		v |= (b & 0x7fn) << shift;
@@ -330,23 +333,16 @@ function packDataOffer(codec: Uint8Array, path: Uint8Array): Uint8Array {
  * blobs. Dynamic cryptographic material is supplied by the caller so tests can
  * be deterministic.
  */
-export function packNativeSetupOffer(
-	material: PlanetSetupOfferMaterial,
-): Uint8Array {
+export function packNativeSetupOffer(material: PlanetSetupOfferMaterial): Uint8Array {
 	return packNativeOneToOneOffer(material, false);
 }
 
 /** Callee audio answer: local stream IDs, disabled video, E2EE only. */
-export function packNativeAnswer(
-	material: PlanetSetupOfferMaterial,
-): Uint8Array {
+export function packNativeAnswer(material: PlanetSetupOfferMaterial): Uint8Array {
 	return packNativeOneToOneOffer(material, true);
 }
 
-function packNativeOneToOneOffer(
-	material: PlanetSetupOfferMaterial,
-	answer: boolean,
-): Uint8Array {
+function packNativeOneToOneOffer(material: PlanetSetupOfferMaterial, answer: boolean): Uint8Array {
 	if (material.mediaPubKey.length !== 33) {
 		throw new Error("packNativeSetupOffer: mediaPubKey must be 33 bytes");
 	}
@@ -357,27 +353,9 @@ function packNativeOneToOneOffer(
 		throw new Error("packNativeSetupOffer: mediaSecret must be 30 bytes");
 	}
 	const delta = answer ? 1 : 0;
-	const audioPath = packOfferPath(
-		96,
-		101 + delta,
-		201 + delta,
-		6801 + delta,
-		13601 + delta,
-	);
-	const videoPath = packOfferPath(
-		97,
-		111 + delta,
-		211 + delta,
-		6801 + delta,
-		13601 + delta,
-	);
-	const dataPath = packOfferPath(
-		98,
-		121 + delta,
-		221 + delta,
-		6801 + delta,
-		13601 + delta,
-	);
+	const audioPath = packOfferPath(96, 101 + delta, 201 + delta, 6801 + delta, 13601 + delta);
+	const videoPath = packOfferPath(97, 111 + delta, 211 + delta, 6801 + delta, 13601 + delta);
+	const dataPath = packOfferPath(98, 121 + delta, 221 + delta, 6801 + delta, 13601 + delta);
 	const audio = packAudioVideoOffer(
 		"A",
 		packOfferCodec("A", { enabled: 1, bitrate: 32, kind: 1 }),
@@ -398,10 +376,7 @@ function packNativeOneToOneOffer(
 		111 + delta,
 		211 + delta,
 	);
-	const data = packDataOffer(
-		packOfferCodec("D", { enabled: 1, bitrate: 2000, kind: 6 }),
-		dataPath,
-	);
+	const data = packDataOffer(packOfferCodec("D", { enabled: 1, bitrate: 2000, kind: 6 }), dataPath);
 
 	const secAInner: Buf = { bytes: [] };
 	emitBytes(secAInner, 1, material.mediaPubKey);
@@ -487,9 +462,7 @@ export function packNativeGroupParticipateOffer(
 	material: PlanetGroupParticipateOfferMaterial,
 ): Uint8Array {
 	if (material.mediaSecret.length !== 30) {
-		throw new Error(
-			"packNativeGroupParticipateOffer: mediaSecret must be 30 bytes",
-		);
+		throw new Error("packNativeGroupParticipateOffer: mediaSecret must be 30 bytes");
 	}
 	const audioPath = packOfferPath(96, 103, 203, 6803, 13603);
 	const videoPath = packOfferPath(97, 113, 213, 6803, 13603);
@@ -510,18 +483,11 @@ export function packNativeGroupParticipateOffer(
 	emitUint32(videoCodec, 6, 2);
 	emitUint32(videoCodec, 50, 7);
 	emitUint32(videoCodec, 50, 4);
-	const video = packAudioVideoOffer(
-		"V",
-		finalize(videoCodec),
-		videoPath,
-		113,
-		213,
-		[packOfferMode(0, 2), packOfferMode(2, 1)],
-	);
-	const data = packDataOffer(
-		packOfferCodec("D", { enabled: 1, bitrate: 2000, kind: 6 }),
-		dataPath,
-	);
+	const video = packAudioVideoOffer("V", finalize(videoCodec), videoPath, 113, 213, [
+		packOfferMode(0, 2),
+		packOfferMode(2, 1),
+	]);
+	const data = packDataOffer(packOfferCodec("D", { enabled: 1, bitrate: 2000, kind: 6 }), dataPath);
 
 	const secInner: Buf = { bytes: [] };
 	emitBytes(secInner, 1, material.mediaSecret);
@@ -721,7 +687,9 @@ export function packCcSetupReq(r: CcSetupReq): Uint8Array {
 	if (r.ua) emitMessage(b, 5, r.ua);
 	if (r.devId !== undefined) emitString(b, 6, r.devId);
 	if (r.commTypeFlags !== undefined) emitEnum(b, 7, r.commTypeFlags);
-	if (r.capas) { for (const c of r.capas) emitEnum(b, 8, c); }
+	if (r.capas) {
+		for (const c of r.capas) emitEnum(b, 8, c);
+	}
 	if (r.offer) emitBytes(b, 9, r.offer);
 	if (r.credential) emitBytes(b, 10, r.credential);
 	if (r.fakeCall !== undefined) emitBool(b, 11, r.fakeCall);
@@ -732,7 +700,9 @@ export function packCcSetupReq(r: CcSetupReq): Uint8Array {
 	if (r.ccp !== undefined) emitString(b, 22, r.ccp);
 	if (r.ueData) emitBytes(b, 23, r.ueData);
 	if (r.ueDataCompType !== undefined) emitEnum(b, 24, r.ueDataCompType);
-	if (r.features) { for (const f of r.features) emitMessage(b, 25, f); }
+	if (r.features) {
+		for (const f of r.features) emitMessage(b, 25, f);
+	}
 	if (r.svcId !== undefined) emitString(b, 51, r.svcId);
 	if (r.tgtSvcId !== undefined) emitString(b, 52, r.tgtSvcId);
 	if (r.reqRec !== undefined) emitBool(b, 53, r.reqRec);
@@ -805,7 +775,9 @@ export function packCcParticipateReq(r: CcParticipateReq): Uint8Array {
 	if (r.ua) emitMessage(b, 7, r.ua);
 	if (r.devId !== undefined) emitString(b, 8, r.devId);
 	if (r.commTypeFlags !== undefined) emitEnum(b, 9, r.commTypeFlags);
-	if (r.capas) { for (const c of r.capas) emitEnum(b, 10, c); }
+	if (r.capas) {
+		for (const c of r.capas) emitEnum(b, 10, c);
+	}
 	if (r.offer) emitBytes(b, 11, r.offer);
 	if (r.credential) emitBytes(b, 12, r.credential);
 	if (r.svcKey !== undefined) emitString(b, 13, r.svcKey);
@@ -813,8 +785,12 @@ export function packCcParticipateReq(r: CcParticipateReq): Uint8Array {
 	if (r.mChanId !== undefined) emitUint64(b, 15, r.mChanId);
 	if (r.crt !== undefined) emitBool(b, 16, r.crt);
 	if (r.mixPort !== undefined) emitUint32(b, 17, r.mixPort);
-	if (r.features) { for (const f of r.features) emitMessage(b, 18, f); }
-	if (r.roomAttrs) { for (const a of r.roomAttrs) emitEnum(b, 19, a); }
+	if (r.features) {
+		for (const f of r.features) emitMessage(b, 18, f);
+	}
+	if (r.roomAttrs) {
+		for (const a of r.roomAttrs) emitEnum(b, 19, a);
+	}
 	if (r.recvRtp !== undefined) emitEnum(b, 20, r.recvRtp);
 	if (r.ccp !== undefined) emitString(b, 21, r.ccp);
 	if (r.maxChanCnt !== undefined) emitUint32(b, 22, r.maxChanCnt);
@@ -864,7 +840,9 @@ export function packCcRelReq(r: CcRelReq): Uint8Array {
 	if (r.releaser !== undefined) emitString(b, 3, r.releaser);
 	if (r.commMediaFlags !== undefined) emitEnum(b, 4, r.commMediaFlags);
 	if (r.userRelCode !== undefined) emitString(b, 5, r.userRelCode);
-	if (r.dataSvcs) { for (const svc of r.dataSvcs) emitEnum(b, 6, svc); }
+	if (r.dataSvcs) {
+		for (const svc of r.dataSvcs) emitEnum(b, 6, svc);
+	}
 	if (r.lastKaTs !== undefined) emitSfixed64(b, 7, r.lastKaTs);
 	if (r.roomDestroy !== undefined) emitBool(b, 51, r.roomDestroy);
 	if (r.devId !== undefined) emitString(b, 101, r.devId);
@@ -969,19 +947,13 @@ export function packPlanetUeInfo(info: PlanetUeInfo): Uint8Array {
 	return finalize(b);
 }
 
-export function wrapMcMsg(
-	oneofTag: number,
-	packedInner: Uint8Array,
-): Uint8Array {
+export function wrapMcMsg(oneofTag: number, packedInner: Uint8Array): Uint8Array {
 	const b: Buf = { bytes: [] };
 	emitMessage(b, oneofTag, packedInner);
 	return finalize(b);
 }
 
-export function packPlanetMcMsg(
-	hdr: PlanetMcHdr,
-	body: Uint8Array,
-): Uint8Array {
+export function packPlanetMcMsg(hdr: PlanetMcHdr, body: Uint8Array): Uint8Array {
 	const b: Buf = { bytes: [] };
 	emitMessage(b, 1, packPlanetMcHdr(hdr));
 	emitMessage(b, 2, body);
@@ -1256,10 +1228,7 @@ export function packBepiChannelOpen(token: bigint): Uint8Array {
 
 // ─── cc_msg oneof wrapper ───────────────────────────────────────────────
 
-export function wrapCcMsg(
-	oneofTag: number,
-	packedInner: Uint8Array,
-): Uint8Array {
+export function wrapCcMsg(oneofTag: number, packedInner: Uint8Array): Uint8Array {
 	const b: Buf = { bytes: [] };
 	emitMessage(b, oneofTag, packedInner);
 	return finalize(b);
@@ -1267,10 +1236,7 @@ export function wrapCcMsg(
 
 // ─── planet_cc_msg ──────────────────────────────────────────────────────
 
-export function packPlanetCcMsg(
-	hdr: PlanetCcHdr,
-	body: Uint8Array,
-): Uint8Array {
+export function packPlanetCcMsg(hdr: PlanetCcHdr, body: Uint8Array): Uint8Array {
 	const b: Buf = { bytes: [] };
 	emitMessage(b, 1, packPlanetCcHdr(hdr));
 	emitMessage(b, 2, body);
@@ -1284,10 +1250,7 @@ export type PlanetMsgBody =
 	| { kind: "cc"; data: Uint8Array }
 	| { kind: "mc"; data: Uint8Array };
 
-export function packPlanetMsg(
-	hdr: PlanetMsgHdr,
-	body: PlanetMsgBody,
-): Uint8Array {
+export function packPlanetMsg(hdr: PlanetMsgHdr, body: PlanetMsgBody): Uint8Array {
 	const b: Buf = { bytes: [] };
 	emitMessage(b, 1, packPlanetMsgHdr(hdr));
 	if (body.kind === "sc") emitMessage(b, 2, body.data);
@@ -1378,55 +1341,40 @@ function fieldsFor(fields: DecodedField[], tag: number): DecodedField[] {
 	return fields.filter((f) => f.tag === tag);
 }
 
-function asBytesField(
-	fields: DecodedField[],
-	tag: number,
-): Uint8Array | undefined {
+function asBytesField(fields: DecodedField[], tag: number): Uint8Array | undefined {
 	const f = field(fields, tag);
 	return f?.value instanceof Uint8Array ? f.value : undefined;
 }
 
-function asStringField(
-	fields: DecodedField[],
-	tag: number,
-): string | undefined {
+function asStringField(fields: DecodedField[], tag: number): string | undefined {
 	const b = asBytesField(fields, tag);
 	return b ? new TextDecoder().decode(b) : undefined;
 }
 
-function asNumberField(
-	fields: DecodedField[],
-	tag: number,
-): number | undefined {
+function asNumberField(fields: DecodedField[], tag: number): number | undefined {
 	const v = field(fields, tag)?.value;
 	return typeof v === "bigint" ? Number(v) : undefined;
 }
 
-function asBigintField(
-	fields: DecodedField[],
-	tag: number,
-): bigint | undefined {
+function asBigintField(fields: DecodedField[], tag: number): bigint | undefined {
 	const v = field(fields, tag)?.value;
 	return typeof v === "bigint" ? v : undefined;
 }
 
-function asBoolField(
-	fields: DecodedField[],
-	tag: number,
-): boolean | undefined {
+function asBoolField(fields: DecodedField[], tag: number): boolean | undefined {
 	const v = asBigintField(fields, tag);
 	return v === undefined ? undefined : v !== 0n;
 }
 
 function repeatedNumbers(fields: DecodedField[], tag: number): number[] {
 	return fieldsFor(fields, tag)
-		.map((f) => typeof f.value === "bigint" ? Number(f.value) : undefined)
+		.map((f) => (typeof f.value === "bigint" ? Number(f.value) : undefined))
 		.filter((v): v is number => v !== undefined);
 }
 
 function repeatedBytes(fields: DecodedField[], tag: number): Uint8Array[] {
 	return fieldsFor(fields, tag)
-		.map((f) => f.value instanceof Uint8Array ? f.value : undefined)
+		.map((f) => (f.value instanceof Uint8Array ? f.value : undefined))
 		.filter((v): v is Uint8Array => v !== undefined);
 }
 
