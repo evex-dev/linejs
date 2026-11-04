@@ -1,6 +1,6 @@
 {
 	"name": "@evex-dev/linejs",
-	"version": "3.6.3",
+	"version": "3.6.4",
 	"description": "LINE SelfBot library for Node.js",
 	"keywords": [
 		"line",
@@ -68,7 +68,7 @@
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@evex-dev/linejs-types": "^3.6.3",
+		"@evex-dev/linejs-types": "^3.6.4",
 		"@noble/ciphers": "^2.2.0",
 		"@types/crypto-js": "^4.2.2",
 		"@types/thrift": "^0.10.17",
