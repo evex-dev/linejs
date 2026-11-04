@@ -1,7 +1,15 @@
 import type { MessageReactionType } from "@evex-dev/linejs-types";
-import type { Square, SquareChat, SquareMessage, TalkMessage, User, Chat } from "@evex-dev/linejs";
+import {
+	TalkMessage,
+	type Chat,
+	type Client,
+	type Square,
+	type SquareChat,
+	type SquareMessage,
+	type User,
+} from "@evex-dev/linejs";
 import type { CommandContext } from "../context.ts";
-import { UsageError } from "../errors.ts";
+import { CliError, UsageError } from "../errors.ts";
 import type { OptionSpec } from "../args.ts";
 import { humanValue } from "../output.ts";
 
@@ -44,6 +52,72 @@ export function pickNumber(record: unknown, key: string): number | undefined {
 
 export function asRecord(value: unknown): Record<string, unknown> {
 	return value && typeof value === "object" ? (value as Record<string, unknown>) : {};
+}
+
+/**
+ * User (1:1) mids start with "u". `talk.getChat` only serves group/room
+ * chats, so user mids must go through the message-box APIs instead.
+ */
+export function isUserMid(mid: string): boolean {
+	return mid.startsWith("u");
+}
+
+export function userChatSummary(mid: string): Record<string, unknown> {
+	return {
+		mid,
+		type: "USER",
+	};
+}
+
+/**
+ * Fetch recent talk messages for a 1:1 (user) mid via the message-box APIs.
+ * Group/room mids keep using `Chat.fetchMessages`; this is the user-mid
+ * counterpart that `client.getChat` cannot serve.
+ */
+export async function fetchUserTalkMessages(
+	client: Client,
+	userMid: string,
+	limit: number,
+): Promise<TalkMessage[]> {
+	const boxes = await client.base.talk.getMessageBoxes({
+		messageBoxListRequest: {},
+	});
+	const box = boxes.messageBoxes.find((entry) => entry.id === userMid);
+	if (!box) {
+		throw new CliError("NOT_FOUND", `Message box ${userMid} was not found`, {
+			details: {
+				chatMid: userMid,
+				hint: "Open the 1:1 chat once in an official client, then retry.",
+			},
+		});
+	}
+	const raws = await client.base.talk.getPreviousMessagesV2WithRequest({
+		request: {
+			messageBoxId: box.id,
+			endMessageId: {
+				messageId: box.lastDeliveredMessageId.messageId,
+				deliveredTime: box.lastDeliveredMessageId.deliveredTime,
+			},
+			messagesCount: limit,
+		},
+	});
+	return await Promise.all(raws.map((raw) => TalkMessage.fromRawTalk(raw, client)));
+}
+
+/**
+ * Fetch recent talk messages for any talk mid. User (1:1) mids go through
+ * the message-box path; group/room mids keep the existing `getChat` path.
+ */
+export async function fetchTalkMessages(
+	client: Client,
+	chatMid: string,
+	limit: number,
+): Promise<TalkMessage[]> {
+	if (!isUserMid(chatMid)) {
+		const chat = await client.getChat(chatMid);
+		return chat.fetchMessages(limit);
+	}
+	return fetchUserTalkMessages(client, chatMid, limit);
 }
 
 export function chatSummary(chat: Chat, includeRaw = false): Record<string, unknown> {
