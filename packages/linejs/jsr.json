@@ -1,6 +1,6 @@
 {
 	"name": "@evex/linejs",
-	"version": "3.6.0",
+	"version": "3.6.1",
 	"exports": {
 		".": "./client/mod.ts",
 		"./base": "./base/mod.ts",
@@ -9,7 +9,7 @@
 		"./thrift": "./base/thrift/mod.ts"
 	},
 	"imports": {
-		"@evex-dev/linejs-types": "npm:@evex-dev/linejs-types@^3.6.0",
+		"@evex-dev/linejs-types": "npm:@evex-dev/linejs-types@^3.6.1",
 		"@noble/ciphers": "npm:@noble/ciphers@^2.2.0",
 		"crypto-js": "npm:crypto-js@^4.2.0",
 		"curve25519-js": "npm:curve25519-js@^0.0.4",

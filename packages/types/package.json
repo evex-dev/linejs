@@ -1,6 +1,6 @@
 {
 	"name": "@evex-dev/linejs-types",
-	"version": "3.6.0",
+	"version": "3.6.1",
 	"description": "LINE Thrift type definitions used by @evex-dev/linejs",
 	"homepage": "https://linejs.evex.land",
 	"bugs": {

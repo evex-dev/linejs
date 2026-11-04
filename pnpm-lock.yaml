@@ -215,7 +215,7 @@ importers:
   packages/linejs:
     dependencies:
       '@evex-dev/linejs-types':
-        specifier: ^3.6.0
+        specifier: ^3.6.1
         version: link:../types
       '@noble/ciphers':
         specifier: ^2.2.0
@@ -2845,35 +2845,50 @@ snapshots:
 
   '@polka/url@1.0.0-next.29': {}
 
-  '@rolldown/binding-android-arm-eabi@1.2.16': {}
+  '@rolldown/binding-android-arm-eabi@1.2.16':
+    optional: true
 
-  '@rolldown/binding-android-arm64@1.2.16': {}
+  '@rolldown/binding-android-arm64@1.2.16':
+    optional: true
 
-  '@rolldown/binding-darwin-arm64@1.2.16': {}
+  '@rolldown/binding-darwin-arm64@1.2.16':
+    optional: true
 
-  '@rolldown/binding-darwin-x64@1.2.16': {}
+  '@rolldown/binding-darwin-x64@1.2.16':
+    optional: true
 
-  '@rolldown/binding-freebsd-x64@1.2.16': {}
+  '@rolldown/binding-freebsd-x64@1.2.16':
+    optional: true
 
-  '@rolldown/binding-linux-arm-gnueabihf@1.2.16': {}
+  '@rolldown/binding-linux-arm-gnueabihf@1.2.16':
+    optional: true
 
-  '@rolldown/binding-linux-arm64-gnu@1.2.16': {}
+  '@rolldown/binding-linux-arm64-gnu@1.2.16':
+    optional: true
 
-  '@rolldown/binding-linux-arm64-musl@1.2.16': {}
+  '@rolldown/binding-linux-arm64-musl@1.2.16':
+    optional: true
 
-  '@rolldown/binding-linux-ppc64-gnu@1.2.16': {}
+  '@rolldown/binding-linux-ppc64-gnu@1.2.16':
+    optional: true
 
-  '@rolldown/binding-linux-s390x-gnu@1.2.16': {}
+  '@rolldown/binding-linux-s390x-gnu@1.2.16':
+    optional: true
 
-  '@rolldown/binding-linux-x64-gnu@1.2.16': {}
+  '@rolldown/binding-linux-x64-gnu@1.2.16':
+    optional: true
 
-  '@rolldown/binding-linux-x64-musl@1.2.16': {}
+  '@rolldown/binding-linux-x64-musl@1.2.16':
+    optional: true
 
-  '@rolldown/binding-openharmony-arm64@1.2.16': {}
+  '@rolldown/binding-openharmony-arm64@1.2.16':
+    optional: true
 
-  '@rolldown/binding-win32-arm64-msvc@1.2.16': {}
+  '@rolldown/binding-win32-arm64-msvc@1.2.16':
+    optional: true
 
-  '@rolldown/binding-win32-x64-msvc@1.2.16': {}
+  '@rolldown/binding-win32-x64-msvc@1.2.16':
+    optional: true
 
   '@rolldown/pluginutils@1.0.1': {}
 

@@ -1,6 +1,6 @@
 {
 	"name": "@evex/linejs-agent",
-	"version": "0.1.0",
+	"version": "3.6.1",
 	"exports": {
 		".": "./mod.ts",
 		"./client": "./client.ts"
