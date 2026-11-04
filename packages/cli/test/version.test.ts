@@ -4,12 +4,15 @@ import { readFile } from "node:fs/promises";
 import { VERSION } from "../src/version.ts";
 import { allCommands } from "../src/registry.ts";
 
-test("CLI version stays in sync with package.json", async () => {
+test("CLI version is sourced from package.json", async () => {
 	const pkg = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8")) as {
 		version: string;
 		bin: Record<string, string>;
 	};
+	// The constant is derived from the manifest, so this also guards the JSON
+	// import wiring rather than relying on a hand-maintained copy.
 	assert.equal(VERSION, pkg.version);
+	assert.match(VERSION, /^\d+\.\d+\.\d+$/);
 	assert.equal(pkg.bin.line, "./dist/line.mjs");
 });
 
