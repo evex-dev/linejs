@@ -179,7 +179,7 @@ object. Press Ctrl+C to stop.
 line mcp
 ```
 
-The stdio server exposes exactly two tools:
+The stdio server exposes two tools:
 
 - `list_linejs_cli` — lists every command with arguments, options, category,
   and whether it is MCP-executable.
@@ -218,6 +218,52 @@ the profile secret; `execute_linejs_cli` can call any non-long-running CLI
 command, including `api call`. Log in from a terminal before exposing the
 server: QR/PIN prompts produced during a tool call are only returned when that
 call finishes, so interactive login is awkward over MCP.
+
+### MCP Events (webhooks)
+
+The server also implements the [MCP Events](https://github.com/modelcontextprotocol/experimental-ext-triggers-events)
+webhook extension that ChatGPT consumes. It advertises `events` in the
+`initialize` capabilities and answers `events/list`, `events/subscribe`, and
+`events/unsubscribe` on the same stdio connection.
+
+Available events (`delivery: ["webhook"]`):
+
+| Event                            | Fires when                                    |
+| -------------------------------- | --------------------------------------------- |
+| `line.message.received`          | a talk message arrives in a 1:1 or group chat |
+| `line.message.edited`            | a visible talk message is edited              |
+| `line.openchat.message.received` | a message arrives in an OpenChat room         |
+
+Subscription arguments are `chatId` and `from` (glob patterns) plus
+`includeText` (default `true`). Payloads stay small on purpose: `messageId`,
+`chatId`, `from`, `contentType`, a whitespace-collapsed text preview of at most
+400 characters, and `receivedAt`/`updatedAt`. Disable `includeText` to keep
+user-authored text out of the webhook entirely.
+
+Lifecycle and delivery:
+
+- `events/subscribe` requires a `whsec_` signing secret (24–64 random bytes,
+  base64) and an `https` callback URL. The server first POSTs a signed
+  `{"type":"verification","challenge":"…"}` envelope and activates delivery only
+  when the endpoint echoes the challenge in a `2xx` response.
+- Deliveries use Standard Webhooks headers (`webhook-id`, `webhook-timestamp`,
+  `webhook-signature`) plus `X-MCP-Subscription-Id`, signed with
+  HMAC-SHA256 over `id.timestamp.body`. Retries use exponential backoff, and
+  `410`/`413` are final.
+- Subscriptions are keyed on `(profile, callback URL, event name, arguments)`,
+  so `events/subscribe` doubles as the refresh call. The granted TTL is 15
+  minutes by default (min 1 minute, max 1 hour); `ttlMs: null` is answered with
+  a finite grant because subscription state is in memory only. Expired or
+  suspended subscriptions and their `deliveryStatus` are reported on refresh.
+- Callback URLs are resolved and validated on every attempt. `http`, embedded
+  credentials, redirects, and non-public addresses (loopback, RFC 1918, link
+  local, ULA, multicast, …) are rejected.
+- Events are not replayable: `cursor` is always `null`. If the listener or the
+  MCP process restarts, events from the gap are gone.
+
+ChatGPT talks to remote servers over Streamable HTTP, while `line mcp` speaks
+stdio. Put the process behind a stdio↔HTTP bridge if you want ChatGPT to
+connect directly; `line mcp --profile work` scopes the events to that profile.
 
 ## Security
 
