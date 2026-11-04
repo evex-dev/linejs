@@ -4,7 +4,7 @@ const mcpCommand: CommandSpec = {
 	name: "mcp",
 	summary: "Run the LINEJS CLI as an MCP server over stdio.",
 	description:
-		"Exposes exactly two tools: list_linejs_cli (all commands and their metadata) and execute_linejs_cli (argv execution without a shell). Long-running commands such as listen and mcp are not executable through the tools.",
+		"Exposes two tools: list_linejs_cli (all commands and their metadata) and execute_linejs_cli (argv execution without a shell). Long-running commands such as listen and mcp are not executable through the tools. Also implements MCP Events (webhook delivery): events/list, events/subscribe, and events/unsubscribe.",
 	category: "MCP",
 	options: [
 		{
@@ -27,6 +27,8 @@ const mcpCommand: CommandSpec = {
 			output: process.stdout,
 			error: process.stderr,
 			signal: context.signal,
+			principal: `stdio:${context.settings.profile.path}`,
+			profile: context.settings.profile.path,
 		});
 		return { exitCode };
 	},
