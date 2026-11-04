@@ -65,6 +65,17 @@ test("ECDH roundtrip — two parties get the same shared secret", () => {
 	assert.deepEqual(sA.length, 32);
 });
 
+test("generated ephemeral private keys always use a fixed 32-byte scalar", () => {
+	// OpenSSL drops leading zero bytes when serialising the P-256 scalar, so a
+	// single generateKeys() call can yield a 31-byte private key. Sampling many
+	// keys makes this regression test reliable without depending on a seed.
+	for (let i = 0; i < 4096; i++) {
+		const keypair = generateEphemeralKeypair();
+		assert.deepEqual(keypair.privateKey.length, 32);
+		assert.deepEqual(keypair.publicKey.length, 33);
+	}
+});
+
 test("Stage-1 HKDF is deterministic and matches expected output length", () => {
 	const ecdhSecret = new Uint8Array(32).fill(0xab);
 	const our = new Uint8Array(33);
