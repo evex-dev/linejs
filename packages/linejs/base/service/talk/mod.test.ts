@@ -44,6 +44,13 @@ function decodeReactRequest(value: unknown) {
 	return readThrift(writeThrift(value as NestedArray, "react", Protocols[4]), Protocols[4]).data;
 }
 
+// `sendMessage_args` is already a NestedArray, so read the fields without
+// round-tripping: the stub's Uint8Array chunks cannot be re-encoded.
+function sendMessageField(value: unknown, fieldId: number): unknown {
+	const message = (value as NestedArray)[1]![2] as NestedArray;
+	return message.find((entry) => (entry as number[])[1] === fieldId)?.[2];
+}
+
 // `InternalError.data` defaults to `{}`, and throw sites such as the
 // client-closed guard never fill in a code. Reading `.toString()` off it threw
 // "Cannot read properties of undefined" from inside this handler, so the caller
@@ -145,6 +152,29 @@ test("react uses a caller-supplied sequence number", async () => {
 	assert.deepEqual(decodeReactRequest(stub.calls[0]!.value), {
 		1: { 1: 1234, 2: 42, 3: { 1: 2 } },
 	});
+});
+
+// The CLI forwards an unset `--content-type` as `contentType: undefined`, and
+// spreading that over the defaults dropped the field from the thrift body while
+// contentMetadata still claimed `contentType: "0"`. /S4 rejects that mismatch
+// with E2EE_INVALID_VERSION / "not allowed contentType", so a plain
+// `line chats send u... "text"` never left the device.
+test("sendMessage keeps an explicit contentType on the wire when the caller passes undefined", async () => {
+	const stub = makeStubClient(() => Promise.resolve({ id: "1" }));
+	await new TalkService(stub.client as never).sendMessage({
+		to: "u0",
+		text: "hi",
+		e2ee: true,
+		contentType: undefined,
+		contentMetadata: undefined,
+	});
+
+	assert.strictEqual(sendMessageField(stub.calls[0].value, 15), 0);
+	assert.deepEqual(sendMessageField(stub.calls[0].value, 18), [
+		11,
+		11,
+		{ e2eeVersion: "2", contentType: "0", e2eeMark: "2" },
+	]);
 });
 
 for (const code of [undefined, null, 5]) {

@@ -97,6 +97,9 @@ MessageType, etc.) are provided.
   - BaseStorage - LINE Client Storage Type
   - MemoryStorage - LINE Client Memory Storage
   - FileStorage - LINE Client File Storage
+- cli - (@evex-dev/linejs-cli)
+  - `line` command-line interface with `--json` output and an MCP server
+  - See [packages/cli/README.md](../cli/README.md)
 - types - (@evex-dev/linejs-types)
   - All Types for LINE
 

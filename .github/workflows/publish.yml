@@ -1,12 +1,25 @@
 name: publish
 
-# Manual release: reads the latest published version from npm, bumps it by the
-# selected semver level, publishes both packages with npm Trusted Publishing
-# (OIDC provenance), publishes the same tag to JSR, then pushes the release
-# commit/tag and creates the GitHub Release.
+# Manual release.
+#
+# `package` selects which package set to release:
+#   - linejs: @evex-dev/linejs-types + @evex-dev/linejs (lockstep, tag vX.Y.Z)
+#   - cli:    @evex-dev/linejs-cli (tag cli-vX.Y.Z)
+#   - all:    both sets, each bumped independently
+#
+# Versions are read from npm, bumped by the selected semver level, published
+# with npm Trusted Publishing (OIDC), then committed/tagged/pushed.
 on:
   workflow_dispatch:
     inputs:
+      package:
+        description: "Package set to publish"
+        required: true
+        type: choice
+        options:
+          - all
+          - linejs
+          - cli
       bump:
         description: "Semver level to release"
         required: true
@@ -49,14 +62,24 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Compute the next version
+      - name: Compute next versions
         id: version
         env:
+          PACKAGE_SELECT: ${{ inputs.package }}
           BUMP: ${{ inputs.bump }}
           npm_config_package_lock: "false"
         run: |
           set -euo pipefail
 
+          case "$PACKAGE_SELECT" in
+            all) LIB=1; CLI=1 ;;
+            linejs) LIB=1; CLI=0 ;;
+            cli) LIB=0; CLI=1 ;;
+            *)
+              echo "::error::Invalid package input: $PACKAGE_SELECT"
+              exit 1
+              ;;
+          esac
           case "$BUMP" in
             major|minor|patch) ;;
             *)
@@ -67,8 +90,10 @@ jobs:
 
           TYPES_NAME=$(node -p "require('./packages/types/package.json').name")
           LINEJS_NAME=$(node -p "require('./packages/linejs/package.json').name")
+          CLI_NAME=$(node -p "require('./packages/cli/package.json').name")
           TYPES_LOCAL=$(node -p "require('./packages/types/package.json').version")
           LINEJS_LOCAL=$(node -p "require('./packages/linejs/package.json').version")
+          CLI_LOCAL=$(node -p "require('./packages/cli/package.json').version")
 
           latest_version() {
             local name="$1" version err
@@ -96,77 +121,135 @@ jobs:
             return 1
           }
 
-          TYPES_LATEST=$(latest_version "$TYPES_NAME")
-          LINEJS_LATEST=$(latest_version "$LINEJS_NAME")
-
-          # Never downgrade: the release base is the newest of both registry
-          # versions and the two checked-in versions, so recovery from a partial
-          # release or a manual bump stays possible.
-          BASE_VERSION=$(node -e '
-            const versions = process.argv.slice(1).filter((version) => /^\d+\.\d+\.\d+$/.test(version));
-            const parse = (version) => version.split(".").map(Number);
-            let best = parse(versions[0]);
-            for (const version of versions.slice(1)) {
-              const parts = parse(version);
-              for (let index = 0; index < 3; index += 1) {
-                if (parts[index] !== best[index]) {
-                  if (parts[index] > best[index]) best = parts;
-                  break;
+          max_version() {
+            node -e '
+              const versions = process.argv.slice(1).filter((version) => /^\d+\.\d+\.\d+$/.test(version));
+              if (!versions.length) {
+                console.error("No valid versions to compare");
+                process.exit(1);
+              }
+              const parse = (version) => version.split(".").map(Number);
+              let best = parse(versions[0]);
+              for (const version of versions.slice(1)) {
+                const parts = parse(version);
+                for (let index = 0; index < 3; index += 1) {
+                  if (parts[index] !== best[index]) {
+                    if (parts[index] > best[index]) best = parts;
+                    break;
+                  }
                 }
               }
-            }
-            console.log(best.join("."));
-          ' "$TYPES_LATEST" "$LINEJS_LATEST" "$TYPES_LOCAL" "$LINEJS_LOCAL")
+              console.log(best.join("."));
+            ' "$@"
+          }
 
-          VERSION=$(node -e '
-            const bump = process.argv[2];
-            const [major, minor, patch] = process.argv[1].split(".").map(Number);
-            const next = bump === "major"
-              ? [major + 1, 0, 0]
-              : bump === "minor"
-                ? [major, minor + 1, 0]
-                : [major, minor, patch + 1];
-            console.log(next.join("."));
-          ' "$BASE_VERSION" "$BUMP")
+          bump_version() {
+            node -e '
+              const bump = process.argv[2];
+              const [major, minor, patch] = process.argv[1].split(".").map(Number);
+              const next = bump === "major"
+                ? [major + 1, 0, 0]
+                : bump === "minor"
+                  ? [major, minor + 1, 0]
+                  : [major, minor, patch + 1];
+              console.log(next.join("."));
+            ' "$1" "$BUMP"
+          }
 
-          if ! printf '%s' "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
-            echo "::error::Computed an invalid version: $VERSION" >&2
-            exit 1
+          LIB_VERSION=""
+          CLI_VERSION=""
+          LINEJS_LATEST=""
+          TYPES_LATEST=""
+
+          if [ "$LIB" = 1 ]; then
+            TYPES_LATEST=$(latest_version "$TYPES_NAME")
+            LINEJS_LATEST=$(latest_version "$LINEJS_NAME")
+            LIB_BASE=$(max_version "$TYPES_LATEST" "$LINEJS_LATEST" "$TYPES_LOCAL" "$LINEJS_LOCAL")
+            LIB_VERSION=$(bump_version "$LIB_BASE")
+            if ! printf '%s' "$LIB_VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+              echo "::error::Computed an invalid linejs version: $LIB_VERSION" >&2
+              exit 1
+            fi
+            if [ "$LIB_VERSION" = "$TYPES_LATEST" ] || [ "$LIB_VERSION" = "$LINEJS_LATEST" ]; then
+              echo "::error::Computed linejs version $LIB_VERSION is already published" >&2
+              exit 1
+            fi
+          else
+            # CLI-only releases pin the dependency ranges to the latest published
+            # library versions. Use the `all` option when the CLI depends on an
+            # unreleased library API.
+            TYPES_LATEST=$(latest_version "$TYPES_NAME")
+            LINEJS_LATEST=$(latest_version "$LINEJS_NAME")
           fi
-          if [ "$VERSION" = "$TYPES_LATEST" ] || [ "$VERSION" = "$LINEJS_LATEST" ]; then
-            echo "::error::Computed version $VERSION is already published" >&2
-            exit 1
+
+          if [ "$CLI" = 1 ]; then
+            CLI_LATEST=$(latest_version "$CLI_NAME")
+            CLI_BASE=$(max_version "$CLI_LATEST" "$CLI_LOCAL")
+            CLI_VERSION=$(bump_version "$CLI_BASE")
+            if ! printf '%s' "$CLI_VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+              echo "::error::Computed an invalid CLI version: $CLI_VERSION" >&2
+              exit 1
+            fi
+            if [ "$CLI_VERSION" = "$CLI_LATEST" ]; then
+              echo "::error::Computed CLI version $CLI_VERSION is already published" >&2
+              exit 1
+            fi
           fi
 
-          (cd packages/types && npm version "$VERSION" --no-git-tag-version --allow-same-version >/dev/null)
-          (cd packages/linejs && npm version "$VERSION" --no-git-tag-version --allow-same-version >/dev/null)
+          if [ -n "$LIB_VERSION" ]; then
+            (cd packages/types && npm version "$LIB_VERSION" --no-git-tag-version --allow-same-version >/dev/null)
+            (cd packages/linejs && npm version "$LIB_VERSION" --no-git-tag-version --allow-same-version >/dev/null)
 
-          # Keep JSR metadata in lockstep with package.json. JSR publishing
-          # runs in this workflow after the tag is pushed.
-          VERSION="$VERSION" node -e '
-            const fs = require("node:fs");
-            const version = process.env.VERSION;
-            for (const file of [
-              "packages/types/jsr.json",
-              "packages/linejs/jsr.json",
-            ]) {
-              const config = JSON.parse(fs.readFileSync(file, "utf8"));
-              config.version = version;
-              if (config.imports?.["@evex-dev/linejs-types"]) {
-                config.imports["@evex-dev/linejs-types"] = `npm:@evex-dev/linejs-types@^${version}`;
+            VERSION="$LIB_VERSION" node -e '
+              const fs = require("node:fs");
+              const version = process.env.VERSION;
+              for (const file of [
+                "packages/types/jsr.json",
+                "packages/linejs/jsr.json",
+              ]) {
+                const config = JSON.parse(fs.readFileSync(file, "utf8"));
+                config.version = version;
+                if (config.imports?.["@evex-dev/linejs-types"]) {
+                  config.imports["@evex-dev/linejs-types"] = `npm:@evex-dev/linejs-types@^${version}`;
+                }
+                fs.writeFileSync(file, `${JSON.stringify(config, null, "\t")}\n`);
               }
-              fs.writeFileSync(file, `${JSON.stringify(config, null, "\t")}\n`);
-            }
-          '
+            '
 
-          # pnpm publish cannot fall back to the npm registry for a workspace
-          # dependency, so pin the concrete range the release publishes.
-          (cd packages/linejs && npm pkg set "dependencies.@evex-dev/linejs-types=^$VERSION")
+            (cd packages/linejs && npm pkg set "dependencies.@evex-dev/linejs-types=^$LIB_VERSION")
+          fi
 
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
-          echo "types_name=$TYPES_NAME" >> "$GITHUB_OUTPUT"
-          echo "linejs_name=$LINEJS_NAME" >> "$GITHUB_OUTPUT"
+          if [ -n "$CLI_VERSION" ]; then
+            (cd packages/cli && npm version "$CLI_VERSION" --no-git-tag-version --allow-same-version >/dev/null)
+            if [ -n "$LIB_VERSION" ]; then
+              CLI_LINEJS_DEP="^$LIB_VERSION"
+              CLI_TYPES_DEP="^$LIB_VERSION"
+            else
+              CLI_LINEJS_DEP="^$LINEJS_LATEST"
+              CLI_TYPES_DEP="^$TYPES_LATEST"
+            fi
+            (cd packages/cli && npm pkg set \
+              "dependencies.@evex-dev/linejs=$CLI_LINEJS_DEP" \
+              "dependencies.@evex-dev/linejs-types=$CLI_TYPES_DEP")
+          fi
+
+          TAGS=()
+          if [ -n "$LIB_VERSION" ]; then TAGS+=("v$LIB_VERSION"); fi
+          if [ -n "$CLI_VERSION" ]; then TAGS+=("cli-v$CLI_VERSION"); fi
+
+          {
+            echo "lib_version=$LIB_VERSION"
+            echo "cli_version=$CLI_VERSION"
+            echo "lib_tag=$([ -n "$LIB_VERSION" ] && echo "v$LIB_VERSION" || true)"
+            echo "cli_tag=$([ -n "$CLI_VERSION" ] && echo "cli-v$CLI_VERSION" || true)"
+            echo "tags=${TAGS[*]}"
+            echo "types_name=$TYPES_NAME"
+            echo "linejs_name=$LINEJS_NAME"
+            echo "cli_name=$CLI_NAME"
+            echo "types_version=$TYPES_LATEST"
+            echo "linejs_version=$LINEJS_LATEST"
+            echo "cli_package_version=$CLI_VERSION"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Sync the lockfile
         run: pnpm install --no-frozen-lockfile
@@ -177,8 +260,6 @@ jobs:
         run: pnpm run format
 
       - name: Build and test
-        env:
-          VERSION: ${{ steps.version.outputs.version }}
         run: |
           set -euo pipefail
           pnpm run build
@@ -188,28 +269,42 @@ jobs:
 
       - name: Refuse to reuse an existing version
         env:
-          VERSION: ${{ steps.version.outputs.version }}
-          TAG: ${{ steps.version.outputs.tag }}
+          LIB_VERSION: ${{ steps.version.outputs.lib_version }}
+          CLI_VERSION: ${{ steps.version.outputs.cli_version }}
           TYPES_NAME: ${{ steps.version.outputs.types_name }}
           LINEJS_NAME: ${{ steps.version.outputs.linejs_name }}
+          CLI_NAME: ${{ steps.version.outputs.cli_name }}
+          TAGS: ${{ steps.version.outputs.tags }}
         run: |
           set -euo pipefail
-          if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
-            echo "::error::Tag $TAG already exists" >&2
-            exit 1
-          fi
-          for name in "$TYPES_NAME" "$LINEJS_NAME"; do
-            err=$(mktemp)
-            if npm view "$name@$VERSION" version >/dev/null 2>"$err"; then
-              echo "::error::$name@$VERSION is already published" >&2
-              exit 1
-            fi
-            if ! grep -qE 'E404|404 Not Found' "$err"; then
-              echo "::error::Could not check whether $name@$VERSION exists on npm:" >&2
-              cat "$err" >&2
+          for tag in $TAGS; do
+            if git rev-parse -q --verify "refs/tags/$tag" >/dev/null; then
+              echo "::error::Tag $tag already exists" >&2
               exit 1
             fi
           done
+
+          check_missing() {
+            local name="$1" version="$2" err
+            err=$(mktemp)
+            if npm view "$name@$version" version >/dev/null 2>"$err"; then
+              echo "::error::$name@$version is already published" >&2
+              exit 1
+            fi
+            if ! grep -qE 'E404|404 Not Found' "$err"; then
+              echo "::error::Could not check whether $name@$version exists on npm:" >&2
+              cat "$err" >&2
+              exit 1
+            fi
+          }
+
+          if [ -n "$LIB_VERSION" ]; then
+            check_missing "$TYPES_NAME" "$LIB_VERSION"
+            check_missing "$LINEJS_NAME" "$LIB_VERSION"
+          fi
+          if [ -n "$CLI_VERSION" ]; then
+            check_missing "$CLI_NAME" "$CLI_VERSION"
+          fi
 
       - name: Ensure main has not moved
         run: |
@@ -220,34 +315,43 @@ jobs:
             exit 1
           fi
 
-      - name: Create the release commit and tag locally
+      - name: Create the release commit and tags locally
         env:
-          VERSION: ${{ steps.version.outputs.version }}
-          TAG: ${{ steps.version.outputs.tag }}
+          TAGS: ${{ steps.version.outputs.tags }}
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add --all
-          git commit -m "chore(release): $TAG"
-          git tag -a "$TAG" -m "$TAG"
+          git commit -m "chore(release): $TAGS"
+          for tag in $TAGS; do
+            git tag -a "$tag" -m "$tag"
+          done
 
       - name: Publish to npm with Trusted Publishing
+        env:
+          LIB_VERSION: ${{ steps.version.outputs.lib_version }}
+          CLI_VERSION: ${{ steps.version.outputs.cli_version }}
         # pnpm rewrites package.json with the `publishConfig` exports/main/types
         # (dist) before packing, and exchanges the GitHub OIDC token itself.
         run: |
           set -euo pipefail
-          (cd packages/types && pnpm publish --access public --no-git-checks)
-          (cd packages/linejs && pnpm publish --access public --no-git-checks)
+          if [ -n "$LIB_VERSION" ]; then
+            (cd packages/types && pnpm publish --access public --no-git-checks)
+            (cd packages/linejs && pnpm publish --access public --no-git-checks)
+          fi
+          if [ -n "$CLI_VERSION" ]; then
+            (cd packages/cli && pnpm publish --access public --no-git-checks)
+          fi
 
-      - name: Push the release commit and tag
+      - name: Push the release commit and tags
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG: ${{ steps.version.outputs.tag }}
+          TAGS: ${{ steps.version.outputs.tags }}
         run: |
           set -euo pipefail
 
-          if git push --atomic origin HEAD:main "$TAG"; then
+          if git push --atomic origin HEAD:main $TAGS; then
             exit 0
           fi
 
@@ -258,20 +362,50 @@ jobs:
           SHA=$(git rev-parse HEAD)
           gh api -X PATCH "repos/$GITHUB_REPOSITORY/git/refs/heads/main" \
             -f sha="$SHA" -F force=false >/dev/null
-          gh api -X POST "repos/$GITHUB_REPOSITORY/git/refs" \
-            -f ref="refs/tags/$TAG" -f sha="$SHA" >/dev/null
+          for tag in $TAGS; do
+            gh api -X POST "repos/$GITHUB_REPOSITORY/git/refs" \
+              -f ref="refs/tags/$tag" -f sha="$SHA" >/dev/null
+          done
 
-      - name: Create the GitHub Release
+      - name: Create the GitHub Releases
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG: ${{ steps.version.outputs.tag }}
-        run: gh release create "$TAG" --verify-tag --generate-notes --title "$TAG"
+          LIB_TAG: ${{ steps.version.outputs.lib_tag }}
+          CLI_TAG: ${{ steps.version.outputs.cli_tag }}
+        run: |
+          set -euo pipefail
+          if [ -n "$LIB_TAG" ]; then
+            gh release create "$LIB_TAG" --verify-tag --generate-notes --title "$LIB_TAG"
+          fi
+          if [ -n "$CLI_TAG" ]; then
+            gh release create "$CLI_TAG" --verify-tag --generate-notes --title "linejs-cli $CLI_TAG"
+          fi
 
       - name: Publish to JSR
         # Runs here because tags pushed with GITHUB_TOKEN do not trigger
         # release.yml. The tag is already public at this point, so a JSR
         # failure can be retried from the Actions tab.
+        if: steps.version.outputs.lib_version != ''
         run: |
           set -euo pipefail
           (cd packages/types && npx --yes jsr@0.14.3 publish)
           (cd packages/linejs && npx --yes jsr@0.14.3 publish)
+
+      - name: Write the release summary
+        env:
+          LIB_VERSION: ${{ steps.version.outputs.lib_version }}
+          CLI_VERSION: ${{ steps.version.outputs.cli_version }}
+          TAGS: ${{ steps.version.outputs.tags }}
+        run: |
+          {
+            echo "## Published"
+            echo ""
+            echo "Tags: \`$TAGS\`"
+            if [ -n "$LIB_VERSION" ]; then
+              echo "- \`@evex-dev/linejs-types@$LIB_VERSION\`"
+              echo "- \`@evex-dev/linejs@$LIB_VERSION\`"
+            fi
+            if [ -n "$CLI_VERSION" ]; then
+              echo "- \`@evex-dev/linejs-cli@$CLI_VERSION\`"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

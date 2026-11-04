@@ -214,7 +214,7 @@ export class TMoreCompactProtocol {
 				value = this.stringTable[temp as number];
 				typeId = 11;
 			} else {
-				console.log(`mid not found: ${temp}`);
+				console.error(`mid not found: ${temp}`);
 			}
 		} else {
 			throw new Error(`cAN't rEad TyPE: ${typeId}`);
