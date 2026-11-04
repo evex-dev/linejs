@@ -54,9 +54,8 @@ jobs:
           set -euo pipefail
           TYPES_VERSION=$(node -p "require('./packages/types/jsr.json').version")
           LINEJS_VERSION=$(node -p "require('./packages/linejs/jsr.json').version")
-          AGENT_VERSION=$(node -p "require('./packages/agent/jsr.json').version")
-          if [ "$TYPES_VERSION" != "$LINEJS_VERSION" ] || [ "$TYPES_VERSION" != "$AGENT_VERSION" ]; then
-            echo "::error::jsr.json versions differ: types=$TYPES_VERSION linejs=$LINEJS_VERSION agent=$AGENT_VERSION" >&2
+          if [ "$TYPES_VERSION" != "$LINEJS_VERSION" ]; then
+            echo "::error::jsr.json versions differ: types=$TYPES_VERSION linejs=$LINEJS_VERSION" >&2
             exit 1
           fi
           if [ "v$TYPES_VERSION" != "$TAG" ]; then
@@ -66,8 +65,7 @@ jobs:
 
       - name: Publish to JSR
         # Idempotent: a retry after a partial JSR publish skips versions that
-        # already exist instead of failing on them. A missing package (for
-        # example the first @evex/linejs-agent release) still fails visibly.
+        # already exist instead of failing on them.
         run: |
           set -euo pipefail
 
@@ -83,4 +81,3 @@ jobs:
 
           publish_if_missing packages/types @evex/linejs-types
           publish_if_missing packages/linejs @evex/linejs
-          publish_if_missing packages/agent @evex/linejs-agent

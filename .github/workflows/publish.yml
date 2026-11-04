@@ -149,7 +149,6 @@ jobs:
             for (const file of [
               "packages/types/jsr.json",
               "packages/linejs/jsr.json",
-              "packages/agent/jsr.json",
             ]) {
               const config = JSON.parse(fs.readFileSync(file, "utf8"));
               config.version = version;
@@ -276,4 +275,3 @@ jobs:
           set -euo pipefail
           (cd packages/types && npx --yes jsr@0.14.3 publish)
           (cd packages/linejs && npx --yes jsr@0.14.3 publish)
-          (cd packages/agent && npx --yes jsr@0.14.3 publish)

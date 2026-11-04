@@ -6,7 +6,7 @@ This repository is a pnpm + [Vite+](https://viteplus.dev/) monorepo.
 
 - `packages/linejs`: main TypeScript library (`@evex-dev/linejs`, also published as JSR `@evex/linejs`) with feature modules under `client`, `base`, and `thrift`.
 - `packages/types`: shared LINE type definitions (`@evex-dev/linejs-types`, JSR `@evex/linejs-types`).
-- `packages/agent`: LINE Agent I / LINE AI REST helpers (`@evex/linejs-agent`, JSR-only).
+- `packages/agent`: LINE Agent I / LINE AI REST helpers. Private workspace package; not published to npm or JSR.
 - `docs`: VitePress documentation site and content.
 - `example`: runnable examples for browser, node, talk, square, storage, thrift, etc.
 - `scripts`: generation/utility scripts, including thrift tooling and service/type helpers.
