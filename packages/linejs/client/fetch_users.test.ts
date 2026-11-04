@@ -82,3 +82,51 @@ test("fetchUsers — non-capability errors are rethrown", async () => {
 	assert.isOk(err instanceof Error);
 	assert.deepEqual((err as Error).message, "AUTHENTICATION_FAILED");
 });
+
+for (const count of [100, 101, 250]) {
+	for (const version of ["v3", "v2"] as const) {
+		test(`fetchUsers — ${version} batches ${count} friends`, async () => {
+			const friendMids = Array.from({ length: count }, (_, i) => `u-${i}`);
+			const requests: string[][] = [];
+			const client = buildClient({
+				friendMids,
+				[version]: ({ mids }: { mids: string[] }) => {
+					requests.push(mids);
+					assert.isAtMost(mids.length, 100);
+					return version === "v3"
+						? { responses: mids.map((mid) => ({ targetUserMid: mid })) }
+						: { contacts: Object.fromEntries(mids.map((mid) => [mid, {}])) };
+				},
+			});
+
+			const users = await client.fetchUsers();
+			assert.deepEqual(
+				requests.map((mids) => mids.length),
+				count === 100 ? [100] : count === 101 ? [100, 1] : [100, 100, 50],
+			);
+			assert.deepEqual(requests.flat(), friendMids);
+			assert.deepEqual(
+				users.map((user) => user.mid),
+				friendMids,
+			);
+		});
+	}
+}
+
+test("fetchUsers — V2 capability failure falls back to per-user getUser", async () => {
+	const friendMids = Array.from({ length: 101 }, (_, i) => `u-${i}`);
+	const client = buildClient({ friendMids });
+	const requests: string[] = [];
+	client.getUser = async (mid) => {
+		requests.push(mid);
+		if (mid === "u-0") throw new Error("unreachable");
+		return { mid } as Awaited<ReturnType<Client["getUser"]>>;
+	};
+
+	const users = await client.fetchUsers();
+	assert.deepEqual(requests, friendMids);
+	assert.deepEqual(
+		users.map((user) => user.mid),
+		friendMids.slice(1),
+	);
+});
