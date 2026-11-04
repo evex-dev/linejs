@@ -218,10 +218,10 @@ importers:
   packages/cli:
     dependencies:
       '@evex-dev/linejs':
-        specifier: workspace:^
+        specifier: ^3.6.3
         version: link:../linejs
       '@evex-dev/linejs-types':
-        specifier: workspace:^
+        specifier: ^3.6.3
         version: link:../types
       uqr:
         specifier: ^0.1.3

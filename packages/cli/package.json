@@ -1,6 +1,6 @@
 {
 	"name": "@evex-dev/linejs-cli",
-	"version": "0.1.0",
+	"version": "0.1.2",
 	"description": "Command-line interface and MCP server for LINEJS",
 	"keywords": [
 		"cli",
@@ -37,8 +37,8 @@
 		"prepublishOnly": "pnpm -w run check && pnpm run build"
 	},
 	"dependencies": {
-		"@evex-dev/linejs": "workspace:^",
-		"@evex-dev/linejs-types": "workspace:^",
+		"@evex-dev/linejs": "^3.6.3",
+		"@evex-dev/linejs-types": "^3.6.3",
 		"uqr": "^0.1.3"
 	},
 	"devDependencies": {
