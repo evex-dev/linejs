@@ -1,6 +1,6 @@
 {
 	"name": "@evex/linejs-types",
-	"version": "3.6.2",
+	"version": "3.6.3",
 	"exports": {
 		".": "./line_types.ts",
 		"./thrift": "./thrift.ts"
