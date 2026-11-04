@@ -42,9 +42,11 @@ release workflow requires an existing npm version to increment. Do this once:
 3. On jsr.io, make sure `@evex/linejs` and `@evex/linejs-types` are linked to
    this repository and allow GitHub Actions OIDC publishing.
 
-4. For `@evex/linejs-agent`, create the package at
-   <https://jsr.io/new?scope=evex&package=linejs-agent> if you want its
-   (best-effort) JSR publish step to succeed.
+4. Create `@evex/linejs-agent` at
+   <https://jsr.io/new?scope=evex&package=linejs-agent> and link it to this
+   repository. The release workflow bumps its `jsr.json` version together with
+   the other two packages and publishes it strictly, so a missing package fails
+   the release visibly (it is `private` for npm, but still published to JSR).
 
 The bootstrap publishes the checked-in version (currently `3.6.0`) without a
 tag or GitHub Release. The first workflow dispatch therefore releases the _next_
@@ -67,7 +69,7 @@ version (for example `3.6.1`); `v3.6.0` is never tagged.
    - publishes with `pnpm publish` (Trusted Publishing), then atomically pushes
      the release commit and tag;
    - creates the GitHub Release;
-   - publishes to JSR with OIDC.
+   - publishes all three packages to JSR with OIDC (agent included).
 
 ## Recovering from a partial failure
 
@@ -76,7 +78,8 @@ version (for example `3.6.1`); `v3.6.0` is never tagged.
   version and dispatch a new release (the workflow computes the next version).
 - **npm and tag succeeded, JSR failed:** re-run just the JSR part via
   **Actions → release → Run workflow** with the tag name (for example
-  `v3.6.1`).
+  `v3.6.1`). A missing or unlinked `@evex/linejs-agent` JSR package is the most
+  likely cause.
 - **One npm package published, the other failed:** dispatch the workflow again.
   It bumps from the newer npm version, so both packages converge on a fresh
   version instead of being stuck out of sync.

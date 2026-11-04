@@ -46,12 +46,13 @@
 		"prepublishOnly": "pnpm -w run check && pnpm run build",
 		"typecheck": "tsc --noEmit"
 	},
-	"dependencies": {
-		"@types/node": "^24.10.0"
-	},
+	"dependencies": {},
 	"devDependencies": {
 		"typescript": "^5.9.3",
 		"vite-plus": "^1.4.0"
+	},
+	"optionalDependencies": {
+		"@types/node": "^24.10.0"
 	},
 	"engines": {
 		"node": "^22.18.0 || ^24.11.0 || >=26.0.0"

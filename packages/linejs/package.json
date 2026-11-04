@@ -71,7 +71,6 @@
 		"@evex-dev/linejs-types": "^3.6.0",
 		"@noble/ciphers": "^2.2.0",
 		"@types/crypto-js": "^4.2.2",
-		"@types/node": "^24.10.0",
 		"@types/thrift": "^0.10.17",
 		"crypto-js": "^4.2.0",
 		"curve25519-js": "^0.0.4",
@@ -85,6 +84,9 @@
 	"devDependencies": {
 		"typescript": "^5.9.3",
 		"vite-plus": "^1.4.0"
+	},
+	"optionalDependencies": {
+		"@types/node": "^24.10.0"
 	},
 	"engines": {
 		"node": "^22.18.0 || ^24.11.0 || >=26.0.0"

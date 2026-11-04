@@ -146,7 +146,11 @@ jobs:
           VERSION="$VERSION" node -e '
             const fs = require("node:fs");
             const version = process.env.VERSION;
-            for (const file of ["packages/types/jsr.json", "packages/linejs/jsr.json"]) {
+            for (const file of [
+              "packages/types/jsr.json",
+              "packages/linejs/jsr.json",
+              "packages/agent/jsr.json",
+            ]) {
               const config = JSON.parse(fs.readFileSync(file, "utf8"));
               config.version = version;
               if (config.imports?.["@evex-dev/linejs-types"]) {
@@ -258,4 +262,4 @@ jobs:
           set -euo pipefail
           (cd packages/types && npx --yes jsr@0.14.3 publish)
           (cd packages/linejs && npx --yes jsr@0.14.3 publish)
-          (cd packages/agent && npx --yes jsr@0.14.3 publish) || echo "::warning::@evex/linejs-agent is not published to JSR yet; skipping"
+          (cd packages/agent && npx --yes jsr@0.14.3 publish)

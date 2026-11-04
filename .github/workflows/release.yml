@@ -54,8 +54,9 @@ jobs:
           set -euo pipefail
           TYPES_VERSION=$(node -p "require('./packages/types/jsr.json').version")
           LINEJS_VERSION=$(node -p "require('./packages/linejs/jsr.json').version")
-          if [ "$TYPES_VERSION" != "$LINEJS_VERSION" ]; then
-            echo "::error::jsr.json versions differ: $TYPES_VERSION vs $LINEJS_VERSION" >&2
+          AGENT_VERSION=$(node -p "require('./packages/agent/jsr.json').version")
+          if [ "$TYPES_VERSION" != "$LINEJS_VERSION" ] || [ "$TYPES_VERSION" != "$AGENT_VERSION" ]; then
+            echo "::error::jsr.json versions differ: types=$TYPES_VERSION linejs=$LINEJS_VERSION agent=$AGENT_VERSION" >&2
             exit 1
           fi
           if [ "v$TYPES_VERSION" != "$TAG" ]; then
@@ -72,10 +73,8 @@ jobs:
         run: npx --yes jsr@0.14.3 publish
 
       - name: Publish linejs-agent to JSR
-        # The package must first be created at
+        # The package must exist at
         #   https://jsr.io/new?scope=evex&package=linejs-agent
-        # with OIDC trust to this repository. Until then this step is expected
-        # to fail; don't fail the release for it.
-        continue-on-error: true
+        # with OIDC trust to this repository before the first release.
         working-directory: packages/agent
         run: npx --yes jsr@0.14.3 publish
