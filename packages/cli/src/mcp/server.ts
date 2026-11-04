@@ -7,6 +7,8 @@ import { allCommands, resolveCommandTokens } from "../registry.ts";
 import { runCli } from "../cli.ts";
 import { VERSION } from "../version.ts";
 import { errorMessage } from "../errors.ts";
+import { EventRpcError, McpEventHub } from "./events.ts";
+import { createLineEventSource } from "./listen-source.ts";
 
 export const LIST_TOOL_NAME = "list_linejs_cli";
 export const EXECUTE_TOOL_NAME = "execute_linejs_cli";
@@ -210,7 +212,11 @@ async function executeCommand(
 
 export async function handleMcpMessage(
 	message: unknown,
-	options: { commands?: readonly CommandSpec[]; executor?: CliExecutor } = {},
+	options: {
+		commands?: readonly CommandSpec[];
+		executor?: CliExecutor;
+		events?: McpEventHub;
+	} = {},
 ): Promise<unknown | null> {
 	if (!message || typeof message !== "object" || Array.isArray(message)) {
 		return jsonRpcError(null, -32600, "Invalid Request");
@@ -239,10 +245,10 @@ export async function handleMcpMessage(
 					: LATEST_PROTOCOL_VERSION;
 			return jsonRpcResult(id, {
 				protocolVersion,
-				capabilities: { tools: { listChanged: false } },
+				capabilities: { tools: { listChanged: false }, events: {} },
 				serverInfo: { name: "@evex-dev/linejs-cli", version: VERSION },
 				instructions:
-					"Use list_linejs_cli to discover commands, then execute_linejs_cli with an argv array. No shell is involved; --json is forced. Long-running commands such as listen are rejected.",
+					"Use list_linejs_cli to discover commands, then execute_linejs_cli with an argv array. No shell is involved; --json is forced. Long-running commands such as listen are rejected. MCP Events (webhook delivery) are available through events/list, events/subscribe, and events/unsubscribe.",
 			});
 		}
 		case "ping":
@@ -274,6 +280,25 @@ export async function handleMcpMessage(
 			}
 			return jsonRpcError(id, -32602, `Unknown tool: ${String(name)}`);
 		}
+		case "events/list":
+		case "events/subscribe":
+		case "events/unsubscribe": {
+			const hub = options.events;
+			if (!hub) return jsonRpcError(id, -32601, `Method not found: ${method}`);
+			const params = (request.params ?? {}) as Record<string, unknown>;
+			try {
+				if (method === "events/list") return jsonRpcResult(id, hub.list(params));
+				if (method === "events/subscribe") {
+					return jsonRpcResult(id, await hub.subscribe(params));
+				}
+				return jsonRpcResult(id, hub.unsubscribe(params));
+			} catch (error) {
+				if (error instanceof EventRpcError) {
+					return jsonRpcError(id, error.code, error.message, error.data);
+				}
+				throw error;
+			}
+		}
 		case "resources/list":
 			return jsonRpcResult(id, { resources: [] });
 		case "prompts/list":
@@ -292,6 +317,12 @@ export interface RunMcpServerOptions {
 	commands?: readonly CommandSpec[];
 	executor?: CliExecutor;
 	signal?: AbortSignal;
+	/** Identity used to scope webhook subscriptions; defaults to "stdio". */
+	principal?: string;
+	/** Profile name or path the event listener should use. */
+	profile?: string;
+	/** Inject a hub (tests); otherwise one backed by `line listen` is created. */
+	events?: McpEventHub;
 }
 
 export async function runMcpServer(options: RunMcpServerOptions = {}): Promise<number> {
@@ -300,6 +331,18 @@ export async function runMcpServer(options: RunMcpServerOptions = {}): Promise<n
 	const error = options.error ?? process.stderr;
 	const commands = options.commands ?? allCommands;
 	const executor = options.executor ?? defaultCliExecutor;
+	const events =
+		options.events ??
+		new McpEventHub({
+			principal: options.principal ?? "stdio",
+			sourceFactory: (kind) =>
+				createLineEventSource({
+					kind,
+					profile: options.profile,
+					onExit: (reason) => error.write(`[mcp-events] LINE listener exited: ${reason}\n`),
+				}),
+			log: (message) => error.write(`[mcp-events] ${message}\n`),
+		});
 
 	const write = async (value: unknown) => {
 		if (!output.write(`${JSON.stringify(value)}\n`)) {
@@ -330,13 +373,13 @@ export async function runMcpServer(options: RunMcpServerOptions = {}): Promise<n
 				if (Array.isArray(parsed)) {
 					const responses = [];
 					for (const entry of parsed) {
-						const response = await handleMcpMessage(entry, { commands, executor });
+						const response = await handleMcpMessage(entry, { commands, executor, events });
 						if (response !== null) responses.push(response);
 					}
 					if (responses.length) await write(responses);
 					return;
 				}
-				const response = await handleMcpMessage(parsed, { commands, executor });
+				const response = await handleMcpMessage(parsed, { commands, executor, events });
 				if (response !== null) await write(response);
 			} catch (handlerError) {
 				await write(
@@ -352,5 +395,6 @@ export async function runMcpServer(options: RunMcpServerOptions = {}): Promise<n
 	}
 	await queue;
 	options.signal?.removeEventListener("abort", onAbort);
+	await events.close();
 	return 0;
 }
