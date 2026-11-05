@@ -1,5 +1,7 @@
 import { assert, test } from "vite-plus/test";
+import { assertRejects } from "../../test/assert.ts";
 import { Buffer } from "node:buffer";
+import { InternalError } from "../core/mod.ts";
 import { LineObs } from "./mod.ts";
 
 /** Per-call record of (data.size, obsPath) so tests can assert which
@@ -247,4 +249,35 @@ test("uploadMediaByE2EE — video duration preserves encrypted preview and messa
 	assert.deepEqual(message.to, "c-group");
 	assert.deepEqual(message.contentType, 2);
 	assert.deepEqual(message.chunks, [new Uint8Array()]);
+});
+
+// The preview upload answering a different object ID used to put every
+// response header into the error, and those can carry the next access token.
+test("uploadMediaByE2EE — an object ID mismatch names no response headers", async () => {
+	const nextAccess = "NEXT-ACCESS-MARKER";
+	const { obs, fake } = makeObs();
+	obs.uploadObjectForService = ((opts: { data: Blob; obsPath: string }) => {
+		fake.records.push({ size: opts.data.size, obsPath: opts.obsPath });
+		return Promise.resolve({
+			objId: `OBJ-${fake.records.length}`,
+			headers: new Headers({ "x-line-next-access": nextAccess }),
+		});
+	}) as never;
+
+	const error = await assertRejects(
+		() =>
+			obs.uploadMediaByE2EE({
+				data: new Blob([new Uint8Array(1_000)]),
+				oType: "image",
+				to: "u-recipient",
+			}),
+		InternalError,
+	);
+
+	assert.deepEqual(error.name, "ObsError");
+	assert.notInclude(error.message, nextAccess);
+	assert.notInclude(JSON.stringify(error.data), nextAccess);
+	assert.deepEqual(error.data, { objId: "OBJ-1", previewObjId: "OBJ-2" });
+	assert.deepEqual(fake.records.length, 2);
+	assert.deepEqual(fake.sendMessageCalls.length, 0);
 });
