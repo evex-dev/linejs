@@ -19,6 +19,9 @@ This skill is a **map**, not a frozen manual. The command set is large and still
 4. **Resolve MIDs; never guess them.** Look up the contact or chat and use the returned `mid` (`u…` user, `c…` group, `r…` room, `s…` OpenChat square, `m…` OpenChat chat).
 5. **Treat credentials as secrets.** `~/.linejs/*.json`, `line auth token`, `line storage list --values`, and `--no-save` output contain auth tokens or E2EE keys. Do not print, log, or commit them.
 6. **Ask before automating a personal account.** Using LINEJS may violate LINE's terms of service and can lead to account restrictions.
+7. **Get explicit consent about the BAN risk before setup.** Before starting setup (login, etc.), always tell the user that there is an account BAN risk and proceed only after their consent.
+8. **Send sparingly — LINE may BAN accounts under heavy request volume.** Never hammer on failure or fire rapid retries. Space out requests, keep batches small, and keep total counts low. Do not send more than necessary.
+9. **Report errors to `evex-dev/linejs` Issues.** Include the command, error message/code, and version (`line --version`), excluding tokens, MIDs, and personal info. Check for duplicates first with `gh issue list -R evex-dev/linejs`, then file with `gh issue create -R evex-dev/linejs` or another channel.
 
 ## Install and invoke
 
