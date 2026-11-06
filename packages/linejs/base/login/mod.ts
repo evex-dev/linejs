@@ -4,7 +4,7 @@ import { type Device, isV3Support } from "../core/utils/devices.ts";
 import { InternalError } from "../core/mod.ts";
 import type * as LINETypes from "@evex-dev/linejs-types";
 import { Buffer } from "node:buffer";
-import { LINEStruct } from "../thrift/mod.ts";
+import { LINEStruct, type ProtocolKey } from "../thrift/mod.ts";
 import type { BaseClient } from "../core/mod.ts";
 import type { LooseType } from "../types.ts";
 import { type AuthTokenInput, parseAuthTokenInput } from "../request/auth_token.ts";
@@ -21,6 +21,10 @@ export type LoginOption =
 
 export function registrationAuthEndpoint(device: Device): "/api/v3p/rs" | "/api/v4p/rs" {
 	return device === "ANDROID" || device === "ANDROIDSECONDARY" ? "/api/v4p/rs" : "/api/v3p/rs";
+}
+
+export function registrationAuthProtocol(device: Device): ProtocolKey {
+	return registrationAuthEndpoint(device) === "/api/v4p/rs" ? 4 : 3;
 }
 
 interface LoginVer {
@@ -648,7 +652,7 @@ export class Login {
 				],
 			],
 			methodName,
-			3,
+			registrationAuthProtocol(this.client.device),
 			methodName === "loginZ" ? "LoginResult" : false,
 			registrationAuthEndpoint(this.client.device),
 		);
@@ -883,7 +887,7 @@ export class Login {
 				[11, 2, deviceSecret],
 			],
 			"confirmE2EELogin",
-			3,
+			registrationAuthProtocol(this.client.device),
 			false,
 			registrationAuthEndpoint(this.client.device),
 		);
