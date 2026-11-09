@@ -1,6 +1,7 @@
 import { assert, test } from "vite-plus/test";
 import { Buffer } from "node:buffer";
 import { Login, registrationAuthEndpoint, registrationAuthProtocol } from "./mod.ts";
+import type { BaseClient } from "../mod.ts";
 import type { Device } from "../core/utils/devices.ts";
 
 function makeRegistrationClient(device: Device) {
@@ -19,7 +20,7 @@ function makeRegistrationClient(device: Device) {
 				return Promise.resolve({});
 			},
 		},
-	} as unknown as import("../core/mod.ts").BaseClient;
+	} as unknown as BaseClient;
 	return { calls, login: new Login(client) };
 }
 
