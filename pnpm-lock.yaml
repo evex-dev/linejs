@@ -240,7 +240,7 @@ importers:
   packages/linejs:
     dependencies:
       '@evex-dev/linejs-types':
-        specifier: ^3.6.4
+        specifier: ^3.6.5
         version: link:../types
       '@noble/ciphers':
         specifier: ^2.2.0
