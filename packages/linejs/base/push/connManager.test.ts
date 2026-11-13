@@ -175,3 +175,47 @@ test("_OnPushResponse still delivers events when fetchMyEvents succeeds", async 
 		["[LEGY/PUSH] _OnPushResponse", "[LEGY/PUSH] SQ_fetchMyEvents"],
 	);
 });
+
+// Restored talk sync cursors are bigints. The diagnostic log used to
+// `JSON.stringify` the sign-on request, which throws on bigint and kept the
+// talk fetcher from ever starting.
+test("InitAndRead sends bigint talk sync cursors without throwing", async () => {
+	const sync = {
+		revision: 9007199254740993n,
+		globalRev: 2n,
+		individualRev: 3n,
+	};
+	const stub = stubClient({});
+	stub.client.poll.sync.talk = sync;
+	const manager = new ConnManager(stub.client as never);
+	const requests: { service: number; args: unknown }[] = [];
+	let reads = 0;
+	manager.conns = [
+		{
+			writeRequest: async () => {},
+			read: async () => {
+				reads++;
+			},
+		},
+	] as never;
+	manager.buildAndSendSignOnRequest = (async (_conn: unknown, service: number, args: unknown) => {
+		requests.push({ service, args });
+		return { payload: new Uint8Array(0), id: 1 };
+	}) as never;
+
+	await manager.InitAndRead([3, 8]);
+
+	assert.equal(reads, 1);
+	assert.deepEqual(
+		requests.map((r) => r.service),
+		[3, 8],
+	);
+	assert.deepEqual(requests[1].args, {
+		request: {
+			lastRevision: sync.revision,
+			count: 100,
+			lastGlobalRevision: sync.globalRev,
+			lastIndividualRevision: sync.individualRev,
+		},
+	});
+});

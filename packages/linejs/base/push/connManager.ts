@@ -549,7 +549,7 @@ export class ConnManager {
 						lastIndividualRevision: this.client.poll.sync.talk.individualRev,
 					},
 				};
-				this.log(`request talk fetcher: ${JSON.stringify(ex_val)}`);
+				this.log("request talk fetcher:", ex_val);
 				await this.buildAndSendSignOnRequest(_conn, service, ex_val);
 			} else {
 				// await this.buildAndSendSignOnRequest(_conn, service, {});
