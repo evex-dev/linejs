@@ -1,0 +1,83 @@
+name: Nix flake
+
+# `nix run` catches packages that evaluate and build but fail at exec time.
+on:
+  # No branch filter: stacked pull requests target other pull request branches.
+  pull_request:
+    paths:
+      - "**.nix"
+      - "flake.lock"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "packages/**"
+      - ".github/workflows/nix.yml"
+  push:
+    branches: [main]
+    paths:
+      - "**.nix"
+      - "flake.lock"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "packages/**"
+      - ".github/workflows/nix.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  nix:
+    name: nix (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      # access-tokens keeps GitHub tarball fetches off the anonymous rate limit.
+      - name: Install Nix
+        uses: nixbuild/nix-quick-install-action@9f63be77f412a248c9d9a65a4c82cf066cdf8f0c # v35
+        with:
+          github_access_token: ${{ github.token }}
+          nix_conf: |
+            access-tokens = github.com=${{ github.token }}
+            max-jobs = auto
+            keep-derivations = true
+            keep-outputs = true
+
+      # Only main saves, so pull request code never writes a store that later
+      # runs restore.
+      - name: Cache Nix store
+        uses: nix-community/cache-nix-action@7df957e333c1e5da7721f60227dbba6d06080569 # v7.0.2
+        with:
+          primary-key: nix-${{ runner.os }}-${{ hashFiles('flake.lock', '**/*.nix', 'pnpm-lock.yaml') }}
+          restore-prefixes-first-match: nix-${{ runner.os }}-
+          save: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+          gc-max-store-size: 4G
+
+      # Formatting and evaluation do not depend on the runner's platform, so
+      # only Linux runs them.
+      - parallel:
+          - name: Check Nix formatting
+            if: runner.os == 'Linux'
+            run: nix fmt -- --ci
+
+          - name: Evaluate the flake for every system
+            if: runner.os == 'Linux'
+            run: nix flake check --all-systems --no-build
+
+          - name: Build and run the package
+            run: |
+              nix build .#default
+              nix run .#default -- --version
