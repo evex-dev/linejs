@@ -46,8 +46,8 @@
             pnpmDeps = pkgs.fetchPnpmDeps {
               inherit (finalAttrs) pname version src;
               inherit pnpm;
-              fetcherVersion = 4;
-              hash = "sha256-Y863moHufKg0aXxBXWMEF46+yh4NcCSKZpJ15G369z4=";
+              fetcherVersion = 5;
+              hash = "sha256-ujgdP7PZfvg3GfVf1Z80myUxSCyzhS4Xt51Wcgff69M=";
             };
 
             nativeBuildInputs = [
@@ -117,6 +117,23 @@
       );
 
       apps = forAllSystems (system: {
+        update-pnpm-deps-hash =
+          let
+            pkgs = nixpkgs.legacyPackages.${system};
+          in
+          {
+            type = "app";
+            program = lib.getExe (
+              pkgs.writeShellApplication {
+                name = "update-pnpm-deps-hash";
+                runtimeInputs = [ pkgs.nix-update ];
+                text = ''
+                  nix-update --flake --version=skip default
+                '';
+              }
+            );
+            meta.description = "Refresh the pnpmDeps hash in flake.nix from pnpm-lock.yaml";
+          };
         default = {
           type = "app";
           program = "${self.packages.${system}.default}/bin/line";
@@ -144,6 +161,6 @@
         }
       );
 
-      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt);
+      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
     };
 }
