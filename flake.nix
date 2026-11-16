@@ -146,6 +146,21 @@
         };
       });
 
+      checks = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+          package = self.packages.${system}.default;
+        in
+        {
+          build = package;
+          version = pkgs.testers.testVersion {
+            inherit package;
+            command = "line --version";
+          };
+        }
+      );
+
       devShells = forAllSystems (
         system:
         let
