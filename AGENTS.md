@@ -27,7 +27,7 @@ This repository is a pnpm + [Vite+](https://viteplus.dev/) monorepo.
 - `pnpm line <args>`: run the CLI from source through `tsx` (for example `pnpm line help`).
 - `pnpm docs:dev` / `pnpm docs:build`: run the VitePress site from `docs`.
 - `cd packages/linejs && pnpm exec vp test`: package-scoped test run.
-- `nix run .#update-pnpm-deps-hash`: refresh the `pnpmDeps` hash in `flake.nix` after `pnpm-lock.yaml` changes (autofix.ci does this on pull requests).
+- `nix run .#update-pnpm-deps-hash`: refresh the `pnpmDeps` hash in `package.nix` after `pnpm-lock.yaml` changes (autofix.ci does this on pull requests).
 - `node example/<name>.ts`: run an example with plain Node 24; the root devDependencies link the workspace packages and the sources are strip-only-compatible TypeScript.
 
 ## Release
