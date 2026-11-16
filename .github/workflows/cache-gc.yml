@@ -1,0 +1,15 @@
+name: Cache GC
+
+on:
+  schedule:
+    - cron: "41 4 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  gc:
+    permissions:
+      actions: write
+      contents: read
+    uses: x-ryoppippi/setup-nix/.github/workflows/gc.yaml@825806671b916e81b3e8dc663cbc557aa336c81d # v0.0.1

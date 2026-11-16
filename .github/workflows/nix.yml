@@ -26,6 +26,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.run_id }}
@@ -45,26 +46,12 @@ jobs:
         with:
           persist-credentials: false
 
-      # access-tokens keeps GitHub tarball fetches off the anonymous rate limit.
-      - name: Install Nix
-        uses: nixbuild/nix-quick-install-action@9f63be77f412a248c9d9a65a4c82cf066cdf8f0c # v35
+      - name: Setup Nix
+        uses: x-ryoppippi/setup-nix@825806671b916e81b3e8dc663cbc557aa336c81d # v0.0.1
         with:
-          github_access_token: ${{ github.token }}
-          nix_conf: |
-            access-tokens = github.com=${{ github.token }}
-            max-jobs = auto
+          extra-conf: |
             keep-derivations = true
             keep-outputs = true
-
-      # Only main saves, so pull request code never writes a store that later
-      # runs restore.
-      - name: Cache Nix store
-        uses: nix-community/cache-nix-action@7df957e333c1e5da7721f60227dbba6d06080569 # v7.0.2
-        with:
-          primary-key: nix-${{ runner.os }}-${{ hashFiles('flake.lock', '**/*.nix', 'pnpm-lock.yaml') }}
-          restore-prefixes-first-match: nix-${{ runner.os }}-
-          save: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-          gc-max-store-size: 4G
 
       # Formatting and evaluation do not depend on the runner's platform, so
       # only Linux runs them.
