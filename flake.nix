@@ -24,7 +24,7 @@
         let
           pkgs = nixpkgs.legacyPackages.${system};
           inherit (pkgs) lib;
-          nodejs = pkgs.nodejs_24;
+          nodejs = pkgs.nodejs-slim_24;
           pnpm = pkgs.pnpm_12;
 
           linejsCli = pkgs.stdenv.mkDerivation (finalAttrs: {
