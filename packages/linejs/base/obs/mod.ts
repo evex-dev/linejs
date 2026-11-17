@@ -356,20 +356,19 @@ export class LineObs {
 			} else {
 				previewEdata = edata;
 			}
-			const { objId: objId2, headers } = await this.uploadObjectForService({
+			const { objId: objId2 } = await this.uploadObjectForService({
 				data: previewEdata,
 				oType: "file",
 				obsPath: `${serviceName}/${obsNamespace}/${objId}__ud-preview`,
 				params,
 			});
 			if (objId !== objId2) {
-				throw new InternalError(
-					"ObsError",
-					"objId not match: " + JSON.stringify(Object.fromEntries(headers)),
-					{
-						headers: Object.fromEntries(headers),
-					},
-				);
+				// The response headers stay out: they can carry the next access
+				// token. Object IDs are no credential; fetching one needs the token.
+				throw new InternalError("ObsError", "objId not match", {
+					objId,
+					previewObjId: objId2,
+				});
 			}
 		}
 
