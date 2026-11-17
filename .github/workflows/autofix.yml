@@ -1,0 +1,76 @@
+# autofix-ci/action requires this exact workflow name.
+name: autofix.ci
+
+on:
+  # No branch filter: stacked pull requests target other pull request branches.
+  pull_request:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: autofix-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  autofix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 12.16.1
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup Nix
+        uses: x-ryoppippi/setup-nix@825806671b916e81b3e8dc663cbc557aa336c81d # v0.0.1
+        with:
+          save: false
+
+      # The pnpmDeps hash depends only on the lockfile and the Nix inputs, so
+      # other pull requests skip the dependency fetch.
+      - name: Detect Nix-relevant changes
+        id: nix-changes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          if gh pr diff "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --name-only |
+            grep -Eq '^(pnpm-lock\.yaml|pnpm-workspace\.yaml|flake\.lock)$|\.nix$'; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - parallel:
+          - name: Format sources
+            run: pnpm run format
+
+          - name: Update the pnpmDeps hash and format Nix files
+            env:
+              NIX_CHANGED: ${{ steps.nix-changes.outputs.changed }}
+            run: |
+              if [ "$NIX_CHANGED" = true ]; then
+                nix run .#update-pnpm-deps-hash
+              fi
+              nix fmt
+
+      - name: Push fixes with autofix.ci
+        uses: autofix-ci/action@c5b2d67aa2274e7b5a18224e8171550871fc7e4a # v1.3.4
+        with:
+          fail-fast: false
+          commit-message: "chore: format and update the Nix pnpmDeps hash"
