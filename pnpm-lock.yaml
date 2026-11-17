@@ -176,8 +176,8 @@ importers:
         specifier: ^25.0.0
         version: 25.0.1
       thrift:
-        specifier: ^0.20.0
-        version: 0.20.0
+        specifier: ^0.23.0
+        version: 0.23.0
       tsx:
         specifier: ^4.23.15
         version: 4.23.15
@@ -267,8 +267,8 @@ importers:
         specifier: ^0.1.1
         version: 0.1.1
       thrift:
-        specifier: ^0.20.0
-        version: 0.20.0
+        specifier: ^0.23.0
+        version: 0.23.0
       tweetnacl:
         specifier: ^1.0.3
         version: 1.0.3
@@ -2307,8 +2307,8 @@ packages:
   tabbable@6.5.1:
     resolution: {integrity: sha512-dMCuwDUY6Noz3zVKLefBC4wq+aJV20yc7vWmM7uTNGwtQSFF5kX7OUIUsxuVajz/bdt5Xqdah3/0NLjth+cM5A==}
 
-  thrift@0.20.0:
-    resolution: {integrity: sha512-oSmJTaoIAGolpupVHFfsWcmdEKX81fcDI6ty0hhezzdgZvp0XyXgMe9+1YusI8Ahy0HK4n8jlNrkPjOPeHZjdQ==}
+  thrift@0.23.0:
+    resolution: {integrity: sha512-j7F1ls8JogClU88Ta/pwD/OzYuiFeD6Z5GoWw7ip+jcDhcNYFKgfXYEsyLXYpiNfJO94fbLnITGxyfZ19YzA6Q==}
     engines: {node: '>= 10.18.0'}
 
   tinybench@6.2.3:
@@ -2390,6 +2390,10 @@ packages:
 
   uqr@0.1.3:
     resolution: {integrity: sha512-0rjE8iEJe4YmT9TOhwsZtqCMRLc5DXZUI2UEYUUg63ikBkqqE5EYWaI0etFe/5KUcmcYwLih2RND1kq+hrUJXA==}
+
+  uuid@13.0.2:
+    resolution: {integrity: sha512-vzi9uRZ926x4XV73S/4qQaTwPXM2JBj6/6lI/byHH1jOpCzb0zDbfytgA9LcN/hzb2l7WQSQnxITOVx5un/wGw==}
+    hasBin: true
 
   vfile-message@4.0.3:
     resolution: {integrity: sha512-QTHzsGd1EhbZs4AsQ20JX1rC3cOlt/IWJruk893DfLRr57lcnOeMaWG4K0JrRta4mIJZKth2Au3mM3u03/JWKw==}
@@ -4301,12 +4305,13 @@ snapshots:
 
   tabbable@6.5.1: {}
 
-  thrift@0.20.0:
+  thrift@0.23.0:
     dependencies:
       browser-or-node: 1.3.0
       isomorphic-ws: 4.0.1(ws@5.2.7)
       node-int64: 0.4.0
       q: 1.5.1
+      uuid: 13.0.2
       ws: 5.2.7
     transitivePeerDependencies:
       - bufferutil
@@ -4381,6 +4386,8 @@ snapshots:
       unist-util-visit-parents: 6.1.0
 
   uqr@0.1.3: {}
+
+  uuid@13.0.2: {}
 
   vfile-message@4.0.3:
     dependencies:
