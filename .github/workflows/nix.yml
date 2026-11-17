@@ -1,6 +1,7 @@
 name: Nix flake
 
-# `nix run` catches packages that evaluate and build but fail at exec time.
+# The flake's version check catches packages that evaluate and build but
+# fail at exec time.
 on:
   # No branch filter: stacked pull requests target other pull request branches.
   pull_request:
@@ -64,7 +65,5 @@ jobs:
             if: runner.os == 'Linux'
             run: nix flake check --all-systems --no-build
 
-          - name: Build and run the package
-            run: |
-              nix build .#default
-              nix run .#default -- --version
+          - name: Build the package and run the flake checks
+            run: nix flake check
