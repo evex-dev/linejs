@@ -19,7 +19,7 @@
 		"jsdom": "^25.0.0",
 		"thrift": "^0.20.0",
 		"tsx": "^4.23.15",
-		"typescript": "^5.9.3",
+		"typescript": "^7.0.2",
 		"undici": "^7.16.0",
 		"vite-plus": "^1.4.0",
 		"xxhash-wasm": "^1.1.0"
