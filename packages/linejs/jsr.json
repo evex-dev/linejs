@@ -16,7 +16,7 @@
 		"node-bignumber": "npm:node-bignumber@^1.2.2",
 		"node-int64": "npm:node-int64@^0.4.0",
 		"opusscript": "npm:opusscript@^0.1.1",
-		"thrift": "npm:thrift@^0.20.0",
+		"thrift": "npm:thrift@^0.23.0",
 		"tweetnacl": "npm:tweetnacl@^1.0.3",
 		"undici": "npm:undici@^7.16.0"
 	},
