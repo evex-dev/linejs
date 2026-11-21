@@ -173,10 +173,12 @@ export class RequestClient {
 		try {
 			res = this.client.thrift.readThrift(parsedBody, protocol);
 		} catch {
+			// Callers log and print this message, so it names no response
+			// headers (x-line-next-access carries the next access token), no
+			// body bytes and no path, which a caller may give a query string.
 			throw new Error(
 				`Request internal failed: status=${response.status} ` +
-					`headers=${JSON.stringify([...response.headers.entries()])} ` +
-					`body=<${[...parsedBody].map((e) => e.toString(16)).join(" ")}>`,
+					`method=${methodName} bodyLength=${parsedBody.length}`,
 			);
 		}
 		if (!res.data[0] && Object.keys(res.data).length) {
