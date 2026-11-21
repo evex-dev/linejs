@@ -5,6 +5,17 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    ignore:
+      # undici 8 dispatchers are rejected by Node's built-in fetch, which
+      # base/core/node_fetch.ts passes them to.
+      - dependency-name: "undici"
+        update-types: ["version-update:semver-major"]
+      # Keep the Node types at the oldest supported Node line.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      # TypeScript 7's API is still experimental for d.ts generation.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
