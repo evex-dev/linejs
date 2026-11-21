@@ -85,6 +85,9 @@ function createBase(
 		storage,
 		version: context.settings.appVersion ?? store?.data.appVersion,
 		endpoint: context.settings.endpoint ?? store?.data.endpoint,
+		...(context.settings.legyEncrypted !== undefined
+			? { legy: { encrypted: context.settings.legyEncrypted } }
+			: {}),
 	});
 	if (context.settings.timeout !== undefined) {
 		if (context.settings.timeout <= 0) throw new UsageError("--timeout must be positive");

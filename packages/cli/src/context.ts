@@ -8,6 +8,7 @@ export interface CliSettings {
 	device?: string;
 	appVersion?: string;
 	endpoint?: string;
+	legyEncrypted?: boolean;
 	timeout?: number;
 	verbose: boolean;
 	json: boolean;

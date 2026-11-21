@@ -61,6 +61,12 @@ export const GLOBAL_OPTIONS: readonly OptionSpec[] = [
 		description: "Override the LEGY endpoint (advanced).",
 	},
 	{
+		name: "legy-encrypted",
+		type: "boolean",
+		description:
+			"Route Talk requests through the LEGY encrypted gateway. Use --no-legy-encrypted to use the plain endpoint instead, e.g. while the gateway is unavailable (default: auto).",
+	},
+	{
 		name: "timeout",
 		type: "number",
 		valueName: "ms",

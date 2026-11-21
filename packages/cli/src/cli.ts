@@ -350,6 +350,10 @@ export async function runCli(
 					? parsed.options["app-version"]
 					: undefined,
 			endpoint: typeof parsed.options.endpoint === "string" ? parsed.options.endpoint : undefined,
+			legyEncrypted:
+				typeof parsed.options["legy-encrypted"] === "boolean"
+					? parsed.options["legy-encrypted"]
+					: undefined,
 			timeout,
 			verbose,
 			json,

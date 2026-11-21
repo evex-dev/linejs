@@ -1,6 +1,11 @@
 import { test } from "vite-plus/test";
 import assert from "node:assert/strict";
-import { parseOptions, splitLeadingGlobalOptions, type OptionSpec } from "../src/args.ts";
+import {
+	GLOBAL_OPTIONS,
+	parseOptions,
+	splitLeadingGlobalOptions,
+	type OptionSpec,
+} from "../src/args.ts";
 import { UsageError } from "../src/errors.ts";
 
 const specs: OptionSpec[] = [
@@ -46,6 +51,22 @@ test("rejects unknown options and missing values", () => {
 test("accepts negative numbers as option values", () => {
 	const parsed = parseOptions(["--count", "-5"], specs);
 	assert.equal(parsed.options.count, -5);
+});
+
+test("parses the legy-encrypted global option", () => {
+	assert.equal(parseOptions(["--legy-encrypted"], GLOBAL_OPTIONS).options["legy-encrypted"], true);
+	assert.equal(
+		parseOptions(["--no-legy-encrypted"], GLOBAL_OPTIONS).options["legy-encrypted"],
+		false,
+	);
+	assert.equal(
+		parseOptions(["--legy-encrypted=false"], GLOBAL_OPTIONS).options["legy-encrypted"],
+		false,
+	);
+	assert.equal(parseOptions([], GLOBAL_OPTIONS).options["legy-encrypted"], undefined);
+	const { leading, rest } = splitLeadingGlobalOptions(["--no-legy-encrypted", "chats", "list"]);
+	assert.deepEqual(leading, ["--no-legy-encrypted"]);
+	assert.deepEqual(rest, ["chats", "list"]);
 });
 
 test("splits leading global options from the command", () => {
