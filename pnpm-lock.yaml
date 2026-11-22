@@ -176,8 +176,8 @@ importers:
         specifier: ^31.0.1
         version: 31.0.1
       thrift:
-        specifier: ^0.23.0
-        version: 0.23.0
+        specifier: ^0.25.0
+        version: 0.25.0
       tsx:
         specifier: ^4.23.15
         version: 4.23.15
@@ -267,8 +267,8 @@ importers:
         specifier: ^0.1.1
         version: 0.1.1
       thrift:
-        specifier: ^0.23.0
-        version: 0.23.0
+        specifier: ^0.25.0
+        version: 0.25.0
       tweetnacl:
         specifier: ^1.0.3
         version: 1.0.3
@@ -1742,9 +1742,6 @@ packages:
     resolution: {integrity: sha512-Izi8RQcffqCeNVgFigKli1ssklIbpHnCYc6AknXGYoB6grJqyeby7jv12JUQgmTAnIDnbck1uxksT4dzN3PWBA==}
     engines: {node: '>=12'}
 
-  async-limiter@1.0.1:
-    resolution: {integrity: sha512-csOlWGAcRFJaI6m+F2WKdnMKr4HhdhFVBk0H/QbJFMCr+uO2kwohwXQPxw/9OCxp05r5ghVBFSyioixx3gfkNQ==}
-
   bcp-47-match@2.0.3:
     resolution: {integrity: sha512-JtTezzbAibu8G0R9op9zb3vcWZd9JF6M0xOYGPn0fNCd7wOpRB1mU2mH9T8gaBGbAAyIIVgB2G7xG0GP98zMAQ==}
 
@@ -2129,14 +2126,6 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
-  q@1.5.1:
-    resolution: {integrity: sha512-kV/CThkXo6xyFEZUugw/+pIOywXcDbFYgSct5cT3gqlbkBE1SJdwy6UQoZvodiWF/ckQLZyDE/Bu1M6gVu5lVw==}
-    engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
-    deprecated: |-
-      You or someone you depend on is using Q, the JavaScript Promise library that gave JavaScript developers strong feelings about promises. They can almost certainly migrate to the native JavaScript promise now. Thank you literally everyone for joining me in this bet against the odds. Be excellent to each other.
-
-      (For a CapTP with native promises, see @endo/eventual-send and @endo/captp)
-
   react-is@17.0.2:
     resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
 
@@ -2200,8 +2189,8 @@ packages:
   tabbable@6.5.1:
     resolution: {integrity: sha512-dMCuwDUY6Noz3zVKLefBC4wq+aJV20yc7vWmM7uTNGwtQSFF5kX7OUIUsxuVajz/bdt5Xqdah3/0NLjth+cM5A==}
 
-  thrift@0.23.0:
-    resolution: {integrity: sha512-j7F1ls8JogClU88Ta/pwD/OzYuiFeD6Z5GoWw7ip+jcDhcNYFKgfXYEsyLXYpiNfJO94fbLnITGxyfZ19YzA6Q==}
+  thrift@0.25.0:
+    resolution: {integrity: sha512-Eaei7TIK9bBwD5wQwAU3RLs51ZIsyq0weKNv4gDNpM1XyaFPcA1AkwG/UjLmu89te4vUqWmAbn1mNGe++fkb9A==}
     engines: {node: '>= 10.18.0'}
 
   tinybench@6.2.3:
@@ -2293,8 +2282,8 @@ packages:
   uqr@0.1.3:
     resolution: {integrity: sha512-0rjE8iEJe4YmT9TOhwsZtqCMRLc5DXZUI2UEYUUg63ikBkqqE5EYWaI0etFe/5KUcmcYwLih2RND1kq+hrUJXA==}
 
-  uuid@13.0.2:
-    resolution: {integrity: sha512-vzi9uRZ926x4XV73S/4qQaTwPXM2JBj6/6lI/byHH1jOpCzb0zDbfytgA9LcN/hzb2l7WQSQnxITOVx5un/wGw==}
+  uuid@11.1.1:
+    resolution: {integrity: sha512-vIYxrBCC/N/K+Js3qSN88go7kIfNPssr/hHCesKCQNAjmgvYS2oqr69kIufEG+O4+PfezOH4EbIeHCfFov8ZgQ==}
     hasBin: true
 
   vfile-message@4.0.3:
@@ -2474,17 +2463,6 @@ packages:
     resolution: {integrity: sha512-Tb2FUhB4vUsGQlfSquQLYkApkuPAFQXGFzxWKHHumVz2dK+X1RUm/HnID4+TfIGYJ1kTcwOaCk/buYCEJr6YjQ==}
     engines: {node: '>=20.11'}
     hasBin: true
-
-  ws@5.2.7:
-    resolution: {integrity: sha512-Yp1RXz/2h2qC/Gy7d5mqQcpuCWbXiO6FgYw/jTbSvytZF9wD7fh7od+6WzWR/y9EAnXcJjQZpPkYVmj3T2bj+Q==}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: ^5.0.2
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
 
   ws@8.22.1:
     resolution: {integrity: sha512-oyL6OPYme/CmiFvNuGzeoxCJ4nOrZE2O1FwM9MWM1AsGri6nLXB2pg+lNA8aLeXMSav0J6eIVS1j6vUPzUtK9g==}
@@ -3554,8 +3532,6 @@ snapshots:
 
   assertion-error@2.0.1: {}
 
-  async-limiter@1.0.1: {}
-
   bcp-47-match@2.0.3: {}
 
   bcp-47@2.1.2:
@@ -3732,9 +3708,9 @@ snapshots:
 
   is-potential-custom-element-name@1.0.1: {}
 
-  isomorphic-ws@4.0.1(ws@5.2.7):
+  isomorphic-ws@4.0.1(ws@8.22.1):
     dependencies:
-      ws: 5.2.7
+      ws: 8.22.1
 
   js-tokens@4.0.0: {}
 
@@ -3959,8 +3935,6 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  q@1.5.1: {}
-
   react-is@17.0.2: {}
 
   regex-recursion@6.0.2:
@@ -4071,14 +4045,13 @@ snapshots:
 
   tabbable@6.5.1: {}
 
-  thrift@0.23.0:
+  thrift@0.25.0:
     dependencies:
       browser-or-node: 1.3.0
-      isomorphic-ws: 4.0.1(ws@5.2.7)
+      isomorphic-ws: 4.0.1(ws@8.22.1)
       node-int64: 0.4.0
-      q: 1.5.1
-      uuid: 13.0.2
-      ws: 5.2.7
+      uuid: 11.1.1
+      ws: 8.22.1
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -4166,7 +4139,7 @@ snapshots:
 
   uqr@0.1.3: {}
 
-  uuid@13.0.2: {}
+  uuid@11.1.1: {}
 
   vfile-message@4.0.3:
     dependencies:
@@ -4388,10 +4361,6 @@ snapshots:
       - '@noble/hashes'
 
   why-is-node-running@3.2.1: {}
-
-  ws@5.2.7:
-    dependencies:
-      async-limiter: 1.0.1
 
   ws@8.22.1: {}
 
