@@ -83,7 +83,7 @@
 	},
 	"devDependencies": {
 		"typescript": "^5.9.3",
-		"vite-plus": "^1.4.0"
+		"vite-plus": "^1.7.0"
 	},
 	"optionalDependencies": {
 		"@types/node": "^24.10.0"
