@@ -20,7 +20,7 @@
 		"thrift": "^0.23.0",
 		"tsx": "^4.23.15",
 		"typescript": "^5.9.3",
-		"undici": "^7.16.0",
+		"undici": "^7.30.2",
 		"vite-plus": "^1.7.0",
 		"xxhash-wasm": "^1.1.0"
 	},
