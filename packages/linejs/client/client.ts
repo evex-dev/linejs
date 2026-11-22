@@ -149,6 +149,9 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			signal.addEventListener("abort", () => {
 				this.base.push.opStream.close();
 				this.base.push.sqStream.close();
+				// The push connection and its reconnect loop otherwise keep the
+				// process alive after listening ends (#266).
+				polling.stopLegyPusher();
 			});
 		// Nothing awaits the loops below, so a throw from the event stream, from
 		// decryptE2EEMessage or from one of the user's own listeners used to
@@ -294,10 +297,17 @@ export class Client extends TypedEventEmitter<ClientEvents> {
 			},
 			syncReason: "INTERNAL",
 		});
-		const { chats } = await this.base.talk.getChats({
-			chatMids: joined.memberChatMids,
-		});
-		return chats.map((raw) => new Chat({ client: this, raw }));
+		const mids = joined.memberChatMids ?? [];
+		// getChats rejects more than 100 MIDs per call with INVALID_LENGTH.
+		const batchSize = 100;
+		const out: Chat[] = [];
+		for (let i = 0; i < mids.length; i += batchSize) {
+			const { chats } = await this.base.talk.getChats({
+				chatMids: mids.slice(i, i + batchSize),
+			});
+			out.push(...chats.map((raw) => new Chat({ client: this, raw })));
+		}
+		return out;
 	}
 
 	/** Fetches all friends. V3→V2→getUser fallback for #71. */
