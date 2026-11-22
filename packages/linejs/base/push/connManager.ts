@@ -143,6 +143,15 @@ export class ConnManager {
 		return writer;
 	}
 
+	/** Closes every push connection. A reconnect loop must be stopped first. */
+	closeAll(): void {
+		const conns = this.conns;
+		this.conns = [];
+		for (const conn of conns) {
+			void conn.close().catch(() => {});
+		}
+	}
+
 	async initializeConn(state = 1, initServices = [3, 6, 8, 9, 10]): Promise<Conn> {
 		const _conn = new Conn(this);
 		this.signOnRequests = {};

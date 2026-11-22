@@ -144,28 +144,45 @@ export class Polling {
 		}
 	}
 
+	#pusherStopped = false;
+
+	/**
+	 * Stops the push reconnect loop and closes its connection, so nothing keeps
+	 * the host process alive after listening ends. A later listen call restarts it.
+	 */
+	stopLegyPusher(): void {
+		this.#pusherStopped = true;
+		this.client.push.closeAll();
+	}
+
 	async initLegyPusher(cb?: () => void) {
 		if (this.islisten) {
 			cb && cb();
 			return;
 		}
+		this.#pusherStopped = false;
 		try {
-			while (this.client.authToken) {
+			while (this.client.authToken && !this.#pusherStopped) {
 				this.islisten = true;
 				try {
 					await this.client.push.initializeConn(1, this.listenTarget);
 				} catch (error) {
+					if (this.#pusherStopped) break;
 					this.#reportFailure("LegyPusherError_cannot_init", error);
 					throw error;
+				}
+				if (this.#pusherStopped) {
+					this.client.push.closeAll();
+					break;
 				}
 				try {
 					cb && cb();
 					await this.client.push.InitAndRead(this.listenTarget);
-					await sleep(4000);
 				} catch (error) {
-					this.#reportFailure("LegyPusherError", error);
-					await sleep(4000);
+					if (!this.#pusherStopped) this.#reportFailure("LegyPusherError", error);
 				}
+				if (this.#pusherStopped) break;
+				await sleep(4000);
 			}
 		} finally {
 			this.islisten = false;

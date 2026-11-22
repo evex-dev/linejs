@@ -167,3 +167,47 @@ test("shared pusher failure rejects both streams even when logging throws", asyn
 		square.releaseLock();
 	}
 });
+
+// `listen --duration` printed its summary but never exited: the abort closed
+// the event streams, while the pusher kept its connection and reconnected
+// forever (#266).
+test("stopLegyPusher ends the reconnect loop and closes the connection", async () => {
+	let inits = 0;
+	let closes = 0;
+	let releaseRead!: () => void;
+	const client = {
+		authToken: "token",
+		push: {
+			initializeConn() {
+				inits++;
+				return Promise.resolve();
+			},
+			InitAndRead() {
+				return new Promise<void>((resolve) => {
+					releaseRead = resolve;
+				});
+			},
+			closeAll() {
+				closes++;
+				// Closing the connection ends the pending read.
+				releaseRead?.();
+			},
+		},
+		log() {},
+	};
+	const polling = new Polling(client as never);
+
+	const loop = polling.initLegyPusher();
+	await new Promise((resolve) => setTimeout(resolve, 0));
+	assert.deepEqual(inits, 1);
+	assert.isTrue(polling.islisten);
+
+	polling.stopLegyPusher();
+	const start = Date.now();
+	await loop;
+
+	assert.isOk(Date.now() - start < 1000, "loop waited for the reconnect delay");
+	assert.deepEqual(inits, 1);
+	assert.isOk(closes >= 1);
+	assert.isFalse(polling.islisten);
+});
