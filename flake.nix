@@ -40,9 +40,37 @@
             program = lib.getExe (
               pkgs.writeShellApplication {
                 name = "update-pnpm-deps-hash";
-                runtimeInputs = [ pkgs.nix-update ];
+                runtimeInputs = [
+                  pkgs.gnugrep
+                  pkgs.gnused
+                ];
+                # nix-update evaluates the flake with nix-instantiate, which
+                # cannot open the flake source on Nix installs with lazy trees.
+                # Build the fetcher with a fake hash and copy the reported
+                # hash back instead; package.nix is not part of the source, so
+                # editing it does not change what is fetched.
                 text = ''
-                  nix-update --flake --version=skip default
+                  file=package.nix
+                  old=$(grep -oE 'hash = "sha256-[A-Za-z0-9+/]{43}="' "$file" | grep -oE 'sha256-[^"]+')
+                  fake=${lib.fakeHash}
+                  sed -i "s|$old|$fake|" "$file"
+                  if out=$(nix build --no-link .#default.pnpmDeps 2>&1); then
+                    sed -i "s|$fake|$old|" "$file"
+                    echo "pnpmDeps built with a fake hash; refusing to update" >&2
+                    exit 1
+                  fi
+                  new=$(printf '%s\n' "$out" | grep -oE 'got: +sha256-[A-Za-z0-9+/]{43}=' | grep -oE 'sha256-.*' | head -n 1 || true)
+                  if [ -z "$new" ]; then
+                    sed -i "s|$fake|$old|" "$file"
+                    printf '%s\n' "$out" >&2
+                    exit 1
+                  fi
+                  sed -i "s|$fake|$new|" "$file"
+                  if [ "$new" = "$old" ]; then
+                    echo "pnpmDeps hash is up to date: $new"
+                  else
+                    echo "pnpmDeps hash: $old -> $new"
+                  fi
                 '';
               }
             );
