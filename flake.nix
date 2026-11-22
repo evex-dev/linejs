@@ -59,12 +59,10 @@
                     echo "pnpmDeps built with a fake hash; refusing to update" >&2
                     exit 1
                   fi
-                  new=$(printf '%s
-' "$out" | grep -oE 'got: +sha256-[A-Za-z0-9+/]{43}=' | grep -oE 'sha256-.*' | head -n 1 || true)
+                  new=$(printf '%s\n' "$out" | grep -oE 'got: +sha256-[A-Za-z0-9+/]{43}=' | grep -oE 'sha256-.*' | head -n 1 || true)
                   if [ -z "$new" ]; then
                     sed -i "s|$fake|$old|" "$file"
-                    printf '%s
-' "$out" >&2
+                    printf '%s\n' "$out" >&2
                     exit 1
                   fi
                   sed -i "s|$fake|$new|" "$file"
