@@ -826,4 +826,4 @@ the tested implementation.
 ## Need Help?
 
 If you run into call-related issues, please ask on the LINEJS Discord:
-[https://discord.gg/evex](https://discord.gg/evex).
+[https://discord.gg/6e4B8dA9z9](https://discord.gg/6e4B8dA9z9).
