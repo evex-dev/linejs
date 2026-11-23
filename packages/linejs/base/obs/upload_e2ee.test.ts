@@ -9,7 +9,7 @@ import { LineObs } from "./mod.ts";
 type UploadRecord = { size: number; obsPath: string };
 
 function fakeClient() {
-	const e2eeCalls: { rawSize: number; keyMaterial?: string }[] = [];
+	const e2eeCalls: { rawSize: number; keyMaterial?: string; chunked?: boolean }[] = [];
 	const sendMessageCalls: unknown[] = [];
 	return {
 		records: [] as UploadRecord[],
@@ -17,10 +17,15 @@ function fakeClient() {
 		sendMessageCalls,
 		mock: {
 			e2ee: {
-				encryptByKeyMaterial(rawData: Buffer, keyMaterial?: Buffer) {
+				encryptByKeyMaterial(
+					rawData: Buffer,
+					keyMaterial?: Buffer,
+					options?: { chunked?: boolean },
+				) {
 					e2eeCalls.push({
 						rawSize: rawData.length,
 						keyMaterial: keyMaterial?.toString("base64"),
+						chunked: options?.chunked,
 					});
 					return Promise.resolve({
 						keyMaterial: keyMaterial
@@ -224,12 +229,12 @@ test("uploadMediaByE2EE — video duration preserves encrypted preview and messa
 	assert.deepEqual(metadata, {
 		SID: "emv",
 		OID: "OBJ-1",
-		FILE_SIZE: "1032",
+		FILE_SIZE: "1000",
 		e2eeVersion: "2",
 		DURATION: "4200",
 		MEDIA_CONTENT_INFO: JSON.stringify({
 			category: "original",
-			fileSize: 1032,
+			fileSize: 1000,
 			extension: "mp4",
 			animated: false,
 		}),
@@ -280,4 +285,23 @@ test("uploadMediaByE2EE — an object ID mismatch names no response headers", as
 	assert.deepEqual(error.data, { objId: "OBJ-1", previewObjId: "OBJ-2" });
 	assert.deepEqual(fake.records.length, 2);
 	assert.deepEqual(fake.sendMessageCalls.length, 0);
+});
+
+// LINE clients refuse to play a video whose tag covers the whole ciphertext;
+// they expect the chunked video tag (#291). Thumbnails and other media keep
+// the whole-ciphertext tag.
+test("uploadMediaByE2EE — only the video itself gets the chunked tag", async () => {
+	for (const oType of ["image", "gif", "audio", "file", "video"] as const) {
+		const { obs, fake } = makeObs();
+		await obs.uploadMediaByE2EE({
+			data: new Blob([new Uint8Array(10)]),
+			oType,
+			to: "u-recipient",
+			preview: oType === "audio" || oType === "file" ? undefined : new Blob(["thumb"]),
+		});
+		assert.deepEqual(fake.e2eeCalls[0].chunked, oType === "video" ? true : undefined, oType);
+		for (const call of fake.e2eeCalls.slice(1)) {
+			assert.deepEqual(call.chunked, undefined, `${oType} preview`);
+		}
+	}
 });

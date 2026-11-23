@@ -1,7 +1,8 @@
 import { assert, test } from "vite-plus/test";
 import { assertRejects } from "../../test/assert.ts";
 import { Buffer } from "node:buffer";
-import { E2EE } from "./mod.ts";
+import crypto from "node:crypto";
+import { chunkDigests, E2EE, MEDIA_TAG_CHUNK } from "./mod.ts";
 import { InternalError } from "../core/utils/error.ts";
 
 // `encryptByKeyMaterial` appends an HMAC-SHA256 of the ciphertext, but
@@ -71,4 +72,46 @@ test("decryptByKeyMaterial rejects truncated input", async () => {
 		"too short",
 	);
 	assert.isOk(true);
+});
+
+// LINE tags videos with an HMAC over the SHA-256 of each 128 KiB ciphertext
+// chunk (LINE Encryption Overview v2.2, "Video Encryption"). Videos sent from
+// the app failed to download with "HMAC verification failed" (#291).
+test("chunked tag matches the published video construction and round-trips", async () => {
+	const e2ee = makeE2EE();
+	// Two full chunks and a partial third, so the chunking matters.
+	const raw = crypto.randomBytes(MEDIA_TAG_CHUNK * 2 + 4097);
+	const { keyMaterial, encryptedData } = await e2ee.encryptByKeyMaterial(raw, undefined, {
+		chunked: true,
+	});
+	const enc = encryptedData.subarray(0, -32);
+	const { macKey } = await e2ee.deriveKeyMaterial(Buffer.from(keyMaterial, "base64"));
+	const hashes = [0, 1, 2].map((i) =>
+		crypto
+			.createHash("sha256")
+			.update(enc.subarray(i * MEDIA_TAG_CHUNK, (i + 1) * MEDIA_TAG_CHUNK))
+			.digest(),
+	);
+	assert.deepEqual(chunkDigests(enc), Buffer.concat(hashes));
+	assert.deepEqual(
+		encryptedData.subarray(-32),
+		crypto.createHmac("sha256", macKey).update(Buffer.concat(hashes)).digest(),
+	);
+	assert.isTrue((await e2ee.decryptByKeyMaterial(encryptedData, keyMaterial)).equals(raw));
+});
+
+test("decryptByKeyMaterial rejects a tampered chunk under the chunked tag", async () => {
+	const e2ee = makeE2EE();
+	const { keyMaterial, encryptedData } = await e2ee.encryptByKeyMaterial(
+		crypto.randomBytes(MEDIA_TAG_CHUNK + 10),
+		undefined,
+		{ chunked: true },
+	);
+	const tampered = Buffer.from(encryptedData);
+	tampered[MEDIA_TAG_CHUNK + 3] ^= 0x01; // inside the second chunk
+	await assertRejects(
+		() => e2ee.decryptByKeyMaterial(tampered, keyMaterial),
+		InternalError as never,
+		"HMAC verification failed",
+	);
 });
