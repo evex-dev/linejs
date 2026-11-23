@@ -340,6 +340,7 @@ export class LineObs {
 			oType === "video" ? { chunked: true } : {},
 		);
 		const tempId = "reqid-" + crypto.randomUUID();
+		const mediaName = filename || "line." + ext;
 		// @ts-expect-error: will fix cuz typescript version change
 		const edata = new Blob([encryptedData]);
 		const { objId } = await this.uploadObjectForService({
@@ -347,6 +348,15 @@ export class LineObs {
 			oType: "file",
 			obsPath: `${serviceName}/${obsNamespace}/${tempId}`,
 			params,
+			// LINE clients stream a video straight from obs and give up on an
+			// object stored as an anonymous application/octet-stream attachment.
+			// The LINE app stores it under its file name and video MIME type (#291).
+			...(oType === "video"
+				? {
+						filename: mediaName,
+						addHeaders: { "content-type": data.type || "video/mp4" },
+					}
+				: {}),
 		});
 		if (oType === "image" || oType === "gif" || oType === "video") {
 			let previewEdata: Blob;
@@ -378,7 +388,7 @@ export class LineObs {
 
 		const chunks = await this.client.e2ee.encryptE2EEMessage(
 			to,
-			{ keyMaterial, fileName: filename || "line." + ext },
+			{ keyMaterial, fileName: mediaName },
 			contentType,
 		);
 
@@ -404,7 +414,10 @@ export class LineObs {
 				OID: objId,
 				FILE_SIZE: fileSize.toString(),
 				e2eeVersion: "2",
-				...(oType === "image" || oType === "gif" || oType === "video"
+				// The LINE app marks an E2EE video like this and sends no
+				// MEDIA_CONTENT_INFO for it (#291).
+				...(oType === "video" ? { e2eeMark: "2", contentType: "2" } : {}),
+				...(oType === "image" || oType === "gif"
 					? {
 							MEDIA_CONTENT_INFO: JSON.stringify({
 								category: "original",

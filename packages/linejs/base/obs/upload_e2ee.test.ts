@@ -6,7 +6,12 @@ import { LineObs } from "./mod.ts";
 
 /** Per-call record of (data.size, obsPath) so tests can assert which
  *  blob was uploaded as the main object vs the preview. */
-type UploadRecord = { size: number; obsPath: string };
+type UploadRecord = {
+	size: number;
+	obsPath: string;
+	filename?: string;
+	addHeaders?: Record<string, string>;
+};
 
 function fakeClient() {
 	const e2eeCalls: { rawSize: number; keyMaterial?: string; chunked?: boolean }[] = [];
@@ -55,8 +60,13 @@ function makeObs(): {
 	const fake = fakeClient();
 	const obs = new LineObs(fake.mock as never);
 	// Intercept uploadObjectForService to record what was sent.
-	obs.uploadObjectForService = ((opts: { data: Blob; obsPath: string }) => {
-		fake.records.push({ size: opts.data.size, obsPath: opts.obsPath });
+	obs.uploadObjectForService = ((opts: UploadRecord & { data: Blob }) => {
+		fake.records.push({
+			size: opts.data.size,
+			obsPath: opts.obsPath,
+			filename: opts.filename,
+			addHeaders: opts.addHeaders,
+		});
 		return Promise.resolve({
 			objId: "OBJ-1",
 			headers: new Headers(),
@@ -232,12 +242,8 @@ test("uploadMediaByE2EE — video duration preserves encrypted preview and messa
 		FILE_SIZE: "1000",
 		e2eeVersion: "2",
 		DURATION: "4200",
-		MEDIA_CONTENT_INFO: JSON.stringify({
-			category: "original",
-			fileSize: 1000,
-			extension: "mp4",
-			animated: false,
-		}),
+		e2eeMark: "2",
+		contentType: "2",
 	});
 	assert.deepEqual(
 		fake.records.map((record) => record.size),
@@ -261,8 +267,13 @@ test("uploadMediaByE2EE — video duration preserves encrypted preview and messa
 test("uploadMediaByE2EE — an object ID mismatch names no response headers", async () => {
 	const nextAccess = "NEXT-ACCESS-MARKER";
 	const { obs, fake } = makeObs();
-	obs.uploadObjectForService = ((opts: { data: Blob; obsPath: string }) => {
-		fake.records.push({ size: opts.data.size, obsPath: opts.obsPath });
+	obs.uploadObjectForService = ((opts: UploadRecord & { data: Blob }) => {
+		fake.records.push({
+			size: opts.data.size,
+			obsPath: opts.obsPath,
+			filename: opts.filename,
+			addHeaders: opts.addHeaders,
+		});
 		return Promise.resolve({
 			objId: `OBJ-${fake.records.length}`,
 			headers: new Headers({ "x-line-next-access": nextAccess }),
@@ -303,5 +314,43 @@ test("uploadMediaByE2EE — only the video itself gets the chunked tag", async (
 		for (const call of fake.e2eeCalls.slice(1)) {
 			assert.deepEqual(call.chunked, undefined, `${oType} preview`);
 		}
+	}
+});
+
+// Official clients cannot stream a video stored as an anonymous
+// application/octet-stream attachment; the LINE app stores it under its file
+// name and video MIME type (#291). Other media keep the old upload.
+test("uploadMediaByE2EE — a video is stored under its name and MIME type", async () => {
+	const { obs, fake } = makeObs();
+	await obs.uploadMediaByE2EE({
+		data: new Blob([new Uint8Array(10)], { type: "video/quicktime" }),
+		oType: "video",
+		to: "u-user",
+		filename: "clip.mov",
+	});
+	assert.deepEqual(fake.records[0].filename, "clip.mov");
+	assert.deepEqual(fake.records[0].addHeaders, { "content-type": "video/quicktime" });
+	assert.deepEqual(fake.records[1].filename, undefined);
+
+	const untyped = makeObs();
+	await untyped.obs.uploadMediaByE2EE({
+		data: new Blob([new Uint8Array(10)]),
+		oType: "video",
+		to: "u-user",
+		filename: "clip.mp4",
+	});
+	assert.deepEqual(untyped.fake.records[0].addHeaders, { "content-type": "video/mp4" });
+
+	for (const oType of ["image", "gif", "audio", "file"] as const) {
+		const other = makeObs();
+		await other.obs.uploadMediaByE2EE({
+			data: new Blob([new Uint8Array(10)], { type: "image/png" }),
+			oType,
+			to: "u-user",
+			filename: "a.png",
+		});
+		assert.deepEqual(other.fake.records[0].filename, undefined, oType);
+		assert.deepEqual(other.fake.records[0].addHeaders, undefined, oType);
+		assert.deepEqual(sentMetadata(other.fake).e2eeMark, undefined, oType);
 	}
 });
