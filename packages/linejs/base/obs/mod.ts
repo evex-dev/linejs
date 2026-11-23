@@ -332,8 +332,12 @@ export class LineObs {
 		if (!(to[0] === "u" || to[0] === "c")) {
 			throw new InternalError("ObsError", "Invalid mid");
 		}
+		// LINE clients verify videos chunk by chunk while streaming them and
+		// refuse to play one tagged over the whole ciphertext (#291).
 		const { keyMaterial, encryptedData } = await this.client.e2ee.encryptByKeyMaterial(
 			Buffer.from(await data.arrayBuffer()),
+			undefined,
+			oType === "video" ? { chunked: true } : {},
 		);
 		const tempId = "reqid-" + crypto.randomUUID();
 		// @ts-expect-error: will fix cuz typescript version change
@@ -387,6 +391,10 @@ export class LineObs {
 				? { DURATION: roundedDuration.toString() }
 				: {};
 
+		// The LINE app reports a video's ciphertext length without the 32-byte
+		// tag; other media keep the historical full length.
+		const fileSize = oType === "video" ? edata.size - 32 : edata.size;
+
 		return await this.client.talk.sendMessage({
 			to,
 			chunks,
@@ -394,13 +402,13 @@ export class LineObs {
 			contentMetadata: {
 				SID: obsNamespace,
 				OID: objId,
-				FILE_SIZE: edata.size.toString(),
+				FILE_SIZE: fileSize.toString(),
 				e2eeVersion: "2",
 				...(oType === "image" || oType === "gif" || oType === "video"
 					? {
 							MEDIA_CONTENT_INFO: JSON.stringify({
 								category: "original",
-								fileSize: edata.size,
+								fileSize,
 								extension: ext,
 								animated: oType == "gif",
 							}),

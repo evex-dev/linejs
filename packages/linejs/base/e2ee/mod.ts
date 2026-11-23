@@ -16,6 +16,28 @@ interface GroupKey {
 	keyId: number;
 }
 
+/**
+ * Chunk size for the E2EE video tag. LINE tags videos with an HMAC over the
+ * SHA-256 of each 128 KiB ciphertext chunk, concatenated, so clients can
+ * verify a video while streaming it (LINE Encryption Overview v2.2, "Video
+ * Encryption"). Images, audio and files are tagged over the whole ciphertext.
+ */
+export const MEDIA_TAG_CHUNK = 128 * 1024;
+
+/** SHA-256 of each {@link MEDIA_TAG_CHUNK}-byte ciphertext chunk, concatenated. */
+export function chunkDigests(encData: Buffer): Buffer {
+	const digests: Buffer[] = [];
+	for (let at = 0; at < encData.length; at += MEDIA_TAG_CHUNK) {
+		digests.push(
+			crypto
+				.createHash("sha256")
+				.update(encData.subarray(at, at + MEDIA_TAG_CHUNK))
+				.digest(),
+		);
+	}
+	return Buffer.concat(digests);
+}
+
 export class E2EE {
 	readonly client: BaseClient;
 	private loginKey?: { keyId: number | string; privKey: Buffer };
@@ -1189,6 +1211,13 @@ export class E2EE {
 	async encryptByKeyMaterial(
 		rawData: Buffer,
 		keyMaterial?: Buffer,
+		options: {
+			/**
+			 * Tag the ciphertext the way LINE tags videos: an HMAC over the
+			 * SHA-256 of each 128 KiB chunk instead of over the ciphertext.
+			 */
+			chunked?: boolean;
+		} = {},
 	): Promise<{ keyMaterial: string; encryptedData: Buffer }> {
 		// Encrypt file for E2EE Next
 		if (!keyMaterial) {
@@ -1196,7 +1225,7 @@ export class E2EE {
 		}
 		const keys = await this.deriveKeyMaterial(keyMaterial);
 		const encData = await this.__encryptAESCTR(keys.encKey, keys.nonce, rawData);
-		const sign = this.signData(encData, keys.macKey);
+		const sign = this.signData(options.chunked ? chunkDigests(encData) : encData, keys.macKey);
 
 		return {
 			keyMaterial: keyMaterial.toString("base64"),
@@ -1218,8 +1247,12 @@ export class E2EE {
 		}
 		const encData = rawData.subarray(0, -32);
 		const sign = rawData.subarray(-32);
-		const expected = this.signData(encData, keys.macKey);
-		if (!crypto.timingSafeEqual(sign, expected)) {
+		// Videos from the LINE app carry the chunked tag (#291); other media and
+		// older linejs uploads tag the whole ciphertext.
+		if (
+			!crypto.timingSafeEqual(sign, this.signData(encData, keys.macKey)) &&
+			!crypto.timingSafeEqual(sign, this.signData(chunkDigests(encData), keys.macKey))
+		) {
 			throw new InternalError(
 				"E2EEMediaError",
 				"HMAC verification failed: ciphertext was tampered with or keyMaterial is wrong",
