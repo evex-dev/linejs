@@ -209,6 +209,17 @@ jobs:
               ]) {
                 const config = JSON.parse(fs.readFileSync(file, "utf8"));
                 config.version = version;
+                // Dependabot only bumps package.json, so take every npm
+                // import range from it; a stale range breaks the JSR publish.
+                const pkg = JSON.parse(
+                  fs.readFileSync(file.replace(/jsr\.json$/, "package.json"), "utf8"),
+                );
+                for (const name of Object.keys(config.imports ?? {})) {
+                  const range = pkg.dependencies?.[name];
+                  if (range && config.imports[name].startsWith(`npm:${name}@`)) {
+                    config.imports[name] = `npm:${name}@${range}`;
+                  }
+                }
                 if (config.imports?.["@evex-dev/linejs-types"]) {
                   config.imports["@evex-dev/linejs-types"] = `npm:@evex-dev/linejs-types@^${version}`;
                 }
