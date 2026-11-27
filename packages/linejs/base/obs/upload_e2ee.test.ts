@@ -2,6 +2,7 @@ import { assert, test } from "vite-plus/test";
 import { assertRejects } from "../../test/assert.ts";
 import { Buffer } from "node:buffer";
 import { InternalError } from "../core/mod.ts";
+import { chunkDigests, MEDIA_TAG_CHUNK } from "../e2ee/mod.ts";
 import { LineObs } from "./mod.ts";
 
 /** Per-call record of (data.size, obsPath) so tests can assert which
@@ -247,10 +248,12 @@ test("uploadMediaByE2EE — video duration preserves encrypted preview and messa
 	});
 	assert.deepEqual(
 		fake.records.map((record) => record.size),
-		[1032, 52],
+		[1032, 52, 32],
 	);
 	assert.isOk(fake.records[0].obsPath.startsWith("talk/emv/reqid-"));
 	assert.deepEqual(fake.records[1].obsPath, "talk/emv/OBJ-1__ud-preview");
+	assert.deepEqual(fake.records[2].obsPath, "talk/emv/OBJ-1__ud-hash");
+	assert.deepEqual(fake.records[2].filename, "hash");
 	assert.deepEqual(fake.e2eeCalls[1].keyMaterial, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=");
 	const message = fake.sendMessageCalls[0] as {
 		to: string;
@@ -330,7 +333,23 @@ test("uploadMediaByE2EE — a video is stored under its name and MIME type", asy
 	});
 	assert.deepEqual(fake.records[0].filename, "clip.mov");
 	assert.deepEqual(fake.records[0].addHeaders, { "content-type": "video/quicktime" });
-	assert.deepEqual(fake.records[1].filename, undefined);
+	assert.deepEqual(fake.records[1].obsPath, "talk/emv/OBJ-1__ud-hash");
+	assert.deepEqual(fake.records[1].filename, "hash");
+	assert.deepEqual(fake.records[1].addHeaders, undefined);
+
+	const withPreview = makeObs();
+	await withPreview.obs.uploadMediaByE2EE({
+		data: new Blob([new Uint8Array(10)], { type: "video/quicktime" }),
+		oType: "video",
+		to: "u-user",
+		filename: "clip.mov",
+		preview: new Blob([new Uint8Array(8)]),
+	});
+	assert.deepEqual(withPreview.fake.records[1].obsPath, "talk/emv/OBJ-1__ud-preview");
+	assert.deepEqual(withPreview.fake.records[1].filename, undefined);
+	assert.deepEqual(withPreview.fake.records[1].addHeaders, undefined);
+	assert.deepEqual(withPreview.fake.records[2].obsPath, "talk/emv/OBJ-1__ud-hash");
+	assert.deepEqual(withPreview.fake.records[2].filename, "hash");
 
 	const untyped = makeObs();
 	await untyped.obs.uploadMediaByE2EE({
@@ -351,6 +370,82 @@ test("uploadMediaByE2EE — a video is stored under its name and MIME type", asy
 		});
 		assert.deepEqual(other.fake.records[0].filename, undefined, oType);
 		assert.deepEqual(other.fake.records[0].addHeaders, undefined, oType);
+		assert.deepEqual(
+			other.fake.records.some((record) => record.obsPath.endsWith("__ud-hash")),
+			false,
+			oType,
+		);
 		assert.deepEqual(sentMetadata(other.fake).e2eeMark, undefined, oType);
 	}
+});
+
+test("uploadMediaByE2EE — a video without preview skips __ud-preview and uploads __ud-hash (#291)", async () => {
+	const { obs, fake } = makeObs();
+	await obs.uploadMediaByE2EE({
+		data: new Blob([new Uint8Array(64)], { type: "video/mp4" }),
+		oType: "video",
+		to: "u-user",
+		filename: "clip.mp4",
+	});
+	assert.deepEqual(fake.e2eeCalls.length, 1);
+	assert.deepEqual(
+		fake.records.some((record) => record.obsPath.endsWith("__ud-preview")),
+		false,
+	);
+	assert.deepEqual(fake.records.length, 2);
+	assert.deepEqual(fake.records[1].obsPath, "talk/emv/OBJ-1__ud-hash");
+	assert.deepEqual(fake.records[1].filename, "hash");
+});
+
+test("uploadMediaByE2EE — __ud-hash carries 128 KiB ciphertext chunk SHA-256 digests (#291)", async () => {
+	const { obs } = makeObs();
+	const ciphertext = new Uint8Array(MEDIA_TAG_CHUNK + 500);
+	for (let i = 0; i < ciphertext.length; i++) {
+		ciphertext[i] = (i * 31) & 0xff;
+	}
+	const tagged = new Uint8Array(ciphertext.length + 32);
+	tagged.set(ciphertext, 0);
+	tagged.fill(0xaa, ciphertext.length);
+
+	(
+		obs as unknown as { client: { e2ee: { encryptByKeyMaterial: () => Promise<unknown> } } }
+	).client.e2ee.encryptByKeyMaterial = () =>
+		Promise.resolve({
+			keyMaterial: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+			encryptedData: Buffer.from(tagged),
+		});
+
+	const uploaded: { obsPath: string; oType: string; filename?: string; bytes: Buffer }[] = [];
+	obs.uploadObjectForService = (async (opts: {
+		data: Blob;
+		oType: string;
+		obsPath: string;
+		filename?: string;
+	}) => {
+		uploaded.push({
+			obsPath: opts.obsPath,
+			oType: opts.oType,
+			filename: opts.filename,
+			bytes: Buffer.from(await opts.data.arrayBuffer()),
+		});
+		return {
+			objId: "OBJ-HASH",
+			objHash: "",
+			headers: new Headers(),
+		};
+	}) as never;
+
+	await obs.uploadMediaByE2EE({
+		data: new Blob([new Uint8Array(MEDIA_TAG_CHUNK + 500)], { type: "video/mp4" }),
+		oType: "video",
+		to: "u-user",
+		filename: "multi.mp4",
+	});
+
+	assert.deepEqual(uploaded.length, 2);
+	assert.deepEqual(uploaded[1].obsPath, "talk/emv/OBJ-HASH__ud-hash");
+	assert.deepEqual(uploaded[1].oType, "file");
+	assert.deepEqual(uploaded[1].filename, "hash");
+	assert.deepEqual(uploaded[1].bytes, chunkDigests(Buffer.from(ciphertext)));
+	assert.deepEqual(uploaded[1].bytes.length, 64);
 });

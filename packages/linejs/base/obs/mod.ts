@@ -1,5 +1,6 @@
 import { Buffer } from "node:buffer";
 import { type BaseClient, InternalError } from "../core/mod.ts";
+import { chunkDigests } from "../e2ee/mod.ts";
 import { MimeType } from "./mime.ts";
 import crypto from "node:crypto";
 import type { Message } from "@evex-dev/linejs-types";
@@ -358,7 +359,10 @@ export class LineObs {
 					}
 				: {}),
 		});
-		if (oType === "image" || oType === "gif" || oType === "video") {
+		// Skip __ud-preview for videos without a preview image: the video itself
+		// uses chunked HMAC, so uploading edata as an image preview fails
+		// decryption on official clients (#291).
+		if (oType === "image" || oType === "gif" || (oType === "video" && preview)) {
 			let previewEdata: Blob;
 			if (preview) {
 				const enc = await this.client.e2ee.encryptByKeyMaterial(
@@ -384,6 +388,22 @@ export class LineObs {
 					previewObjId: objId2,
 				});
 			}
+		}
+
+		if (oType === "video" && encryptedData.length > 32) {
+			// LINE official clients require the __ud-hash sidecar (concatenated
+			// 32-byte SHA-256 digests of each 128 KiB ciphertext chunk) to stream
+			// and verify E2EE videos (#291).
+			const digests = chunkDigests(
+				Buffer.from(encryptedData.subarray(0, encryptedData.length - 32)),
+			);
+			await this.uploadObjectForService({
+				data: new Blob([new Uint8Array(digests)]),
+				oType: "file",
+				filename: "hash",
+				obsPath: `${serviceName}/${obsNamespace}/${objId}__ud-hash`,
+				params,
+			});
 		}
 
 		const chunks = await this.client.e2ee.encryptE2EEMessage(
