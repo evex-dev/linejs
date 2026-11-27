@@ -368,6 +368,33 @@ export const enums: {
 		SquareSubscriptionStatus & number
 	>;
 	TermsType: Record<TermsType & string, TermsType & number>;
+	ExcludeType: Record<ExcludeType & string, ExcludeType & number>;
+	MessageStatusType: Record<MessageStatusType & string, MessageStatusType & number>;
+	PaidSquareFormAttribute: Record<
+		PaidSquareFormAttribute & string,
+		PaidSquareFormAttribute & number
+	>;
+	PreconditionFailedExtraInfo: Record<
+		PreconditionFailedExtraInfo & string,
+		PreconditionFailedExtraInfo & number
+	>;
+	SquareChatAnnouncementType: Record<
+		SquareChatAnnouncementType & string,
+		SquareChatAnnouncementType & number
+	>;
+	SquareMemberRelationAttribute: Record<
+		SquareMemberRelationAttribute & string,
+		SquareMemberRelationAttribute & number
+	>;
+	SquareThreadMemberAttribute: Record<
+		SquareThreadMemberAttribute & string,
+		SquareThreadMemberAttribute & number
+	>;
+	SquareUserSettingsAttribute: Record<
+		SquareUserSettingsAttribute & string,
+		SquareUserSettingsAttribute & number
+	>;
+	StatusBadge: Record<StatusBadge & string, StatusBadge & number>;
 } = {
 	AR0_g: {
 		ILLEGAL_ARGUMENT: 16641,
@@ -516,6 +543,10 @@ export const enums: {
 		WEAROS_RC: 545,
 		WEAROS_BETA: 546,
 		WEAROS_ALPHA: 547,
+		VISIONOS: 560,
+		VISIONOS_RC: 561,
+		VISIONOS_BETA: 562,
+		VISIONOS_ALPHA: 563,
 	},
 	BotType: {
 		RESERVED: 0,
@@ -1291,16 +1322,17 @@ export const enums: {
 		NOTIFIED_GCS_REFRESH_CONTENT: 157,
 		EDIT_MESSAGE: 158,
 		NOTIFIED_EDIT_MESSAGE: 159,
-		ADD_SCHEDULED_MESSAGE: 160,
-		UPDATE_SCHEDULED_MESSAGE: 161,
-		DELETE_SCHEDULED_MESSAGE: 162,
-		E2EE_REENCRYPT_SCHEDULED_MESSAGE: 163,
-		SEND_FAILED_SCHEDULED_MESSAGE: 164,
-		SEND_SUCCEEDED_SCHEDULED_MESSAGE: 165,
-		UPDATE_SERVICE_CHAT: 166,
-		MARK_SERVICE_CHAT_AS_READ: 167,
-		UPDATE_SERVICE_CHAT_NOTIFICATION_TEXT: 168,
+		UPDATE_SERVICE_CHAT: 160,
+		MARK_SERVICE_CHAT_AS_READ: 161,
+		UPDATE_SERVICE_CHAT_NOTIFICATION_TEXT: 162,
+		ADD_SCHEDULED_MESSAGE: 163,
+		UPDATE_SCHEDULED_MESSAGE: 164,
+		DELETE_SCHEDULED_MESSAGE: 165,
+		E2EE_REENCRYPT_SCHEDULED_MESSAGE: 166,
+		SEND_FAILED_SCHEDULED_MESSAGE: 167,
+		SEND_SUCCEEDED_SCHEDULED_MESSAGE: 168,
 		LINE_AUTH_NOTIFICATION: 169,
+		NOTIFIED_GCS_CONSUMABLE_BADGE: 170,
 	},
 	P70_g: {
 		INVALID_REQUEST: 1000,
@@ -1544,6 +1576,7 @@ export const enums: {
 		COMMERCE_TW_TAB: 56,
 		PREMIUM_PRODUCT_DEFINITION: 57,
 		DATAMODE: 58,
+		GCS_CONSUMABLE_BADGE: 59,
 	},
 	Pb1_EnumC13221w3: {
 		UNKNOWN: 0,
@@ -2080,6 +2113,18 @@ export const enums: {
 		AGREEMENT_LYP_PREMIUM_MUTE_MESSAGE: 118,
 		AGREEMENT_LYP_PREMIUM_MUTE_MESSAGE_VERSION: 119,
 		AGREEMENT_LYP_PREMIUM_MUTE_MESSAGE_PREMIUM_TYPE: 120,
+		LAB_MESSAGE_SCHEDULING: 121,
+		HOME_NOTIFICATION_FEED_OPERATION_PROMOTION: 122,
+		HOME_NOTIFICATION_FEED_OPERATION_TRENDING: 123,
+		HOME_NOTIFICATION_NOTICE_OPERATION_GENERAL: 124,
+		MANUAL_READ_RECEIPTS: 125,
+		AGREEMENT_LYP_PREMIUM_BACKUP_REGION: 126,
+		AGREEMENT_LYP_PREMIUM_ALBUM_REGION: 127,
+		AGREEMENT_LYP_PREMIUM_MULTI_PROFILE_REGION: 128,
+		AGREEMENT_LYP_PREMIUM_UNSEND_REGION: 129,
+		AGREEMENT_LYP_PREMIUM_MESSAGE_EDIT_REGION: 130,
+		AGREEMENT_LYP_PREMIUM_MESSAGE_SCHEDULING_REGION: 131,
+		AGREEMENT_LYP_PREMIUM_MUTE_MESSAGE_REGION: 132,
 	},
 	SnsIdType: {
 		FACEBOOK: 1,
@@ -3217,6 +3262,33 @@ export const enums: {
 		PAID_SQUARE_SUBSCRIPTION: 2,
 		PAID_SQUARE_CREATION: 3,
 	},
+	ExcludeType: {
+		MINOR_SEARCH: 0,
+	},
+	MessageStatusType: {
+		MESSAGE_REACTION: 1,
+	},
+	PaidSquareFormAttribute: {
+		STATE: 1,
+	},
+	PreconditionFailedExtraInfo: {
+		DUPLICATED_DISPLAY_NAME: 0,
+	},
+	SquareChatAnnouncementType: {
+		TEXT_MESSAGE: 0,
+	},
+	SquareMemberRelationAttribute: {
+		BLOCKED: 1,
+	},
+	SquareThreadMemberAttribute: {
+		MEMBERSHIP_STATE: 1,
+	},
+	SquareUserSettingsAttribute: {
+		LIVE_TALK_NOTIFICATION: 1,
+	},
+	StatusBadge: {
+		LIVETALK_ONAIR: 1,
+	},
 };
 export type AR0_g =
 	| 16641
@@ -3500,7 +3572,15 @@ export type ApplicationType =
 	| 546
 	| "WEAROS_BETA"
 	| 547
-	| "WEAROS_ALPHA";
+	| "WEAROS_ALPHA"
+	| 560
+	| "VISIONOS"
+	| 561
+	| "VISIONOS_RC"
+	| 562
+	| "VISIONOS_BETA"
+	| 563
+	| "VISIONOS_ALPHA";
 
 export type BotType = 0 | "RESERVED" | 1 | "OFFICIAL" | 2 | "LINE_AT_0" | 3 | "LINE_AT";
 
@@ -4750,25 +4830,27 @@ export type OpType =
 	| 159
 	| "NOTIFIED_EDIT_MESSAGE"
 	| 160
-	| "ADD_SCHEDULED_MESSAGE"
-	| 161
-	| "UPDATE_SCHEDULED_MESSAGE"
-	| 162
-	| "DELETE_SCHEDULED_MESSAGE"
-	| 163
-	| "E2EE_REENCRYPT_SCHEDULED_MESSAGE"
-	| 164
-	| "SEND_FAILED_SCHEDULED_MESSAGE"
-	| 165
-	| "SEND_SUCCEEDED_SCHEDULED_MESSAGE"
-	| 166
 	| "UPDATE_SERVICE_CHAT"
-	| 167
+	| 161
 	| "MARK_SERVICE_CHAT_AS_READ"
-	| 168
+	| 162
 	| "UPDATE_SERVICE_CHAT_NOTIFICATION_TEXT"
+	| 163
+	| "ADD_SCHEDULED_MESSAGE"
+	| 164
+	| "UPDATE_SCHEDULED_MESSAGE"
+	| 165
+	| "DELETE_SCHEDULED_MESSAGE"
+	| 166
+	| "E2EE_REENCRYPT_SCHEDULED_MESSAGE"
+	| 167
+	| "SEND_FAILED_SCHEDULED_MESSAGE"
+	| 168
+	| "SEND_SUCCEEDED_SCHEDULED_MESSAGE"
 	| 169
-	| "LINE_AUTH_NOTIFICATION";
+	| "LINE_AUTH_NOTIFICATION"
+	| 170
+	| "NOTIFIED_GCS_CONSUMABLE_BADGE";
 
 export type P70_g = 1000 | "INVALID_REQUEST" | 1001 | "RETRY_REQUIRED";
 
@@ -5044,7 +5126,9 @@ export type Pb1_EnumC13209v5 =
 	| 57
 	| "PREMIUM_PRODUCT_DEFINITION"
 	| 58
-	| "DATAMODE";
+	| "DATAMODE"
+	| 59
+	| "GCS_CONSUMABLE_BADGE";
 
 export type Pb1_EnumC13221w3 = 0 | "UNKNOWN" | 1 | "EUROPEAN_ECONOMIC_AREA";
 
@@ -5798,7 +5882,31 @@ export type SettingsAttributeEx =
 	| 119
 	| "AGREEMENT_LYP_PREMIUM_MUTE_MESSAGE_VERSION"
 	| 120
-	| "AGREEMENT_LYP_PREMIUM_MUTE_MESSAGE_PREMIUM_TYPE";
+	| "AGREEMENT_LYP_PREMIUM_MUTE_MESSAGE_PREMIUM_TYPE"
+	| 121
+	| "LAB_MESSAGE_SCHEDULING"
+	| 122
+	| "HOME_NOTIFICATION_FEED_OPERATION_PROMOTION"
+	| 123
+	| "HOME_NOTIFICATION_FEED_OPERATION_TRENDING"
+	| 124
+	| "HOME_NOTIFICATION_NOTICE_OPERATION_GENERAL"
+	| 125
+	| "MANUAL_READ_RECEIPTS"
+	| 126
+	| "AGREEMENT_LYP_PREMIUM_BACKUP_REGION"
+	| 127
+	| "AGREEMENT_LYP_PREMIUM_ALBUM_REGION"
+	| 128
+	| "AGREEMENT_LYP_PREMIUM_MULTI_PROFILE_REGION"
+	| 129
+	| "AGREEMENT_LYP_PREMIUM_UNSEND_REGION"
+	| 130
+	| "AGREEMENT_LYP_PREMIUM_MESSAGE_EDIT_REGION"
+	| 131
+	| "AGREEMENT_LYP_PREMIUM_MESSAGE_SCHEDULING_REGION"
+	| 132
+	| "AGREEMENT_LYP_PREMIUM_MUTE_MESSAGE_REGION";
 
 export type SnsIdType =
 	| 1
@@ -10548,7 +10656,7 @@ export interface GetUserProfileResponse {
 }
 
 export interface GetUserSettingsRequest {
-	requestedAttrs: any[];
+	requestedAttrs: SquareUserSettingsAttribute[];
 }
 
 export interface GetUserSettingsResponse {
@@ -13573,6 +13681,27 @@ export interface Settings {
 	notificationNoteMention: boolean;
 	notificationAlbumLike: boolean;
 	phoneNumberDeleteEnable: boolean;
+	securityCardRequired: boolean;
+	labMessageEdit: boolean;
+	agreementLypPremiumMessageScheduling: Int64;
+	agreementLypPremiumMessageSchedulingVersion: Int64;
+	agreementLypPremiumMessageSchedulingPremiumType: string;
+	labPremiumFriendsManagement: boolean;
+	agreementLypPremiumMuteMessage: Int64;
+	agreementLypPremiumMuteMessageVersion: Int64;
+	agreementLypPremiumMuteMessagePremiumType: string;
+	labMessageScheduling: boolean;
+	homeNotificationFeedOperationPromotion: boolean;
+	homeNotificationFeedOperationTrending: boolean;
+	homeNotificationNoticeOperationGeneral: boolean;
+	manualReadReceipts: boolean;
+	agreementLypPremiumBackupRegion: string;
+	agreementLypPremiumAlbumRegion: string;
+	agreementLypPremiumMultiProfileRegion: string;
+	agreementLypPremiumUnsendRegion: string;
+	agreementLypPremiumMessageEditRegion: string;
+	agreementLypPremiumMessageSchedulingRegion: string;
+	agreementLypPremiumMuteMessageRegion: string;
 }
 
 export interface ShareTargetPickerResultRequest {
@@ -14921,7 +15050,7 @@ export interface UpdateSquareResponse {
 }
 
 export interface UpdateUserSettingsRequest {
-	updatedAttrs: any[];
+	updatedAttrs: SquareUserSettingsAttribute[];
 	userSettings: SquareUserSettings;
 }
 
@@ -20973,3 +21102,21 @@ export interface ValidateTextsResponse {
 	success: boolean;
 	errorMessage: string;
 }
+
+export type ExcludeType = 0 | "MINOR_SEARCH";
+
+export type MessageStatusType = 1 | "MESSAGE_REACTION";
+
+export type PaidSquareFormAttribute = 1 | "STATE";
+
+export type PreconditionFailedExtraInfo = 0 | "DUPLICATED_DISPLAY_NAME";
+
+export type SquareChatAnnouncementType = 0 | "TEXT_MESSAGE";
+
+export type SquareMemberRelationAttribute = 1 | "BLOCKED";
+
+export type SquareThreadMemberAttribute = 1 | "MEMBERSHIP_STATE";
+
+export type SquareUserSettingsAttribute = 1 | "LIVE_TALK_NOTIFICATION";
+
+export type StatusBadge = 1 | "LIVETALK_ONAIR";
