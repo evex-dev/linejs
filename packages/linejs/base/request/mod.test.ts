@@ -56,7 +56,7 @@ function replyWith(fields: NestedArray, methodName: string): BaseClient {
 	const body = writeThrift(fields, methodName, Protocols[4]);
 	return new BaseClient({
 		device: "DESKTOPWIN",
-		fetch: () => Promise.resolve(new Response(body)),
+		fetch: () => Promise.resolve(new Response(new Uint8Array(body))),
 	});
 }
 
