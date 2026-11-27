@@ -181,7 +181,10 @@ export class RequestClient {
 					`method=${methodName} bodyLength=${parsedBody.length}`,
 			);
 		}
-		if (!res.data[0] && Object.keys(res.data).length) {
+		// Field 0 is the result. A result of false, 0 or "" is still a result,
+		// so only a missing field 0 next to other fields (an exception) is an
+		// error; a void method replies with no fields at all.
+		if (res.data[0] === undefined && Object.keys(res.data).length) {
 			hasError = true;
 		}
 		if (parse === true) {
