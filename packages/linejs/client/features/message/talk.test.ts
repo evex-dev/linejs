@@ -197,3 +197,15 @@ test("reply leaves e2ee unset for a plain message and keeps an explicit choice",
 	assert.strictEqual(encrypted.sent[0]!.e2ee, true);
 	assert.strictEqual(encrypted.sent[1]!.e2ee, false);
 });
+
+test("send answers an encrypted message encrypted unless told otherwise", async () => {
+	const { msg, sent } = captureSend({ chunks: ["a", "b"] });
+
+	await msg.send("hi");
+	await msg.send({ text: "hi", e2ee: false });
+
+	assert.deepEqual(
+		sent.map((opts) => opts.e2ee),
+		[true, false],
+	);
+});
