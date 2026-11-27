@@ -1,6 +1,8 @@
 import { assert, test } from "vite-plus/test";
 import { assertRejects } from "../../test/assert.ts";
 import { BaseClient } from "../core/mod.ts";
+import { type NestedArray, Protocols } from "../thrift/readwrite/declares.ts";
+import { writeThrift } from "../thrift/readwrite/write.ts";
 
 const nextAccess = "NEXT-ACCESS-MARKER";
 const bodyText = "<html>BODY-MARKER</html>";
@@ -48,4 +50,55 @@ test("request — an unparsable response names no headers, body or path", async 
 		error.message,
 		`Request internal failed: status=503 method=getProfile bodyLength=${body.length}`,
 	);
+});
+
+function replyWith(fields: NestedArray, methodName: string): BaseClient {
+	const body = writeThrift(fields, methodName, Protocols[4]);
+	return new BaseClient({
+		device: "DESKTOPWIN",
+		fetch: () => Promise.resolve(new Response(body)),
+	});
+}
+
+// Field 0 carries the result, and false, 0 and "" are results like any
+// other. Only a reply that lacks field 0 but has other fields (an exception)
+// is an error.
+test("request — a false, 0 or empty result is returned, not thrown", async () => {
+	const cases: [string, NestedArray, unknown][] = [
+		["isUseridAvailable", [[2, 0, false]], false],
+		["getServerTime", [[10, 0, 0]], 0],
+		["issueNonce", [[11, 0, ""]], ""],
+	];
+	for (const [methodName, fields, expected] of cases) {
+		const base = replyWith(fields, methodName);
+		assert.strictEqual(
+			await base.request.request([], methodName, 4, false, "/S4"),
+			expected,
+			methodName,
+		);
+	}
+});
+
+test("request — an enum result of 0 is renamed and returned", async () => {
+	const base = replyWith([[8, 0, 0]], "getPurchaseEnabledStatus");
+
+	assert.strictEqual(
+		await base.request.request([], "getPurchaseEnabledStatus", 4, true, "/S4"),
+		"OK",
+	);
+});
+
+test("request — a void reply returns undefined", async () => {
+	const base = replyWith([], "noop");
+
+	assert.strictEqual(await base.request.request([], "noop", 4, false, "/S4"), undefined);
+});
+
+test("request — an exception reply still throws", async () => {
+	const base = replyWith([[12, 1, [[8, 1, 5]]]], "isUseridAvailable");
+
+	const error = await assertRejects(() =>
+		base.request.request([], "isUseridAvailable", 4, false, "/S4"),
+	);
+	assert.match(error.message, /isUseridAvailable\(\/S4\)/);
 });

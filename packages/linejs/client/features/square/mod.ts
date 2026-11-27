@@ -228,46 +228,13 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 					syncToken = response.syncToken;
 				}
 				for (const event of response.events) {
-					this.emit("event", event);
-					if (event.type === "SEND_MESSAGE" && event.payload.sendMessage) {
-						const message = new SquareMessage({
-							client: this.#client,
-							raw: event.payload.sendMessage.squareMessage,
-						});
-						this.emit("message", message);
-					} else if (event.type === "RECEIVE_MESSAGE" && event.payload.receiveMessage) {
-						const message = new SquareMessage({
-							client: this.#client,
-							raw: event.payload.receiveMessage.squareMessage,
-						});
-						this.emit("message", message);
-						if (
-							message
-								.getTextDecorations()
-								.some((e) => e.mention && e.mention.mid === this.#client.base.profile?.mid)
-						) {
-							this.emit("mention", message);
-						}
-					} else if (
-						event.type === "NOTIFIED_KICKOUT_FROM_SQUARE" &&
-						event.payload.notifiedKickoutFromSquare
-					) {
-						this.emit("kick", event.payload.notifiedKickoutFromSquare);
-					} else if (
-						event.type === "NOTIFIED_LEAVE_SQUARE_CHAT" &&
-						event.payload.notifiedLeaveSquareChat
-					) {
-						this.emit("leave", event.payload.notifiedLeaveSquareChat);
-					} else if (
-						event.type === "NOTIFIED_JOIN_SQUARE_CHAT" &&
-						event.payload.notifiedJoinSquareChat
-					) {
-						this.emit("join", event.payload.notifiedJoinSquareChat);
-					} else if (
-						event.type === "NOTIFIED_DESTROY_MESSAGE" &&
-						event.payload.notifiedDestroyMessage
-					) {
-						this.emit("destroy", event.payload.notifiedDestroyMessage);
+					// syncToken has already moved past this batch, so an event that
+					// fails here is not fetched again. Report it and dispatch the rest
+					// of the batch instead of dropping them.
+					try {
+						this.#dispatchEvent(event);
+					} catch (e) {
+						if (param.onError) param.onError(e);
 					}
 				}
 				await new Promise<void>((resolve) => setTimeout(resolve, 1000));
@@ -275,6 +242,47 @@ export class SquareChat extends TypedEventEmitter<SquareChatEvents> {
 				if (param.onError) param.onError(e);
 				await new Promise<void>((resolve) => setTimeout(resolve, 2000));
 			}
+		}
+	}
+
+	#dispatchEvent(event: LINETypes.SquareEvent): void {
+		this.emit("event", event);
+		if (event.type === "SEND_MESSAGE" && event.payload.sendMessage) {
+			const message = new SquareMessage({
+				client: this.#client,
+				raw: event.payload.sendMessage.squareMessage,
+			});
+			this.emit("message", message);
+		} else if (event.type === "RECEIVE_MESSAGE" && event.payload.receiveMessage) {
+			const message = new SquareMessage({
+				client: this.#client,
+				raw: event.payload.receiveMessage.squareMessage,
+			});
+			this.emit("message", message);
+			// Only text messages carry decorations: getTextDecorations() throws
+			// for stickers, images and every other content type.
+			if (
+				message.raw.message.contentType === "NONE" &&
+				message
+					.getTextDecorations()
+					.some((e) => e.mention && e.mention.mid === this.#client.base.profile?.mid)
+			) {
+				this.emit("mention", message);
+			}
+		} else if (
+			event.type === "NOTIFIED_KICKOUT_FROM_SQUARE" &&
+			event.payload.notifiedKickoutFromSquare
+		) {
+			this.emit("kick", event.payload.notifiedKickoutFromSquare);
+		} else if (
+			event.type === "NOTIFIED_LEAVE_SQUARE_CHAT" &&
+			event.payload.notifiedLeaveSquareChat
+		) {
+			this.emit("leave", event.payload.notifiedLeaveSquareChat);
+		} else if (event.type === "NOTIFIED_JOIN_SQUARE_CHAT" && event.payload.notifiedJoinSquareChat) {
+			this.emit("join", event.payload.notifiedJoinSquareChat);
+		} else if (event.type === "NOTIFIED_DESTROY_MESSAGE" && event.payload.notifiedDestroyMessage) {
+			this.emit("destroy", event.payload.notifiedDestroyMessage);
 		}
 	}
 
