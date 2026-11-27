@@ -113,3 +113,99 @@ test("read keeps 1:1 behavior (counterpart mid) for received DMs", async () => {
 		seq: 1,
 	});
 });
+
+function captureSend(raw: Record<string, unknown> = {}) {
+	const sent: Record<string, unknown>[] = [];
+	const client = {
+		base: {
+			profile: { mid: "u-self" },
+			talk: {
+				sendMessage(opts: Record<string, unknown>) {
+					sent.push(opts);
+					return Promise.resolve({});
+				},
+			},
+		},
+	} as never as Client;
+	const msg = new TalkMessage({
+		client,
+		raw: {
+			...(makeRaw({ to: "g-group", from: "u-them", toType: "GROUP" }) as object),
+			...raw,
+		} as never,
+	});
+	return { msg, sent };
+}
+
+// send(object) used to forward only `to` and `e2ee`, so the text, content
+// type, metadata, reply target and location were all dropped.
+test("send forwards the given content", async () => {
+	const { msg, sent } = captureSend();
+	const location = { title: "here", address: "addr", latitude: 1, longitude: 2 };
+
+	await msg.send({
+		text: "hello",
+		contentType: "STICKER",
+		contentMetadata: { STKID: "1" },
+		relatedMessageId: "msg-0",
+		location: location as never,
+	});
+
+	assert.deepEqual(sent, [
+		{
+			to: "g-group",
+			text: "hello",
+			contentType: "STICKER",
+			contentMetadata: { STKID: "1" },
+			relatedMessageId: "msg-0",
+			location,
+			e2ee: undefined,
+		},
+	]);
+});
+
+// send("text") used to call reply(), so it quoted the message.
+test("send(string) sends a plain message, not a reply", async () => {
+	const { msg, sent } = captureSend();
+
+	await msg.send("hello");
+
+	assert.strictEqual(sent[0]!.text, "hello");
+	assert.strictEqual(sent[0]!.relatedMessageId, undefined);
+});
+
+test("reply forwards the content type and quotes the message", async () => {
+	const { msg, sent } = captureSend();
+
+	await msg.reply({ contentType: "STICKER", contentMetadata: { STKID: "1" } });
+
+	assert.strictEqual(sent[0]!.contentType, "STICKER");
+	assert.deepEqual(sent[0]!.contentMetadata, { STKID: "1" });
+	assert.strictEqual(sent[0]!.relatedMessageId, "msg-1");
+});
+
+// talk.sendMessage retries encrypted on an E2EE error only while `e2ee` is
+// unset. reply() always passed a boolean, so that retry never ran.
+test("reply leaves e2ee unset for a plain message and keeps an explicit choice", async () => {
+	const plain = captureSend();
+	await plain.msg.reply("hi");
+	assert.strictEqual(plain.sent[0]!.e2ee, undefined);
+
+	const encrypted = captureSend({ chunks: ["a", "b"] });
+	await encrypted.msg.reply("hi");
+	await encrypted.msg.reply({ text: "hi", e2ee: false });
+	assert.strictEqual(encrypted.sent[0]!.e2ee, true);
+	assert.strictEqual(encrypted.sent[1]!.e2ee, false);
+});
+
+test("send answers an encrypted message encrypted unless told otherwise", async () => {
+	const { msg, sent } = captureSend({ chunks: ["a", "b"] });
+
+	await msg.send("hi");
+	await msg.send({ text: "hi", e2ee: false });
+
+	assert.deepEqual(
+		sent.map((opts) => opts.e2ee),
+		[true, false],
+	);
+});

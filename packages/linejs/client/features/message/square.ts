@@ -69,7 +69,9 @@ export class SquareMessage {
 	}
 
 	/**
-	 * Sends to message.
+	 * Sends a message to the OpenChat this message belongs to. It does not
+	 * quote this message unless `relatedMessageId` is given; use {@link reply}
+	 * to quote it.
 	 */
 	async send(
 		input:
@@ -89,9 +91,8 @@ export class SquareMessage {
 		}
 
 		await this.#client.base.square.sendMessage({
-			relatedMessageId: this.raw.message.id,
-			squareChatMid: this.raw.message.to,
 			...input,
+			squareChatMid: this.raw.message.to,
 		});
 	}
 	/**

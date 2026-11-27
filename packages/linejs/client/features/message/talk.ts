@@ -49,24 +49,20 @@ export class TalkMessage {
 			});
 		}
 
-		let to: string;
-		if (this.to.type === "GROUP" || this.to.type === "ROOM") {
-			to = this.to.id; // this.to means it is group.
-		} else {
-			// Personal chats
-			to = this.isMyMessage ? this.to.id : this.from.id;
-		}
 		await this.#client.base.talk.sendMessage({
-			relatedMessageId: this.raw.id,
+			to: this.#chatMid,
 			text: input.text,
-			to,
-			e2ee: input.e2ee || Boolean(this.raw.chunks),
+			contentType: input.contentType,
 			contentMetadata: input.contentMetadata,
+			relatedMessageId: this.raw.id,
+			e2ee: this.#e2ee(input.e2ee),
 		});
 	}
 
 	/**
-	 * Sends to message.
+	 * Sends a message to the chat this message belongs to. It does not quote
+	 * this message unless `relatedMessageId` is given; use {@link reply} to
+	 * quote it.
 	 */
 	async send(
 		input:
@@ -81,22 +77,39 @@ export class TalkMessage {
 			  },
 	): Promise<void> {
 		if (typeof input === "string") {
-			return this.reply({
+			return this.send({
 				text: input,
 			});
 		}
 
-		let to: string;
-		if (this.to.type === "GROUP" || this.to.type === "ROOM") {
-			to = this.to.id; // this.to means it is group.
-		} else {
-			// Personal chats
-			to = this.isMyMessage ? this.to.id : this.from.id;
-		}
 		await this.#client.base.talk.sendMessage({
-			to,
-			e2ee: input.e2ee || Boolean(this.raw.chunks),
+			to: this.#chatMid,
+			text: input.text,
+			contentType: input.contentType,
+			contentMetadata: input.contentMetadata,
+			relatedMessageId: input.relatedMessageId,
+			location: input.location,
+			e2ee: this.#e2ee(input.e2ee),
 		});
+	}
+
+	/** The chat this message belongs to, seen from this account. */
+	get #chatMid(): string {
+		if (this.to.type === "GROUP" || this.to.type === "ROOM") {
+			return this.to.id; // this.to means it is group.
+		}
+		// Personal chats
+		return this.isMyMessage ? this.to.id : this.from.id;
+	}
+
+	/**
+	 * An explicit choice wins. A message that arrived encrypted is answered
+	 * encrypted. Otherwise leave it unset, so `talk.sendMessage` retries
+	 * encrypted when the chat requires E2EE.
+	 */
+	#e2ee(e2ee: boolean | undefined): boolean | undefined {
+		if (e2ee !== undefined) return e2ee;
+		return this.raw.chunks ? true : undefined;
 	}
 
 	/**
@@ -115,14 +128,8 @@ export class TalkMessage {
 	async read(): Promise<void> {
 		// `chatMid` must be the chat id. In group/room chats `from` is the
 		// sender's USER mid, not the chat, so mark the chat itself read.
-		const chatMid =
-			this.to.type === "GROUP" || this.to.type === "ROOM"
-				? this.to.id
-				: this.isMyMessage
-					? this.to.id
-					: this.from.id;
 		await this.#client.base.talk.sendChatChecked({
-			chatMid,
+			chatMid: this.#chatMid,
 			lastMessageId: this.raw.id,
 			seq: await this.#client.base.getReqseq(),
 		});
