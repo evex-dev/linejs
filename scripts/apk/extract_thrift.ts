@@ -75,6 +75,7 @@ import {
 import {
 	applyDiff,
 	computeDiff,
+	findTopLevelKey,
 	type EnumDef,
 	type EnumMember,
 	type FieldDef,
@@ -1497,14 +1498,13 @@ function findFieldEntry(
 	structName: string,
 	fid: number,
 ): { start: number; end: number } | null {
-	const marker = `\t"${structName}": [`;
-	const startIdx = src.indexOf(marker);
-	if (startIdx < 0) return null;
-	let i = startIdx + marker.length;
+	const key = findTopLevelKey(src, structName, "[");
+	if (!key) return null;
+	let i = key.end;
 	let depth = 1;
 	let inStr: false | '"' | "'" = false;
 	let entryStart = -1;
-	const fidLine = `\t\t\t"fid": ${fid},`;
+	const fidLines = [`\t\t\tfid: ${fid},`, `\t\t\t"fid": ${fid},`];
 	while (i < src.length && depth > 0) {
 		const c = src[i];
 		if (inStr) {
@@ -1533,7 +1533,7 @@ function findFieldEntry(
 			if (src[end] === ",") end++;
 			if (src[end] === "\n") end++;
 			const entry = src.slice(entryStart, end);
-			if (entry.includes(fidLine)) {
+			if (fidLines.some((l) => entry.includes(l))) {
 				return { start: entryStart, end };
 			}
 			entryStart = -1;
@@ -1549,9 +1549,9 @@ function findEnumValueLine(
 	enumName: string,
 	value: number,
 ): { start: number; end: number; line: string } | null {
-	const marker = `\t"${enumName}": {`;
-	const startIdx = src.indexOf(marker);
-	if (startIdx < 0) return null;
+	const key = findTopLevelKey(src, enumName, "{");
+	if (!key) return null;
+	const startIdx = key.start;
 	// Search forward for the line `\t\t"<value>": "..."` up to the closing `\t}`.
 	const valueLineRe = new RegExp(`\\t\\t"${value}":\\s*"([^"]*)",`, "g");
 	valueLineRe.lastIndex = startIdx;

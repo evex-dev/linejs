@@ -1142,12 +1142,30 @@ interface BlockSpan {
 	singleLine: boolean; // true when opener and closer are on the same source line (e.g. `[],`)
 }
 
+/**
+ * Locate a top-level `\t<name>: <opener>` entry of the Thrift dict. `vp fmt`
+ * unquotes identifier keys, while freshly emitted entries are still quoted
+ * until the next format pass, so both spellings must be found.
+ */
+export function findTopLevelKey(
+	src: string,
+	name: string,
+	opener: "[" | "{",
+): { start: number; end: number } | null {
+	for (const key of [name, `"${name}"`]) {
+		const marker = `\n\t${key}: ${opener}`;
+		const idx = src.indexOf(marker);
+		if (idx >= 0) return { start: idx + 1, end: idx + marker.length };
+	}
+	return null;
+}
+
 function findBlock(src: string, name: string, opener: "[" | "{"): BlockSpan | null {
 	const closer = opener === "[" ? "]" : "}";
-	const marker = `\t"${name}": ${opener}`;
-	const startMarkerIdx = src.indexOf(marker);
-	if (startMarkerIdx < 0) return null;
-	const contentStart = startMarkerIdx + marker.length;
+	const key = findTopLevelKey(src, name, opener);
+	if (!key) return null;
+	const startMarkerIdx = key.start;
+	const contentStart = key.end;
 	let i = contentStart;
 	let depth = 1;
 	let inStr: false | '"' | "'" = false;
