@@ -2529,10 +2529,26 @@ export function GetSquareThreadRequest(
 				[2, 2, param.includeRootMessage],
 			];
 }
+export function SquareUserSettingsAttribute(
+	param: LINETypes.SquareUserSettingsAttribute | undefined,
+): (LINETypes.SquareUserSettingsAttribute & number) | undefined {
+	return typeof param === "string" ? LINETypes.enums.SquareUserSettingsAttribute[param] : param;
+}
 export function GetUserSettingsRequest(
 	param?: PartialDeep<LINETypes.GetUserSettingsRequest> | undefined,
 ): NestedArray {
-	return typeof param === "undefined" ? [] : [];
+	return typeof param === "undefined"
+		? []
+		: [
+				[
+					14,
+					1,
+					[
+						8,
+						param.requestedAttrs && param.requestedAttrs.map((e) => SquareUserSettingsAttribute(e)),
+					],
+				],
+			];
 }
 export function HideSquareMemberContentsRequest(
 	param?: PartialDeep<LINETypes.HideSquareMemberContentsRequest> | undefined,
@@ -3032,7 +3048,16 @@ export function SquareUserSettings(
 export function UpdateUserSettingsRequest(
 	param?: PartialDeep<LINETypes.UpdateUserSettingsRequest> | undefined,
 ): NestedArray {
-	return typeof param === "undefined" ? [] : [, [12, 2, SquareUserSettings(param.userSettings)]];
+	return typeof param === "undefined"
+		? []
+		: [
+				[
+					14,
+					1,
+					[8, param.updatedAttrs && param.updatedAttrs.map((e) => SquareUserSettingsAttribute(e))],
+				],
+				[12, 2, SquareUserSettings(param.userSettings)],
+			];
 }
 export function r80_EnumC34362b(
 	param: LINETypes.r80_EnumC34362b | undefined,
@@ -4402,6 +4427,27 @@ export function Settings(param?: PartialDeep<LINETypes.Settings> | undefined): N
 				[2, 139, param.notificationNoteMention],
 				[2, 140, param.notificationAlbumLike],
 				[2, 141, param.phoneNumberDeleteEnable],
+				[2, 142, param.securityCardRequired],
+				[2, 143, param.labMessageEdit],
+				[10, 144, param.agreementLypPremiumMessageScheduling],
+				[10, 145, param.agreementLypPremiumMessageSchedulingVersion],
+				[11, 146, param.agreementLypPremiumMessageSchedulingPremiumType],
+				[2, 147, param.labPremiumFriendsManagement],
+				[10, 148, param.agreementLypPremiumMuteMessage],
+				[10, 149, param.agreementLypPremiumMuteMessageVersion],
+				[11, 150, param.agreementLypPremiumMuteMessagePremiumType],
+				[2, 151, param.labMessageScheduling],
+				[2, 152, param.homeNotificationFeedOperationPromotion],
+				[2, 153, param.homeNotificationFeedOperationTrending],
+				[2, 154, param.homeNotificationNoticeOperationGeneral],
+				[2, 155, param.manualReadReceipts],
+				[11, 156, param.agreementLypPremiumBackupRegion],
+				[11, 157, param.agreementLypPremiumAlbumRegion],
+				[11, 158, param.agreementLypPremiumMultiProfileRegion],
+				[11, 159, param.agreementLypPremiumUnsendRegion],
+				[11, 160, param.agreementLypPremiumMessageEditRegion],
+				[11, 161, param.agreementLypPremiumMessageSchedulingRegion],
+				[11, 162, param.agreementLypPremiumMuteMessageRegion],
 			];
 }
 export function RepairTriggerSettingsElement(

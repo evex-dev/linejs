@@ -149,6 +149,10 @@ export const Thrift: LooseType = {
 		"545": "WEAROS_RC",
 		"546": "WEAROS_BETA",
 		"547": "WEAROS_ALPHA",
+		"560": "VISIONOS",
+		"561": "VISIONOS_RC",
+		"562": "VISIONOS_BETA",
+		"563": "VISIONOS_ALPHA",
 	},
 	BotType: {
 		"0": "RESERVED",
@@ -924,16 +928,17 @@ export const Thrift: LooseType = {
 		"157": "NOTIFIED_GCS_REFRESH_CONTENT",
 		"158": "EDIT_MESSAGE",
 		"159": "NOTIFIED_EDIT_MESSAGE",
-		"160": "ADD_SCHEDULED_MESSAGE",
-		"161": "UPDATE_SCHEDULED_MESSAGE",
-		"162": "DELETE_SCHEDULED_MESSAGE",
-		"163": "E2EE_REENCRYPT_SCHEDULED_MESSAGE",
-		"164": "SEND_FAILED_SCHEDULED_MESSAGE",
-		"165": "SEND_SUCCEEDED_SCHEDULED_MESSAGE",
-		"166": "UPDATE_SERVICE_CHAT",
-		"167": "MARK_SERVICE_CHAT_AS_READ",
-		"168": "UPDATE_SERVICE_CHAT_NOTIFICATION_TEXT",
+		"160": "UPDATE_SERVICE_CHAT",
+		"161": "MARK_SERVICE_CHAT_AS_READ",
+		"162": "UPDATE_SERVICE_CHAT_NOTIFICATION_TEXT",
+		"163": "ADD_SCHEDULED_MESSAGE",
+		"164": "UPDATE_SCHEDULED_MESSAGE",
+		"165": "DELETE_SCHEDULED_MESSAGE",
+		"166": "E2EE_REENCRYPT_SCHEDULED_MESSAGE",
+		"167": "SEND_FAILED_SCHEDULED_MESSAGE",
+		"168": "SEND_SUCCEEDED_SCHEDULED_MESSAGE",
 		"169": "LINE_AUTH_NOTIFICATION",
+		"170": "NOTIFIED_GCS_CONSUMABLE_BADGE",
 	},
 	P70_g: {
 		"1000": "INVALID_REQUEST",
@@ -1177,6 +1182,7 @@ export const Thrift: LooseType = {
 		"56": "COMMERCE_TW_TAB",
 		"57": "PREMIUM_PRODUCT_DEFINITION",
 		"58": "DATAMODE",
+		"59": "GCS_CONSUMABLE_BADGE",
 	},
 	Pb1_EnumC13221w3: {
 		"0": "UNKNOWN",
@@ -1713,6 +1719,18 @@ export const Thrift: LooseType = {
 		"118": "AGREEMENT_LYP_PREMIUM_MUTE_MESSAGE",
 		"119": "AGREEMENT_LYP_PREMIUM_MUTE_MESSAGE_VERSION",
 		"120": "AGREEMENT_LYP_PREMIUM_MUTE_MESSAGE_PREMIUM_TYPE",
+		"121": "LAB_MESSAGE_SCHEDULING",
+		"122": "HOME_NOTIFICATION_FEED_OPERATION_PROMOTION",
+		"123": "HOME_NOTIFICATION_FEED_OPERATION_TRENDING",
+		"124": "HOME_NOTIFICATION_NOTICE_OPERATION_GENERAL",
+		"125": "MANUAL_READ_RECEIPTS",
+		"126": "AGREEMENT_LYP_PREMIUM_BACKUP_REGION",
+		"127": "AGREEMENT_LYP_PREMIUM_ALBUM_REGION",
+		"128": "AGREEMENT_LYP_PREMIUM_MULTI_PROFILE_REGION",
+		"129": "AGREEMENT_LYP_PREMIUM_UNSEND_REGION",
+		"130": "AGREEMENT_LYP_PREMIUM_MESSAGE_EDIT_REGION",
+		"131": "AGREEMENT_LYP_PREMIUM_MESSAGE_SCHEDULING_REGION",
+		"132": "AGREEMENT_LYP_PREMIUM_MUTE_MESSAGE_REGION",
 	},
 	SnsIdType: {
 		"1": "FACEBOOK",
@@ -21278,6 +21296,111 @@ export const Thrift: LooseType = {
 			name: "phoneNumberDeleteEnable",
 			type: 2,
 		},
+		{
+			fid: 142,
+			name: "securityCardRequired",
+			type: 2,
+		},
+		{
+			fid: 143,
+			name: "labMessageEdit",
+			type: 2,
+		},
+		{
+			fid: 144,
+			name: "agreementLypPremiumMessageScheduling",
+			type: 10,
+		},
+		{
+			fid: 145,
+			name: "agreementLypPremiumMessageSchedulingVersion",
+			type: 10,
+		},
+		{
+			fid: 146,
+			name: "agreementLypPremiumMessageSchedulingPremiumType",
+			type: 11,
+		},
+		{
+			fid: 147,
+			name: "labPremiumFriendsManagement",
+			type: 2,
+		},
+		{
+			fid: 148,
+			name: "agreementLypPremiumMuteMessage",
+			type: 10,
+		},
+		{
+			fid: 149,
+			name: "agreementLypPremiumMuteMessageVersion",
+			type: 10,
+		},
+		{
+			fid: 150,
+			name: "agreementLypPremiumMuteMessagePremiumType",
+			type: 11,
+		},
+		{
+			fid: 151,
+			name: "labMessageScheduling",
+			type: 2,
+		},
+		{
+			fid: 152,
+			name: "homeNotificationFeedOperationPromotion",
+			type: 2,
+		},
+		{
+			fid: 153,
+			name: "homeNotificationFeedOperationTrending",
+			type: 2,
+		},
+		{
+			fid: 154,
+			name: "homeNotificationNoticeOperationGeneral",
+			type: 2,
+		},
+		{
+			fid: 155,
+			name: "manualReadReceipts",
+			type: 2,
+		},
+		{
+			fid: 156,
+			name: "agreementLypPremiumBackupRegion",
+			type: 11,
+		},
+		{
+			fid: 157,
+			name: "agreementLypPremiumAlbumRegion",
+			type: 11,
+		},
+		{
+			fid: 158,
+			name: "agreementLypPremiumMultiProfileRegion",
+			type: 11,
+		},
+		{
+			fid: 159,
+			name: "agreementLypPremiumUnsendRegion",
+			type: 11,
+		},
+		{
+			fid: 160,
+			name: "agreementLypPremiumMessageEditRegion",
+			type: 11,
+		},
+		{
+			fid: 161,
+			name: "agreementLypPremiumMessageSchedulingRegion",
+			type: 11,
+		},
+		{
+			fid: 162,
+			name: "agreementLypPremiumMuteMessageRegion",
+			type: 11,
+		},
 	],
 	ShareTargetPickerResultRequest: [
 		{
@@ -39302,6 +39425,33 @@ export const Thrift: LooseType = {
 			type: 11,
 		},
 	],
+	ExcludeType: {
+		"0": "MINOR_SEARCH",
+	},
+	MessageStatusType: {
+		"1": "MESSAGE_REACTION",
+	},
+	PaidSquareFormAttribute: {
+		"1": "STATE",
+	},
+	PreconditionFailedExtraInfo: {
+		"0": "DUPLICATED_DISPLAY_NAME",
+	},
+	SquareChatAnnouncementType: {
+		"0": "TEXT_MESSAGE",
+	},
+	SquareMemberRelationAttribute: {
+		"1": "BLOCKED",
+	},
+	SquareThreadMemberAttribute: {
+		"1": "MEMBERSHIP_STATE",
+	},
+	SquareUserSettingsAttribute: {
+		"1": "LIVE_TALK_NOTIFICATION",
+	},
+	StatusBadge: {
+		"1": "LIVETALK_ONAIR",
+	},
 };
 export function parseEnum(name: string, value: number | string): string | null {
 	return (Thrift as LooseType)[name][value] ?? null;
